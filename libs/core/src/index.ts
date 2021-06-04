@@ -14,7 +14,7 @@ export * from './lib/entities/lang.entity';
 
 export * from './lib/entities/sys-user.entity';
 
-export * from './lib/request/base.request';
+export * from './lib/requests/base.request';
 
 export * from './lib/guards/gql-auth.guard';
 
