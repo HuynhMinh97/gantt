@@ -7,6 +7,8 @@
 
 # dependencies
 /node_modules
+/logs
+/schema.gql
 
 # IDEs and editors
 /.idea
