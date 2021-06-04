@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'ait-matching-webapp-starter';
+  title = 'ait-matching-webapp';
 }

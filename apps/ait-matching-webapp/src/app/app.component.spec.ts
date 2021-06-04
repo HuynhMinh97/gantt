@@ -16,10 +16,10 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'ait-matching-webapp-starter'`, () => {
+  it(`should have as title 'ait-matching-webapp'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('ait-matching-webapp-starter');
+    expect(app.title).toEqual('ait-matching-webapp');
   });
 
   it('should render title', () => {
@@ -27,7 +27,7 @@ describe('AppComponent', () => {
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
     expect(compiled.querySelector('h1').textContent).toContain(
-      'Welcome to ait-matching-webapp-starter!'
+      'Welcome to ait-matching-webapp!'
     );
   });
 });

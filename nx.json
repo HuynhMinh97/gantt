@@ -23,7 +23,7 @@
     "assets": { "tags": [] },
     "ait-webapp-starter": { "tags": [] },
     "ait-api-starter": { "tags": [] },
-    "ait-matching-webapp-starter": { "tags": [] },
-    "ait-matching-api-starter": { "tags": [] }
+    "ait-matching-webapp": { "tags": [] },
+    "ait-matching-api": { "tags": [] }
   }
 }

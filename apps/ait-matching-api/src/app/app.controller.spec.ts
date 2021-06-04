@@ -14,10 +14,10 @@ describe('AppController', () => {
   });
 
   describe('getData', () => {
-    it('should return "Welcome to ait-matching-api-starter!"', () => {
+    it('should return "Welcome to ait-matching-api!"', () => {
       const appController = app.get<AppController>(AppController);
       expect(appController.getData()).toEqual({
-        message: 'Welcome to ait-matching-api-starter!',
+        message: 'Welcome to ait-matching-api!',
       });
     });
   });

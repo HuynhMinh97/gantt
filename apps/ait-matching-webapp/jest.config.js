@@ -1,5 +1,5 @@
 module.exports = {
-  displayName: 'ait-matching-webapp-starter',
+  displayName: 'ait-matching-webapp',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {
@@ -14,7 +14,7 @@ module.exports = {
       },
     },
   },
-  coverageDirectory: '../../coverage/apps/ait-matching-webapp-starter',
+  coverageDirectory: '../../coverage/apps/ait-matching-webapp',
   snapshotSerializers: [
     'jest-preset-angular/build/AngularNoNgAttributesSnapshotSerializer.js',
     'jest-preset-angular/build/AngularSnapshotSerializer.js',

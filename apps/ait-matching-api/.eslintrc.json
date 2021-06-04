@@ -5,7 +5,7 @@
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "parserOptions": {
-        "project": ["apps/ait-matching-api-starter/tsconfig.*?.json"]
+        "project": ["apps/ait-matching-api/tsconfig.*?.json"]
       },
       "rules": {}
     },

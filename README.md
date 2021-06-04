@@ -12,7 +12,7 @@ Run npm i or yarn to install all dependencies
 
 Run `ng g @nrwl/angular:app my-app` to generate an application angular.
 
-Run `ng generate @nrwl/nest:application --name=ait-matching-api-starter` to generate an application nestjs.
+Run `ng generate @nrwl/nest:application --name=ait-matching-api` to generate an application nestjs.
 
 > You can use any of the plugins above to generate applications as well.
 

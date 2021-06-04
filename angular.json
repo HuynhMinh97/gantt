@@ -326,34 +326,34 @@
         }
       }
     },
-    "ait-matching-webapp-starter": {
+    "ait-matching-webapp": {
       "projectType": "application",
-      "root": "apps/ait-matching-webapp-starter",
-      "sourceRoot": "apps/ait-matching-webapp-starter/src",
+      "root": "apps/ait-matching-webapp",
+      "sourceRoot": "apps/ait-matching-webapp/src",
       "prefix": "ait",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/apps/ait-matching-webapp-starter",
-            "index": "apps/ait-matching-webapp-starter/src/index.html",
-            "main": "apps/ait-matching-webapp-starter/src/main.ts",
-            "polyfills": "apps/ait-matching-webapp-starter/src/polyfills.ts",
-            "tsConfig": "apps/ait-matching-webapp-starter/tsconfig.app.json",
+            "outputPath": "dist/apps/ait-matching-webapp",
+            "index": "apps/ait-matching-webapp/src/index.html",
+            "main": "apps/ait-matching-webapp/src/main.ts",
+            "polyfills": "apps/ait-matching-webapp/src/polyfills.ts",
+            "tsConfig": "apps/ait-matching-webapp/tsconfig.app.json",
             "aot": true,
             "assets": [
-              "apps/ait-matching-webapp-starter/src/favicon.ico",
-              "apps/ait-matching-webapp-starter/src/assets"
+              "apps/ait-matching-webapp/src/favicon.ico",
+              "apps/ait-matching-webapp/src/assets"
             ],
-            "styles": ["apps/ait-matching-webapp-starter/src/styles.scss"],
+            "styles": ["apps/ait-matching-webapp/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "apps/ait-matching-webapp-starter/src/environments/environment.ts",
-                  "with": "apps/ait-matching-webapp-starter/src/environments/environment.prod.ts"
+                  "replace": "apps/ait-matching-webapp/src/environments/environment.ts",
+                  "with": "apps/ait-matching-webapp/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -381,52 +381,52 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ait-matching-webapp-starter:build"
+            "browserTarget": "ait-matching-webapp:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "ait-matching-webapp-starter:build:production"
+              "browserTarget": "ait-matching-webapp:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ait-matching-webapp-starter:build"
+            "browserTarget": "ait-matching-webapp:build"
           }
         },
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": [
-              "apps/ait-matching-webapp-starter/src/**/*.ts",
-              "apps/ait-matching-webapp-starter/src/**/*.html"
+              "apps/ait-matching-webapp/src/**/*.ts",
+              "apps/ait-matching-webapp/src/**/*.html"
             ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/ait-matching-webapp-starter"],
+          "outputs": ["coverage/apps/ait-matching-webapp"],
           "options": {
-            "jestConfig": "apps/ait-matching-webapp-starter/jest.config.js",
+            "jestConfig": "apps/ait-matching-webapp/jest.config.js",
             "passWithNoTests": true
           }
         }
       }
     },
-    "ait-matching-api-starter": {
-      "root": "apps/ait-matching-api-starter",
-      "sourceRoot": "apps\\ait-matching-api-starter\\src",
+    "ait-matching-api": {
+      "root": "apps/ait-matching-api",
+      "sourceRoot": "apps\\ait-matching-api\\src",
       "projectType": "application",
       "architect": {
         "build": {
           "builder": "@nrwl/node:build",
           "outputs": ["{options.outputPath}"],
           "options": {
-            "outputPath": "dist/apps/ait-matching-api-starter",
-            "main": "apps/ait-matching-api-starter/src/main.ts",
-            "tsConfig": "apps/ait-matching-api-starter/tsconfig.app.json",
-            "assets": ["apps/ait-matching-api-starter/src/assets"]
+            "outputPath": "dist/apps/ait-matching-api",
+            "main": "apps/ait-matching-api/src/main.ts",
+            "tsConfig": "apps/ait-matching-api/tsconfig.app.json",
+            "assets": ["apps/ait-matching-api/src/assets"]
           },
           "configurations": {
             "production": {
@@ -435,8 +435,8 @@
               "inspect": false,
               "fileReplacements": [
                 {
-                  "replace": "apps/ait-matching-api-starter/src/environments/environment.ts",
-                  "with": "apps/ait-matching-api-starter/src/environments/environment.prod.ts"
+                  "replace": "apps/ait-matching-api/src/environments/environment.ts",
+                  "with": "apps/ait-matching-api/src/environments/environment.prod.ts"
                 }
               ]
             }
@@ -445,20 +445,20 @@
         "serve": {
           "builder": "@nrwl/node:execute",
           "options": {
-            "buildTarget": "ait-matching-api-starter:build"
+            "buildTarget": "ait-matching-api:build"
           }
         },
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/ait-matching-api-starter/**/*.ts"]
+            "lintFilePatterns": ["apps/ait-matching-api/**/*.ts"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/ait-matching-api-starter"],
+          "outputs": ["coverage/apps/ait-matching-api"],
           "options": {
-            "jestConfig": "apps/ait-matching-api-starter/jest.config.js",
+            "jestConfig": "apps/ait-matching-api/jest.config.js",
             "passWithNoTests": true
           }
         }
