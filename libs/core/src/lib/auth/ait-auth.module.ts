@@ -2,7 +2,7 @@ import { SECRET_KEY } from '@ait/shared';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { JwtModule } from '@nestjs/jwt';
-import { AuthResolver } from '../resolver/auth.resolver';
+import { AuthResolver } from '../resolvers/auth.resolver';
 import { AuthService } from '../services/ait-auth.service';
 import { GqlAuthGuard } from '../guards/gql-auth.guard';
 import { AitJwtStrategy } from './ait-jwt.strategy';

@@ -1,5 +1,5 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
-import { BaseRequest } from '../request/base.request';
+import { BaseRequest } from '../requests/base.request';
 import { BaseDto } from './base.dto';
 
 @InputType()
