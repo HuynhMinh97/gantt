@@ -1,28 +1,49 @@
 {
   "implicitDependencies": {
     "angular.json": "*",
-    "package.json": { "dependencies": "*", "devDependencies": "*" },
+    "package.json": {
+      "dependencies": "*",
+      "devDependencies": "*"
+    },
     "tsconfig.base.json": "*",
     "tslint.json": "*",
     ".eslintrc.json": "*",
     "nx.json": "*"
   },
-  "affected": { "defaultBase": "master" },
+  "affected": {
+    "defaultBase": "master"
+  },
   "npmScope": "ait",
   "tasksRunnerOptions": {
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
-      "options": { "cacheableOperations": ["build", "lint", "test", "e2e"] }
+      "options": {
+        "cacheableOperations": ["build", "lint", "test", "e2e"]
+      }
     }
   },
   "projects": {
-    "shared": { "tags": [] },
-    "ui": { "tags": ["ui"] },
-    "core": { "tags": [] },
-    "auth": { "tags": [] },
-    "assets": { "tags": [] },
-    "ait-webapp-starter": { "tags": [] },
-    "ait-api-starter": { "tags": [] },
+    "shared": {
+      "tags": []
+    },
+    "ui": {
+      "tags": ["ui"]
+    },
+    "core": {
+      "tags": []
+    },
+    "auth": {
+      "tags": []
+    },
+    "assets": {
+      "tags": []
+    },
+    "ait-webapp-starter": {
+      "tags": []
+    },
+    "ait-api-starter": {
+      "tags": []
+    },
     "ait-matching-webapp": { "tags": [] },
     "ait-matching-api": { "tags": [] }
   }
