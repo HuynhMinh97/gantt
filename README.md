@@ -2,6 +2,12 @@
 
 # Ait Matching Framework
 
+## Install
+
+Run npm i or yarn to install all dependencies
+
+> This is requirement for starting develop.
+
 ## Generate an application
 
 Run `ng g @nrwl/angular:app my-app` to generate an application.
