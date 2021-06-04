@@ -1,0 +1,346 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type SysUser {
+  email: String
+  password: String
+  username: String
+  company: String
+  _key: String
+}
+
+type BinaryDataEntity {
+  _key: ID
+  company: String
+  user_id: String
+  create_at: Float
+  create_by: String
+  change_at: Float
+  change_by: String
+  name: String
+  file_type: String
+  size: Int
+  data_base64: String
+  base64: String
+}
+
+type BinaryResponse {
+  data: [BinaryDataEntity!]
+  errors: String
+  message: String
+  status: Int
+  numData: Int
+  numError: Int
+}
+
+type LangEntity {
+  en_US: String
+  ja_JP: String
+  vi_VN: String
+}
+
+type SysEntity {
+  _key: ID
+  company: String
+  user_id: String
+  create_at: Float
+  create_by: String
+  change_at: Float
+  change_by: String
+  class: String
+  code: String
+  parent_code: String
+  sort_no: Int
+  group_no: Int
+  name: String
+  type: String
+  module: String
+  page: String
+  message: LangEntity
+  slug: String
+  param: String
+  active_flag: Boolean
+}
+
+type SystemResponse {
+  data: [SysEntity!]
+  errors: String
+  message: String
+  status: Int
+  numData: Int
+  numError: Int
+}
+
+type UserSettingEntity {
+  _key: ID
+  company: String
+  user_id: String
+  create_at: Float
+  create_by: String
+  change_at: Float
+  change_by: String
+  date_format_display: String
+  date_format_input: String
+  number_format: String
+  site_language: String
+  timezone: String
+}
+
+type UserSettingResponse {
+  data: [UserSettingEntity!]
+  errors: String
+  message: String
+  status: Int
+  numData: Int
+  numError: Int
+}
+
+type UserToken {
+  token: String!
+  refreshToken: String!
+  timeLog: String!
+}
+
+type ValidatedToken {
+  token_valid: Boolean!
+  timeLog: Float!
+}
+
+type AuthUserObject {
+  _key: String
+  email: String
+  username: String
+}
+
+type AuthPasswordChangedOutput {
+  status: Float
+  message: String
+  data: AuthUserObject
+  error_code: String
+}
+
+type AuthCheckPassword {
+  isMatched: Boolean!
+}
+
+type ExampleEntity {
+  _key: ID
+  company: String
+  user_id: String
+  create_at: Float
+  create_by: String
+  change_at: Float
+  change_by: String
+  class: String
+  code: String
+  parent_code: String
+  sort_no: Int
+  name: LangEntity
+  active_flag: Boolean
+}
+
+type ExampleResponse {
+  data: [ExampleEntity!]
+  errors: String
+  message: String
+  status: Int
+  numData: Int
+  numError: Int
+}
+
+type Query {
+  findExample(request: ExampleRequest!): ExampleResponse!
+  findSystem(request: SystemRequest!): SystemResponse!
+  findBinaryData(request: BinaryRequest!): BinaryResponse!
+  findUserSetting(request: UserSettingRequest!): UserSettingResponse!
+  findByConditionUser(request: AitSysUserRequest!): [SysUser!]!
+  checkPassword(request: AuthCheckPasswordInput!): AuthCheckPassword!
+}
+
+input ExampleRequest {
+  company: String!
+  lang: String!
+  collection: String
+  user_id: String
+  condition: ExampleDto
+  data: [ExampleDto!]
+}
+
+input ExampleDto {
+  _key: ID
+  company: String
+  user_id: String
+  create_at: Float
+  create_by: String
+  change_at: Float
+  change_by: String
+  class: String
+  code: String
+  parent_code: String
+  sort_no: Int
+  name: LangDto
+  active_flag: Boolean
+}
+
+input LangDto {
+  en_US: String
+  ja_JP: String
+  vi_VN: String
+}
+
+input SystemRequest {
+  company: String!
+  lang: String!
+  collection: String
+  user_id: String
+  condition: SystemDto
+  data: [SystemDto!]
+}
+
+input SystemDto {
+  _key: ID
+  company: String
+  user_id: String
+  create_at: Float
+  create_by: String
+  change_at: Float
+  change_by: String
+  class: String
+  code: String
+  parent_code: String
+  sort_no: Int
+  group_no: Int
+  name: String
+  type: String
+  module: String
+  page: String
+  message: String
+  slug: String
+  param: String
+  active_flag: Boolean
+}
+
+input BinaryRequest {
+  company: String!
+  lang: String!
+  collection: String
+  user_id: String
+  condition: BinaryDataDto
+  data: [BinaryDataDto!]
+}
+
+input BinaryDataDto {
+  _key: ID
+  company: String
+  user_id: String
+  create_at: Float
+  create_by: String
+  change_at: Float
+  change_by: String
+  name: String
+  file_type: String
+  size: Int
+  data_base64: String
+  base64: String
+}
+
+input UserSettingRequest {
+  company: String!
+  lang: String!
+  collection: String
+  user_id: String
+  condition: UserSettingDto
+  data: [UserSettingDto!]
+}
+
+input UserSettingDto {
+  _key: ID
+  company: String
+  user_id: String
+  create_at: Float
+  create_by: String
+  change_at: Float
+  change_by: String
+  date_format_display: String
+  date_format_input: String
+  number_format: String
+  site_language: String
+  timezone: String
+}
+
+input AitSysUserRequest {
+  company: String!
+  lang: String!
+  collection: String
+  user_id: String
+  condition: SysUserInput
+}
+
+input SysUserInput {
+  _key: String!
+}
+
+input AuthCheckPasswordInput {
+  _key: ID
+  company: String
+  user_id: String
+  create_at: Float
+  create_by: String
+  change_at: Float
+  change_by: String
+  condition: AuthCheckPasswordCondition
+}
+
+input AuthCheckPasswordCondition {
+  password: String!
+}
+
+type Mutation {
+  saveExample(request: ExampleRequest!): ExampleResponse!
+  removeExample(request: ExampleRequest!): ExampleResponse!
+  saveSystem(request: SystemRequest!): SystemResponse!
+  removeSystem(request: SystemRequest!): SystemResponse!
+  saveBinaryData(request: BinaryRequest!): BinaryResponse!
+  removeBinaryData(request: BinaryRequest!): BinaryResponse!
+  saveUserSetting(request: UserSettingRequest!): UserSettingResponse!
+  removeUserSetting(request: UserSettingRequest!): UserSettingResponse!
+  login(input: AuthLoginInput!): UserToken!
+  register(input: AuthRegisterInput!): UserToken!
+  setEncryptPassword(input: String!): String!
+  generateToken(input: String!): UserToken!
+  changePassword(input: AuthPasswordChanged!): AuthPasswordChangedOutput!
+  findUser(input: SysUserInput!): SysUser!
+  validateToken(input: AuthValidatedInput!): ValidatedToken!
+}
+
+input AuthLoginInput {
+  _key: String
+  email: String!
+  password: String!
+}
+
+input AuthRegisterInput {
+  _key: String
+  email: String!
+  password: String!
+  username: String
+}
+
+input AuthPasswordChanged {
+  company: String!
+  lang: String!
+  collection: String
+  user_id: String
+  data: [AuthPasswordChangeData!]
+}
+
+input AuthPasswordChangeData {
+  user_id: String!
+  old_password: String!
+  new_password: String!
+}
+
+input AuthValidatedInput {
+  refresh_token: String!
+}

@@ -1,0 +1,74 @@
+<drag-scroll
+  [scrollbar-hidden]="true"
+  *ngIf="!isNormal"
+  [ngStyle]="{
+    'max-width': maxWidth || null,
+    'min-width': minWidth || null,
+    width: width || null
+  }"
+  style="overflow: hidden;"
+>
+  <button
+    nbButton
+    shape="round"
+    size="small"
+    status="primary"
+    class="items"
+    style="
+      background-color: #ffffff;
+      color: #10529d;
+      margin: 4px;
+      border: 0.6px solid #e0eeff;
+      height: 25px;
+      outline: none;
+      cursor: grab;
+    "
+    *ngFor="let skill of list"
+    [ngStyle]="{ background: skill.isHightLight ? '#e0eeff' : '#fff' }"
+  >
+    <span
+      style="
+        text-transform: initial;
+        font-weight: 600;
+        font-size: 13px;
+        color: #10529d;
+      "
+      >{{ skill[showField] }}</span
+    >
+
+    <!-- {{skillList | json}} -->
+  </button>
+</drag-scroll>
+<div *ngIf="isNormal" class="normal">
+  <button
+    nbButton
+    shape="round"
+    size="small"
+    status="primary"
+    class="items"
+    style="
+      background-color: #ffffff;
+      color: #10529d;
+      margin: 4px;
+      border: 0.6px solid #e0eeff;
+      height: 25px;
+      outline: none;
+      cursor: grab;
+    "
+    *ngFor="let skill of list"
+    [ngStyle]="{ background: skill.isHightLight ? '#e0eeff' : '#fff' }"
+  >
+    <span
+      style="
+        text-transform: initial;
+        font-weight: 600;
+        font-size: 13px;
+        color: #10529d;
+      "
+      >{{ skill[showField] }}</span
+    >
+
+    <!-- {{skillList | json}} -->
+  </button>
+</div>
+<p *ngIf="list.length === 0">List skill empty</p>

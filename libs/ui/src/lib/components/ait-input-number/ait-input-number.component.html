@@ -1,0 +1,41 @@
+<!-- {{ getPreviousValueInput() }} -->
+<div class="input__contrainer" [ngStyle]="{ width: widthInput }">
+  <input
+    *ngIf="isReadOnly"
+    nbInput
+    fullWidth
+    fieldSize="medium"
+    [ngStyle]="styleInput"
+    [formControl]="inputCtrl"
+    class="border__bottom__input"
+    disabled
+    [nbTooltip]="inputCtrl.value"
+    [nbTooltipTrigger]="!inputCtrl.value ? 'noop' : 'hover'"
+    [nbTooltipPlacement]="'left'"
+    style="padding-top: 0; padding-bottom: 0; font-size: 12px"
+  />
+  <input
+    *ngIf="!isReadOnly"
+    pattern="[0-9\.]+"
+    nbInput
+    [id]="inputId"
+    #inputNumber
+    fullWidth
+    fieldSize="medium"
+    [maxlength]="maxLength"
+    [value]="inputCtrl.value"
+    [placeholder]="salaryPlaceholder"
+    (input)="onInput($event.target.value)"
+    [formControl]="inputCtrl"
+    (focusout)="handleFocusOut();"
+    (beforeinput)="onKeyDown($event)"
+    (keydown)="onKeyUp($event)"
+    (focus)="handleFocus()"
+    style="font-size: 12px"
+    (click)="handleClick()"
+    [ngStyle]="styleInput"
+
+  />
+</div>
+<!-- {{inputCtrl.value}} -->
+<!-- <ait-error-message *ngIf="isTooltip" [errors]="['Please input number']"></ait-error-message> -->

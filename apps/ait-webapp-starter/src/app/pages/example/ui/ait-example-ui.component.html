@@ -1,0 +1,562 @@
+<div style="padding: 50px">
+  <h1>Welcome to starter web kit ✌</h1>
+  <ait-divider></ait-divider>
+  <ait-space></ait-space>
+
+  <ait-tabs
+    [tabs]="tabs"
+    (onTabSelect)="getTabSelected($event)"
+    [tabSelected]="tabSelect"
+  ></ait-tabs>
+  <ait-space></ait-space>
+
+  <div class="container" *ngIf="tabSelect === 'C'">
+    <h4>COMPONENTS</h4>
+
+    <ait-card-content [isColumn]="true" [label]="'Output text input'">
+      <p>This is a component, which is used to input value from user 🎉</p>
+      <div
+        style="
+          margin-left: 20px;
+          display: flex;
+          max-width: 400px;
+          flex-wrap: wrap;
+        "
+      >
+        <ait-output-text
+          [valueArray]="['âsasa','sadsdsadsa','sadadsadsa']"
+          [caption]="
+            '受入れ企業名が変更になった場合は「雇用条件書」「パスポート」「在留カード」リンクを張り替えてください'
+          "
+        ></ait-output-text>
+      </div>
+    </ait-card-content>
+    <ait-card-content [isColumn]="true" [label]="'Text input'">
+      <p>This is a component, which is used to input value from user 🎉</p>
+      <div
+        style="
+          margin-left: 20px;
+          display: flex;
+          max-width: 400px;
+          flex-wrap: wrap;
+        "
+      >
+        <div *ngFor="let st of status">
+          <ait-label [label]="'#' + st"></ait-label>
+          <ait-input-text
+            [status]="st"
+            [iconName]="'heart'"
+            [nbPrefix]="false"
+            [placeholder]="st"
+            (watchValue)="getValueInput(st, $event)"
+          ></ait-input-text>
+          <br />
+          <code>#Result output : {{ result[st] }}</code>
+        </div>
+      </div>
+    </ait-card-content>
+
+    <!-- <ait-space></ait-space>
+
+    <ait-card-content [isColumn]="true" [label]="'Table'">
+      <p>This is a component, which is used to input value from user 🎉</p>
+      <div
+        style="
+          margin-left: 20px;
+          display: flex;
+          max-width: 400px;
+          flex-wrap: wrap;
+        "
+      >
+       <ait-table></ait-table>
+      </div>
+    </ait-card-content> -->
+
+    <ait-space></ait-space>
+    <ait-card-content [isColumn]="true" [label]="'Chips'">
+      <p>This is a component, which is used to show items of somethings 🎉</p>
+      <div
+        style="
+          margin-left: 20px;
+          display: flex;
+          max-width: 400px;
+          flex-wrap: wrap;
+        "
+      >
+        <ait-chip
+          *ngFor="let st of status"
+          [title]="st + '🍓'"
+          [isTooltip]="true"
+        ></ait-chip>
+      </div>
+    </ait-card-content>
+
+    <ait-space></ait-space>
+    <ait-card-content [isColumn]="true" [label]="'Confirm dialog'">
+      <p>
+        This is a component, which is used to show popup to confirm whatever you
+        want 🎉
+      </p>
+      <div
+        style="
+          margin-left: 20px;
+          display: flex;
+          max-width: 400px;
+          flex-wrap: wrap;
+        "
+      >
+        <ait-button
+          *ngFor="let s of status"
+          [title]="s"
+          [height]="'24px'"
+          [fontsize]="'10px'"
+          [color]="'#fff'"
+          [style]="'active'"
+          [background]="
+            'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
+          "
+          [styleText]="{
+            'font-weight': 'bold',
+            color: '#fff'
+          }"
+          [styleBtn]="{
+            'min-width': '100px',
+            'max-width': '150px',
+            margin: '5px'
+          }"
+          (click)="confirmDialog(s)"
+        ></ait-button>
+      </div>
+    </ait-card-content>
+
+    <ait-space></ait-space>
+    <ait-card-content [isColumn]="true" [label]="'Special Matching Button'">
+      <p>This is a button component, user can click, hover,...</p>
+
+      <div
+        style="
+          margin-left: 20px;
+          display: flex;
+          max-width: 400px;
+          flex-wrap: wrap;
+        "
+      >
+        <ait-button
+          *ngFor="let s of status"
+          [title]="s"
+          [height]="'24px'"
+          [fontsize]="'10px'"
+          [background]="
+            'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
+          "
+          [styleText]="{
+            'font-weight': 'bold',
+            color: '#fff'
+          }"
+          [styleBtn]="{
+            'min-width': '100px',
+            'max-width': '150px',
+            margin: '5px'
+          }"
+        ></ait-button>
+      </div>
+    </ait-card-content>
+
+    <ait-space></ait-space>
+    <ait-card-content [isColumn]="true" [label]="'Dragscroll list'">
+      <p>This is list component, you can scroll by draging chips 😜</p>
+
+      <code># [isNormal]="true"</code>
+      <div
+        style="
+          margin-left: 20px;
+          display: flex;
+          max-width: 400px;
+          flex-wrap: wrap;
+        "
+      >
+        <ait-drag-scroll
+          [list]="skills"
+          [showField]="'value'"
+          [minWidth]="'400px'"
+          [isNormal]="true"
+        ></ait-drag-scroll>
+      </div>
+      <ait-space></ait-space>
+      <code># [isNormal]="false"</code>
+      <div
+        style="
+          margin-left: 20px;
+          display: flex;
+          max-width: 400px;
+          flex-wrap: wrap;
+        "
+      >
+        <ait-drag-scroll
+          [list]="skills"
+          [showField]="'value'"
+          [minWidth]="'400px'"
+          [isNormal]="false"
+        ></ait-drag-scroll>
+      </div>
+    </ait-card-content>
+
+    <ait-space></ait-space>
+    <ait-card-content [isColumn]="true" [label]="'Datepicker'">
+      <p>
+        This is a datepicker component, which is used to pick a date you want.
+        You can set format by <code>[staticFormat]="YOUR_FORMAT"</code>
+      </p>
+      <div
+        style="
+          margin-left: 20px;
+          display: flex;
+          max-width: 400px;
+          flex-direction: column;
+        "
+      >
+        <ait-datepicker (onDateChange)="getDate($event)"></ait-datepicker>
+        <br />
+        <code>#Result output : {{ result.date?.value }}</code>
+      </div>
+    </ait-card-content>
+
+    <ait-space></ait-space>
+    <ait-card-content [isColumn]="true" [label]="'Displayfile'">
+      <p>
+        This is a output file component, which display files you that you set
+        and upload from local 📁
+      </p>
+      <div
+        style="
+          margin-left: 20px;
+          display: flex;
+          max-width: 400px;
+          flex-direction: column;
+        "
+      >
+        <ait-output-file></ait-output-file>
+      </div>
+    </ait-card-content>
+
+    <ait-space></ait-space>
+    <ait-card-content [isColumn]="true" [label]="'Errors message'">
+      <p>This is a component, which you use theme for showing errors.</p>
+      <div
+        style="
+          margin-left: 20px;
+          display: flex;
+          max-width: 400px;
+          flex-direction: column;
+        "
+      >
+        <ait-error-message [errors]="errorMessages"></ait-error-message>
+      </div>
+    </ait-card-content>
+
+    <ait-space></ait-space>
+
+    <ait-card-content [isColumn]="true" [label]="'Tabs'">
+      <p>This is a component, which you can switch between theme.</p>
+      <div
+        style="
+          margin-left: 20px;
+          display: flex;
+          max-width: 400px;
+          flex-direction: column;
+        "
+      >
+        <ait-tabs
+          [tabs]="tabs"
+          (onTabSelect)="getTabSelectedExample($event)"
+          [tabSelected]="tabSelected"
+        ></ait-tabs>
+        <br />
+        <code>#Result output : {{ tabSelected }}</code>
+      </div>
+    </ait-card-content>
+
+    <ait-space></ait-space>
+    <ait-card-content [isColumn]="true" [label]="'Textarea'">
+      <p>This is a component , which is used for writing a too long text.</p>
+      <div
+        style="
+          margin-left: 20px;
+          display: flex;
+          max-width: 400px;
+          flex-direction: column;
+        "
+      >
+        <ait-text-area
+          [placholder]="'Textarea'"
+          (watchValue)="getTextArea($event)"
+          [width]="'400px'"
+          [row]="5"
+        ></ait-text-area>
+        <br />
+        <code>#Result output : {{ result.textarea }}</code>
+      </div>
+    </ait-card-content>
+
+    <ait-space></ait-space>
+    <ait-card-content [isColumn]="true" [label]="'InputNumber'">
+      <p>
+        This is a component, which is used to choose a number follow by format.
+      </p>
+      <div
+        style="
+          margin-left: 20px;
+          display: flex;
+          max-width: 400px;
+          flex-direction: column;
+        "
+        *ngFor="let f of numberFormats"
+      >
+        <li>Number Format : {{ f.value }}</li>
+        <ait-input-number
+          (watchValue)="getValueNumber(f.id, $event)"
+          [staticFormat]="f.value"
+        ></ait-input-number>
+        <br />
+        <code>#Result output : {{ result[f.id] }}</code>
+        <ait-space></ait-space>
+      </div>
+    </ait-card-content>
+
+    <ait-space></ait-space>
+    <!-- <ait-card-content [isColumn]="true" [label]="'Input Files'">
+      <p>This is a component, which is used to upload files from local.</p>
+      <div
+        style="
+          margin-left: 20px;
+          display: flex;
+          max-width: 400px;
+          flex-direction: column;
+        "
+      >
+        <ait-input-file [isDefault]="false"></ait-input-file>
+      </div>
+    </ait-card-content> -->
+
+    <ait-space></ait-space>
+
+    <ait-card-content [isColumn]="true" [label]="'Autocomplete master data'">
+      <p>This is a component for select one or multiple values.</p>
+      <div
+        style="
+          margin-left: 20px;
+          display: flex;
+          max-width: 400px;
+          flex-direction: column;
+          position: relative;
+          min-height: 350px;
+        "
+      >
+        <code style="font-size: 20px; font-weight: 700"
+          >Choose mulitple values</code
+        >
+        <ait-autocomplete-master-data
+          [widthInput]="400"
+          [placeholder]="'Pick a job'"
+          [class]="'JOB_OCCUPATION'"
+          [style]="{ width: '400px' }"
+          (watchValues)="getValueMasterData($event)"
+        ></ait-autocomplete-master-data>
+        <p>Result ouput</p>
+        <ait-text-area
+          [placeholder]="'Result ouput'"
+          [defaultValue]="result?.dataMaster"
+          [isJson]="true"
+          [minHeight]="'400px'"
+          [disabled]="true"
+        ></ait-text-area>
+        <ait-space></ait-space>
+        <code style="font-size: 20px; font-weight: 700"
+          >Choose one value, add property <strong> [maxItem]="1"</strong></code
+        >
+        <ait-autocomplete-master-data
+          [widthInput]="400"
+          [placeholder]="'Pick a job'"
+          [class]="'JOB_OCCUPATION'"
+          [style]="{ width: '400px' }"
+          [maxItem]="1"
+          (watchValues)="getValueMasterDataOne($event)"
+        ></ait-autocomplete-master-data>
+        <p>Result ouput</p>
+        <ait-text-area
+          [placeholder]="'Result ouput'"
+          [defaultValue]="result?.dataMasterOne"
+          [isJson]="true"
+          [minHeight]="'400px'"
+          [disabled]="true"
+        ></ait-text-area>
+      </div>
+    </ait-card-content>
+
+    <ait-space></ait-space>
+
+    <ait-card-content [isColumn]="true" [label]="'Autocomplete master'">
+      <p>
+        This is a component for select one or multiple values. Trying to type
+        "t"
+      </p>
+      <div
+        style="
+          margin-left: 20px;
+          display: flex;
+          max-width: 400px;
+          flex-direction: column;
+          position: relative;
+          min-height: 350px;
+        "
+      >
+        <code style="font-size: 20px; font-weight: 700"
+          >Choose mulitple values</code
+        >
+        <ait-autocomplete-master
+          [widthInput]="400"
+          [type]="'CAPTION'"
+          [maxItem]="10"
+          (watchValues)="getValueMaster($event)"
+        ></ait-autocomplete-master>
+        <p>Result ouput</p>
+        <ait-text-area
+          [placeholder]="'Result ouput'"
+          [defaultValue]="result?.master"
+          [isJson]="true"
+          [minHeight]="'400px'"
+          [disabled]="true"
+        ></ait-text-area>
+        <ait-space></ait-space>
+        <code style="font-size: 20px; font-weight: 700"
+          >Choose one value, add property <strong> [maxItem]="1"</strong></code
+        >
+        <ait-autocomplete-master
+          [widthInput]="400"
+          [type]="'CAPTION'"
+          [maxItem]="1"
+          (watchValues)="getValueMasterOne($event)"
+        ></ait-autocomplete-master>
+        <p>Result ouput</p>
+        <ait-text-area
+          [placeholder]="'Result ouput'"
+          [defaultValue]="result?.masterOne"
+          [isJson]="true"
+          [minHeight]="'400px'"
+          [disabled]="true"
+        ></ait-text-area>
+      </div>
+    </ait-card-content>
+
+    <ait-space></ait-space>
+    <ait-card-content [isColumn]="true" [label]="'Button Groups'">
+      <p>
+        This is a component, which is used to display buttons. There are 3 typed
+        buttons : <code>active, </code> <code>normal, </code
+        ><code>disabled</code>
+      </p>
+      <div
+        style="
+          margin-left: 20px;
+          display: flex;
+          min-width: 400px;
+          flex-direction: column;
+          background-color: #10295d;
+          min-height: 200px;
+          align-items: center;
+          justify-content: center;
+        "
+      >
+        <ait-button-group [buttons]="buttonGroups.one"></ait-button-group>
+      </div>
+    </ait-card-content>
+
+    <ait-space></ait-space>
+    <ait-card-content [isColumn]="true" [label]="'Time picker'">
+      <p>
+        This is a component, which is used to choose time follow by hours,
+        minutes.
+      </p>
+      <div
+        style="
+          margin-left: 20px;
+          display: flex;
+          max-width: 400px;
+          flex-direction: column;
+        "
+      >
+        <div style="display: flex; align-items: center">
+          <ait-timepicker
+            [isTuples]="false"
+            [ishourValue]="true"
+            [time]="[{ shift_1_from_hour: 8 }]"
+            (watchValue)="handleOnchange($event, 'time')"
+            [placeholder]="'HH'"
+            [mode]="'dark'"
+          ></ait-timepicker>
+          <ait-timepicker
+            [placeholder]="'ss'"
+            [isTuples]="false"
+            [isminuteValue]="true"
+            [time]="[{ shift_1_from_minute: 0 }]"
+            (watchValue)="handleOnchange($event, 'time')"
+            [mode]="'dark'"
+          ></ait-timepicker>
+          <span style="color: #000; margin: 10px; font-weight: 600">〜</span>
+          <ait-timepicker
+            [isTuples]="false"
+            [ishourValue]="true"
+            [time]="[{ shift_1_to_hour: 17 }]"
+            (watchValue)="handleOnchange($event, 'time')"
+            [placeholder]="'HH'"
+            [mode]="'dark'"
+          ></ait-timepicker>
+          <ait-timepicker
+            [isTuples]="false"
+            [isminuteValue]="true"
+            [time]="[{ shift_1__to_minute: 0 }]"
+            (watchValue)="handleOnchange($event, 'time')"
+            [placeholder]="'mm'"
+            [mode]="'dark'"
+          ></ait-timepicker>
+        </div>
+      </div>
+    </ait-card-content>
+  </div>
+
+  <div *ngIf="tabSelect !== 'C'" class="container">
+    <h4>SERVICES</h4>
+
+    <ait-space></ait-space>
+    <ait-card-content [isColumn]="true" [label]="'TranslateService'">
+      <p>Please input a code for translating</p>
+      <div
+        style="
+          margin-left: 20px;
+          display: flex;
+          min-width: 700px;
+          flex-direction: column;
+        "
+      >
+        <ait-input-text
+          [status]="'primary'"
+          [iconName]="'code'"
+          [nbPrefix]="true"
+          [placeholder]="'Please input a code for translating'"
+          (watchValue)="getCodeFortranslate($event)"
+        ></ait-input-text>
+        <br />
+        <ait-text-area
+          [placeholder]="'Result ouput'"
+          [defaultValue]="result?.code"
+          [isJson]="true"
+          [minHeight]="'600px'"
+          [disabled]="true"
+        ></ait-text-area>
+      </div>
+    </ait-card-content>
+  </div>
+
+  <ait-space></ait-space>
+  <ait-space></ait-space>
+</div>

@@ -1,0 +1,70 @@
+<div style="max-width: 300px">
+  <nb-action class="user-action">
+    <img [src]="getAvatar()" alt="" class="avatar" (click)="toggleMenu()" />
+    <div
+      class="menu__user"
+      [ngStyle]="{ opacity: isOpenMenu ? 1 : 0 }"
+      *ngIf="isOpenMenu && isUserLogined()"
+    >
+      <div class="header__menu">
+        <div class="avatar__group">
+          <img [src]="getAvatar()" alt="" class="avatar" />
+          <div class="info">
+            <p class="name">
+              {{
+                fullName || userInfo?.username || this.userInfo?.email || '  '
+              }}
+            </p>
+            <!-- <span>
+              {{ getCommonTitle() }}
+            </span> -->
+          </div>
+        </div>
+        <!-- <div class="button__area">
+          <div
+            class="button__view__profile"
+            (click)="navigateToMyProfile(); hideMenu()"
+          >
+            <span>{{
+              "matching.common.header.menu.view-profile" | translate
+            }}</span>
+          </div>
+        </div> -->
+
+        <div class="divider"></div>
+        <div *ngFor="let m of menus">
+          <p class="title__header">
+            {{ m.header_title }}
+          </p>
+          <div
+            *ngFor="let tab of m.tabs"
+            (click)="tab.action(); navigate(tab.url); hideMenu()"
+          >
+            <div class="tab">
+              <nb-icon
+                class="icon_tab"
+                style="
+                  margin-left: 19px;
+                  margin-right: 15px;
+                  height: 28px;
+                  width: 28px;
+                  color: #8f9bb3;
+                "
+                icon="{{ tab.iconName }}"
+                *ngIf="tab.iconName"
+              ></nb-icon>
+              <img
+                src="{{ tab.imgSrc }}"
+                *ngIf="!tab.iconName"
+                alt=""
+                style="height: 24px; width: 24px"
+              />
+              <p class="tab__title">{{ tab.title }}</p>
+            </div>
+            <div class="divider"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nb-action>
+</div>

@@ -1,0 +1,11 @@
+.container__404 {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  h1 {
+    font-size: 70px;
+  }
+}

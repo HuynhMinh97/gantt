@@ -1,0 +1,43 @@
+<nb-form-field [ngStyle]="style">
+  <nb-icon
+    nbSuffix
+    icon="calendar-outline"
+    pack="eva"
+    *ngIf="!disable"
+    style="cursor: pointer"
+    (click)="clickIconDate()"
+  ></nb-icon>
+  <input
+    nbInput
+    #inputDateTime
+    placeholder="{{ staticFormat ? staticFormat : getFormat() }}"
+    [nbDatepicker]="dateTimePicker"
+    [(ngModel)]="date"
+    *ngIf="!disable"
+    [shape]="isRound ? 'semi-round' : 'rectangle'"
+    [ngStyle]="styleInput"
+    (focusout)="checkValidDateInput()"
+    [formControl]="inputCtrl"
+    (click)="clickInput($event)"
+  />
+  <input
+    [ngClass]="'border__bottom__input'"
+    nbInput
+    fullWidth
+    #inputDateTime
+    disabled
+    [(ngModel)]="date"
+    [nbDatepicker]="dateTimePicker"
+    *ngIf="disable"
+    [shape]="isRound ? 'semi-round' : 'rectangle'"
+    [ngStyle]="styleInput"
+    style="padding-top: 0; padding-bottom: 0; font-size: 12px; text-align: left"
+  />
+  <nb-datepicker
+    #dateTimePicker
+    [format]="staticFormat ? staticFormat : getFormat()"
+    [style.visibility]="disable ? 'hidden' : null"
+    (dateChange)="dateChange($event)"
+    [date]="date"
+  ></nb-datepicker>
+</nb-form-field>

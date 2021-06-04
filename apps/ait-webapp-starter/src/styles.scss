@@ -1,0 +1,14 @@
+@import '~@nebular/theme/styles/globals';
+
+@include nb-install() {
+  @include nb-theme-global();
+  .nb-theme-default
+    nb-layout
+    .layout
+    .layout-container
+    .content
+    nb-layout-footer
+    nav {
+    padding: 0;
+  }
+} ;

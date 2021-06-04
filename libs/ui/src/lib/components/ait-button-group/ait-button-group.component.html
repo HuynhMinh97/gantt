@@ -1,0 +1,11 @@
+<div class="btn__container">
+  <ait-button
+    *ngFor="let b of btnCtrl"
+    [style]="b.style"
+    [title]="b.title"
+    (click)="b.action()"
+    [color]="'#000'"
+    [classBtn]="'btn'"
+  >
+  </ait-button>
+</div>

@@ -1,0 +1,101 @@
+<div [ngStyle]="style" *ngIf="style === 'disabled'">
+  <button
+    shape="round"
+    class="button__wrapper__disabled"
+    [style.height]="height"
+    [style.width]="width"
+    [style.border]="border"
+    [style.background]="background"
+    [nbTooltip]="toolTip"
+    disabled
+    ng-class="{ 'diabled-class': !isDisabled }"
+    nbButton
+    [ngClass]="classBtn"
+    [ngStyle]="styleBtn"
+  >
+    <nb-icon
+      [icon]="iconName"
+      [ngStyle]="styleIcon"
+      *ngIf="iconName"
+      [style.fontSize]="fontsize"
+      [style.color]="color"
+      [style.height]="fontsize"
+      [sttle.width]="fontsize"
+    ></nb-icon>
+    <p
+      class="disabled"
+      [ngClass]="classText"
+      [style.fontSize]="fontsize"
+      [style.color]="color"
+      [ngStyle]="styleText"
+    >
+      {{ title }}
+    </p>
+  </button>
+</div>
+<div [style]="style" *ngIf="style === 'active'">
+  <button
+    shape="round"
+    class="button__wrapper__active"
+    [nbTooltip]="toolTip"
+    nbButton
+    [style.height]="height"
+    [style.width]="width"
+    [style.border]="border"
+    [style.background]="background"
+    [ngClass]="classBtn"
+    [ngStyle]="styleBtn"
+  >
+    <nb-icon
+      [icon]="iconName"
+      *ngIf="iconName"
+      [style.fontSize]="fontsize"
+      [style.color]="color"
+      [style.height]="fontsize"
+      [sttle.width]="fontsize"
+      [ngStyle]="styleIcon"
+    ></nb-icon>
+    <p
+      class="active"
+      [ngClass]="classText"
+      [style.fontSize]="fontsize"
+      [style.color]="color"
+      [ngStyle]="styleText"
+    >
+      {{ title }}
+    </p>
+  </button>
+</div>
+<div [style]="style" *ngIf="style === 'normal'">
+  <button
+    shape="round"
+    class="button__wrapper__primary"
+    [nbTooltip]="toolTip"
+    nbButton
+    [style.height]="height"
+    [style.width]="width"
+    [style.border]="border"
+    [style.background]="background"
+    [ngClass]="classBtn"
+    [ngStyle]="styleBtn"
+  >
+    <nb-icon
+      [icon]="iconName"
+      *ngIf="iconName"
+      [style.fontSize]="fontsize"
+      [style.color]="color"
+      [style.height]="fontsize"
+      [sttle.width]="fontsize"
+      [ngStyle]="styleIcon"
+    ></nb-icon>
+    <p
+      class="primary"
+      [ngClass]="classText"
+      [style.fontSize]="fontsize"
+      [style.color]="color"
+      [ngStyle]="styleText"
+    >
+      {{ title }}
+    </p>
+  </button>
+</div>

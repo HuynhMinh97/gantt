@@ -1,0 +1,24 @@
+<nb-form-field class="ait-text-input">
+  <nb-icon
+    nbPrefix
+    *ngIf="iconName && nbPrefix"
+    icon="{{ iconName }}"
+    pack="eva"
+  ></nb-icon>
+  <nb-icon
+    nbSuffix
+    *ngIf="iconName && !nbPrefix"
+    icon="{{ iconName }}"
+    pack="eva"
+  ></nb-icon>
+
+  <input
+    nbInput
+    [status]="status"
+    [fieldSize]="fieldSize"
+    [shape]="shape"
+    [fullWidth]="fullWidth"
+    type="text"
+    (input)="onChange($event.target.value)"
+  />
+</nb-form-field>
