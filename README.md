@@ -1,6 +1,6 @@
 
 
-# Ait Matching Framework
+# Ait Framework
 
 ## Generate an application
 
