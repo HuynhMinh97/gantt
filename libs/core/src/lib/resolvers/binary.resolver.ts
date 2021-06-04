@@ -6,42 +6,39 @@ import { AitCtxUser } from '../decorators/ait-ctx-user.decorator';
 import { GqlAuthGuard } from '../guards/gql-auth.guard';
 import { SysUser } from '../entities/sys-user.entity';
 import { AitBaseService } from '../services/ait-base.service';
-import { UserSettingResponse } from '../response/user-setting.response';
-import { UserSettingRequest } from '../request/user-setting.request';
+import { BinaryResponse } from '../responses/binary.response';
+import { BinaryRequest } from '../requests/binary.request';
 
 @Resolver()
-// @UseGuards(GqlAuthGuard)
-export class UserSettingResolver extends AitBaseService {
+@UseGuards(GqlAuthGuard)
+export class BinaryResolver extends AitBaseService {
   constructor(db: Database) {
     super(db);
   }
-  collection: string = COLLECTIONS.USER_SETTING;
+  collection: string = COLLECTIONS.SYS_BINARY_DATA;
 
-  @Query(() => UserSettingResponse, { name: 'findUserSetting' })
-  findUserSetting(
+  @Query(() => BinaryResponse, { name: 'findBinaryData' })
+  findBinaryData(
     @AitCtxUser() user: SysUser,
-    @Args('request', { type: () => UserSettingRequest })
-    request: UserSettingRequest
+    @Args('request', { type: () => BinaryRequest }) request: BinaryRequest
   ) {
     request['colection'] = this.collection;
     return this.find(request, user);
   }
 
-  @Mutation(() => UserSettingResponse, { name: 'saveUserSetting' })
-  saveUserSetting(
+  @Mutation(() => BinaryResponse, { name: 'saveBinaryData' })
+  saveBinaryData(
     @AitCtxUser() user: SysUser,
-    @Args('request', { type: () => UserSettingRequest })
-    request: UserSettingRequest
+    @Args('request', { type: () => BinaryRequest }) request: BinaryRequest
   ) {
     request['colection'] = this.collection;
     return this.save(request, user);
   }
 
-  @Mutation(() => UserSettingResponse, { name: 'removeUserSetting' })
-  removeUserSetting(
+  @Mutation(() => BinaryResponse, { name: 'removeBinaryData' })
+  removeBinaryData(
     @AitCtxUser() user: SysUser,
-    @Args('request', { type: () => UserSettingRequest })
-    request: UserSettingRequest
+    @Args('request', { type: () => BinaryRequest }) request: BinaryRequest
   ) {
     request['colection'] = this.collection;
     return this.remove(request, user);
