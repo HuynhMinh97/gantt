@@ -1,0 +1,42 @@
+<div class="tabs__wrapper">
+  <div
+    class="tab__items"
+    *ngFor="let tab of tabs"
+    (click)="selectTab(tab.type)"
+  >
+    <div
+      class="status__line"
+      [ngStyle]="{
+        'background-image':
+          tabSelected === tab.type
+            ? 'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
+            : null
+      }"
+    ></div>
+    <div class="icon__tab">
+      <nb-icon
+        class="icon"
+        *ngIf="tabSelected !== tab.type"
+        style="color: #8f9bb3"
+        icon="{{ tab.tabIcon }}"
+      ></nb-icon>
+      <nb-icon
+        class="icon"
+        *ngIf="tabSelected === tab.type"
+        [ngClass]="tabSelected === tab.type ? 'icon_active' : 'icon_unactive'"
+        icon="{{ tab.tabIcon }}"
+      ></nb-icon>
+    </div>
+    <div class="tab__title">
+      <p style="color: #8f9bb3" *ngIf="tabSelected !== tab.type">
+        {{ tab.title }}
+      </p>
+      <p
+        *ngIf="tabSelected === tab.type"
+        [ngClass]="tabSelected === tab.type ? 'text_active' : 'icon_unactive'"
+      >
+        {{ tab.title }}
+      </p>
+    </div>
+  </div>
+</div>

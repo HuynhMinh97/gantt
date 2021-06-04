@@ -1,0 +1,114 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap");
+
+// themes - our custom or/and out of the box themes
+// @import 'themes';
+
+// framework component themes (styles tied to theme variables)
+@import "~@nebular/theme/styles/globals";
+// @import '~@nebular/auth/styles/all';
+
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/grid";
+
+// loading progress bar theme
+@import "./pace.theme";
+
+@import "./layout";
+@import "./overrides";
+@import "./material/material-overrides";
+
+// install the framework and custom global styles
+@include nb-install() {
+  .nb-theme-default nb-layout .layout {
+    height: 100vh;
+    padding: 0;
+    .layout-container {
+      .nb-layout-footer {
+        nav {
+          padding: 0 !important;
+        }
+      }
+    }
+  }
+
+  textarea {
+    font-size: 12px !important;
+    resize: none !important;
+    margin-top: 10px;
+  }
+
+  img.error-not-fixed,
+  img.error-fixed {
+    display: inline-block;
+    position: relative;
+    width: 128px;
+    height: 128px;
+    border: 15px solid #fff;
+    border-radius: 1px;
+    margin: 0px;
+    background: #fff !important;
+  }
+  img.error-fixed {
+    background: #ccc !important;
+    text-indent: -9999px;
+    border: 15px solid #fff;
+    color: transparent !important;
+    -webkit-appearance: none !important;
+  }
+
+  input::-ms-reveal,
+  input::-ms-clear {
+    display: none;
+  }
+
+  ::ng-deep nb-spinner {
+    background-color: transparent !important;
+  }
+
+  ::ng-deep nb-checkbox.status-basic .custom-checkbox.checked {
+    background: transparent !important;
+    border-color: #fff !important;
+    nb-icon {
+      color: #fff;
+    }
+  }
+
+  ::ng-deep nb-checkbox.status-basic .custom-checkbox {
+    background: #fff !important;
+    border-color: #f5f5f5 !important;
+  }
+
+  ::ng-deep ait-error-message {
+    width: 100% !important;
+    max-width: 320px !important;
+  }
+
+  textarea {
+    text-indent: 5px;
+  }
+
+  ::-webkit-resizer {
+    display: none;
+  }
+
+  .textarea {
+    min-height: 100px !important;
+    background: transparent !important;
+    font-weight: 100 !important;
+    font-size: 12px !important;
+    resize: none !important;
+    margin-top: 10px;
+  }
+
+  // framework global styles
+  @include nb-theme-global();
+  // @include nb-auth-global();
+
+  @include ngx-layout();
+  // loading progress bar
+  @include ngx-pace-theme();
+
+  @include nb-overrides();
+} ;

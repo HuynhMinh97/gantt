@@ -1,0 +1,16 @@
+<div
+  class="button__fab__container"
+  (click)="gotoTop()"
+  *ngIf="!isHide"
+  [ngStyle]="{
+    background: backgroundBtn
+  }"
+>
+  <nb-icon
+    style="font-size: 25px"
+    [ngStyle]="{
+      color: colorIcon ? colorIcon : null
+    }"
+    icon="arrow-ios-upward-outline"
+  ></nb-icon>
+</div>

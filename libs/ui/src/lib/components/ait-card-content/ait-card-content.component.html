@@ -1,0 +1,54 @@
+<div
+  class="card__content_container"
+  [nbSpinner]="loading"
+  nbSpinnerStatus="primary"
+>
+  <div class="header__card">
+    <ait-text-gradient [content]="label" [paddingLeft]="0"></ait-text-gradient>
+    <div style="display: flex">
+      <div
+        class="button_header_card"
+        *ngIf="!disableButton"
+        [ngClass]="!isDev ? 'button_header_card disable' : 'button_header_card'"
+        (click)="handleClickBtnHeader()"
+      >
+        <span style="display: flex">
+          <nb-icon style="color: #fff" [icon]="actionBtn[0].icon"></nb-icon>
+          <span
+            class="text"
+            style="
+              text-transform: uppercase;
+              color: #ffffff;
+              font-size: 10px;
+              margin-left: 10px;
+            "
+            >{{ actionBtn[0].title | translate }}</span
+          >
+        </span>
+      </div>
+      <nb-icon
+        style="cursor: pointer"
+        (click)="toggleExpan()"
+        *ngIf="!isOpen"
+        icon="arrow-ios-downward-outline"
+      ></nb-icon>
+      <nb-icon
+        style="cursor: pointer"
+        (click)="toggleExpan()"
+        *ngIf="isOpen"
+        icon="arrow-ios-upward-outline"
+      ></nb-icon>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div
+    class="content"
+    [ngStyle]="{
+      'flex-direction': isColumn ? 'column' : 'row',
+      'align-items': isColumn ? 'flex-start' : 'center'
+    }"
+    [ngClass]="isOpen ? null : 'isClose'"
+  >
+    <ng-content></ng-content>
+  </div>
+</div>

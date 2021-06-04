@@ -1,0 +1,23 @@
+<div class="form-container">
+  <div class="title">
+    <p>{{ title }}</p>
+  </div>
+  <div class="button-group">
+    <ait-button
+      [title]="btn_left || 'c_b002' | translate"
+      [background]="'transparent'"
+      [style]="'normal'"
+      [color]="'#FFFFFF'"
+      (click)="closeDialog(false)"
+    >
+    </ait-button>
+    <ait-button
+      [title]="btn_right || 'c_b001' | translate"
+      [background]="'#FFFFFF'"
+      [style]="'active'"
+      [color]="'#000000'"
+      (click)="closeDialog(true)"
+    >
+    </ait-button>
+  </div>
+</div>

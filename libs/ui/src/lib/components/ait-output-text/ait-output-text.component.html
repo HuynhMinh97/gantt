@@ -1,0 +1,65 @@
+<div class="output_text" *ngIf="isTranslate">
+  <ait-label [label]="label" [isTranslate]="isTranslate"></ait-label>
+  <input
+    type="text"
+    readonly
+    [value]="value"
+    [placeholder]="placeholder | translate"
+    *ngIf="row === 1"
+    [style.height]="height"
+    [style.width]="width"
+  />
+  <textarea
+    *ngIf="row !== 1"
+    rows="{{ row }}"
+    disabled
+    [style.width]="width"
+    style="resize: none"
+    class="textarea"
+    [value]="value || ''"
+  >
+  </textarea>
+  <div class="caption" *ngIf="caption" [style.width]="width">
+    <div class="icon">
+      <nb-icon [icon]="iconCaption"></nb-icon>
+    </div>
+    <div class="info">
+      <p style="word-break: break-word; color: #8f9bb3; font-size: 12px">
+        {{ caption }}
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="output_text" *ngIf="!isTranslate">
+  <ait-label [label]="label"></ait-label>
+  <input
+    type="text"
+    readonly
+    [value]="value"
+    [placeholder]="placeholder"
+    *ngIf="row === 1"
+    [style.height]="height"
+    [style.width]="width"
+  />
+  <textarea
+    class="textarea"
+    *ngIf="row !== 1"
+    rows="{{ row }}"
+    disabled
+    [style.width]="width"
+    style="resize: none"
+    [value]="value || ''"
+  >
+  </textarea>
+  <div class="caption" *ngIf="caption" [style.width]="width">
+    <div class="icon">
+      <nb-icon [icon]="iconCaption"></nb-icon>
+    </div>
+    <div class="info">
+      <p style="word-break: break-word; color: #8f9bb3; font-size: 12px">
+        {{ caption }}
+      </p>
+    </div>
+  </div>
+</div>

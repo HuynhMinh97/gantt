@@ -1,0 +1,98 @@
+<div class="login__wrapper">
+  <div class="left__side"></div>
+  <div class="right__side">
+    <p class="title__signin">
+      {{ '001' | translate }}
+    </p>
+    <!-- <button (click)="navigateToHome()">go home</button> -->
+    <!-- <button (click)>goto starter</button> -->
+    <div class="form" [formGroup]="formLoginCtrl">
+      <ait-error-message [errors]="[notifyText]"></ait-error-message>
+      <ait-space></ait-space>
+      <div class="input__group">
+        <p class="label">{{ emailLabel }}</p>
+        <div class="input__container">
+          <input
+            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+            [formControlName]="'email'"
+            type="text"
+            name="email"
+            id="email"
+            [placeholder]="
+              '004' | translate
+            "
+            (input)="handleFocus($event.target.value, 'email')"
+          />
+        </div>
+        <ait-error-message [errors]="errors.email"></ait-error-message>
+      </div>
+      <div class="input__group">
+        <p class="label">
+          {{ passwordLabel }}
+        </p>
+        <div class="input__container">
+          <input
+            [formControlName]="'password'"
+            [type]="isShowPassword ? 'text' : 'password'"
+            name="password"
+            id="password"
+            (input)="handleFocus($event.target.value, 'password')"
+            [placeholder]="
+              '005' | translate
+            "
+          />
+          <nb-icon
+            style="
+              height: 24px;
+              width: 24px;
+              color: #8f9bb3;
+              cursor: pointer;
+              margin-right: 3px;
+            "
+            icon="{{ isShowPassword ? 'eye-off' : 'eye' }}"
+            (click)="toggleShowPass()"
+          ></nb-icon>
+        </div>
+        <ait-error-message [errors]="errors.password"></ait-error-message>
+      </div>
+      <!-- <div class="input__group">
+        <p class="label">repeat password</p>
+        <div class="input__container">
+          <input
+            type="password"
+            name="repeat-password"
+            id=''
+            placeholder="repeat-password"
+          />
+        </div>
+      </div> -->
+      <div class="term">
+        <nb-checkbox (checkedChange)="checkboxChange($event)">
+          <p>{{ '006' | translate }} ?</p>
+        </nb-checkbox>
+      </div>
+    </div>
+    <div
+      class="button__submit"
+      (click)="login()"
+      [nbSpinner]="isLoading"
+      nbSpinnerStatus="primary"
+    >
+      <span
+        >{{ '001' | translate }}
+      </span>
+    </div>
+
+    <div class="more__link">
+      <!-- <p (click)="navigateToResetPassword()" style="cursor: pointer">
+        {{ '007' | translate }} ?
+      </p> -->
+      <p>
+        {{ '008' | translate }}
+        <span (click)="navigateToSignUp()"
+          >{{ '009' | translate }}
+        </span>
+      </p>
+    </div>
+  </div>
+</div>

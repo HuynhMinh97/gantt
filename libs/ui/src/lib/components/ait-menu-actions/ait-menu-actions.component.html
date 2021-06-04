@@ -1,0 +1,12 @@
+<div class="menu__actions">
+  <nb-actions size="small">
+    <nb-action
+      *ngFor="let item of buttons"
+      [icon]="item.icon"
+      [nbTooltip]="item.title"
+      [nbTooltipPlacement]="'bottom'"
+      (click)="item.action()"
+    >
+    </nb-action>
+  </nb-actions>
+</div>
