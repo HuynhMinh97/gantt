@@ -151,12 +151,12 @@ export class AitAuthService extends AitBaseService {
    * @param password
    * @returns
    */
-  register(email: string, password: string) {
+  register(email: string, password: string, company: string) {
     return this.apollo
       .mutate({
         mutation: gql`
             mutation {
-              register(input: { email: "${email}", password: "${password}" }) {
+              register(input: { email: "${email}", password: "${password}",company : "${company || this.company}" }) {
                 token
                 refreshToken
                 timeLog

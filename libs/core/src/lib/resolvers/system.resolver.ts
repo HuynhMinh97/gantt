@@ -9,7 +9,7 @@ import { SystemResponse } from '../responses/system.response';
 import { AitBaseService } from '../services/ait-base.service';
 
 @Resolver()
-@UseGuards(GqlAuthGuard)
+// @UseGuards(GqlAuthGuard)
 export class SystemResolver extends AitBaseService {
   constructor(db: Database) {
     super(db);
@@ -24,6 +24,7 @@ export class SystemResolver extends AitBaseService {
   }
 
   @Mutation(() => SystemResponse, { name: 'saveSystem' })
+  @UseGuards(GqlAuthGuard)
   saveSystem(
     @AitCtxUser() user: SysUser,
     @Args('request', { type: () => SystemRequest }) request: SystemRequest
@@ -32,6 +33,7 @@ export class SystemResolver extends AitBaseService {
   }
 
   @Mutation(() => SystemResponse, { name: 'removeSystem' })
+  @UseGuards(GqlAuthGuard)
   removeSystem(
     @AitCtxUser() user: SysUser,
     @Args('request', { type: () => SystemRequest }) request: SystemRequest
