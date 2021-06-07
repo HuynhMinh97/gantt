@@ -1,5 +1,5 @@
-import { LangDto } from '@ait/core';
 import { Field, InputType, OmitType, PartialType } from '@nestjs/graphql';
+import { LangDto } from '../dtos/lang.dto';
 import { SystemDto } from '../dtos/system.dto';
 import { BaseRequest } from './base.request';
 
