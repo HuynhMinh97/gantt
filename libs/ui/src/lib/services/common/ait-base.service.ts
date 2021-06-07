@@ -9,7 +9,7 @@ import { tap, catchError, map } from 'rxjs/operators';
 import { SHOWSNACKBAR } from '../../state/actions';
 import { NbToastrService } from '@nebular/theme';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {  MessageModel, SYSTEM_COMPANY } from '@ait/shared';
+import { MessageModel, SYSTEM_COMPANY } from '@ait/shared';
 import { AitEnvironmentService } from '../ait-environment.service';
 import { AitAppUtils } from '../../utils/ait-utils';
 import { Apollo, gql } from 'apollo-angular';
@@ -215,8 +215,6 @@ export class AitBaseService implements OnDestroy {
     // Parse to gql
     const gqlQuery = jsonToGraphQLQuery(query, { pretty: true });
 
-    console.log(gqlQuery);
-
     return this.apollo
       .query({
         query: gql`
@@ -258,7 +256,6 @@ export class AitBaseService implements OnDestroy {
     // Parse to gql
     const gqlQuery = jsonToGraphQLQuery(query, { pretty: true });
 
-    console.log(gqlQuery);
     return this.apollo
       .mutate({
         mutation: gql`
@@ -268,29 +265,4 @@ export class AitBaseService implements OnDestroy {
       .pipe(map((res) => (<any>res.data)[name]))
       .toPromise();
   }
-
-  /**
-   *
-   * @param email
-   * @param password
-   * @returns
-   */
-  Glogin(email: string, password: string) {
-    return this.apollo
-      .mutate({
-        mutation: gql`
-          mutation {
-            login(input: { email: "${email}", password: "${password}" }) {
-              token
-              refreshToken
-              timeLog
-            }
-          }
-        `,
-      })
-      .pipe(map((res) => (<any>res.data)['login']))
-      .toPromise();
-  }
-
-
 }
