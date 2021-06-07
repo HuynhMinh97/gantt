@@ -147,10 +147,9 @@ export class AitBaseComponent implements OnInit, OnDestroy {
       next: state => {
         const { userInfo } = state.commonReducer;
         this.user_id = AitAppUtils.getUserId();
-        this.username = userInfo.username;
-        this.userProfile = userInfo.user_profile;
-        this.email = userInfo.email;
-        this.title = userInfo.user_profile?.title?.value;
+        this.username = userInfo?.username;
+        this.userProfile = userInfo?.user_profile;
+        this.email = userInfo?.email;
       }
     })
   }
