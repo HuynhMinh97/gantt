@@ -107,11 +107,11 @@ export class AitBaseService {
   }
 
   async find(request: any, user?: SysUser) {
+    const lang = request.lang;
     let aqlStr = `LET current_data = ( ${this.getSearchCondition(request, false)} ) `;
     aqlStr += `LET result = LENGTH(current_data) > 0 ? current_data : ( ${this.getSearchCondition(request, true)} ) `;
-    aqlStr += `FOR data IN result RETURN data`;
+    aqlStr += `FOR data IN result RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name }) `;
 
-    // console.log(aqlStr);
     try {
       const result = await this.db.query(aqlStr);
       const rawData = [];
@@ -119,7 +119,6 @@ export class AitBaseService {
         rawData.push(data);
       }
       return new BaseResponse(RESULT_STATUS.OK, rawData, KEYS.SUCCESS);
-      // return 
     } catch (error) {
       return new BaseResponse(RESULT_STATUS.ERROR, [], error);
     }
