@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AitLoginComponent } from './pages/auth/ait-login/ait-login.component';
 import { AitSignUpComponent } from './pages/auth/ait-signup/ait-signup.component';
@@ -23,6 +23,9 @@ import { AitUserSettingComponent } from './pages/user-setting/ait-user-setting.c
 import { AitAuthRoutingModule } from './auth-routing.module';
 import { Ait403Component } from './pages/auth/ait-403/ait-403.component';
 import { Ait404Component } from './pages/auth/ait-404/ait-404.component';
+import { AitEnvironmentService, Params } from './services/environment.service';
+
+
 
 
 const AIT_MODULES = [
@@ -71,4 +74,18 @@ const AIT_MODULES = [
     AitAuthRoutingModule
   ]
 })
-export class AitAuthModule { }
+export class AitAuthModule {
+
+
+  static forRoot(config): ModuleWithProviders<AitAuthModule> {
+    console.log(config)
+    return {
+      ngModule: AitAuthModule,
+      providers: [
+        {
+          provide: AitEnvironmentService, useValue: config
+        },
+      ]
+    };
+  }
+}

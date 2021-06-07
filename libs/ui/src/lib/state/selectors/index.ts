@@ -35,7 +35,7 @@ export const getSettingLangTime = (state: AppState) => {
 }
 
 export const getUFullName = (state: AppState) => {
-  const { user_profile } = state?.commonReducer?.userInfo;
+  const user_profile = state?.commonReducer?.userInfo?.user_profile;
   return user_profile?.name;
 };
 
@@ -62,7 +62,7 @@ export const getEmpId = (state: AppState) => {
 
 export const getEmail = (state: AppState) => {
   const { userInfo } = state.commonReducer;
-  return userInfo.email;
+  return userInfo?.email;
 }
 
 
