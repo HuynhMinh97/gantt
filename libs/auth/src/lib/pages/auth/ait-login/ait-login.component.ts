@@ -97,6 +97,13 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
     console.log('Login page');
     // const item = of(localStorage.getItem('access_token'));
     // item.subscribe(d => console.log(d))
+    console.log(history.state)
+    if (history.state?.email) {
+      this.formLoginCtrl.setValue({
+        ...this.formLoginCtrl.value,
+        email : history.state?.email
+      })
+    }
   }
 
   getErrorEmailMessage = (value) => {
@@ -213,9 +220,26 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
   };
 
   getUserInfo = async (user_id: string) => {
-    console.log(user_id)
+    // console.log(user_id)
     if (user_id && user_id !== '') {
       let user = null;
+      console.log(`
+      query {
+        findByConditionUser(request:{
+          company: "${this.company}",
+              lang: "${this.lang}",
+              collection: "sys_user",
+              user_id: "${user_id}",
+              condition: {
+                _key : "${user_id}"
+              }
+        }){
+          email
+          username
+          _key
+          company
+        }
+      }`)
       const rest_user: any = await this.apollo.query({
         query: gql`
         query {
@@ -271,9 +295,6 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
             console.log(setUser);
             if (setUser?.email) {
               localStorage.setItem('isRemember', JSON.stringify(this.isRemember));
-              // this.setupUserSetting(this.authService.getUserID(), this.company);
-              // const item = of(localStorage.getItem('access_token'));
-              // item.subscribe(d => console.log(d))
               location.reload();
             }
           }
