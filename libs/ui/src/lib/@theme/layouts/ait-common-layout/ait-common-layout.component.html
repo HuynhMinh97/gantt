@@ -11,6 +11,15 @@
       "
     >
       <div style="display: flex; align-items: center">
+        <a
+          (click)="toggleSidebar()"
+          href="#"
+          class="sidebar-toggle"
+          *ngIf="hasSidebar && !isExcludeScreen()"
+        >
+          <nb-icon icon="menu-2-outline"></nb-icon>
+        </a>
+        <div style="margin: 15px" *ngIf="hasSidebar"></div>
         <svg
           width="50"
           height="50"
@@ -47,13 +56,22 @@
         </svg>
         <h1 style="color: #10529d; margin-left: 10px">AIT FRAMEWORK</h1>
       </div>
-      <div style="display: flex; align-items: center;">
+      <div style="display: flex; align-items: center">
         <ait-menu-actions></ait-menu-actions>
-        <div style="margin: 15px;"></div>
+        <div style="margin: 15px"></div>
         <ait-menu-user style="width: auto"></ait-menu-user>
       </div>
     </div>
   </nb-layout-header>
+  <nb-sidebar
+    class="menu-sidebar"
+    tag="menu-sidebar"
+    responsive
+    *ngIf="hasSidebar && !isExcludeScreen()"
+  >
+    <ng-content select="nb-menu"></ng-content>
+  </nb-sidebar>
+
   <nb-layout-column style="height: 100%; padding: 0; overflow-x: hidden">
     <ng-content select="router-outlet"></ng-content>
     <ait-back-button></ait-back-button>

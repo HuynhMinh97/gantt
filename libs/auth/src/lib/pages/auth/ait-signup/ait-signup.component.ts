@@ -13,6 +13,7 @@ import { NbToastrService } from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
+import { AitEnvironmentService as EnvService } from '../../../services/environment.service';
 
 @Component({
   selector: 'ait-signup',
@@ -25,7 +26,8 @@ export class AitSignUpComponent extends AitBaseComponent implements OnInit {
 
   emailLabel = '1002';
   passwordLabel = '1003';
-  repeat_password = '1005'
+  repeat_password = '1005';
+  env: any;
 
   constructor(
     private router: Router,
@@ -34,10 +36,11 @@ export class AitSignUpComponent extends AitBaseComponent implements OnInit {
     store: Store<AppState>,
     userService: AitUserService,
     envService: AitEnvironmentService,
-    translateService: AitTranslationService,
-    apollo: Apollo
+    private translateService: AitTranslationService,
+    apollo: Apollo,
+    _env: EnvService,
   ) {
-    super(store, authService, apollo, userService, envService);
+    super(store, authService, apollo, userService, envService, null, toastrService);
     this.setModulePage({
       page: PAGES.SIGNUP,
       module: MODULES.AUTH
@@ -48,7 +51,7 @@ export class AitSignUpComponent extends AitBaseComponent implements OnInit {
       password_repeat: new FormControl(''),
       term: new FormControl(false),
     });
-
+    this.env = _env;
     store.pipe(select(getCaption)).subscribe(c => {
       this.emailLabel = translateService.translate(this.emailLabel);
       this.passwordLabel = translateService.translate(this.passwordLabel);
@@ -209,24 +212,47 @@ export class AitSignUpComponent extends AitBaseComponent implements OnInit {
     else {
       if (!this.isErrors()) {
         this.isLoading = true;
-        this.authService.register(email, password).then(result => {
+        this.authService.register(email, password, this.env?.COMMON?.COMPANY_DEFAULT).then(result => {
           console.log(result)
-          if (result) {
-            this.authService.saveTokens(result?.token, result?.refreshToken);
-            const userInfo = this.authService.decodeJWT(result?.token);
-            console.log(userInfo)
-            this.userService.getUserInfo(userInfo['user_key']).then(r => {
-              console.log(r)
-              const userfind = r ? r[0] : null;
-              if (userfind?.email) {
-                // this.setupUserSetting(this.authService.getUserID(), this.company);
-                this.router.navigateByUrl('/')
+          if (result && result?.token) {
+            this.showToastr(
+              this.translateService.translate(
+                'c_10020'
+              ),
+              this.translateService.getMsg('I0001'),
+              'success'
+            );
+            this.isLoading = false;
+
+            this.router.navigate(['/sign-in'], {
+              state: {
+                email
               }
-              this.isLoading = false;
-            })
+            });
+            // this.authService.saveTokens(result?.token, result?.refreshToken);
+            // const userInfo = this.authService.decodeJWT(result?.token);
+            // console.log(userInfo)
+            // this.userService.getUserInfo(userInfo['user_key']).then(r => {
+            //   console.log(r)
+            //   const userfind = r ? r[0] : null;
+            //   if (userfind?.email) {
+            //     // this.setupUserSetting(this.authService.getUserID(), this.company);
+            //     location.reload()
+            //   }
+            // })
 
           }
-        }).catch(e => console.log(e))
+        }).catch(e => {
+          console.log(e);
+          this.isLoading = false;
+          this.showToastr(
+            this.translateService.translate(
+              'c_10020'
+            ),
+            this.translateService.getMsg('I0010'),
+            'danger'
+          );
+        })
       }
     }
   }
