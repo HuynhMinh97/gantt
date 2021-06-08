@@ -45,7 +45,6 @@ import {
   NbCardModule
 } from '@nebular/theme';
 import { AitEnvironmentService } from './services/ait-environment.service';
-import { NzTableModule } from 'ng-zorro-antd/table';
 import { Apollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { InMemoryCache } from '@apollo/client/cache';
@@ -71,9 +70,6 @@ const NB_MODULES = [
   NbCardModule,
 ]
 
-const NZ_MODULES = [
-  NzTableModule
-]
 
 @NgModule({
   declarations: [AitConfirmDialogComponent, AitTranslatePipe, AitBaseComponent, AitUiComponent],
@@ -113,7 +109,6 @@ const NZ_MODULES = [
       ...inItialState
     }),
     ...NB_MODULES,
-    ...NZ_MODULES
   ],
   exports: [
     CommonModule,
@@ -147,7 +142,8 @@ const NZ_MODULES = [
     DragScrollModule,
     AitOutputTextModule,
     AitTranslatePipe,
-    AitUiComponent
+    AitUiComponent,
+    AitBaseComponent
   ],
   providers: [
     AitBaseService,

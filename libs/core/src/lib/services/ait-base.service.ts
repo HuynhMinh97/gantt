@@ -13,7 +13,8 @@ import { aql, Database } from 'arangojs';
 import { DocumentCollection } from 'arangojs/collection';
 import { Guid } from 'guid-typescript';
 import { SysUser } from '../entities/sys-user.entity';
-import { BaseResponse } from '../response/base.response';
+import { BaseResponse } from '../responses/base.response';
+import { AitUtils } from '../utils/ait-utils';
 
 @Injectable()
 export class AitBaseService {
@@ -26,6 +27,7 @@ export class AitBaseService {
   async save(request: any, user?: SysUser) {
     this.initialize(request, user);
     const collection = request.collection;
+    const lang = request.lang;
 
     const dataInsert = [];
     const dataUpdate = [];
@@ -36,7 +38,7 @@ export class AitBaseService {
         dataUpdate.push(data);
       } else {
         this.setCommonInsert(data);
-        data[KEYS.KEY] = this.guid;
+        data[KEYS.KEY] = AitUtils.guid;
         dataInsert.push(data);
       }
     });
@@ -45,7 +47,7 @@ export class AitBaseService {
 
     if (dataInsert.length > 0) {
       const aqlStr = `FOR data IN ${JSON.stringify(dataInsert)}
-      INSERT data INTO ${collection} RETURN data`;
+      INSERT data INTO ${collection} RETURN MERGE(data, {name: data.name.${lang} ? data.name.${lang} : data.name }) `;
       try {
         const res = await this.db.query(aqlStr);
         for await (const data of res) {
@@ -58,7 +60,7 @@ export class AitBaseService {
 
     if (dataUpdate.length > 0) {
       const aqlStr = `FOR data IN ${JSON.stringify(dataUpdate)}
-      UPDATE data WITH data IN ${collection} RETURN data`;
+      UPDATE data WITH data IN ${collection} RETURN MERGE(NEW, {name:  NEW.name.${lang} ? NEW.name.${lang} : NEW.name }) `;
       try {
         const res = await this.db.query(aqlStr);
         for await (const data of res) {
@@ -105,13 +107,11 @@ export class AitBaseService {
   }
 
   async find(request: any, user?: SysUser) {
-    // console.log(request); return
+    const lang = request.lang;
     let aqlStr = `LET current_data = ( ${this.getSearchCondition(request, false)} ) `;
     aqlStr += `LET result = LENGTH(current_data) > 0 ? current_data : ( ${this.getSearchCondition(request, true)} ) `;
-    aqlStr += `FOR data IN result RETURN data`;
+    aqlStr += `FOR data IN result RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name }) `;
 
-    // console.log(aqlStr);
-    
     try {
       const result = await this.db.query(aqlStr);
       const rawData = [];
@@ -119,7 +119,6 @@ export class AitBaseService {
         rawData.push(data);
       }
       return new BaseResponse(RESULT_STATUS.OK, rawData, KEYS.SUCCESS);
-      // return 
     } catch (error) {
       return new BaseResponse(RESULT_STATUS.ERROR, [], error);
     }
@@ -156,7 +155,7 @@ export class AitBaseService {
           : `${condition[prop]} `;
       }
     }
-    aqlStr += `RETURN MERGE(data, {name:  data.name.${lang}}) `;
+    aqlStr += `RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name }) `;
 
     return aqlStr;
   }
@@ -172,32 +171,17 @@ export class AitBaseService {
     if (this.company) {
       data[KEYS.COMPANY] = this.company;
     }
-    data[KEYS.KEY] = this.guid;
+    data[KEYS.KEY] = AitUtils.guid;
     data[KEYS.CREATE_BY] = this.username;
     data[KEYS.CHANGE_BY] = this.username;
-    data[KEYS.CREATE_AT] = this.getUnixTime();
-    data[KEYS.CHANGE_AT] = this.getUnixTime();
+    data[KEYS.CREATE_AT] = AitUtils.getUnixTime();
+    data[KEYS.CHANGE_AT] = AitUtils.getUnixTime();
   }
   setCommonUpdate(data: any) {
     if (this.company) {
       data[KEYS.COMPANY] = this.company;
     }
     data[KEYS.CHANGE_BY] = this.username;
-    data[KEYS.CHANGE_AT] = this.getUnixTime();
-  }
-
-  /**
-   * Generate GUID
-   *
-   * @readonly
-   * @type {string}
-   * @memberof BaseService
-   */
-   get guid(): string {
-    return Guid.create().toString();
-  }
-
-  protected getUnixTime() {
-    return new Date().setHours(0, 0, 0, 0);
+    data[KEYS.CHANGE_AT] = AitUtils.getUnixTime();
   }
 }

@@ -9,6 +9,7 @@ import { AitEnvironmentService } from '../ait-environment.service';
 @Injectable({ providedIn: 'root' })
 export class AitLayoutService {
   env: any = {};
+  public menuUserInput = [];
   constructor(
     private translateService: AitTranslationService,
     private titleService: Title,
@@ -36,7 +37,6 @@ export class AitLayoutService {
 
   // MENU HEADER
   get MENU_HEADER(): any[] {
-
     const menu = MENU_HEADER.map(item => {
       return {
         ...item,
@@ -48,7 +48,9 @@ export class AitLayoutService {
 
   // MENU USER
   get MENU_USER(): any[] {
-    const menu = MENU_USER.map(item => {
+    const target = this.menuUserInput.length !== 0 ? this.menuUserInput : MENU_USER
+
+    const menu = target.map(item => {
       return {
         header_title: this.translateService.translate(item.header_title),
         tabs: item.tabs.map(tab => ({

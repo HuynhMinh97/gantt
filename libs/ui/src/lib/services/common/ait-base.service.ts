@@ -9,7 +9,7 @@ import { tap, catchError, map } from 'rxjs/operators';
 import { SHOWSNACKBAR } from '../../state/actions';
 import { NbToastrService } from '@nebular/theme';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {  MessageModel, SYSTEM_COMPANY } from '@ait/shared';
+import { MessageModel, SYSTEM_COMPANY } from '@ait/shared';
 import { AitEnvironmentService } from '../ait-environment.service';
 import { AitAppUtils } from '../../utils/ait-utils';
 import { Apollo, gql } from 'apollo-angular';
@@ -53,6 +53,8 @@ export class AitBaseService implements OnDestroy {
       this.company = company;
       this.page = page;
       this.module = module;
+
+      //  console.log(this.company)
     });
   }
 
@@ -195,27 +197,29 @@ export class AitBaseService implements OnDestroy {
    * @param condition condition search
    * @returns data or error
    */
-   query(name: string, request: any, returnField?: any) {
+  query(name: string, request: any, returnField?: any) {
     // Request to graphql query
-    request['company'] = this.company || SYSTEM_COMPANY;
+    request['company'] = this.company || localStorage.comp || SYSTEM_COMPANY;
     request['lang'] = this.currentLang;
     request['user_id'] = this.user_id;
 
-      // Setup gql json
-    const query = { query: { [name]: {
-      data: returnField,
-      message: true,
-      errors: true,
-      status: true,
-      numData: true,
-      numError: true
-    } } };
+    // Setup gql json
+    const query = {
+      query: {
+        [name]: {
+          data: returnField,
+          message: true,
+          errors: true,
+          status: true,
+          numData: true,
+          numError: true
+        }
+      }
+    };
 
     query.query[name]['__args'] = { request };
     // Parse to gql
     const gqlQuery = jsonToGraphQLQuery(query, { pretty: true });
-
-    console.log(gqlQuery);
 
     return this.apollo
       .query({
@@ -245,20 +249,23 @@ export class AitBaseService implements OnDestroy {
       data,
     };
     // Setup gql json
-    const query = { mutation: { [name]: {
-      data: returnField,
-      message: true,
-      errors: true,
-      status: true,
-      numData: true,
-      numError: true
-    } } };
+    const query = {
+      mutation: {
+        [name]: {
+          data: returnField,
+          message: true,
+          errors: true,
+          status: true,
+          numData: true,
+          numError: true
+        }
+      }
+    };
 
     query.mutation[name]['__args'] = { request };
     // Parse to gql
     const gqlQuery = jsonToGraphQLQuery(query, { pretty: true });
 
-    console.log(gqlQuery);
     return this.apollo
       .mutate({
         mutation: gql`
@@ -268,29 +275,4 @@ export class AitBaseService implements OnDestroy {
       .pipe(map((res) => (<any>res.data)[name]))
       .toPromise();
   }
-
-  /**
-   *
-   * @param email
-   * @param password
-   * @returns
-   */
-  Glogin(email: string, password: string) {
-    return this.apollo
-      .mutate({
-        mutation: gql`
-          mutation {
-            login(input: { email: "${email}", password: "${password}" }) {
-              token
-              refreshToken
-              timeLog
-            }
-          }
-        `,
-      })
-      .pipe(map((res) => (<any>res.data)['login']))
-      .toPromise();
-  }
-
-
 }

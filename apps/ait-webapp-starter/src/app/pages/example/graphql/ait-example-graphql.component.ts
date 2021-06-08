@@ -10,10 +10,7 @@ import {
   NbToastrService,
 } from '@nebular/theme';
 import { Store } from '@ngrx/store';
-import {
-  AppState,
-  AitAppUtils,
-} from '@ait/ui';
+import { AppState, AitAppUtils } from '@ait/ui';
 import { AitConfirmDialogComponent } from 'libs/ui/src/lib/components/ait-confirm-dialog/ait-confirm-dialog.component';
 import { AitExampleGraphqlService } from './ait-example-graphql.service';
 
@@ -169,16 +166,18 @@ export class AitGraphqlComponent implements OnInit, DoCheck {
         delete clone[prop];
       }
     }
-    // clone['name'] = this.getObjectName(clone.name);
+    clone['name'] = this.getObjectName(clone.name);
     this.service.save([clone]).then(
       (data) => {
-        data[0].create_at = event.data.create_at;
-        data[0].create_by = event.data.create_by;
-        data[0].change_at = new Date(data[0].change_at)
+        const updated = data.data[0];
+        updated.change_at = new Date(updated.change_at)
+          .toLocaleString()
+          .split(',')[0];
+        updated.create_at = new Date(updated.change_at)
           .toLocaleString()
           .split(',')[0];
         this.showToastr('', 'Successfully updated information.');
-        event.confirm.resolve(data[0]);
+        event.confirm.resolve(updated);
       },
       () =>
         this.showToastr(
@@ -198,12 +197,12 @@ export class AitGraphqlComponent implements OnInit, DoCheck {
     }
     clone['sort_no'] = 1;
     clone['active_flag'] = true;
-    // clone['name'] = this.getObjectName(clone.name);
-
+    clone['name'] = this.getObjectName(clone.name);
     this.service.save([clone]).then(
       (data) => {
         this.showToastr('', 'Registration information is successful.');
-        event.confirm.resolve(data[0]);
+        const saved = data.data[0];
+        event.confirm.resolve(saved);
       },
       () =>
         this.showToastr(
@@ -258,11 +257,6 @@ export interface MasterData {
   class: string;
   parent_code: string;
   code: string;
-  // name: {
-  //   ja_JP: string;
-  //   en_US: string;
-  //   vi_VN: string;
-  // };
   name: string;
   sort_no: number;
 

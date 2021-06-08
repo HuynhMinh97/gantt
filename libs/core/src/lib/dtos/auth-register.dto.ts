@@ -13,4 +13,7 @@ export class AuthRegisterInput {
 
   @Field(() => String, { nullable: true })
   username?: string;
+
+  @Field(() => String, { nullable: true })
+  company?: string
 }

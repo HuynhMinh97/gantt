@@ -6,8 +6,116 @@
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <style>
+      *::-webkit-scrollbar {
+        width: 5px !important;
+        cursor: grab;
+      }
+
+      *::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3) !important;
+        cursor: pointer;
+      }
+
+      *::-webkit-scrollbar-thumb {
+        background-color: #10529d !important;
+        outline: 1px solid slategrey;
+        border-radius: 3px !important;
+        cursor: pointer;
+      }
+      iframe {
+        left: 0 !important;
+      }
+      /* * {
+        scrollbar-width: thin;
+        scrollbar-color: blue orange;
+      }
+
+      /* Works on Chrome, Edge, and Safari */
+    </style>
   </head>
   <body>
-    <ait-root></ait-root>
+    <ait-root id="app"></ait-root>
+    <style>
+      .container__loading {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #fff;
+      }
+      .load-wrapp {
+        width: 100px;
+        height: 100px;
+        margin: 0 10px 10px 0;
+        padding: 20px 20px 20px;
+        border-radius: 5px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #fff;
+      }
+      .load-wrapp p {
+        padding: 0 0 20px;
+      }
+      .load-wrapp:last-child {
+        margin-right: 0;
+      }
+      .line {
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        border-radius: 15px;
+        background-color: #10529d;
+        margin-right: 5px;
+      }
+      .load-2 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .load-2 .line:nth-last-child(1) {
+        animation: loadingB 1.5s 1s infinite;
+      }
+      .load-2 .line:nth-last-child(2) {
+        animation: loadingB 1.5s 0.5s infinite;
+      }
+      .load-2 .line:nth-last-child(3) {
+        animation: loadingB 1.5s 0s infinite;
+      }
+      @-webkit-keyframes loadingB {
+        0% {
+          width: 15px;
+        }
+        50% {
+          width: 35px;
+        }
+        100% {
+          width: 15px;
+        }
+      }
+    </style>
+    <div class="container__loading" id="app_loading">
+      <div class="load-wrapp">
+        <div class="load-2">
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+        </div>
+      </div>
+    </div>
+    <script data-jsd-embedded data-key="8f599029-96ff-4ad9-b66d-7ff492325c61" data-base-url="https://jsd-widget.atlassian.com" src="https://jsd-widget.atlassian.com/assets/embed.js"></script>
+    <script>
+      const app = document.getElementById('app');
+      const app_loading = document.getElementById('app_loading');
+
+      app.style.display = 'none';
+      setTimeout(() => {
+        app.style.display = 'block';
+        app_loading.style.display = 'none';
+      }, 2000);
+    </script>
   </body>
 </html>

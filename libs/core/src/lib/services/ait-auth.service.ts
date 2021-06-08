@@ -43,9 +43,11 @@ export class AuthService {
       }
     }
 
-    const passwordValid = await AuthHelper.validate(
+    const passwordDecrypt = AuthHelper.getEncrypt(input.password);
+
+    const passwordValid = await AuthHelper.comparePwds(
+      passwordDecrypt,
       user.password,
-      input.password
     );
 
     if (!passwordValid) {

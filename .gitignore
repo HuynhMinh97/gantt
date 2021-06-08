@@ -9,6 +9,7 @@
 /node_modules
 /logs
 /schema.gql
+/package-lock.json
 
 # IDEs and editors
 /.idea
