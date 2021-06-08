@@ -14,6 +14,8 @@ export * from './lib/dtos/mail.dto';
 export * from './lib/dtos/master-data.dto';
 export * from './lib/dtos/user-setting.dto';
 export * from './lib/dtos/user.dto';
+export * from './lib/dtos/biz/aureole-v.dto';
+export * from './lib/dtos/biz/job.dto';
 
 // Models
 export * from './lib/models/message.model';

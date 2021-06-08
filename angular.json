@@ -345,7 +345,19 @@
               "apps/ait-matching-webapp/src/favicon.ico",
               "apps/ait-matching-webapp/src/assets"
             ],
-            "styles": ["apps/ait-matching-webapp/src/styles.scss"],
+            "styles": [
+              "apps/ait-matching-webapp/src/styles.scss",
+              "node_modules/@nebular/theme/styles/prebuilt/default.css",
+              "node_modules/bootstrap/dist/css/bootstrap.css",
+              "node_modules/roboto-fontface/css/roboto/roboto-fontface.css",
+              "node_modules/ionicons/scss/ionicons.scss",
+              "node_modules/@fortawesome/fontawesome-free/css/all.css",
+              "node_modules/socicon/css/socicon.css",
+              "node_modules/nebular-icons/scss/nebular-icons.scss",
+              "node_modules/pace-js/templates/pace-theme-flash.tmpl.css",
+              "node_modules/leaflet/dist/leaflet.css",
+              "apps/ait-webapp-starter/src/styles/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -381,7 +393,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ait-matching-webapp:build"
+            "browserTarget": "ait-matching-webapp:build",
+            "proxyConfig": "apps/ait-matching-webapp/proxy.conf.json"
           },
           "configurations": {
             "production": {
