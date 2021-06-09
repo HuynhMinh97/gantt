@@ -120,3 +120,4 @@ export * from './lib/state/rootReducers';
 
 //pipe
 export * from './lib/@theme/pipes/ait-translate.pipe';
+export * from './lib/@theme/pipes/ait-number-format.pipe';
