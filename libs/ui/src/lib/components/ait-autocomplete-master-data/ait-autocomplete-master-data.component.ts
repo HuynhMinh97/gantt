@@ -123,6 +123,9 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   get VALUE(): string {
     // console.log(this.selectOne?.value, this.defaultValue[0]?.value, '')
+    if (!this.defaultValue) {
+      return this.selectOne?.value || ''
+    }
     if (this.maxItem === 1) {
       return this.selectOne?.value || this.defaultValue[0]?.value || ''
     }
@@ -170,8 +173,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   }
 
   setupDefault = () => {
-
-
     if (this.defaultValue && this.defaultValue.length !== 0) {
 
       if (this.MAXITEM !== 1) {
@@ -215,7 +216,9 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
             f._key === this.defaultValue[0]?._key ||
             f.code === this.defaultValue[0]?._key
         );
-        this.selectOne = { _key: findByKey?._key, value: findByKey?.value };
+        this.selectOne = { _key: findByKey?.code, value: findByKey?.value };
+        // console.log(this.defaultValue, this.dataSourceDf, this.selectOne)
+
         this.inputControl.setValue(this.selectOne?.value || '');
         this.getFilteredDataSource();
       }
