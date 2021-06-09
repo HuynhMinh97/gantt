@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { DATA_TYPE, RESULT_STATUS } from '@ait/shared';
+import { DATA_TYPE, GRAPHQL, isObjectFull, RESULT_STATUS } from '@ait/shared';
 import {
   AitAppUtils,
   AitAuthService,
@@ -142,76 +142,82 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
       this.displayLabel = this.setLabel(this.displayLabel);
       this.inputLabel = this.setLabel(this.inputLabel);
       this.numberLabel = this.setLabel(this.numberLabel);
-    })
+    });
+
+    // this.getUserSetting(this.user_id).then(r => console.log(r))
     store.pipe(select(getLang)).subscribe(lang => {
       this.currentLang = lang;
 
       store.pipe(select(getUserSetting)).subscribe(set => {
-        this.settingObj = set;
-        // console.log(set)
+        console.log(set)
 
-        const target: any = set || {};
-        this.masterData.getClassBy(['LANGUAGE', 'TIMEZONE']).then(r => {
+        if (!AitAppUtils.isObjectEqual(set, this.settingObj)) {
+          this.settingObj = set;
+          console.log(this.settingObj)
 
-          this.setDataObject({
-            dataLanguage: r.data.filter(d => d.class === 'LANGUAGE'),
-            dataTimezone: r.data.filter(d => d.class === 'TIMEZONE'),
-          });
-          this.dataLangs = this.dataObject.dataLanguage;
-          this.dataTimeZone = this.dataObject.dataTimezone;
-          if (target?.site_language &&
-            target?.site_language !== this.currentLang) {
+          const target: any = set || {};
+          masterData.find({ class: 'LANGUAGE' }).then(r => {
 
-            this.currentLang = target?.site_language;
+            if (r?.status === RESULT_STATUS.OK) {
+              const data = r.data.map(f => ({ ...f, value: f?.name, _key: f?.code }))
+              this.setDataObject({
+                dataLanguage: data,
+              });
+              this.dataLangs = this.dataObject.dataLanguage;
 
-          }
-          if (target?.site_language) {
-            this.langDf = this.getLangDefault(target?.site_language);
+              this.langDf = this.getLangDefault(target?.site_language);
 
-
-          }
-          if (target?.timezone) {
-            this.timeDf = this.getTimezoneDefault(target?.timezone);
-          }
-          this.setDefaultInputValues({
-            langDf: this.langDf,
-            timeDf: this.timeDf,
+              console.log(this.langDf)
+            }
           })
-        });
-        masterData.getSuggestData({
-          type: DATA_TYPE.MASTER,
-          class: 'USER_SETTING',
-        }).then(r => {
-          this.setDataObject({
-            dataDateFormatDisplay: r.data.filter(d => d.parent_code === 'DATE_FORMAT_DISPLAY'),
-            dataDateFormatInput: r.data.filter(d => d.parent_code === 'DATE_FORMAT_INPUT'),
-            dataNumberFormat: r.data.filter(d => d.parent_code === 'NUMBER_FORMAT'),
-          });
+          masterData.find({ class: 'TIMEZONE' }).then(r => {
+            if (r?.status === RESULT_STATUS.OK) {
+              const data = r.data.map(f => ({ ...f, value: f?.name }))
 
-          if (target?.date_format_display) {
-            this.dateDisplayDf = this.dataObject.dataDateFormatDisplay.find(f => f.code === target?.date_format_display?.code);
-
-          }
-          if (target?.date_format_input) {
-            this.dateInputDf = this.dataObject.dataDateFormatInput.find(f => f.code === target?.date_format_input?.code);
-
-          }
-          if (target?.number_format) {
-            this.numberFormatDf = this.dataObject.dataNumberFormat.find(f => f.code === target?.number_format?.code);
-
-          }
-          this.setDefaultInputValues({
-            dateDisplayDf: this.dateDisplayDf,
-            dateInputDf: this.dateInputDf,
-            numberFormatDf: this.numberFormatDf
+              this.setDataObject({
+                dataTimezone: data,
+              });
+              this.dataTimeZone = this.dataObject.dataTimezone;
+              this.timeDf = this.getTimezoneDefault(target?.timezone);
+            }
           })
+          this.queryUserSetting('USER_SETTING').then(r => {
+            const data = r.map(f => ({ ...f, value: f?.name }))
+            this.setDataObject({
+              dataDateFormatDisplay: data.filter(d => d.parent_code === 'DATE_FORMAT_DISPLAY'),
+              dataDateFormatInput: data.filter(d => d.parent_code === 'DATE_FORMAT_INPUT'),
+              dataNumberFormat: data.filter(d => d.parent_code === 'NUMBER_FORMAT'),
+            });
 
-        });
+            if (target?.date_format_display) {
+              this.dateDisplayDf = this.dataObject.dataDateFormatDisplay.find(f => f.name === target?.date_format_display);
+
+            }
+            if (target?.date_format_input) {
+              this.dateInputDf = this.dataObject.dataDateFormatInput.find(f => f.name === target?.date_format_input);
+
+            }
+            if (target?.number_format) {
+              this.numberFormatDf = this.dataObject.dataNumberFormat.find(f => f.name === target?.number_format);
+
+            }
+            this.setDefaultInputValues({
+              dateDisplayDf: this.dateDisplayDf,
+              dateInputDf: this.dateInputDf,
+              numberFormatDf: this.numberFormatDf
+            })
+            console.log(this.dataObject)
+            // console.log(this.defaultInputValues)
+          })
+        }
+
       });
     });
 
 
   }
+
+
 
   clearDefaultValueInput = () => {
     this.langDf = null;
@@ -231,6 +237,33 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
       this.numberFormatDf = this.defaultInputValues?.numberFormatDf;
     }, 50)
   }
+
+  queryUserSetting = async (classMaster: string) => {
+    const returnFields = {
+      code: true,
+      _key: true,
+      name: true,
+      parent_code: true
+    }
+    const condition = {
+      active_flag: true,
+      class: classMaster
+    }
+    const request = {};
+    request['collection'] = 'sys_master_data';
+    if (isObjectFull(condition)) {
+      request['condition'] = condition;
+    }
+    const rest = await this.query(GRAPHQL.FIND_SYSTEM, request, returnFields);
+
+    let dataMaster = [];
+    const result = rest?.data
+    if (result) {
+      dataMaster = result;
+    }
+    return dataMaster || [];
+  }
+
 
   back = () => {
     history.back();
@@ -258,8 +291,8 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
   }
 
   setUserSetting = () => {
-    this.userService.getUserSetting(this.user_id).then(r => {
-
+    this.getUserSetting(this.user_id).then(r => {
+      console.log(r)
       if (r?.data[0]?.site_language) {
         this.store.dispatch(new ChangeLangage(r.data[0].site_language?.code || 'ja_JP'));
       }

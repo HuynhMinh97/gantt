@@ -142,7 +142,8 @@ const NB_MODULES = [
     DragScrollModule,
     AitOutputTextModule,
     AitTranslatePipe,
-    AitUiComponent
+    AitUiComponent,
+    AitBaseComponent
   ],
   providers: [
     AitBaseService,
