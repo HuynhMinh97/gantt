@@ -1,5 +1,5 @@
 import { SECRET_KEY } from '@ait/shared';
-import { Module } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthResolver } from '../resolvers/auth.resolver';
@@ -11,7 +11,6 @@ import { AitBaseService } from '../services/ait-base.service';
 
 @Module({
   imports: [
-    AitDatabaseModule,
     GraphQLModule.forRoot({
       autoSchemaFile: 'schema.gql',
       path: 'api/v1',
@@ -22,6 +21,15 @@ import { AitBaseService } from '../services/ait-base.service';
     }),
   ],
   providers: [AuthResolver, AuthService, AitJwtStrategy, GqlAuthGuard, AitBaseService],
-  exports: [AitDatabaseModule, GraphQLModule, JwtModule],
+  exports: [ GraphQLModule, JwtModule],
 })
-export class AitAuthModule {}
+export class AitAuthModule {
+  static forRoot(environment): DynamicModule {
+    return {
+      module: AitAuthModule,
+      imports: [
+        AitDatabaseModule.forRoot(environment)
+      ]
+    }
+  }
+}

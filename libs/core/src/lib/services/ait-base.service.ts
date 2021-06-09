@@ -38,7 +38,6 @@ export class AitBaseService {
         dataUpdate.push(data);
       } else {
         this.setCommonInsert(data);
-        data[KEYS.KEY] = AitUtils.guid;
         dataInsert.push(data);
       }
     });
@@ -172,8 +171,8 @@ export class AitBaseService {
       data[KEYS.COMPANY] = this.company;
     }
     data[KEYS.KEY] = AitUtils.guid;
-    data[KEYS.CREATE_BY] = this.username;
-    data[KEYS.CHANGE_BY] = this.username;
+    data[KEYS.CREATE_BY] = this.username || KEYS.ADMIN;
+    data[KEYS.CHANGE_BY] = this.username || KEYS.ADMIN;
     data[KEYS.CREATE_AT] = AitUtils.getUnixTime();
     data[KEYS.CHANGE_AT] = AitUtils.getUnixTime();
   }
@@ -181,7 +180,7 @@ export class AitBaseService {
     if (this.company) {
       data[KEYS.COMPANY] = this.company;
     }
-    data[KEYS.CHANGE_BY] = this.username;
+    data[KEYS.CHANGE_BY] = this.username || KEYS.ADMIN;
     data[KEYS.CHANGE_AT] = AitUtils.getUnixTime();
   }
 }
