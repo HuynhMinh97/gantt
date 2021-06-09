@@ -12,7 +12,7 @@ export class TranslationSet {
 @Injectable()
 export class AitTranslationService {
   masterData: any[];
-  currentLang = 'en_US';
+  currentLang = 'ja_JP';
   captionByPage = [];
   allMessage = [];
   constructor(store?: Store<AppState>) {

@@ -53,6 +53,8 @@ export class AitBaseService implements OnDestroy {
       this.company = company;
       this.page = page;
       this.module = module;
+
+      //  console.log(this.company)
     });
   }
 
@@ -195,21 +197,25 @@ export class AitBaseService implements OnDestroy {
    * @param condition condition search
    * @returns data or error
    */
-   query(name: string, request: any, returnField?: any) {
+  query(name: string, request: any, returnField?: any) {
     // Request to graphql query
-    request['company'] = this.company || SYSTEM_COMPANY;
+    request['company'] = this.company || localStorage.comp || SYSTEM_COMPANY;
     request['lang'] = this.currentLang;
     request['user_id'] = this.user_id;
 
-      // Setup gql json
-    const query = { query: { [name]: {
-      data: returnField,
-      message: true,
-      errors: true,
-      status: true,
-      numData: true,
-      numError: true
-    } } };
+    // Setup gql json
+    const query = {
+      query: {
+        [name]: {
+          data: returnField,
+          message: true,
+          errors: true,
+          status: true,
+          numData: true,
+          numError: true
+        }
+      }
+    };
 
     query.query[name]['__args'] = { request };
     // Parse to gql
@@ -243,14 +249,18 @@ export class AitBaseService implements OnDestroy {
       data,
     };
     // Setup gql json
-    const query = { mutation: { [name]: {
-      data: returnField,
-      message: true,
-      errors: true,
-      status: true,
-      numData: true,
-      numError: true
-    } } };
+    const query = {
+      mutation: {
+        [name]: {
+          data: returnField,
+          message: true,
+          errors: true,
+          status: true,
+          numData: true,
+          numError: true
+        }
+      }
+    };
 
     query.mutation[name]['__args'] = { request };
     // Parse to gql
