@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { AitDatabaseModule } from './services/arangodb/ait-database.module';
 import { AitBaseService } from './services/ait-base.service';
@@ -15,10 +15,10 @@ const RESOLVERS = [
 @Module({
   imports: [
     AitLogger,
-    AitDatabaseModule,
+
     GraphQLModule.forRoot({
       autoSchemaFile: 'schema.gql',
-      path:'api/v1'
+      path: 'api/v1'
     }),
   ],
   controllers: [],
@@ -33,4 +33,24 @@ const RESOLVERS = [
     GraphQLModule
   ]
 })
-export class AitCoreModule {}
+export class AitCoreModule {
+
+  static forRoot(environment: any): DynamicModule {
+    // console.log(environment)
+    return {
+      module: AitCoreModule,
+      imports: [AitDatabaseModule.forRoot(environment)],
+      providers: [
+        // Chổ này muốn sử dụng biến ENVIRONMENT này cho các services hoặc resolver thì  làm như sau :
+        // @Injectable()
+        // export class CatsRepository {
+        //   constructor(@Inject('ENVIRONMENT') enviroment: any) {}
+        // }
+        {
+          provide: 'ENVIRONMENT',
+          useValue: environment
+        }
+      ],
+    };
+  }
+}
