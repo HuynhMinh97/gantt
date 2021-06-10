@@ -1,8 +1,20 @@
-import { Module } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 import { databaseProviders } from './ait-database.providers';
 
 @Module({
-  providers: [...databaseProviders],
-  exports: [...databaseProviders],
+
 })
-export class AitDatabaseModule {}
+export class AitDatabaseModule {
+  static forRoot(environment): DynamicModule {
+    const databaseProvider = databaseProviders(environment);
+    return {
+      module: AitDatabaseModule,
+      providers: [
+        ...databaseProvider
+      ],
+      exports: [
+        ...databaseProvider
+      ],
+    }
+  }
+}
