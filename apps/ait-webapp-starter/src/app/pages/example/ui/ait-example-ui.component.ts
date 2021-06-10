@@ -9,11 +9,12 @@ import {
   AppState,
   TabView,
 } from '@ait/ui';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NbComponentStatus, NbDialogService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
+import { AitTextInputComponent } from 'libs/ui/src/lib/components/ait-input-text/ait-input-text.component';
 
 @Component({
   selector: 'ait-example-ui',
@@ -21,6 +22,8 @@ import { Apollo } from 'apollo-angular';
   styleUrls: ['./ait-example-ui.component.scss'],
 })
 export class AitUiComponent extends AitBaseComponent {
+
+  @ViewChild('input', { static: true }) input: AitTextInputComponent;
   constructor(
     private translateService: AitTranslationService,
     store: Store<AppState>,
@@ -40,6 +43,8 @@ export class AitUiComponent extends AitBaseComponent {
     this.testTranslate = translateService.translate(this.testTranslate);
     console.log(router)
   }
+
+
 
   buttonGroups = {
     one: [
@@ -149,6 +154,10 @@ export class AitUiComponent extends AitBaseComponent {
     }).onClose.subscribe(r => {
       console.log(r)
     })
+  }
+
+  resetInput = () => {
+    this.input.reset();
   }
 
   ngOnInit() {

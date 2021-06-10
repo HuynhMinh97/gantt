@@ -24,7 +24,7 @@
         "
       >
         <ait-output-text
-          [valueArray]="['âsasa','sadsdsadsa','sadadsadsa']"
+          [valueArray]="['âsasa', 'sadsdsadsa', 'sadadsadsa']"
           [caption]="
             '受入れ企業名が変更になった場合は「雇用条件書」「パスポート」「在留カード」リンクを張り替えてください'
           "
@@ -33,6 +33,7 @@
     </ait-card-content>
     <ait-card-content [isColumn]="true" [label]="'Text input'">
       <p>This is a component, which is used to input value from user 🎉</p>
+      <button nbButton status="'danger'" (click)="resetInput()">Reset</button>
       <div
         style="
           margin-left: 20px;
@@ -44,12 +45,15 @@
         <div *ngFor="let st of status">
           <ait-label [label]="'#' + st"></ait-label>
           <ait-input-text
+            #input
             [status]="st"
+            [value]="st"
             [iconName]="'heart'"
             [nbPrefix]="false"
             [placeholder]="st"
             (watchValue)="getValueInput(st, $event)"
           ></ait-input-text>
+
           <br />
           <code>#Result output : {{ result[st] }}</code>
         </div>
