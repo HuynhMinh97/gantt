@@ -9,8 +9,9 @@ import { KEYS, RESULT_STATUS, SYSTEM_COMPANY } from '@ait/shared'
 import { FormGroup, ValidationErrors } from '@angular/forms';
 import { AitAuthService } from '../services/common/ait-auth.service';
 import { AitUserService } from '../services/common/ait-user.service';
-import { AppState, getLoading, getSettingLangTime } from '../state/selectors';
+import { AppState, getLang, getLoading, getSettingLangTime } from '../state/selectors';
 import {
+  CHANGECOMPANY,
   ChangeLangage,
   GetCaptionByPages,
   GetCommonCaptions, GetCommonMessages, LOADINGAPP, SetModulePage, StoreSetting, StoreUserId, StoreUserInfo
@@ -65,27 +66,32 @@ export class AitBaseComponent implements OnInit, OnDestroy {
   ) {
     this.env = _env;
     //setting default lang & company
-    const langStorage = localStorage.lang;
     this.company = this.env.COMMON.COMPANY_DEFAULT;
     // get token from localStorage
     this.token = authService.getAccessToken();
 
-    //get caption common for buttons, header, label, ...
-    this.getCommonCaptions().then();
 
-    // call api get all message follow by type as I : Information , W : Warning, E: Error
-    this.getAllMessages().then();
 
-    // call api get user setting
-    this.settingUpUser().then();
-
-    // If we couldn't find lang in localStorage, It should be set base on ENV
-    if (!langStorage) {
-      localStorage.setItem('lang', this.env?.COMMON?.LANG_DEFAULT || 'ja_JP');
-    }
+    // // If we couldn't find lang in localStorage, It should be set base on ENV
+    // if (!langStorage) {
+    //   localStorage.setItem('lang', this.env?.COMMON?.LANG_DEFAULT || 'ja_JP');
+    // }
 
     // Push lang  on store
-    store.dispatch(new ChangeLangage(langStorage || this.env?.COMMON?.LANG_DEFAULT || 'ja_JP'))
+    // store.dispatch(new ChangeLangage(langStorage || this.env?.COMMON?.LANG_DEFAULT || 'ja_JP'));
+
+    store.pipe(select(getLang)).subscribe(lang => {
+      this.lang = lang;
+      //get caption common for buttons, header, label, ...
+      this.getCommonCaptions().then();
+
+      // call api get all message follow by type as I : Information , W : Warning, E: Error
+      this.getAllMessages().then();
+
+      // call api get user setting
+      // this.settingUpUser().then();
+    })
+
 
     // Listening event loading when the app is loading
     store
@@ -98,49 +104,54 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
       if (userId && userId !== '') {
         this.getUserInfo(userId).then((res: any) => {
+          // Push company on store base on user-setting
+          this.store.dispatch(
+            new CHANGECOMPANY(res?.company || this.env.COMMON.COMPANY_DEFAULT)
+          );
+          localStorage.setItem('comp', res?.company || this.env.COMMON.COMPANY_DEFAULT);
           store.dispatch(new StoreUserInfo(res));
-          this.
-            getUserSetting(userId).then(r => {
 
-              if (r?.status === RESULT_STATUS.OK) {
-                const data = r.data ? r.data[0] : {};
-                this.lang = data.site_language
-                // Push lang on store base on user-setting
-                this.store.dispatch(
-                  new ChangeLangage(
-                    data.site_language || this.env.COMMON.LANG_DEFAULT
-                  )
-                );
-                // Push company on store base on user-setting
-                this.company = data.company;
-                this.store.dispatch(
-                  new StoreSetting({
-                    site_language:
-                      data.company ||
-                      this.env.COMMON.LANG_DEFAULT,
-                  })
-                );
+        });
+        this.
+          getUserSetting(userId).then(r => {
+
+            if (r?.status === RESULT_STATUS.OK) {
+              const data = r.data ? r.data[0] : {};
+
+              this.lang = data?.site_language || this.env.COMMON.LANG_DEFAULT
+              // Push lang on store base on user-setting
+              this.store.dispatch(
+                new ChangeLangage(
+                  data?.site_language || this.env.COMMON.LANG_DEFAULT
+                )
+              );
+
+              //console.log(this.lang)
+
+              // //get caption common for buttons, header, label, ...
+              // this.getCommonCaptions(this.lang).then();
+
+              // // call api get all message follow by type as I : Information , W : Warning, E: Error
+              // this.getAllMessages().then();
+
+              // call api get user setting
+              this.settingUpUser().then((b) => {
                 const result = {
                   ...data,
-                  date_format_display: this.getValueByCodeMaster(data.date_format_display),
-                  date_format_input: this.getValueByCodeMaster(data.date_format_input),
-                  number_format: this.getValueByCodeMaster(data.number_format)
+                  date_format_display: this.getValueByCodeMaster(data.date_format_display, b || []),
+                  date_format_input: this.getValueByCodeMaster(data.date_format_input, b || []),
+                  number_format: this.getValueByCodeMaster(data.number_format, b || [])
                 }
                 // // Push settings on store base on user-setting
                 this.store.dispatch(new StoreSetting(result));
-              }
-            })
+              });
 
-
-        });
+            }
+          })
       }
     }
 
-    // apply company and lang for base component
-    // store.pipe(select(getLang_Company)).subscribe(data => {
-    //   this.lang = data.language || this.env?.COMMON?.LANG_DEFAULT;
-    //   this.company = data.company || this.env?.COMMON?.COMPANY_DEFAULT;
-    // });
+
 
     // apply user info for base component
     store.subscribe({
@@ -156,14 +167,14 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
   // api call user-setting from master-data
   private settingUpUser = async () => {
-    this.getUserSettingData('USER_SETTING').then(data => {
-      this.dataUserSetting = data;
-    })
+    const data = await this.getUserSettingData('USER_SETTING');
+    this.dataUserSetting = data;
+    return data;
   }
 
   // method get name or value by code
-  private getValueByCodeMaster = (code: string) => {
-    const find = this.dataUserSetting.find(f => f.code === code);
+  private getValueByCodeMaster = (code: string, data?: any) => {
+    const find = (data || this.dataUserSetting).find(f => f.code === code);
     return find?.name;
   }
 
@@ -232,7 +243,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     }
       `
     }).toPromise();
-    return rest.data.findSystem;
+    return rest?.data?.findUserSetting;
   }
 
 
@@ -251,6 +262,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
   }
 
   async getUserSettingData(classMaster: string) {
+    //console.log(this.lang)
     let user_setting = [];
     const rest_user: any = await this.apollo.query({
       query: gql`
@@ -286,34 +298,6 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     return user_setting;
   }
 
-  getUserSettingBackup = (company) => {
-    this.userService.getUserSetting(company).then((r) => {
-      if (r?.data[0]?.site_language) {
-        this.store.dispatch(new ChangeLangage(r.data[0].site_language?.code));
-        this.store.dispatch(
-          new StoreSetting({ site_language: r.data[0].site_language?.code })
-        );
-        this.userService.getUserSetting(company).then((res) => {
-          const result = {};
-          Object.entries(res?.data[0] || {}).forEach(([key, target]) => {
-            if (target) {
-              if (key === 'site_language' || key === 'timezone') {
-                result[key] = target['code'];
-              } else {
-                result[key] = {
-                  code: target['code'],
-                  value: target['value'],
-                };
-              }
-            }
-          });
-
-          this.store.dispatch(new StoreSetting(result));
-        });
-      }
-    });
-  };
-
 
   private replaceValueInMess = (message: string, params: any[]) => {
     const result = message;
@@ -330,7 +314,8 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
   getMsg = (code: string) => {
     const typeMessage = code ? code[0] : '';
-    const mes = this.allMessages[typeMessage];
+
+    const mes = this.allMessages ? this.allMessages[typeMessage] : [];
     if (mes) {
       const mainCode = code.slice(1, code.length);
       const find = mes.find(m => m.code === mainCode);
@@ -465,29 +450,31 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
     this.store.dispatch(new LOADINGAPP(false));
   }
-  getCommonCaptions = async () => {
+  getCommonCaptions = async (lang?: string) => {
 
-    this.getCaption().then((r: any) => {
-      const result = r?.data?.findSystem;
-      if (result) {
-        if (result.status === RESULT_STATUS.OK) {
-          this.store.dispatch(new GetCommonCaptions({ page: 'common', module: 'common', data: result.data }))
+
+    setTimeout(() => {
+      this.getCaption(null, null, lang).then((r: any) => {
+        const result = r?.data?.findSystem;
+        if (result) {
+          if (result.status === RESULT_STATUS.OK) {
+            this.store.dispatch(new GetCommonCaptions({ page: 'common', module: 'common', data: result.data }))
+          }
         }
-      }
-    })
+      })
+    }, 350)
 
   }
 
 
   // Get Caption common or by page & module
-  getCaption = async (page?: string, module?: string) => {
-
+  getCaption = async (page?: string, module?: string, lang?: string) => {
     return await this.apollo.query({
       query: gql`
       query {
         findSystem(request : {
           company: "${this.company}",
-          lang: "${this.lang}",
+          lang: "${lang || this.lang}",
           collection: "sys_caption",
           user_id: "${this.user_id}",
           condition: {
@@ -516,19 +503,24 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
   // Start basecomponent for initializing
   ngOnInit() {
-    AitAppUtils.checkTokens();
-    this.getCommonCaptions().then()
-    this.getAllMessages().then();
+
+    this.store.select(getLang).subscribe(lang => {
+      console.log(lang)
+    })
+
 
     // register locale by language setting
     this.store.pipe(select(getSettingLangTime)).subscribe({
       next: (state) => {
         switch (state?.site_language) {
           case 'en_US':
+
             return registerLocaleData(localeEn);
           case 'vi_VN':
+
             return registerLocaleData(localeVn);
           default:
+
             return registerLocaleData(localeJp);
         }
       },
@@ -553,15 +545,18 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     this.store.dispatch(new SetModulePage({ page, module }));
     this.module = module;
     this.page = page;
-
-    this.getCaption(page, module).then((r: any) => {
-      const result = r?.data?.findSystem;
-      if (result) {
-        if (result.status === RESULT_STATUS.OK) {
-          this.store.dispatch(new GetCaptionByPages({ page: data.page, module: data.module, data: result.data }))
+    setTimeout(() => {
+      this.getCaption(page, module).then((r: any) => {
+        const result = r?.data?.findSystem;
+        if (result) {
+          if (result.status === RESULT_STATUS.OK) {
+            this.store.dispatch(new GetCaptionByPages({ page: data.page, module: data.module, data: result.data }))
+          }
         }
-      }
-    })
+      })
+    }, 400)
+
+
     // Coding here for calling api to request caption or master data for module and page 🚀🚀🚀
   }
 
@@ -576,6 +571,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
           E: result?.data.filter(f => f?.type === 'E'),
           W: result?.data.filter(f => f?.type === 'W'),
         };
+        // //console.log(this.allMessages)
 
         this.store.dispatch(new GetCommonMessages(this.allMessages));
       }
@@ -585,35 +581,37 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
   // api get sys message
   getSysMessage = async () => {
-    return await this.apollo.query({
-      query: gql`
-      query {
-        findSystem(request : {
-          company: "${this.company}",
-          lang: "${this.lang}",
-          collection: "sys_message",
-          user_id: "${this.user_id}",
-          condition: {
+    return await new Promise((resolve, reject) => {
+      this.apollo.query({
+        query: gql`
+        query {
+          findSystem(request : {
+            company: "${this.company}",
+            lang: "${this.lang}",
+            collection: "sys_message",
+            user_id: "${this.user_id}",
+            condition: {
 
-          }
-        }) {
-          data {
-            _key
-            code
-            message {
-              ${this.lang}
             }
-            type
+          }) {
+            data {
+              _key
+              code
+              message {
+                ${this.lang}
+              }
+              type
+            }
+            errors
+            message
+            status
+            numData
+            numError
           }
-          errors
-          message
-          status
-          numData
-          numError
         }
-      }
-      `
-    }).toPromise();
+        `
+      }).toPromise().then(r => resolve(r)).catch(e => reject(e))
+    })
 
   }
 
@@ -648,7 +646,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     // Parse to gql
     const gqlQuery = jsonToGraphQLQuery(query, { pretty: true });
 
-    // console.log(gqlQuery);
+    // //console.log(gqlQuery);
 
     return this.apollo
       .query({

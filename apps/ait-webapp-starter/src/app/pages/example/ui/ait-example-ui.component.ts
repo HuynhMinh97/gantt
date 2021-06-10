@@ -14,7 +14,6 @@ import { Router } from '@angular/router';
 import { NbComponentStatus, NbDialogService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
-import { AitTextInputComponent } from 'libs/ui/src/lib/components/ait-input-text/ait-input-text.component';
 
 @Component({
   selector: 'ait-example-ui',
@@ -23,7 +22,6 @@ import { AitTextInputComponent } from 'libs/ui/src/lib/components/ait-input-text
 })
 export class AitUiComponent extends AitBaseComponent {
 
-  @ViewChild('input', { static: true }) input: AitTextInputComponent;
   constructor(
     private translateService: AitTranslationService,
     store: Store<AppState>,
@@ -156,9 +154,7 @@ export class AitUiComponent extends AitBaseComponent {
     })
   }
 
-  resetInput = () => {
-    this.input.reset();
-  }
+
 
   ngOnInit() {
     // console.log(this.page, this.module, this.user_id, this.company);
