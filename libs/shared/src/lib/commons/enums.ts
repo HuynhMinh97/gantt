@@ -205,3 +205,18 @@ export enum COLLECTIONS {
   USER_PROFILE = 'user_profile',
   EXAMPLE = 'example'
 }
+
+export enum OPERATOR {
+  EQUAL = '==',
+  INEQUAL = '!=',
+  LESS_THAN = '<',
+  LESS_OR_EQUAL = '<=',
+  GREATER_THAN = '>',
+  GREATER_OR_EQUAL = '>=',
+  IN = 'IN',
+  NOT_IN = 'NOT IN',
+  LIKE = 'LIKE',
+  NOT_LIKE = 'NOT LIKE',
+  MATCH_REGEXP = '=~',
+  NOT_MATCH_REGEXP = '!~'
+}

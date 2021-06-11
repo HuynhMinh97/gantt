@@ -1,4 +1,3 @@
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { AitCoreModule, AitAuthModule } from '@ait/core';
 import { Module } from '@nestjs/common';
 import { environment } from '../environments/environment';
