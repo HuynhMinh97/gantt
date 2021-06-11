@@ -3,6 +3,7 @@ import {
   COLLECTIONS,
   DB_CONNECTION_TOKEN,
   isNil,
+  isObjectFull,
   KEYS,
   RESULT_STATUS,
   SYSTEM_COMPANY,
@@ -134,7 +135,16 @@ export class AitBaseService {
     aqlStr += `FILTER data.company == "${company}" `
     for (const prop in condition) {
       const data = condition[prop];
-      aqlStr += ` && data.${prop} ${data.operator} ${JSON.stringify(data.value)}`;
+      if (isObjectFull(data)) {
+        aqlStr += ` && data.${prop} ${data.operator} ${JSON.stringify(data.value)}`;
+      } else {
+        aqlStr += `&& data.${prop} == `;
+        aqlStr +=
+        typeof condition[prop] === 'string'
+          ? `"${condition[prop]}" `
+          : `${condition[prop]} `;
+
+      }
     }
     aqlStr += `RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name }) `;
 
