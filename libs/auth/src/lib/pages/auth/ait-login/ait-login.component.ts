@@ -43,7 +43,7 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
     public toastrService: NbToastrService,
     private translateService: AitTranslationService,
     userService: AitUserService,
-    private envService: AitEnvironmentService,
+    envService: AitEnvironmentService,
 
   ) {
 
@@ -104,11 +104,6 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
         email : history.state?.email
       })
     }
-  }
-
-  isAureoleV = () => {
-    const target: any = this.envService;
-    return target?.isAureoleV;
   }
 
   getErrorEmailMessage = (value) => {

@@ -1,9 +1,6 @@
 /* eslint-disable @angular-eslint/no-output-on-prefix */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { select, Store } from '@ngrx/store';
 import { TabView } from '../../@constant';
-import { AitTranslationService } from '../../services';
-import { AppState, getCaption } from '../../state/selectors';
 
 @Component({
   selector: 'ait-tabs',
@@ -17,20 +14,9 @@ export class AitTabsCommonComponent implements OnInit {
   @Input() countItemsRE = 0;
   @Input() disabled = false;
   @Input()
-  tabs: TabView[] = [
+  tabs : TabView[] = [
 
   ]
-
-  constructor(private translateService: AitTranslationService, store: Store<AppState>) {
-    store.pipe(select(getCaption)).subscribe(() => {
-      this.tabs = this.tabs.map(tab => {
-        return {
-          ...tab,
-          title: translateService.translate(tab?.title)
-        }
-      })
-    })
-  }
 
   selectTab = (type) => {
     if (!this.disabled) {
@@ -40,7 +26,6 @@ export class AitTabsCommonComponent implements OnInit {
   }
 
   ngOnInit() {
-
     if (!this.tabSelected) {
       this.tabSelected = this.tabs[0]?.type
     }

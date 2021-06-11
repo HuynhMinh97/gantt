@@ -150,16 +150,6 @@ export class AitBaseComponent implements OnInit, OnDestroy {
           })
       }
     }
-    else {
-      //get caption common for buttons, header, label, ...
-      this.getCommonCaptions().then();
-
-      // call api get all message follow by type as I : Information , W : Warning, E: Error
-      this.getAllMessages().then();
-
-      // call api get user setting
-      this.settingUpUser().then();
-    }
 
 
 
