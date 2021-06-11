@@ -10,8 +10,8 @@ export class SystemDto extends BaseDto {
   @Field(() => ConditionDto, { nullable: true })
   code?: ConditionDto;
 
-  @Field(() => ConditionDto, { nullable: true })
-  parent_code?: ConditionDto;
+  @Field(() => String, { nullable: true })
+  parent_code?: string;
 
   @Field(() => Int, { nullable: true })
   sort_no?: number;
@@ -19,26 +19,26 @@ export class SystemDto extends BaseDto {
   @Field(() => Int, { nullable: true })
   group_no?: number;
 
-  @Field(() => ConditionDto, { nullable: true })
-  name?: ConditionDto;
+  @Field(() => String, { nullable: true })
+  name?: string;
 
-  @Field(() => ConditionDto, { nullable: true })
-  type?: ConditionDto;
+  @Field(() => String, { nullable: true })
+  type?: string;
 
-  @Field(() => ConditionDto, { nullable: true })
-  module?: ConditionDto;
+  @Field(() => String, { nullable: true })
+  module?: string;
 
-  @Field(() => ConditionDto, { nullable: true })
-  page?: ConditionDto;
+  @Field(() => String, { nullable: true })
+  page?: string;
 
-  @Field(() => ConditionDto, { nullable: true })
-  message?: ConditionDto;
+  @Field(() => String, { nullable: true })
+  message?: string;
 
-  @Field(() => ConditionDto, { nullable: true })
-  slug?: ConditionDto;
+  @Field(() => String, { nullable: true })
+  slug?: string;
 
-  @Field(() => ConditionDto, { nullable: true })
-  param?: ConditionDto;
+  @Field(() => String, { nullable: true })
+  param?: string;
 
   @Field(() => Boolean, { nullable: true })
   active_flag?: boolean;

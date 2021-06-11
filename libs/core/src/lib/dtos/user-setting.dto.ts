@@ -1,6 +1,5 @@
 import { BaseDto } from './base.dto';
 import { InputType, Field } from '@nestjs/graphql';
-
 @InputType()
 export class UserSettingDto extends BaseDto {
   @Field(() => String, { nullable: true })

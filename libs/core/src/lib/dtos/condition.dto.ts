@@ -1,4 +1,4 @@
-import { OPERATOR } from "@ait/shared";
+import { COLLECTIONS, OPERATOR } from "@ait/shared";
 import { InputType, Field } from "@nestjs/graphql";
 
 @InputType()
@@ -12,7 +12,7 @@ export class ConditionDto {
   @Field(() => String, { nullable: true })
   attribute: string;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, defaultValue: COLLECTIONS.MASTER_DATA })
   ref_collection: string;
 
   @Field(() => String, { nullable: true })
