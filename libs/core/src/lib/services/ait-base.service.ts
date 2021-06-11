@@ -2,8 +2,8 @@
 import {
   COLLECTIONS,
   DB_CONNECTION_TOKEN,
-  isArrayFull,
   isNil,
+  isObjectFull,
   KEYS,
   RESULT_STATUS,
   SYSTEM_COMPANY,
@@ -11,7 +11,6 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 import { aql, Database } from 'arangojs';
 import { DocumentCollection } from 'arangojs/collection';
-import { Guid } from 'guid-typescript';
 import { SysUser } from '../entities/sys-user.entity';
 import { BaseResponse } from '../responses/base.response';
 import { AitUtils } from '../utils/ait-utils';
@@ -135,23 +134,16 @@ export class AitBaseService {
     let aqlStr = `FOR data IN ${collection} `;
     aqlStr += `FILTER data.company == "${company}" `
     for (const prop in condition) {
-      if (isArrayFull(condition[prop])) {
-        aqlStr += `&& data.${prop} IN ${JSON.stringify(condition[prop])} `;
-
-      } else if (prop === KEYS.NAME) {
-        aqlStr += `&& LOWER(data.name.${lang}) `;
-        aqlStr += `LIKE LOWER(CONCAT("${condition[prop]}", "%")) `;
-        
-        if (collection === COLLECTIONS.MASTER_DATA) {
-          const class_code = condition.class;
-          aqlStr += class_code ? `&& data.class == "${class_code}" ` : '';
-        }
+      const data = condition[prop];
+      if (isObjectFull(data)) {
+        aqlStr += ` && data.${prop} ${data.operator} ${JSON.stringify(data.value)}`;
       } else {
         aqlStr += `&& data.${prop} == `;
         aqlStr +=
         typeof condition[prop] === 'string'
           ? `"${condition[prop]}" `
           : `${condition[prop]} `;
+
       }
     }
     aqlStr += `RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name }) `;
