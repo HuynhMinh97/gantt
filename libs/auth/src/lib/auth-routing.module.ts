@@ -6,7 +6,6 @@ import { AitSignUpComponent } from './pages/auth/ait-signup/ait-signup.component
 import { AitChangePwdComponent } from './pages/auth/ait-change-password/ait-change-password.component';
 import { Ait403Component } from './pages/auth/ait-403/ait-403.component';
 import { Ait404Component } from './pages/auth/ait-404/ait-404.component';
-import { AitUserSettingComponent } from './pages/user-setting/ait-user-setting.component';
 
 
 // Push your routes here one by one 🎉
@@ -25,11 +24,6 @@ export const routes: Routes = [
   {
     path: 'change-password',
     component: AitChangePwdComponent,
-    canActivate: [AitAuthGuardService],
-  },
-  {
-    path: 'user-setting',
-    component: AitUserSettingComponent,
     canActivate: [AitAuthGuardService],
   },
   {
