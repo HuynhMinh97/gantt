@@ -9,7 +9,7 @@ import {
   AppState,
   TabView,
 } from '@ait/ui';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NbComponentStatus, NbDialogService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
@@ -21,6 +21,7 @@ import { Apollo } from 'apollo-angular';
   styleUrls: ['./ait-example-ui.component.scss'],
 })
 export class AitUiComponent extends AitBaseComponent {
+
   constructor(
     private translateService: AitTranslationService,
     store: Store<AppState>,
@@ -40,6 +41,8 @@ export class AitUiComponent extends AitBaseComponent {
     this.testTranslate = translateService.translate(this.testTranslate);
     console.log(router)
   }
+
+
 
   buttonGroups = {
     one: [
@@ -150,6 +153,8 @@ export class AitUiComponent extends AitBaseComponent {
       console.log(r)
     })
   }
+
+
 
   ngOnInit() {
     // console.log(this.page, this.module, this.user_id, this.company);

@@ -1,6 +1,6 @@
-import { Field, InputType, OmitType, PartialType } from '@nestjs/graphql';
-import { LangDto } from '../dtos/lang.dto';
+import { Field, InputType } from '@nestjs/graphql';
 import { SystemDto } from '../dtos/system.dto';
+import { UpdateSystemDto } from '../dtos/update-system.dto';
 import { BaseRequest } from './base.request';
 
 @InputType()
@@ -10,11 +10,4 @@ export class SystemRequest extends BaseRequest {
 
   @Field(() => [UpdateSystemDto], { nullable: true })
   data: UpdateSystemDto[];
-}
-@InputType()
-export class UpdateSystemDto extends PartialType(
-  OmitType(SystemDto, ['name'] as const),
-) {
-  @Field(() => LangDto, { nullable: true })
-  name: LangDto;
 }
