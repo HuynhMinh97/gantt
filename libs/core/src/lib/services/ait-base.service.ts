@@ -2,6 +2,7 @@
 import {
   COLLECTIONS,
   DB_CONNECTION_TOKEN,
+  hasLength,
   isNil,
   isObjectFull,
   KEYS,
@@ -109,7 +110,7 @@ export class AitBaseService {
     let aqlStr = `LET current_data = ( ${this.getSearchCondition(request, false)} ) `;
     aqlStr += `LET result = LENGTH(current_data) > 0 ? current_data : ( ${this.getSearchCondition(request, true)} ) `;
     aqlStr += `FOR data IN result RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name }) `;
-
+    console.log(aqlStr);
     try {
       const result = await this.db.query(aqlStr);
       const rawData = [];
@@ -122,32 +123,47 @@ export class AitBaseService {
     }
   }
 
-
   private getSearchCondition(request: any, isSystem: boolean) {
     const company = isSystem ? SYSTEM_COMPANY : request.company;
     const condition = request.condition;
     const lang = request.lang;
     const collection = request.collection;
+    const mapData = [];
 
     isSystem && (collection === COLLECTIONS.USER_SETTING) && condition['user_id'] ? delete condition['user_id'] : '';
 
     let aqlStr = `FOR data IN ${collection} `;
     aqlStr += `FILTER data.company == "${company}" `
     for (const prop in condition) {
-      const data = condition[prop];
-      if (isObjectFull(data)) {
-        aqlStr += ` && data.${prop} ${data.operator} ${JSON.stringify(data.value)}`;
+      if (prop === KEYS.NAME && collection === COLLECTIONS.MASTER_DATA) {
+        aqlStr += `&& LOWER(data.name.${lang}) `;
+        aqlStr += `LIKE LOWER(CONCAT("${condition[prop]}", "%")) `;
       } else {
-        aqlStr += `&& data.${prop} == `;
-        aqlStr +=
-        typeof condition[prop] === 'string'
-          ? `"${condition[prop]}" `
-          : `${condition[prop]} `;
-
+        const data = condition[prop];
+        if (isObjectFull(data)) {
+          if (data.operator && hasLength(data.value)) {
+            aqlStr += ` && data.${prop} ${data.operator} ${JSON.stringify(data.value)} `;
+          }
+          if (data.attribute && data.ref_collection && data.ref_attribute && !isSystem) {
+            mapData.push(data);
+          }
+        } else {
+          aqlStr += `&& data.${prop} == `;
+          aqlStr +=
+          typeof condition[prop] === 'string'
+            ? `"${condition[prop]}" `
+            : `${condition[prop]} `;
+        }
       }
     }
-    aqlStr += `RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name }) `;
-
+    aqlStr += `RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name, `;
+    mapData.forEach(data => {
+      aqlStr += ` ${data.attribute} : ( `;
+      aqlStr += ` FOR doc IN ${data.ref_collection} `;
+      aqlStr += ` FILTER doc.${data.ref_attribute} == data.${data.attribute} `;
+      aqlStr += ` RETURN { _key: doc._key, value: doc.name.${lang} })[0], `
+    })
+    aqlStr += `  }) `;
     return aqlStr;
   }
 

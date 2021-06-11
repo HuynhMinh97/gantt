@@ -8,7 +8,7 @@ export class UserSettingEntity extends BaseEntity {
 
   @Field(() => String, { nullable: true })
   date_format_input?: string;
-
+  
   @Field(() => String, { nullable: true })
   number_format?: string;
 
