@@ -273,7 +273,9 @@ export class AitBaseComponent implements OnInit, OnDestroy {
                 collection: "sys_master_data",
                 user_id: "${this.user_id}",
                 condition: {
-                  class : "${classMaster}",
+                  class : {
+                    value : ["${classMaster}"]
+                  },
                   active_flag: true
                 }
           }){

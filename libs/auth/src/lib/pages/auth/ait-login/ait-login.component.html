@@ -18,9 +18,7 @@
             type="text"
             name="email"
             id="email"
-            [placeholder]="
-              '004' | translate
-            "
+            [placeholder]="'004' | translate"
             (input)="handleFocus($event.target.value, 'email')"
           />
         </div>
@@ -37,9 +35,7 @@
             name="password"
             id="password"
             (input)="handleFocus($event.target.value, 'password')"
-            [placeholder]="
-              '005' | translate
-            "
+            [placeholder]="'005' | translate"
           />
           <nb-icon
             style="
@@ -78,20 +74,16 @@
       [nbSpinner]="isLoading"
       nbSpinnerStatus="primary"
     >
-      <span
-        >{{ '001' | translate }}
-      </span>
+      <span>{{ '001' | translate }} </span>
     </div>
 
-    <div class="more__link">
+    <div class="more__link" *ngIf="!isAureoleV()">
       <!-- <p (click)="navigateToResetPassword()" style="cursor: pointer">
         {{ '007' | translate }} ?
       </p> -->
       <p>
         {{ '008' | translate }}
-        <span (click)="navigateToSignUp()"
-          >{{ '009' | translate }}
-        </span>
+        <span (click)="navigateToSignUp()">{{ '009' | translate }} </span>
       </p>
     </div>
   </div>
