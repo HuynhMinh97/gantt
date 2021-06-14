@@ -12,7 +12,8 @@ export const ACTION_HEADER = [
     icon: 'home',
     title: 'c_1001',
     action: () => { },
-    isI18n: true
+    isI18n: true,
+    link : '/'
   },
 ];
 

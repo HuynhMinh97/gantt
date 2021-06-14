@@ -1,21 +1,25 @@
+
 <div
-  class="text__gradient"
-  *ngIf="gradientString !== ''"
-  [ngStyle]="{
-    'background-image': gradientString,
-    padding: padding + 'px',
-    'font-size': fontsize,
-    'padding-left' : paddingLeft
-  }"
+class="text__gradient"
+*ngIf="gradientString !== ''"
+[ngStyle]="{
+  'background-image': gradientString,
+  padding: padding + 'px',
+  'font-size': fontsize,
+  'padding-left' : paddingLeft
+}"
 >
-  {{ content }}
+{{ content }}
 </div>
 
 <div
-  class="text__gradient__no__string"
-  *ngIf="gradientString === ''"
-  [ngStyle]="{ 'font-size': fontsize,
-  'padding-left' : paddingLeft }"
+class="text__gradient__no__string"
+*ngIf="gradientString === ''"
+[ngStyle]="{ 'font-size': fontsize,
+'padding-left' : paddingLeft }"
 >
-  {{ content }}
+{{ content }}
 </div>
+
+
+
