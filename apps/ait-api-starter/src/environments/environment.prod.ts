@@ -17,11 +17,5 @@ export const environment = {
     EXCUTE_FUCTION: '/api/execute-function',
     MATCHING: '/matching',
     AUREOLE_V: '/sync/aureole-v',
-  },
-  MAIL: {
-    USER: 'ait.dev@ait.com',
-    PASS: '@itteam.AIT',
-    HOST: '192.168.136.11',
-    POST: 25,
-  },
+  }
 };
