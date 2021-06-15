@@ -1,6 +1,8 @@
 <div class="output_text" *ngIf="isTranslate">
   <ait-label [label]="label" [isTranslate]="isTranslate"></ait-label>
   <input
+    [nbTooltip]="value"
+    [nbTooltipTrigger]="value ? 'hover' : 'noop'"
     type="text"
     readonly
     [value]="value"
@@ -19,7 +21,7 @@
     [value]="value || ''"
   >
   </textarea>
-  <div class="caption" *ngIf="caption" [style.width]="width">
+  <div class="caption" *ngIf="caption">
     <div class="icon">
       <nb-icon [icon]="iconCaption"></nb-icon>
     </div>
@@ -34,6 +36,8 @@
 <div class="output_text" *ngIf="!isTranslate">
   <ait-label [label]="label"></ait-label>
   <input
+    [nbTooltip]="value"
+    [nbTooltipTrigger]="value ? 'hover' : 'noop'"
     type="text"
     readonly
     [value]="value"
@@ -52,7 +56,7 @@
     [value]="value || ''"
   >
   </textarea>
-  <div class="caption" *ngIf="caption" [style.width]="width">
+  <div class="caption" *ngIf="caption">
     <div class="icon">
       <nb-icon [icon]="iconCaption"></nb-icon>
     </div>

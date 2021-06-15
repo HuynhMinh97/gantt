@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { AitTranslationService } from '../../services';
+import { AitAppUtils } from '../../utils/ait-utils';
 
 @Component({
   selector: 'ait-output-text',
@@ -8,9 +9,9 @@ import { AitTranslationService } from '../../services';
 })
 export class AitOutputTextComponent implements OnChanges {
   @Input() label = 'Default label';
-  @Input() value = 'hello';
+  @Input() value = '';
   @Input() valueArray: string[] = [];
-  @Input() placeholder = 'Please input something ✌'
+  @Input() placeholder = ''
   @Input() isTranslate = false;
   @Input() caption = ''
   @Input() iconCaption = 'info-outline';
@@ -25,9 +26,10 @@ export class AitOutputTextComponent implements OnChanges {
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
         if (key === 'valueArray') {
+          const target = AitAppUtils.getArrayNotFalsy(this.valueArray);
           const comma = this.translateService.translate('s_0001');
-          if (this.valueArray.length !== 0) {
-            this.value = this.valueArray.join(comma || ',');
+          if (target.length !== 0) {
+            this.value = target.join(comma || ',');
           }
           else {
             this.value = '';

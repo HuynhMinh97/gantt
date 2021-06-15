@@ -78,6 +78,7 @@ export class AitAuthModule {
 
 
   static forRoot(config): ModuleWithProviders<AitAuthModule> {
+    console.log(config)
     return {
       ngModule: AitAuthModule,
       providers: [

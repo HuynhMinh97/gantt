@@ -20,6 +20,7 @@ export class AitTextAreaComponent implements OnInit, OnChanges {
   @Input() disabled = false;
   @Input() width;
   @Input() row = 1;
+  @Input() style = {};
 
 
   @Output() watchValue = new EventEmitter();

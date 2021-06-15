@@ -36,6 +36,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   @Input() isReset = false;
   @Input() staticFormat = null;
   isClickInput = false;
+  valueDf = '';
 
   @ViewChild('inputDateTime', { static: false }) input: ElementRef;
   @ViewChild(NbDatepickerDirective, { static: false }) nbDatepicker;
@@ -110,7 +111,6 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
 
   setupDate = () => {
     this.store.pipe(select(getSettingLangTime)).subscribe(setting => {
-      // console.log(setting);
       if (this.currentLang !== setting?.site_language) {
         this.currentLang = setting?.site_language || 'ja_JP';
 
@@ -129,9 +129,11 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
 
         if (AitAppUtils.isValidDate(this.dateInput) || typeof this.dateInput === 'number') {
           if (this.dateInput) {
-            // let dateFormat;
+            let dateFormat;
             if (this.disable) {
-              // dateFormat = this.dateFormatService.formatDatePicker(this.dateInput, this.formatDateTimeDisplay)
+              dateFormat = this.dateFormatService.formatDatePicker(this.dateInput, this.formatDateTimeDisplay);
+              // console.log(dateFormat)
+              this.valueDf = dateFormat
             }
             else {
               // dateFormat = this.dateFormatService.formatDatePicker(this.dateInput, this.formatDateTimeInput)

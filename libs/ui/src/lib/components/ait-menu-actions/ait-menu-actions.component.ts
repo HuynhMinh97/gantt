@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { AitTranslationService } from '../../services';
 import { AitLayoutService } from '../../services/common/ait-layout.service';
@@ -10,7 +11,12 @@ import { AppState, getCaption } from '../../state/selectors';
   styleUrls: ['./ait-menu-actions.component.scss']
 })
 export class AitMenuActionsComponent implements OnInit {
-  constructor(private layoutService: AitLayoutService, private translateService: AitTranslationService, private store: Store<AppState>) { }
+  constructor(
+    private layoutService: AitLayoutService,
+    private translateService: AitTranslationService,
+    private store: Store<AppState>,
+    private router: Router
+  ) { }
   buttons = [];
   ngOnInit() {
     this.store.pipe(select(getCaption)).subscribe(() => {
@@ -25,5 +31,7 @@ export class AitMenuActionsComponent implements OnInit {
       })
     })
   }
+
+  navigate = (link: string) => this.router.navigate([link]);
 
 }
