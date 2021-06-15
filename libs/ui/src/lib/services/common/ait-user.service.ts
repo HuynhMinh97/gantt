@@ -5,10 +5,11 @@ import { HttpClient } from '@angular/common/http';
 import { NbToastrService } from '@nebular/theme';
 import { AitBaseService } from './ait-base.service';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { KeyValueDto } from '@ait/shared';
+import { GRAPHQL, KeyValueDto } from '@ait/shared';
 import { AitEnvironmentService } from '../ait-environment.service';
 import gql from 'graphql-tag';
 import { AppState } from '../../state/selectors';
+import { Apollo } from 'apollo-angular';
 
 export interface UserSetting {
   user_id?: string;
@@ -44,8 +45,9 @@ export class AitUserService extends AitBaseService {
     httpService: HttpClient,
     snackbarService: NbToastrService,
     envService: AitEnvironmentService,
+    apollo: Apollo
   ) {
-    super(envService, store, httpService, snackbarService);
+    super(envService, store, httpService, snackbarService, apollo);
     this.storeManagement = store;
   }
   async getUserSetting(user_id?: string) {
@@ -54,7 +56,12 @@ export class AitUserService extends AitBaseService {
   async saveUserSetting(data: UserSetting[]) {
 
     const dataSave = data.map(d => ({ ...d, user_id: this.user_id }));
-    return await this.post(this.saveSetting, { data: dataSave }).toPromise();
+    return await this.mutation(
+      GRAPHQL.SAVE_USER_SETTING,
+      'user_setting',
+      dataSave,
+      { user_id: true, date_format_display: true, date_format_input: true, number_format: true, site_language: true, timezone: true });
+    // return await this.post(this.saveSetting, { data: dataSave }).toPromise();
   }
 
   async getUserJobSetting(user_id?: string) {

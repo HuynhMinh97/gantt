@@ -5,17 +5,18 @@
   <ait-space></ait-space>
   <div class="form__wrapper">
     <div class="input__group">
-      <p class="label">{{ langLabel }} *</p>
+      <p class="label">{{ '1002' | translate }} *</p>
       <ait-autocomplete-master-data
         [placeholder]="'Site language'"
         [class]="'LANGUAGE'"
         [maxItem]="1"
         [icon]="'search-outline'"
-        [widthInput]="400"
+        [style]="{ width: '400px' }"
         [defaultValue]="[langDf]"
-        (watchValues)="getValueLang($event);handleInput($event, 'lang', langLabel)"
+        (watchValues)="
+          getValueLang($event); handleInput($event, 'lang', langLabel)
+        "
         [style]="{ width: '100%' }"
-        (onInput)="handleInput($event, 'lang', langLabel)"
       >
       </ait-autocomplete-master-data>
       <ait-error-message [errors]="errors.lang"></ait-error-message>
@@ -24,18 +25,18 @@
     <ait-space></ait-space>
 
     <div class="input__group">
-      <p class="label">{{ timeLabel }} *</p>
+      <p class="label">{{ '1003' | translate }} *</p>
       <ait-autocomplete-master-data
         [placeholder]="'Timezone'"
         [class]="'TIMEZONE'"
         [maxItem]="1"
         [icon]="'search-outline'"
-        [widthInput]="400"
+        [style]="{ width: '400px' }"
         [defaultValue]="[timeDf]"
-        (watchValues)="getValueTimeZone($event)"
-        (onInput)="handleInput($event, 'timezone', timeLabel)"
+        (watchValues)="
+          getValueTimeZone($event); handleInput($event, 'timezone', timeLabel)
+        "
         [style]="{ width: '100%' }"
-        [disableOutputDefault]="false"
       >
       </ait-autocomplete-master-data>
       <ait-error-message [errors]="errors.timezone"></ait-error-message>
@@ -43,19 +44,20 @@
     <ait-space></ait-space>
 
     <div class="input__group">
-      <p class="label">{{ displayLabel }}*</p>
+      <p class="label">{{ '1004' | translate }}*</p>
       <ait-autocomplete-master-data
         [placeholder]="'MM/dd/yyyy'"
         [class]="'USER_SETTING'"
         [parentCode]="'DATE_FORMAT_DISPLAY'"
         [maxItem]="1"
         [icon]="'search-outline'"
-        [widthInput]="400"
+        [style]="{ width: '400px' }"
         [defaultValue]="[dateDisplayDf]"
-        (watchValues)="getValueDateDisplay($event)"
-        (onInput)="handleInput($event, 'display', displayLabel)"
+        (watchValues)="
+          getValueDateDisplay($event);
+          handleInput($event, 'display', displayLabel)
+        "
         [style]="{ width: '100%' }"
-        [disableOutputDefault]="false"
       >
       </ait-autocomplete-master-data>
       <ait-error-message [errors]="errors.display"></ait-error-message>
@@ -64,19 +66,19 @@
     <ait-space></ait-space>
 
     <div class="input__group">
-      <p class="label">{{ inputLabel }} *</p>
+      <p class="label">{{ '1005' | translate }} *</p>
       <ait-autocomplete-master-data
         [placeholder]="'MM/dd/yyyy'"
         [class]="'USER_SETTING'"
         [parentCode]="'DATE_FORMAT_INPUT'"
         [maxItem]="1"
         [icon]="'search-outline'"
-        [widthInput]="400"
+        [style]="{ width: '400px' }"
         [defaultValue]="[dateInputDf]"
-        (watchValues)="getValueDateInf($event)"
-        (onInput)="handleInput($event, 'input', inputLabel)"
+        (watchValues)="
+          getValueDateInf($event); handleInput($event, 'input', inputLabel)
+        "
         [style]="{ width: '100%' }"
-        [disableOutputDefault]="false"
       >
       </ait-autocomplete-master-data>
       <ait-error-message [errors]="errors.input"></ait-error-message>
@@ -84,17 +86,19 @@
     <ait-space></ait-space>
 
     <div class="input__group">
-      <p class="label">{{ numberLabel }} *</p>
+      <p class="label">{{ '1006' | translate }} *</p>
       <ait-autocomplete-master-data
         [placeholder]="'###, ###,###.###'"
         [class]="'USER_SETTING'"
         [parentCode]="'NUMBER_FORMAT'"
         [maxItem]="1"
         [icon]="'search-outline'"
-        [widthInput]="400"
+        [style]="{ width: '400px' }"
         [defaultValue]="[numberFormatDf]"
-        (watchValues)="getValueNumberFormat($event)"
-        (onInput)="handleInput($event, 'number', numberLabel)"
+        (watchValues)="
+          getValueNumberFormat($event);
+          handleInput($event, 'number', numberLabel)
+        "
         [style]="{ width: '100%' }"
       >
       </ait-autocomplete-master-data>
@@ -105,6 +109,7 @@
       <ait-button
         (click)="back()"
         [title]="'c_2004'"
+        [background]="'transparent'"
       ></ait-button>
       <ait-button
         (click)="save()"

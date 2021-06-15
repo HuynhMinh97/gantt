@@ -8,15 +8,9 @@ export * from './lib/dtos/base.dto';
 
 export * from './lib/dtos/lang.dto';
 
-export * from './lib/dtos/key-value.dto';
-
-export * from './lib/dtos/condition.dto';
-
 export * from './lib/entities/base.entity';
 
 export * from './lib/entities/lang.entity';
-
-export * from './lib/entities/key-value.entity';
 
 export * from './lib/entities/sys-user.entity';
 

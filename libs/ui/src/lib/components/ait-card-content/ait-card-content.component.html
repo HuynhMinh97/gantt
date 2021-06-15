@@ -4,18 +4,7 @@
   nbSpinnerStatus="primary"
 >
   <div class="header__card">
-    <div
-      class="text__gradient"
-      *ngIf="gradientString !== ''"
-      [ngStyle]="{
-        'background-image': gradientString,
-        padding: 15 + 'px',
-        'padding-left': '15px'
-      }"
-    >
-      {{ label }}
-    </div>
-
+    <ait-text-gradient [content]="label" [paddingLeft]="0"></ait-text-gradient>
     <div style="display: flex">
       <div
         class="button_header_card"
@@ -33,7 +22,7 @@
               font-size: 10px;
               margin-left: 10px;
             "
-            >{{ buttonTitle }}</span
+            >{{ actionBtn[0].title | translate }}</span
           >
         </span>
       </div>

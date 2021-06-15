@@ -150,6 +150,16 @@ export class AitBaseComponent implements OnInit, OnDestroy {
           })
       }
     }
+    else {
+      //get caption common for buttons, header, label, ...
+      this.getCommonCaptions().then();
+
+      // call api get all message follow by type as I : Information , W : Warning, E: Error
+      this.getAllMessages().then();
+
+      // call api get user setting
+      this.settingUpUser().then();
+    }
 
 
 
@@ -273,9 +283,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
                 collection: "sys_master_data",
                 user_id: "${this.user_id}",
                 condition: {
-                  class : {
-                    value : ["${classMaster}"]
-                  },
+                  class : "${classMaster}",
                   active_flag: true
                 }
           }){

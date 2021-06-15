@@ -2,7 +2,7 @@
   "version": 1,
   "cli": {
     "defaultCollection": "@nrwl/angular",
-    "analytics": "e45dbbe4-2e97-4773-98e0-001322a344c8"
+    "analytics": "e1716e90-281e-4e31-ab58-664907c03bcd"
   },
   "defaultProject": "ait-webapp-starter",
   "schematics": {
@@ -321,6 +321,157 @@
           "outputs": ["coverage/apps/ait-api-starter"],
           "options": {
             "jestConfig": "apps/ait-api-starter/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "ait-matching-webapp": {
+      "projectType": "application",
+      "root": "apps/ait-matching-webapp",
+      "sourceRoot": "apps/ait-matching-webapp/src",
+      "prefix": "ait",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/ait-matching-webapp",
+            "index": "apps/ait-matching-webapp/src/index.html",
+            "main": "apps/ait-matching-webapp/src/main.ts",
+            "polyfills": "apps/ait-matching-webapp/src/polyfills.ts",
+            "tsConfig": "apps/ait-matching-webapp/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "apps/ait-matching-webapp/src/favicon.ico",
+              "apps/ait-matching-webapp/src/assets"
+            ],
+            "styles": [
+              "apps/ait-matching-webapp/src/styles.scss",
+              "node_modules/@nebular/theme/styles/prebuilt/default.css",
+              "node_modules/bootstrap/dist/css/bootstrap.css",
+              "node_modules/roboto-fontface/css/roboto/roboto-fontface.css",
+              "node_modules/ionicons/scss/ionicons.scss",
+              "node_modules/@fortawesome/fontawesome-free/css/all.css",
+              "node_modules/socicon/css/socicon.css",
+              "node_modules/nebular-icons/scss/nebular-icons.scss",
+              "node_modules/pace-js/templates/pace-theme-flash.tmpl.css",
+              "node_modules/leaflet/dist/leaflet.css",
+              "apps/ait-webapp-starter/src/styles/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/ait-matching-webapp/src/environments/environment.ts",
+                  "with": "apps/ait-matching-webapp/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "ait-matching-webapp:build",
+            "proxyConfig": "apps/ait-matching-webapp/proxy.conf.json"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "ait-matching-webapp:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "ait-matching-webapp:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/ait-matching-webapp/src/**/*.ts",
+              "apps/ait-matching-webapp/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/ait-matching-webapp"],
+          "options": {
+            "jestConfig": "apps/ait-matching-webapp/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "ait-matching-api": {
+      "root": "apps/ait-matching-api",
+      "sourceRoot": "apps\\ait-matching-api\\src",
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/ait-matching-api",
+            "main": "apps/ait-matching-api/src/main.ts",
+            "tsConfig": "apps/ait-matching-api/tsconfig.app.json",
+            "assets": ["apps/ait-matching-api/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/ait-matching-api/src/environments/environment.ts",
+                  "with": "apps/ait-matching-api/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "ait-matching-api:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/ait-matching-api/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/ait-matching-api"],
+          "options": {
+            "jestConfig": "apps/ait-matching-api/jest.config.js",
             "passWithNoTests": true
           }
         }

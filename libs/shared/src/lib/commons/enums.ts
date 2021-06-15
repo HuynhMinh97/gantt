@@ -203,8 +203,7 @@ export enum COLLECTIONS {
   USER_SETTING = 'user_setting',
   SYS_BINARY_DATA = 'sys_binary_data',
   USER_PROFILE = 'user_profile',
-  EXAMPLE = 'example',
-  COMPANY = 'sys_company'
+  EXAMPLE = 'example'
 }
 
 export enum OPERATOR {
