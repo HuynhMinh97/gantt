@@ -26,17 +26,12 @@
     fullWidth
     #inputDateTime
     disabled
-    [value]="valueDf"
+    [(ngModel)]="date"
+    [nbDatepicker]="dateTimePicker"
     *ngIf="disable"
     [shape]="isRound ? 'semi-round' : 'rectangle'"
     [ngStyle]="styleInput"
-    style="
-      padding-top: 0;
-      padding-bottom: 0;
-      font-size: 12px;
-      text-align: left;
-      padding-left: 16px;
-    "
+    style="padding-top: 0; padding-bottom: 0; font-size: 12px; text-align: left"
   />
   <nb-datepicker
     #dateTimePicker

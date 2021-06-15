@@ -2,7 +2,7 @@ import { Guid } from 'guid-typescript';
 import { AitLogger } from '../utils/ait-logger.util';
 
 import { AitCheckController } from './ait-check.controller';
-import { EdgeCondition, isNil, KEYS, RequestCoreModel, RequestModel } from '@ait/shared';
+import { isNil, KEYS, RequestCoreModel, RequestModel } from '@ait/shared';
 import { AitBaseService } from '@ait/core';
 
 /**
@@ -21,22 +21,6 @@ export class AitBaseController {
 
   constructor(private baseService: AitBaseService) {
     this.check = new AitCheckController();
-  }
-
-  async removeEdge(
-
-    condition: EdgeCondition,
-
-    collection: string
-
-  ): Promise<any> {
-
-    const req = new RequestCoreModel(collection);
-
-    req[KEYS.CONDITION] = condition || {};
-
-    return await this.remove(req);
-
   }
 
   /**

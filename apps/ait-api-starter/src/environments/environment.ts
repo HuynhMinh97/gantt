@@ -18,6 +18,12 @@ export const environment = {
     MATCHING: '/matching',
     AUREOLE_V: '/sync/aureole-v',
   },
+  MAIL: {
+    USER: 'ait.dev@ait.com',
+    PASS: '@itteam.AIT',
+    HOST: '192.168.136.11',
+    POST: 25,
+  },
   DATABASE: {
     HOST: 'http://192.168.136.17:8529/',
     NAME: 'ait-matching-system-starter',
