@@ -5,7 +5,7 @@
       [icon]="item.icon"
       [nbTooltip]="item.title"
       [nbTooltipPlacement]="'bottom'"
-      (click)="item.action()"
+      (click)="item.action();navigate(item?.link)"
     >
     </nb-action>
   </nb-actions>

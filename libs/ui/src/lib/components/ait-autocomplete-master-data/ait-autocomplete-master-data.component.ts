@@ -242,7 +242,9 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   usingGraphQL = async (cond) => {
     const rest = await this.masterDataService.find({
-      class: this.class,
+      class: {
+        value : [this.class]
+      },
       ...cond
     }, {
       _key: true, code: true, name: true

@@ -216,7 +216,7 @@
           flex-direction: column;
         "
       >
-        <ait-datepicker (onDateChange)="getDate($event)"></ait-datepicker>
+        <ait-datepicker (onDateChange)="getDate($event)" [dateInput]="date"></ait-datepicker>
         <br />
         <code>#Result output : {{ result.date?.value }}</code>
       </div>

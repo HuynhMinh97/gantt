@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/no-empty-function */
 
 export enum PERMISSIONS {
@@ -12,11 +13,12 @@ export const ACTION_HEADER = [
     icon: 'home',
     title: 'c_1001',
     action: () => { },
-    isI18n: true
+    isI18n: true,
+    link : '/'
   },
 ];
 
-export enum PAGES  {
+export enum PAGES {
   //auth
   SIGNIN = 'signin',
   SIGNUP = 'signup',
@@ -24,12 +26,23 @@ export enum PAGES  {
   CHANGE_PASSWORD = 'change_password',
 
   //user
-  USER_SETTING = 'user_setting'
+  USER_SETTING = 'user_setting',
+  USER_PROFILE = 'user_profile',
+
+  //company
+  COMPANY_INFO = 'company_info',
+
+  //recommenced
+  RECOMMENCED_USER = 'recommenced_user'
+
 }
 
 export enum MODULES {
   AUTH = 'auth',
-  USER = 'user'
+  USER = 'user',
+  RECOMMENCED_USER = 'recommenced_user',
+  USER_PROFILE = 'user_profile',
+  COMPANY = 'company'
 }
 
 export enum COMMON_KEYS_I18N {
@@ -132,10 +145,11 @@ export const DarkScreen = [
   'job',
   'company-basic-info',
   'user-basic-info',
-  'user-certificate-info'
+  'user-certificate-info',
+  'change-password'
 ]
 
-export enum CURRENCY_SYMBOL  {
+export enum CURRENCY_SYMBOL {
   ja = 'JPY',
   en = 'USD',
   vi = 'VND'
@@ -189,3 +203,7 @@ export const PASSWORD_LENGTH = 8;
 export const MAX_FILE_DEFAULT = 1;
 
 export const FILE_TYPE_SUPPORT_DEFAULT = 'jpg,jpeg,png,gif,doc,docx,xls,xlsx,json,csv,pdf';
+
+
+export const aureole_logo_header = `
+`
