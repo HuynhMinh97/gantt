@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { NbSidebarService } from '@nebular/theme';
-import { Store } from '@ngrx/store';
-import { APP_TITLE } from '../../../@constant';
+import { select, Store } from '@ngrx/store';
+import { APP_TITLE, aureole_logo_header } from '../../../@constant';
 import { AitEnvironmentService, AitTranslationService } from '../../../services';
-import { AppState } from '../../../state/selectors';
+import { AppState, getCaption } from '../../../state/selectors';
 import { AitAppUtils } from '../../../utils/ait-utils';
 
 @Component({

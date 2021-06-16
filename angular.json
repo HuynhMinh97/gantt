@@ -2,7 +2,7 @@
   "version": 1,
   "cli": {
     "defaultCollection": "@nrwl/angular",
-    "analytics": "e45dbbe4-2e97-4773-98e0-001322a344c8"
+    "analytics": "e1716e90-281e-4e31-ab58-664907c03bcd"
   },
   "defaultProject": "ait-webapp-starter",
   "schematics": {

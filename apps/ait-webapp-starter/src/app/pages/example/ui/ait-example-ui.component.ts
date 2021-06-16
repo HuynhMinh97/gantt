@@ -42,7 +42,7 @@ export class AitUiComponent extends AitBaseComponent {
     console.log(router)
   }
 
-
+  date = Date.now();
 
   buttonGroups = {
     one: [
@@ -69,8 +69,6 @@ export class AitUiComponent extends AitBaseComponent {
       },
     ],
   };
-
-  date = Date.now();
 
   testTranslate = 'common.files.numberoffiles';
 

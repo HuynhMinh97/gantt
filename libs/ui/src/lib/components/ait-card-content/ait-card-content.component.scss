@@ -1,109 +1,109 @@
-.card__content_container {
-  width: 100%;
-  min-height: 130px;
-  background: #ffffff;
-  padding: 50px;
-  margin-top: 30px;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  box-shadow: 0 1px 6px rgb(0 0 0 / 6%), 0 1px 1px rgb(0 0 0 / 3%);
-  transition: 0.8s all ease-in-out;
-  // border-radius: 20px;
-}
-
-.header__card {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.button_header_card {
-  min-width: 100px;
-  height: 24px;
-  display: flex;
-  margin-right: 20px;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%);
-  border-radius: 25px;
-  cursor: pointer;
-  .text {
-    text-transform: uppercase;
-    color: #ffffff;
-    font-size: 10px;
-  }
-}
-.disable {
-  cursor: not-allowed;
-  opacity: 0.8;
-  background: gray;
-  visibility: hidden;
-}
-.divider {
-  width: 100%;
-  border: 1px solid #8f9bb3;
-  margin-top: 15px;
-}
-.content {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  width: 100%;
-  padding-top: 16px;
-  height: auto;
-  transition: 0.8s all ease-in-out;
-  overflow-x: hidden !important;
-  &.isClose {
-    height: 0;
-    overflow: hidden;
+  .card__content_container {
+    width: 100%;
+    min-height: 130px;
+    background: #ffffff;
+    padding: 50px;
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    box-shadow: 0 1px 6px rgb(0 0 0 / 6%), 0 1px 1px rgb(0 0 0 / 3%);
     transition: 0.8s all ease-in-out;
+    // border-radius: 20px;
   }
-}
-@media only screen and (max-width: 1669px) {
-  .card__content_container {
+
+  .header__card {
     width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .button_header_card {
+    min-width: 100px;
+    height: 24px;
+    display: flex;
+    margin-right: 20px;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%);
+    border-radius: 25px;
+    cursor: pointer;
+    .text {
+      text-transform: uppercase;
+      color: #ffffff;
+      font-size: 10px;
+    }
+  }
+  .disable {
+    cursor: not-allowed;
+    opacity: 0.8;
+    background: gray;
+    visibility: hidden;
+  }
+  .divider {
+    width: 100%;
+    border: 1px solid #8f9bb3;
+    margin-top: 15px;
   }
   .content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
     width: 100%;
+    padding-top: 16px;
+    height: auto;
+    transition: 0.8s all ease-in-out;
+    overflow-x: hidden !important;
+    &.isClose {
+      height: 0;
+      overflow: hidden;
+      transition: 0.8s all ease-in-out;
+    }
   }
-}
-@media only screen and (max-width: 600px) {
-  .card__content_container {
-    width: 100%;
-    padding: 10px;
+  @media only screen and (max-width: 1669px) {
+    .card__content_container {
+      width: 100%;
+    }
+    .content {
+      width: 100%;
+    }
   }
-  .content {
-    width: 100%;
+  @media only screen and (max-width: 600px) {
+    .card__content_container {
+      width: 100%;
+      padding: 10px;
+    }
+    .content {
+      width: 100%;
+    }
   }
-}
-.text__gradient {
-  // background-image: linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%);
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  .text__gradient {
+    // background-image: linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 
-  margin: 0;
-  font-weight: bold;
-  font-size: 2vmax;
-  // line-height: 48px;
-  /* or 133% */
+    margin: 0;
+    font-weight: bold;
+    font-size: 2vmax;
+    // line-height: 48px;
+    /* or 133% */
 
-  display: flex;
-  align-items: center;
-  text-align: center;
-  word-break: keep-all;
-}
-.text__gradient__no__string {
-  font-size:  2vmax;
-  word-break: keep-all;
-}
+    display: flex;
+    align-items: center;
+    text-align: center;
+    word-break: keep-all;
+  }
+  .text__gradient__no__string {
+    font-size:  2vmax;
+    word-break: keep-all;
+  }
 
-@media only screen and (min-width: 1024px) and (max-width: 1025px) {
-  // .text__gradient {
-  //   transform: scale(0.7);
-  // }
-  // .text__gradient__no__string {
-  //   transform: scale(0.7);
-  // }
-}
+  @media only screen and (min-width: 1024px) and (max-width: 1025px) {
+    // .text__gradient {
+    //   transform: scale(0.7);
+    // }
+    // .text__gradient__no__string {
+    //   transform: scale(0.7);
+    // }
+  }

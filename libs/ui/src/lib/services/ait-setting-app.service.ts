@@ -28,7 +28,7 @@ export class AitSettingAppService {
   async Init() {
     if (localStorage.access_token) {
       const userId = AitAppUtils.getUserId();
-      console.log('APP INITIALIZING', userId, this.envService);
+      // console.log('APP INITIALIZING', userId, this.envService);
       const env: any = this.envService;
 
       const url = env?.API_PATH.BASE_REST_PREFIX + '/user/get-setting';

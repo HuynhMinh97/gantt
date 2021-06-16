@@ -111,7 +111,6 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
 
   setupDate = () => {
     this.store.pipe(select(getSettingLangTime)).subscribe(setting => {
-      console.log(setting)
       if (this.currentLang !== setting?.site_language) {
         this.currentLang = setting?.site_language || 'ja_JP';
 

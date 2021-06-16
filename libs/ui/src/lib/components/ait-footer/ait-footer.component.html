@@ -1,7 +1,6 @@
 <div class="footer__home__home">
   <div class="content__foot">
     <svg
-      style="cursor: pointer"
       *ngIf="!isAureoleV()"
       class="img"
       (click)="navigateToHome()"
@@ -39,12 +38,7 @@
       </defs>
     </svg>
 
-    <div
-      (click)="navigateToHome()"
-      class="logo__header"
-      style="cursor: pointer"
-      *ngIf="isAureoleV()"
-    >
+    <div (click)="navigateToHome()" class="logo__header" *ngIf="isAureoleV()">
       <svg
         width="367"
         height="44"

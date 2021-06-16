@@ -30,7 +30,8 @@ export class AitOutputTextComponent implements OnChanges {
           const target = AitAppUtils.getArrayNotFalsy(this.valueArray);
           const comma = this.translateService.translate('s_0001');
           if (target.length !== 0) {
-            this.value = target.join(comma || ',');
+            const m = comma !== 's_0001' ? comma : ','
+            this.value = target.join(m);
           }
           else {
             this.value = '';
