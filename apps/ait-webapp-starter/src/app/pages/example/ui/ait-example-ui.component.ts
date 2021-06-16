@@ -42,7 +42,7 @@ export class AitUiComponent extends AitBaseComponent {
     console.log(router)
   }
 
-
+  date = Date.now();
 
   buttonGroups = {
     one: [

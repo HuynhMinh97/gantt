@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
+import { APP_INITIALIZER, ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AitButtonModule } from './components/ait-button/ait-button.module';
 import { AitThemeModule } from './@theme/theme.module';
@@ -29,7 +29,7 @@ import { AitTranslatePipe } from './@theme/pipes/ait-translate.pipe';
 import { AitMenuUserModule } from './components/ait-menu-user/ait-menu-user.module';
 import { AitAutocompleteMasterModule } from './components/ait-autocomplete-master/ait-autocomplete-master.module';
 import { AitAutocompleteMasterDataModule } from './components/ait-autocomplete-master-data/ait-autocomplete-master-data.module';
-import { StoreModule } from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
 import { rootReducers } from './state/rootReducers';
 import { AitBaseComponent } from './components/base.component';
 import {
@@ -54,6 +54,14 @@ import { DragScrollModule } from 'ngx-drag-scroll';
 import { AitOutputTextModule } from './components/ait-output-text/ait-output-text.module';
 import { AitCommonLayoutModule } from './@theme/layouts/ait-common-layout/ait-common-layout.module';
 import { AitUiComponent } from './ait-ui.component';
+import { AppState, } from './state/selectors';
+import { AitSettingAppService } from './services/ait-setting-app.service';
+
+export function initializeApp(appInitService: AitSettingAppService) {
+  return () => {
+    return appInitService.Init();
+  }
+}
 
 const inItialState = {};
 
@@ -96,7 +104,6 @@ const NB_MODULES = [
     AitTextareaModule,
     AitProgressModule,
     AitTimePickerModule,
-    AitTextGradientModule,
     AitCardContentModule,
     AitButtonModule,
     AitConfirmDialogModule,
@@ -104,6 +111,7 @@ const NB_MODULES = [
     AitAutocompleteMasterModule,
     AitAutocompleteMasterDataModule,
     AitOutputTextModule,
+    AitTextGradientModule,
     StoreModule.forRoot({
       ...rootReducers,
       ...inItialState
@@ -148,7 +156,13 @@ const NB_MODULES = [
   providers: [
     AitBaseService,
     AitTranslationService,
-    AitEnvironmentService
+    AitEnvironmentService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeApp,
+      deps: [AitSettingAppService],
+      multi: true
+    }
   ]
 })
 export class AitUiModule {
@@ -158,6 +172,7 @@ export class AitUiModule {
     envService: AitEnvironmentService,
     private httpLink: HttpLink,
     private apollo: Apollo,
+    private store: Store<AppState>,
     @Optional() @SkipSelf() parentModule?: AitUiModule,
 
   ) {
@@ -171,13 +186,13 @@ export class AitUiModule {
 
       // create error link
       const errorLink = onError(({ graphQLErrors, networkError }) => {
-        if (graphQLErrors)
-          graphQLErrors.map(({ message, locations, path }) =>
-            console.log(
-              `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-            ),
-          );
-        if (networkError) console.log(networkError);
+        // if (graphQLErrors)
+        //   graphQLErrors.map(({ message, locations, path }) =>
+        //     console.log(
+        //       `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+        //     ),
+        //   );
+        // if (networkError) console.log(networkError);
       });
 
       const http = this.httpLink.create({

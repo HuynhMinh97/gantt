@@ -1,3 +1,4 @@
+
 <div
   class="text__gradient"
   *ngIf="gradientString !== ''"
@@ -8,7 +9,7 @@
     'padding-left' : paddingLeft
   }"
 >
-  {{ content }}
+  {{ getContent() }}
 </div>
 
 <div
@@ -17,5 +18,8 @@
   [ngStyle]="{ 'font-size': fontsize,
   'padding-left' : paddingLeft }"
 >
-  {{ content }}
+  {{ getContent() }}
 </div>
+
+
+

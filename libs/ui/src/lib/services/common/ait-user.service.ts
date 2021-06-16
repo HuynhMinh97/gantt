@@ -55,7 +55,7 @@ export class AitUserService extends AitBaseService {
   }
   async saveUserSetting(data: UserSetting[]) {
 
-    const dataSave = data.map(d => ({ ...d, user_id: this.user_id }));
+    const dataSave = data.map(d => ({ ...d, user_id: this.user_id, company: this.company }));
     return await this.mutation(
       GRAPHQL.SAVE_USER_SETTING,
       'user_setting',

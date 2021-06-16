@@ -3,7 +3,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { AppState, getAllInfoRequest } from '../../state/selectors';
+import { AppState, getAllInfoRequest, getLang } from '../../state/selectors';
 import { Observable, of, Subscription } from 'rxjs';
 import { tap, catchError, map } from 'rxjs/operators';
 import { SHOWSNACKBAR } from '../../state/actions';
@@ -197,38 +197,46 @@ export class AitBaseService implements OnDestroy {
    * @param condition condition search
    * @returns data or error
    */
-  query(name: string, request: any, returnField?: any) {
+  query(name: string, request: any, returnField?: any): Promise<any> {
+    // console.log(localStorage.lang)
     // Request to graphql query
-    request['company'] = this.company || localStorage.comp || SYSTEM_COMPANY;
-    request['lang'] = this.currentLang;
-    request['user_id'] = this.user_id;
+    return new Promise((resolve, reject) => {
+      this.store.pipe(select(getLang)).subscribe(lang => {
+        request['company'] = this.company || localStorage.comp || SYSTEM_COMPANY;
+        request['lang'] = lang;
+        request['user_id'] = this.user_id;
 
-    // Setup gql json
-    const query = {
-      query: {
-        [name]: {
-          data: returnField,
-          message: true,
-          errors: true,
-          status: true,
-          numData: true,
-          numError: true
-        }
-      }
-    };
+        // Setup gql json
+        const query = {
+          query: {
+            [name]: {
+              data: returnField,
+              message: true,
+              errors: true,
+              status: true,
+              numData: true,
+              numError: true
+            }
+          }
+        };
 
-    query.query[name]['__args'] = { request };
-    // Parse to gql
-    const gqlQuery = jsonToGraphQLQuery(query, { pretty: true });
+        query.query[name]['__args'] = { request };
+        // Parse to gql
+        const gqlQuery = jsonToGraphQLQuery(query, { pretty: true });
+        console.log(gqlQuery)
 
-    return this.apollo
-      .query({
-        query: gql`
+        const result = this.apollo
+          .query({
+            query: gql`
           ${gqlQuery}
         `,
+          })
+          .pipe(map((res) => (<any>res.data)[name]))
+          .toPromise();
+        resolve(result)
       })
-      .pipe(map((res) => (<any>res.data)[name]))
-      .toPromise();
+
+    })
   }
 
   /**
@@ -265,7 +273,7 @@ export class AitBaseService implements OnDestroy {
     query.mutation[name]['__args'] = { request };
     // Parse to gql
     const gqlQuery = jsonToGraphQLQuery(query, { pretty: true });
-
+    console.log(gqlQuery)
     return this.apollo
       .mutate({
         mutation: gql`
