@@ -6,7 +6,6 @@ import { AitDatePickerComponent } from './ait-datepicker.component';
 import { AitDateFormatService } from '../../services/common/ait-date.service';
 import { StoreModule } from '@ngrx/store';
 import { rootReducers } from '../../state/rootReducers';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -14,8 +13,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     NbInputModule,
-    FormsModule,
-    ReactiveFormsModule,
     NbDatepickerModule.forRoot(),
     NbDateFnsDateModule.forRoot({
       parseOptions: { useAdditionalWeekYearTokens: true, useAdditionalDayOfYearTokens: true },

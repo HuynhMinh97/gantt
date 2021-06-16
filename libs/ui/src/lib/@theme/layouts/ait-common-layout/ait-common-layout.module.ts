@@ -7,7 +7,6 @@ import { AitMenuUserModule } from '../../../components/ait-menu-user/ait-menu-us
 import { AitMenuActionsModule } from '../../../components/ait-menu-actions/ait-menu-actions.module';
 import { AitBackButtonModule } from '../../../components/ait-back-button/ait-back-button.module';
 import { AitUpButtonModule } from '../../../components/ait-up-button/ait-up-button.module';
-import { AitTextareaModule } from '../../../components/ait-text-area/ait-text-area.module';
 
 @NgModule({
   declarations: [AitCommonLayoutComponent, AitFooterComponent,],
@@ -15,10 +14,7 @@ import { AitTextareaModule } from '../../../components/ait-text-area/ait-text-ar
     CommonModule,
     NbLayoutModule,
     AitMenuUserModule,
-    AitMenuActionsModule, AitBackButtonModule, AitUpButtonModule, NbSidebarModule, NbIconModule,
-    AitTextareaModule
-  ]
-    ,
+    AitMenuActionsModule, AitBackButtonModule, AitUpButtonModule, NbSidebarModule, NbIconModule],
   exports: [AitCommonLayoutComponent],
   providers: [],
 })
