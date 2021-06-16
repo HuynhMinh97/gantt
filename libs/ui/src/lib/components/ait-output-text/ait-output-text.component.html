@@ -1,39 +1,8 @@
-<div class="output_text" *ngIf="isTranslate">
-  <ait-label [label]="label" [isTranslate]="isTranslate"></ait-label>
-  <input
-    type="text"
-    readonly
-    [value]="value"
-    [placeholder]="placeholder | translate"
-    *ngIf="row === 1"
-    [style.height]="height"
-    [style.width]="width"
-  />
-  <textarea
-    *ngIf="row !== 1"
-    rows="{{ row }}"
-    disabled
-    [style.width]="width"
-    style="resize: none"
-    class="textarea"
-    [value]="value || ''"
-  >
-  </textarea>
-  <div class="caption" *ngIf="caption" [style.width]="width">
-    <div class="icon">
-      <nb-icon [icon]="iconCaption"></nb-icon>
-    </div>
-    <div class="info">
-      <p style="word-break: break-word; color: #8f9bb3; font-size: 12px">
-        {{ caption }}
-      </p>
-    </div>
-  </div>
-</div>
-
-<div class="output_text" *ngIf="!isTranslate">
+<div class="output_text" >
   <ait-label [label]="label"></ait-label>
   <input
+    [nbTooltip]="value"
+    [nbTooltipTrigger]="value ? 'hover' : 'noop'"
     type="text"
     readonly
     [value]="value"
@@ -52,13 +21,13 @@
     [value]="value || ''"
   >
   </textarea>
-  <div class="caption" *ngIf="caption" [style.width]="width">
+  <div class="caption" *ngIf="caption">
     <div class="icon">
       <nb-icon [icon]="iconCaption"></nb-icon>
     </div>
     <div class="info">
       <p style="word-break: break-word; color: #8f9bb3; font-size: 12px">
-        {{ caption }}
+        {{ getCaption() }}
       </p>
     </div>
   </div>

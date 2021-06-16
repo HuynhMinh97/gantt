@@ -3,10 +3,9 @@ import { CommonModule } from '@angular/common';
 import { AitTextGradientComponent } from './ait-text-gradient.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [AitTextGradientComponent],
   imports: [ CommonModule ],
-  exports: [],
+  exports: [AitTextGradientComponent],
   providers: [],
-  entryComponents: [AitTextGradientComponent]
 })
 export class AitTextGradientModule {}

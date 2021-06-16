@@ -28,15 +28,11 @@ interface CommonAction {
 }
 
 
+const langStorage = localStorage.lang;
 
-
-
-// if (!langStorage) {
-//   localStorage.setItem('lang', environment.COMMON.LANG_DEFAULT);
-// }
 export const initialState: CommonState = {
   company: '',
-  language: localStorage.lang || 'ja_JP',
+  language: langStorage || 'ja_JP',
   userInfo: {
     user_id: '',
     email: '',
@@ -163,7 +159,7 @@ export const CommonReducer = (state = initialState, action: CommonAction): Commo
         requestInfo: action.payload,
       };
     case ActionTypes.Change_lang_app:
-
+      localStorage.setItem('lang', action.payload);
       return {
         ...state,
         language: action.payload,

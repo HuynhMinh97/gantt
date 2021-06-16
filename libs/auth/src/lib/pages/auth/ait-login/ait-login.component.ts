@@ -48,7 +48,7 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
   ) {
 
     super(store, authService, apollo, userService, envService);
-    console.log(router)
+    console.log(this.allMessages)
     this.setModulePage({
       page: PAGES.SIGNIN,
       module: MODULES.AUTH
@@ -108,7 +108,7 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
 
   isAureoleV = () => {
     const target: any = this.envService;
-    return target?.isAureoleV;
+    return !target?.default;
   }
 
   getErrorEmailMessage = (value) => {
@@ -307,13 +307,13 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
         } catch (e) {
           console.log(e)
           if (!(e?.message || '').includes('email')) {
-            const message = this.getMsg('E0107');
+            const message = this.translateService.getMsg('E0107');
             this.setErrors({
               password: [...this.errors.password, message]
             })
           }
           else if ((e?.message || '').includes('email')) {
-            const message = this.getMsg('E0104');
+            const message = this.translateService.getMsg('E0104');
             this.setErrors({
               email: [...this.errors.email, message]
             })

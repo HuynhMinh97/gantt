@@ -1,6 +1,6 @@
-<p class="ait-label" *ngIf="isTranslate">
-  {{ label | translate }}
+<p class="ait-label" *ngIf="isTranslate" [ngStyle]="styleText">
+  {{ getLabelTranslate() }}
 </p>
-<p class="ait-label" *ngIf="!isTranslate">
+<p class="ait-label" *ngIf="!isTranslate" [ngStyle]="styleText">
   {{ label }}
 </p>
