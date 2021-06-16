@@ -26,7 +26,7 @@ export class AitFooterComponent {
   }
   isAureoleV = () => {
     const target: any = this.env;
-    return target?.isAureoleV;
+    return !target?.default;
   }
   handleHref = () => {
     this.router.navigateByUrl('/');

@@ -70,6 +70,8 @@ export class AitUiComponent extends AitBaseComponent {
     ],
   };
 
+  date = Date.now();
+
   testTranslate = 'common.files.numberoffiles';
 
   buttonStatus = [];

@@ -1,7 +1,8 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { select, Store } from '@ngrx/store';
+import { title } from 'node:process';
 import { AitTranslationService } from '../../services';
-import { AppState, getCaption } from '../../state/selectors';
+import { AppState, getCaption, getLang } from '../../state/selectors';
 
 @Component({
   selector: 'ait-button',
@@ -39,9 +40,13 @@ export class AitButtonComponent implements OnChanges {
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
         if (key === 'title') {
-          this.store.pipe(select(getCaption)).subscribe(() => {
+
+          this.store.pipe(select(getCaption)).subscribe((r) => {
             if (this.isTranslate) {
+              //
               this.title = this.translateService.translate(this.title);
+
+
               this.toolTip = this.title;
             }
           })

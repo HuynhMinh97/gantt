@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { DATA_TYPE, RESULT_STATUS } from '@ait/shared';
+import { DATA_TYPE, GRAPHQL, isObjectFull, RESULT_STATUS } from '@ait/shared';
 import {
   AitAppUtils,
   AitAuthService,
@@ -67,7 +67,10 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
   timeLabel = '1003';
   displayLabel = '1004';
   inputLabel = '1005';
-  numberLabel = '1005';
+  numberLabel = '1006';
+  title = '';
+
+
 
   errors = {
     lang: [],
@@ -120,6 +123,7 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
     this.dataObject = { ...this.dataObject, ...newState };
   }
 
+
   constructor(
     public masterData: AitMasterDataService,
     store: Store<AppState>,
@@ -127,7 +131,7 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
     authService: AitAuthService,
     private translatePipe: AitTranslationService,
     private router: Router,
-    userService: AitUserService,
+    public userService: AitUserService,
     envService: AitEnvironmentService,
     apollo: Apollo
   ) {
@@ -136,82 +140,105 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
       page: PAGES.USER_SETTING,
       module: MODULES.USER
     })
-    store.pipe(select(getCaption)).subscribe(() => {
+    store.pipe(select(getLang)).subscribe(() => {
+
       this.langLabel = this.setLabel(this.langLabel);
       this.timeLabel = this.setLabel(this.timeLabel);
       this.displayLabel = this.setLabel(this.displayLabel);
       this.inputLabel = this.setLabel(this.inputLabel);
       this.numberLabel = this.setLabel(this.numberLabel);
+
+
+    });
+
+    store.pipe(select(getLang)).subscribe(() => {
+      const title = this.translatePipe.translate(
+        'c_10020'
+      );
+      if (title !== 'c_10020') {
+        this.title = title;
+      }
     })
+
+    // this.getUserSetting(this.user_id).then(r => console.log(r))
     store.pipe(select(getLang)).subscribe(lang => {
       this.currentLang = lang;
 
       store.pipe(select(getUserSetting)).subscribe(set => {
-        this.settingObj = set;
-        // console.log(set)
+        if (!AitAppUtils.isObjectEqual(set, this.settingObj)) {
+          this.settingObj = set;
 
-        const target: any = set || {};
-        this.masterData.getClassBy(['LANGUAGE', 'TIMEZONE']).then(r => {
+          const target: any = set || {};
+          masterData.find({
+            class: {
+              value: ['LANGUAGE']
+            }
+          }).then(r => {
 
-          this.setDataObject({
-            dataLanguage: r.data.filter(d => d.class === 'LANGUAGE'),
-            dataTimezone: r.data.filter(d => d.class === 'TIMEZONE'),
-          });
-          this.dataLangs = this.dataObject.dataLanguage;
-          this.dataTimeZone = this.dataObject.dataTimezone;
-          if (target?.site_language &&
-            target?.site_language !== this.currentLang) {
+            if (r?.status === RESULT_STATUS.OK) {
+              const data = r.data.map(f => ({ ...f, value: f?.name, _key: f?.code }))
+              this.setDataObject({
+                dataLanguage: data,
+              });
+              this.dataLangs = this.dataObject.dataLanguage;
 
-            this.currentLang = target?.site_language;
+              this.langDf = this.getLangDefault(target?.site_language);
 
-          }
-          if (target?.site_language) {
-            this.langDf = this.getLangDefault(target?.site_language);
-
-
-          }
-          if (target?.timezone) {
-            this.timeDf = this.getTimezoneDefault(target?.timezone);
-          }
-          this.setDefaultInputValues({
-            langDf: this.langDf,
-            timeDf: this.timeDf,
+            }
           })
-        });
-        masterData.getSuggestData({
-          type: DATA_TYPE.MASTER,
-          class: 'USER_SETTING',
-        }).then(r => {
-          this.setDataObject({
-            dataDateFormatDisplay: r.data.filter(d => d.parent_code === 'DATE_FORMAT_DISPLAY'),
-            dataDateFormatInput: r.data.filter(d => d.parent_code === 'DATE_FORMAT_INPUT'),
-            dataNumberFormat: r.data.filter(d => d.parent_code === 'NUMBER_FORMAT'),
-          });
+          masterData.find({
+            class: {
+              value: ['TIMEZONE']
+            }
+          }).then(r => {
+            if (r?.status === RESULT_STATUS.OK) {
+              const data = r.data.map(f => ({ ...f, value: f?.name, _key: f?.code }))
 
-          if (target?.date_format_display) {
-            this.dateDisplayDf = this.dataObject.dataDateFormatDisplay.find(f => f.code === target?.date_format_display?.code);
-
-          }
-          if (target?.date_format_input) {
-            this.dateInputDf = this.dataObject.dataDateFormatInput.find(f => f.code === target?.date_format_input?.code);
-
-          }
-          if (target?.number_format) {
-            this.numberFormatDf = this.dataObject.dataNumberFormat.find(f => f.code === target?.number_format?.code);
-
-          }
-          this.setDefaultInputValues({
-            dateDisplayDf: this.dateDisplayDf,
-            dateInputDf: this.dateInputDf,
-            numberFormatDf: this.numberFormatDf
+              this.setDataObject({
+                dataTimezone: data,
+              });
+              this.dataTimeZone = this.dataObject.dataTimezone;
+              this.timeDf = this.getTimezoneDefault(target?.timezone);
+            }
           })
+          this.queryUserSetting('USER_SETTING').then(r => {
+            const data = r.map(f => ({ ...f, value: f?.name, _key: f?.code }));
+            this.setDataObject({
+              dataDateFormatDisplay: data.filter(d => d.parent_code === 'DATE_FORMAT_DISPLAY'),
+              dataDateFormatInput: data.filter(d => d.parent_code === 'DATE_FORMAT_INPUT'),
+              dataNumberFormat: data.filter(d => d.parent_code === 'NUMBER_FORMAT'),
+            });
+            // console.log(target,this.dataObject)
+            if (target?.date_format_display) {
+              this.dateDisplayDf = this.dataObject.dataDateFormatDisplay.find(f => f.name === target?.date_format_display);
 
-        });
+            }
+            if (target?.date_format_input) {
+              this.dateInputDf = this.dataObject.dataDateFormatInput.find(f => f.name === target?.date_format_input);
+
+            }
+            if (target?.number_format) {
+              this.numberFormatDf = this.dataObject.dataNumberFormat.find(f => f.name === target?.number_format);
+
+            }
+
+            this.setDefaultInputValues({
+              dateDisplayDf: this.dateDisplayDf,
+              dateInputDf: this.dateInputDf,
+              numberFormatDf: this.numberFormatDf
+            })
+
+            // console.log(this.defaultInputValues)
+          })
+        }
+
       });
     });
 
 
   }
+
+
 
   clearDefaultValueInput = () => {
     this.langDf = null;
@@ -231,6 +258,35 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
       this.numberFormatDf = this.defaultInputValues?.numberFormatDf;
     }, 50)
   }
+
+  queryUserSetting = async (classMaster: string) => {
+    const returnFields = {
+      code: true,
+      _key: true,
+      name: true,
+      parent_code: true
+    }
+    const condition = {
+      active_flag: true,
+      class: {
+        value: [classMaster]
+      }
+    }
+    const request = {};
+    request['collection'] = 'sys_master_data';
+    if (isObjectFull(condition)) {
+      request['condition'] = condition;
+    }
+    const rest = await this.query(GRAPHQL.FIND_SYSTEM, request, returnFields);
+
+    let dataMaster = [];
+    const result = rest?.data
+    if (result) {
+      dataMaster = result;
+    }
+    return dataMaster || [];
+  }
+
 
   back = () => {
     history.back();
@@ -258,10 +314,10 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
   }
 
   setUserSetting = () => {
-    this.userService.getUserSetting(this.user_id).then(r => {
-
+    this.getUserSetting(this.user_id).then(r => {
+      console.log(r)
       if (r?.data[0]?.site_language) {
-        this.store.dispatch(new ChangeLangage(r.data[0].site_language?.code || 'ja_JP'));
+        this.store.dispatch(new ChangeLangage(r.data[0].site_language || 'ja_JP'));
       }
       const result = {};
       Object.entries(r?.data[0]).forEach(([key, target]) => {
@@ -317,6 +373,10 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
     return checks.length !== 0
   }
 
+  jsUcfirst(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
   save = () => {
     this.clearErrors();
     const fields = this.getFieldNotNullFromState().map(m => ({ [m]: this.formState[m] }));
@@ -324,25 +384,34 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
     const { site_language } = this.formState;
     if (!this.isErrors()) {
       if (fields.length !== 0) {
-        this.userService.saveUserSetting([{ ...this.formState, user_id: this.user_id }]).then(r => {
+        this.userService.saveUserSetting([{ ...this.formState, user_id: this.user_id, _key: this.user_id }]).then(r => {
           if (r.status === RESULT_STATUS.OK) {
-
+            const successToSave = this.translatePipe.getMsg('I0012')
             if (site_language) {
               this.store.dispatch(new ChangeLangage(site_language));
+              localStorage.setItem('lang',site_language)
             }
-            this.setUserSetting();
-            const title = this.translatePipe.translate(this.messageArlet + '.title');
-            const successToSave = this.translatePipe.translate(this.messageArlet + '.success');
-            const fieldsTrans = this.getFieldNotNullFromState().map(m => this.translatePipe.translate(this.messageArlet + '.' + m));
-            this.showToastr(title, `${fieldsTrans.join(', ')}` + successToSave);
+            // this.setUserSetting();
+            const mapping = {
+              site_language: this.langLabel,
+              timezone: this.timeLabel,
+              date_format_display: this.displayLabel,
+              date_format_input: this.inputLabel,
+              number_format: this.numberLabel
+            }
+            const fieldsTrans = this.getFieldNotNullFromState().map(m => this.jsUcfirst(mapping[m]));
+            this.showToastr(this.title, `${fieldsTrans.join(', ')} ` + successToSave);
+            setTimeout(() => {
             this.back();
+
+            },1000)
           }
         });
       }
       else {
-        const title = this.translatePipe.translate(this.messageArlet + '.title');
-        const nothingToSave = this.translatePipe.translate(this.messageArlet + '.nothing');
-        this.showToastr(title, nothingToSave, 'warning');
+
+        const nothingToSave = this.getMsg('W0001');
+        this.showToastr(this.title, nothingToSave, 'warning');
       }
     }
 

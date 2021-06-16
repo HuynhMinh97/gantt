@@ -55,6 +55,13 @@ import { AitOutputTextModule } from './components/ait-output-text/ait-output-tex
 import { AitCommonLayoutModule } from './@theme/layouts/ait-common-layout/ait-common-layout.module';
 import { AitUiComponent } from './ait-ui.component';
 import { AppState, } from './state/selectors';
+import { AitSettingAppService } from './services/ait-setting-app.service';
+
+export function initializeApp(appInitService: AitSettingAppService) {
+  return () => {
+    return appInitService.Init();
+  }
+}
 
 const inItialState = {};
 
@@ -150,6 +157,12 @@ const NB_MODULES = [
     AitBaseService,
     AitTranslationService,
     AitEnvironmentService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeApp,
+      deps: [AitSettingAppService],
+      multi: true
+    }
   ]
 })
 export class AitUiModule {

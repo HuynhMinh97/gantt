@@ -12,26 +12,31 @@ export class TranslationSet {
 @Injectable()
 export class AitTranslationService {
   masterData: any[];
-  currentLang = 'en_US';
+  currentLang = '';
   captionByPage = [];
   allMessage = [];
   constructor(store?: Store<AppState>) {
-    store.pipe(select(getLang)).subscribe(lang => this.currentLang = lang);
-    store.pipe(select(getCaption)).subscribe(req => {
-      //module.page${group_no+code} as a key in i18n
-      this.captionByPage = req.map(cap => {
+    store.pipe(select(getLang)).subscribe(lang => {
+      if (this.currentLang !== lang) {
+        this.currentLang = lang;
+        store.pipe(select(getCaption)).subscribe(req => {
+          //module.page${group_no+code} as a key in i18n
+          this.captionByPage = req.map(cap => {
 
-        const _key = `${cap.module}.${cap.page}.${cap.code}`
-        return {
-          _key,
-          value: cap.name,
-          code: cap.code
-        }
-      });
+            const _key = `${cap.module}.${cap.page}.${cap.code}`
+            return {
+              _key,
+              value: cap.name,
+              code: cap.code
+            }
+          });
+        });
+        store.subscribe(s => {
+          this.allMessage = s.commonReducer.commonMessages;
+        })
+      }
     });
-    store.subscribe(s => {
-      this.allMessage = s.commonReducer.commonMessages;
-    })
+
   }
 
 
@@ -62,6 +67,7 @@ export class AitTranslationService {
   */
   translate(value: string): string {
     const code = value.toLowerCase();
+    // console.log(code,this.captionByPage)
 
     if (this.captionByPage.length !== 0) {
       const find = this.captionByPage.find(caption => {
@@ -84,12 +90,16 @@ export class AitTranslationService {
   getMsg = (code: string) => {
     const typeMessage = code ? code[0] : '';
     const mes = this.allMessage[typeMessage];
+    console.log(mes)
+
     if (mes) {
       const mainCode = code.slice(1, code.length);
+
       const find = mes.find(m => m.code === mainCode);
-      return find?.message[this.currentLang] || code;
+      console.log(find)
+      return find?.message[this.currentLang] || '';
     }
-    return code;
+    return '';
   }
 
   // Please provide api for search master data for page

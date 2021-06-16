@@ -39,7 +39,7 @@ export interface BaseInitData {
 })
 export class AitBaseComponent implements OnInit, OnDestroy {
   public module: string;
-  public lang = 'ja_JP';
+  public lang = '';
   public page: string;
   public sup = new Subscription();
   public title = 'PM';
@@ -64,43 +64,24 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     private layoutScrollService?: NbLayoutScrollService,
     public toastrService?: NbToastrService,
   ) {
+    const userId = this.authService.getUserID();
     this.env = _env;
     //setting default lang & company
     this.company = this.env.COMMON.COMPANY_DEFAULT;
+    this.lang = localStorage.getItem('lang');
     // get token from localStorage
     this.token = authService.getAccessToken();
 
+    // call api get all message follow by type as I : Information , W : Warning, E: Error
+    this.getAllMessages().then();
+
+    //get caption common for buttons, header, label, ...
+    this.getCommonCaptions().then();
 
 
-    // // If we couldn't find lang in localStorage, It should be set base on ENV
-    // if (!langStorage) {
-    //   localStorage.setItem('lang', this.env?.COMMON?.LANG_DEFAULT || 'ja_JP');
-    // }
-
-    // Push lang  on store
-    // store.dispatch(new ChangeLangage(langStorage || this.env?.COMMON?.LANG_DEFAULT || 'ja_JP'));
-
-    store.pipe(select(getLang)).subscribe(lang => {
-      this.lang = lang;
-      //get caption common for buttons, header, label, ...
-      this.getCommonCaptions().then();
-
-      // call api get all message follow by type as I : Information , W : Warning, E: Error
-      this.getAllMessages().then();
-
-      // call api get user setting
-      // this.settingUpUser().then();
-    })
-
-
-    // Listening event loading when the app is loading
-    store
-      .pipe(select(getLoading))
-      .subscribe((loading) => (this.isLoading = loading));
 
     // CAll get user info , such as company, username, email, _key
     if (localStorage.getItem('access_token')) {
-      const userId = this.authService.getUserID();
 
       if (userId && userId !== '') {
         this.getUserInfo(userId).then((res: any) => {
@@ -112,6 +93,22 @@ export class AitBaseComponent implements OnInit, OnDestroy {
           store.dispatch(new StoreUserInfo(res));
 
         });
+
+      }
+    }
+
+    store.pipe(select(getLang)).subscribe(lang => {
+
+      if (this.lang !== lang) {
+        console.log(lang);
+        //get caption common for buttons, header, label, ...
+        this.getCommonCaptions().then();
+
+        // call api get all message follow by type as I : Information , W : Warning, E: Error
+        this.getAllMessages().then();
+
+        // call api get user setting
+        // this.settingUpUser().then();
         this.
           getUserSetting(userId).then(r => {
 
@@ -132,7 +129,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
               // this.getCommonCaptions(this.lang).then();
 
               // // call api get all message follow by type as I : Information , W : Warning, E: Error
-              // this.getAllMessages().then();
+              this.getAllMessages().then();
 
               // call api get user setting
               this.settingUpUser().then((b) => {
@@ -149,7 +146,17 @@ export class AitBaseComponent implements OnInit, OnDestroy {
             }
           })
       }
-    }
+      this.lang = lang;
+
+    })
+
+
+    // Listening event loading when the app is loading
+    store
+      .pipe(select(getLoading))
+      .subscribe((loading) => (this.isLoading = loading));
+
+
 
 
 
@@ -318,6 +325,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     const typeMessage = code ? code[0] : '';
 
     const mes = this.allMessages ? this.allMessages[typeMessage] : [];
+    console.log(mes)
     if (mes) {
       const mainCode = code.slice(1, code.length);
       const find = mes.find(m => m.code === mainCode);
@@ -453,35 +461,29 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     this.store.dispatch(new LOADINGAPP(false));
   }
   getCommonCaptions = async (lang?: string) => {
-
-
-    setTimeout(() => {
-      this.getCaption(null, null, lang).then((r: any) => {
-        const result = r?.data?.findSystem;
-        if (result) {
-          if (result.status === RESULT_STATUS.OK) {
-            this.store.dispatch(new GetCommonCaptions({ page: 'common', module: 'common', data: result.data }))
-          }
-        }
-      })
-    }, 350)
-
+    const r: any = await this.getCaption('common', 'common');
+    const result = r?.data?.findSystem;
+    if (result) {
+      if (result.status === RESULT_STATUS.OK) {
+        this.store.dispatch(new GetCommonCaptions({ page: 'common', module: 'common', data: result.data }))
+      }
+    }
   }
 
 
   // Get Caption common or by page & module
-  getCaption = async (page?: string, module?: string, lang?: string) => {
+  getCaption = async (pages?: string, module?: string,) => {
     return await this.apollo.query({
       query: gql`
       query {
         findSystem(request : {
           company: "${this.company}",
-          lang: "${lang || this.lang}",
+          lang: "${this.lang}",
           collection: "sys_caption",
           user_id: "${this.user_id}",
           condition: {
-            module : "${module ? module : 'common'}",
-            page : "${page ? page : 'common'}"
+            module : "${module && typeof module === 'string' ? module : 'common'}",
+            page : "${pages && typeof pages === 'string' ? pages : 'common'}"
           }
         }) {
           data {
@@ -505,11 +507,6 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
   // Start basecomponent for initializing
   ngOnInit() {
-
-    this.store.select(getLang).subscribe(lang => {
-      console.log(lang)
-    })
-
 
     // register locale by language setting
     this.store.pipe(select(getSettingLangTime)).subscribe({
@@ -547,16 +544,14 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     this.store.dispatch(new SetModulePage({ page, module }));
     this.module = module;
     this.page = page;
-    setTimeout(() => {
-      this.getCaption(page, module).then((r: any) => {
-        const result = r?.data?.findSystem;
-        if (result) {
-          if (result.status === RESULT_STATUS.OK) {
-            this.store.dispatch(new GetCaptionByPages({ page: data.page, module: data.module, data: result.data }))
-          }
+    this.getCaption(data.page, data.module).then((r: any) => {
+      const result = r?.data?.findSystem;
+      if (result) {
+        if (result.status === RESULT_STATUS.OK) {
+          this.store.dispatch(new GetCaptionByPages({ page: data.page, module: data.module, data: result.data }))
         }
-      })
-    }, 400)
+      }
+    })
 
 
     // Coding here for calling api to request caption or master data for module and page 🚀🚀🚀
@@ -573,7 +568,6 @@ export class AitBaseComponent implements OnInit, OnDestroy {
           E: result?.data.filter(f => f?.type === 'E'),
           W: result?.data.filter(f => f?.type === 'W'),
         };
-        // //console.log(this.allMessages)
 
         this.store.dispatch(new GetCommonMessages(this.allMessages));
       }

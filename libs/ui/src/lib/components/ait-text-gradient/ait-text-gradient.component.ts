@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { AitTranslationService } from '../../services';
 
 @Component({
   selector: 'ait-text-gradient',
@@ -13,4 +14,10 @@ export class AitTextGradientComponent {
   @Input() padding = 15;
   @Input() paddingLeft = 15;
   @Input() fontsize: string = null;
+
+  constructor(private translateService: AitTranslationService) {
+
+  }
+
+  getContent = () => this.translateService.translate(this.content);
 }

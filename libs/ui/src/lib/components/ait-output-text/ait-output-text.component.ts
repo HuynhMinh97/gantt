@@ -12,7 +12,7 @@ export class AitOutputTextComponent implements OnChanges {
   @Input() value = '';
   @Input() valueArray: string[] = [];
   @Input() placeholder = ''
-  @Input() isTranslate = false;
+  @Input() isTranslate = true;
   @Input() caption = ''
   @Input() iconCaption = 'info-outline';
   @Input() height;
@@ -22,6 +22,7 @@ export class AitOutputTextComponent implements OnChanges {
 
   }
 
+  getCaption = () => this.translateService.translate(this.caption);
   ngOnChanges(changes: SimpleChanges) {
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {

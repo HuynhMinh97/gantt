@@ -20,7 +20,7 @@
           <nb-icon icon="menu-2-outline"></nb-icon>
         </a>
         <div style="margin: 15px" *ngIf="hasSidebar"></div>
-        <div style="display: flex; align-items: center;cursor: pointer;" *ngIf="!isAureoleV()" (click)="handleClickLogo()">
+        <div style="display: flex; align-items: center" *ngIf="!isAureoleV()">
           <svg
             width="50"
             height="50"
@@ -57,7 +57,7 @@
           </svg>
           <h1 style="color: #10529d; margin-left: 10px">AIT FRAMEWORK</h1>
         </div>
-        <div (click)="navigateHome()" class="logo__header" style="cursor: pointer;" *ngIf="isAureoleV()">
+        <div (click)="navigateHome()" class="logo__header" *ngIf="isAureoleV()">
           <svg
             width="367"
             height="44"
@@ -121,7 +121,7 @@
             'padding-left': '15px'
           }"
         >
-          {{ title }}
+          {{ getTitle() }}
         </div>
       </div>
       <div

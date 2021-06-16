@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { NbSidebarService } from '@nebular/theme';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { APP_TITLE } from '../../../@constant';
 import { AitEnvironmentService, AitTranslationService } from '../../../services';
-import { AppState, getCaption } from '../../../state/selectors';
+import { AppState } from '../../../state/selectors';
 import { AitAppUtils } from '../../../utils/ait-utils';
 
 @Component({
@@ -23,16 +23,13 @@ export class AitCommonLayoutComponent {
   // logoHeader = aureole_logo_header;
   isExcludeScreen = () => this.excludeHeaderScreens.includes(this.currentPath);
   constructor(
-    private router: Router,
+    router: Router,
     private sidebarService: NbSidebarService,
     private env: AitEnvironmentService,
     private translateService: AitTranslationService,
     private store: Store<AppState>
   ) {
-    store.pipe(select(getCaption)).subscribe(() => {
-      const target: any = env;
-      this.title = translateService.translate(APP_TITLE) + target?.COMMON?.VERSION
-    })
+
     router.events.subscribe(e => {
       if (e instanceof NavigationEnd) {
         const path: any = AitAppUtils.getParamsOnUrl(true);
@@ -41,14 +38,14 @@ export class AitCommonLayoutComponent {
       }
     })
   }
+  getTitle = () => {
+    const target: any = this.env;
+    return this.translateService.translate(APP_TITLE) + target?.COMMON?.VERSION
+  }
 
   isAureoleV = () => {
     const target: any = this.env;
-    return target?.isAureoleV;
-  }
-
-  handleClickLogo = () => {
-    this.router.navigate(['/'])
+    return !target?.default;
   }
 
   toggleSidebar(): boolean {

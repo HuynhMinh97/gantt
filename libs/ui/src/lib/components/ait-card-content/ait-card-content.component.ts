@@ -39,6 +39,10 @@ export class AitCardContentComponent {
     return 'c_2003';
   }
 
+  get LABEL(): string {
+    return this.translate.translate(this.label);
+  }
+
   toggleExpan = () => this.isOpen = !this.isOpen;
 
 
