@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   COLLECTIONS,
@@ -128,6 +129,7 @@ export class AitBaseService {
     const condition = request.condition;
     const lang = request.lang;
     const collection = request.collection;
+    const collectionReq = [COLLECTIONS.MASTER_DATA , COLLECTIONS.COMPANY];
     const mapData = [];
 
     isSystem && (collection === COLLECTIONS.USER_SETTING) && condition['user_id'] ? delete condition['user_id'] : '';
@@ -135,7 +137,7 @@ export class AitBaseService {
     let aqlStr = `FOR data IN ${collection} `;
     aqlStr += `FILTER data.company == "${company}" `
     for (const prop in condition) {
-      if (prop === KEYS.NAME && collection === COLLECTIONS.MASTER_DATA) {
+      if (prop === KEYS.NAME && collectionReq.includes(collection)) {
         aqlStr += `&& LOWER(data.name.${lang}) `;
         aqlStr += `LIKE LOWER(CONCAT("${condition[prop]}", "%")) `;
       } else {
@@ -158,10 +160,40 @@ export class AitBaseService {
     }
     aqlStr += `RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name, `;
     mapData.forEach(data => {
+      const ref_condition = data.ref_condition;
+
       aqlStr += ` ${data.attribute} : ( `;
+      aqlStr += ` IS_ARRAY(data.${data.attribute}) == true ? ( `;
+      aqlStr += ` FOR item IN TO_ARRAY(data.${data.attribute}) `;
       aqlStr += ` FOR doc IN ${data.ref_collection} `;
+      aqlStr += ` FILTER doc.${data.ref_attribute} == item `;
+      if (isObjectFull(ref_condition)) {
+        for (const prop in ref_condition) {
+          if (ref_condition[prop]) {
+            aqlStr += ` && doc.${prop} == `;
+            aqlStr +=
+            typeof ref_condition[prop] === 'string'
+              ? `"${ref_condition[prop]}" `
+              : `${ref_condition[prop]} `;
+          }
+        }
+      }
+      aqlStr += ` RETURN { _key: doc._key, value: doc.name.${lang} } ) : `;
+
+      aqlStr += ` (FOR doc IN ${data.ref_collection} `;
       aqlStr += ` FILTER doc.${data.ref_attribute} == data.${data.attribute} `;
-      aqlStr += ` RETURN { _key: doc._key, value: doc.name.${lang} })[0], `
+      if (isObjectFull(ref_condition)) {
+        for (const prop in ref_condition) {
+          if (ref_condition[prop]) {
+            aqlStr += ` && doc.${prop} == `;
+            aqlStr +=
+            typeof ref_condition[prop] === 'string'
+              ? `"${ref_condition[prop]}" `
+              : `${ref_condition[prop]} `;
+          }
+        }
+      }
+      aqlStr += ` RETURN { _key: doc._key, value: doc.name.${lang} })[0] ), `
     })
     aqlStr += `  }) `;
     return aqlStr;
@@ -184,6 +216,7 @@ export class AitBaseService {
     data[KEYS.CREATE_AT] = AitUtils.getUnixTime();
     data[KEYS.CHANGE_AT] = AitUtils.getUnixTime();
   }
+
   setCommonUpdate(data: any) {
     if (this.company) {
       data[KEYS.COMPANY] = this.company;
