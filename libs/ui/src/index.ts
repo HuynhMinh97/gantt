@@ -32,6 +32,9 @@ export * from './lib/components/ait-up-button/ait-up-button.module';
 //datepicker
 export * from './lib/components/ait-datepicker/ait-datepicker.module';
 
+//template-popup
+export * from './lib/components/ait-template-popup/ait-template-popup.module';
+
 //display file
 export * from './lib/components/ait-output-file/ait-output-file.module';
 
