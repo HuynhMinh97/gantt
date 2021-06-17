@@ -229,7 +229,8 @@ export class AitBaseService implements OnDestroy {
           .query({
             query: gql`
           ${gqlQuery}
-        `,
+          `,
+            fetchPolicy: 'network-only',
           })
           .pipe(map((res) => (<any>res.data)[name]))
           .toPromise();

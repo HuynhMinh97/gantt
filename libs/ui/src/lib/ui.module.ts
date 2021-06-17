@@ -56,6 +56,7 @@ import { AitCommonLayoutModule } from './@theme/layouts/ait-common-layout/ait-co
 import { AitUiComponent } from './ait-ui.component';
 import { AppState, } from './state/selectors';
 import { AitSettingAppService } from './services/ait-setting-app.service';
+import { AitTemplatePopupModule } from './components/ait-template-popup/ait-template-popup.module';
 
 export function initializeApp(appInitService: AitSettingAppService) {
   return () => {
@@ -100,6 +101,7 @@ const NB_MODULES = [
     AitOutputFileModule,
     AitErrorMessageModule,
     AitTabsModule,
+    AitTemplatePopupModule,
     AitDividerModule,
     AitTextareaModule,
     AitProgressModule,
@@ -134,6 +136,7 @@ const NB_MODULES = [
     AitOutputFileModule,
     AitErrorMessageModule,
     AitTabsModule,
+    AitTemplatePopupModule,
     AitDividerModule,
     AitTextareaModule,
     AitInputNumberModule,
