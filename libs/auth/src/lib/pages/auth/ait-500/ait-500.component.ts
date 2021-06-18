@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'ait-403',
+  selector: 'ait-500',
   template: `
-  <div class="container__403">
+  <div class="container__500">
     <div style="display:flex;align-items:flex-end;margin-bottom:30px">
       <p class="message" (click)="navigateHome()">{{'家に帰ります' | translate}}</p>
       <div style="margin:10px"></div>
@@ -17,9 +17,9 @@ import { Router } from '@angular/router';
     </div>
   </div>
  `,
-  styleUrls: ['./ait-403.component.scss']
+  styleUrls: ['./ait-500.component.scss']
 })
-export class Ait403Component {
+export class Ait500Component {
   constructor(private router: Router) {
 
   }

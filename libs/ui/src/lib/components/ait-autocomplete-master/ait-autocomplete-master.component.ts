@@ -178,13 +178,23 @@ export class AitAutoCompleteMasterComponent implements OnInit, AfterViewChecked,
   }
 
   getDefaultValueByLang = async (keys: string[]) => {
-    this.masterDataService.getSuggestData({
-      type: this.type,
-      _key: keys
-    }).then(r => {
-      const result = r.data;
-      this.selectItems = [...(result || []), ...this.storeDataDraft];
+    const condition = {
+      _key: {
+        value: keys
+      }
+    }
+    const returnFields = {
+      _key: true,
+      name: true
+    }
+
+    this.masterDataService.find(condition, returnFields, TYPE[this.type] || this.type).then(r => {
+      if (r?.status === RESULT_STATUS.OK) {
+        const result = r.data;
+        this.selectItems = [...(result || []), ...this.storeDataDraft];
+      }
     })
+
   }
 
 
@@ -201,7 +211,7 @@ export class AitAutoCompleteMasterComponent implements OnInit, AfterViewChecked,
         _key: true,
         name: true
       }
-      this.masterDataService.find(condition, returnFields, TYPE[this.type]).then(r => {
+      this.masterDataService.find(condition, returnFields, TYPE[this.type] || this.type).then(r => {
         if (r.status === RESULT_STATUS.OK) {
           this.dataSource = (r.data || []).map(m => ({ _key: m._key, value: m?.name }));
           const _keys = this.excludedList.map(e => e?._key);

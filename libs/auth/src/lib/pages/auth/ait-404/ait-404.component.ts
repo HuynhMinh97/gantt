@@ -5,14 +5,8 @@ import { Router } from '@angular/router';
   selector: 'ait-404',
   template: `
   <div class="container__404">
-    <h1>404 - NOT FOUND</h1>
-    <div style="display:flex;">
-      <nb-icon
-        icon="home"
-        status="primary"
-        style="font-size:50px;cursor:pointer"
-        (click)="navigateHome()"
-        ></nb-icon>
+    <div style="display:flex;align-items:flex-end;margin-bottom:30px">
+      <p class="message" (click)="navigateHome()">{{'家に帰ります' | translate}}</p>
       <div style="margin:10px"></div>
       <nb-icon
         icon="arrow-forward-outline"

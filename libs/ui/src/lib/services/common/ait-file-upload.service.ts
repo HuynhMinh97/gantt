@@ -48,10 +48,21 @@ export class AitFileUploaderService extends AitBaseService {
 
   public afterMethodFileSelect: Subject<any> = new Subject();
 
+
   // public url: string = this.baseURL + '/upload-file/upload';
   public url: string = this.baseURL + '/upload-file/upload-files';
   public removeUrl: string = this.baseURL + '/upload-file/remove-files';
   private importURL: string = this.env?.API_PATH?.SYS?.UPLOAD + '/import-data';
+
+  uploadFile = async (data: any[]) => {
+    return await this.mutation('saveBinaryData', 'sys_binary_data', data, {
+      _key: true,
+      name: true,
+      base64: true,
+      size: true,
+      file_type: true
+    });
+  }
 
 
   uploadFiles = async (formData: FormData): Promise<any> => {

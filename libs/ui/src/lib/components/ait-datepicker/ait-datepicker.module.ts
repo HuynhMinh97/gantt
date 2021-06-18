@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NbDatepickerModule, NbInputModule } from '@nebular/theme';
+import { NbDatepickerModule, NbFormFieldModule, NbIconModule, NbInputModule } from '@nebular/theme';
 import { NbDateFnsDateModule } from '@nebular/date-fns';
 import { AitDatePickerComponent } from './ait-datepicker.component';
 import { AitDateFormatService } from '../../services/common/ait-date.service';
@@ -28,6 +28,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
         initialState: {},
       },
     ),
+    NbIconModule,
+    NbFormFieldModule
   ],
   exports: [AitDatePickerComponent],
   providers: [AitDateFormatService],

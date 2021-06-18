@@ -10,6 +10,7 @@ export class AitLabelComponent implements OnChanges  {
   @Input() label: string;
   @Input() isTranslate = true;
   @Input() styleText = {};
+  @Input() required = false;
 
   constructor(private translateService : AitTranslationService) {
 

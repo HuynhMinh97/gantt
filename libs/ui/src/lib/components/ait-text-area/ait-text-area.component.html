@@ -13,7 +13,7 @@
   class="custom-textarea"
   nbInput
   fullWidth
-  [value]="inputControl.value || ''"
+  [value]="inputControl.value |json"
   [placeholder]="placeholder"
   [style.minHeight]="minHeight"
   readonly

@@ -10,7 +10,7 @@ import { BinaryResponse } from '../responses/binary.response';
 import { BinaryRequest } from '../requests/binary.request';
 
 @Resolver()
-@UseGuards(GqlAuthGuard)
+// @UseGuards(GqlAuthGuard)
 export class BinaryResolver extends AitBaseService {
   constructor(db: Database) {
     super(db);

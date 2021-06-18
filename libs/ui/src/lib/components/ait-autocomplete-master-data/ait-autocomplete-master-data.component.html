@@ -106,7 +106,7 @@ class="input__container"
       >
     </div>
   </div>
-  <div class="icon">
+  <div class="icon" (click)="handleClick()">
     <div *ngIf="!isOpenAutocomplete">
       <nb-icon
         style="color: gray; margin: 8px; cursor: pointer"
