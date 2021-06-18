@@ -24,6 +24,8 @@ import { AitAuthRoutingModule } from './auth-routing.module';
 import { Ait403Component } from './pages/auth/ait-403/ait-403.component';
 import { Ait404Component } from './pages/auth/ait-404/ait-404.component';
 import { AitEnvironmentService, Params } from './services/environment.service';
+import { Ait500Component } from './pages/auth/ait-500/ait-500.component';
+import { Ait503Component } from './pages/auth/ait-503/ait-503.component';
 
 
 
@@ -47,6 +49,8 @@ const AIT_MODULES = [
     AitUserSettingComponent,
     Ait403Component,
     Ait404Component,
+    Ait500Component,
+    Ait503Component
   ],
   imports: [
     AitThemeModule.forRoot(),

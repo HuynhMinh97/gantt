@@ -3,6 +3,8 @@
   <ait-divider></ait-divider>
   <ait-space></ait-space>
 
+  <ait-input-file></ait-input-file>
+
   <ait-tabs
     [tabs]="tabs"
     (onTabSelect)="getTabSelected($event)"
@@ -42,7 +44,7 @@
         "
       >
         <div *ngFor="let st of status">
-          <ait-label [label]="'#' + st"></ait-label>
+          <ait-label [label]="'#' + st" [required]="true"></ait-label>
           <ait-input-text
             [status]="st"
             [iconName]="'heart'"
@@ -251,7 +253,7 @@
           flex-direction: column;
         "
       >
-        <ait-error-message [errors]="errorMessages"></ait-error-message>
+        <ait-error-message [errors]="errorMessages" [style]="{background : 'yellow'}"></ait-error-message>
       </div>
     </ait-card-content>
 

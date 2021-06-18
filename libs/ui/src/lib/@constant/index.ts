@@ -14,7 +14,7 @@ export const ACTION_HEADER = [
     title: 'c_1001',
     action: () => { },
     isI18n: true,
-    link : '/'
+    link: '/'
   },
 ];
 
@@ -147,6 +147,13 @@ export const DarkScreen = [
   'user-basic-info',
   'user-certificate-info',
   'change-password'
+];
+
+export const ErrorScreen = [
+  '404',
+  '500',
+  '403',
+  '503'
 ]
 
 export enum CURRENCY_SYMBOL {

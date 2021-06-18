@@ -7,6 +7,8 @@ import { AitChangePwdComponent } from './pages/auth/ait-change-password/ait-chan
 import { Ait403Component } from './pages/auth/ait-403/ait-403.component';
 import { Ait404Component } from './pages/auth/ait-404/ait-404.component';
 import { AitUserSettingComponent } from './pages/user-setting/ait-user-setting.component';
+import { Ait503Component } from './pages/auth/ait-503/ait-503.component';
+import { Ait500Component } from './pages/auth/ait-500/ait-500.component';
 
 
 // Push your routes here one by one 🎉
@@ -35,6 +37,14 @@ export const routes: Routes = [
   {
     path: '403',
     component: Ait403Component
+  },
+  {
+    path: '503',
+    component: Ait503Component
+  },
+  {
+    path: '500',
+    component: Ait500Component
   },
   {
     path: '404',

@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { NbSidebarService } from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
-import { APP_TITLE, aureole_logo_header } from '../../../@constant';
+import { APP_TITLE, aureole_logo_header, ErrorScreen } from '../../../@constant';
 import { AitEnvironmentService, AitTranslationService } from '../../../services';
 import { AppState, getCaption } from '../../../state/selectors';
 import { AitAppUtils } from '../../../utils/ait-utils';
@@ -21,7 +21,7 @@ export class AitCommonLayoutComponent {
   gradientString = 'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)';
 
   // logoHeader = aureole_logo_header;
-  isExcludeScreen = () => this.excludeHeaderScreens.includes(this.currentPath);
+  isExcludeScreen = () => [...this.excludeHeaderScreens,...ErrorScreen].includes(this.currentPath);
   constructor(
     router: Router,
     private sidebarService: NbSidebarService,

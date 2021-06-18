@@ -12,7 +12,7 @@ const RESOLVERS = [ExampleResolver];
     AitCoreModule.forRoot(environment),
     AitAuthModule.forRoot(environment)
   ],
-  controllers: [ExampleRestController, UserController],
+  controllers: [ExampleRestController, ],
   providers: [...RESOLVERS],
 })
 export class AppModule { }

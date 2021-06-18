@@ -5,6 +5,12 @@
   display: inline-block;
 }
 
+.container_file {
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
 .tag-default {
   background-color: gray;
 }
