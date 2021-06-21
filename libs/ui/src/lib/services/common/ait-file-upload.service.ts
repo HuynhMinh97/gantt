@@ -58,33 +58,54 @@ export class AitFileUploaderService extends AitBaseService {
     return await this.mutation('saveBinaryData', 'sys_binary_data', data, {
       _key: true,
       name: true,
-      base64: true,
+      data_base64: true,
       size: true,
       file_type: true
     });
   }
 
 
-  uploadFiles = async (formData: FormData): Promise<any> => {
-    return new Promise((resolve, reject) => {
-      fetch(this.url, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          Authorization: 'Bearer ' + this.token
-        },
-      }).then(res => res.json()).then(result => {
-        resolve(result)
-      }).catch(e => reject(e));
-    })
+  removeFile = async (_key: string) => {
+
+    return await this.mutation('removeBinaryData', 'sys_binary_data', [{
+      _key
+    }], {
+      _key: true,
+      name: true,
+      data_base64: true,
+      size: true,
+      file_type: true
+    });
   }
 
-  removeFiles = async (_keys: string[]): Promise<any> => {
-    return this.http.post(this.removeUrl, { condition: { _keys } }).toPromise();
-  }
+  async getFilesByFileKeys(file_key: string | string[]) {
 
-  async importData(data: any[]) {
-    return await this.post(this.importURL, { data }).toPromise();
+    if ((file_key || []).length !== 0) {
+      try {
+        const req = {
+          collection: 'sys_binary_data',
+          condition: {
+            _key: {
+              value: file_key
+            }
+          }
+        }
+        const result = await this.query('findBinaryData', req, {
+          _key: true,
+          data_base64: true,
+          file_type: true,
+          size: true,
+          name: true,
+          create_at: true
+        });
+        console.log(file_key, req)
+        return result;
+      } catch (error) {
+        console.log(error);
+        return null;
+      }
+    }
+    return null;
   }
 
 }

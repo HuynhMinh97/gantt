@@ -3,8 +3,6 @@
   <ait-divider></ait-divider>
   <ait-space></ait-space>
 
-  <ait-input-file></ait-input-file>
-
   <ait-tabs
     [tabs]="tabs"
     (onTabSelect)="getTabSelected($event)"
@@ -26,7 +24,7 @@
         "
       >
         <ait-output-text
-          [valueArray]="['âsasa','sadsdsadsa','sadadsadsa']"
+          [valueArray]="['âsasa', 'sadsdsadsa', 'sadadsadsa']"
           [caption]="
             '受入れ企業名が変更になった場合は「雇用条件書」「パスポート」「在留カード」リンクを張り替えてください'
           "
@@ -166,6 +164,26 @@
     </ait-card-content>
 
     <ait-space></ait-space>
+    <ait-card-content [isColumn]="true" [label]="'Input file'" [styleContainer]="{
+      padding : '10px'
+    }">
+      <p>This is a input-file component</p>
+
+      <div
+        style="
+          margin-left: 20px;
+          display: flex;
+          max-width: 400px;
+          flex-wrap: wrap;
+        "
+      >
+        <ait-input-file
+        [isDefault]="false"
+          [file_keys]="['7bfedd70-a3db-f0c5-6340-d0e728d407ba']"
+        ></ait-input-file>
+      </div>
+    </ait-card-content>
+    <ait-space></ait-space>
     <ait-card-content [isColumn]="true" [label]="'Dragscroll list'">
       <p>This is list component, you can scroll by draging chips 😜</p>
 
@@ -218,7 +236,10 @@
           flex-direction: column;
         "
       >
-        <ait-datepicker (onDateChange)="getDate($event)" [dateInput]="date"></ait-datepicker>
+        <ait-datepicker
+          (onDateChange)="getDate($event)"
+          [dateInput]="date"
+        ></ait-datepicker>
         <br />
         <code>#Result output : {{ result.date?.value }}</code>
       </div>
@@ -253,7 +274,10 @@
           flex-direction: column;
         "
       >
-        <ait-error-message [errors]="errorMessages" [style]="{background : 'yellow'}"></ait-error-message>
+        <ait-error-message
+          [errors]="errorMessages"
+          [style]="{ background: 'yellow' }"
+        ></ait-error-message>
       </div>
     </ait-card-content>
 

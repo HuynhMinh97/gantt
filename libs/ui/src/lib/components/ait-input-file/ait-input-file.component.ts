@@ -92,6 +92,13 @@ export class AitInputFileComponent implements OnInit, OnChanges {
     }
   }
 
+  getNote = () => this.translateService.translate(this.note_text);
+  getTitle = () => this.translateService.translate(this.title);
+  getPlaceHolder = () => this.translateService.translate('ドラッグ&ドロップでファイル添付または');
+  getReference = () => this.translateService.translate('参照');
+  getMaxFileText = () => this.translateService.translate('ファイルまで添付できます。');
+  getFileTypeText = () => this.translateService.translate('形式のファイルのみ添付できます。');
+
   sumSizeFiles = (files: any[]) => {
     return (this.fileRequest[0]?.size || 0) / (1024);
   }
@@ -131,6 +138,8 @@ export class AitInputFileComponent implements OnInit, OnChanges {
     return this.fileDatas.length + this.displayedFiles.length < this.getFileMaxUpload();
   }
 
+  getTextDelete = () => this.translateService.translate('c_2002');
+
   getKB = (bytes: number) => {
     return bytes ? bytes / 1024 : null;
   }
@@ -167,7 +176,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
 
     if (this.file_keys && this.file_keys.length !== 0) {
-      this.binaryService.getFilesByKeys(this.file_keys || []).then(r => {
+      this.fileUploadService.getFilesByFileKeys(this.file_keys || []).then((r: any) => {
         if (r?.status === RESULT_STATUS.OK) {
           this.displayedFiles = r.data;
         }
@@ -243,8 +252,9 @@ export class AitInputFileComponent implements OnInit, OnChanges {
    * @param index (File index)
    */
   deleteFile(file: any, index: number) {
-    this.fileUploadService.removeFiles([file?._key]).then(r => {
+    this.fileUploadService.removeFile(file?._key).then(r => {
       if (r.status === RESULT_STATUS.OK) {
+
         this.files.splice(index, 1);
         this.fileDatas = this.fileDatas.filter(f => f._key !== file?._key);
         this.displayedFiles = this.displayedFiles.filter(f => f._key !== file?._key);
@@ -310,7 +320,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
             console.log(res)
             if (res.status !== 0) {
 
-              this.fileDatas = [...this.fileDatas, { ...res.data[0], progress: 0, data_base64: res.data[0]?.base64 }];
+              this.fileDatas = [...this.fileDatas, { ...res.data[0], progress: 0 }];
 
               this.watchFiles.emit({ value: this.fileDatas });
               this.fileDatas.forEach((file, index) => {
@@ -358,7 +368,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
         file_type: type,
         company: this.company,
         user_id: AitAppUtils.getUserId(),
-        base64: this.currentBase64,
+        data_base64: this.currentBase64,
       }
     ]
 

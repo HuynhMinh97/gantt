@@ -8,9 +8,10 @@ import { AitDayJSService } from '../../services/ait-dayjs.service';
 import { rootReducers } from '../../state/rootReducers';
 import { StoreModule } from '@ngrx/store';
 import { AitInputFileComponent } from './ait-input-file.component';
-import { NbIconModule } from '@nebular/theme';
+import { NbIconModule, NbTooltipModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { AitProgressModule } from '../ait-progress/ait-progress.module';
+import { AitLabelModule } from '../ait-label/ait-label.module';
 
 @NgModule({
   declarations: [AitInputFileComponent],
@@ -19,6 +20,8 @@ import { AitProgressModule } from '../ait-progress/ait-progress.module';
     NbIconModule,
     NbEvaIconsModule,
     AitProgressModule,
+    NbTooltipModule,
+    AitLabelModule,
     StoreModule.forRoot(
       { ...rootReducers },
       {

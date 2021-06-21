@@ -200,44 +200,39 @@ export class AitBaseService implements OnDestroy {
   query(name: string, request: any, returnField?: any): Promise<any> {
     // console.log(localStorage.lang)
     // Request to graphql query
-    return new Promise((resolve, reject) => {
-      this.store.pipe(select(getLang)).subscribe(lang => {
-        request['company'] = this.company || localStorage.comp || SYSTEM_COMPANY;
-        request['lang'] = lang;
-        request['user_id'] = this.user_id;
+    request['company'] = this.company || localStorage.comp || SYSTEM_COMPANY;
+    request['lang'] = localStorage.lang || this.currentLang;
+    request['user_id'] = this.user_id;
 
-        // Setup gql json
-        const query = {
-          query: {
-            [name]: {
-              data: returnField,
-              message: true,
-              errors: true,
-              status: true,
-              numData: true,
-              numError: true
-            }
-          }
-        };
+    // Setup gql json
+    const query = {
+      query: {
+        [name]: {
+          data: returnField,
+          message: true,
+          errors: true,
+          status: true,
+          numData: true,
+          numError: true
+        }
+      }
+    };
 
-        query.query[name]['__args'] = { request };
-        // Parse to gql
-        const gqlQuery = jsonToGraphQLQuery(query, { pretty: true });
-        console.log(gqlQuery)
+    query.query[name]['__args'] = { request };
+    // Parse to gql
+    const gqlQuery = jsonToGraphQLQuery(query, { pretty: true });
+    console.log(gqlQuery)
 
-        const result = this.apollo
-          .query({
-            query: gql`
-          ${gqlQuery}
-          `,
-            fetchPolicy: 'network-only',
-          })
-          .pipe(map((res) => (<any>res.data)[name]))
-          .toPromise();
-        resolve(result)
+    const result = this.apollo
+      .query({
+        query: gql`
+      ${gqlQuery}
+      `,
+        fetchPolicy: 'network-only',
       })
-
-    })
+      .pipe(map((res) => (<any>res.data)[name]))
+      .toPromise();
+    return result;
   }
 
   /**
