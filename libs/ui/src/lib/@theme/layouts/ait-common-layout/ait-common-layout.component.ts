@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { NbSidebarService } from '@nebular/theme';
-import { select, Store } from '@ngrx/store';
-import { APP_TITLE, aureole_logo_header } from '../../../@constant';
+import { Store } from '@ngrx/store';
+import { APP_TITLE } from '../../../@constant';
 import { AitEnvironmentService, AitTranslationService } from '../../../services';
-import { AppState, getCaption } from '../../../state/selectors';
+import { AppState } from '../../../state/selectors';
 import { AitAppUtils } from '../../../utils/ait-utils';
 
 @Component({
@@ -15,6 +15,7 @@ import { AitAppUtils } from '../../../utils/ait-utils';
 export class AitCommonLayoutComponent {
   @Input() excludeHeaderScreens = [];
   currentPath = '';
+  @Input() menu_actions: [];
   @Input()
   hasSidebar = false;
   title = ''
@@ -29,7 +30,6 @@ export class AitCommonLayoutComponent {
     private translateService: AitTranslationService,
     private store: Store<AppState>
   ) {
-
     router.events.subscribe(e => {
       if (e instanceof NavigationEnd) {
         const path: any = AitAppUtils.getParamsOnUrl(true);
@@ -47,6 +47,7 @@ export class AitCommonLayoutComponent {
     const target: any = this.env;
     return !target?.default;
   }
+
 
   toggleSidebar(): boolean {
     this.sidebarService.toggle(true, 'menu-sidebar');
