@@ -1,154 +1,151 @@
 <div class="container_file">
-  <p
-  style="
-    font-size: 12px;
-    text-transform: uppercase;
-    color: #8f9bb3;
-    margin-bottom: 5px;
-    height: 16px;
-  "
-  [ngStyle]="{ color: !isDefault ? '#000' : '#8f9bb3' }"
->
-  {{ title }}
-</p>
-<div
-  class="containerx"
-  appDnd
-  (fileDropped)="onFileDropped($event)"
-  *ngIf="!isLoading"
-  (dragover)="onFileDropped()"
-  (dragleave)="onFileDragLeave()"
-  (mouseout)="onFileDragLeave()"
-  style="cursor: pointer"
-  [ngStyle]="{ border: !isDefault ? '0.5px solid #000' : null }"
->
-  <p *ngIf="placeholder" [ngStyle]="{ color: !isDefault ? '#000' : null }">
-    {{ placeholder }}
-  </p>
-  <p *ngIf="!placeholder" [ngStyle]="{ color: !isDefault ? '#000' : null }">
-    ドラッグ&ドロップでファイル添付または<span
-      style="text-decoration: underline"
-      >参照</span
-    >...
-  </p>
-  <input
-    type="file"
-    #fileDropRef
-    id="fileDropRef"
-    (click)="fileDropRef.value = null"
-    [ngStyle]="{ color: !isDefault ? '#000' : null }"
-    value=""
-    (change)="fileBrowseHandler($event.target.files)"
-    style="cursor: pointer"
-  />
-</div>
-<p style="color: red; margin: 0" *ngIf="messageErrorFileSp">
-  {{ messageErrorFileSp }}
-</p>
-<div class="information__file">
-  <div class="icon">
-    <nb-icon icon="info-outline" style="color: #8f9bb3"></nb-icon>
-  </div>
-  <div class="info">
-    <p
-      style="margin-left: -5px"
-      [ngStyle]="{ color: !isDefault ? '#000' : null }"
-    >
-      {{ note_text }}
-    </p>
-    <p *ngIf="max_files" [ngStyle]="{ color: !isDefault ? '#000' : null }">
-      {{ getFileMaxUpload() || max_files }} ファイルまで添付できます。
-    </p>
-    <p *ngIf="file_types" [ngStyle]="{ color: !isDefault ? '#000' : null }">
-      {{ getFileTypeSup() || file_types }} 形式のファイルのみ添付できます。
-    </p>
-  </div>
-</div>
-<!-- {{fileDatas['file_type'] | json}} -->
-<div class="files-list" *ngIf="displayedFiles && displayedFiles.length !== 0">
+  <ait-label [label]="getTitle()"></ait-label>
+
   <div
-    class="single-file default"
-    *ngFor="let file of displayedFiles; let i = index"
+    class="containerx"
+    appDnd
+    (fileDropped)="onFileDropped($event)"
+    *ngIf="!isLoading"
+    (dragover)="onFileDropped()"
+    (dragleave)="onFileDragLeave()"
+    (mouseout)="onFileDragLeave()"
+    style="cursor: pointer; margin-top: 8px"
+    [ngStyle]="{ border: !isDefault ? '0.5px solid #000' : null }"
   >
-    <div class="file-icon" style="width: 50px">
-      <img
-        *ngIf="(file?.file_type || '').includes('image')"
-        id="{{ file?.name }}"
-        [src]="safelyURL(file.data_base64, file.file_type)"
-        alt=""
-        (error)="image.src = '../../../../assets/images/not-f.jpg'"
-        style="height: 38px; width: 38px; margin-right: 5px; object-fit: cover"
-        [nbTooltip]="file?.name"
-      />
-      <nb-icon
-        *ngIf="!(file?.file_type || '').includes('image')"
-        icon="attach-2-outline"
-        style="font-size: 35px; color: #fff"
-        [nbTooltip]="file?.name"
-      ></nb-icon>
+    <p *ngIf="placeholder" [ngStyle]="{ color: !isDefault ? '#000' : null }">
+      {{ placeholder }}
+    </p>
+    <p *ngIf="!placeholder" [ngStyle]="{ color: !isDefault ? '#000' : null }">
+      {{ getPlaceHolder() }} &
+      <span style="text-decoration: underline;text-transform: lowercase;">{{ getReference() }}</span
+      >...
+    </p>
+    <input
+      type="file"
+      #fileDropRef
+      id="fileDropRef"
+      (click)="fileDropRef.value = null"
+      [ngStyle]="{ color: !isDefault ? '#000' : null }"
+      value=""
+      (change)="fileBrowseHandler($event.target.files)"
+      style="cursor: pointer"
+    />
+  </div>
+  <p style="color: red; margin: 0" *ngIf="messageErrorFileSp">
+    {{ messageErrorFileSp }}
+  </p>
+  <div class="information__file">
+    <div class="icon">
+      <nb-icon icon="info-outline" style="color: #8f9bb3"></nb-icon>
     </div>
     <div class="info">
-      <p class="name" [ngStyle]="{ color: !isDefault ? '#000' : null }">
-        {{ file?.name }} ({{ formatBytes(file?.size) }})
+      <p
+        [ngStyle]="{ color: !isDefault ? '#000' : null }"
+      >
+        {{ getNote() }}
       </p>
-      <p class="size" [ngStyle]="{ color: !isDefault ? '#000' : null }">
-        {{ getTime(file.create_at) }}
+      <p *ngIf="max_files" [ngStyle]="{ color: !isDefault ? '#000' : null }">
+        {{ getFileMaxUpload() || max_files }} {{ getMaxFileText() }}
       </p>
-    </div>
-
-    <div class="delete" (click)="deleteFile(file, i)">
-      <nb-icon
-        icon="trash-2-outline"
-        style="color: #8f9bb3"
-        [nbTooltip]="'common.system.key.delete' | translate"
-      ></nb-icon>
+      <p *ngIf="file_types" [ngStyle]="{ color: !isDefault ? '#000' : null }">
+        {{ getFileTypeSup() || file_types }} {{ getFileTypeText() }}
+      </p>
     </div>
   </div>
-</div>
 
-<div class="files-list">
-  <div class="single-file" *ngFor="let file of fileDatas">
-    <div class="file-icon" style="width: 50px">
-      <img
-        #image
-        *ngIf="(file?.file_type || '').includes('image')"
-        [src]="getSrc(file)"
-        (error)="handleErrorImage(file)"
-        alt=""
-        srcset=""
-        style="height: 38px; width: 38px; margin-right: 5px; object-fit: cover"
-      />
-      <nb-icon
-        *ngIf="!(file?.file_type || '').includes('image')"
-        icon="attach-2-outline"
-        style="font-size: 35px; color: #8f9bb3"
-      ></nb-icon>
-    </div>
+  <div class="files-list" *ngIf="displayedFiles && displayedFiles.length !== 0">
+    <div
+      class="single-file default"
+      *ngFor="let file of displayedFiles; let i = index"
+    >
+      <div class="file-icon" style="width: 50px">
+        <img
+          *ngIf="(file?.file_type || '').includes('image')"
+          id="{{ file?.name }}"
+          [src]="file.data_base64"
+          alt=""
+          (error)="image.src = '../../../../assets/images/not-f.jpg'"
+          style="
+            height: 45px;
+            width: 45px;
+            margin-right: 5px;
+            object-fit: cover;
+          "
+          [nbTooltip]="file?.name"
+        />
+        <nb-icon
+          *ngIf="!(file?.file_type || '').includes('image')"
+          icon="attach-2-outline"
+          style="font-size: 35px; color: #fff"
+          [nbTooltip]="file?.name"
+        ></nb-icon>
+      </div>
+      <div class="info">
+        <p class="name" [ngStyle]="{ color: !isDefault ? '#000' : null }">
+          {{ file?.name }} ({{ formatBytes(file?.size) }})
+        </p>
+        <p class="size" [ngStyle]="{ color: !isDefault ? '#000' : null }">
+          {{ getTime(file?.create_at) }}
+        </p>
+      </div>
 
-    <div class="info">
-      <p class="name" [ngStyle]="{ color: !isDefault ? '#000' : null }">
-        {{ file?.name }}
-      </p>
-      <p class="size" [ngStyle]="{ color: !isDefault ? '#000' : null }">
-        ({{ formatBytes(file?.size) }})
-      </p>
-      <p class="size" [ngStyle]="{ color: !isDefault ? '#000' : null }">
-        {{ getTime(file.create_at) }}
-      </p>
-      <div class="progress-cont">
-        <div
-          class="progress"
-          [style.height]="'10px'"
-          [style.width]="file?.progress + '%'"
-          [style.background]="'#00d68f'"
-        ></div>
+      <div class="delete" (click)="deleteFile(file, i)">
+        <nb-icon
+          icon="trash-2-outline"
+          style="color: #8f9bb3"
+          [nbTooltip]="getTextDelete()"
+        ></nb-icon>
       </div>
     </div>
+  </div>
 
-    <div class="delete" (click)="deleteFile(file, i)">
-      <nb-icon icon="trash-2-outline" style="color: #8f9bb3"></nb-icon>
+  <div class="files-list">
+    <div class="single-file" *ngFor="let file of fileDatas">
+      <div class="file-icon" style="width: 50px">
+        <img
+          #image
+          *ngIf="(file?.file_type || '').includes('image')"
+          [src]="getSrc(file)"
+          (error)="handleErrorImage(file)"
+          alt=""
+          srcset=""
+          style="
+            height: 38px;
+            width: 38px;
+            margin-right: 5px;
+            object-fit: cover;
+          "
+        />
+        <nb-icon
+          *ngIf="!(file?.file_type || '').includes('image')"
+          icon="attach-2-outline"
+          style="font-size: 35px; color: #8f9bb3"
+        ></nb-icon>
+      </div>
+
+      <div class="info">
+        <p class="name" [ngStyle]="{ color: !isDefault ? '#000' : null }">
+          {{ file?.name }}
+        </p>
+        <p class="size" [ngStyle]="{ color: !isDefault ? '#000' : null }">
+          ({{ formatBytes(file?.size) }})
+        </p>
+        <p class="size" [ngStyle]="{ color: !isDefault ? '#000' : null }">
+          {{ getTime(file.create_at) }}
+        </p>
+        <div class="progress-cont">
+          <div
+            class="progress"
+            [style.height]="'10px'"
+            [style.width]="file?.progress + '%'"
+            [style.background]="'#00d68f'"
+          ></div>
+        </div>
+      </div>
+
+      <div class="delete" (click)="deleteFile(file, i)">
+        <nb-icon icon="trash-2-outline" style="color: #8f9bb3"></nb-icon>
+      </div>
     </div>
   </div>
-</div>
-
 </div>

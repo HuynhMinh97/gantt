@@ -34,6 +34,7 @@ export class AitCardContentComponent {
   @Input()
   disableButton = false;
   buttonTitle = ''
+  @Input() styleContainer: any;
 
   get textButton(): string {
     return 'c_2003';

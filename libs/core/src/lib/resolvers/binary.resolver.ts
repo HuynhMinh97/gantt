@@ -7,7 +7,7 @@ import { GqlAuthGuard } from '../guards/gql-auth.guard';
 import { SysUser } from '../entities/sys-user.entity';
 import { AitBaseService } from '../services/ait-base.service';
 import { BinaryResponse } from '../responses/binary.response';
-import { BinaryRequest } from '../requests/binary.request';
+import { BinaryRemoveRequest, BinaryRequest } from '../requests/binary.request';
 
 @Resolver()
 // @UseGuards(GqlAuthGuard)
@@ -38,7 +38,7 @@ export class BinaryResolver extends AitBaseService {
   @Mutation(() => BinaryResponse, { name: 'removeBinaryData' })
   removeBinaryData(
     @AitCtxUser() user: SysUser,
-    @Args('request', { type: () => BinaryRequest }) request: BinaryRequest
+    @Args('request', { type: () => BinaryRemoveRequest }) request: BinaryRemoveRequest
   ) {
     request['colection'] = this.collection;
     return this.remove(request, user);
