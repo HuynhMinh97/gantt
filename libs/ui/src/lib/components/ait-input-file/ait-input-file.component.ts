@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { RESULT_STATUS } from '@ait/shared';
+import { objKeys, RESULT_STATUS } from '@ait/shared';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { select, Store } from '@ngrx/store';
@@ -27,13 +27,16 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   user_id = '';
   company = '';
   settings = [];
-  isLoading = true;
+  isLoading = false;
   messageErrorFileSp = '';
   isSupported = false; // for test
   @Input() mode: 'dark' | 'light' = 'light';
   @Input()
   file_keys = []
   displayedFiles = []; // _keys of files
+  currentBase64 = '';
+
+  fileRequest: any = {};
 
   styleHover = {
 
@@ -89,16 +92,24 @@ export class AitInputFileComponent implements OnInit, OnChanges {
     }
   }
 
+  getNote = () => this.translateService.translate(this.note_text);
+  getTitle = () => this.translateService.translate(this.title);
+  getPlaceHolder = () => this.translateService.translate('ドラッグ&ドロップでファイル添付または');
+  getReference = () => this.translateService.translate('参照');
+  getMaxFileText = () => this.translateService.translate('ファイルまで添付できます。');
+  getFileTypeText = () => this.translateService.translate('形式のファイルのみ添付できます。');
+
   sumSizeFiles = (files: any[]) => {
-    return [...files, ...this.displayedFiles, ...this.fileDatas].reduce((a, b) => a + (b?.size || 0), 0) / (1024);
+    return (this.fileRequest[0]?.size || 0) / (1024);
   }
 
   getSrc = (file) => {
+    const { data_base64, base64, ...rest } = file;
     if (!file.isError) {
-      return this.safelyURL(file.data_base64, file.file_type) ||
+      return file.data_base64 ||
         '../../../../assets/images/file.svg'
     }
-    return '../../../../assets/images/not-f.jpg'
+    return '../../../assets/images/not-f.jpg'
   }
 
   handleErrorImage = (file) => {
@@ -120,13 +131,14 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   safelyURL = (data, type) => this.santilizer.bypassSecurityTrustUrl(`data:${type};base64, ${data}`);
 
   checkMaxSize = (file: any[]) => {
-    console.log(file, this.sumSizeFiles(file), this.getKB((this.max_size_bytes || this.getMaxSizeFile())))
-    return this.sumSizeFiles(file) <= this.getKB((this.max_size_bytes || this.getMaxSizeFile()));
+    return this.fileRequest[0]?.size <= this.max_size_bytes * 1024;
   }
   checkMaxFile = () => {
 
     return this.fileDatas.length + this.displayedFiles.length < this.getFileMaxUpload();
   }
+
+  getTextDelete = () => this.translateService.translate('c_2002');
 
   getKB = (bytes: number) => {
     return bytes ? bytes / 1024 : null;
@@ -145,24 +157,26 @@ export class AitInputFileComponent implements OnInit, OnChanges {
     }).then(r => {
       const settings = r.data.filter(d => settingFiles.includes(d?.code));
       this.settings = settings.map((s: any) => ({ ...s, value: s?.name }));
-      // console.log(this.settings)
+
       if (settings.length !== 0) {
         if (!this.max_size_bytes) {
-          this.max_size_bytes = this.getValueByCode('FILE_MAX_SIZE_MB')?.name;
+          this.max_size_bytes = Number(this.settings.find(f => f.code === 'FILE_MAX_SIZE_MB')?.value);
         }
         if (!this.max_files) {
-          this.max_files = this.getValueByCode('FILE_MAX_UPLOAD')?.name;
+          this.max_files = Number(this.getValueByCode('FILE_MAX_UPLOAD')?.value);
         }
         if (!this.file_types) {
-          this.file_types = this.getValueByCode('FILE_TYPE_SUPPORT')?.name;
+          this.file_types = this.getValueByCode('FILE_TYPE_SUPPORT')?.value;
         }
+
       }
+
 
     })
 
 
     if (this.file_keys && this.file_keys.length !== 0) {
-      this.binaryService.getFilesByKeys(this.file_keys || []).then(r => {
+      this.fileUploadService.getFilesByFileKeys(this.file_keys || []).then((r: any) => {
         if (r?.status === RESULT_STATUS.OK) {
           this.displayedFiles = r.data;
         }
@@ -181,8 +195,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   }
 
   getMaxSizeFile = () => {
-    const maxSize = this.settings.find(f => f.code === 'FILE_MAX_SIZE_MB');
-    return this.max_size_bytes ? this.max_size_bytes : maxSize ? maxSize?.value : 5000000;
+    return this.max_size_bytes ? this.max_size_bytes * 1024 : 5000000;
   }
 
   getValueByCode = (code) => {
@@ -191,9 +204,9 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
 
   checkFileExt = (file) => {
-    const check = AitAppUtils.checkFileExt(this.file_types || this.getValueByCode('FILE_TYPE_SUPPORT') || FILE_TYPE_SUPPORT_DEFAULT, file);
+    const check = AitAppUtils.checkFileExt(this.file_types || FILE_TYPE_SUPPORT_DEFAULT, file);
     if (check.status !== 1) {
-      this.messageErrorFileSp = this.translateService.translate('E0012')
+      this.messageErrorFileSp = this.translateService.getMsg('E0012')
         .replace('{0}', this.file_types || this.getValueByCode('FILE_TYPE_SUPPORT') || FILE_TYPE_SUPPORT_DEFAULT);
       return false;
     }
@@ -220,7 +233,18 @@ export class AitInputFileComponent implements OnInit, OnChanges {
    * handle file from browsing
    */
   fileBrowseHandler(files) {
-    this.prepareFilesList(files);
+    if (files && files[0]) {
+
+      const FR = new FileReader();
+      FR.onload = (e: any) => {
+        this.currentBase64 = e.target.result;
+        this.prepareFilesList(files);
+      }
+
+
+      FR.readAsDataURL(files[0]);
+    }
+
   }
 
   /**
@@ -228,8 +252,9 @@ export class AitInputFileComponent implements OnInit, OnChanges {
    * @param index (File index)
    */
   deleteFile(file: any, index: number) {
-    this.fileUploadService.removeFiles([file?._key]).then(r => {
+    this.fileUploadService.removeFile(file?._key).then(r => {
       if (r.status === RESULT_STATUS.OK) {
+
         this.files.splice(index, 1);
         this.fileDatas = this.fileDatas.filter(f => f._key !== file?._key);
         this.displayedFiles = this.displayedFiles.filter(f => f._key !== file?._key);
@@ -270,6 +295,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
         size: item.size
       })
     }
+    this.fileRequest = fileReq;
     // this.fileDatas = [...this.fileDatas, files[files.length - 1]];
     this.files = this.files = [files[files.length - 1]];
     // // console.log(this.fileDatas);
@@ -279,11 +305,11 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
     if (!this.checkMaxFile()) {
       this.messageErrorFileSp =
-        this.translateService.translate('E0155').replace('{0}', this.getFileMaxUpload().toString())
+        this.translateService.getMsg('E0155').replace('{0}', this.getFileMaxUpload().toString())
     }
     else if (!this.checkMaxSize(fileReq)) {
       this.messageErrorFileSp =
-        this.translateService.translate('E0157').replace('{0}', this.formatBytes(this.getMaxSizeFile(), 2).toString())
+        this.translateService.getMsg('E0157').replace('{0}', this.formatBytes(this.getMaxSizeFile(), 2).toString())
     }
     else {
       this.files = [files[files.length - 1]];
@@ -291,8 +317,10 @@ export class AitInputFileComponent implements OnInit, OnChanges {
       if (this.checkFileExt(fileReq[0])) {
         this.submitMultipleForm().then(
           res => {
+            console.log(res)
             if (res.status !== 0) {
-              this.fileDatas = [...this.fileDatas, { ...res.data, progress: 0 }];
+
+              this.fileDatas = [...this.fileDatas, { ...res.data[0], progress: 0 }];
 
               this.watchFiles.emit({ value: this.fileDatas });
               this.fileDatas.forEach((file, index) => {
@@ -333,14 +361,19 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
 
   async submitMultipleForm() {
-    const formData = new FormData();
-    this.files.forEach((file, i) => {
-      formData.append('photos[]', file, this.company + '{_}' + this.user_id + '{_}' + file.name);
-    })
+    const { type, ...objKeys } = this.fileRequest[0];
+    const data = [
+      {
+        ...objKeys,
+        file_type: type,
+        company: this.company,
+        user_id: AitAppUtils.getUserId(),
+        data_base64: this.currentBase64,
+      }
+    ]
 
     try {
-      const response = await this.fileUploadService.uploadFiles(formData);
-
+      const response = await this.fileUploadService.uploadFile(data);
       if (!response) {
         throw new Error(response.statusText);
       }

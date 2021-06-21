@@ -16,12 +16,30 @@ export class AitBinaryDataService extends AitBaseService {
   }
 
   async getFilesByFileKeys(file_key: string | string[]) {
-    if ((file_key || '').length !== 0) {
-      return await this.post(this.getFile, {
-        condition: {
-          file_key: file_key
+
+    if ((file_key || []).length !== 0) {
+      try {
+        const req = {
+          collection: 'sys_binary_data',
+          condition: {
+            _key: {
+              value: file_key
+            }
+          }
         }
-      }).toPromise();
+        const result = await this.query('findBinaryData', req, {
+          _key: true,
+          data_base64: true,
+          file_type: true,
+          size: true,
+          name: true,
+        });
+        console.log(file_key, req)
+        return result;
+      } catch (error) {
+        console.log(error);
+        return null;
+      }
     }
     return null;
   }

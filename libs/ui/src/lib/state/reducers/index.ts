@@ -32,7 +32,7 @@ const langStorage = localStorage.lang;
 
 export const initialState: CommonState = {
   company: '',
-  language: langStorage || 'ja_JP',
+  language: langStorage ,
   userInfo: {
     user_id: '',
     email: '',

@@ -65,42 +65,14 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     public toastrService?: NbToastrService,
   ) {
     const userId = this.authService.getUserID();
+    this.user_id = AitAppUtils.getUserId();
     this.env = _env;
     //setting default lang & company
     this.company = this.env.COMMON.COMPANY_DEFAULT;
-    this.lang = localStorage.getItem('lang');
-    // get token from localStorage
-    this.token = authService.getAccessToken();
-
-    // call api get all message follow by type as I : Information , W : Warning, E: Error
-    this.getAllMessages().then();
-
-    //get caption common for buttons, header, label, ...
-    this.getCommonCaptions().then();
-
-
-
-    // CAll get user info , such as company, username, email, _key
-    if (localStorage.getItem('access_token')) {
-
-      if (userId && userId !== '') {
-        this.getUserInfo(userId).then((res: any) => {
-          // Push company on store base on user-setting
-          this.store.dispatch(
-            new CHANGECOMPANY(res?.company || this.env.COMMON.COMPANY_DEFAULT)
-          );
-          localStorage.setItem('comp', res?.company || this.env.COMMON.COMPANY_DEFAULT);
-          store.dispatch(new StoreUserInfo(res));
-
-        });
-
-      }
-    }
-
     store.pipe(select(getLang)).subscribe(lang => {
-
       if (this.lang !== lang) {
-        console.log(lang);
+        this.lang = lang;
+
         //get caption common for buttons, header, label, ...
         this.getCommonCaptions().then();
 
@@ -146,9 +118,38 @@ export class AitBaseComponent implements OnInit, OnDestroy {
             }
           })
       }
-      this.lang = lang;
 
     })
+
+    // get token from localStorage
+    this.token = authService.getAccessToken();
+
+    // call api get all message follow by type as I : Information , W : Warning, E: Error
+    this.getAllMessages().then();
+
+    //get caption common for buttons, header, label, ...
+    this.getCommonCaptions().then();
+
+
+
+    // CAll get user info , such as company, username, email, _key
+    if (localStorage.getItem('access_token')) {
+
+      if (userId && userId !== '') {
+        this.getUserInfo(userId).then((res: any) => {
+          // Push company on store base on user-setting
+          this.store.dispatch(
+            new CHANGECOMPANY(res?.company || this.env.COMMON.COMPANY_DEFAULT)
+          );
+          localStorage.setItem('comp', res?.company || this.env.COMMON.COMPANY_DEFAULT);
+          store.dispatch(new StoreUserInfo(res));
+
+        });
+
+      }
+    }
+
+
 
 
     // Listening event loading when the app is loading
@@ -478,7 +479,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
       query {
         findSystem(request : {
           company: "${this.company}",
-          lang: "${this.lang}",
+          lang: "${this.lang || this.env.COMMON.LANG_DEFAULT}",
           collection: "sys_caption",
           user_id: "${this.user_id}",
           condition: {
@@ -583,7 +584,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
         query {
           findSystem(request : {
             company: "${this.company}",
-            lang: "${this.lang}",
+            lang: "${this.lang || this.env.COMMON.LANG_DEFAULT}",
             collection: "sys_message",
             user_id: "${this.user_id}",
             condition: {

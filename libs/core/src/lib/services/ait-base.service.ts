@@ -129,7 +129,7 @@ export class AitBaseService {
     const condition = request.condition;
     const lang = request.lang;
     const collection = request.collection;
-    const collectionReq = [COLLECTIONS.MASTER_DATA , COLLECTIONS.COMPANY];
+    const collectionReq = [COLLECTIONS.MASTER_DATA , COLLECTIONS.COMPANY, COLLECTIONS.CAPTION];
     const mapData = [];
 
     isSystem && (collection === COLLECTIONS.USER_SETTING) && condition['user_id'] ? delete condition['user_id'] : '';

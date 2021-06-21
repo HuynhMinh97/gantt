@@ -48,32 +48,64 @@ export class AitFileUploaderService extends AitBaseService {
 
   public afterMethodFileSelect: Subject<any> = new Subject();
 
+
   // public url: string = this.baseURL + '/upload-file/upload';
   public url: string = this.baseURL + '/upload-file/upload-files';
   public removeUrl: string = this.baseURL + '/upload-file/remove-files';
   private importURL: string = this.env?.API_PATH?.SYS?.UPLOAD + '/import-data';
 
-
-  uploadFiles = async (formData: FormData): Promise<any> => {
-    return new Promise((resolve, reject) => {
-      fetch(this.url, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          Authorization: 'Bearer ' + this.token
-        },
-      }).then(res => res.json()).then(result => {
-        resolve(result)
-      }).catch(e => reject(e));
-    })
+  uploadFile = async (data: any[]) => {
+    return await this.mutation('saveBinaryData', 'sys_binary_data', data, {
+      _key: true,
+      name: true,
+      data_base64: true,
+      size: true,
+      file_type: true
+    });
   }
 
-  removeFiles = async (_keys: string[]): Promise<any> => {
-    return this.http.post(this.removeUrl, { condition: { _keys } }).toPromise();
+
+  removeFile = async (_key: string) => {
+
+    return await this.mutation('removeBinaryData', 'sys_binary_data', [{
+      _key
+    }], {
+      _key: true,
+      name: true,
+      data_base64: true,
+      size: true,
+      file_type: true
+    });
   }
 
-  async importData(data: any[]) {
-    return await this.post(this.importURL, { data }).toPromise();
+  async getFilesByFileKeys(file_key: string | string[]) {
+
+    if ((file_key || []).length !== 0) {
+      try {
+        const req = {
+          collection: 'sys_binary_data',
+          condition: {
+            _key: {
+              value: file_key
+            }
+          }
+        }
+        const result = await this.query('findBinaryData', req, {
+          _key: true,
+          data_base64: true,
+          file_type: true,
+          size: true,
+          name: true,
+          create_at: true
+        });
+        console.log(file_key, req)
+        return result;
+      } catch (error) {
+        console.log(error);
+        return null;
+      }
+    }
+    return null;
   }
 
 }
