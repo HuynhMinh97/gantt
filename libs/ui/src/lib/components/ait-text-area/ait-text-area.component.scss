@@ -1,11 +1,14 @@
 @import "../../@theme/styles/themes.scss";
 .custom-textarea {
-    width: 100%;
-    // height: 108px;
-    /* Basic / 200 */
-    background: nb-theme(color-basic-200);
-    /* Basic / 400 */
-    border: 1px solid nb-theme(color-basic-400);
-    box-sizing: border-box;
-    border-radius: 4px;
+  width: 100%;
+  // height: 108px;
+  /* Basic / 200 */
+  background: nb-theme(color-basic-200);
+  /* Basic / 400 */
+  border: 1px solid nb-theme(color-basic-400);
+  box-sizing: border-box;
+  border-radius: 4px;
+  &.isError {
+    border: 1px solid nb-theme(color-danger-500);
+  }
 }

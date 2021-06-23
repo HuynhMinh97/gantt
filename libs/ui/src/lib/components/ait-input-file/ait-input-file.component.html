@@ -9,6 +9,7 @@
     (dragover)="onFileDropped()"
     (dragleave)="onFileDragLeave()"
     (mouseout)="onFileDragLeave()"
+    [ngClass]="{'isError': isError}"
     style="cursor: pointer; margin-top: 8px"
     [ngStyle]="{ border: !isDefault ? '0.5px solid #000' : null }"
   >

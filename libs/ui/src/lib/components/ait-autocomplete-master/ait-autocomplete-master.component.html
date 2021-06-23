@@ -1,5 +1,5 @@
 <!-- {{selectItems | json}} -->
-<div class="input__container" [ngStyle]="{ width: widthInput + 'px' }">
+<div class="input__container" [ngStyle]="{ width: widthInput + 'px' }" [ngClass]="{'isError': isError}">
   <div
     style="
       width: 44px;
@@ -37,8 +37,11 @@
     (input)="handleInput($event.target)"
     (keydown.enter)="enterItems(input.value); input.value = ''"
     (keydown.tab)="enterItems(input.value); input.value = ''"
+    (focusout)="outFocus()"
   />
 </div>
+<ait-error-message [errors]="errors"></ait-error-message>
+
 <div
   class="suggest__wrapper"
   [ngStyle]="{ width: widthInput + 'px' }"

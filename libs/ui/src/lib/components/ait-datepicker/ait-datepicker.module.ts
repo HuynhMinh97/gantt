@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NbDatepickerModule, NbFormFieldModule, NbIconModule, NbInputModule } from '@nebular/theme';
-import { NbDateFnsDateModule } from '@nebular/date-fns';
+import { NbDateFnsDateModule, NbDateFnsDateService } from '@nebular/date-fns';
 import { AitDatePickerComponent } from './ait-datepicker.component';
 import { AitDateFormatService } from '../../services/common/ait-date.service';
 import { StoreModule } from '@ngrx/store';
 import { rootReducers } from '../../state/rootReducers';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AitErrorMessageModule } from '../ait-error-message/ait-error-message.module';
 
 
 @NgModule({
@@ -29,9 +30,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
       },
     ),
     NbIconModule,
-    NbFormFieldModule
+    NbFormFieldModule,
+    AitErrorMessageModule
   ],
   exports: [AitDatePickerComponent],
-  providers: [AitDateFormatService],
+  providers: [AitDateFormatService, NbDateFnsDateService],
 })
 export class AitDatepickerModule { }
