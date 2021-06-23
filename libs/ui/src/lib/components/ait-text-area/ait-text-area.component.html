@@ -8,6 +8,7 @@
   [style.width]="width"
   *ngIf="!disabled"
   rows="{{row}}"
+  [ngClass]="{'isError': isError}"
 ></textarea>
 <textarea
   class="custom-textarea"

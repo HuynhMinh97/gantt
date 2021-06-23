@@ -1,4 +1,4 @@
-// input {
-//   padding-top: 0;
-//   padding-bottom: 0;
-// }
+@import "../../@theme/styles/themes.scss";
+.isError {
+  border: 1px solid nb-theme(color-danger-500);
+}

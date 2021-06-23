@@ -1,4 +1,9 @@
 @import "../../@theme/styles/themes.scss";
 .ait-text-input {
   max-width: 400px;
+  input {
+    &.isError {
+      border-color: nb-theme(color-danger-500) !important;
+    }
+  }
 }

@@ -90,13 +90,11 @@ export class AitTranslationService {
   getMsg = (code: string) => {
     const typeMessage = code ? code[0] : '';
     const mes = this.allMessage[typeMessage];
-    console.log(mes)
 
     if (mes) {
       const mainCode = code.slice(1, code.length);
 
       const find = mes.find(m => m.code === mainCode);
-      console.log(find)
       return find?.message[this.currentLang] || '';
     }
     return '';

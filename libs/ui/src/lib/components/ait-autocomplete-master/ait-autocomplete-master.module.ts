@@ -5,10 +5,19 @@ import { NbIconModule, NbInputModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { AitChipModule } from '../ait-chip/ait-chip.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AitErrorMessageModule } from '../ait-error-message/ait-error-message.module';
 
 @NgModule({
   declarations: [AitAutoCompleteMasterComponent],
-  imports: [CommonModule, NbIconModule, NbEvaIconsModule, AitChipModule, NbInputModule, FormsModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    NbIconModule,
+    NbEvaIconsModule,
+    AitChipModule,
+    NbInputModule,
+    FormsModule,
+    ReactiveFormsModule,
+    AitErrorMessageModule],
   exports: [AitAutoCompleteMasterComponent],
   providers: [],
 })

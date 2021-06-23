@@ -74,6 +74,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   @Input() max_size_bytes: number; // bytes
   @Input() isReset: boolean;
   isImgErr = false;
+  @Input() isError = false;
 
   ngOnChanges(changes: SimpleChanges) {
     for (const key in changes) {
