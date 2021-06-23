@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { AitNumberFormatPipe } from '../../@theme/pipes/ait-number-format.pipe';
+import { AitTranslationService } from '../../services';
 import { AitCurrencySymbolService } from '../../services/ait-currency-symbol.service';
 import { AitAppUtils } from '../../utils/ait-utils';
 
@@ -20,7 +21,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   @Input() max = 999999999999;
   @Input() maxLength = 15;
   @Input() widthInput = '250px';
-  @Input() salaryPlaceholder = '';
+  @Input() placeholder = '';
   @Input() defaultValue = null;
   @Output() watchValue = new EventEmitter();
   @Input() styleInput: any = {};
@@ -40,6 +41,9 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   previousValue: any = '';
   symbol = '円';
   @Input() isReset = false;
+  @Input() isError = false;
+  @Input() required = false;
+  errors = [];
   dataInput = [];
 
   @Input() staticFormat = '###,###,###';
@@ -47,6 +51,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   constructor(
     private numberPipe: AitNumberFormatPipe,
     private currencySymbolService: AitCurrencySymbolService,
+    private translateService: AitTranslationService,
     @Inject(LOCALE_ID) public locale: string) {
     this.inputCtrl = new FormControl('');
 
@@ -113,8 +118,10 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
 
   handleFocusOut = () => {
 
+
     if (!this.currentNumber) {
       this.inputCtrl.patchValue(null);
+      this.checkReq(null);
       return;
     }
     if (this.isCurrency) {
@@ -150,25 +157,61 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
     return this.dataInput[this.dataInput.length - 1] || 0;
   }
 
-  onInput = (text: string) => {
-    this.dataInput = [...this.dataInput, text];
-    this.exactedValue = text;
-    this.currentNumber = text;
-    const target = this.replaceAll(text);
+  onInput = () => {
+    this.dataInput = [...this.dataInput, this.inputCtrl.value];
 
-    if (text !== '') {
+    const target = this.replaceAll(this.inputCtrl.value);
+    this.checkReq(target);
+    if (this.inputCtrl.value !== '') {
       this.watchValue.emit(!isNaN(Number(target)) ? Number(target) : null);
     }
     else {
+
       this.watchValue.emit(null);
     }
 
+  }
+
+  checkReq = (value?: any) => {
+    this.errors = [];
+    if (this.required) {
+      if (!value) {
+        this.isError = true;
+        const msg = this.translateService.getMsg('E0041');
+        this.errors = [msg]
+      }
+      else {
+        this.isError = false;
+      }
+    }
   }
 
 
 
   onKeyUp = (evt) => {
     this.currentKey = evt.keyCode;
+
+  }
+
+  onInputHandle = (text) => {
+    console.log(text)
+    if (text !== '') {
+      const transform: any = Number(text) < this.max ? text : this.max;
+      const res = Number(transform) > this.min ? transform : this.min;
+      setTimeout(() => {
+        this.inputCtrl.patchValue(res);
+        this.exactedValue = res;
+        this.currentNumber = res;
+        this.onInput()
+      }, 50)
+    }
+    else {
+      this.inputCtrl.patchValue(text);
+      this.checkReq(text);
+      this.exactedValue = text;
+      this.currentNumber = text;
+      this.onInput();
+    }
   }
 
 

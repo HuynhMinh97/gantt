@@ -25,18 +25,18 @@
     fieldSize="medium"
     [maxlength]="maxLength"
     [value]="inputCtrl.value"
-    [placeholder]="salaryPlaceholder"
-    (input)="onInput($event.target.value)"
+    [placeholder]="placeholder"
+    (input)="onInputHandle($event.target.value)"
     [formControl]="inputCtrl"
-    (focusout)="handleFocusOut();"
+    (focusout)="handleFocusOut()"
     (beforeinput)="onKeyDown($event)"
     (keydown)="onKeyUp($event)"
     (focus)="handleFocus()"
-    style="font-size: 12px"
+    style="font-size: 12px; background-color: transparent"
     (click)="handleClick()"
     [ngStyle]="styleInput"
-
+    [ngClass]="{ isError: isError }"
   />
 </div>
 <!-- {{inputCtrl.value}} -->
-<!-- <ait-error-message *ngIf="isTooltip" [errors]="['Please input number']"></ait-error-message> -->
+<ait-error-message [errors]="errors"></ait-error-message>

@@ -1,3 +1,4 @@
+@import "../../@theme/styles/themes.scss";
 .tag {
   border-radius: 50%;
   height: 15px;
@@ -174,6 +175,9 @@
   justify-content: flex-start;
   cursor: pointer;
   background: #fff;
+  &.isError {
+    border: 1px solid nb-theme(color-danger-500);
+  }
   p {
     margin: 0;
     margin-right: 2px;

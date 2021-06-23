@@ -1,4 +1,4 @@
-<nb-form-field class="ait-text-input">
+<nb-form-field class="ait-text-input" >
   <nb-icon
     nbPrefix
     *ngIf="iconName && nbPrefix"
@@ -18,8 +18,12 @@
     [fieldSize]="fieldSize"
     [shape]="shape"
     [fullWidth]="fullWidth"
+    [placeholder]="placeholder"
     type="text"
     (input)="onChange($event.target.value)"
     [formControl]="inputCtrl"
+    [class.isError]="isError"
+    style="border-color: #E4E9F2;"
   />
 </nb-form-field>
+<ait-error-message [errors]="errors" [style]="styleMessage"></ait-error-message>

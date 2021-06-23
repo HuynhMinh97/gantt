@@ -1,4 +1,8 @@
-<nb-form-field [ngStyle]="style">
+<nb-form-field
+  [ngStyle]="style"
+  style="border-radius: 0.25rem"
+  [ngClass]="{ isError: isError }"
+>
   <nb-icon
     nbSuffix
     icon="calendar-outline"
@@ -17,8 +21,10 @@
     [shape]="isRound ? 'semi-round' : 'rectangle'"
     [ngStyle]="styleInput"
     (focusout)="checkValidDateInput()"
-    [formControl]="inputCtrl"
     (click)="clickInput($event)"
+    (input)="handleInput($event)"
+    (beforeinput)="onBeforeInput($event)"
+    style="background-color: transparent"
   />
   <input
     [ngClass]="'border__bottom__input'"
@@ -44,5 +50,7 @@
     [style.visibility]="disable ? 'hidden' : null"
     (dateChange)="dateChange($event)"
     [date]="date"
+    [visibleDate]="date"
   ></nb-datepicker>
 </nb-form-field>
+<ait-error-message *ngIf="required" [errors]="errors"></ait-error-message>

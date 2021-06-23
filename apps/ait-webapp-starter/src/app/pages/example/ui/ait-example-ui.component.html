@@ -57,9 +57,9 @@
       </div>
     </ait-card-content>
 
-    <!-- <ait-space></ait-space>
+    <ait-space></ait-space>
 
-    <ait-card-content [isColumn]="true" [label]="'Table'">
+    <ait-card-content [isColumn]="true" [label]="'Error styles'">
       <p>This is a component, which is used to input value from user 🎉</p>
       <div
         style="
@@ -67,11 +67,64 @@
           display: flex;
           max-width: 400px;
           flex-wrap: wrap;
+          flex-direction: column;
         "
       >
-       <ait-table></ait-table>
+        <ait-label [label]="'Text input'" [required]="true"></ait-label>
+        <ait-input-text
+          [required]="true"
+          [placeholder]="'one'"
+          (watchValue)="getValueInput(st, $event)"
+          [styleMessage]="{
+            background : 'yellow'
+          }"
+        ></ait-input-text>
+        <ait-space></ait-space>
+        <ait-label [label]="'Number input'" [required]="true"></ait-label>
+        <ait-input-number
+          [required]="true"
+          [placeholder]="'one'"
+          [max]="6"
+          [min]="1"
+        ></ait-input-number>
+
+        <ait-space></ait-space>
+        <ait-label [label]="'date picker'" [required]="true"></ait-label>
+        <ait-datepicker
+          [placeholder]="'one'"
+          [required]="true"
+          [dateInput]="1591773014834"
+        ></ait-datepicker>
+
+        <ait-space></ait-space>
+        <ait-label
+          [label]="'autocomplete master'"
+          [required]="true"
+        ></ait-label>
+        <ait-autocomplete-master
+          [placeholder]="'one'"
+          [required]="true"
+        ></ait-autocomplete-master>
+
+        <ait-space></ait-space>
+        <ait-label
+          [label]="'autocomplete master data'"
+          [required]="true"
+        ></ait-label>
+        <ait-autocomplete-master-data
+          [placeholder]="'one'"
+          [required]="true"
+          [class]="'JOB_OCCUPATION'"
+        ></ait-autocomplete-master-data>
+
+        <ait-space></ait-space>
+        <ait-input-file [isError]="true"></ait-input-file>
+
+        <ait-space></ait-space>
+        <ait-label [label]="'textarea'" [required]="true"></ait-label>
+        <ait-textarea [isError]="true" [placeholder]="'one'"></ait-textarea>
       </div>
-    </ait-card-content> -->
+    </ait-card-content>
 
     <ait-space></ait-space>
     <ait-card-content [isColumn]="true" [label]="'Chips'">
@@ -164,9 +217,13 @@
     </ait-card-content>
 
     <ait-space></ait-space>
-    <ait-card-content [isColumn]="true" [label]="'Input file'" [styleContainer]="{
-      padding : '10px'
-    }">
+    <ait-card-content
+      [isColumn]="true"
+      [label]="'Input file'"
+      [styleContainer]="{
+        padding: '10px'
+      }"
+    >
       <p>This is a input-file component</p>
 
       <div
@@ -178,7 +235,7 @@
         "
       >
         <ait-input-file
-        [isDefault]="false"
+          [isDefault]="false"
           [file_keys]="['7bfedd70-a3db-f0c5-6340-d0e728d407ba']"
         ></ait-input-file>
       </div>
@@ -385,9 +442,11 @@
         <ait-autocomplete-master-data
           [widthInput]="400"
           [placeholder]="'Pick a job'"
+          [maxItem]="3"
           [class]="'JOB_OCCUPATION'"
           [style]="{ width: '400px' }"
           (watchValues)="getValueMasterData($event)"
+          [defaultValue]="[{_key :'ビルクリーニング'}]"
         ></ait-autocomplete-master-data>
         <p>Result ouput</p>
         <ait-text-area

@@ -79,7 +79,7 @@
 
 .input__container {
   height: 40px;
-  background: nb-theme(color-basic-200);
+  background:transparent;
   border: 1px solid nb-theme(color-basic-400);
   box-sizing: border-box;
   border-radius: 4px;
@@ -87,6 +87,9 @@
   align-items: center;
   flex-direction: row;
   position: relative;
+  &.isError {
+    border: 1px solid nb-theme(color-danger-500);
+  }
   .icon {
     position: absolute;
     right: 0;
