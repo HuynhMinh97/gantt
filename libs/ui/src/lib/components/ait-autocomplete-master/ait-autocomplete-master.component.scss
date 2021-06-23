@@ -31,13 +31,16 @@
 .input__container {
   width: 400px;
   height: 40px;
-  background: nb-theme(color-basic-200);
+  background: transparent;
   border: 1px solid nb-theme(color-basic-400);
   box-sizing: border-box;
   border-radius: 4px;
   display: flex;
   align-items: center;
   flex-direction: row;
+  &.isError {
+    border: 1px solid nb-theme(color-danger-500);
+  }
 
   .span {
     padding-left: 5px;

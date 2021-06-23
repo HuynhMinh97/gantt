@@ -7,12 +7,22 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
+import { Apollo } from 'apollo-angular';
 import { Observable, of } from 'rxjs';
 import { distinctUntilChanged, debounceTime } from 'rxjs/operators';
 import { TYPE } from '../../@constant';
-import { AitMasterDataService, AitTranslationService, CLASS, DATA_TYPE } from '../../services';
+import {
+  AitAuthService,
+  AitEnvironmentService,
+  AitMasterDataService,
+  AitTranslationService,
+  AitUserService,
+  CLASS,
+  DATA_TYPE
+} from '../../services';
 import { AppState, getLang } from '../../state/selectors';
 import { AitAppUtils } from '../../utils/ait-utils';
+import { AitBaseComponent } from '../base.component';
 
 
 
@@ -21,7 +31,7 @@ import { AitAppUtils } from '../../utils/ait-utils';
   styleUrls: ['./ait-autocomplete-master.component.scss'],
   templateUrl: './ait-autocomplete-master.component.html',
 })
-export class AitAutoCompleteMasterComponent implements OnInit, AfterViewChecked, OnChanges {
+export class AitAutoCompleteMasterComponent extends AitBaseComponent implements OnInit, AfterViewChecked, OnChanges {
 
   inputControlMaster: FormControl = new FormControl('');
   currentLang = 'en_US';
@@ -29,7 +39,11 @@ export class AitAutoCompleteMasterComponent implements OnInit, AfterViewChecked,
     private cdr: ChangeDetectorRef,
     private masterDataService: AitMasterDataService,
     store: Store<AppState>,
+    authService: AitAuthService,
+    apollo: Apollo,
+    userService: AitUserService, _env: AitEnvironmentService,
     private translateService: AitTranslationService) {
+    super(store, authService, apollo, userService, _env);
     store.pipe(select(getLang)).subscribe(
       lang => {
         if (lang !== this.currentLang) {
@@ -72,6 +86,9 @@ export class AitAutoCompleteMasterComponent implements OnInit, AfterViewChecked,
   @Input() isReset = false;
   @Output() watchValues = new EventEmitter();
   @Output() getDefaultValue = new EventEmitter();
+  @Input() isError = false;
+  @Input() required = false;
+  errors = []
 
   // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngAfterViewChecked() {
@@ -171,9 +188,34 @@ export class AitAutoCompleteMasterComponent implements OnInit, AfterViewChecked,
     }
   }
 
+  clearErrors = () => {
+    this.errors = [];
+    this.isError = false;
+  }
+
   handleInput($event) {
+    this.clearErrors();
+    if (this.required) {
+      if ($event.value === '' && this.selectItems.length === 0) {
+        this.isError = true;
+        const err = this.translateService.getMsg('E0041');
+        this.errors = [err]
+      }
+    }
     if ($event.value === '') {
       this.filteredData = [];
+    }
+  }
+
+  outFocus = () => {
+    this.clearErrors();
+    this.inputControlMaster.reset();
+    if (this.required) {
+      if (this.selectItems.length === 0) {
+        this.isError = true;
+        const err = this.translateService.getMsg('E0041');
+        this.errors = [err]
+      }
     }
   }
 
@@ -201,7 +243,7 @@ export class AitAutoCompleteMasterComponent implements OnInit, AfterViewChecked,
   settingData2 = () => {
     //call api # master data
     this.inputControlMaster.valueChanges.pipe(
-      debounceTime(500),
+      debounceTime(200),
       distinctUntilChanged()
     ).subscribe(text => {
       const condition = {
@@ -316,6 +358,16 @@ export class AitAutoCompleteMasterComponent implements OnInit, AfterViewChecked,
 
     }
     this.getFilteredData()
+    if (this.required) {
+      if (this.selectItems.length === 0) {
+        const err = this.translateService.getMsg('E0041');
+        this.isError = true;
+        this.errors = [err]
+      }
+      else {
+        this.clearErrors();
+      }
+    }
   }
 
   displayOptions = () => {

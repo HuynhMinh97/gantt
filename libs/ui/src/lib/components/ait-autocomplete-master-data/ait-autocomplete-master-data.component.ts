@@ -78,7 +78,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Input() code: string;
   @Input()
   placeholder: string = '';
-  @Input() maxItem: number = 0;
+  @Input() maxItem: number = 1;
   @Input() icon: string = 'search-outline';
   @Input() widthInput: number = 400;
   @Input() defaultValue: any[] = [];
@@ -92,6 +92,10 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Input() isReadOnly = false;
   @Input() disableOutputDefault = false;
   @Input() isResetInput = false;
+  @Input() isError = false;
+  @Input() required = false;
+
+  errors = []
 
   isHideLabel = false;
   isClickOption = false;
@@ -187,7 +191,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         this.optionSelected = [...AitAppUtils.getArrayNotFalsy(findByKeys)].filter(
           (f) => !!f
         );
-        const _keys = this.optionSelected.map((m) => m?._key);
+        const _keys = this.optionSelected.map((m) => m?.code);
 
         this.dataSource = AitAppUtils.deepCloneArray(this.dataSourceDf).map((d) => {
           if (this.isResetInput) {
@@ -243,7 +247,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   usingGraphQL = async (cond) => {
     const rest = await this.masterDataService.find({
       class: {
-        value : [this.class]
+        value: [this.class]
       },
       ...cond
     }, {
@@ -345,6 +349,13 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       this.isClickOption = false;
     }, 10)
 
+    if (this.required) {
+      if (this.optionSelected.length === 0) {
+        const err = this.getMsg('E0041');
+        this.errors = [err]
+      }
+    }
+
   };
 
   displayOptions = () => {
@@ -378,7 +389,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
 
   optionClicked(event: Event, opt: any) {
-    console.log(opt)
+    this.clearErrors();
     this.isClickOption = true;
     this.checkItem(event, opt);
     this.inputControl.patchValue('');
@@ -418,30 +429,32 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   @HostListener('document:click', ['$event'])
   clickout(event) {
-    if (this.eRef.nativeElement.contains(event.target)) {
-      if (this.maxItem === 1) {
-        this.data = this.dataSourceDf;
-        this.filteredOptions$ = of(this.dataSourceDf);
-      }
+    if (!this.isReadOnly) {
+      if (this.eRef.nativeElement.contains(event.target)) {
+        if (this.maxItem === 1) {
+          this.data = this.dataSourceDf;
+          this.filteredOptions$ = of(this.dataSourceDf);
+        }
 
 
-      if (this.isOpenAutocomplete) {
-        if (!this.isClickOption) {
-          this.hideAutocomplete();
+        if (this.isOpenAutocomplete) {
+          if (!this.isClickOption) {
+            this.hideAutocomplete();
+          }
+          else {
+            this.openAutocomplete();
+          }
+        } else {
+          this.openAutocomplete()
         }
-        else {
-          this.openAutocomplete();
-        }
+
+
       } else {
-        this.openAutocomplete()
-      }
+        if (!this.isClickOption) {
+          this.outFocusValues.emit(true);
+          this.hideAutocomplete();
 
-
-    } else {
-      if (!this.isClickOption) {
-        this.outFocusValues.emit(true);
-        this.hideAutocomplete();
-
+        }
       }
     }
   }
@@ -469,6 +482,22 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       }
     }, 100)
     this.outFocusValues.emit(true);
+    this.checkReq();
+  }
+
+  checkReq = () => {
+
+    if (this.required) {
+      if (this.optionSelected.length === 0 || this.selectOne?.value === '') {
+        const err = this.getMsg('E0041');
+        this.isError = true;
+        this.errors = [err]
+      }
+    }
+    else {
+      this.clearErrors();
+      this.isError = false;
+    }
   }
 
   onTab = () => {
@@ -492,8 +521,20 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   }
 
 
+  clearErrors = () => {
+    this.errors = [];
+    this.isError = false;
+  }
 
   handleInput = (value) => {
+    this.clearErrors();
+    if (this.required) {
+      if (value === '' && this.optionSelected.length === 0) {
+        const err = this.getMsg('E0041');
+        this.isError = true;
+        this.errors = [err];
+      }
+    }
     this.openAutocomplete();
     this.onInputValues.emit({ value: [{ value }] });
     if (this.maxItem === 1) {
@@ -529,9 +570,12 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     }
 
 
+
+
   };
 
   onSelectionChange($event) {
+    this.clearErrors();
     this.selectOne = { _key: $event?.code, value: $event?.value };
     this.inputControl.patchValue($event?.value || '')
     this.onInput.emit({ value: $event?.value })
@@ -540,6 +584,15 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       value: [{ _key: $event?.code, value: $event?.value }],
     });
     this.getFilteredDataSource();
+
+    if (this.required) {
+      if (!this.selectOne?.value) {
+        this.isError = true;
+
+        const err = this.getMsg('E0041');
+        this.errors = [err];
+      }
+    }
 
   }
 

@@ -19,6 +19,7 @@ export class AitTextAreaComponent implements OnInit, OnChanges {
   @Input() minHeight;
   @Input() disabled = false;
   @Input() width;
+  @Input() isError = false;
   @Input() row = 1;
   @Input() style = {};
 

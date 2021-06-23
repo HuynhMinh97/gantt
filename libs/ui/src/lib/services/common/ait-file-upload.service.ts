@@ -98,10 +98,8 @@ export class AitFileUploaderService extends AitBaseService {
           name: true,
           create_at: true
         });
-        console.log(file_key, req)
         return result;
       } catch (error) {
-        console.log(error);
         return null;
       }
     }
