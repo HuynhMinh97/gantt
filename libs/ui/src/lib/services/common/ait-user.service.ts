@@ -111,7 +111,6 @@ export class AitUserService extends AitBaseService {
   }
 
   getUserInfo = async (user_id: string) => {
-    console.log(user_id)
     if (user_id && user_id !== '') {
       let user = null;
       const rest_user: any = await this.apollo.query({

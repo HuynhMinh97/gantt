@@ -12,6 +12,7 @@ import { NbIconModule, NbTooltipModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { AitProgressModule } from '../ait-progress/ait-progress.module';
 import { AitLabelModule } from '../ait-label/ait-label.module';
+import { AitErrorMessageModule } from '../ait-error-message/ait-error-message.module';
 
 @NgModule({
   declarations: [AitInputFileComponent],
@@ -22,6 +23,7 @@ import { AitLabelModule } from '../ait-label/ait-label.module';
     AitProgressModule,
     NbTooltipModule,
     AitLabelModule,
+    AitErrorMessageModule,
     StoreModule.forRoot(
       { ...rootReducers },
       {
