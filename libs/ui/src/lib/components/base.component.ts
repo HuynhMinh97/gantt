@@ -650,6 +650,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
         query: gql`
             ${gqlQuery}
           `,
+          fetchPolicy: 'network-only',
       })
       .pipe(map((res) => (<any>res.data)[name]))
       .toPromise();
