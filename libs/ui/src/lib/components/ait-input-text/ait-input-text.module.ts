@@ -5,6 +5,7 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { AitTextInputComponent } from './ait-input-text.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AitErrorMessageModule } from '../ait-error-message/ait-error-message.module';
+import { AitLabelModule } from '../ait-label/ait-label.module';
 
 @NgModule({
   declarations: [AitTextInputComponent],
@@ -16,7 +17,8 @@ import { AitErrorMessageModule } from '../ait-error-message/ait-error-message.mo
     NbEvaIconsModule,
     NbFormFieldModule,
     NbInputModule,
-    AitErrorMessageModule
+    AitErrorMessageModule,
+    AitLabelModule,
   ],
   exports: [AitTextInputComponent, NbIconModule, NbEvaIconsModule, NbFormFieldModule],
   providers: [],

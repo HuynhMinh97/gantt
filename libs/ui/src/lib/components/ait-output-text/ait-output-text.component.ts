@@ -11,18 +11,17 @@ export class AitOutputTextComponent implements OnChanges {
   @Input() label = 'Default label';
   @Input() value = '';
   @Input() valueArray: string[] = [];
-  @Input() placeholder = ''
-  @Input() isTranslate = true;
-  @Input() caption = ''
-  @Input() iconCaption = 'info-outline';
+  @Input() guidance = ''
+  @Input() guidanceIcon = 'info-outline';
   @Input() height;
   @Input() width;
-  @Input() row = 1;
+  @Input() rows = 1;
+  @Input() classContainer;
   constructor(private translateService: AitTranslationService) {
 
   }
 
-  getCaption = () => this.translateService.translate(this.caption);
+  getCaption = () => this.translateService.translate(this.guidance);
   ngOnChanges(changes: SimpleChanges) {
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {

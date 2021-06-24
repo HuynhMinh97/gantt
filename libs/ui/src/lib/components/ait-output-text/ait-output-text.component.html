@@ -1,34 +1,36 @@
-<div class="output_text" >
-  <ait-label [label]="label"></ait-label>
-  <input
-    [nbTooltip]="value"
-    [nbTooltipTrigger]="value ? 'hover' : 'noop'"
-    type="text"
-    readonly
-    [value]="value"
-    [placeholder]="placeholder"
-    *ngIf="row === 1"
-    [style.height]="height"
-    [style.width]="width"
-  />
-  <textarea
-    class="textarea"
-    *ngIf="row !== 1"
-    rows="{{ row }}"
-    disabled
-    [style.width]="width"
-    style="resize: none"
-    [value]="value || ''"
-  >
-  </textarea>
-  <div class="caption" *ngIf="caption">
-    <div class="icon">
-      <nb-icon [icon]="iconCaption"></nb-icon>
-    </div>
-    <div class="info">
-      <p style="word-break: break-word; color: #8f9bb3; font-size: 12px">
-        {{ getCaption() }}
-      </p>
+<div [ngClass]="classContainer">
+  <div class="output_text" >
+    <ait-label [label]="label"></ait-label>
+    <input
+      [nbTooltip]="value"
+      [nbTooltipTrigger]="value ? 'hover' : 'noop'"
+      type="text"
+      readonly
+      [value]="value"
+      *ngIf="rows === 1"
+      [style.height]="height"
+      [style.width]="width"
+    />
+    <textarea
+      class="textarea"
+      *ngIf="rows !== 1"
+      rows="{{ rows }}"
+      disabled
+      [style.width]="width"
+      style="resize: none"
+      [value]="value || ''"
+    >
+    </textarea>
+    <div class="caption" *ngIf="guidance">
+      <div class="icon" *ngIf="guidanceIcon">
+        <nb-icon [icon]="guidanceIcon"></nb-icon>
+      </div>
+      <div class="info">
+        <p style="word-break: break-word; color: #8f9bb3; font-size: 12px">
+          {{ getCaption() }}
+        </p>
+      </div>
     </div>
   </div>
+
 </div>

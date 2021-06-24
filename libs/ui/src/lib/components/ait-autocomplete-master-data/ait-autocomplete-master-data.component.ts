@@ -21,7 +21,7 @@ import { FormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { Observable, of } from 'rxjs';
-import { AitAuthService, AitEnvironmentService, AitMasterDataService, AitUserService } from '../../services';
+import { AitAuthService, AitEnvironmentService, AitMasterDataService, AitTranslationService, AitUserService } from '../../services';
 import { AppState, } from '../../state/selectors';
 import { AitAppUtils } from '../../utils/ait-utils';
 import { AitBaseComponent } from '../base.component';
@@ -48,6 +48,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     authService: AitAuthService,
     userService: AitUserService,
     _envService: AitEnvironmentService,
+    private translateSerivce: AitTranslationService,
     apollo: Apollo
   ) {
     super(store, authService, apollo, userService, _envService);
@@ -63,7 +64,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   // Neu la type master data thi` maxItem=1 => giong nhu select (ho tro autocomplete), maxItem > 1  show giong nhu auto muti choice , nhung ho tro autocomplete
   // emit {_key : code ,value}
   filteredOptions$: Observable<any>;
-  dataSource: any[] = [];
+  DataSource: any[] = [];
   optionSelected: any[] = [];
   dataSourceDf = [];
   selectOne: any;
@@ -73,6 +74,8 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   @ViewChild('autoInput', { static: false }) auto: ElementRef;
   @ViewChild('input', { static: false }) input: ElementRef;
+  @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
+
   @Input() class: string;
   @Input() parentCode: string;
   @Input() code: string;
@@ -84,7 +87,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Input() defaultValue: any[] = [];
   @Input() style: any;
   @Input() styleInput: any;
-  @Output() watchValues = new EventEmitter();
+  @Output() watchValue = new EventEmitter();
   @Output() onInput = new EventEmitter();
   @Output() onInputValues = new EventEmitter();
   @Output() outFocusValues = new EventEmitter();
@@ -94,6 +97,16 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Input() isResetInput = false;
   @Input() isError = false;
   @Input() required = false;
+  @Input() label;
+  @Input() guidance = ''
+  @Input() guidanceIcon = 'info-outline';
+  @Input() excludedValue: any[] = [];
+  @Input() dataSource: any[] = [];
+  @Input() collection = 'sys_master_data';
+  @Input() targetValue = 'name';
+  @Input() classContainer;
+
+
 
   errors = []
 
@@ -105,6 +118,11 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     this.isOpenAutocomplete = false;
 
   }
+
+  getCaptions = () => this.translateSerivce.translate(this.guidance);
+
+
+  getFieldName = () => this.translateSerivce.translate(this.label);
 
 
   ngAfterViewChecked() {
@@ -157,7 +175,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
           this.setupDefault();
           if (!this.disableOutputDefault) {
 
-            this.watchValues.emit({ value: typeDF.map(m => ({ _key: m?.code, value: m?.value })) });
+            this.watchValue.emit({ value: typeDF.map(m => ({ _key: m?.code, value: m?.value })) });
           }
 
         }
@@ -167,7 +185,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
             this.selectOne = {};
             this.optionSelected = [];
             this.inputControl.patchValue('');
-            this.dataSource = AitAppUtils.deepCloneArray(this.dataSourceDf);
+            this.DataSource = AitAppUtils.deepCloneArray(this.dataSourceDf);
             this.filteredOptions$ = of(this.dataSourceDf);
             this.isResetInput = false;
           }
@@ -193,7 +211,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         );
         const _keys = this.optionSelected.map((m) => m?.code);
 
-        this.dataSource = AitAppUtils.deepCloneArray(this.dataSourceDf).map((d) => {
+        this.DataSource = AitAppUtils.deepCloneArray(this.dataSourceDf).map((d) => {
           if (this.isResetInput) {
             return {
               ...d,
@@ -205,10 +223,10 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
             isChecked: _keys.includes(d._key) || _keys.includes(d.code),
           };
         });
-        this.data = this.dataSource;
+        this.data = this.DataSource;
 
         if (!this.isClickOption && !this.isOpenAutocomplete) {
-          this.filteredOptions$ = of(this.dataSource)
+          this.filteredOptions$ = of(this.DataSource)
         }
 
 
@@ -238,28 +256,43 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       cond['code'] = this.code;
     }
 
-    if (this.class) {
+    if (this.class && this.collection === 'sys_master_data') {
       this.usingGraphQL(cond).then();
+    }
+    else {
+      this.usingGraphQL({},false).then();
     }
 
   };
 
-  usingGraphQL = async (cond) => {
-    const rest = await this.masterDataService.find({
-      class: {
-        value: [this.class]
-      },
-      ...cond
-    }, {
-      _key: true, code: true, name: true
-    })
-
+  usingGraphQL = async (cond, hasClass = true) => {
     let dataMaster = [];
-    const result = rest?.data
-    if (result) {
-      dataMaster = result;
+    if (this.dataSource.length !== 0) {
+      dataMaster = this.dataSource;
     }
-    const r = dataMaster.map(r => ({ code: r.code, value: r.name }));
+    else {
+      const condition = {
+        ...cond
+      };
+      if (hasClass) {
+        condition.class = {
+          value: [this.class]
+        }
+      }
+      const rest = await this.masterDataService.find({
+        ...condition
+      }, {
+        _key: true, code: true, [this.targetValue]: true,
+      }, this.collection)
+
+
+      const result = rest?.data
+      if (result) {
+        dataMaster = result || [];
+      }
+    }
+    const r = dataMaster.map(r => ({ code: r.code, value: r[this.targetValue] || r?.value, _key: r.code }));
+
 
 
     const dataFiltered = AitAppUtils.getUniqueArray((r || []), 'value');
@@ -279,16 +312,24 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         optionId: m._key ? m._key + idx : idx,
       };
     });
+    console.log(data)
 
-    const dataFilter = data.filter(d => d.value)
+    const dataFilter = data.filter(d => d.value);
+    let ret = dataFilter;
+    const _keys = this.excludedValue.map(e => e?._key);
+    if (_keys.length !== 0) {
+      ret = dataFilter.filter(f => !_keys.includes(f?._key));
+    }
 
-    this.dataSource = dataFilter;
-    this.dataSourceDf = AitAppUtils.deepCloneArray(this.dataSource);
+
+
+    this.DataSource = ret;
+    this.dataSourceDf = AitAppUtils.deepCloneArray(this.DataSource);
 
     this.setupDefault();
     if (this.maxItem !== 1) {
       this.inputControl.valueChanges.subscribe(value => {
-        this.filteredOptions$ = of(this.dataSource);
+        this.filteredOptions$ = of(this.DataSource);
       })
     }
 
@@ -296,7 +337,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   get DATASUGGEST(): any[] {
     const keys = this.optionSelected.map(m => m?._key)
-    const data = this.dataSource.filter(f => !keys.includes(f?._key));
+    const data = this.DataSource.filter(f => !keys.includes(f?._key));
     return [...this.optionSelected, ...data]
   }
 
@@ -315,43 +356,44 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     if (this.maxItem !== 1) {
 
       if (!this.isOpenAutocomplete && !this.isClickOption) {
-        this.filteredOptions$ = of(this.sortItems(this.dataSource))
+        this.filteredOptions$ = of(this.sortItems(this.DataSource))
       }
     }
   }
 
 
   getSelectedOptions = () =>
-    this.dataSource
+    this.DataSource
       .filter((f) => !!f.isChecked)
       .map((m) => ({ _key: m?.code, value: m?.value }));
 
   checkItem = (event: Event, opt: any) => {
+    console.log(opt)
     let target
-    const itemFind = this.dataSource.find((f) => f.optionId === opt.optionId);
+    const itemFind = this.DataSource.find((f) => f.optionId === opt.optionId);
     if (this.optionSelected.length < this.MAXITEM) {
 
       itemFind.isChecked = !itemFind.isChecked;
 
       this.optionSelected = this.getSelectedOptions();
-      target = this.dataSource;
-      this.watchValues.emit({ value: this.optionSelected });
+      target = this.DataSource;
+      this.watchValue.emit({ value: this.optionSelected });
     } else {
       if (itemFind.isChecked) {
         itemFind.isChecked = !itemFind.isChecked;
         this.optionSelected = this.getSelectedOptions();
-
-        this.watchValues.emit({ value: this.optionSelected });
+        target = this.DataSource;
+        this.watchValue.emit({ value: this.optionSelected });
       }
     }
     setTimeout(() => {
-      this.dataSource = target;
+      this.DataSource = target;
       this.isClickOption = false;
     }, 10)
 
     if (this.required) {
       if (this.optionSelected.length === 0) {
-        const err = this.getMsg('E0041');
+        const err = this.getMsg('E0001').replace('{0}', this.getFieldName());
         this.errors = [err]
       }
     }
@@ -374,7 +416,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     );
     const excludeOptionNull = filteredResult.filter(f => f.value);
     const sortOptions = excludeOptionNull
-    this.dataSource = sortOptions;
+    this.DataSource = sortOptions;
     this.data = sortOptions;
     this.filteredOptions$ = of(sortOptions);
   };
@@ -430,7 +472,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @HostListener('document:click', ['$event'])
   clickout(event) {
     if (!this.isReadOnly) {
-      if (this.eRef.nativeElement.contains(event.target)) {
+      if (this.inputContainer.nativeElement.contains(event.target)) {
         if (this.maxItem === 1) {
           this.data = this.dataSourceDf;
           this.filteredOptions$ = of(this.dataSourceDf);
@@ -472,7 +514,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       if (this.maxItem === 1) {
         if (!values.includes(this.selectOne?.value)) {
           this.selectOne = {};
-          this.watchValues.emit({
+          this.watchValue.emit({
             value: [],
           });
           this.data = this.dataSourceDf;
@@ -489,7 +531,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
     if (this.required) {
       if (this.optionSelected.length === 0 || this.selectOne?.value === '') {
-        const err = this.getMsg('E0041');
+        const err = this.getMsg('E0001').replace('{0}', this.getFieldName());
         this.isError = true;
         this.errors = [err]
       }
@@ -504,13 +546,13 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     if (this.maxItem === 1) {
       const values = this.dataSourceDf.find(f => f?.value === this.selectOne?.value);
       if (values) {
-        this.watchValues.emit({
+        this.watchValue.emit({
           value: [values],
         })
       }
       else {
         this.selectOne = {};
-        this.watchValues.emit({
+        this.watchValue.emit({
           value: [],
         });
         this.onInput.emit({ value: '' })
@@ -530,7 +572,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     this.clearErrors();
     if (this.required) {
       if (value === '' && this.optionSelected.length === 0) {
-        const err = this.getMsg('E0041');
+        const err = this.getMsg('E0001').replace('{0}', this.getFieldName());
         this.isError = true;
         this.errors = [err];
       }
@@ -545,9 +587,9 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       if (value === '') {
         this.selectOne = {};
         this.defaultValue = [];
-        this.dataSource = AitAppUtils.deepCloneArray(this.dataSourceDf);
-        this.filteredOptions$ = of(this.dataSource);
-        this.watchValues.emit({ value: [] })
+        this.DataSource = AitAppUtils.deepCloneArray(this.dataSourceDf);
+        this.filteredOptions$ = of(this.DataSource);
+        this.watchValue.emit({ value: [] })
       } else {
         const text = value;
         this.selectOne = { value }
@@ -559,8 +601,8 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     else {
       if (value === '') {
         this.defaultValue = [];
-        this.filteredOptions$ = of(this.dataSource);
-        this.watchValues.emit({ value: [] })
+        this.filteredOptions$ = of(this.DataSource);
+        this.watchValue.emit({ value: [] })
       } else {
 
         const text = value;
@@ -580,7 +622,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     this.inputControl.patchValue($event?.value || '')
     this.onInput.emit({ value: $event?.value })
 
-    this.watchValues.emit({
+    this.watchValue.emit({
       value: [{ _key: $event?.code, value: $event?.value }],
     });
     this.getFilteredDataSource();
@@ -588,8 +630,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     if (this.required) {
       if (!this.selectOne?.value) {
         this.isError = true;
-
-        const err = this.getMsg('E0041');
+        const err = this.getMsg('E0001').replace('{0}', this.getFieldName());
         this.errors = [err];
       }
     }

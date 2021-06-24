@@ -1,75 +1,93 @@
-<!-- {{selectItems | json}} -->
-<div class="input__container" [ngStyle]="{ width: widthInput + 'px' }" [ngClass]="{'isError': isError}">
+<div [ngClass]="classContainer" style="max-width: 400px">
+  <ait-label [label]="label" [required]="required"></ait-label>
   <div
-    style="
-      width: 44px;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    "
+    class="input__container"
+    style="margin-top: 8px; width: 100%"
+    [ngClass]="{ isError: isError }"
   >
-    <nb-icon
-      style="color: gray; font-size: 24px; margin-left: 5px"
+    <div
+      style="
+        width: 44px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <nb-icon
+        style="color: gray; font-size: 24px; margin-left: 5px"
+        nbPrefix
+        [icon]="icon"
+        pack="eva"
+      ></nb-icon>
+    </div>
+    <div
+      class="span"
+      *ngIf="selectItems?.length !== 0 && maxItem === 1"
       nbPrefix
-      [icon]="icon"
-      pack="eva"
-    ></nb-icon>
+    >
+      <ait-chip
+        [title]="o?.value"
+        *ngFor="let o of selectItems"
+        (action)="removeItems(chip)"
+        [icon]="'close-outline'"
+      ></ait-chip>
+    </div>
+    <input
+      [formControl]="inputControlMaster"
+      (click)="handleClick()"
+      fullWidth
+      nbInput
+      #input
+      [maxlength]="maxLength"
+      type="text"
+      class="search"
+      [placeholder]="getPlaceholder()"
+      (input)="handleInput($event.target)"
+      (keydown.enter)="enterItems(input.value); input.value = ''"
+      (keydown.tab)="enterItems(input.value); input.value = ''"
+      (focusout)="outFocus()"
+    />
   </div>
-  <div class="span" *ngIf="selectItems?.length !== 0 && maxItem === 1" nbPrefix>
-    <ait-chip
-      [title]="o?.value"
-      *ngFor="let o of selectItems"
-      (action)="removeItems(chip)"
-      [icon]="'close-outline'"
-    ></ait-chip>
+  <div class="caption" *ngIf="guidance">
+    <div class="icon" *ngIf="guidanceIcon">
+      <nb-icon [icon]="guidanceIcon"></nb-icon>
+    </div>
+    <div class="info">
+      <p style="word-break: break-word; color: #8f9bb3; font-size: 12px">
+        {{ getCaptions() }}
+      </p>
+    </div>
   </div>
-  <input
-    [formControl]="inputControlMaster"
-    (click)="handleClick()"
-    fullWidth
-    nbInput
-    #input
-    [maxlength]="maxLength"
-    type="text"
-    class="search"
-    [placeholder]="getPlaceholder()"
-    (input)="handleInput($event.target)"
-    (keydown.enter)="enterItems(input.value); input.value = ''"
-    (keydown.tab)="enterItems(input.value); input.value = ''"
-    (focusout)="outFocus()"
-  />
-</div>
-<ait-error-message [errors]="errors"></ait-error-message>
 
-<div
-  class="suggest__wrapper"
-  [ngStyle]="{ width: widthInput + 'px' }"
-  *ngIf="filteredData.length !== 0 && input.value !== ''"
->
-  <span class="caption">{{ getTitle() }}</span>
-  <div class="suggestion__data" [ngStyle]="{ width: '100%' }">
-    <ait-chip
-      [title]="chip?.value"
-      *ngFor="let chip of filteredData"
-      (onClickChip)="addItems(chip); input.value = ''"
-      [icon]="'plus-outline'"
-    ></ait-chip>
+  <div class="suggest__wrapper" [ngStyle]="{ width: '100%' }" *ngIf="filteredData.length !== 0 && isOpenSuggest">
+    <span class="caption">{{ getTitle() }}</span>
+    <div class="suggestion__data" [ngStyle]="{ width: '100%' }">
+      <ait-chip
+        [title]="chip?.value"
+        *ngFor="let chip of filteredData"
+        (onClickChip)="addItems(chip)"
+        [icon]="'plus-outline'"
+      ></ait-chip>
+    </div>
   </div>
-</div>
 
-<div
-  class="select_data_wrapper"
-  [ngStyle]="{ width: widthInput + 'px' }"
-  *ngIf="selectItems?.length !== 0 && maxItem !== 1"
->
-  <span class="caption"> {{ getLimitInput() }}</span>
-  <div class="select__data" [ngStyle]="{ width: '100%' }">
-    <ait-chip
-      [title]="chip?.value"
-      *ngFor="let chip of selectItems"
-      (action)="removeItems(chip)"
-      [icon]="'close-outline'"
-    ></ait-chip>
+  <div
+    class="select_data_wrapper"
+    [ngStyle]="{ width: widthInput + 'px' }"
+    *ngIf="selectItems?.length !== 0 && maxItem !== 1"
+    style="margin-top: 10px"
+  >
+    <span class="caption"> {{ getLimitInput() }}</span>
+    <div class="select__data" [ngStyle]="{ width: '100%' }">
+      <ait-chip
+        [title]="chip?.value"
+        *ngFor="let chip of selectItems"
+        (action)="removeItems(chip)"
+        [icon]="'close-outline'"
+      ></ait-chip>
+    </div>
   </div>
+
+  <ait-error-message [errors]="errors"></ait-error-message>
 </div>

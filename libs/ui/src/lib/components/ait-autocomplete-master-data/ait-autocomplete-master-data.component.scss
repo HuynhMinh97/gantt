@@ -122,3 +122,20 @@
 ::ng-deep .nb-timepicker-container {
   width: auto !important;
 }
+
+.caption {
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  .icon {
+    width: 25px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .info {
+    flex-grow: 1;
+    height: 100%;
+  }
+}

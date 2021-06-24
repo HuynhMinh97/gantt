@@ -10,3 +10,10 @@ h6 {
 .containerx {
   padding: 70px;
 }
+
+::ng-deep .container_file {
+  nb-icon {
+    color :#000 !important;
+  }
+}
+
