@@ -1,29 +1,64 @@
-<nb-form-field class="ait-text-input" >
-  <nb-icon
-    nbPrefix
-    *ngIf="iconName && nbPrefix"
-    icon="{{ iconName }}"
-    pack="eva"
-  ></nb-icon>
-  <nb-icon
-    nbSuffix
-    *ngIf="iconName && !nbPrefix"
-    icon="{{ iconName }}"
-    pack="eva"
-  ></nb-icon>
+<div [ngClass]="classContainer">
+  <ait-label [label]="label" [required]="required"></ait-label>
+  <nb-form-field class="ait-text-input" style="margin-top: 8px">
+    <nb-icon
+      nbPrefix
+      *ngIf="iconName && nbPrefix"
+      icon="{{ iconName }}"
+      pack="eva"
+    ></nb-icon>
+    <nb-icon
+      nbSuffix
+      *ngIf="iconName && !nbPrefix"
+      icon="{{ iconName }}"
+      pack="eva"
+    ></nb-icon>
+    <textarea
+      nbInput
+      [status]="status"
+      [fieldSize]="fieldSize"
+      [shape]="shape"
+      [fullWidth]="fullWidth"
+      [placeholder]="placeholder"
+      [row]="rows"
+      [col]="cols"
+      type="text"
+      (input)="onChange($event.target.value)"
+      [formControl]="inputCtrl"
+      [class.isError]="isError"
+      style="border-color: #e4e9f2"
+      *ngIf="rows !== 1"
+      [maxLength]="length"
+    ></textarea>
 
-  <input
-    nbInput
-    [status]="status"
-    [fieldSize]="fieldSize"
-    [shape]="shape"
-    [fullWidth]="fullWidth"
-    [placeholder]="placeholder"
-    type="text"
-    (input)="onChange($event.target.value)"
-    [formControl]="inputCtrl"
-    [class.isError]="isError"
-    style="border-color: #E4E9F2;"
-  />
-</nb-form-field>
-<ait-error-message [errors]="errors" [style]="styleMessage"></ait-error-message>
+    <input
+      nbInput
+      [status]="status"
+      [fieldSize]="fieldSize"
+      [shape]="shape"
+      [fullWidth]="fullWidth"
+      [placeholder]="placeholder"
+      [maxLength]="length"
+      *ngIf="rows === 1"
+      type="text"
+      (input)="onChange($event.target.value)"
+      [formControl]="inputCtrl"
+      [class.isError]="isError"
+      style="border-color: #e4e9f2"
+    />
+  </nb-form-field>
+  <div class="caption" *ngIf="guidance">
+    <div class="icon" *ngIf="guidanceIcon">
+      <nb-icon [icon]="guidanceIcon"></nb-icon>
+    </div>
+    <div class="info">
+      <p style="word-break: break-word; color: #8f9bb3; font-size: 12px">
+        {{ getCaption() }}
+      </p>
+    </div>
+  </div>
+  <ait-error-message
+    [errors]="errors"
+    [style]="styleMessage"
+  ></ait-error-message>
+</div>

@@ -1,56 +1,70 @@
-<nb-form-field
-  [ngStyle]="style"
-  style="border-radius: 0.25rem"
-  [ngClass]="{ isError: isError }"
->
-  <nb-icon
-    nbSuffix
-    icon="calendar-outline"
-    pack="eva"
-    *ngIf="!disable"
-    style="cursor: pointer"
-    (click)="clickIconDate()"
-  ></nb-icon>
-  <input
-    nbInput
-    #inputDateTime
-    placeholder="{{ staticFormat ? staticFormat : getFormat() }}"
-    [nbDatepicker]="dateTimePicker"
-    [(ngModel)]="date"
-    *ngIf="!disable"
-    [shape]="isRound ? 'semi-round' : 'rectangle'"
-    [ngStyle]="styleInput"
-    (focusout)="checkValidDateInput()"
-    (click)="clickInput($event)"
-    (input)="handleInput($event)"
-    (beforeinput)="onBeforeInput($event)"
-    style="background-color: transparent"
-  />
-  <input
-    [ngClass]="'border__bottom__input'"
-    nbInput
-    fullWidth
-    #inputDateTime
-    disabled
-    [value]="valueDf"
-    *ngIf="disable"
-    [shape]="isRound ? 'semi-round' : 'rectangle'"
-    [ngStyle]="styleInput"
-    style="
-      padding-top: 0;
-      padding-bottom: 0;
-      font-size: 12px;
-      text-align: left;
-      padding-left: 16px;
-    "
-  />
-  <nb-datepicker
-    #dateTimePicker
-    [format]="staticFormat ? staticFormat : getFormat()"
-    [style.visibility]="disable ? 'hidden' : null"
-    (dateChange)="dateChange($event)"
-    [date]="date"
-    [visibleDate]="date"
-  ></nb-datepicker>
-</nb-form-field>
-<ait-error-message *ngIf="required" [errors]="errors"></ait-error-message>
+<div [ngClass]="classContainer">
+  <ait-label [label]="label" [required]="required"></ait-label>
+
+  <nb-form-field
+    [ngStyle]="style"
+    style="border-radius: 0.25rem; margin-top: 8px"
+    [ngClass]="{ isError: isError }"
+  >
+    <nb-icon
+      nbSuffix
+      icon="calendar-outline"
+      pack="eva"
+      *ngIf="!disable"
+      style="cursor: pointer"
+      (click)="clickIconDate()"
+    ></nb-icon>
+    <input
+      nbInput
+      #inputDateTime
+      placeholder="{{ staticFormat ? staticFormat : getFormat() }}"
+      [nbDatepicker]="dateTimePicker"
+      [(ngModel)]="date"
+      *ngIf="!disable"
+      [shape]="isRound ? 'semi-round' : 'rectangle'"
+      [ngStyle]="styleInput"
+      (focusout)="checkValidDateInput()"
+      (click)="clickInput($event)"
+      (input)="handleInput($event)"
+      (beforeinput)="onBeforeInput($event)"
+      style="background-color: transparent"
+    />
+    <input
+      [ngClass]="'border__bottom__input'"
+      nbInput
+      fullWidth
+      #inputDateTime
+      disabled
+      [value]="valueDf"
+      *ngIf="disable"
+      [shape]="isRound ? 'semi-round' : 'rectangle'"
+      [ngStyle]="styleInput"
+      style="
+        padding-top: 0;
+        padding-bottom: 0;
+        font-size: 12px;
+        text-align: left;
+        padding-left: 16px;
+      "
+    />
+    <nb-datepicker
+      #dateTimePicker
+      [format]="format ? format : getFormat()"
+      [style.visibility]="disable ? 'hidden' : null"
+      (dateChange)="dateChange($event)"
+      [date]="date"
+      [visibleDate]="date"
+    ></nb-datepicker>
+  </nb-form-field>
+  <div class="caption" *ngIf="guidance">
+    <div class="icon" *ngIf="guidanceIcon">
+      <nb-icon [icon]="guidanceIcon"></nb-icon>
+    </div>
+    <div class="info">
+      <p style="word-break: break-word; color: #8f9bb3; font-size: 12px">
+        {{ getCaption() }}
+      </p>
+    </div>
+  </div>
+  <ait-error-message *ngIf="required" [errors]="errors"></ait-error-message>
+</div>

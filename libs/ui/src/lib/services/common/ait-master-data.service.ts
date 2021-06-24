@@ -112,10 +112,12 @@ export class AitMasterDataService extends AitBaseService {
   async find(condition: any, rf?: any, collection?: string) {
     const returnFields = rf ? rf : this.returnFields;
     const request = {};
-    request['collection'] = collection || 'sys_master_data';
     if (isObjectFull(condition)) {
       request['condition'] = condition;
     }
+    request['collection'] = collection || 'sys_master_data';
+    console.log('119',request)
+
     return await this.query(GRAPHQL.FIND_SYSTEM, request, returnFields);
   }
 }

@@ -6,6 +6,7 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { AitChipModule } from '../ait-chip/ait-chip.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AitErrorMessageModule } from '../ait-error-message/ait-error-message.module';
+import { AitLabelModule } from '../ait-label/ait-label.module';
 
 @NgModule({
   declarations: [AitAutoCompleteMasterComponent],
@@ -17,7 +18,9 @@ import { AitErrorMessageModule } from '../ait-error-message/ait-error-message.mo
     NbInputModule,
     FormsModule,
     ReactiveFormsModule,
-    AitErrorMessageModule],
+    AitErrorMessageModule,
+    AitLabelModule
+  ],
   exports: [AitAutoCompleteMasterComponent],
   providers: [],
 })
