@@ -46,11 +46,11 @@
         <p [ngStyle]="{ color: !isDefault ? '#000' : null }" *ngIf="guidance">
           {{ getNote() }}
         </p>
-        <p *ngIf="max_files" [ngStyle]="{ color: !isDefault ? '#000' : null }">
-          {{ getFileMaxUpload() || max_files }} {{ getMaxFileText() }}
+        <p *ngIf="maxFiles" [ngStyle]="{ color: !isDefault ? '#000' : null }">
+          {{ getFileMaxUpload() || maxFiles }} {{ getMaxFileText() }}
         </p>
-        <p *ngIf="file_types" [ngStyle]="{ color: !isDefault ? '#000' : null }">
-          {{ getFileTypeSup() || file_types }} {{ getFileTypeText() }}
+        <p *ngIf="fileTypes" [ngStyle]="{ color: !isDefault ? '#000' : null }">
+          {{ getFileTypeSup() || fileTypes }} {{ getFileTypeText() }}
         </p>
       </div>
     </div>

@@ -70,9 +70,9 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   @Input() guidance = '';
   @Input() guidanceIcon = '';
   @Input() margin_top = 0;
-  @Input() file_types = '';
-  @Input() max_files: number;
-  @Input() max_size_bytes: number; // bytes
+  @Input() fileTypes = '';
+  @Input() maxFiles: number;
+  @Input() maxSizeBytes: number; // bytes
   @Input() isReset: boolean;
   isImgErr = false;
   @Input() isError = false;
@@ -105,7 +105,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   getFileTypeText = () => this.translateService.translate('形式のファイルのみ添付できます。');
 
   check = () => {
-    return this.getNote() || (this.getFileMaxUpload() || this.max_files) || (this.getFileTypeSup() || this.file_types)
+    return this.getNote() || (this.getFileMaxUpload() || this.maxFiles) || (this.getFileTypeSup() || this.fileTypes)
   }
 
   sumSizeFiles = (files: any[]) => {
@@ -139,7 +139,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   safelyURL = (data, type) => this.santilizer.bypassSecurityTrustUrl(`data:${type};base64, ${data}`);
 
   checkMaxSize = (file: any[]) => {
-    return this.fileRequest[0]?.size <= this.max_size_bytes * 1024;
+    return this.fileRequest[0]?.size <= this.maxSizeBytes * 1024;
   }
   checkMaxFile = () => {
 
@@ -167,14 +167,14 @@ export class AitInputFileComponent implements OnInit, OnChanges {
       this.settings = settings.map((s: any) => ({ ...s, value: s?.name }));
 
       if (settings.length !== 0) {
-        if (!this.max_size_bytes) {
-          this.max_size_bytes = Number(this.settings.find(f => f.code === 'FILE_MAX_SIZE_MB')?.value);
+        if (!this.maxSizeBytes) {
+          this.maxSizeBytes = Number(this.settings.find(f => f.code === 'FILE_MAX_SIZE_MB')?.value);
         }
-        if (!this.max_files) {
-          this.max_files = Number(this.getValueByCode('FILE_MAX_UPLOAD')?.value);
+        if (!this.maxFiles) {
+          this.maxFiles = Number(this.getValueByCode('FILE_MAX_UPLOAD')?.value);
         }
-        if (!this.file_types) {
-          this.file_types = this.getValueByCode('FILE_TYPE_SUPPORT')?.value;
+        if (!this.fileTypes) {
+          this.fileTypes = this.getValueByCode('FILE_TYPE_SUPPORT')?.value;
         }
 
       }
@@ -196,16 +196,16 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
   getFileMaxUpload = () => {
     const maxfile = this.settings.find(f => f.code === 'FILE_MAX_UPLOAD');
-    return this.max_files ? this.max_files : maxfile ? maxfile?.value : MAX_FILE_DEFAULT;
+    return this.maxFiles ? this.maxFiles : maxfile ? maxfile?.value : MAX_FILE_DEFAULT;
   }
 
   getFileTypeSup = () => {
     const supfile = this.settings.find(f => f.code === 'FILE_TYPE_SUPPORT');
-    return this.file_types ? this.file_types : supfile ? supfile?.value : FILE_TYPE_SUPPORT_DEFAULT;
+    return this.fileTypes ? this.fileTypes : supfile ? supfile?.value : FILE_TYPE_SUPPORT_DEFAULT;
   }
 
   getMaxSizeFile = () => {
-    return this.max_size_bytes ? this.max_size_bytes * 1024 : 5000000;
+    return this.maxSizeBytes ? this.maxSizeBytes * 1024 : 5000000;
   }
 
   getValueByCode = (code) => {
@@ -214,10 +214,10 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
 
   checkFileExt = (file) => {
-    const check = AitAppUtils.checkFileExt(this.file_types || FILE_TYPE_SUPPORT_DEFAULT, file);
+    const check = AitAppUtils.checkFileExt(this.fileTypes || FILE_TYPE_SUPPORT_DEFAULT, file);
     if (check.status !== 1) {
       this.messageErrorFileSp = this.translateService.getMsg('E0012')
-        .replace('{0}', this.file_types || this.getValueByCode('FILE_TYPE_SUPPORT') || FILE_TYPE_SUPPORT_DEFAULT);
+        .replace('{0}', this.fileTypes || this.getValueByCode('FILE_TYPE_SUPPORT') || FILE_TYPE_SUPPORT_DEFAULT);
       return false;
     }
     return check?.status === 1;
