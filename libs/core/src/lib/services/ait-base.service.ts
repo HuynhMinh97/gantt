@@ -178,7 +178,7 @@ export class AitBaseService {
           }
         }
       }
-      aqlStr += ` RETURN { _key: doc._key, value: doc.name.${lang} } ) : `;
+      aqlStr += ` RETURN { _key: doc.code, value: doc.name.${lang} } ) : `;
 
       aqlStr += ` (FOR doc IN ${data.ref_collection} `;
       aqlStr += ` FILTER doc.${data.ref_attribute} == data.${data.attribute} `;
@@ -193,7 +193,7 @@ export class AitBaseService {
           }
         }
       }
-      aqlStr += ` RETURN { _key: doc._key, value: doc.name.${lang} })[0] ), `
+      aqlStr += ` RETURN { _key: doc.code, value: doc.name.${lang} })[0] ), `
     })
     aqlStr += `  }) `;
     return aqlStr;

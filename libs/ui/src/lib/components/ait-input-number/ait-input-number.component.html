@@ -1,42 +1,60 @@
-<!-- {{ getPreviousValueInput() }} -->
-<div class="input__contrainer" [ngStyle]="{ width: widthInput }">
-  <input
-    *ngIf="isReadOnly"
-    nbInput
-    fullWidth
-    fieldSize="medium"
-    [ngStyle]="styleInput"
-    [formControl]="inputCtrl"
-    [value]="inputCtrl.value"
-    class="border__bottom__input"
-    disabled
-    [nbTooltip]="inputCtrl.value"
-    [nbTooltipTrigger]="!inputCtrl.value ? 'noop' : 'hover'"
-    [nbTooltipPlacement]="'left'"
-    style="padding-top: 0; padding-bottom: 0; font-size: 12px"
-  />
-  <input
-    *ngIf="!isReadOnly"
-    pattern="[0-9\.]+"
-    nbInput
-    [id]="inputId"
-    #inputNumber
-    fullWidth
-    fieldSize="medium"
-    [maxlength]="maxLength"
-    [value]="inputCtrl.value"
-    [placeholder]="placeholder"
-    (input)="onInputHandle($event.target.value)"
-    [formControl]="inputCtrl"
-    (focusout)="handleFocusOut()"
-    (beforeinput)="onKeyDown($event)"
-    (keydown)="onKeyUp($event)"
-    (focus)="handleFocus()"
-    style="font-size: 12px; background-color: transparent"
-    (click)="handleClick()"
-    [ngStyle]="styleInput"
-    [ngClass]="{ isError: isError }"
-  />
+<div [ngClass]="classContainer">
+  <!-- {{ getPreviousValueInput() }} -->
+  <ait-label [label]="label" [required]="required"></ait-label>
+
+  <div
+    class="input__contrainer"
+    [ngStyle]="{ width: widthInput }"
+    style="margin-top: 8px"
+  >
+    <input
+      *ngIf="isReadOnly"
+      nbInput
+      fullWidth
+      fieldSize="medium"
+      [ngStyle]="styleInput"
+      [formControl]="inputCtrl"
+      [value]="inputCtrl.value"
+      class="border__bottom__input"
+      disabled
+      [nbTooltip]="inputCtrl.value"
+      [nbTooltipTrigger]="!inputCtrl.value ? 'noop' : 'hover'"
+      [nbTooltipPlacement]="'left'"
+      style="padding-top: 0; padding-bottom: 0; font-size: 12px"
+    />
+    <input
+      *ngIf="!isReadOnly"
+      pattern="[0-9\.]+"
+      nbInput
+      [id]="inputId"
+      #inputNumber
+      fullWidth
+      fieldSize="medium"
+      [maxlength]="length"
+      [value]="inputCtrl.value"
+      [placeholder]="placeholder"
+      (input)="onInputHandle($event.target.value)"
+      [formControl]="inputCtrl"
+      (focusout)="handleFocusOut()"
+      (beforeinput)="onKeyDown($event)"
+      (keydown)="onKeyUp($event)"
+      (focus)="handleFocus()"
+      style="font-size: 12px; background-color: transparent"
+      (click)="handleClick()"
+      [ngStyle]="styleInput"
+      [ngClass]="{ isError: isError }"
+    />
+  </div>
+  <!-- {{inputCtrl.value}} -->
+  <div class="caption" *ngIf="guidance">
+    <div class="icon" *ngIf="guidanceIcon">
+      <nb-icon [icon]="guidanceIcon"></nb-icon>
+    </div>
+    <div class="info">
+      <p style="word-break: break-word; color: #8f9bb3; font-size: 12px">
+        {{ getCaption() }}
+      </p>
+    </div>
+  </div>
+  <ait-error-message [errors]="errors"></ait-error-message>
 </div>
-<!-- {{inputCtrl.value}} -->
-<ait-error-message [errors]="errors"></ait-error-message>

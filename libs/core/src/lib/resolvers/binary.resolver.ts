@@ -26,6 +26,7 @@ export class BinaryResolver extends AitBaseService {
     return this.find(request, user);
   }
 
+
   @Mutation(() => BinaryResponse, { name: 'saveBinaryData' })
   saveBinaryData(
     @AitCtxUser() user: SysUser,

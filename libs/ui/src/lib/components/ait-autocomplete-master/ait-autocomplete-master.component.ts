@@ -3,7 +3,7 @@
 import { RESULT_STATUS } from '@ait/shared';
 import {
   AfterViewChecked,
-  ChangeDetectorRef, Component, Input, OnInit, Output, EventEmitter, OnChanges, SimpleChanges
+  ChangeDetectorRef, Component, Input, OnInit, Output, EventEmitter, OnChanges, SimpleChanges, ElementRef, ViewChild
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
@@ -65,7 +65,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   // O truong hop maxItem>1 thi`, neu isNew la` true cho phep chon trong data source lan~ cho emit cai moi ra ngoai`
 
   filteredOptions$: Observable<any>;
-  dataSource: any[] = [];
+  DataSource: any[] = [];
   optionSelected: any[] = [];
   dataSourceDf = [];
   selectItems = [];
@@ -74,21 +74,31 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   currentDataDef: any;
   @Input()
   placeholder = 'Default';
+  @ViewChild('input', { static: false }) input: ElementRef;
+  isOpenSuggest = false;
 
   isNew = false;
   @Input() maxItem = 1;
   @Input() icon = 'search-outline';
   @Input() widthInput = 300;
   @Input() defaultValue: any;
-  @Input() type = '';
   @Input() maxLength = 200;
-  @Input() excludedList: any[] = [];
+  @Input() excludedValue: any[] = [];
   @Input() isReset = false;
-  @Output() watchValues = new EventEmitter();
+  @Output() watchValue = new EventEmitter();
   @Output() getDefaultValue = new EventEmitter();
   @Input() isError = false;
   @Input() required = false;
+  @Input() label;
   errors = []
+  @Input() guidance = ''
+  @Input() guidanceIcon = 'info-outline';
+  @Input() collection;
+  @Input() dataSource: any[] = [];
+  @Input() classContainer;
+
+  getCaptions = () => this.translateService.translate(this.guidance);
+
 
   // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngAfterViewChecked() {
@@ -96,6 +106,8 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
     // this.inputControl = new FormControl('');
     // this.cdr.detectChanges();
   }
+
+  getFieldName = () => this.translateService.translate(this.label);
 
   viewHandle(opt) {
     return opt?.value;
@@ -175,7 +187,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
       && this.selectItems.length < this.maxItem
     ) {
       this.selectItems = [{ _key: null, value }];
-      this.watchValues.emit({ value: [{ _key: null, value }] });
+      this.watchValue.emit({ value: [{ _key: null, value }] });
     }
 
     else if (
@@ -184,7 +196,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
       && this.selectItems.length < this.maxItem
     ) {
       this.selectItems = [...this.selectItems, { _key: null, value }];
-      this.watchValues.emit({ value: this.selectItems.map(m => ({ _key: m?._key, value: m?.value })) });
+      this.watchValue.emit({ value: this.selectItems.map(m => ({ _key: m?._key, value: m?.value })) });
     }
   }
 
@@ -198,7 +210,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
     if (this.required) {
       if ($event.value === '' && this.selectItems.length === 0) {
         this.isError = true;
-        const err = this.translateService.getMsg('E0041');
+        const err = this.translateService.getMsg('E0001').replace('{0}', this.getFieldName());
         this.errors = [err]
       }
     }
@@ -213,7 +225,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
     if (this.required) {
       if (this.selectItems.length === 0) {
         this.isError = true;
-        const err = this.translateService.getMsg('E0041');
+        const err = this.translateService.getMsg('E0001').replace('{0}', this.getFieldName());
         this.errors = [err]
       }
     }
@@ -230,7 +242,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
       name: true
     }
 
-    this.masterDataService.find(condition, returnFields, TYPE[this.type] || this.type).then(r => {
+    this.masterDataService.find(condition, returnFields, this.collection).then(r => {
       if (r?.status === RESULT_STATUS.OK) {
         const result = r.data;
         this.selectItems = [...(result || []), ...this.storeDataDraft];
@@ -246,26 +258,33 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
       debounceTime(200),
       distinctUntilChanged()
     ).subscribe(text => {
-      const condition = {
-        name: text
-      }
-      const returnFields = {
-        _key: true,
-        name: true
-      }
-      this.masterDataService.find(condition, returnFields, TYPE[this.type] || this.type).then(r => {
-        if (r.status === RESULT_STATUS.OK) {
-          this.dataSource = (r.data || []).map(m => ({ _key: m._key, value: m?.name }));
-          const _keys = this.excludedList.map(e => e?._key);
-          if (_keys.length !== 0) {
-            this.filteredData = AitAppUtils.deepCloneArray(this.dataSource).filter(f => !_keys.includes(f._key));
-          }
-          else {
-            this.filteredData = AitAppUtils.deepCloneArray(this.dataSource);
-          }
-
+      console.log(text)
+      if (text) {
+        const condition = {
+          name: text
         }
-      })
+        const returnFields = {
+          _key: true,
+          name: true
+        }
+        this.masterDataService.find(condition, returnFields, this.collection).then(r => {
+          if (r.status === RESULT_STATUS.OK) {
+            this.DataSource = (r.data || []).map(m => ({ _key: m._key, value: m?.name }));
+            const _keys = this.excludedValue.map(e => e?._key);
+            if (_keys.length !== 0) {
+              this.filteredData = AitAppUtils.deepCloneArray(this.DataSource).filter(f => !_keys.includes(f._key));
+            }
+            else {
+              this.filteredData = AitAppUtils.deepCloneArray(this.DataSource);
+            }
+            this.isOpenSuggest = true;
+          }
+        })
+      }
+      else {
+        this.DataSource = [];
+        this.filteredData = [];
+      }
     })
   }
 
@@ -287,7 +306,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
       const symbols = m.code.replace('_INPUT_INSERT_NEW', '');
       return symbols
     });
-    this.isNew = dataIsNews.includes(this.type);
+    this.isNew = dataIsNews.includes(this.collection);
   }
 
   ngOnInit() {
@@ -302,7 +321,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
 
   }
 
-  getSelectedOptions = () => this.dataSource.filter(f => f.isChecked).map(m => ({ _key: m?.code, value: m?.value }));
+  getSelectedOptions = () => this.DataSource.filter(f => f.isChecked).map(m => ({ _key: m?.code, value: m?.value }));
 
   checkItem = (event: Event, opt: any) => {
     this.inputControlMaster.patchValue('');
@@ -311,56 +330,72 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
     itemFind.isChecked = !itemFind.isChecked;
     this.optionSelected = this.getSelectedOptions();
 
-    this.watchValues.emit({ value: this.optionSelected });
+    this.watchValue.emit({ value: this.optionSelected });
 
   }
 
   getFilteredData = () => {
     const _keys = (this.selectItems || []).map(m => m._key);
-    this.filteredData = this.dataSource.filter(f => !_keys.includes(f._key));
+    this.filteredData = this.DataSource.filter(f => !_keys.includes(f._key));
   }
 
   addItems = (info) => {
+
     const itemFind = this.filteredData.find(f => f._key === info?._key);
     if (this.maxItem === 1) {
       this.selectItems = [itemFind];
-      this.watchValues.emit({ value: this.selectItems.map(m => ({ _key: m?._key, value: m?.value })) });
+      this.watchValue.emit({ value: this.selectItems.map(m => ({ _key: m?._key, value: m?.value })) });
     }
     else {
       if (this.selectItems.length < this.maxItem) {
         this.selectItems = [...this.selectItems, itemFind];
-        this.watchValues.emit({ value: this.selectItems.map(m => ({ _key: m?._key, value: m?.value })) });
+        this.watchValue.emit({ value: this.selectItems.map(m => ({ _key: m?._key, value: m?.value })) });
       }
     }
-    this.getFilteredData()
+    this.getFilteredData();
+    if (this.required) {
+      if (this.selectItems.length === 0) {
+        const err = this.translateService.getMsg('E0001').replace('{0}', this.getFieldName());
+        this.isError = true;
+        this.errors = [err]
+      }
+      else {
+        this.isError = false;
+        this.clearErrors();
+      }
+    }
+    setTimeout(() => {
+      this.isOpenSuggest = false
+
+    }, 100)
   }
 
   removeItems = (info) => {
 
     if (this.maxItem === 1) {
       this.selectItems = [];
-      this.watchValues.emit({ value: [] });
+      this.watchValue.emit({ value: [] });
     }
     else {
-      const find = this.dataSource.find(f => f._key === info?._key);
+      const find = this.DataSource.find(f => f._key === info?._key);
 
 
       if (!find) {
         this.selectItems = this.selectItems.filter(f => f._key !== info?._key);
 
-        this.watchValues.emit({ value: this.selectItems.map(m => ({ _key: m?._key, value: m?.value })) });
+        this.watchValue.emit({ value: this.selectItems.map(m => ({ _key: m?._key, value: m?.value })) });
       }
       else {
         this.selectItems = this.selectItems.filter(f => f._key !== find?._key);
 
-        this.watchValues.emit({ value: this.selectItems.map(m => ({ _key: m?._key, value: m?.value })) });
+        this.watchValue.emit({ value: this.selectItems.map(m => ({ _key: m?._key, value: m?.value })) });
       }
 
     }
     this.getFilteredData()
     if (this.required) {
       if (this.selectItems.length === 0) {
-        const err = this.translateService.getMsg('E0041');
+        const err = this.translateService.getMsg('E0001').replace('{0}', this.getFieldName());
         this.isError = true;
         this.errors = [err]
       }
@@ -389,7 +424,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   }
 
   handleClick = () => {
-    this.filteredOptions$ = of(this.dataSource);
+    this.filteredOptions$ = of(this.DataSource);
 
   }
 
@@ -410,7 +445,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
 
   private _filter(value: string): string[] {
     const filterValue = value?.toString().toLowerCase();
-    const result = this.dataSource.filter(f => {
+    const result = this.DataSource.filter(f => {
       const target = f?.value;
       return target.toString().toLowerCase().includes(filterValue);
     })

@@ -190,6 +190,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
   // api call to get user info
   getUserInfo = async (user_id: string) => {
+    console.log(this.company)
     if (user_id && user_id !== '') {
       let user = {};
       const rest_user: any = await this.apollo.query({
@@ -326,7 +327,6 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     const typeMessage = code ? code[0] : '';
 
     const mes = this.allMessages ? this.allMessages[typeMessage] : [];
-    console.log(mes)
     if (mes) {
       const mainCode = code.slice(1, code.length);
       const find = mes.find(m => m.code === mainCode);
@@ -650,6 +650,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
         query: gql`
             ${gqlQuery}
           `,
+          fetchPolicy: 'network-only',
       })
       .pipe(map((res) => (<any>res.data)[name]))
       .toPromise();

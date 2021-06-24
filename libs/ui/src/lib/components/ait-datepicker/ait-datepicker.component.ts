@@ -29,19 +29,24 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   date: Date | number = null;
   @Input() disable = false;
   @Input() dateInput: Date | number = null;
+  @Input() defaultValue;
   @Input() placeholder = 'Pick date'
-  @Output() onDateChange = new EventEmitter();
+  @Output() watchValue = new EventEmitter();
   @Input() isRound = false;
   @Input() style: any;
   @Input() styleInput: any;
   @Input() isShow = false;
   @Input() isReset = false;
-  @Input() staticFormat = null;
+  @Input() format = null;
   isClickInput = false;
   valueDf = '';
   @Input() isError = false;
   errors = [];
   @Input() required = false;
+  @Input() label;
+  @Input() guidance = ''
+  @Input() guidanceIcon = 'info-outline';
+  @Input() classContainer;
 
   @ViewChild('inputDateTime', { static: false }) input: ElementRef;
   @ViewChild(NbDatepickerDirective, { static: false }) nbDatepicker;
@@ -61,6 +66,9 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
 
   }
 
+  getCaption = () => this.translateService.translate(this.guidance);
+
+
 
   ngOnChanges(changes: SimpleChanges) {
     for (const key in changes) {
@@ -73,12 +81,21 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
         }
 
         if (key === 'dateInput' && this.dateInput) {
+          this.date = new Date(this.dateInput);
+          this.setupDate();
+        }
+
+        if (key === 'defaultValue' && this.defaultValue) {
+          this.dateInput = this.defaultValue;
+          this.date = new Date(this.dateInput);
           this.setupDate();
         }
 
       }
     }
   }
+
+  getFieldName = () => this.translateService.translate(this.label);
 
   clearErrors = () => {
     this.isError = false;
@@ -90,7 +107,8 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
     if (this.required) {
       if (value === '') {
         this.isError = true;
-        const err = this.translateService.getMsg('E0041');
+        const err = this.translateService.getMsg('E0001').replace('{0}', this.getFieldName());
+
         this.errors = [err];
       }
     }
@@ -98,7 +116,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
 
   getMessage = () => {
     this.clearErrors();
-    const err = this.translateService.getMsg('E0041');
+    const err = this.translateService.getMsg('E0001').replace('{0}', this.getFieldName());
     if (!this.date || !this.inputCtrl.value) {
       this.isError = true;
 
@@ -136,8 +154,8 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   }
 
   translateDate = (value) => {
-    const symbol = this.staticFormat.includes('-') ? '-' : '/';
-    const formatArray = this.staticFormat.split(symbol);
+    const symbol = this.format.includes('-') ? '-' : '/';
+    const formatArray = this.format.split(symbol);
     const target = value;
     const d = this.getObjectDateTime(formatArray, target);
 
@@ -190,7 +208,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
     this.checkReq(unix);
     this.dateInput = unix;
     this.date = new Date(this.dateInput);
-    this.onDateChange.emit({ value: unix })
+    this.watchValue.emit({ value: unix })
   }
 
 
@@ -210,14 +228,14 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
     if (this.formatTransfrom) {
       this.date = new Date(this.formatTransfrom);
       this.dateInput = this.formatTransfrom;
-      this.onDateChange.emit({ value: this.formatTransfrom });
+      this.watchValue.emit({ value: this.formatTransfrom });
       this.checkReq(this.formatTransfrom);
       this.formatTransfrom = null;
     }
     if (!this.isDateValid(this.date)) {
       this.date = null;
       this.inputCtrl.reset();
-      this.onDateChange.emit({ value: null });
+      this.watchValue.emit({ value: null });
     }
   }
 
@@ -248,7 +266,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
 
       }
       const formatTime = this.formatDateTimeInput || this.formatDateTimeDisplay;
-      this.staticFormat = formatTime;
+      this.format = this.format || formatTime;
 
       if (formatTime) {
 
@@ -277,6 +295,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.setupDate();
-    this.onDateChange.emit({ value: this.dateInput ? (new Date(this.dateInput)).getTime() : this.dateInput });
+    const target = this.defaultValue || this.dateInput
+    this.watchValue.emit({ value: target ? (new Date(target)).getTime() : target });
   }
 }

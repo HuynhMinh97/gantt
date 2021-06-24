@@ -32,9 +32,11 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   isSupported = false; // for test
   @Input() mode: 'dark' | 'light' = 'light';
   @Input()
-  file_keys = []
+  fileKeys = []
   displayedFiles = []; // _keys of files
   currentBase64 = '';
+
+
 
   fileRequest: any = {};
 
@@ -61,30 +63,32 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   fileDatas = [];
   @Input() withInput: number = 300;
   @Input() hasImage: boolean = true;
-  @Output() watchFiles = new EventEmitter();
+  @Output() watchValue = new EventEmitter();
   @Input() placeholder = '';
   @Input() isDefault = true;
-  @Input() title = '顔写真';
-  @Input() note_text = '「顔写真」を添付して下さい。';
-  @Input() sub_note = true;
+  @Input() title = '';
+  @Input() guidance = '';
+  @Input() guidanceIcon = '';
   @Input() margin_top = 0;
-  @Input() note = '';
-  @Input() file_types = '';
-  @Input() max_files: number;
-  @Input() max_size_bytes: number; // bytes
+  @Input() fileTypes = '';
+  @Input() maxFiles: number;
+  @Input() maxSizeBytes: number; // bytes
   @Input() isReset: boolean;
   isImgErr = false;
   @Input() isError = false;
+  @Input() required = false;
+  errors = []
+  @Input() classContainer;
 
   ngOnChanges(changes: SimpleChanges) {
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
         const element = changes[key].currentValue;
-
+        console.log(element,key)
         if (key === 'isReset') {
           if (this.isReset) {
             this.fileDatas = [];
-            this.file_keys = [];
+            this.fileKeys = [];
             this.isReset = false;
           }
         }
@@ -93,24 +97,27 @@ export class AitInputFileComponent implements OnInit, OnChanges {
     }
   }
 
-  getNote = () => this.translateService.translate(this.note_text);
+  getNote = () => this.translateService.translate(this.guidance);
   getTitle = () => this.translateService.translate(this.title);
-  getPlaceHolder = () => this.translateService.translate('ドラッグ&ドロップでファイル添付または');
+  getPlaceHolder = () => this.translateService.translate(this.placeholder || 'ドラッグ&ドロップでファイル添付または');
   getReference = () => this.translateService.translate('参照');
   getMaxFileText = () => this.translateService.translate('ファイルまで添付できます。');
   getFileTypeText = () => this.translateService.translate('形式のファイルのみ添付できます。');
+
+  check = () => {
+    return this.getNote() || (this.getFileMaxUpload() || this.maxFiles) || (this.getFileTypeSup() || this.fileTypes)
+  }
 
   sumSizeFiles = (files: any[]) => {
     return (this.fileRequest[0]?.size || 0) / (1024);
   }
 
   getSrc = (file) => {
-    const { data_base64, base64, ...rest } = file;
     if (!file.isError) {
-      return file.data_base64 ||
+      return this.safelyURL(file.data_base64, file.file_type) ||
         '../../../../assets/images/file.svg'
     }
-    return '../../../assets/images/not-f.jpg'
+    return '../../../../assets/images/not-f.jpg'
   }
 
   handleErrorImage = (file) => {
@@ -132,7 +139,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   safelyURL = (data, type) => this.santilizer.bypassSecurityTrustUrl(`data:${type};base64, ${data}`);
 
   checkMaxSize = (file: any[]) => {
-    return this.fileRequest[0]?.size <= this.max_size_bytes * 1024;
+    return this.fileRequest[0]?.size <= this.maxSizeBytes * 1024;
   }
   checkMaxFile = () => {
 
@@ -160,25 +167,27 @@ export class AitInputFileComponent implements OnInit, OnChanges {
       this.settings = settings.map((s: any) => ({ ...s, value: s?.name }));
 
       if (settings.length !== 0) {
-        if (!this.max_size_bytes) {
-          this.max_size_bytes = Number(this.settings.find(f => f.code === 'FILE_MAX_SIZE_MB')?.value);
+        if (!this.maxSizeBytes) {
+          this.maxSizeBytes = Number(this.settings.find(f => f.code === 'FILE_MAX_SIZE_MB')?.value);
         }
-        if (!this.max_files) {
-          this.max_files = Number(this.getValueByCode('FILE_MAX_UPLOAD')?.value);
+        if (!this.maxFiles) {
+          this.maxFiles = Number(this.getValueByCode('FILE_MAX_UPLOAD')?.value);
         }
-        if (!this.file_types) {
-          this.file_types = this.getValueByCode('FILE_TYPE_SUPPORT')?.value;
+        if (!this.fileTypes) {
+          this.fileTypes = this.getValueByCode('FILE_TYPE_SUPPORT')?.value;
         }
 
       }
 
 
     })
+    console.log(this.fileKeys)
 
 
-    if (this.file_keys && this.file_keys.length !== 0) {
-      this.fileUploadService.getFilesByFileKeys(this.file_keys || []).then((r: any) => {
+    if (this.fileKeys && this.fileKeys.length !== 0) {
+      this.fileUploadService.getFilesByFileKeys(this.fileKeys || []).then((r: any) => {
         if (r?.status === RESULT_STATUS.OK) {
+          console.log(r.data)
           this.displayedFiles = r.data;
         }
       })
@@ -187,16 +196,16 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
   getFileMaxUpload = () => {
     const maxfile = this.settings.find(f => f.code === 'FILE_MAX_UPLOAD');
-    return this.max_files ? this.max_files : maxfile ? maxfile?.value : MAX_FILE_DEFAULT;
+    return this.maxFiles ? this.maxFiles : maxfile ? maxfile?.value : MAX_FILE_DEFAULT;
   }
 
   getFileTypeSup = () => {
     const supfile = this.settings.find(f => f.code === 'FILE_TYPE_SUPPORT');
-    return this.file_types ? this.file_types : supfile ? supfile?.value : FILE_TYPE_SUPPORT_DEFAULT;
+    return this.fileTypes ? this.fileTypes : supfile ? supfile?.value : FILE_TYPE_SUPPORT_DEFAULT;
   }
 
   getMaxSizeFile = () => {
-    return this.max_size_bytes ? this.max_size_bytes * 1024 : 5000000;
+    return this.maxSizeBytes ? this.maxSizeBytes * 1024 : 5000000;
   }
 
   getValueByCode = (code) => {
@@ -205,10 +214,10 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
 
   checkFileExt = (file) => {
-    const check = AitAppUtils.checkFileExt(this.file_types || FILE_TYPE_SUPPORT_DEFAULT, file);
+    const check = AitAppUtils.checkFileExt(this.fileTypes || FILE_TYPE_SUPPORT_DEFAULT, file);
     if (check.status !== 1) {
       this.messageErrorFileSp = this.translateService.getMsg('E0012')
-        .replace('{0}', this.file_types || this.getValueByCode('FILE_TYPE_SUPPORT') || FILE_TYPE_SUPPORT_DEFAULT);
+        .replace('{0}', this.fileTypes || this.getValueByCode('FILE_TYPE_SUPPORT') || FILE_TYPE_SUPPORT_DEFAULT);
       return false;
     }
     return check?.status === 1;
@@ -238,7 +247,8 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
       const FR = new FileReader();
       FR.onload = (e: any) => {
-        this.currentBase64 = e.target.result;
+        const index = e.target.result.indexOf(',');
+        this.currentBase64 = e.target.result.slice(index + 1);
         this.prepareFilesList(files);
       }
 
@@ -259,7 +269,8 @@ export class AitInputFileComponent implements OnInit, OnChanges {
         this.files.splice(index, 1);
         this.fileDatas = this.fileDatas.filter(f => f._key !== file?._key);
         this.displayedFiles = this.displayedFiles.filter(f => f._key !== file?._key);
-        this.watchFiles.emit({ value: this.fileDatas });
+        this.watchValue.emit({ value: this.fileDatas });
+        this.checkReq();
       }
     })
   }
@@ -323,10 +334,13 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
               this.fileDatas = [...this.fileDatas, { ...res.data[0], progress: 0 }];
 
-              this.watchFiles.emit({ value: this.fileDatas });
+              this.watchValue.emit({ value: this.fileDatas });
               this.fileDatas.forEach((file, index) => {
                 this.uploadFilesSimulator(file._key);
               })
+
+              this.checkReq();
+
 
             }
             else {
@@ -337,6 +351,20 @@ export class AitInputFileComponent implements OnInit, OnChanges {
         )
       }
 
+    }
+  }
+
+  checkReq = () => {
+    this.errors = [];
+    if (this.required) {
+      if (this.fileDatas.length === 0 && this.displayedFiles.length === 0) {
+        const err = this.translateService.getMsg('E0001').replace('{0}', this.getTitle());
+        this.isError = true;
+        this.errors = [err];
+      }
+    }
+    else {
+      this.isError = false;
     }
   }
 
