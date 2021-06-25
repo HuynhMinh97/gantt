@@ -5,6 +5,13 @@
     top: 0 !important;
   }
 
+  // using style override by class
+  // ::ng-deep .filene {
+  //   border :1px solid;
+  //   .display__files {
+  //     margin-top: 0 !important;
+  //   }
+  // }
   textarea {
     font-size: 12px !important;
   }

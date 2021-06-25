@@ -21,6 +21,16 @@
 
 // install the framework and custom global styles
 @include nb-install() {
+  // framework global styles
+  @include nb-theme-global();
+  // @include nb-auth-global();
+
+  @include ngx-layout();
+  // loading progress bar
+  @include ngx-pace-theme();
+
+  @include nb-overrides();
+
   .nb-theme-default nb-layout .layout {
     height: 100vh;
     padding: 0;
@@ -39,6 +49,9 @@
     margin-top: 10px;
   }
 
+  .paragraph {
+    margin: 0 !important;
+  }
   img.error-not-fixed,
   img.error-fixed {
     display: inline-block;
@@ -101,14 +114,4 @@
     resize: none !important;
     margin-top: 10px;
   }
-
-  // framework global styles
-  @include nb-theme-global();
-  // @include nb-auth-global();
-
-  @include ngx-layout();
-  // loading progress bar
-  @include ngx-pace-theme();
-
-  @include nb-overrides();
 } ;

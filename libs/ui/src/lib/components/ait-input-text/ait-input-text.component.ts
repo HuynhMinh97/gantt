@@ -17,14 +17,26 @@ export class AitTextInputComponent implements OnChanges {
   @Input() nbPrefix = true;
   @Output() watchValue = new EventEmitter();
   inputId = Date.now();
-  @Input() value: string;
+  @Input() defaultValue: string;
   @Input() isError = false;
   @Input() required = false;
   @Input() placeholder;
   @Input() styleMessage = {};
+  @Input() label;
+  @Input() guidance = ''
+  @Input() guidanceIcon = 'info-outline';
+  @Input() rows = 1;
+  @Input() cols;
+  @Input() classContainer;
+  @Input() length = 255;
   errors = []
 
   inputCtrl: FormControl;
+
+  getNameField = () => this.translateService.translate(this.label || '');
+
+  getCaption = () => this.translateService.translate(this.guidance);
+
 
   constructor(private translateService: AitTranslationService) {
     this.inputCtrl = new FormControl('');
@@ -33,8 +45,9 @@ export class AitTextInputComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
-        if (key === 'value') {
-          this.inputCtrl.setValue(this.value);
+        if (key === 'defaultValue') {
+          this.inputCtrl.setValue(this.defaultValue);
+          this.watchValue.emit(this.defaultValue);
         }
 
       }
@@ -49,7 +62,7 @@ export class AitTextInputComponent implements OnChanges {
   onChange(value) {
     if (this.required) {
       if (!value) {
-        const msg = this.translateService.getMsg('E0041');
+        const msg = this.translateService.getMsg('E0001').replace('{0}', this.getNameField());;
         this.isError = true;
         this.errors = [msg]
       }

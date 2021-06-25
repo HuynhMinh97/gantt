@@ -1,3 +1,4 @@
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 import { RESULT_STATUS } from '@ait/shared';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
@@ -25,7 +26,11 @@ export class AitOutputFileComponent implements OnChanges {
       this.numberOfFilesI18 = translateService.translate(this.numberOfFilesI18);
     })
   }
-  @Input() filekeys = []
+  @Input() fileKeys = [];
+  @Input() label;
+  @Input() guidance = ''
+  @Input() guidanceIcon = 'info-outline';
+  @Input() classContainer;
   files: any[] = [
   ]
   url = ''
@@ -56,9 +61,10 @@ export class AitOutputFileComponent implements OnChanges {
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
         const element = changes[key];
-        if (element.currentValue?.length !== 0) {
-          this.fileService.getFilesByKeys(element.currentValue).then(r => {
+        if (element.currentValue?.length !== 0 && key === 'fileKeys') {
+          this.fileService.getFilesByFileKeys(element.currentValue).then(r => {
             if (r?.status === RESULT_STATUS.OK) {
+              console.log(r.data)
               this.files = r.data;
             }
           });

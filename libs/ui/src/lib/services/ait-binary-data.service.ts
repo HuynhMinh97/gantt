@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../state/selectors';
 import { AitBaseService } from './common/ait-base.service';
 import { AitEnvironmentService } from './ait-environment.service';
+import { Apollo } from 'apollo-angular';
 
 @Injectable({ providedIn: 'root' })
 export class AitBinaryDataService extends AitBaseService {
@@ -11,8 +12,9 @@ export class AitBinaryDataService extends AitBaseService {
   public downloadUrl = this.env?.API_PATH?.BASE_PREFIX + this.env?.API_PATH?.SYS?.BINARY_DATA + '/get-file' + '?_key=';
   constructor(http: HttpClient, store: Store<AppState>,
     envService: AitEnvironmentService,
+    apollo: Apollo
   ) {
-    super(envService, store, http);
+    super(envService, store, http, null, apollo);
   }
 
   async getFilesByFileKeys(file_key: string | string[]) {

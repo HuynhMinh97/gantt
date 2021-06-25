@@ -8,6 +8,7 @@ import { StoreModule } from '@ngrx/store';
 import { rootReducers } from '../../state/rootReducers';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AitErrorMessageModule } from '../ait-error-message/ait-error-message.module';
+import { AitLabelModule } from '../ait-label/ait-label.module';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { AitErrorMessageModule } from '../ait-error-message/ait-error-message.mo
     ),
     NbIconModule,
     NbFormFieldModule,
-    AitErrorMessageModule
+    AitErrorMessageModule,
+    AitLabelModule
   ],
   exports: [AitDatePickerComponent],
   providers: [AitDateFormatService, NbDateFnsDateService],

@@ -19,7 +19,7 @@ import { AitAppUtils } from '../../utils/ait-utils';
 export class AitInputNumberComponent implements OnChanges, OnInit {
   @Input() min = 0;
   @Input() max = 999999999999;
-  @Input() maxLength = 15;
+  @Input() length = 15;
   @Input() widthInput = '250px';
   @Input() placeholder = '';
   @Input() defaultValue = null;
@@ -36,6 +36,8 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   @ViewChild('inputNumber', { static: false }) input: ElementRef;
   isTooltip = false;
   inputId = Date.now() + AitAppUtils.random(0, 100);
+  @Input() classContainer;
+
 
   currentNumber = '';
   previousValue: any = '';
@@ -45,8 +47,11 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   @Input() required = false;
   errors = [];
   dataInput = [];
+  @Input() label;
+  @Input() guidance = ''
+  @Input() guidanceIcon = 'info-outline';
 
-  @Input() staticFormat = '###,###,###';
+  @Input() format = '###,###,###';
 
   constructor(
     private numberPipe: AitNumberFormatPipe,
@@ -67,6 +72,9 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
     })
   }
 
+  getCaption = () => this.translateService.translate(this.guidance);
+
+
   replaceAll(string: string) {
     const target = string.toString();
     const split = target.split('.');
@@ -83,18 +91,21 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
           }
         }
         if (key === KEYS.DEFAULT_VALUE && this.defaultValue) {
+          const transform: any = Number(this.defaultValue) < this.max ? this.defaultValue : this.max;
+          const res = Number(transform) > this.min ? transform : this.min;
+          this.watchValue.emit(res);
           this.currentNumber = this.defaultValue;
 
           if (this.isCurrency) {
             const symbol = this.currencySymbolService.getCurrencyByLocale();
             this.symbol = symbol;
-            this.inputCtrl.setValue(this.numberPipe.transform(this.defaultValue, this.staticFormat) + symbol);
+            this.inputCtrl.setValue(this.numberPipe.transform(this.defaultValue, this.format) + symbol);
           }
           else if (this.isAge) {
             this.inputCtrl.setValue(this.defaultValue);
           }
           else {
-            this.inputCtrl.setValue(this.defaultValue ? this.numberPipe.transform(this.defaultValue, this.staticFormat) : null);
+            this.inputCtrl.setValue(this.defaultValue ? this.numberPipe.transform(this.defaultValue, this.format) : null);
 
           }
         }
@@ -125,11 +136,11 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
       return;
     }
     if (this.isCurrency) {
-      this.inputCtrl.patchValue(this.numberPipe.transform(this.replaceAll(this.currentNumber), this.staticFormat) + this.symbol);
+      this.inputCtrl.patchValue(this.numberPipe.transform(this.replaceAll(this.currentNumber), this.format) + this.symbol);
     }
     else {
       // console.log(this.currentNumber)
-      const target = this.numberPipe.transform(this.replaceAll(this.currentNumber), this.staticFormat);
+      const target = this.numberPipe.transform(this.replaceAll(this.currentNumber), this.format);
       // console.log(target)
       this.inputCtrl.setValue(target);
     }
@@ -172,12 +183,14 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
 
   }
 
+  getFieldName = () => this.translateService.translate(this.label);
+
   checkReq = (value?: any) => {
     this.errors = [];
     if (this.required) {
       if (!value) {
         this.isError = true;
-        const msg = this.translateService.getMsg('E0041');
+        const msg = this.translateService.getMsg('E0001').replace('{0}',this.getFieldName());
         this.errors = [msg]
       }
       else {
