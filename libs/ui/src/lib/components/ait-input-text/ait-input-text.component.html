@@ -1,5 +1,6 @@
 <div [ngClass]="classContainer">
-  <ait-label [label]="label" [required]="required"></ait-label>
+  <ait-label [label]="label" [required]="required" *ngIf="label"></ait-label>
+
   <nb-form-field class="ait-text-input" style="margin-top: 8px">
     <nb-icon
       nbPrefix
