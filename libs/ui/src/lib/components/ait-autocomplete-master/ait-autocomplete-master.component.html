@@ -1,5 +1,6 @@
 <div [ngClass]="classContainer" style="max-width: 400px">
-  <ait-label [label]="label" [required]="required"></ait-label>
+  <ait-label [label]="label" [required]="required" *ngIf="label"></ait-label>
+
   <div
     class="input__container"
     style="margin-top: 8px; width: 100%;background-color: #fff;"

@@ -1,5 +1,6 @@
 <div [ngClass]="classContainer">
-  <ait-label [label]="label" [required]="required"></ait-label>
+  <ait-label [label]="label" [required]="required" *ngIf="label"></ait-label>
+
   <div
     class="input__container"
     [ngStyle]="style"

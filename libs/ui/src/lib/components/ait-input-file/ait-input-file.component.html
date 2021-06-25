@@ -1,6 +1,6 @@
 <div [ngClass]="classContainer">
   <div class="container_file">
-    <ait-label [label]="getTitle()" [required]="required"></ait-label>
+    <ait-label [label]="getTitle()" [required]="required" *ngIf="getTitle()"></ait-label>
 
     <div
       class="containerx"
