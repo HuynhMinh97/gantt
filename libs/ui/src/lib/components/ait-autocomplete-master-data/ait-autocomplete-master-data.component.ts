@@ -260,7 +260,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       this.usingGraphQL(cond).then();
     }
     else {
-      this.usingGraphQL({},false).then();
+      this.usingGraphQL({}, false).then();
     }
 
   };
@@ -368,17 +368,19 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       .map((m) => ({ _key: m?.code, value: m?.value }));
 
   checkItem = (event: Event, opt: any) => {
-    console.log(opt)
-    let target
-    const itemFind = this.DataSource.find((f) => f.optionId === opt.optionId);
-    if (this.optionSelected.length < this.MAXITEM) {
+    let target;
+    console.log(this.DataSource, opt)
 
+    const itemFind = this.DataSource.find((f) => f?.optionId === opt?.optionId);
+    if (this.optionSelected.length < this.MAXITEM) {
+      console.log(itemFind.isChecked)
       itemFind.isChecked = !itemFind.isChecked;
 
       this.optionSelected = this.getSelectedOptions();
       target = this.DataSource;
       this.watchValue.emit({ value: this.optionSelected });
     } else {
+      console.log(itemFind.isChecked)
       if (itemFind.isChecked) {
         itemFind.isChecked = !itemFind.isChecked;
         this.optionSelected = this.getSelectedOptions();
@@ -387,7 +389,9 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       }
     }
     setTimeout(() => {
-      this.DataSource = target;
+      if (target) {
+        this.DataSource = target;
+      }
       this.isClickOption = false;
     }, 10)
 

@@ -1,11 +1,11 @@
 <div [ngClass]="classContainer">
   <!-- {{ getPreviousValueInput() }} -->
-  <ait-label [label]="label" [required]="required"></ait-label>
+  <ait-label [label]="label" [required]="required" *ngIf="label"></ait-label>
 
   <div
     class="input__contrainer"
     [ngStyle]="{ width: widthInput }"
-    style="margin-top: 8px"
+    style="margin-top: 8px;border-radius: 5px;"
   >
     <input
       *ngIf="isReadOnly"

@@ -228,23 +228,6 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
     // console.log(user_id)
     if (user_id && user_id !== '') {
       let user = null;
-      console.log(`
-      query {
-        findByConditionUser(request:{
-          company: "${this.company}",
-              lang: "${this.lang}",
-              collection: "sys_user",
-              user_id: "${user_id}",
-              condition: {
-                _key : "${user_id}"
-              }
-        }){
-          email
-          username
-          _key
-          company
-        }
-      }`)
       const rest_user: any = await this.apollo.query({
         query: gql`
         query {
