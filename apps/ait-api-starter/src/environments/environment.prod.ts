@@ -5,6 +5,7 @@ export const environment = {
     HOST: 'http://127.0.0.1',
     PORT: 3004,
     API_PREFIX: '/api/v1',
+    GRAPHQL_PREFIX: '/api/v1',
     HOST_DOMAIN: 'https://aureole-v.aureole-it.vn',
   },
   API_CORE: {
@@ -17,11 +18,5 @@ export const environment = {
     EXCUTE_FUCTION: '/api/execute-function',
     MATCHING: '/matching',
     AUREOLE_V: '/sync/aureole-v',
-  },
-  MAIL: {
-    USER: 'ait.dev@ait.com',
-    PASS: '@itteam.AIT',
-    HOST: '192.168.136.11',
-    POST: 25,
   },
 };

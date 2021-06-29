@@ -139,13 +139,8 @@ export const DarkScreen = [
   'sign-up',
   'reset-password',
   'user-setting',
-  'sync-pe-api-setting',
-  'sync-pe-api-history',
   'new',
   'job',
-  'company-basic-info',
-  'user-basic-info',
-  'user-certificate-info',
   'change-password'
 ];
 
