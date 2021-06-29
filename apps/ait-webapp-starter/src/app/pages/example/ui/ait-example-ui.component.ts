@@ -154,6 +154,24 @@ export class AitUiComponent extends AitBaseComponent {
     })
   }
 
+  ///methods
+
+  getValueTextInput= (value) => {
+    this.result.text_input = value
+  }
+
+  getValueNumberInput= (value) => {
+    this.result.number_input = value
+  }
+
+  getValueDatePicker= (value) => {
+    this.result.date_picker = value
+  }
+
+
+  getValueMasterData= (value) => {
+    this.result.master_data = value
+  }
 
 
   ngOnInit() {
@@ -223,9 +241,6 @@ export class AitUiComponent extends AitBaseComponent {
     this.result[label] = value;
   };
 
-  getValueMasterData = (value) => {
-    this.result.dataMaster = value;
-  };
   getValueMasterDataOne = (value) => {
     this.result.dataMasterOne = value;
   };

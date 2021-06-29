@@ -10,3 +10,13 @@ h6 {
 .containerx {
   padding: 70px;
 }
+
+::ng-deep .container_file {
+  nb-icon {
+    color: #000 !important;
+  }
+}
+
+// ::ng-deep .card__content_container {
+//   background: linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%) !important;
+// }
