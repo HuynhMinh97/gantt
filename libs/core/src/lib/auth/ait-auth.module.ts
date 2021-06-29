@@ -11,10 +11,6 @@ import { AitBaseService } from '../services/ait-base.service';
 
 @Module({
   imports: [
-    GraphQLModule.forRoot({
-      autoSchemaFile: 'schema.gql',
-      path: 'api/v1',
-    }),
     JwtModule.register({
       secret: SECRET_KEY,
       signOptions: { expiresIn: '3600000s' }
@@ -28,7 +24,11 @@ export class AitAuthModule {
     return {
       module: AitAuthModule,
       imports: [
-        AitDatabaseModule.forRoot(environment)
+        AitDatabaseModule.forRoot(environment),
+        GraphQLModule.forRoot({
+          autoSchemaFile: 'schema.gql',
+          path: environment.APP.GRAPHQL_PREFIX,
+        }),
       ]
     }
   }

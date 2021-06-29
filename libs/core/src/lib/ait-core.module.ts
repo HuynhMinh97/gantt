@@ -14,12 +14,7 @@ const RESOLVERS = [
 ]
 @Module({
   imports: [
-    AitLogger,
-
-    GraphQLModule.forRoot({
-      autoSchemaFile: 'schema.gql',
-      path: 'api/v1'
-    }),
+    AitLogger
   ],
   controllers: [],
   providers: [
@@ -35,17 +30,17 @@ const RESOLVERS = [
 })
 export class AitCoreModule {
 
-  static forRoot(environment: any): DynamicModule {
-    // console.log(environment)
+  static forRoot(environment): DynamicModule {
     return {
       module: AitCoreModule,
-      imports: [AitDatabaseModule.forRoot(environment)],
+      imports: [
+        AitDatabaseModule.forRoot(environment),
+        GraphQLModule.forRoot({
+          autoSchemaFile: 'schema.gql',
+          path: environment.APP.GRAPHQL_PREFIX
+        }),],
+      
       providers: [
-        // Chổ này muốn sử dụng biến ENVIRONMENT này cho các services hoặc resolver thì  làm như sau :
-        // @Injectable()
-        // export class CatsRepository {
-        //   constructor(@Inject('ENVIRONMENT') enviroment: any) {}
-        // }
         {
           provide: 'ENVIRONMENT',
           useValue: environment
