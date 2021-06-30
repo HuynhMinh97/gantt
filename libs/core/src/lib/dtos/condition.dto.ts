@@ -40,4 +40,7 @@ export class ConditionDto {
 
   @Field(() => RefCondition, { nullable: true })
   ref_condition: RefCondition;
+
+  @Field(() => String, { nullable: true })
+  return_field: string;
 }
