@@ -221,3 +221,8 @@ export enum OPERATOR {
   MATCH_REGEXP = '=~',
   NOT_MATCH_REGEXP = '!~'
 }
+
+export enum ORDER_BY {
+  ASC = 'ASC',
+  DESC = 'DESC',
+}
