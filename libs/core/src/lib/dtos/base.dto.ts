@@ -1,4 +1,6 @@
 import { InputType, ID, Float, Field } from '@nestjs/graphql';
+import { ChangeByDto } from './change-by.dto';
+import { CreateByDto } from './create-by.dto';
 
 @InputType()
 export class BaseDto {
@@ -14,12 +16,12 @@ export class BaseDto {
   @Field(() => Float, { nullable: true })
   create_at: number;
 
-  @Field(() => String, { nullable: true })
-  create_by: string;
+  @Field(() => CreateByDto, { nullable: true })
+  create_by: CreateByDto;
 
   @Field(() => Float, { nullable: true })
   change_at: number;
 
-  @Field(() => String, { nullable: true })
-  change_by: string;
+  @Field(() => ChangeByDto, { nullable: true })
+  change_by: ChangeByDto;
 }
