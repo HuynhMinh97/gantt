@@ -6,7 +6,7 @@ import { Component, Input } from '@angular/core';
   template: `
     <ng-container>
         <div [ngClass]="classContainer">
-        <div class="d-flex" *ngFor="let err of errors" style="color: red; font-style: italic; margin-top: 5px" [ngStyle]="style">
+        <div *ngFor="let err of errors" style="color: red; font-style: italic; margin-top: 5px" [ngStyle]="style">
             <span>{{ err }}</span>
         </div>
         </div>
