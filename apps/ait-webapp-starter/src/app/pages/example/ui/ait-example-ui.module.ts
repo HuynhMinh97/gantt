@@ -33,6 +33,7 @@ import {
   AitConfirmDialogModule,
 } from '@ait/ui';
 import { AitUiComponent } from './ait-example-ui.component';
+import { NbButtonModule } from '@nebular/theme';
 
 
 // There are some module from @ait/ui you need
@@ -63,6 +64,7 @@ const AIT_UI_MODULES = [
   AitAutocompleteMasterModule,
   AitOutputTextModule,
   AitConfirmDialogModule,
+  NbButtonModule
 ];
 
 // There are some service from @ait/ui you need

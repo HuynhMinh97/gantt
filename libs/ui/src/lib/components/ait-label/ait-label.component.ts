@@ -11,13 +11,18 @@ export class AitLabelComponent implements OnChanges  {
   @Input() isTranslate = true;
   @Input() styleText = {};
   @Input() required = false;
+  @Input() id;
+
+  ID(element : string): string {
+    return this.id + '_' + element;
+  }
 
   constructor(private translateService : AitTranslationService) {
 
   }
 
   getLabelTranslate = () => {
-    return this.translateService.translate(this.label);
+    return this.translateService.translate(this.label || '');
   }
 
   ngOnChanges(changes: SimpleChanges) {

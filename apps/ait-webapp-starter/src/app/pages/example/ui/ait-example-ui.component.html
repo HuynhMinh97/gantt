@@ -16,18 +16,12 @@
     <ait-card-content [isColumn]="true" [label]="'Output text input'">
       <p>This is a component, which is used to input value from user 🎉</p>
       <div
-        style="
-          margin-left: 20px;
-          display: flex;
-          max-width: 400px;
-          flex-wrap: wrap;
-        "
+        style="margin-left: 20px; display: flex; width: 100%; flex-wrap: wrap"
       >
         <ait-output-text
-          [valueArray]="['âsasa', 'sadsdsadsa', 'sadadsadsa']"
-          [caption]="
-            '受入れ企業名が変更になった場合は「雇用条件書」「パスポート」「在留カード」リンクを張り替えてください'
-          "
+          [label]="'Default'"
+          [valueArray]="['abc', 'def']"
+          [width]="'100%'"
         ></ait-output-text>
       </div>
     </ait-card-content>
@@ -72,38 +66,86 @@
       >
         <ait-input-text
           [required]="true"
-          [placeholder]="'one'"
-          (watchValue)="getValueInput(st, $event)"
-          [label]="'Default'"
-          [guidance]="'whatever you want'"
+          [placeholder]="'c_2003'"
+          [label]="'c_2003'"
+          [guidance]="'c_2003'"
           [guidanceIcon]="'star'"
           [length]="5"
           (watchValue)="getValueTextInput($event)"
-          [defaultValue]="'Hello'"
+          [defaultValue]="''"
+          [styleLabel]="{ 'text-transform': 'initial' }"
+          [width]="'300px'"
+          (onError)="result.error_text = $event.isValid"
+          [isSubmit]="result.submit_text_input"
+          [readonly]="true"
+          [id]="'example1'"
         ></ait-input-text>
+        <button
+          nbButton
+          status="primary"
+          (click)="subMitTextInput()"
+          style="width: 100px; margin: 15px"
+        >
+          submit
+        </button>
+        <code>#isValid : {{ result?.error_text }}</code>
         <code>#Ouput : {{ result?.text_input }}</code>
         <ait-space></ait-space>
         <ait-input-number
-          [label]="'Number input'"
+          [label]="'c_2003'"
           [required]="true"
-          [placeholder]="'one'"
-          [max]="6"
+          [placeholder]="'c_2003'"
+          [max]="9999999999999"
           [min]="1"
+          [length]="5"
+          [format]="'###,###,###.000'"
           [guidance]="'whatever you want'"
+          [guidanceIcon]="'star'"
           (watchValue)="getValueNumberInput($event)"
-          [defaultValue]="5"
+          [styleLabel]="{ 'text-transform': 'uppercase' }"
+          (onError)="result.error_number = $event.isValid"
+          [id]="'example2'"
+          [isSubmit]="result.submit_text_number"
         ></ait-input-number>
+
+        <button
+          nbButton
+          status="primary"
+          (click)="subMitTextNumber()"
+          style="width: 100px; margin: 15px"
+        >
+          submit
+        </button>
+
+        <code>#isValid : {{ result?.error_number }}</code>
+
         <code>#Ouput : {{ result?.number_input }}</code>
         <ait-space></ait-space>
         <ait-datepicker
-          [label]="'date picker'"
-          [placeholder]="'one'"
-          [required]="true"
-          [defaultValue]="1591773014834"
-          [guidance]="'whatever you want'"
-          [format]="'yyyy-MM-dd'"
+        [required]="true"
+          [label]="'Datepicker'"
+          [styleLabel]="{ 'text-transform': 'initial' }"
+          [width]="'400px'"
+          (onError)="result.error_datepicker = $event.isValid"
+          [placeholder]="'c_2003'"
+          [guidance]="'c_2003'"
           (watchValue)="getValueDatePicker($event)"
+          [format]="'dd/MM/yyyy'"
+          [guidanceIcon]="'star'"
+          [defaultValue]="date"
+          [isSubmit]="result.submit_datepicker"
         ></ait-datepicker>
+
+        <button
+          nbButton
+          status="primary"
+          (click)="subMitDatepicker()"
+          style="width: 100px; margin: 15px"
+        >
+          submit
+        </button>
+        <code>#isValid : {{ result.error_datepicker }}</code>
+
         <code>#Ouput : {{ result?.date_picker?.value }}</code>
         <ait-space></ait-space>
         <ait-autocomplete-master
@@ -119,13 +161,8 @@
         <ait-space></ait-space>
 
         <ait-autocomplete-master-data
-          [label]="'autocomplete master data'"
-          [maxItem]="3"
-          [placeholder]="'one'"
-          [required]="true"
-          [collection]="'sys_caption'"
           (watchValue)="getValueMasterData($event)"
-          [defaultValue]="[{ _key: '001', value: 'Test Data 1 VN' }]"
+          [dataSource]="[{ _key: '555', value: 'Test Data 2 VN' }]"
         ></ait-autocomplete-master-data>
         <code>#Ouput : {{ result?.master_data | json }}</code>
 
@@ -157,7 +194,7 @@
         <ait-input-text
           [label]="'textarea'"
           [required]="true"
-          [rows]="5"
+          [rows]="10"
           [placeholder]="'one'"
           [guidance]="'whatever you want'"
         ></ait-input-text>
