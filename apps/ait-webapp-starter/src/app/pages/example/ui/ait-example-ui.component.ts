@@ -178,6 +178,10 @@ export class AitUiComponent extends AitBaseComponent {
     this.result.submit_text_input = true;
   }
 
+  subMitTextNumber = () => {
+    this.result.submit_text_number = true;
+  }
+
 
   ngOnInit() {
     // console.log(this.page, this.module, this.user_id, this.company);

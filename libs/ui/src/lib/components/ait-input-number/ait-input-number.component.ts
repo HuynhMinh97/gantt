@@ -24,6 +24,9 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   @Input() placeholder = '';
   @Input() defaultValue = null;
   @Output() watchValue = new EventEmitter();
+  // eslint-disable-next-line @angular-eslint/no-output-on-prefix
+  @Output() onError = new EventEmitter();
+
   @Input() styleInput: any = {};
   inputCtrl: FormControl;
   @Input() isReadOnly = false;
@@ -35,13 +38,14 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   isTrick = false;
   @ViewChild('inputNumber', { static: false }) input: ElementRef;
   isTooltip = false;
-  inputId = Date.now() + AitAppUtils.random(0, 100);
+  @Input() id;
   @Input() classContainer;
 
 
   currentNumber = '';
   previousValue: any = '';
   symbol = '円';
+
   @Input() isReset = false;
   @Input() isError = false;
   @Input() required = false;
@@ -51,8 +55,11 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   @Input() guidance = ''
   @Input() guidanceIcon = '';
   @Input() styleLabel;
+  @Input() width;
+  @Input() height;
+  @Input() format = '';
+  @Input() isSubmit = false;
 
-  @Input() format = '###,###,###';
 
   constructor(
     private numberPipe: AitNumberFormatPipe,
@@ -75,6 +82,10 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
     })
   }
 
+  ID(element: string): string {
+    return this.id + '_' + element;
+  }
+
   getCaption = () => this.translateService.translate(this.guidance);
 
 
@@ -93,11 +104,18 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
             this.inputCtrl.patchValue('');
           }
         }
+        if (key === 'isSubmit') {
+          if (this.isSubmit) {
+            this.checkReq(this.inputCtrl.value);
+          }
+        }
         if (key === KEYS.DEFAULT_VALUE && this.defaultValue) {
           const transform: any = Number(this.defaultValue) < this.max ? this.defaultValue : this.max;
           const res = Number(transform) > this.min ? transform : this.min;
           this.watchValue.emit(res);
-          this.currentNumber = this.defaultValue;
+          this.currentNumber = res;
+          this.defaultValue = res;
+          this.onError.emit({ isValid: res && res.length !== 0 });
 
           if (this.isCurrency) {
             const symbol = this.currencySymbolService.getCurrencyByLocale();
@@ -189,15 +207,19 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   getFieldName = () => this.translateService.translate(this.label);
 
   checkReq = (value?: any) => {
+    console.log(value)
     this.errors = [];
     if (this.required) {
       if (!value) {
         this.isError = true;
-        const msg = this.translateService.getMsg('E0001').replace('{0}',this.getFieldName());
+        const msg = this.translateService.getMsg('E0001').replace('{0}', this.getFieldName());
         this.errors = [msg]
+        this.onError.emit({ isValid: false });
       }
       else {
         this.isError = false;
+        this.onError.emit({ isValid: true });
+
       }
     }
   }
@@ -223,11 +245,12 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
     }
     else {
       this.inputCtrl.patchValue(text);
-      this.checkReq(text);
+
       this.exactedValue = text;
       this.currentNumber = text;
       this.onInput();
     }
+    this.checkReq(text);
   }
 
 
