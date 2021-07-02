@@ -22,7 +22,7 @@ export class AitLabelComponent implements OnChanges  {
   }
 
   getLabelTranslate = () => {
-    return this.translateService.translate(this.label);
+    return this.translateService.translate(this.label || '');
   }
 
   ngOnChanges(changes: SimpleChanges) {

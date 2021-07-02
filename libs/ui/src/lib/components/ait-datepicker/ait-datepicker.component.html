@@ -1,9 +1,20 @@
 <div [ngClass]="classContainer">
-  <ait-label [label]="label" [required]="required"></ait-label>
+  <ait-label
+    [label]="label"
+    [required]="required"
+    [id]="id"
+    [styleText]="styleLabel"
+  ></ait-label>
 
   <nb-form-field
     [ngStyle]="style"
-    style="border-radius: 0.25rem; margin-top: 8px;background-color: #fff;"
+    style="
+      border-radius: 0.25rem;
+      margin-top: 8px;
+      background-color: #fff;
+      max-width: 100%;
+    "
+
     [ngClass]="{ isError: isError }"
   >
     <nb-icon
@@ -17,7 +28,7 @@
     <input
       nbInput
       #inputDateTime
-      placeholder="{{ staticFormat ? staticFormat : getFormat() }}"
+      [placeholder]="getPlaceHolder()"
       [nbDatepicker]="dateTimePicker"
       [(ngModel)]="date"
       *ngIf="!disable"
@@ -27,7 +38,10 @@
       (click)="clickInput($event)"
       (input)="handleInput($event)"
       (beforeinput)="onBeforeInput($event)"
-      style="background-color: transparent"
+      style="background-color: transparent; max-width: 100%"
+      id="{{ ID('input') }}"
+      [style.width]="width"
+      [style.height]="height"
     />
     <input
       [ngClass]="'border__bottom__input'"
@@ -46,6 +60,7 @@
         text-align: left;
         padding-left: 16px;
       "
+      id="{{ ID('input') }}"
     />
     <nb-datepicker
       #dateTimePicker
@@ -61,7 +76,10 @@
       <nb-icon [icon]="guidanceIcon"></nb-icon>
     </div>
     <div class="info">
-      <p style="word-break: break-word; color: #8f9bb3; font-size: 12px">
+      <p
+        style="word-break: break-word; color: #8f9bb3; font-size: 12px"
+        id="{{ ID('caption') }}"
+      >
         {{ getCaption() }}
       </p>
     </div>

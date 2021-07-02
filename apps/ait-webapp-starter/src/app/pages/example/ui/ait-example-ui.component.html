@@ -80,7 +80,14 @@
           [readonly]="true"
           [id]="'example1'"
         ></ait-input-text>
-        <button nbButton status="primary" (click)="subMitTextInput()" style="width:100px;margin :15px">submit</button>
+        <button
+          nbButton
+          status="primary"
+          (click)="subMitTextInput()"
+          style="width: 100px; margin: 15px"
+        >
+          submit
+        </button>
         <code>#isValid : {{ result?.error_text }}</code>
         <code>#Ouput : {{ result?.text_input }}</code>
         <ait-space></ait-space>
@@ -96,28 +103,49 @@
           [guidanceIcon]="'star'"
           (watchValue)="getValueNumberInput($event)"
           [styleLabel]="{ 'text-transform': 'uppercase' }"
-          [width]="'300px'"
-          [height]="'70px'"
           (onError)="result.error_number = $event.isValid"
           [id]="'example2'"
           [isSubmit]="result.submit_text_number"
         ></ait-input-number>
 
-        <button nbButton status="primary" (click)="subMitTextNumber()" style="width:100px;margin :15px">submit</button>
+        <button
+          nbButton
+          status="primary"
+          (click)="subMitTextNumber()"
+          style="width: 100px; margin: 15px"
+        >
+          submit
+        </button>
 
         <code>#isValid : {{ result?.error_number }}</code>
-
 
         <code>#Ouput : {{ result?.number_input }}</code>
         <ait-space></ait-space>
         <ait-datepicker
-          [label]="''"
-          [placeholder]="'one'"
-          [required]="true"
-          [guidance]="'whatever you want'"
-          [defaultValue]="date"
+        [required]="true"
+          [label]="'Datepicker'"
+          [styleLabel]="{ 'text-transform': 'initial' }"
+          [width]="'400px'"
+          (onError)="result.error_datepicker = $event.isValid"
+          [placeholder]="'c_2003'"
+          [guidance]="'c_2003'"
           (watchValue)="getValueDatePicker($event)"
+          [format]="'dd/MM/yyyy'"
+          [guidanceIcon]="'star'"
+          [defaultValue]="date"
+          [isSubmit]="result.submit_datepicker"
         ></ait-datepicker>
+
+        <button
+          nbButton
+          status="primary"
+          (click)="subMitDatepicker()"
+          style="width: 100px; margin: 15px"
+        >
+          submit
+        </button>
+        <code>#isValid : {{ result.error_datepicker }}</code>
+
         <code>#Ouput : {{ result?.date_picker?.value }}</code>
         <ait-space></ait-space>
         <ait-autocomplete-master
