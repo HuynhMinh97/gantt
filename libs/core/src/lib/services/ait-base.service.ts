@@ -4,7 +4,6 @@ import {
   COLLECTIONS,
   DB_CONNECTION_TOKEN,
   hasLength,
-  isNil,
   isObjectFull,
   KEYS,
   RESULT_STATUS,
@@ -27,6 +26,7 @@ export class AitBaseService {
 
   async save(request: any, user?: SysUser) {
     this.initialize(request, user);
+
     const collection = request.collection;
     const lang = request.lang;
 
@@ -42,12 +42,12 @@ export class AitBaseService {
         dataInsert.push(data);
       }
     });
-
     const resData = [];
 
     if (dataInsert.length > 0) {
       const aqlStr = `FOR data IN ${JSON.stringify(dataInsert)}
       INSERT data INTO ${collection} RETURN MERGE(data, {name: data.name.${lang} ? data.name.${lang} : data.name }) `;
+
       try {
         const res = await this.db.query(aqlStr);
         for await (const data of res) {
@@ -129,6 +129,7 @@ export class AitBaseService {
     const condition = request.condition;
     const lang = request.lang;
     const collection = request.collection;
+    const options = request.options;
     const collectionReq = [COLLECTIONS.MASTER_DATA , COLLECTIONS.COMPANY, COLLECTIONS.CAPTION];
     const mapData = [];
 
@@ -158,6 +159,15 @@ export class AitBaseService {
         }
       }
     }
+
+    if (isObjectFull(options?.sort_by)) {
+      aqlStr += ` SORT data.${options.sort_by?.value} ${options.sort_by?.order_by} `;
+    }
+
+    if (options?.limit) {
+      aqlStr += ` LIMIT ${options.limit} `;
+    }
+
     aqlStr += `RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name, `;
     mapData.forEach(data => {
       const ref_condition = data.ref_condition;
@@ -178,7 +188,10 @@ export class AitBaseService {
           }
         }
       }
-      aqlStr += ` RETURN { _key: doc.code, value: doc.name.${lang} } ) : `;
+      aqlStr += ` RETURN `;
+      aqlStr += data.return_field ? 
+      ` doc.${data.return_field}  ) : `:
+      `{ _key: doc.code, value: doc.name.${lang} } ) : `;
 
       aqlStr += ` (FOR doc IN ${data.ref_collection} `;
       aqlStr += ` FILTER doc.${data.ref_attribute} == data.${data.attribute} `;
@@ -193,17 +206,19 @@ export class AitBaseService {
           }
         }
       }
-      aqlStr += ` RETURN { _key: doc.code, value: doc.name.${lang} })[0] ), `
+      aqlStr += ` RETURN `;
+      aqlStr += data.return_field ? 
+      ` doc.${data.return_field} )[0] ), ` :
+      `{ _key: doc.code, value: doc.name.${lang} })[0] ), `;
     })
     aqlStr += `  }) `;
     return aqlStr;
   }
 
   initialize(request: any, user?: SysUser) {
-    if (isNil(request) || isNil(user)) return;
     this.company = request.company;
     this.lang = request.lang;
-    this.username = user.username;
+    this.username = user?.username || KEYS.ADMIN;
   }
 
   setCommonInsert(data: any) {

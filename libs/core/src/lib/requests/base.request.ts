@@ -1,4 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
+import { OptionDto } from '../dtos/option.dto';
 
 @InputType()
 export class BaseRequest {
@@ -13,4 +14,7 @@ export class BaseRequest {
 
   @Field(() => String, { nullable: true })
   user_id: string;
+
+  @Field(() => OptionDto, { nullable: true })
+  options: OptionDto;
 }
