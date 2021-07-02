@@ -77,6 +77,8 @@
           [width]="'300px'"
           (onError)="result.error_text = $event.isValid"
           [isSubmit]="result.submit_text_input"
+          [readonly]="true"
+          [id]="'example1'"
         ></ait-input-text>
         <button nbButton status="primary" (click)="subMitTextInput()" style="width:100px;margin :15px">submit</button>
         <code>#isValid : {{ result?.error_text }}</code>
@@ -86,14 +88,25 @@
           [label]="'c_2003'"
           [required]="true"
           [placeholder]="'c_2003'"
-          [max]="99999999999999"
+          [max]="9999999999999"
           [min]="1"
-          [format]="'###.###.###.000'"
+          [length]="5"
+          [format]="'###,###,###.000'"
           [guidance]="'whatever you want'"
+          [guidanceIcon]="'star'"
           (watchValue)="getValueNumberInput($event)"
-          [defaultValue]="5"
-          [styleLabel]="{ 'text-transform': 'initial' }"
+          [styleLabel]="{ 'text-transform': 'uppercase' }"
+          [width]="'300px'"
+          [height]="'70px'"
+          (onError)="result.error_number = $event.isValid"
+          [id]="'example2'"
+          [isSubmit]="result.submit_text_number"
         ></ait-input-number>
+
+        <button nbButton status="primary" (click)="subMitTextNumber()" style="width:100px;margin :15px">submit</button>
+
+        <code>#isValid : {{ result?.error_number }}</code>
+
         <code>#Ouput : {{ result?.number_input }}</code>
         <ait-space></ait-space>
         <ait-datepicker

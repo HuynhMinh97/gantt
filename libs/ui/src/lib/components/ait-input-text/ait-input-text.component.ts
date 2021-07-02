@@ -6,7 +6,8 @@ import { AitTranslationService } from '../../services';
 @Component({
   selector: 'ait-input-text',
   templateUrl: './ait-input-text.component.html',
-  styleUrls: ['./ait-input-text.component.scss']
+  styleUrls: ['./ait-input-text.component.scss'],
+  moduleId : 'ait-input-text'
 })
 export class AitTextInputComponent implements OnChanges {
   @Input() status: NbComponentStatus = null;
@@ -18,7 +19,7 @@ export class AitTextInputComponent implements OnChanges {
   @Output() watchValue = new EventEmitter();
   // eslint-disable-next-line @angular-eslint/no-output-on-prefix
   @Output() onError = new EventEmitter();
-  inputId = Date.now();
+  @Input() id = Date.now();
   @Input() defaultValue: string;
   @Input() isError = false;
   @Input() required = false;
@@ -35,6 +36,7 @@ export class AitTextInputComponent implements OnChanges {
   @Input() width;
   @Input() height;
   @Input() isSubmit = false;
+  @Input() readonly = false;
   errors = []
 
   inputCtrl: FormControl;
@@ -46,6 +48,9 @@ export class AitTextInputComponent implements OnChanges {
 
   constructor(private translateService: AitTranslationService) {
     this.inputCtrl = new FormControl('');
+  }
+  ID(element : string): string {
+    return this.id + '_' + element;
   }
 
   ngOnChanges(changes: SimpleChanges) {

@@ -1,11 +1,17 @@
 <div [ngClass]="classContainer">
   <!-- {{ getPreviousValueInput() }} -->
-  <ait-label [label]="label" [required]="required" *ngIf="label" [styleText]="styleLabel"></ait-label>
+  <ait-label
+    [label]="label"
+    [required]="required"
+    *ngIf="label"
+    [styleText]="styleLabel"
+    [id]="id"
+  ></ait-label>
 
   <div
     class="input__contrainer"
     [ngStyle]="{ width: widthInput }"
-    style="margin-top: 8px;border-radius: 5px;"
+    style="margin-top: 8px; border-radius: 5px"
   >
     <input
       *ngIf="isReadOnly"
@@ -21,16 +27,20 @@
       [nbTooltipTrigger]="!inputCtrl.value ? 'noop' : 'hover'"
       [nbTooltipPlacement]="'left'"
       style="padding-top: 0; padding-bottom: 0; font-size: 12px"
+      [style.width]="width"
+      [style.height]="height"
+      id="{{ ID('input') }}"
     />
     <input
+      id="ait-input-number"
       *ngIf="!isReadOnly"
       pattern="[0-9\.]+"
       nbInput
-      [id]="inputId"
+      id="{{ ID('input') }}"
       #inputNumber
       fullWidth
       fieldSize="medium"
-      [maxlength]="length"
+      [maxLength]="length"
       [value]="inputCtrl.value"
       [placeholder]="getPlaceHolder()"
       (input)="onInputHandle($event.target.value)"
@@ -43,6 +53,8 @@
       (click)="handleClick()"
       [ngStyle]="styleInput"
       [ngClass]="{ isError: isError }"
+      [style.width]="width"
+      [style.height]="height"
     />
   </div>
   <!-- {{inputCtrl.value}} -->
@@ -51,7 +63,10 @@
       <nb-icon [icon]="guidanceIcon"></nb-icon>
     </div>
     <div class="info">
-      <p style="word-break: break-word; color: #8f9bb3; font-size: 12px">
+      <p
+        style="word-break: break-word; color: #8f9bb3; font-size: 12px"
+        id="{{ ID('caption') }}"
+      >
         {{ getCaption() }}
       </p>
     </div>

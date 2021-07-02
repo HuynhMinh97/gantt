@@ -4,9 +4,13 @@
     [required]="required"
     *ngIf="label"
     [styleText]="styleLabel"
+    [id]="id"
   ></ait-label>
 
-  <nb-form-field class="ait-text-input" style="margin-top: 8px;max-width: 100%;">
+  <nb-form-field
+    class="ait-text-input"
+    style="margin-top: 8px; max-width: 100%"
+  >
     <nb-icon
       nbPrefix
       *ngIf="iconName && nbPrefix"
@@ -35,12 +39,15 @@
       style="border-color: #e4e9f2"
       *ngIf="rows !== 1"
       [maxLength]="length"
+      readonly="{{ readonly }}"
+      id="{{ ID('textarea') }}"
     ></textarea>
 
     <input
       nbInput
       [status]="status"
       [fieldSize]="fieldSize"
+      readonly="{{ readonly }}"
       [shape]="shape"
       [placeholder]="getPlaceholder()"
       [maxLength]="length"
@@ -52,6 +59,7 @@
       [formControl]="inputCtrl"
       [class.isError]="isError"
       style="border-color: #e4e9f2; width: 100%; max-width: 100%"
+      id="{{ ID('input') }}"
     />
   </nb-form-field>
   <div class="caption" *ngIf="guidance">
@@ -59,7 +67,10 @@
       <nb-icon [icon]="guidanceIcon"></nb-icon>
     </div>
     <div class="info">
-      <p style="word-break: break-word; color: #8f9bb3; font-size: 12px">
+      <p
+        style="word-break: break-word; color: #8f9bb3; font-size: 12px"
+        id="{{ ID('caption') }}"
+      >
         {{ getCaption() }}
       </p>
     </div>

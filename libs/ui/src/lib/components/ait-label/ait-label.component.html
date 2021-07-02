@@ -1,4 +1,4 @@
-<p class="ait-label" *ngIf="isTranslate" [ngStyle]="styleText">
+<p class="ait-label" *ngIf="isTranslate" [ngStyle]="styleText" id="{{ID('label')}}">
   {{ getLabelTranslate() }} <span style="color : red" *ngIf="required">*</span>
 </p>
 <p class="ait-label" *ngIf="!isTranslate" [ngStyle]="styleText">
