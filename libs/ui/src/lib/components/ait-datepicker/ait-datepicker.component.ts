@@ -30,7 +30,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   @Input() disable = false;
   @Input() dateInput: Date | number = null;
   @Input() defaultValue;
-  @Input() placeholder = 'Pick date'
+  @Input() placeholder = ''
   @Output() watchValue = new EventEmitter();
   @Input() isRound = false;
   @Input() style: any;
@@ -45,8 +45,14 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   @Input() required = false;
   @Input() label;
   @Input() guidance = ''
-  @Input() guidanceIcon = 'info-outline';
+  @Input() guidanceIcon = '';
+  @Input() id;
+  @Input() styleLabel;
   @Input() classContainer;
+  @Input() width;
+  @Input() height;
+  @Output() onError = new EventEmitter();
+  @Input() isSubmit = false;
 
   @ViewChild('inputDateTime', { static: false }) input: ElementRef;
   @ViewChild(NbDatepickerDirective, { static: false }) nbDatepicker;
@@ -66,6 +72,13 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
 
   }
 
+  ID(element: string): string {
+    return this.id + '_' + element;
+  }
+
+  getPlaceHolder = () => this.translateService.translate(this.placeholder);
+
+
   getCaption = () => this.translateService.translate(this.guidance);
 
 
@@ -80,14 +93,21 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
           }
         }
 
+        if (key === 'isSubmit') {
+          if (this.isSubmit) {
+            this.checkReq(this.date);
+          }
+        }
+
         if (key === 'dateInput' && this.dateInput) {
           this.date = new Date(this.dateInput);
           this.setupDate();
         }
 
-        if (key === 'defaultValue' && this.defaultValue) {
+        if (key === 'defaultValue') {
           this.dateInput = this.defaultValue;
           this.date = new Date(this.dateInput);
+          this.onError.emit({ isValid: !!this.defaultValue })
           this.setupDate();
         }
 
@@ -95,7 +115,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
     }
   }
 
-  getFieldName = () => this.translateService.translate(this.label);
+  getFieldName = () => this.translateService.translate(this.label || '');
 
   clearErrors = () => {
     this.isError = false;
@@ -103,13 +123,18 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   }
 
   checkReq = (value: any) => {
+
     this.clearErrors();
     if (this.required) {
-      if (value === '') {
+      if (!value || value === null) {
         this.isError = true;
         const err = this.translateService.getMsg('E0001').replace('{0}', this.getFieldName());
-
+        this.onError.emit({ isValid: false });
         this.errors = [err];
+      }
+      else {
+        this.onError.emit({ isValid: true });
+
       }
     }
   }
@@ -153,31 +178,26 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
 
   }
 
+  getDaysInMonth = function (month, year) {
+    // Here January is 1 based
+    //Day 0 is the last day in the previous month
+    return new Date(year, month, 0).getDate();
+    // Here January is 0 based
+    // return new Date(year, month+1, 0).getDate();
+  };
+
   translateDate = (value) => {
-    const symbol = this.format.includes('-') ? '-' : '/';
-    const formatArray = this.format.split(symbol);
-    const target = value;
-    const d = this.getObjectDateTime(formatArray, target);
+    let target = Number(value)
+    const date = new Date();
+    const lastDay = this.getDaysInMonth(date.getMonth(), date.getFullYear());
 
-    const format = new Date();
-    const date = new Date(), y = date.getFullYear(), m = date.getMonth();
-    const lastDay = new Date(y, m + 1, 0);
-    formatArray.forEach(item => {
-      if (d[item] && item) {
-        if (item.includes('d')) {
-          const dd = Number(d[item]) > lastDay.getDate() ? lastDay : d[item];
-          format.setDate(dd)
-        }
-        else if (item.includes('M')) {
-          const MM = Number(d[item] - 1) > 12 ? 12 : d[item] - 1
-          format.setMonth(MM)
-        }
-        else {
+    if (target < 1) {
+      target = 1;
+    } else if (value > lastDay) {
+      target = lastDay;
+    }
+    const format = new Date(date.getFullYear(), date.getMonth(), target);
 
-          format.setFullYear(d[item])
-        }
-      }
-    })
 
     this.formatTransfrom = format.getTime();
   }
@@ -214,8 +234,9 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
 
   getFormat = () => {
     const format = this.disable ? this.formatDateTimeDisplay : this.formatDateTimeInput;
+    const res = this.format || format;
 
-    return format || 'yyyy/MM/dd';
+    return res || 'yyyy/MM/dd';
   }
   isDateValid = (val) => {
     if (typeof val === 'number') {
@@ -234,9 +255,11 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
     }
     if (!this.isDateValid(this.date)) {
       this.date = null;
+
       this.inputCtrl.reset();
       this.watchValue.emit({ value: null });
     }
+    this.checkReq(this.date);
   }
 
 
@@ -266,7 +289,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
 
       }
       const formatTime = this.formatDateTimeInput || this.formatDateTimeDisplay;
-      this.format = this.format || formatTime;
+      this.format = this.getFormat();
 
       if (formatTime) {
 
