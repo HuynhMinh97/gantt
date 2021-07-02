@@ -49,7 +49,8 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   dataInput = [];
   @Input() label;
   @Input() guidance = ''
-  @Input() guidanceIcon = 'info-outline';
+  @Input() guidanceIcon = '';
+  @Input() styleLabel;
 
   @Input() format = '###,###,###';
 
@@ -61,6 +62,8 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
     this.inputCtrl = new FormControl('');
 
   }
+
+  getPlaceHolder = () => this.translateService.translate(this.placeholder);
 
   ngOnInit() {
     this.inputCtrl.valueChanges.subscribe({

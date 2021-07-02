@@ -1,6 +1,6 @@
 <div [ngClass]="classContainer">
   <!-- {{ getPreviousValueInput() }} -->
-  <ait-label [label]="label" [required]="required" *ngIf="label"></ait-label>
+  <ait-label [label]="label" [required]="required" *ngIf="label" [styleText]="styleLabel"></ait-label>
 
   <div
     class="input__contrainer"
@@ -32,7 +32,7 @@
       fieldSize="medium"
       [maxlength]="length"
       [value]="inputCtrl.value"
-      [placeholder]="placeholder"
+      [placeholder]="getPlaceHolder()"
       (input)="onInputHandle($event.target.value)"
       [formControl]="inputCtrl"
       (focusout)="handleFocusOut()"
