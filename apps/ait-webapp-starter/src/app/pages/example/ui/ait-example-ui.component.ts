@@ -157,6 +157,7 @@ export class AitUiComponent extends AitBaseComponent {
   ///methods
 
   getValueTextInput= (value) => {
+    console.log(value)
     this.result.text_input = value
   }
 
@@ -171,6 +172,10 @@ export class AitUiComponent extends AitBaseComponent {
 
   getValueMasterData= (value) => {
     this.result.master_data = value
+  }
+
+  subMitTextInput = () => {
+    this.result.submit_text_input = true;
   }
 
 
