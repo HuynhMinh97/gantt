@@ -8,7 +8,7 @@ import { AitAppUtils } from '../../utils/ait-utils';
   styleUrls: ['./ait-output-text.component.scss']
 })
 export class AitOutputTextComponent implements OnChanges {
-  @Input() label = 'Default label';
+  @Input() label = '';
   @Input() value = '';
   @Input() valueArray: string[] = [];
   @Input() guidance = ''

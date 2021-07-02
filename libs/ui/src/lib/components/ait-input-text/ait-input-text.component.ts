@@ -6,7 +6,8 @@ import { AitTranslationService } from '../../services';
 @Component({
   selector: 'ait-input-text',
   templateUrl: './ait-input-text.component.html',
-  styleUrls: ['./ait-input-text.component.scss']
+  styleUrls: ['./ait-input-text.component.scss'],
+  moduleId : 'ait-input-text'
 })
 export class AitTextInputComponent implements OnChanges {
   @Input() status: NbComponentStatus = null;
@@ -16,7 +17,9 @@ export class AitTextInputComponent implements OnChanges {
   @Input() iconName = '';
   @Input() nbPrefix = true;
   @Output() watchValue = new EventEmitter();
-  inputId = Date.now();
+  // eslint-disable-next-line @angular-eslint/no-output-on-prefix
+  @Output() onError = new EventEmitter();
+  @Input() id = Date.now();
   @Input() defaultValue: string;
   @Input() isError = false;
   @Input() required = false;
@@ -24,11 +27,16 @@ export class AitTextInputComponent implements OnChanges {
   @Input() styleMessage = {};
   @Input() label;
   @Input() guidance = ''
-  @Input() guidanceIcon = 'info-outline';
+  @Input() guidanceIcon = '';
   @Input() rows = 1;
   @Input() cols;
   @Input() classContainer;
   @Input() length = 255;
+  @Input() styleLabel;
+  @Input() width;
+  @Input() height;
+  @Input() isSubmit = false;
+  @Input() readonly = false;
   errors = []
 
   inputCtrl: FormControl;
@@ -41,6 +49,9 @@ export class AitTextInputComponent implements OnChanges {
   constructor(private translateService: AitTranslationService) {
     this.inputCtrl = new FormControl('');
   }
+  ID(element : string): string {
+    return this.id + '_' + element;
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     for (const key in changes) {
@@ -48,6 +59,12 @@ export class AitTextInputComponent implements OnChanges {
         if (key === 'defaultValue') {
           this.inputCtrl.setValue(this.defaultValue);
           this.watchValue.emit(this.defaultValue);
+          this.onError.emit({ isValid: !!this.defaultValue && this.defaultValue.length !== 0 });
+        }
+        if (key === 'isSubmit') {
+          if (this.isSubmit) {
+            this.onChange(this.inputCtrl.value);
+          }
         }
 
       }
@@ -55,9 +72,10 @@ export class AitTextInputComponent implements OnChanges {
   }
 
   public reset() {
-    console.log('reset')
     this.inputCtrl.reset();
   }
+
+  getPlaceholder = () => this.translateService.translate(this.placeholder);
 
   onChange(value) {
     if (this.required) {
@@ -65,10 +83,13 @@ export class AitTextInputComponent implements OnChanges {
         const msg = this.translateService.getMsg('E0001').replace('{0}', this.getNameField());;
         this.isError = true;
         this.errors = [msg]
+        this.onError.emit({ isValid: false });
       }
       else {
         this.isError = false;
-        this.errors = []
+        this.errors = [];
+        this.onError.emit({ isValid: true });
+
       }
     }
     this.watchValue.emit(value);

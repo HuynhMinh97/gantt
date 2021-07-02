@@ -74,14 +74,14 @@ export class AitTranslationService {
         return caption.code === code;
       });
 
-      return find?.value || code;
+      return find?.value || value;
     }
     else {
       const find = this.captionByPage.find(caption => {
         return caption.code === code;
       });
 
-      return find?.value || code;
+      return find?.value || value;
     }
   }
 
