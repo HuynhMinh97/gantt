@@ -74,7 +74,9 @@ export class AuthResolver {
     @Args('request', { type: () => AitSysUserRequest })
     request: AitSysUserRequest
   ) {
+    console.log(request)
     const res = await this.graphqlService.find(request);
+    console.log(res)
     return res.data;
   }
 

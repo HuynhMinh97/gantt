@@ -122,7 +122,7 @@
         <code>#Ouput : {{ result?.number_input }}</code>
         <ait-space></ait-space>
         <ait-datepicker
-        [required]="true"
+          [required]="true"
           [label]="'Datepicker'"
           [styleLabel]="{ 'text-transform': 'initial' }"
           [width]="'400px'"
@@ -155,27 +155,67 @@
           [guidance]="'whatever you want'"
           [collection]="'sys_caption'"
           (watchValue)="getValueMaster($event)"
+          [styleLabel]="{ 'text-transform': 'initial' }"
         ></ait-autocomplete-master>
         <code>#Ouput : {{ result?.master | json }}</code>
 
         <ait-space></ait-space>
 
         <ait-autocomplete-master-data
+          [width]="'300px'"
+          [styleLabel]="{ 'text-transform': 'initial' }"
+          [required]="true"
+          [placeholder]="'c_2003'"
+          [label]="'c_2003'"
+          [excludedValue]="[{ _key: 'ja_JP', value: 'Tiếng Nhật' }]"
           (watchValue)="getValueMasterData($event)"
-          [dataSource]="[{ _key: '555', value: 'Test Data 2 VN' }]"
+          (onError)="result.error_data1 = $event.isValid"
+          [isSubmit]="result.master1"
+          [allowNew]="true"
         ></ait-autocomplete-master-data>
+        <button
+          nbButton
+          status="primary"
+          (click)="subMitMasterData1()"
+          style="width: 100px; margin: 15px"
+        >
+          submit
+        </button>
+        <code>#isValid : {{ result.error_data1 }}</code>
         <code>#Ouput : {{ result?.master_data | json }}</code>
 
         <ait-space></ait-space>
 
         <ait-autocomplete-master-data
+          [styleLabel]="{ 'text-transform': 'initial' }"
+          [width]="'400px'"
           [label]="'autocomplete master data'"
           [maxItem]="3"
           [placeholder]="'one'"
           [required]="true"
-          [guidance]="'collection = null'"
-          [defaultValue]=""
+          [guidance]="'c_2003'"
+          [guidanceIcon]="'star'"
+          [class]="'RESIDENCE_STATUS'"
+          (onError)="result.error_data2 = $event.isValid"
+          (watchValue)="result.multi_data = $event"
+          [excludedValue]="[
+            { _key: 'en_US', value: 'Tiếng Anh' },
+            { _key: 'vi_VN', value: 'Tiếng Việt' }
+          ]"
+          [isSubmit]="result.master2"
+          [allowNew]="true"
         ></ait-autocomplete-master-data>
+        <button
+          nbButton
+          status="primary"
+          (click)="subMitMasterData2()"
+          style="width: 100px; margin: 15px"
+        >
+          submit
+        </button>
+        <code>#isValid : {{ result.error_data2 }}</code>
+
+        <code>#Ouput : {{ result?.multi_data | json }}</code>
 
         <ait-space></ait-space>
 
