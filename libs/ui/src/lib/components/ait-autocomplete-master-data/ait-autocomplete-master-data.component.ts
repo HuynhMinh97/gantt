@@ -221,6 +221,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     }
   }
 
+  //TODO Khi nhấn enter sẽ chọn lun giá trị đó nếu save thành công
   checkAllowNew = (value: string) => {
     // const title = this.translateSerivce.translate(
     //   'c_10020'
@@ -231,7 +232,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       if (!find) {
         this.masterDataService.saveData([{
           active_flag: true,
-          class: this.class,
+          class: this.class || '',
           code: value,
           name: {
             vi_VN: value,
@@ -241,9 +242,39 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         }]).then(r => {
           if (r?.status === RESULT_STATUS.OK) {
             const func = () => {
-              this.inputControl.setValue(null);
-              this.inputControl.patchValue(this.currentValue);
-              this.handleInput(this.currentValue);
+              if (this.maxItem !== 1) {
+
+                const d = r?.data[0];
+                this.checkItem(null, { code: d?.code, value: d.name });
+                this.currentValue = '';
+
+
+                this.inputControl.setValue(null);
+                this.input.nativeElement.value = '';
+                if (this.dataFilter.length === 0) {
+                  this.dataFilter = [1];
+                }
+                this.hideAutocomplete();
+                this.filteredOptions$ = of(this.sortItems(this.DataSource));
+                setTimeout(() => {
+                  this.openAutocomplete()
+                }, 150)
+              }
+              else {
+                this.inputControl.setValue(null);
+                this.inputControl.patchValue(this.currentValue);
+                this.handleInput(this.currentValue);
+                const d = r?.data[0];
+                this.onSelectionChange({ code: d?.code, value: d.name });
+                this.hideAutocomplete();
+                this.selectOne = { _key: d?.code, value: d.name };
+                if (this.dataFilter.length === 0) {
+                  this.dataFilter = [1];
+                }
+                this.checkReq();
+                this.input.nativeElement.blur();
+
+              }
             }
             this.settingData(func);
 
@@ -295,7 +326,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
           };
         });
 
-        console.log(this.DataSource)
         this.data = this.DataSource;
 
         if (!this.isClickOption && !this.isOpenAutocomplete) {
@@ -311,7 +341,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
             f._key === this.defaultValue[0]?._key ||
             f.code === this.defaultValue[0]?._key
         );
-        console.log(findByKey);
         this.selectOne = { _key: findByKey?.code, value: findByKey?.value };
         // console.log(this.defaultValue, this.dataSourceDf, this.selectOne)
         if (!this.disableOutputDefault) {
@@ -398,7 +427,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         optionId: m._key ? m._key + idx : idx,
       };
     });
-    console.log(data)
 
     const dataFilter = data.filter(d => d.value);
     let ret = dataFilter;
@@ -454,20 +482,16 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       .map((m) => ({ _key: m?.code, value: m?.value }));
 
   checkItem = (event: Event, opt: any) => {
-    console.log(opt)
     let target;
-    console.log(this.DataSource, opt)
 
-    const itemFind = this.DataSource.find((f) => f?.optionId === opt?.optionId);
+    const itemFind = this.DataSource.find((f) => f?.optionId === opt?.optionId || f?._key === opt?.code);
     if (this.optionSelected.length < this.MAXITEM) {
-      console.log(itemFind.isChecked)
       itemFind.isChecked = !itemFind.isChecked;
 
       this.optionSelected = this.getSelectedOptions();
       target = this.DataSource;
       this.watchValue.emit({ value: this.optionSelected });
     } else {
-      console.log(itemFind.isChecked)
       if (itemFind.isChecked) {
         itemFind.isChecked = !itemFind.isChecked;
         this.optionSelected = this.getSelectedOptions();
@@ -626,7 +650,8 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   checkReq = () => {
 
     if (this.required) {
-      if (this.optionSelected.length === 0 || this.selectOne?.value === '') {
+      const check = this.maxItem === 1 ? !this.selectOne?.value : this.optionSelected.length === 0;
+      if (check) {
         const err = this.getMsg('E0001').replace('{0}', this.getFieldName());
         this.isError = true;
         this.errors = [err]
@@ -635,7 +660,8 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       }
       else {
         this.onError.emit({ isValid: true });
-
+        this.clearErrors();
+        this.isError = false;
       }
     }
     else {
@@ -726,7 +752,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   };
 
   onSelectionChange($event) {
-    console.log($event)
     this.clearErrors();
     this.selectOne = { _key: $event?.code, value: $event?.value };
     this.inputControl.patchValue($event?.value || '')
