@@ -12,7 +12,7 @@ import { AppState, getCaption } from '../../state/selectors';
 })
 
 export class AitCardContentComponent {
-  constructor(private envService: AitEnvironmentService,private store : Store<AppState> ,private translate : AitTranslationService) {
+  constructor(private envService: AitEnvironmentService, private store: Store<AppState>, private translate: AitTranslationService) {
     store.pipe(select(getCaption)).subscribe(() => {
       this.buttonTitle = translate.translate('c_2003');
     })
@@ -22,13 +22,11 @@ export class AitCardContentComponent {
   @Output() onClickButtonHeader = new EventEmitter();
   @Input() isColumn = false;
   @Input() actionBtn = [
-    {
-      title: 'c_2003',
-      icon: 'edit',
-    }
+
   ]
   gradientString = 'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)';
   isShow = true;
+  @Input()
   isOpen = true;
   isDev = false;
   @Input()
@@ -44,14 +42,16 @@ export class AitCardContentComponent {
     return this.translate.translate(this.label);
   }
 
-  toggleExpan = () => this.isOpen = !this.isOpen;
+  toggleExpan = (isClick = false) => {
+    if (!isClick) {
+      this.isOpen = !this.isOpen
+    }
+  };
 
 
   handleClickBtnHeader = () => {
     // this.isShow = !this.isShow;
-    if (this.isDev) {
-      this.onClickButtonHeader.emit({ clicked: true });
-    }
+    this.onClickButtonHeader.emit({ clicked: true });
   }
 
 }

@@ -36,10 +36,29 @@
       (input)="onChange($event.target.value)"
       [formControl]="inputCtrl"
       [class.isError]="isError"
-      style="border-color: #e4e9f2"
-      *ngIf="rows !== 1"
+      style="border-color: #e4e9f2; padding-left: 5px !important"
+      *ngIf="rows !== 1 && readonly"
       [maxLength]="length"
-      readonly="{{ readonly }}"
+      readonly
+      id="{{ ID('textarea') }}"
+    ></textarea>
+
+    <textarea
+      nbInput
+      [status]="status"
+      [fieldSize]="fieldSize"
+      [shape]="shape"
+      [fullWidth]="fullWidth"
+      [placeholder]="getPlaceholder()"
+      [rows]="rows"
+      [cols]="cols"
+      type="text"
+      (input)="onChange($event.target.value)"
+      [formControl]="inputCtrl"
+      [class.isError]="isError"
+      style="border-color: #e4e9f2; padding-left: 5px !important"
+      *ngIf="rows !== 1 && !readonly"
+      [maxLength]="length"
       id="{{ ID('textarea') }}"
     ></textarea>
 
@@ -47,18 +66,36 @@
       nbInput
       [status]="status"
       [fieldSize]="fieldSize"
-      readonly="{{ readonly }}"
+      readonly
       [shape]="shape"
       [placeholder]="getPlaceholder()"
       [maxLength]="length"
-      *ngIf="rows === 1"
+      *ngIf="rows === 1 && readonly"
       type="text"
       [style.width]="width"
       [style.height]="height"
       (input)="onChange($event.target.value)"
       [formControl]="inputCtrl"
       [class.isError]="isError"
-      style="border-color: #e4e9f2; width: 100%; max-width: 100%"
+      style="border-color: #e4e9f2; width: 100%; max-width: 100%;padding-left: 5px;"
+      id="{{ ID('input') }}"
+    />
+
+    <input
+      nbInput
+      [status]="status"
+      [fieldSize]="fieldSize"
+      [shape]="shape"
+      [placeholder]="getPlaceholder()"
+      [maxLength]="length"
+      *ngIf="rows === 1 && !readonly"
+      type="text"
+      [style.width]="width"
+      [style.height]="height"
+      (input)="onChange($event.target.value)"
+      [formControl]="inputCtrl"
+      [class.isError]="isError"
+      style="border-color: #e4e9f2; width: 100%; max-width: 100%;padding-left: 5px;"
       id="{{ ID('input') }}"
     />
   </nb-form-field>
