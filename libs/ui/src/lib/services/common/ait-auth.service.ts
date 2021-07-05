@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import jwt_decode from 'jwt-decode';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { StoreUserInfo } from '../../state/actions';
-import { AppState } from '../../state/selectors';
+import { AppState, getEmail } from '../../state/selectors';
 import { NbToastrService } from '@nebular/theme';
 import { AitEncrDecrService } from './ait-encrypt.service';
 import { AitBaseService } from './ait-base.service';

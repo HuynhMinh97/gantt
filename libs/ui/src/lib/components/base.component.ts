@@ -137,6 +137,10 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
       if (userId && userId !== '') {
         this.getUserInfo(userId).then((res: any) => {
+          if (!res || !res?.email) {
+            authService.removeTokens();
+            location.reload();
+          }
           // Push company on store base on user-setting
           this.store.dispatch(
             new CHANGECOMPANY(res?.company || this.env.COMMON.COMPANY_DEFAULT)

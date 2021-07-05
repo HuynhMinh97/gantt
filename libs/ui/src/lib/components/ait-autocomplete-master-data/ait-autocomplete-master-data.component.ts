@@ -105,6 +105,15 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Input() collection = 'sys_master_data';
   @Input() targetValue = 'name';
   @Input() classContainer;
+  @Input() id;
+  @Input() styleLabel;
+  @Input() width;
+  @Input() height;
+  @Input() isSubmit = false;
+  @Input() allowNew = false;
+  @Output() onError = new EventEmitter();
+  currentValue = '';
+  dataFilter = [1];
 
 
 
@@ -117,6 +126,10 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   hideAutocomplete = () => {
     this.isOpenAutocomplete = false;
 
+  }
+
+  ID(element: string): string {
+    return this.id + '_' + element;
   }
 
   getCaptions = () => this.translateSerivce.translate(this.guidance);
@@ -133,12 +146,12 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   get PLACEHOLDER(): string {
     if (this.maxItem === 1) {
       if (this.selectOne?.value) {
-        return this.selectOne?.value || '';
+        return '';
       }
-      return this.placeholder || '';
+      return this.translateSerivce.translate(this.placeholder) || '';
     }
     else if (this.maxItem !== 1) {
-      return this.optionSelected.length < 1 ? this.placeholder : '';
+      return this.optionSelected.length < 1 ? this.translateSerivce.translate(this.placeholder) : '';
     }
     return '';
   }
@@ -149,7 +162,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       return this.selectOne?.value || ''
     }
     if (this.maxItem === 1) {
-      return this.selectOne?.value || this.defaultValue[0]?.value || ''
+      return this.selectOne?.value || ''
     }
     else {
       return '';
@@ -166,17 +179,18 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
 
+        if (key === 'isSubmit') {
+          if (this.isSubmit) {
+            this.checkReq();
+          }
+        }
         if (this.parentCode && key === 'parentCode') {
           this.settingData();
         }
         if (this.defaultValue && key === 'defaultValue') {
           this.defaultValueDf = this.defaultValue || [];
-          const typeDF: any[] = (this.defaultValue || []).filter(x => !!x);
+          // const typeDF: any[] = (this.defaultValue || []).filter(x => !!x);
           this.setupDefault();
-          if (!this.disableOutputDefault) {
-
-            this.watchValue.emit({ value: typeDF.map(m => ({ _key: m?.code, value: m?.value })) });
-          }
 
         }
 
@@ -194,11 +208,92 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     }
   }
 
+  getAllowNewText = () => {
+    if (this.dataFilter.length === 0 && this.allowNew && this.currentValue) {
+      return this.translateSerivce.translate('allow_new');
+    }
+    return '';
+  };
+
+  enter = () => {
+    if (this.dataFilter.length === 0 && this.allowNew) {
+      this.checkAllowNew(this.currentValue);
+    }
+  }
+
+  //TODO Khi nhấn enter sẽ chọn lun giá trị đó nếu save thành công
+  checkAllowNew = (value: string) => {
+    // const title = this.translateSerivce.translate(
+    //   'c_10020'
+    // );
+    // const successToSave = this.translateSerivce.getMsg('I0012')
+    if (this.allowNew) {
+      const find = this.dataSourceDf.find(d => d.value === value);
+      if (!find) {
+        this.masterDataService.saveData([{
+          active_flag: true,
+          class: this.class || '',
+          code: value,
+          name: {
+            vi_VN: value,
+            ja_JP: value,
+            en_US: value
+          },
+        }]).then(r => {
+          if (r?.status === RESULT_STATUS.OK) {
+            const func = () => {
+              if (this.maxItem !== 1) {
+
+                const d = r?.data[0];
+                this.checkItem(null, { code: d?.code, value: d.name });
+                this.currentValue = '';
+
+
+                this.inputControl.setValue(null);
+                this.input.nativeElement.value = '';
+                if (this.dataFilter.length === 0) {
+                  this.dataFilter = [1];
+                }
+                this.hideAutocomplete();
+                this.filteredOptions$ = of(this.sortItems(this.DataSource));
+                setTimeout(() => {
+                  this.openAutocomplete()
+                }, 150)
+              }
+              else {
+                this.inputControl.setValue(null);
+                this.inputControl.patchValue(this.currentValue);
+                this.handleInput(this.currentValue);
+                const d = r?.data[0];
+                this.onSelectionChange({ code: d?.code, value: d.name });
+                this.hideAutocomplete();
+                this.selectOne = { _key: d?.code, value: d.name };
+                if (this.dataFilter.length === 0) {
+                  this.dataFilter = [1];
+                }
+                this.checkReq();
+                this.input.nativeElement.blur();
+
+              }
+            }
+            this.settingData(func);
+
+
+          }
+          else {
+          }
+        })
+      }
+    }
+
+  }
+
   setupDefault = () => {
     if (this.defaultValue && this.defaultValue.length !== 0) {
 
       if (this.MAXITEM !== 1) {
         const typeDF = AitAppUtils.getArrayNotFalsy(this.defaultValue);
+
 
         const findByKeys = typeDF.map((m) => {
           const result = this.dataSourceDf.find(
@@ -209,6 +304,13 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         this.optionSelected = [...AitAppUtils.getArrayNotFalsy(findByKeys)].filter(
           (f) => !!f
         );
+
+        if (!this.disableOutputDefault) {
+
+          this.watchValue.emit({ value: this.optionSelected.map(m => ({ _key: m?.code, value: m?.value })) });
+        }
+
+
         const _keys = this.optionSelected.map((m) => m?.code);
 
         this.DataSource = AitAppUtils.deepCloneArray(this.dataSourceDf).map((d) => {
@@ -220,9 +322,10 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
           }
           return {
             ...d,
-            isChecked: _keys.includes(d._key) || _keys.includes(d.code),
+            isChecked: _keys.includes(d.code),
           };
         });
+
         this.data = this.DataSource;
 
         if (!this.isClickOption && !this.isOpenAutocomplete) {
@@ -240,6 +343,10 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         );
         this.selectOne = { _key: findByKey?.code, value: findByKey?.value };
         // console.log(this.defaultValue, this.dataSourceDf, this.selectOne)
+        if (!this.disableOutputDefault) {
+          const res = this.selectOne?._key ? [this.selectOne] : []
+          this.watchValue.emit({ value: res });
+        }
 
         this.inputControl.setValue(this.selectOne?.value || '');
         this.getFilteredDataSource();
@@ -247,7 +354,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     }
   };
 
-  settingData = () => {
+  settingData = (cb?: any) => {
     const cond = {};
     if (this.parentCode) {
       cond['parent_code'] = this.parentCode;
@@ -257,10 +364,18 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     }
 
     if (this.class && this.collection === 'sys_master_data') {
-      this.usingGraphQL(cond).then();
+      this.usingGraphQL(cond).then(() => {
+        if (cb) {
+          cb();
+        }
+      });
     }
     else {
-      this.usingGraphQL({}, false).then();
+      this.usingGraphQL({}, false).then(() => {
+        if (cb) {
+          cb();
+        }
+      });
     }
 
   };
@@ -291,7 +406,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         dataMaster = result || [];
       }
     }
-    const r = dataMaster.map(r => ({ code: r.code, value: r[this.targetValue] || r?.value, _key: r.code }));
+    const r = dataMaster.map(r => ({ code: r.code || r._key, value: r[this.targetValue] || r?.value, _key: r.code || r._key }));
 
 
 
@@ -312,7 +427,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         optionId: m._key ? m._key + idx : idx,
       };
     });
-    console.log(data)
 
     const dataFilter = data.filter(d => d.value);
     let ret = dataFilter;
@@ -369,18 +483,15 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   checkItem = (event: Event, opt: any) => {
     let target;
-    console.log(this.DataSource, opt)
 
-    const itemFind = this.DataSource.find((f) => f?.optionId === opt?.optionId);
+    const itemFind = this.DataSource.find((f) => f?.optionId === opt?.optionId || f?._key === opt?.code);
     if (this.optionSelected.length < this.MAXITEM) {
-      console.log(itemFind.isChecked)
       itemFind.isChecked = !itemFind.isChecked;
 
       this.optionSelected = this.getSelectedOptions();
       target = this.DataSource;
       this.watchValue.emit({ value: this.optionSelected });
     } else {
-      console.log(itemFind.isChecked)
       if (itemFind.isChecked) {
         itemFind.isChecked = !itemFind.isChecked;
         this.optionSelected = this.getSelectedOptions();
@@ -399,6 +510,11 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       if (this.optionSelected.length === 0) {
         const err = this.getMsg('E0001').replace('{0}', this.getFieldName());
         this.errors = [err]
+        this.onError.emit({ isValid: false });
+      }
+      else {
+        this.onError.emit({ isValid: true });
+
       }
     }
 
@@ -534,10 +650,18 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   checkReq = () => {
 
     if (this.required) {
-      if (this.optionSelected.length === 0 || this.selectOne?.value === '') {
+      const check = this.maxItem === 1 ? !this.selectOne?.value : this.optionSelected.length === 0;
+      if (check) {
         const err = this.getMsg('E0001').replace('{0}', this.getFieldName());
         this.isError = true;
         this.errors = [err]
+        this.onError.emit({ isValid: false });
+
+      }
+      else {
+        this.onError.emit({ isValid: true });
+        this.clearErrors();
+        this.isError = false;
       }
     }
     else {
@@ -573,12 +697,19 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   }
 
   handleInput = (value) => {
+    this.currentValue = value;
     this.clearErrors();
     if (this.required) {
       if (value === '' && this.optionSelected.length === 0) {
         const err = this.getMsg('E0001').replace('{0}', this.getFieldName());
         this.isError = true;
         this.errors = [err];
+        this.onError.emit({ isValid: false });
+
+      }
+      else {
+        this.onError.emit({ isValid: true });
+
       }
     }
     this.openAutocomplete();
@@ -636,6 +767,12 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         this.isError = true;
         const err = this.getMsg('E0001').replace('{0}', this.getFieldName());
         this.errors = [err];
+        this.onError.emit({ isValid: false });
+
+      }
+      else {
+        this.onError.emit({ isValid: true });
+
       }
     }
 
@@ -663,6 +800,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
       return target.toString().toLowerCase().includes(filterValue);
     });
-    return filterValue !== '' ? result : this.dataSource;
+    this.dataFilter = filterValue !== '' ? result : this.DataSource;
+    return filterValue !== '' ? result : this.DataSource;
   }
 }

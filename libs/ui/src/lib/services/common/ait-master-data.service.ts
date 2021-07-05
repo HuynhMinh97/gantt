@@ -108,6 +108,11 @@ export class AitMasterDataService extends AitBaseService {
     }).toPromise();
   }
 
+  async saveData(data: any[]) {
+
+    return await this.mutation('saveSystem', 'sys_master_data', data, this.returnFields);
+  }
+
 
   async find(condition: any, rf?: any, collection?: string) {
     const returnFields = rf ? rf : this.returnFields;
@@ -116,7 +121,7 @@ export class AitMasterDataService extends AitBaseService {
       request['condition'] = condition;
     }
     request['collection'] = collection || 'sys_master_data';
-    console.log('119',request)
+    console.log('119', request)
 
     return await this.query(GRAPHQL.FIND_SYSTEM, request, returnFields);
   }
