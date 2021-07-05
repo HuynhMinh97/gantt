@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { APP_INITIALIZER, ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AitButtonModule } from './components/ait-button/ait-button.module';
@@ -179,6 +180,8 @@ export class AitUiModule {
     @Optional() @SkipSelf() parentModule?: AitUiModule,
 
   ) {
+    console.log = () => { };
+    console.error = () => { }
     const environment: any = envService;
     const uri = environment?.API_PATH?.BASE_GRAPHQL_PREFIX;
     if (!uri) {

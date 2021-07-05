@@ -1,12 +1,20 @@
 <div [ngClass]="classContainer">
-  <ait-label [label]="label" [required]="required" *ngIf="label"></ait-label>
+  <ait-label
+    [label]="label"
+    [required]="required"
+    *ngIf="label"
+    [id]="id"
+    [styleText]="styleLabel"
+  ></ait-label>
 
   <div
     class="input__container"
     [ngStyle]="style"
-    style="margin-top: 8px;background-color: #fff;"
+    style="margin-top: 8px; background-color: #fff"
     [ngClass]="{ isError: isError }"
     #inputContainer
+    [style.width]="width"
+    [style.height]="height"
   >
     <div
       style="
@@ -26,12 +34,14 @@
           [nbTooltip]="displayOptions()"
           [ngStyle]="styleInput"
           style="font-weight: bold; font-size: 12px"
+          id="{{ ID('selected_items') }}"
         >
           {{ getSelectedItems(optionSelected) }}
         </p>
       </div>
 
       <input
+        id="{{ ID('input') }}"
         fullWidth
         nbInput
         [value]="VALUE"
@@ -47,6 +57,7 @@
       />
 
       <input
+        id="{{ ID('input') }}"
         *ngIf="!isReadOnly"
         [formControl]="inputControl"
         [placeholder]="PLACEHOLDER"
@@ -64,9 +75,10 @@
         (focusout)="outFocus()"
         (blur)="!isSelectMatch(input.value) ? (input.value = '') : null"
         (keydown.tab)="onTab()"
+        (keydown.enter)="enter()"
       />
 
-      <div class="autocompleteeeee" *ngIf="MAXITEM !== 1 && isOpenAutocomplete">
+      <div class="autocompleteeeee" *ngIf="MAXITEM !== 1 && isOpenAutocomplete && dataFilter.length !== 0">
         <div
           *ngFor="let option of filteredOptions$ | async"
           class="option__container"
@@ -87,13 +99,18 @@
             style="cursor: pointer; margin-left: 15px"
             [status]="'primary'"
           >
-            <span style="cursor: pointer; font-size: 12px">{{
-              option?.value
-            }}</span>
+            <span
+              style="cursor: pointer; font-size: 12px"
+              id="{{ ID('selection_value') }}"
+              >{{ option?.value }}</span
+            >
           </nb-checkbox>
         </div>
       </div>
-      <div class="autocompleteeeee" *ngIf="MAXITEM === 1 && isOpenAutocomplete">
+      <div
+        class="autocompleteeeee"
+        *ngIf="MAXITEM === 1 && isOpenAutocomplete && dataFilter.length !== 0"
+      >
         <div
           *ngFor="let option of filteredOptions$ | async"
           (click)="onSelectionChange(option)"
@@ -108,6 +125,7 @@
               margin: 5px;
               margin-left: 15px;
             "
+            id="{{ ID('selection_value') }}"
             >{{ option?.value }}</span
           >
         </div>
@@ -130,16 +148,32 @@
       </div>
     </div>
   </div>
+  <p
+    style="
+      word-break: break-word;
+      color: #8f9bb3;
+      font-size: 12px;
+      margin-top: 10px;
+    "
+    id="{{ ID('information') }}"
+    *ngIf="allowNew && dataFilter.length === 0"
+  >
+    {{ getAllowNewText() }}
+  </p>
 
-  <div class="caption" *ngIf="guidance">
+  <div class="caption" *ngIf="guidance" [style.width]="width">
     <div class="icon" *ngIf="guidanceIcon">
       <nb-icon [icon]="guidanceIcon"></nb-icon>
     </div>
     <div class="info">
-      <p style="word-break: break-word; color: #8f9bb3; font-size: 12px">
+      <p
+        style="word-break: break-word; color: #8f9bb3; font-size: 12px"
+        id="{{ ID('caption') }}"
+      >
         {{ getCaptions() }}
       </p>
     </div>
   </div>
   <ait-error-message [errors]="errors"></ait-error-message>
 </div>
+{{VALUE}}
