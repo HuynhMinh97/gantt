@@ -1,29 +1,30 @@
-<div [ngClass]="classContainer">
+<div [ngClass]="classContainer" style="width: 100%">
   <div
     class="card__content_container"
     [nbSpinner]="loading"
     nbSpinnerStatus="primary"
   >
     <div class="header__card">
-      <div
-        class="text__gradient"
-        *ngIf="gradientString !== ''"
-        [ngStyle]="{
-          'background-image': gradientString,
-          padding: 15 + 'px',
-          'padding-left': '15px'
-        }"
-      >
-        {{ LABEL }}
+      <div style="flex-grow: 1" (click)="toggleExpan()">
+        <div
+          class="text__gradient"
+          *ngIf="gradientString !== ''"
+          [ngStyle]="{
+            'background-image': gradientString,
+            padding: 15 + 'px',
+            'padding-left': '15px'
+          }"
+
+        >
+          {{ LABEL }}
+        </div>
       </div>
 
-      <div style="display: flex">
+      <div style="display: flex" (click)="toggleExpan(true)">
         <div
           class="button_header_card"
-          *ngIf="!disableButton"
-          [ngClass]="
-            !isDev ? 'button_header_card disable' : 'button_header_card'
-          "
+          *ngIf="actionBtn.length !== 0"
+          [ngClass]="'button_header_card'"
           (click)="handleClickBtnHeader()"
         >
           <span style="display: flex">
@@ -42,13 +43,11 @@
         </div>
         <nb-icon
           style="cursor: pointer"
-          (click)="toggleExpan()"
           *ngIf="!isOpen"
           icon="arrow-ios-downward-outline"
         ></nb-icon>
         <nb-icon
           style="cursor: pointer"
-          (click)="toggleExpan()"
           *ngIf="isOpen"
           icon="arrow-ios-upward-outline"
         ></nb-icon>
