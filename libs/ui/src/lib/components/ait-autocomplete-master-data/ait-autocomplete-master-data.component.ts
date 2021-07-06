@@ -574,14 +574,23 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       if (!values.includes(value)) {
         this.selectOne = {};
         this.inputControl.patchValue('');
+        this.dataFilter = [1];
+        this.filteredOptions$ = of(this.dataSourceDf)
+
       }
-      else {
+
+      //
+    }
+    else {
+      if (!values.includes(value)) {
+        console.log(this.dataSource, this.dataSourceDf, this.DataSource);
+        this.dataFilter = [1];
+
+        this.filteredOptions$ = of(this.dataSourceDf)
+
         this.inputControl.patchValue(this.selectOne?.value || '');
 
       }
-    }
-    else {
-
     }
 
     return values.includes(value);
@@ -639,7 +648,11 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
           });
           this.data = this.dataSourceDf;
           this.filteredOptions$ = of(this.dataSourceDf)
+
           this.onInput.emit({ value: '' })
+        }
+        else {
+          this.filteredOptions$ = of(this.dataSourceDf)
         }
       }
     }, 100)
@@ -736,6 +749,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     else {
       if (value === '') {
         this.defaultValue = [];
+        this.dataFilter = [1]
         this.filteredOptions$ = of(this.DataSource);
         this.watchValue.emit({ value: [] })
       } else {
