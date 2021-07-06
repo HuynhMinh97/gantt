@@ -132,6 +132,9 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
         // const element = changes[key].currentValue;
+        if (key === 'required') {
+          console.log(this.required)
+        }
         if (key === 'isReset') {
           if (this.isReset) {
             this.selectItems = [];
