@@ -211,7 +211,9 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
       this.formatTransfrom = null;
     }
 
-    this.errors = this.getMessage();
+    if (this.required) {
+      this.errors = this.getMessage();
+    }
   }
 
   onBeforeInput = (e) => {
