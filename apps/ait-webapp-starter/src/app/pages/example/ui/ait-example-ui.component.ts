@@ -170,7 +170,8 @@ export class AitUiComponent extends AitBaseComponent {
   }
 
 
-  getValueMasterData= (value) => {
+  getValueMasterData = (value) => {
+    console.log(value)
     this.result.master_data = value
   }
 

@@ -570,18 +570,24 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   isSelectMatch = (value) => {
     const values = this.dataSourceDf.map(m => m?.value);
     if (this.maxItem === 1) {
-
+      this.filteredOptions$ = of(this.dataSourceDf)
       if (!values.includes(value)) {
         this.selectOne = {};
         this.inputControl.patchValue('');
-      }
-      else {
-        this.inputControl.patchValue(this.selectOne?.value || '');
+        this.dataFilter = [1];
 
       }
+
+      //
+      // console.log(this.dataSource, this.dataSourceDf, this.DataSource);
     }
     else {
+      if (!values.includes(value)) {
+        this.filteredOptions$ = of(this.dataSourceDf)
 
+        this.inputControl.patchValue(this.selectOne?.value || '');
+        this.dataFilter = [1];
+      }
     }
 
     return values.includes(value);
@@ -639,7 +645,11 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
           });
           this.data = this.dataSourceDf;
           this.filteredOptions$ = of(this.dataSourceDf)
+
           this.onInput.emit({ value: '' })
+        }
+        else {
+          this.filteredOptions$ = of(this.dataSourceDf)
         }
       }
     }, 100)
