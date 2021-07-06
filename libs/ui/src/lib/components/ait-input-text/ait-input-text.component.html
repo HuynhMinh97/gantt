@@ -36,7 +36,7 @@
       (input)="onChange($event.target.value)"
       [formControl]="inputCtrl"
       [class.isError]="isError"
-      style="border-color: #e4e9f2; padding-left: 5px !important"
+      style="border-color: #e4e9f2; "
       *ngIf="rows !== 1 && readonly"
       [maxLength]="length"
       readonly
@@ -56,7 +56,7 @@
       (input)="onChange($event.target.value)"
       [formControl]="inputCtrl"
       [class.isError]="isError"
-      style="border-color: #e4e9f2; padding-left: 5px !important"
+      style="border-color: #e4e9f2; "
       *ngIf="rows !== 1 && !readonly"
       [maxLength]="length"
       id="{{ ID('textarea') }}"
@@ -77,7 +77,7 @@
       (input)="onChange($event.target.value)"
       [formControl]="inputCtrl"
       [class.isError]="isError"
-      style="border-color: #e4e9f2; width: 100%; max-width: 100%;padding-left: 5px;"
+      style="border-color: #e4e9f2; width: 100%; max-width: 100%;padding-left: 10px;"
       id="{{ ID('input') }}"
     />
 
@@ -95,7 +95,7 @@
       (input)="onChange($event.target.value)"
       [formControl]="inputCtrl"
       [class.isError]="isError"
-      style="border-color: #e4e9f2; width: 100%; max-width: 100%;padding-left: 5px;"
+      style="border-color: #e4e9f2; width: 100%; max-width: 100%;padding-left: 10px;"
       id="{{ ID('input') }}"
     />
   </nb-form-field>
