@@ -24,6 +24,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   @Input() placeholder = '';
   @Input() defaultValue = null;
   @Output() watchValue = new EventEmitter();
+  @Output() lostFocus = new EventEmitter();
   // eslint-disable-next-line @angular-eslint/no-output-on-prefix
   @Output() onError = new EventEmitter();
 
@@ -149,7 +150,11 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   }
 
   handleFocusOut = () => {
-
+    if (this.inputCtrl.value === null || this.inputCtrl.value == '') {
+      this.lostFocus.emit(null);
+    } else {
+      this.lostFocus.emit(Number(this.inputCtrl.value));
+    }
 
     if (!this.currentNumber) {
       this.inputCtrl.patchValue(null);
