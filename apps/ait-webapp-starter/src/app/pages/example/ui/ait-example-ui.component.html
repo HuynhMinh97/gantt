@@ -162,7 +162,7 @@
           [styleLabel]="{ 'text-transform': 'initial' }"
           [placeholder]="'c_2003'"
           [label]="'c_2003'"
-          [excludedValue]="[{ _key: 'ja_JP', value: 'Tiếng Nhật' }]"
+          [dataSource]="[{ _key: 'ja_JP', value: 'Tiếng Nhật' }]"
           (watchValue)="getValueMasterData($event)"
           (onError)="result.error_data1 = $event.isValid"
           [isSubmit]="result.master1"
