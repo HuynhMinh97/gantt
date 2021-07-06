@@ -65,7 +65,6 @@
         "
       >
         <ait-input-text
-          [required]="true"
           [placeholder]="'c_2003'"
           [label]="'c_2003'"
           [guidance]="'c_2003'"
@@ -92,7 +91,6 @@
         <ait-space></ait-space>
         <ait-input-number
           [label]="'c_2003'"
-          [required]="true"
           [placeholder]="'c_2003'"
           [max]="9999999999999"
           [min]="1"
@@ -121,7 +119,7 @@
         <code>#Ouput : {{ result?.number_input }}</code>
         <ait-space></ait-space>
         <ait-datepicker
-          [required]="true"
+          [required]="false"
           [label]="'Datepicker'"
           [styleLabel]="{ 'text-transform': 'initial' }"
           [width]="'400px'"
@@ -150,7 +148,6 @@
         <ait-autocomplete-master
           [label]="'autocomplete master'"
           [placeholder]="'one'"
-          [required]="true"
           [guidance]="'whatever you want'"
           [collection]="'sys_caption'"
           (watchValue)="getValueMaster($event)"
@@ -163,7 +160,6 @@
         <ait-autocomplete-master-data
           [width]="'300px'"
           [styleLabel]="{ 'text-transform': 'initial' }"
-          [required]="true"
           [placeholder]="'c_2003'"
           [label]="'c_2003'"
           [excludedValue]="[{ _key: 'ja_JP', value: 'Tiếng Nhật' }]"
@@ -191,7 +187,6 @@
           [label]="'autocomplete master data'"
           [maxItem]="3"
           [placeholder]="'one'"
-          [required]="true"
           [guidance]="'c_2003'"
           [guidanceIcon]="'star'"
           [class]="'RESIDENCE_STATUS'"
