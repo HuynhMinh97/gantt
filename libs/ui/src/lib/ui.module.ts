@@ -180,7 +180,7 @@ export class AitUiModule {
     @Optional() @SkipSelf() parentModule?: AitUiModule,
 
   ) {
-    // console.log = () => { };
+    console.log = () => { };
     console.error = () => { }
     const environment: any = envService;
     const uri = environment?.API_PATH?.BASE_GRAPHQL_PREFIX;
