@@ -29,10 +29,15 @@ export class AitButtonComponent implements OnChanges {
   @Input() styleBtn = {};
   @Input() styleIcon = {};
   @Input() styleText = {}
+  @Input() id;
 
   @Input() title = '';
   @Input() toolTip = '';
   @Input() style = 'normal';
+
+  ID(element: string): string {
+    return this.id + '_' + element;
+  }
 
 
 

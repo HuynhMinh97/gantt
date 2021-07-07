@@ -36,7 +36,6 @@ export class AitBinaryDataService extends AitBaseService {
           size: true,
           name: true,
         });
-        console.log(file_key, req)
         return result;
       } catch (error) {
         console.log(error);

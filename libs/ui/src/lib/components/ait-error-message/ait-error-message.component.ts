@@ -6,7 +6,8 @@ import { Component, Input } from '@angular/core';
   template: `
     <ng-container>
         <div [ngClass]="classContainer">
-        <div *ngFor="let err of errors" style="color: red; font-style: italic; margin-top: 5px" [ngStyle]="style">
+        <div
+        *ngFor="let err of errors" style="color: red; font-style: italic; margin-top: 5px" [ngStyle]="style" [id]="ID('error_message')">
             <span>{{ err }}</span>
         </div>
         </div>
@@ -17,4 +18,9 @@ export class AitErrorMessageComponent {
   @Input() errors: any[];
   @Input() style: any;
   @Input() classContainer;
+  @Input() id;
+  ID(element: string): string {
+    return this.id + '_' + element;
+  }
+
 }

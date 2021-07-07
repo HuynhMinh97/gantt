@@ -1,9 +1,8 @@
 <div [ngClass]="classContainer" style="max-width: 400px">
   <ait-label [label]="label" [required]="required" *ngIf="label"></ait-label>
-
   <div
     class="input__container"
-    style="margin-top: 8px; width: 100%;background-color: #fff;"
+    style="margin-top: 8px; width: 100%; background-color: #fff"
     [ngClass]="{ isError: isError }"
   >
     <div
@@ -28,6 +27,8 @@
       nbPrefix
     >
       <ait-chip
+        [nbTooltip]="getDataTooltip(o?._key)"
+        [nbTooltipTrigger]="isShowTooltip ? 'hover' : 'noop'"
         [title]="o?.value"
         *ngFor="let o of selectItems"
         (action)="removeItems(chip)"
@@ -36,6 +37,24 @@
     </div>
     <input
       [formControl]="inputControlMaster"
+      (click)="handleClick()"
+      fullWidth
+      nbInput
+      #input
+      [maxlength]="maxLength"
+      type="text"
+      class="search"
+      [placeholder]="getPlaceholder()"
+      (input)="handleInput($event.target)"
+      (keydown.enter)="enterItems(input.value); input.value = ''"
+      (keydown.tab)="enterItems(input.value); input.value = ''"
+      (focusout)="outFocus()"
+      *ngIf="!disabled"
+    />
+    <input
+      [formControl]="inputControlMaster"
+      *ngIf="disabled"
+      disabled
       (click)="handleClick()"
       fullWidth
       nbInput
@@ -61,7 +80,11 @@
     </div>
   </div>
 
-  <div class="suggest__wrapper" [ngStyle]="{ width: '100%' }" *ngIf="filteredData.length !== 0 && isOpenSuggest">
+  <div
+    class="suggest__wrapper"
+    [ngStyle]="{ width: '100%' }"
+    *ngIf="filteredData.length !== 0 && isOpenSuggest"
+  >
     <span class="caption">{{ getTitle() }}</span>
     <div class="suggestion__data" [ngStyle]="{ width: '100%' }">
       <ait-chip

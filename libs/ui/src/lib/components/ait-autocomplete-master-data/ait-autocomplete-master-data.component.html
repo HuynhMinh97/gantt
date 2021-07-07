@@ -78,7 +78,7 @@
         (keydown.enter)="enter()"
       />
 
-      <div class="autocompleteeeee" *ngIf="MAXITEM !== 1 && isOpenAutocomplete && dataFilter.length !== 0">
+      <div class="autocompleteeeee emptyy" *ngIf="MAXITEM !== 1 && isOpenAutocomplete && dataFilter.length !== 0">
         <div
           *ngFor="let option of filteredOptions$ | async"
           class="option__container"
@@ -108,7 +108,7 @@
         </div>
       </div>
       <div
-        class="autocompleteeeee"
+        class="autocompleteeeee emptyy"
         *ngIf="MAXITEM === 1 && isOpenAutocomplete && dataFilter.length !== 0"
       >
         <div

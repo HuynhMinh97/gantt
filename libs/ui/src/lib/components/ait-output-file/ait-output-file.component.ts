@@ -64,7 +64,6 @@ export class AitOutputFileComponent implements OnChanges {
         if (element.currentValue?.length !== 0 && key === 'fileKeys') {
           this.fileService.getFilesByFileKeys(element.currentValue).then(r => {
             if (r?.status === RESULT_STATUS.OK) {
-              console.log(r.data)
               this.files = r.data;
             }
           });
