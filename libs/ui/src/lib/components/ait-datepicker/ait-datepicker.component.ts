@@ -294,7 +294,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
       this.format = this.getFormat();
 
       if (formatTime) {
-
+        console.log(AitAppUtils.isValidDate(this.dateInput) , typeof this.dateInput === 'number',this.defaultValue)
         if (AitAppUtils.isValidDate(this.dateInput) || typeof this.dateInput === 'number') {
           if (this.dateInput) {
             let dateFormat;

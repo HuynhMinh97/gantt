@@ -150,6 +150,14 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
 
   handleFocusOut = () => {
 
+    if (this.isReset) {
+      this.currentNumber = null;
+      this.exactedValue = null;
+      this.inputCtrl.patchValue(null);
+      this.isReset = false;
+      this.watchValue.emit(null);
+    }
+
 
     if (!this.currentNumber) {
       this.inputCtrl.patchValue(null);
