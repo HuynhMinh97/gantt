@@ -161,7 +161,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
     const res = [];
     arr.forEach(item => {
       if (!res.includes(item?.value)) {
-          res.push(item)
+        res.push(item)
       }
     })
     return AitAppUtils.getArrayNotFalsy(res);
@@ -276,9 +276,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
 
   getDefaultValueByLang = async (keys: string[]) => {
     const condition = {
-      _key: {
-        value: keys
-      }
+      _key: keys[0]
     }
     const returnFields = {
       _key: true,
@@ -287,7 +285,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
 
     this.masterDataService.find(condition, returnFields, this.collection).then(r => {
       if (r?.status === RESULT_STATUS.OK) {
-        const result = r.data;
+        const result = r.data.map(m => ({ ...m, value: m?.name }));
         this.selectItems = [...(result || []), ...this.storeDataDraft];
       }
     })
