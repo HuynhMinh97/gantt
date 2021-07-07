@@ -101,7 +101,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Input() guidance = ''
   @Input() guidanceIcon = 'info-outline';
   @Input() excludedValue: any[] = [];
-  @Input() dataSource: any[] = [];
+  @Input() dataSource: any[];
   @Input() collection = 'sys_master_data';
   @Input() targetValue = 'name';
   @Input() classContainer;
@@ -114,7 +114,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Output() onError = new EventEmitter();
   currentValue = '';
   dataFilter = [1];
-
 
 
   errors = []
@@ -157,7 +156,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   }
 
   get VALUE(): string {
-    // console.log(this.selectOne?.value, this.defaultValue[0]?.value, '')
+    // //console.log(this.selectOne?.value, this.defaultValue[0]?.value, '')
     if (!this.defaultValue) {
       return this.selectOne?.value || ''
     }
@@ -382,7 +381,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   usingGraphQL = async (cond, hasClass = true) => {
     let dataMaster = [];
-    if (this.dataSource.length !== 0) {
+    if (this.dataSource) {
       dataMaster = this.dataSource;
     }
     else {
@@ -521,8 +520,9 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   };
 
   displayOptions = () => {
-    const res2 = this.optionSelected.map((m) => m?.value || '');
-    return this.optionSelected.length !== 0 ? res2.join(', ') : '';
+    const target = Array.from(new Set(this.optionSelected.map(m => m.value)));
+    const res2 = target.map((m) => m || '');
+    return target.length !== 0 ? res2.join(', ') : '';
   };
 
   getFilteredDataSource = () => {
@@ -574,26 +574,27 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       if (!values.includes(value)) {
         this.selectOne = {};
         this.inputControl.patchValue('');
-        this.dataFilter = [1];
-        this.filteredOptions$ = of(this.dataSourceDf)
-
       }
-
-      //
-    }
-    else {
-      if (!values.includes(value)) {
-        console.log(this.dataSource, this.dataSourceDf, this.DataSource);
-        this.dataFilter = [1];
-
-        this.filteredOptions$ = of(this.dataSourceDf)
-
+      else {
         this.inputControl.patchValue(this.selectOne?.value || '');
 
       }
     }
+    else {
+
+    }
 
     return values.includes(value);
+  }
+
+  getUniqueSelection = (arr: any[]) => {
+    const res = [];
+    arr.forEach(item => {
+      if (!res.includes(item?.value)) {
+        res.push(item)
+      }
+    })
+    return AitAppUtils.getArrayNotFalsy(res);
   }
 
 
@@ -601,7 +602,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @HostListener('document:click', ['$event'])
   clickout(event) {
     if (!this.isReadOnly) {
-      if (this.inputContainer.nativeElement.contains(event.target)) {
+      if (this.inputContainer?.nativeElement.contains(event.target)) {
         if (this.maxItem === 1) {
           this.data = this.dataSourceDf;
           this.filteredOptions$ = of(this.dataSourceDf);
@@ -648,12 +649,13 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
           });
           this.data = this.dataSourceDf;
           this.filteredOptions$ = of(this.dataSourceDf)
-
           this.onInput.emit({ value: '' })
         }
-        else {
-          this.filteredOptions$ = of(this.dataSourceDf)
-        }
+      }
+      else {
+        this.watchValue.emit({
+          value: this.optionSelected,
+        });
       }
     }, 100)
     this.outFocusValues.emit(true);
@@ -749,7 +751,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     else {
       if (value === '') {
         this.defaultValue = [];
-        this.dataFilter = [1]
         this.filteredOptions$ = of(this.DataSource);
         this.watchValue.emit({ value: [] })
       } else {
@@ -793,8 +794,8 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   }
 
   getSelectedItems = (data: any[]) => {
-
-    if (data.length === 1) {
+    const target = Array.from(new Set(data.map((m) => m?.value)));
+    if (target.length === 1) {
       const statement = data[0]?.value;
       return statement;
     } else if (data.length !== 1) {
