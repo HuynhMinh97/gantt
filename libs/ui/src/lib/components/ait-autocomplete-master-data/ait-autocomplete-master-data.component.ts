@@ -101,7 +101,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Input() guidance = ''
   @Input() guidanceIcon = 'info-outline';
   @Input() excludedValue: any[] = [];
-  @Input() dataSource: any[] = [];
+  @Input() dataSource: any[];
   @Input() collection = 'sys_master_data';
   @Input() targetValue = 'name';
   @Input() classContainer;
@@ -114,7 +114,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Output() onError = new EventEmitter();
   currentValue = '';
   dataFilter = [1];
-
 
 
   errors = []
@@ -382,7 +381,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   usingGraphQL = async (cond, hasClass = true) => {
     let dataMaster = [];
-    if (this.dataSource.length !== 0) {
+    if (this.dataSource) {
       dataMaster = this.dataSource;
     }
     else {
@@ -652,6 +651,11 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
           this.filteredOptions$ = of(this.dataSourceDf)
           this.onInput.emit({ value: '' })
         }
+      }
+      else {
+        this.watchValue.emit({
+          value: this.optionSelected,
+        });
       }
     }, 100)
     this.outFocusValues.emit(true);

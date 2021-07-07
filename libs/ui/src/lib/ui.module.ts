@@ -181,7 +181,7 @@ export class AitUiModule {
 
   ) {
     // console.log = () => { };
-    // console.error = () => { }
+    console.error = () => { }
     const environment: any = envService;
     const uri = environment?.API_PATH?.BASE_GRAPHQL_PREFIX;
     if (!uri) {
