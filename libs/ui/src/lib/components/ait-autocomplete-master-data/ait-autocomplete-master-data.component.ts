@@ -291,9 +291,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     if (this.defaultValue && this.defaultValue.length !== 0) {
 
       if (this.MAXITEM !== 1) {
-        const typeDF = AitAppUtils.getArrayNotFalsy(this.defaultValue);
-
-
+        const typeDF = this.getUniqueSelection(AitAppUtils.getArrayNotFalsy(this.defaultValue));
         const findByKeys = typeDF.map((m) => {
           const result = this.dataSourceDf.find(
             (f) => f._key === m?._key || f.code === m?._key
@@ -302,7 +300,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         });
         this.optionSelected = [...AitAppUtils.getArrayNotFalsy(findByKeys)].filter(
           (f) => !!f
-        );
+        )
 
         if (!this.disableOutputDefault) {
 
@@ -589,12 +587,14 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   getUniqueSelection = (arr: any[]) => {
     const res = [];
+    const target = [];
     arr.forEach(item => {
       if (!res.includes(item?.value)) {
-        res.push(item)
+        res.push(item?.value)
+        target.push(item)
       }
     })
-    return AitAppUtils.getArrayNotFalsy(res);
+    return AitAppUtils.getArrayNotFalsy(target);
   }
 
 
@@ -799,10 +799,9 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       const statement = data[0]?.value;
       return statement;
     } else if (data.length !== 1) {
-      const statements = data.map((m) => m?.value);
 
-      const statement = statements[0];
-      return statement + `（+${statements.length - 1} items）`;
+      const statement = target[0];
+      return statement + `（+${target.length - 1} items）`;
     }
     return '';
   };
