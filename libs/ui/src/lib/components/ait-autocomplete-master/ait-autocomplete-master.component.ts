@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { RESULT_STATUS } from '@ait/shared';
+import { CompanyInfoDto, RESULT_STATUS } from '@ait/shared';
 import {
   AfterViewChecked,
   ChangeDetectorRef, Component, Input, OnInit, Output, EventEmitter, OnChanges, SimpleChanges, ElementRef, ViewChild
@@ -96,6 +96,9 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   @Input() collection;
   @Input() dataSource: any[] = [];
   @Input() classContainer;
+  @Input() dataTooltip = [];
+  @Input() disabled = false;
+  isShowTooltip = false;
 
   getCaptions = () => this.translateService.translate(this.guidance);
 
@@ -113,11 +116,38 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
     return opt?.value;
   }
 
+  getDataTooltip = (_key: string) => {
+    const company: CompanyInfoDto = this.dataTooltip.find(f => f._key === _key);
+    const result = [
+      { field: 'address', value: company?.address },
+      { field: 'occupation', ...company?.occupation },
+      { field: 'work', ...company?.work },
+    ]
+
+    if (result.map(m => this.getContent(m)).filter(f => !!f).length > 0) {
+      this.isShowTooltip = true;
+    }
+    else {
+      this.isShowTooltip = false;
+    }
+    const comma = this.translateService.translate('s_0001');
+    return result.map(m => this.getContent(m)).filter(f => !!f).join(comma || '、')
+  }
+
+  getContent = (data) => {
+    const fieldName = {
+      address: '住所',
+      occupation: '職種',
+      work: '作業'
+    }
+    return data?.value ? `・${this.translateService.translate(fieldName[data?.field])}：${data.value}` : '';
+  }
+
   checkDefaultValue(data) {
     if (data.length > 1) {
       return false;
     } else {
-      return AitAppUtils.isObjectValueEmpty(data[0]);
+      return AitAppUtils.isObjectValueEmpty(data[0] || {});
     }
   }
 
@@ -126,6 +156,16 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   }
 
   compareDeep = (agr1: any, agr2: any) => JSON.stringify(agr1) === JSON.stringify(agr2);
+
+  getUniqueSelection = (arr: any[]) => {
+    const res = [];
+    arr.forEach(item => {
+      if (!res.includes(item?.value)) {
+          res.push(item)
+      }
+    })
+    return AitAppUtils.getArrayNotFalsy(res);
+  }
 
   ngOnChanges(changes: SimpleChanges) {
 
@@ -375,35 +415,37 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
 
   removeItems = (info) => {
 
-    if (this.maxItem === 1) {
-      this.selectItems = [];
-      this.watchValue.emit({ value: [] });
-    }
-    else {
-      const find = this.DataSource.find(f => f._key === info?._key);
-
-
-      if (!find) {
-        this.selectItems = this.selectItems.filter(f => f._key !== info?._key);
-
-        this.watchValue.emit({ value: this.selectItems.map(m => ({ _key: m?._key, value: m?.value })) });
+    if (!this.disabled) {
+      if (this.maxItem === 1) {
+        this.selectItems = [];
+        this.watchValue.emit({ value: [] });
       }
       else {
-        this.selectItems = this.selectItems.filter(f => f._key !== find?._key);
+        const find = this.DataSource.find(f => f._key === info?._key);
 
-        this.watchValue.emit({ value: this.selectItems.map(m => ({ _key: m?._key, value: m?.value })) });
-      }
 
-    }
-    this.getFilteredData()
-    if (this.required) {
-      if (this.selectItems.length === 0) {
-        const err = this.translateService.getMsg('E0001').replace('{0}', this.getFieldName());
-        this.isError = true;
-        this.errors = [err]
+        if (!find) {
+          this.selectItems = this.selectItems.filter(f => f._key !== info?._key);
+
+          this.watchValue.emit({ value: this.selectItems.map(m => ({ _key: m?._key, value: m?.value })) });
+        }
+        else {
+          this.selectItems = this.selectItems.filter(f => f._key !== find?._key);
+
+          this.watchValue.emit({ value: this.selectItems.map(m => ({ _key: m?._key, value: m?.value })) });
+        }
+
       }
-      else {
-        this.clearErrors();
+      this.getFilteredData()
+      if (this.required) {
+        if (this.selectItems.length === 0) {
+          const err = this.translateService.getMsg('E0001').replace('{0}', this.getFieldName());
+          this.isError = true;
+          this.errors = [err]
+        }
+        else {
+          this.clearErrors();
+        }
       }
     }
   }
