@@ -121,7 +121,6 @@ export class AitMasterDataService extends AitBaseService {
       request['condition'] = condition;
     }
     request['collection'] = collection || 'sys_master_data';
-    console.log('119', request)
 
     return await this.query(GRAPHQL.FIND_SYSTEM, request, returnFields);
   }

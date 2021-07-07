@@ -93,7 +93,6 @@
           [label]="'c_2003'"
           [placeholder]="'c_2003'"
           [max]="9999999999999"
-          [min]="1"
           [length]="5"
           [format]="'###,###,###.000'"
           [guidance]="'whatever you want'"
@@ -129,7 +128,6 @@
           (watchValue)="getValueDatePicker($event)"
           [format]="'dd/MM/yyyy'"
           [guidanceIcon]="'star'"
-          [defaultValue]="date"
           [isSubmit]="result.submit_datepicker"
         ></ait-datepicker>
 
@@ -162,7 +160,7 @@
           [styleLabel]="{ 'text-transform': 'initial' }"
           [placeholder]="'c_2003'"
           [label]="'c_2003'"
-          [dataSource]="[{ _key: 'ja_JP', value: 'Tiếng Nhật' }]"
+          [dataSource]="[]"
           (watchValue)="getValueMasterData($event)"
           (onError)="result.error_data1 = $event.isValid"
           [isSubmit]="result.master1"
