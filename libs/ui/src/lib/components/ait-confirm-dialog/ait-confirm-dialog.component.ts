@@ -26,13 +26,6 @@ export class AitConfirmDialogComponent extends AitBaseComponent {
   ) {
     super(store, authService, apollo, userService, envService);
 
-    store.subscribe(s => {
-      const Warning = s.commonReducer.commonMessages?.I;
-      const til = Warning.find(f => f.code === '0004');
-      this.title = til?.message[this.lang];
-    })
-    // console.log(this.allMessages)
-    //
   }
 
   closeDialog(event: boolean) {

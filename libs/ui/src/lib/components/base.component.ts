@@ -194,7 +194,6 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
   // api call to get user info
   getUserInfo = async (user_id: string) => {
-    console.log(this.company)
     if (user_id && user_id !== '') {
       let user = {};
       const rest_user: any = await this.apollo.query({
