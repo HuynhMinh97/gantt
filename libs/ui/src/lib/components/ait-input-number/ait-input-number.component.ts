@@ -43,7 +43,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   @Input() classContainer;
 
 
-  currentNumber = '';
+  currentNumber: any = '';
   previousValue: any = '';
   symbol = '円';
 
@@ -150,25 +150,50 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   }
 
   handleFocusOut = () => {
-    if (this.inputCtrl.value === null || this.inputCtrl.value == '') {
-      this.lostFocus.emit(null);
-    } else {
-      this.lostFocus.emit(Number(this.inputCtrl.value));
+
+    if (this.isReset) {
+      this.currentNumber = null;
+      this.exactedValue = null;
+      this.inputCtrl.patchValue(null);
+      this.isReset = false;
+      this.watchValue.emit(null);
     }
 
-    if (!this.currentNumber) {
+    if (this.inputCtrl.value === null || this.inputCtrl.value === '') {
+      this.lostFocus.emit(null);
+    } else {
+      this.lostFocus.emit(this.replaceAll(this.inputCtrl.value));
+    }
+
+    if (this.currentNumber === null && this.inputCtrl.value === '') {
       this.inputCtrl.patchValue(null);
       this.checkReq(null);
       return;
     }
+
     if (this.isCurrency) {
       this.inputCtrl.patchValue(this.numberPipe.transform(this.replaceAll(this.currentNumber), this.format) + this.symbol);
     }
     else {
-      // console.log(this.currentNumber)
-      const target = this.numberPipe.transform(this.replaceAll(this.currentNumber), this.format);
-      // console.log(target)
-      this.inputCtrl.setValue(target);
+      if (this.inputCtrl.value === null || this.inputCtrl.value === undefined) {
+        this.inputCtrl.setValue(null);
+      }
+      else if (this.inputCtrl.value === 0 || this.inputCtrl.value === '0') {
+        this.inputCtrl.setValue(0);
+      }
+      else {
+        if (this.inputCtrl.value) {
+          const target = this.numberPipe.transform(this.replaceAll(this.currentNumber), this.format);
+          this.inputCtrl.setValue(target);
+        }
+        else {
+          this.inputCtrl.setValue(null);
+        }
+
+
+      }
+
+
     }
   }
   slugify = str => {
@@ -212,7 +237,6 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   getFieldName = () => this.translateService.translate(this.label);
 
   checkReq = (value?: any) => {
-    console.log(value)
     this.errors = [];
     if (this.required) {
       if (!value) {
@@ -237,7 +261,6 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   }
 
   onInputHandle = (text) => {
-    console.log(text)
     if (text !== '') {
       const transform: any = Number(text) < this.max ? text : this.max;
       const res = Number(transform) > this.min ? transform : this.min;
@@ -245,7 +268,8 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
         this.inputCtrl.patchValue(res);
         this.exactedValue = res;
         this.currentNumber = res;
-        this.onInput()
+        this.onInput();
+        this.checkReq(text);
       }, 50)
     }
     else {
@@ -254,8 +278,9 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
       this.exactedValue = text;
       this.currentNumber = text;
       this.onInput();
+      this.checkReq(text);
     }
-    this.checkReq(text);
+
   }
 
 

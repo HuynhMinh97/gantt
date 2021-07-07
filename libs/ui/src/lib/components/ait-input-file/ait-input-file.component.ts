@@ -84,7 +84,6 @@ export class AitInputFileComponent implements OnInit, OnChanges {
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
         const element = changes[key].currentValue;
-        console.log(element,key)
         if (key === 'isReset') {
           if (this.isReset) {
             this.fileDatas = [];
@@ -181,13 +180,11 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
 
     })
-    console.log(this.fileKeys)
 
 
     if (this.fileKeys && this.fileKeys.length !== 0) {
       this.fileUploadService.getFilesByFileKeys(this.fileKeys || []).then((r: any) => {
         if (r?.status === RESULT_STATUS.OK) {
-          console.log(r.data)
           this.displayedFiles = r.data;
         }
       })
@@ -329,7 +326,6 @@ export class AitInputFileComponent implements OnInit, OnChanges {
       if (this.checkFileExt(fileReq[0])) {
         this.submitMultipleForm().then(
           res => {
-            console.log(res)
             if (res.status !== 0) {
 
               this.fileDatas = [...this.fileDatas, { ...res.data[0], progress: 0 }];

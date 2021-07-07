@@ -7,7 +7,7 @@ import { AitTranslationService } from '../../services';
   selector: 'ait-input-text',
   templateUrl: './ait-input-text.component.html',
   styleUrls: ['./ait-input-text.component.scss'],
-  moduleId : 'ait-input-text'
+  moduleId: 'ait-input-text'
 })
 export class AitTextInputComponent implements OnChanges {
   @Input() status: NbComponentStatus = null;
@@ -49,7 +49,7 @@ export class AitTextInputComponent implements OnChanges {
   constructor(private translateService: AitTranslationService) {
     this.inputCtrl = new FormControl('');
   }
-  ID(element : string): string {
+  ID(element: string): string {
     return this.id + '_' + element;
   }
 
@@ -59,7 +59,9 @@ export class AitTextInputComponent implements OnChanges {
         if (key === 'defaultValue') {
           this.inputCtrl.setValue(this.defaultValue);
           this.watchValue.emit(this.defaultValue);
-          this.onError.emit({ isValid: !!this.defaultValue && this.defaultValue.length !== 0 });
+          if (this.required) {
+            this.onError.emit({ isValid: !!this.defaultValue && this.defaultValue.length !== 0 });
+          }
         }
         if (key === 'isSubmit') {
           if (this.isSubmit) {
@@ -91,6 +93,9 @@ export class AitTextInputComponent implements OnChanges {
         this.onError.emit({ isValid: true });
 
       }
+    }
+    else {
+      // this.onError.emit({ isValid: true });
     }
     this.watchValue.emit(value);
   }

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AitAutoCompleteMasterComponent } from './ait-autocomplete-master.component';
-import { NbIconModule, NbInputModule } from '@nebular/theme';
+import { NbIconModule, NbInputModule, NbTooltipModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { AitChipModule } from '../ait-chip/ait-chip.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -19,7 +19,8 @@ import { AitLabelModule } from '../ait-label/ait-label.module';
     FormsModule,
     ReactiveFormsModule,
     AitErrorMessageModule,
-    AitLabelModule
+    AitLabelModule,
+    NbTooltipModule
   ],
   exports: [AitAutoCompleteMasterComponent],
   providers: [],
