@@ -26,7 +26,7 @@ export class AitOutputTextComponent implements OnChanges {
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
         if (key === 'valueArray') {
-          const target = AitAppUtils.getArrayNotFalsy(this.valueArray);
+          const target = Array.from(new Set(AitAppUtils.getArrayNotFalsy(this.valueArray)));
           const comma = this.translateService.translate('s_0001');
           if (target.length !== 0) {
             const m = comma !== 's_0001' ? comma : ','
