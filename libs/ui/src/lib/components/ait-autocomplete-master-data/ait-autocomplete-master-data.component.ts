@@ -114,9 +114,11 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Output() onError = new EventEmitter();
   currentValue = '';
   dataFilter = [1];
+  @Input() errorMessages;
 
 
-  errors = []
+
+  componentErrors = []
 
   isHideLabel = false;
   isClickOption = false;
@@ -170,6 +172,9 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   compareDeep = (agr1: any, agr2: any) => JSON.stringify(agr1) === JSON.stringify(agr2);
 
+  messagesError = () => Array.from(new Set([...this.componentErrors, ...(this.errorMessages || [])]))
+
+
   ngOnChanges(changes: SimpleChanges) {
     if (this.parentCode) {
       this.selectOne = {};
@@ -177,6 +182,33 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     }
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
+
+          if (key === 'errorMessages') {
+            console.log(this.messagesError())
+          if (this.messagesError().length !== 0) {
+            this.isError = true;
+            this.onError.emit({ isValid: false });
+          }
+          else {
+            const check = this.maxItem === 1 ? !this.selectOne?.value : this.optionSelected.length === 0;
+
+            if (this.required) {
+              if (!check) {
+                this.isError = false;
+                this.onError.emit({ isValid: true });
+              }
+              else {
+                this.onError.emit({ isValid: false });
+              }
+            }
+            else {
+              this.isError = false;
+              this.onError.emit({ isValid: true });
+            }
+
+
+          }
+        }
 
         if (key === 'isSubmit') {
           if (this.isSubmit) {
@@ -506,7 +538,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     if (this.required) {
       if (this.optionSelected.length === 0) {
         const err = this.getMsg('E0001').replace('{0}', this.getFieldName());
-        this.errors = [err]
+        this.componentErrors = [err]
         this.onError.emit({ isValid: false });
       }
       else {
@@ -649,10 +681,12 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
           });
           this.data = this.dataSourceDf;
           this.filteredOptions$ = of(this.dataSourceDf)
+
           this.onInput.emit({ value: '' })
         }
       }
       else {
+
         this.watchValue.emit({
           value: this.optionSelected,
         });
@@ -669,7 +703,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       if (check) {
         const err = this.getMsg('E0001').replace('{0}', this.getFieldName());
         this.isError = true;
-        this.errors = [err]
+        this.componentErrors = [err]
         this.onError.emit({ isValid: false });
 
       }
@@ -707,7 +741,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
 
   clearErrors = () => {
-    this.errors = [];
+    this.componentErrors = [];
     this.isError = false;
   }
 
@@ -718,7 +752,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       if (value === '' && this.optionSelected.length === 0) {
         const err = this.getMsg('E0001').replace('{0}', this.getFieldName());
         this.isError = true;
-        this.errors = [err];
+        this.componentErrors = [err];
         this.onError.emit({ isValid: false });
 
       }
@@ -781,7 +815,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       if (!this.selectOne?.value) {
         this.isError = true;
         const err = this.getMsg('E0001').replace('{0}', this.getFieldName());
-        this.errors = [err];
+        this.componentErrors = [err];
         this.onError.emit({ isValid: false });
 
       }
