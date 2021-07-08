@@ -14,6 +14,7 @@
     style="margin-top: 8px; border-radius: 5px"
   >
     <input
+      [id]="ID('input_number_readonly')"
       *ngIf="isReadOnly"
       nbInput
       fullWidth
@@ -29,14 +30,14 @@
       style="padding-top: 0; padding-bottom: 0; font-size: 12px"
       [style.width]="width"
       [style.height]="height"
-      id="{{ ID('input') }}"
+      autocomplete="doNotAutoComplete"
     />
     <input
-      id="ait-input-number"
+      [id]="ID('input_number')"
+      autocomplete="doNotAutoComplete"
       *ngIf="!isReadOnly"
       pattern="[0-9\.]+"
       nbInput
-      id="{{ ID('input') }}"
       #inputNumber
       fullWidth
       fieldSize="medium"
@@ -71,5 +72,5 @@
       </p>
     </div>
   </div>
-  <ait-error-message [errors]="errors"></ait-error-message>
+  <ait-error-message [errors]="messagesError()" [id]="id"></ait-error-message>
 </div>

@@ -43,6 +43,7 @@ export class AitUiComponent extends AitBaseComponent {
   }
 
   date = Date.now();
+  errors = [];
 
   buttonGroups = {
     one: [
@@ -156,16 +157,16 @@ export class AitUiComponent extends AitBaseComponent {
 
   ///methods
 
-  getValueTextInput= (value) => {
+  getValueTextInput = (value) => {
     console.log(value)
     this.result.text_input = value
   }
 
-  getValueNumberInput= (value) => {
+  getValueNumberInput = (value) => {
     this.result.number_input = value
   }
 
-  getValueDatePicker= (value) => {
+  getValueDatePicker = (value) => {
     this.result.date_picker = value
   }
 
@@ -192,6 +193,14 @@ export class AitUiComponent extends AitBaseComponent {
   }
   subMitMasterData2 = () => {
     this.result.master2 = true;
+  }
+
+  subMitFile = () => {
+    this.result.file = true;
+    setTimeout(() => {
+      this.result.file = false;
+
+    }, 100)
   }
 
 
@@ -227,6 +236,12 @@ export class AitUiComponent extends AitBaseComponent {
   action = () => {
     console.log('hello from home component');
   };
+
+  getErrors = (value) => this.errors = [...this.errors, value];
+  removeSearch = (value) => {
+    console.log(value)
+    this.errors = this.errors.filter(f => f !== value);
+  }
 
   getValueInput(status: string, value: string) {
     console.log(status, value);

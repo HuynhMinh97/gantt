@@ -176,7 +176,7 @@
   cursor: pointer;
   background: #fff;
   &.isError {
-    border: 1px solid nb-theme(color-danger-500);
+    border: 1px solid nb-theme(color-danger-500) !important;
   }
   p {
     margin: 0;
