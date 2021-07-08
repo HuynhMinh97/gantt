@@ -44,7 +44,7 @@ export class AitDayJSService extends AitBaseService {
       const locale = this.getLocale(setting?.site_language || 'ja_JP');
       this.lang = setting?.site_language || 'ja_JP';
       this.offset = setting?.timezone || OFFSET[this.lang];
-      this.dateFormat = (setting?.date_format_display?.value.replace('yyyy', 'YYYY').replace('dd', 'DD') || 'YYYY/MM/DD') + ' HH:mm:ss';
+      this.dateFormat = (setting?.date_format_display?.value?.replace('yyyy', 'YYYY').replace('dd', 'DD') || 'YYYY/MM/DD') + ' HH:mm:ss';
       dayjs.locale(locale);// use locale
     });
 

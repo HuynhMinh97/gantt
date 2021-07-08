@@ -52,11 +52,6 @@ export class AitSignUpComponent extends AitBaseComponent implements OnInit {
       term: new FormControl(false),
     });
     this.env = _env;
-    store.pipe(select(getCaption)).subscribe(c => {
-      this.emailLabel = translateService.translate(this.emailLabel);
-      this.passwordLabel = translateService.translate(this.passwordLabel);
-      this.repeat_password = translateService.translate(this.repeat_password);
-    })
   }
   errors = {
     email: [],
@@ -112,7 +107,7 @@ export class AitSignUpComponent extends AitBaseComponent implements OnInit {
 
   getErrorEmailMessage = (value) => {
     const errorList = [
-      this.checkRequired(value, this.emailLabel), // method này mình dùng để check required
+      this.checkRequired(value, this.getFieldName(this.emailLabel)), // method này mình dùng để check required
       // this.checkMaxLength(value, 5), // method này dùng để check maxlength nè 😋😋
     ];
     this.setErrors({
@@ -122,8 +117,8 @@ export class AitSignUpComponent extends AitBaseComponent implements OnInit {
 
   getErrorPasswordMessage = (value) => {
     const errorList = [
-      this.checkRequired(value, this.passwordLabel),
-      this.checkMinLength(value, PASSWORD_LENGTH, this.passwordLabel),
+      this.checkRequired(value, this.getFieldName(this.passwordLabel)),
+      this.checkMinLength(value, PASSWORD_LENGTH, this.getFieldName(this.passwordLabel)),
     ];
     this.setErrors({
       password: errorList,
@@ -132,8 +127,8 @@ export class AitSignUpComponent extends AitBaseComponent implements OnInit {
 
   getErrorRepeatPasswordMessage = (value) => {
     const errorList = [
-      this.checkRequired(value, this.passwordLabel),
-      this.checkMinLength(value, PASSWORD_LENGTH, this.passwordLabel),
+      this.checkRequired(value, this.getFieldName(this.repeat_password)),
+      this.checkMinLength(value, PASSWORD_LENGTH, this.getFieldName(this.repeat_password)),
     ];
     this.setErrors({
       password_repeat: errorList,
@@ -141,48 +136,7 @@ export class AitSignUpComponent extends AitBaseComponent implements OnInit {
   };
 
 
-  // handleSignUp = () => {
-  //   this.isLoading = true;
-  //   this.clearErrors();
-  //   const { email, password, password_repeat, term } = this.signupCtrl.value;
-  //   if (password !== password_repeat) {
-  //     this.errors = [
-  //       ...this.errors,
-  //       { id: 'all', message: 'Password and password repeat are not matched' },
-  //     ];
-  //     this.isLoading = false;
-  //   } else if (!email || !password || !password_repeat) {
-  //     this.errors = [
-  //       ...this.errors,
-  //       { id: 'all', message: 'Please input full fields' },
-  //     ];
-  //     this.isLoading = false;
-  //   } else if (!term) {
-  //     this.errors = [
-  //       ...this.errors,
-  //       { id: 'term', message: 'あなたはまだ私たちのルールを受け入れていません' },
-  //     ];
-  //     this.isLoading = false;
-  //   } else {
-  //     this.authService.register({ email, password }).then((res) => {
-  //       if (res === undefined) {
-  //         this.errors = [
-  //           ...this.errors,
-  //           { id: 'term', message: 'Email was existed!' },
-  //         ];
-  //         this.isLoading = false;
-  //       }
-  //       if (res?.status === 400) {
-  //         this.errors = [...this.errors, { id: 'term', message: res?.message }];
-  //         this.isLoading = false;
-  //       } else {
-  //         setTimeout(() => {
-  //           this.loginHandle(email, password);
-  //         }, 500);
-  //       }
-  //     });
-  //   }
-  // };
+  getFieldName = (name: string) => this.translateService.translate(name || '');
 
   isErrors = () => {
     const { email, password, password_repeat, term, common } = this.errors;
@@ -213,7 +167,6 @@ export class AitSignUpComponent extends AitBaseComponent implements OnInit {
       if (!this.isErrors()) {
         this.isLoading = true;
         this.authService.register(email, password, this.env?.COMMON?.COMPANY_DEFAULT).then(result => {
-          console.log(result)
           if (result && result?.token) {
             this.showToastr(
               this.translateService.translate(

@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/no-output-on-prefix */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
@@ -36,6 +37,10 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   displayedFiles = []; // _keys of files
   currentBase64 = '';
 
+  deletedKeys = [];
+  savedData = [];
+  dataDisplayDf = [];
+
 
 
   fileRequest: any = {};
@@ -72,13 +77,23 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   @Input() margin_top = 0;
   @Input() fileTypes = '';
   @Input() maxFiles: number;
-  @Input() maxSizeBytes: number; // bytes
-  @Input() isReset: boolean;
+  @Input() maxSize: number; // bytes
+  @Input() isReset = false;
   isImgErr = false;
   @Input() isError = false;
   @Input() required = false;
-  errors = []
+  componentErrors = []
   @Input() classContainer;
+  @Input() id;
+  @Input() errorMessages;
+  @Output() onError = new EventEmitter();
+  @Input() isSubmit = false;
+
+  ID(element: string): string {
+    return this.id + '_' + element;
+  }
+  messagesError = () => Array.from(new Set([...this.componentErrors, ...(this.errorMessages || [])]))
+
 
   ngOnChanges(changes: SimpleChanges) {
     for (const key in changes) {
@@ -87,8 +102,36 @@ export class AitInputFileComponent implements OnInit, OnChanges {
         if (key === 'isReset') {
           if (this.isReset) {
             this.fileDatas = [];
-            this.fileKeys = [];
-            this.isReset = false;
+            this.displayedFiles = this.dataDisplayDf;
+            setTimeout(() => {
+              this.isReset = false;
+            },100)
+          }
+        }
+
+        if (key === 'isSubmit') {
+          if (this.isSubmit) {
+            if (this.savedData.length !== 0) {
+              this.submitMultipleForm().then(r => {
+                this.checkReq();
+              })
+            }
+            if (this.deletedKeys.length !== 0) {
+              this.deleteFile(null, null, true);
+            }
+            this.isSubmit = false;
+          }
+
+        }
+
+        if (key === 'errorMessages') {
+          if (this.messagesError().length !== 0) {
+            this.isError = true;
+            this.onError.emit({ isValid: false });
+          }
+          else {
+            this.isError = false;
+            this.onError.emit({ isValid: true });
           }
         }
 
@@ -138,7 +181,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   safelyURL = (data, type) => this.santilizer.bypassSecurityTrustUrl(`data:${type};base64, ${data}`);
 
   checkMaxSize = (file: any[]) => {
-    return this.fileRequest[0]?.size <= this.maxSizeBytes * 1024;
+    return this.fileRequest[0]?.size <= this.maxSize * 1024;
   }
   checkMaxFile = () => {
 
@@ -166,8 +209,8 @@ export class AitInputFileComponent implements OnInit, OnChanges {
       this.settings = settings.map((s: any) => ({ ...s, value: s?.name }));
 
       if (settings.length !== 0) {
-        if (!this.maxSizeBytes) {
-          this.maxSizeBytes = Number(this.settings.find(f => f.code === 'FILE_MAX_SIZE_MB')?.value);
+        if (!this.maxSize) {
+          this.maxSize = Number(this.settings.find(f => f.code === 'FILE_MAX_SIZE_MB')?.value);
         }
         if (!this.maxFiles) {
           this.maxFiles = Number(this.getValueByCode('FILE_MAX_UPLOAD')?.value);
@@ -185,6 +228,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
     if (this.fileKeys && this.fileKeys.length !== 0) {
       this.fileUploadService.getFilesByFileKeys(this.fileKeys || []).then((r: any) => {
         if (r?.status === RESULT_STATUS.OK) {
+          this.dataDisplayDf = r.data;
           this.displayedFiles = r.data;
         }
       })
@@ -193,16 +237,16 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
   getFileMaxUpload = () => {
     const maxfile = this.settings.find(f => f.code === 'FILE_MAX_UPLOAD');
-    return this.maxFiles ? this.maxFiles : maxfile ? maxfile?.value : MAX_FILE_DEFAULT;
+    return this.maxFiles ? this.maxFiles : maxfile ? maxfile?.value : null;
   }
 
   getFileTypeSup = () => {
     const supfile = this.settings.find(f => f.code === 'FILE_TYPE_SUPPORT');
-    return this.fileTypes ? this.fileTypes : supfile ? supfile?.value : FILE_TYPE_SUPPORT_DEFAULT;
+    return this.fileTypes ? this.fileTypes : supfile ? supfile?.value : null;
   }
 
   getMaxSizeFile = () => {
-    return this.maxSizeBytes ? this.maxSizeBytes * 1024 : 5000000;
+    return this.maxSize ? this.maxSize * 1024 : 5000000;
   }
 
   getValueByCode = (code) => {
@@ -259,17 +303,24 @@ export class AitInputFileComponent implements OnInit, OnChanges {
    * Delete file from files list
    * @param index (File index)
    */
-  deleteFile(file: any, index: number) {
-    this.fileUploadService.removeFile(file?._key).then(r => {
-      if (r.status === RESULT_STATUS.OK) {
+  deleteFile(file?: any, index?: number, isSubmit = false) {
+    if (isSubmit) {
+      this.fileUploadService.removeFile(this.deletedKeys).then(r => {
+        if (r.status === RESULT_STATUS.OK) {
 
-        this.files.splice(index, 1);
-        this.fileDatas = this.fileDatas.filter(f => f._key !== file?._key);
-        this.displayedFiles = this.displayedFiles.filter(f => f._key !== file?._key);
-        this.watchValue.emit({ value: this.fileDatas });
-        this.checkReq();
-      }
-    })
+          this.checkReq();
+        }
+      })
+    }
+    else {
+      this.deletedKeys = [...this.deletedKeys, { _key: file?._key }];
+      this.savedData = this.savedData.filter(s => s._key !== file?._key)
+      this.files.splice(index, 1);
+      this.fileDatas = this.fileDatas.filter(f => f._key !== file?._key);
+      this.displayedFiles = this.displayedFiles.filter(f => f._key !== file?._key);
+      this.watchValue.emit({ value: this.fileDatas });
+      this.checkReq();
+    }
   }
 
   /**
@@ -324,43 +375,63 @@ export class AitInputFileComponent implements OnInit, OnChanges {
       this.files = [files[files.length - 1]];
 
       if (this.checkFileExt(fileReq[0])) {
-        this.submitMultipleForm().then(
-          res => {
-            if (res.status !== 0) {
-
-              this.fileDatas = [...this.fileDatas, { ...res.data[0], progress: 0 }];
-
-              this.watchValue.emit({ value: this.fileDatas });
-              this.fileDatas.forEach((file, index) => {
-                this.uploadFilesSimulator(file._key);
-              })
-
-              this.checkReq();
-
-
-            }
-            else {
-
-            }
-
+        const { type, ...objKeys } = this.fileRequest[0];
+        const data = [
+          {
+            ...objKeys,
+            file_type: type,
+            company: this.company,
+            user_id: AitAppUtils.getUserId(),
+            data_base64: this.currentBase64,
+            _key: Date.now()
           }
-        )
+        ]
+        this.savedData = [...this.savedData, ...data];
+        this.fileDatas = [...this.fileDatas, { ...data[0], progress: 0 }];
+
+        this.watchValue.emit({ value: this.fileDatas });
+        this.fileDatas.forEach((file, index) => {
+          this.uploadFilesSimulator(file._key);
+        })
+
+        this.checkReq();
+        // this.submitMultipleForm().then(
+        //   res => {
+        //     if (res.status !== 0) {
+
+
+
+
+        //     }
+        //     else {
+
+        //     }
+
+        //   }
+        // )
       }
 
     }
   }
 
   checkReq = () => {
-    this.errors = [];
+    this.componentErrors = [];
     if (this.required) {
-      if (this.fileDatas.length === 0 && this.displayedFiles.length === 0) {
+      if ([...this.displayedFiles, ...this.fileDatas].length === 0) {
         const err = this.translateService.getMsg('E0001').replace('{0}', this.getTitle());
         this.isError = true;
-        this.errors = [err];
+        this.componentErrors = [err];
+        this.onError.emit({ isValid: false });
+      }
+      else {
+        this.isError = false;
+        this.onError.emit({ isValid: true });
       }
     }
     else {
       this.isError = false;
+      this.onError.emit({ isValid: true });
+
     }
   }
 
@@ -386,16 +457,14 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
 
   async submitMultipleForm() {
-    const { type, ...objKeys } = this.fileRequest[0];
-    const data = [
-      {
+    const data = this.savedData.map(m => {
+      const { type, _key, ...objKeys } = m;
+      return {
         ...objKeys,
-        file_type: type,
         company: this.company,
         user_id: AitAppUtils.getUserId(),
-        data_base64: this.currentBase64,
       }
-    ]
+    });
 
     try {
       const response = await this.fileUploadService.uploadFile(data);

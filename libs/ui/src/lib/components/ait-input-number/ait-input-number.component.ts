@@ -22,7 +22,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   @Input() length = 15;
   @Input() widthInput = '250px';
   @Input() placeholder = '';
-  @Input() defaultValue = null;
+  @Input() defaultValue: string;
   @Output() watchValue = new EventEmitter();
   @Output() lostFocus = new EventEmitter();
   // eslint-disable-next-line @angular-eslint/no-output-on-prefix
@@ -50,7 +50,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   @Input() isReset = false;
   @Input() isError = false;
   @Input() required = false;
-  errors = [];
+  componentErrors = [];
   dataInput = [];
   @Input() label;
   @Input() guidance = ''
@@ -60,6 +60,8 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   @Input() height;
   @Input() format = '';
   @Input() isSubmit = false;
+  @Input() errorMessages = [];
+  msgRequired = ''
 
 
   constructor(
@@ -68,7 +70,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
     private translateService: AitTranslationService,
     @Inject(LOCALE_ID) public locale: string) {
     this.inputCtrl = new FormControl('');
-
+    this.msgRequired = this.translateService.getMsg('E0001').replace('{0}', this.getFieldName());
   }
 
   getPlaceHolder = () => this.translateService.translate(this.placeholder);
@@ -97,9 +99,38 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
     return split2.join('');
   }
 
+  messagesError = () => Array.from(new Set([...this.componentErrors, ...this.errorMessages]))
+
+
   ngOnChanges(changes: SimpleChanges) {
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
+        if (key === 'defaultValue') {
+          const transform: any = Number(this.defaultValue) < this.max ? this.defaultValue : this.max;
+          const res = Number(transform) > this.min ? transform : this.min;
+          this.watchValue.emit(res);
+          this.currentNumber = res;
+          this.defaultValue = res;
+
+          if (this.required) {
+            this.onError.emit({ isValid: res && (res || '').length !== 0 });
+          }
+
+          if (this.defaultValue) {
+            if (this.isCurrency) {
+              const symbol = this.currencySymbolService.getCurrencyByLocale();
+              this.symbol = symbol;
+              this.inputCtrl.setValue(this.numberPipe.transform(this.defaultValue, this.format) + symbol);
+            }
+            else if (this.isAge) {
+              this.inputCtrl.setValue(this.defaultValue);
+            }
+            else {
+              this.inputCtrl.setValue(this.defaultValue ? this.numberPipe.transform(this.defaultValue, this.format) : null);
+
+            }
+          }
+        }
         if (key === 'isReset') {
           if (this.isReset) {
             this.inputCtrl.patchValue('');
@@ -110,27 +141,31 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
             this.checkReq(this.inputCtrl.value);
           }
         }
-        if (key === KEYS.DEFAULT_VALUE && this.defaultValue) {
-          const transform: any = Number(this.defaultValue) < this.max ? this.defaultValue : this.max;
-          const res = Number(transform) > this.min ? transform : this.min;
-          this.watchValue.emit(res);
-          this.currentNumber = res;
-          this.defaultValue = res;
-          this.onError.emit({ isValid: res && res.length !== 0 });
 
-          if (this.isCurrency) {
-            const symbol = this.currencySymbolService.getCurrencyByLocale();
-            this.symbol = symbol;
-            this.inputCtrl.setValue(this.numberPipe.transform(this.defaultValue, this.format) + symbol);
-          }
-          else if (this.isAge) {
-            this.inputCtrl.setValue(this.defaultValue);
+        if (key === 'errorMessages') {
+          if (this.messagesError().length !== 0) {
+            this.isError = true;
+            this.onError.emit({ isValid: false });
           }
           else {
-            this.inputCtrl.setValue(this.defaultValue ? this.numberPipe.transform(this.defaultValue, this.format) : null);
+            if (this.required) {
+              if (this.inputCtrl.value && this.inputCtrl.value.length !== 0) {
+                this.isError = false;
+                this.onError.emit({ isValid: true });
+              }
+              else {
+                this.onError.emit({ isValid: false });
+              }
+            }
+            else {
+              this.isError = false;
+              this.onError.emit({ isValid: true });
+            }
+
 
           }
         }
+
 
       }
     }
@@ -151,6 +186,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
 
   handleFocusOut = () => {
 
+    this.checkReq(this.inputCtrl.value);
     if (this.isReset) {
       this.currentNumber = null;
       this.exactedValue = null;
@@ -165,9 +201,9 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
       this.lostFocus.emit(this.replaceAll(this.inputCtrl.value));
     }
 
-    if (this.currentNumber === null && this.inputCtrl.value === '') {
+    if (this.inputCtrl.value === '' || this.inputCtrl.value === null) {
       this.inputCtrl.patchValue(null);
-      this.checkReq(null);
+
       return;
     }
 
@@ -237,17 +273,20 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   getFieldName = () => this.translateService.translate(this.label);
 
   checkReq = (value?: any) => {
-    this.errors = [];
     if (this.required) {
       if (!value) {
         this.isError = true;
         const msg = this.translateService.getMsg('E0001').replace('{0}', this.getFieldName());
-        this.errors = [msg]
+        this.componentErrors = Array.from(new Set([...this.componentErrors, msg]));
         this.onError.emit({ isValid: false });
       }
       else {
-        this.isError = false;
-        this.onError.emit({ isValid: true });
+        this.componentErrors = [];
+        if (this.componentErrors.length === 0) {
+          this.isError = false;
+          this.onError.emit({ isValid: true });
+
+        }
 
       }
     }

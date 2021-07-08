@@ -41,7 +41,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   isClickInput = false;
   valueDf = '';
   @Input() isError = false;
-  errors = [];
+  componentErrors = [];
   @Input() required = false;
   @Input() label;
   @Input() guidance = ''
@@ -53,6 +53,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   @Input() height;
   @Output() onError = new EventEmitter();
   @Input() isSubmit = false;
+  @Input() errorMessages;
 
   @ViewChild('inputDateTime', { static: false }) input: ElementRef;
   @ViewChild(NbDatepickerDirective, { static: false }) nbDatepicker;
@@ -81,11 +82,37 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
 
   getCaption = () => this.translateService.translate(this.guidance);
 
+  messagesError = () => Array.from(new Set([...this.componentErrors, ...(this.errorMessages || [])]))
+
 
 
   ngOnChanges(changes: SimpleChanges) {
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
+
+        if (key === 'errorMessages') {
+          if (this.messagesError().length !== 0) {
+            this.isError = true;
+            this.onError.emit({ isValid: false });
+          }
+          else {
+            if (this.required) {
+              if (this.date) {
+                this.isError = false;
+                this.onError.emit({ isValid: true });
+              }
+              else {
+                this.onError.emit({ isValid: false });
+
+              }
+            }
+            else {
+              this.isError = false;
+              this.onError.emit({ isValid: true });
+            }
+
+          }
+        }
 
         if (key === 'isReset') {
           if (this.isReset) {
@@ -107,7 +134,10 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
         if (key === 'defaultValue') {
           this.dateInput = this.defaultValue;
           this.date = new Date(this.dateInput);
-          this.onError.emit({ isValid: !!this.defaultValue })
+          if (this.required) {
+            this.onError.emit({ isValid: !!this.defaultValue })
+          }
+
           this.setupDate();
         }
 
@@ -119,7 +149,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
 
   clearErrors = () => {
     this.isError = false;
-    this.errors = [];
+    this.componentErrors = [];
   }
 
   checkReq = (value: any) => {
@@ -130,7 +160,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
         this.isError = true;
         const err = this.translateService.getMsg('E0001').replace('{0}', this.getFieldName());
         this.onError.emit({ isValid: false });
-        this.errors = [err];
+        this.componentErrors = [err];
       }
       else {
         this.onError.emit({ isValid: true });
@@ -212,7 +242,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
     }
 
     if (this.required) {
-      this.errors = this.getMessage();
+      this.componentErrors = this.getMessage();
     }
   }
 

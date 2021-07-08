@@ -55,6 +55,7 @@
 
     <ait-card-content [isColumn]="true" [label]="'Error styles'">
       <p>This is a component, which is used to input value from user 🎉</p>
+
       <div
         style="
           margin-left: 20px;
@@ -71,12 +72,12 @@
           [guidanceIcon]="'star'"
           [length]="5"
           (watchValue)="getValueTextInput($event)"
-          [defaultValue]="''"
           [styleLabel]="{ 'text-transform': 'initial' }"
           [width]="'300px'"
           (onError)="result.error_text = $event.isValid"
           [isSubmit]="result.submit_text_input"
           [id]="'example1'"
+          [errorMessages]="errors"
         ></ait-input-text>
         <button
           nbButton
@@ -102,6 +103,7 @@
           (onError)="result.error_number = $event.isValid"
           [id]="'example2'"
           [isSubmit]="result.submit_text_number"
+          [errorMessages]="errors"
         ></ait-input-number>
 
         <button
@@ -128,7 +130,10 @@
           (watchValue)="getValueDatePicker($event)"
           [format]="'dd/MM/yyyy'"
           [guidanceIcon]="'star'"
+          [defaultValue]="null"
           [isSubmit]="result.submit_datepicker"
+          [required]="true"
+          [errorMessages]="errors"
         ></ait-datepicker>
 
         <button
@@ -154,17 +159,32 @@
         <code>#Ouput : {{ result?.master | json }}</code>
 
         <ait-space></ait-space>
+        <input
+          nbInput
+          placeholder="Add error"
+          (keydown.enter)="getErrors(input.value); input.value = ''"
+          #input
+        />
+        <ait-space></ait-space>
+        <ait-chip
+          [title]="e"
+          *ngFor="let e of errors"
+          [icon]="'close-outline'"
+          (action)="removeSearch(e)"
+        ></ait-chip>
+        <ait-space></ait-space>
 
         <ait-autocomplete-master-data
           [width]="'300px'"
           [styleLabel]="{ 'text-transform': 'initial' }"
           [placeholder]="'c_2003'"
           [label]="'c_2003'"
-          [dataSource]="[]"
           (watchValue)="getValueMasterData($event)"
           (onError)="result.error_data1 = $event.isValid"
           [isSubmit]="result.master1"
           [allowNew]="true"
+          [errorMessages]="errors"
+          [required]="true"
         ></ait-autocomplete-master-data>
         <button
           nbButton
@@ -196,6 +216,8 @@
           ]"
           [isSubmit]="result.master2"
           [allowNew]="true"
+          [errorMessages]="errors"
+          [required]="true"
         ></ait-autocomplete-master-data>
         <button
           nbButton
@@ -216,11 +238,29 @@
           [isDefault]="false"
           [required]="true"
           [fileKeys]="[
-            '71305a2f-1d23-0f7b-25a8-94b1687e11b9',
-            '1afb64a5-1f79-e403-eaa4-c8ec30d73550'
+            'db1b0177-8301-c718-fa7a-da2824419653',
+            '1fc263c5-bf74-63fd-ee72-430d5ce8b3f4'
           ]"
           [classContainer]="iconFile"
+          (onError)="result.error_file = $event.isValid"
+          [isReset]="result.file"
+          [errorMessages]="errors"
+          [maxFiles]="3"
+          [fileTypes]="'jpg,json'"
+          [maxSize]="50"
+
         ></ait-input-file>
+
+        <button
+          nbButton
+          status="primary"
+          (click)="subMitFile()"
+          style="width: 100px; margin: 15px"
+        >
+          submit
+        </button>
+
+        <code>#isValid : {{ result.error_file }}</code>
 
         <ait-space></ait-space>
         <ait-input-text
@@ -229,6 +269,7 @@
           [rows]="10"
           [placeholder]="'one'"
           [guidance]="'whatever you want'"
+          [width]="'400px'"
         ></ait-input-text>
       </div>
     </ait-card-content>
