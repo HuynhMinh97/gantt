@@ -37,7 +37,10 @@ export class AitTextInputComponent implements OnChanges {
   @Input() height;
   @Input() isSubmit = false;
   @Input() readonly = false;
-  errors = []
+  @Input() errorMessages = [];
+  componentErrors = []
+  msgRequired = '';
+  errorArray = [];
 
   inputCtrl: FormControl;
 
@@ -48,10 +51,13 @@ export class AitTextInputComponent implements OnChanges {
 
   constructor(private translateService: AitTranslationService) {
     this.inputCtrl = new FormControl('');
+    this.msgRequired = this.translateService.getMsg('E0001').replace('{0}', this.getNameField());
   }
   ID(element: string): string {
     return this.id + '_' + element;
   }
+
+  messagesError = () => Array.from(new Set([...this.componentErrors, ...this.errorMessages]))
 
   ngOnChanges(changes: SimpleChanges) {
     for (const key in changes) {
@@ -60,7 +66,29 @@ export class AitTextInputComponent implements OnChanges {
           this.inputCtrl.setValue(this.defaultValue);
           this.watchValue.emit(this.defaultValue);
           if (this.required) {
-            this.onError.emit({ isValid: !!this.defaultValue && this.defaultValue.length !== 0 });
+            this.onError.emit({ isValid: this.defaultValue && this.defaultValue.length !== 0 });
+          }
+        }
+        if (key === 'errorMessages') {
+          if (this.messagesError().length !== 0) {
+            this.isError = true;
+            this.onError.emit({ isValid: false });
+          }
+          else {
+            if (this.required) {
+              if (this.inputCtrl.value && (this.inputCtrl.value || '').length !== 0) {
+
+              }
+              else {
+                this.onError.emit({ isValid: false });
+              }
+            } else {
+              this.isError = false;
+              this.onError.emit({ isValid: true });
+            }
+
+
+
           }
         }
         if (key === 'isSubmit') {
@@ -77,26 +105,39 @@ export class AitTextInputComponent implements OnChanges {
     this.inputCtrl.reset();
   }
 
-  getPlaceholder = () => this.translateService.translate(this.placeholder);
+  focusout = () => {
+    this.checkReq(this.inputCtrl.value)
+  }
 
-  onChange(value) {
+  checkReq = (value) => {
     if (this.required) {
       if (!value) {
-        const msg = this.translateService.getMsg('E0001').replace('{0}', this.getNameField());;
+        const msg = this.translateService.getMsg('E0001').replace('{0}', this.getNameField());
         this.isError = true;
-        this.errors = [msg]
+        this.componentErrors = [msg]
+
         this.onError.emit({ isValid: false });
       }
       else {
-        this.isError = false;
-        this.errors = [];
-        this.onError.emit({ isValid: true });
+        this.componentErrors = [];
+        console.log(this.messagesError())
+        if (this.messagesError().length === 0) {
+          this.isError = false;
+          this.onError.emit({ isValid: true });
+
+        }
 
       }
     }
     else {
       // this.onError.emit({ isValid: true });
     }
+  }
+
+  getPlaceholder = () => this.translateService.translate(this.placeholder);
+
+  onChange(value) {
+    this.checkReq(value);
     this.watchValue.emit(value);
   }
 }

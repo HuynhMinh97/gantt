@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/no-output-on-prefix */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
@@ -72,13 +73,23 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   @Input() margin_top = 0;
   @Input() fileTypes = '';
   @Input() maxFiles: number;
-  @Input() maxSizeBytes: number; // bytes
+  @Input() maxSize: number; // bytes
   @Input() isReset: boolean;
   isImgErr = false;
   @Input() isError = false;
   @Input() required = false;
-  errors = []
+  componentErrors = []
   @Input() classContainer;
+  @Input() id;
+  @Input() errorMessages;
+  @Output() onError = new EventEmitter();
+  @Input() isSubmit = false;
+
+  ID(element: string): string {
+    return this.id + '_' + element;
+  }
+  messagesError = () => Array.from(new Set([...this.componentErrors, ...(this.errorMessages || [])]))
+
 
   ngOnChanges(changes: SimpleChanges) {
     for (const key in changes) {
@@ -89,6 +100,23 @@ export class AitInputFileComponent implements OnInit, OnChanges {
             this.fileDatas = [];
             this.fileKeys = [];
             this.isReset = false;
+          }
+        }
+
+        if (key === 'isSubmit') {
+          if (this.isSubmit) {
+            this.checkReq();
+          }
+        }
+
+        if (key === 'errorMessages') {
+          if (this.messagesError().length !== 0) {
+            this.isError = true;
+            this.onError.emit({ isValid: false });
+          }
+          else {
+            this.isError = false;
+            this.onError.emit({ isValid: true });
           }
         }
 
@@ -138,7 +166,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   safelyURL = (data, type) => this.santilizer.bypassSecurityTrustUrl(`data:${type};base64, ${data}`);
 
   checkMaxSize = (file: any[]) => {
-    return this.fileRequest[0]?.size <= this.maxSizeBytes * 1024;
+    return this.fileRequest[0]?.size <= this.maxSize * 1024;
   }
   checkMaxFile = () => {
 
@@ -166,8 +194,8 @@ export class AitInputFileComponent implements OnInit, OnChanges {
       this.settings = settings.map((s: any) => ({ ...s, value: s?.name }));
 
       if (settings.length !== 0) {
-        if (!this.maxSizeBytes) {
-          this.maxSizeBytes = Number(this.settings.find(f => f.code === 'FILE_MAX_SIZE_MB')?.value);
+        if (!this.maxSize) {
+          this.maxSize = Number(this.settings.find(f => f.code === 'FILE_MAX_SIZE_MB')?.value);
         }
         if (!this.maxFiles) {
           this.maxFiles = Number(this.getValueByCode('FILE_MAX_UPLOAD')?.value);
@@ -202,7 +230,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   }
 
   getMaxSizeFile = () => {
-    return this.maxSizeBytes ? this.maxSizeBytes * 1024 : 5000000;
+    return this.maxSize ? this.maxSize * 1024 : 5000000;
   }
 
   getValueByCode = (code) => {
@@ -240,6 +268,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
    * handle file from browsing
    */
   fileBrowseHandler(files) {
+    console.log(files)
     if (files && files[0]) {
 
       const FR = new FileReader();
@@ -351,16 +380,23 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   }
 
   checkReq = () => {
-    this.errors = [];
+    this.componentErrors = [];
     if (this.required) {
-      if (this.fileDatas.length === 0 && this.displayedFiles.length === 0) {
+      if ([...this.displayedFiles, ...this.fileDatas].length === 0) {
         const err = this.translateService.getMsg('E0001').replace('{0}', this.getTitle());
         this.isError = true;
-        this.errors = [err];
+        this.componentErrors = [err];
+        this.onError.emit({ isValid: false });
+      }
+      else {
+        this.isError = false;
+        this.onError.emit({ isValid: true });
       }
     }
     else {
       this.isError = false;
+      this.onError.emit({ isValid: true });
+
     }
   }
 
