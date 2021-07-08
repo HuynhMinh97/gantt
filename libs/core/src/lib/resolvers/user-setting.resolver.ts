@@ -1,4 +1,4 @@
-import { COLLECTIONS, KEYS, RESULT_STATUS } from '@ait/shared';
+import { COLLECTIONS, RESULT_STATUS } from '@ait/shared';
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { Database } from 'arangojs';
@@ -60,25 +60,24 @@ export class UserSettingResolver extends AitBaseService {
 
     const result = await this.query(findAql);
     let aqlStr = ``;
-    if (result.length > 0) {
-      this.setCommonUpdate(data);
-      data._key = result[0]._key;
-      dataUpdate.push(data);
-
-      aqlStr = `FOR data IN ${JSON.stringify(dataUpdate)}
-      UPDATE data WITH data IN ${collection} RETURN NEW `;
+    
+    if (result.status === RESULT_STATUS.OK) {
+      if (result.data.length > 0) {
+        this.setCommonUpdate(data);
+        data._key = result.data[0]._key;
+        dataUpdate.push(data);
+  
+        aqlStr = `FOR data IN ${JSON.stringify(dataUpdate)}
+        UPDATE data WITH data IN ${collection} RETURN NEW `;
+      } else {
+        this.setCommonInsert(data);
+        dataInsert.push(data);
+        aqlStr = `FOR data IN ${JSON.stringify(dataInsert)}
+        INSERT data INTO ${collection} RETURN MERGE(data, {name: data.name.${lang} ? data.name.${lang} : data.name }) `;
+      }
+      return await this.query(aqlStr);
     } else {
-      this.setCommonInsert(data);
-      dataInsert.push(data);
-      aqlStr = `FOR data IN ${JSON.stringify(dataInsert)}
-      INSERT data INTO ${collection} RETURN MERGE(data, {name: data.name.${lang} ? data.name.${lang} : data.name }) `;
-    }
-
-    try {
-      const res = await this.query(aqlStr);
-      return new UserSettingResponse(RESULT_STATUS.OK, res, KEYS.SUCCESS);
-    } catch (error) {
-      return new UserSettingResponse(RESULT_STATUS.ERROR, [], error);
+      return new UserSettingResponse(RESULT_STATUS.ERROR, [], 'error');
     }
   }
 }

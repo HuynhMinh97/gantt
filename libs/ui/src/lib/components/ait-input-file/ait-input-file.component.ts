@@ -16,6 +16,7 @@ import { AitTranslationService } from '../../services/common/ait-translate.servi
 import { AppState } from '../../state/selectors';
 import { getEmpId, getLang_Company } from '../../state/selectors';
 import { AitAppUtils } from '../../utils/ait-utils';
+import { Guid } from 'guid-typescript';
 
 
 @Component({
@@ -88,6 +89,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   @Input() errorMessages;
   @Output() onError = new EventEmitter();
   @Input() isSubmit = false;
+  @Input() hasStatus = true;
 
   ID(element: string): string {
     return this.id + '_' + element;
@@ -105,7 +107,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
             this.displayedFiles = this.dataDisplayDf;
             setTimeout(() => {
               this.isReset = false;
-            },100)
+            }, 100)
           }
         }
 
@@ -383,9 +385,10 @@ export class AitInputFileComponent implements OnInit, OnChanges {
             company: this.company,
             user_id: AitAppUtils.getUserId(),
             data_base64: this.currentBase64,
-            _key: Date.now()
+            _key: Guid.create().toString()
           }
         ]
+        console.log(data)
         this.savedData = [...this.savedData, ...data];
         this.fileDatas = [...this.fileDatas, { ...data[0], progress: 0 }];
 
@@ -458,7 +461,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
   async submitMultipleForm() {
     const data = this.savedData.map(m => {
-      const { type, _key, ...objKeys } = m;
+      const { type, ...objKeys } = m;
       return {
         ...objKeys,
         company: this.company,
