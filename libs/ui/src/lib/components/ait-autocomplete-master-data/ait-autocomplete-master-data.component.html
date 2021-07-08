@@ -46,6 +46,7 @@
         nbInput
         [value]="VALUE"
         type="text"
+        autocomplete="doNotAutoComplete"
         class="search"
         [ngStyle]="styleInput"
         [placeholder]="placeholder"
@@ -65,6 +66,7 @@
         fullWidth
         nbInput
         #input
+        autocomplete="doNotAutoComplete"
         type="text"
         class="search"
         style="padding-left: 10px; font-size: 12px"
@@ -174,5 +176,5 @@
       </p>
     </div>
   </div>
-  <ait-error-message [errors]="errors"></ait-error-message>
+  <ait-error-message [errors]="messagesError()" [id]="id"></ait-error-message>
 </div>

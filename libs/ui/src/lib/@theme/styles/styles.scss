@@ -43,6 +43,19 @@
     }
   }
 
+  ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #8f9bb3;
+    opacity: 1; /* Firefox */
+  }
+
+  :-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: #8f9bb3;
+  }
+
+  ::-ms-input-placeholder { /* Microsoft Edge */
+    color: #8f9bb3;
+  }
+
   textarea {
     font-size: 12px !important;
     resize: none !important;

@@ -43,6 +43,7 @@ export class AitUiComponent extends AitBaseComponent {
   }
 
   date = Date.now();
+  errors = [];
 
   buttonGroups = {
     one: [
@@ -194,6 +195,10 @@ export class AitUiComponent extends AitBaseComponent {
     this.result.master2 = true;
   }
 
+  subMitFile= () => {
+    this.result.file = true;
+  }
+
 
   ngOnInit() {
     // console.log(this.page, this.module, this.user_id, this.company);
@@ -227,6 +232,12 @@ export class AitUiComponent extends AitBaseComponent {
   action = () => {
     console.log('hello from home component');
   };
+
+  getErrors = (value) => this.errors = [...this.errors, value];
+  removeSearch = (value) => {
+    console.log(value)
+    this.errors = this.errors.filter(f => f !== value);
+  }
 
   getValueInput(status: string, value: string) {
     console.log(status, value);

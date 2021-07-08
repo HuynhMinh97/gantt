@@ -25,6 +25,7 @@
     ></nb-icon>
     <textarea
       nbInput
+      autocomplete="doNotAutoComplete"
       [status]="status"
       [fieldSize]="fieldSize"
       [shape]="shape"
@@ -36,7 +37,7 @@
       (input)="onChange($event.target.value)"
       [formControl]="inputCtrl"
       [class.isError]="isError"
-      style="border-color: #e4e9f2; "
+      style="border-color: #e4e9f2; max-width: 100% !important; resize: none"
       *ngIf="rows !== 1 && readonly"
       [maxLength]="length"
       readonly
@@ -44,6 +45,7 @@
     ></textarea>
 
     <textarea
+      autocomplete="doNotAutoComplete"
       nbInput
       [status]="status"
       [fieldSize]="fieldSize"
@@ -51,18 +53,21 @@
       [fullWidth]="fullWidth"
       [placeholder]="getPlaceholder()"
       [rows]="rows"
-      [cols]="cols"
       type="text"
       (input)="onChange($event.target.value)"
       [formControl]="inputCtrl"
       [class.isError]="isError"
-      style="border-color: #e4e9f2; "
+      style="border-color: #e4e9f2; resize: none; max-width: 100% !important"
       *ngIf="rows !== 1 && !readonly"
       [maxLength]="length"
       id="{{ ID('textarea') }}"
+      (focusout)="focusout()"
+      [style.width]="width"
+      [style.height]="height"
     ></textarea>
 
     <input
+      autocomplete="doNotAutoComplete"
       nbInput
       [status]="status"
       [fieldSize]="fieldSize"
@@ -77,11 +82,17 @@
       (input)="onChange($event.target.value)"
       [formControl]="inputCtrl"
       [class.isError]="isError"
-      style="border-color: #e4e9f2; width: 100%; max-width: 100%;padding-left: 10px;"
+      style="
+        border-color: #e4e9f2;
+        width: 100%;
+        max-width: 100%;
+        padding-left: 10px;
+      "
       id="{{ ID('input') }}"
     />
 
     <input
+      autocomplete="doNotAutoComplete"
       nbInput
       [status]="status"
       [fieldSize]="fieldSize"
@@ -95,7 +106,13 @@
       (input)="onChange($event.target.value)"
       [formControl]="inputCtrl"
       [class.isError]="isError"
-      style="border-color: #e4e9f2; width: 100%; max-width: 100%;padding-left: 10px;"
+      (focusout)="focusout()"
+      style="
+        border-color: #e4e9f2;
+        width: 100%;
+        max-width: 100%;
+        padding-left: 10px;
+      "
       id="{{ ID('input') }}"
     />
   </nb-form-field>
@@ -113,7 +130,8 @@
     </div>
   </div>
   <ait-error-message
-    [errors]="errors"
+    [id]="id"
+    [errors]="messagesError()"
     [style]="styleMessage"
   ></ait-error-message>
 </div>

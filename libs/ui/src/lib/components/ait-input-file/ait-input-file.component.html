@@ -1,6 +1,10 @@
 <div [ngClass]="classContainer">
   <div class="container_file">
-    <ait-label [label]="getTitle()" [required]="required" *ngIf="getTitle()"></ait-label>
+    <ait-label
+      [label]="getTitle()"
+      [required]="required"
+      *ngIf="getTitle()"
+    ></ait-label>
 
     <div
       class="containerx"
@@ -14,7 +18,9 @@
       style="cursor: pointer; margin-top: 8px"
       [ngStyle]="{ border: !isDefault ? '0.5px solid #000' : null }"
     >
-      <p *ngIf="placeholder" [ngStyle]="{ color: !isDefault ? '#000' : null }">
+      <p *ngIf="placeholder" [ngStyle]="{ color: !isDefault ? '#000' : null }"
+      [id]="ID('placeholder')"
+      >
         {{ placeholder }}
       </p>
       <p *ngIf="!placeholder" [ngStyle]="{ color: !isDefault ? '#000' : null }">
@@ -25,31 +31,47 @@
         >...
       </p>
       <input
+        [id]="ID(input_file)"
         type="file"
         #fileDropRef
         id="fileDropRef"
-        (click)="fileDropRef.value = null"
+        (click)="fileDropRef.value = null;checkReq()"
         [ngStyle]="{ color: !isDefault ? '#000' : null }"
         value=""
         (change)="fileBrowseHandler($event.target.files)"
         style="cursor: pointer"
       />
     </div>
-    <ait-error-message [errors]="errors"></ait-error-message>
-    <ait-error-message [errors]="[messageErrorFileSp]"></ait-error-message>
+    <ait-error-message [errors]="messagesError()" [id]="id"></ait-error-message>
+    <ait-error-message
+      [errors]="[messageErrorFileSp]"
+      [id]="id + '_sp'"
+    ></ait-error-message>
 
     <div class="information__file">
       <div class="icon" *ngIf="guidanceIcon && check()">
         <nb-icon [icon]="guidanceIcon" style="color: #8f9bb3"></nb-icon>
       </div>
       <div class="info empty">
-        <p [ngStyle]="{ color: !isDefault ? '#000' : null }" *ngIf="guidance">
+        <p
+          [ngStyle]="{ color: !isDefault ? '#000' : null }"
+          *ngIf="guidance"
+          [id]="ID('note')"
+        >
           {{ getNote() }}
         </p>
-        <p *ngIf="maxFiles" [ngStyle]="{ color: !isDefault ? '#000' : null }">
+        <p
+          *ngIf="maxFiles"
+          [ngStyle]="{ color: !isDefault ? '#000' : null }"
+          [id]="ID('max_file')"
+        >
           {{ getFileMaxUpload() || maxFiles }} {{ getMaxFileText() }}
         </p>
-        <p *ngIf="fileTypes" [ngStyle]="{ color: !isDefault ? '#000' : null }">
+        <p
+          *ngIf="fileTypes"
+          [ngStyle]="{ color: !isDefault ? '#000' : null }"
+          [id]="ID('caption_type')"
+        >
           {{ getFileTypeSup() || fileTypes }} {{ getFileTypeText() }}
         </p>
       </div>
@@ -65,6 +87,7 @@
       >
         <div class="file-icon" style="width: 50px">
           <img
+            [id]="ID('file_image_display')"
             *ngIf="(file?.file_type || '').includes('image')"
             id="{{ file?.name }}"
             [src]="safelyURL(file.data_base64, file.file_type)"
@@ -79,6 +102,7 @@
             [nbTooltip]="file?.name"
           />
           <nb-icon
+            [id]="ID('file_icon_display')"
             *ngIf="!(file?.file_type || '').includes('image')"
             icon="attach-2-outline"
             style="font-size: 35px; color: #fff"
@@ -86,10 +110,18 @@
           ></nb-icon>
         </div>
         <div class="info">
-          <p class="name" [ngStyle]="{ color: !isDefault ? '#000' : null }">
+          <p
+            class="name"
+            [ngStyle]="{ color: !isDefault ? '#000' : null }"
+            [id]="ID('info_name_display')"
+          >
             {{ file?.name }} ({{ formatBytes(file?.size) }})
           </p>
-          <p class="size" [ngStyle]="{ color: !isDefault ? '#000' : null }">
+          <p
+            class="size"
+            [ngStyle]="{ color: !isDefault ? '#000' : null }"
+            [id]="ID('info_time_display')"
+          >
             {{ getTime(file?.create_at) }}
           </p>
         </div>
@@ -108,6 +140,7 @@
       <div class="single-file" *ngFor="let file of fileDatas">
         <div class="file-icon" style="width: 50px">
           <img
+            [id]="ID('image_file')"
             #image
             *ngIf="(file?.file_type || '').includes('image')"
             [src]="getSrc(file)"
@@ -122,6 +155,7 @@
             "
           />
           <nb-icon
+            [id]="ID('icon_file')"
             *ngIf="!(file?.file_type || '').includes('image')"
             icon="attach-2-outline"
             style="font-size: 35px; color: #8f9bb3"
@@ -129,13 +163,25 @@
         </div>
 
         <div class="info">
-          <p class="name" [ngStyle]="{ color: !isDefault ? '#000' : null }">
+          <p
+            class="name"
+            [ngStyle]="{ color: !isDefault ? '#000' : null }"
+            [id]="ID('info_name')"
+          >
             {{ file?.name }}
           </p>
-          <p class="size" [ngStyle]="{ color: !isDefault ? '#000' : null }">
+          <p
+            class="size"
+            [ngStyle]="{ color: !isDefault ? '#000' : null }"
+            [id]="ID('info_size')"
+          >
             ({{ formatBytes(file?.size) }})
           </p>
-          <p class="size" [ngStyle]="{ color: !isDefault ? '#000' : null }">
+          <p
+            class="size"
+            [ngStyle]="{ color: !isDefault ? '#000' : null }"
+            [id]="ID('info_time')"
+          >
             {{ getTime(file.create_at) }}
           </p>
           <div class="progress-cont">

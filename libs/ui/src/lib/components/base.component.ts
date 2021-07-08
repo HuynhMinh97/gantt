@@ -81,42 +81,44 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
         // call api get user setting
         // this.settingUpUser().then();
-        this.
-          getUserSetting(userId).then(r => {
+        if (localStorage.getItem('access_token')) {
+          this.
+            getUserSetting(userId).then(r => {
 
-            if (r?.status === RESULT_STATUS.OK) {
-              const data = r.data ? r.data[0] : {};
+              if (r?.status === RESULT_STATUS.OK) {
+                const data = r.data ? r.data[0] : {};
 
-              this.lang = data?.site_language || this.env.COMMON.LANG_DEFAULT
-              // Push lang on store base on user-setting
-              this.store.dispatch(
-                new ChangeLangage(
-                  data?.site_language || this.env.COMMON.LANG_DEFAULT
-                )
-              );
+                this.lang = data?.site_language || this.env.COMMON.LANG_DEFAULT
+                // Push lang on store base on user-setting
+                this.store.dispatch(
+                  new ChangeLangage(
+                    data?.site_language || this.env.COMMON.LANG_DEFAULT
+                  )
+                );
 
-              //console.log(this.lang)
+                //console.log(this.lang)
 
-              // //get caption common for buttons, header, label, ...
-              // this.getCommonCaptions(this.lang).then();
+                // //get caption common for buttons, header, label, ...
+                // this.getCommonCaptions(this.lang).then();
 
-              // // call api get all message follow by type as I : Information , W : Warning, E: Error
-              this.getAllMessages().then();
+                // // call api get all message follow by type as I : Information , W : Warning, E: Error
+                this.getAllMessages().then();
 
-              // call api get user setting
-              this.settingUpUser().then((b) => {
-                const result = {
-                  ...data,
-                  date_format_display: this.getValueByCodeMaster(data.date_format_display, b || []),
-                  date_format_input: this.getValueByCodeMaster(data.date_format_input, b || []),
-                  number_format: this.getValueByCodeMaster(data.number_format, b || [])
-                }
-                // // Push settings on store base on user-setting
-                this.store.dispatch(new StoreSetting(result));
-              });
+                // call api get user setting
+                this.settingUpUser().then((b) => {
+                  const result = {
+                    ...data,
+                    date_format_display: this.getValueByCodeMaster(data.date_format_display, b || []),
+                    date_format_input: this.getValueByCodeMaster(data.date_format_input, b || []),
+                    number_format: this.getValueByCodeMaster(data.number_format, b || [])
+                  }
+                  // // Push settings on store base on user-setting
+                  this.store.dispatch(new StoreSetting(result));
+                });
 
-            }
-          })
+              }
+            })
+        }
       }
 
     })
@@ -653,7 +655,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
         query: gql`
             ${gqlQuery}
           `,
-          fetchPolicy: 'network-only',
+        fetchPolicy: 'network-only',
       })
       .pipe(map((res) => (<any>res.data)[name]))
       .toPromise();

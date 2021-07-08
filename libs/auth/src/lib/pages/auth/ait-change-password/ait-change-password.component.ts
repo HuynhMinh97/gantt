@@ -57,13 +57,6 @@ export class AitChangePwdComponent extends AitBaseComponent implements OnInit {
       page: PAGES.CHANGE_PASSWORD,
       module: MODULES.AUTH
     })
-    store.pipe(select(getCaption)).subscribe(() => {
-      this.old_passwordLabel = translateService.translate(this.old_passwordLabel);
-      this.new_passwordLabel = translateService.translate(this.new_passwordLabel);
-      this.repeat_passwordLabel = translateService.translate(
-        this.repeat_passwordLabel
-      );
-    })
     this.old_passwordCtrl = new FormControl('');
     this.new_passwordCtrl = new FormControl('');
     this.repeat_passwordCtrl = new FormControl('');
@@ -82,6 +75,8 @@ export class AitChangePwdComponent extends AitBaseComponent implements OnInit {
     );
   }
 
+  getFieldName = (name: string) => this.translateService.translate(name || '');
+
   back = () => {
     history.back();
   };
@@ -96,10 +91,10 @@ export class AitChangePwdComponent extends AitBaseComponent implements OnInit {
   };
 
   getErrorPwd = (value) => {
-    const errorList = [this.checkRequired(value, this.old_passwordLabel)];
+    const errorList = [this.checkRequired(value, this.getFieldName(this.old_passwordLabel))];
     if (value) {
       errorList.push(
-        this.checkMinLength(value, PASSWORD_LENGTH, this.old_passwordLabel)
+        this.checkMinLength(value, PASSWORD_LENGTH, this.getFieldName(this.old_passwordLabel))
       );
     }
     this.setErrors({
@@ -108,10 +103,10 @@ export class AitChangePwdComponent extends AitBaseComponent implements OnInit {
   };
 
   getErrorNewPwd = (value) => {
-    const errorList = [this.checkRequired(value, this.new_passwordLabel)];
+    const errorList = [this.checkRequired(value, this.getFieldName(this.new_passwordLabel))];
     if (value) {
       errorList.push(
-        this.checkMinLength(value, PASSWORD_LENGTH, this.new_passwordLabel)
+        this.checkMinLength(value, PASSWORD_LENGTH, this.getFieldName(this.new_passwordLabel))
       );
     }
     this.setErrors({
@@ -120,10 +115,10 @@ export class AitChangePwdComponent extends AitBaseComponent implements OnInit {
   };
 
   getErrorRepeatPwd = (value) => {
-    const errorList = [this.checkRequired(value, this.repeat_passwordLabel)];
+    const errorList = [this.checkRequired(value, this.getFieldName(this.repeat_passwordLabel))];
     if (value) {
       errorList.push(
-        this.checkMinLength(value, PASSWORD_LENGTH, this.repeat_passwordLabel)
+        this.checkMinLength(value, PASSWORD_LENGTH, this.getFieldName(this.repeat_passwordLabel))
       );
     }
     this.setErrors({

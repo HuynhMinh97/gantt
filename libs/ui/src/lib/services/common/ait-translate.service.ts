@@ -66,7 +66,7 @@ export class AitTranslationService {
   * @memberof TranslationService
   */
   translate(value: string): string {
-    const code = value.toLowerCase();
+    const code = (value || '').toLowerCase();
     // console.log(code,this.captionByPage)
 
     if (this.captionByPage.length !== 0) {
