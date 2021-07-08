@@ -56,11 +56,7 @@ export class AitFileUploaderService extends AitBaseService {
 
   uploadFile = async (data: any[]) => {
     return await this.mutation('saveBinaryData', 'sys_binary_data', data, {
-      _key: true,
-      name: true,
-      data_base64: true,
-      size: true,
-      file_type: true
+      _key: true
     });
   }
 
@@ -68,7 +64,7 @@ export class AitFileUploaderService extends AitBaseService {
   removeFile = async (_keys: any[]) => {
     console.log(_keys)
 
-    return await this.mutation('removeBinaryData', 'sys_binary_data',_keys, {
+    return await this.mutation('removeBinaryData', 'sys_binary_data', _keys, {
       _key: true,
       name: true,
       data_base64: true,

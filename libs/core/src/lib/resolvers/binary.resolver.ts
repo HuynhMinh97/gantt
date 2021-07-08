@@ -7,7 +7,8 @@ import { GqlAuthGuard } from '../guards/gql-auth.guard';
 import { SysUser } from '../entities/sys-user.entity';
 import { AitBaseService } from '../services/ait-base.service';
 import { BinaryResponse } from '../responses/binary.response';
-import { BinaryRemoveRequest, BinaryRequest } from '../requests/binary.request';
+import { BinaryRemoveRequest, BinaryRequest, BinarySaveRequest } from '../requests/binary.request';
+import { BinaryDataSaveDto } from '../dtos/binary-data.dto';
 
 @Resolver()
 // @UseGuards(GqlAuthGuard)
@@ -28,12 +29,12 @@ export class BinaryResolver extends AitBaseService {
 
 
   @Mutation(() => BinaryResponse, { name: 'saveBinaryData' })
-  saveBinaryData(
+  async saveBinaryData(
     @AitCtxUser() user: SysUser,
-    @Args('request', { type: () => BinaryRequest }) request: BinaryRequest
+    @Args('request', { type: () => BinarySaveRequest }) request: BinarySaveRequest
   ) {
     request['colection'] = this.collection;
-    return this.save(request, user);
+    return await this.save(request, user);
   }
 
   @Mutation(() => BinaryResponse, { name: 'removeBinaryData' })

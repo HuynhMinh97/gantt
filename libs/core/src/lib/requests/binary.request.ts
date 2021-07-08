@@ -1,5 +1,5 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { BinaryDataDto, BinaryRemoveDataDto } from '../dtos/binary-data.dto';
+import { BinaryDataDto, BinaryDataSaveDto, BinaryRemoveDataDto } from '../dtos/binary-data.dto';
 import { BaseRequest } from './base.request';
 
 @InputType()
@@ -11,6 +11,15 @@ export class BinaryRequest extends BaseRequest {
   data: BinaryDataDto[];
 }
 
+
+@InputType()
+export class BinarySaveRequest extends BaseRequest {
+  @Field(() => BinaryDataDto, { nullable: true })
+  condition: BinaryDataDto;
+
+  @Field(() => [BinaryDataSaveDto], { nullable: true })
+  data: BinaryDataSaveDto[];
+}
 
 @InputType()
 export class BinaryRemoveRequest extends BaseRequest {
