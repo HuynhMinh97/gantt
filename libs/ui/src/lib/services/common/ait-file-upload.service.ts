@@ -65,11 +65,10 @@ export class AitFileUploaderService extends AitBaseService {
   }
 
 
-  removeFile = async (_key: string) => {
+  removeFile = async (_keys: any[]) => {
+    console.log(_keys)
 
-    return await this.mutation('removeBinaryData', 'sys_binary_data', [{
-      _key
-    }], {
+    return await this.mutation('removeBinaryData', 'sys_binary_data',_keys, {
       _key: true,
       name: true,
       data_base64: true,
