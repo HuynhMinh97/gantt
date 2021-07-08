@@ -157,16 +157,16 @@ export class AitUiComponent extends AitBaseComponent {
 
   ///methods
 
-  getValueTextInput= (value) => {
+  getValueTextInput = (value) => {
     console.log(value)
     this.result.text_input = value
   }
 
-  getValueNumberInput= (value) => {
+  getValueNumberInput = (value) => {
     this.result.number_input = value
   }
 
-  getValueDatePicker= (value) => {
+  getValueDatePicker = (value) => {
     this.result.date_picker = value
   }
 
@@ -195,8 +195,12 @@ export class AitUiComponent extends AitBaseComponent {
     this.result.master2 = true;
   }
 
-  subMitFile= () => {
+  subMitFile = () => {
     this.result.file = true;
+    setTimeout(() => {
+      this.result.file = false;
+
+    }, 100)
   }
 
 
