@@ -88,8 +88,8 @@ export class AitBaseService {
         resData.push(data);
       }
       return new BaseResponse(RESULT_STATUS.OK, resData, KEYS.SUCCESS);
-    } catch (err) {
-      return new BaseResponse(RESULT_STATUS.OK, resData, KEYS.SUCCESS);
+    } catch (error) {
+      return new BaseResponse(RESULT_STATUS.ERROR, [], error);
     }
   }
 
@@ -100,9 +100,9 @@ export class AitBaseService {
       for await (const data of res) {
         rawData.push(data);
       }
-      return rawData;
-    } catch (err) {
-      console.error(err.message);
+      return new BaseResponse(RESULT_STATUS.OK, rawData, KEYS.SUCCESS);
+    } catch (error) {
+      return new BaseResponse(RESULT_STATUS.ERROR, [], error);
     }
   }
 
