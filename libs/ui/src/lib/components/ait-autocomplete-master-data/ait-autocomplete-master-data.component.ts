@@ -183,8 +183,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
 
-          if (key === 'errorMessages') {
-            console.log(this.messagesError())
+        if (key === 'errorMessages') {
           if (this.messagesError().length !== 0) {
             this.isError = true;
             this.onError.emit({ isValid: false });
@@ -679,6 +678,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
           this.watchValue.emit({
             value: [],
           });
+          this.dataFilter = [1];
           this.data = this.dataSourceDf;
           this.filteredOptions$ = of(this.dataSourceDf)
 
@@ -686,6 +686,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         }
       }
       else {
+        this.dataFilter = [1];
 
         this.watchValue.emit({
           value: this.optionSelected,
