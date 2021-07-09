@@ -62,14 +62,14 @@
           {{ getNote() }}
         </p>
         <p
-          *ngIf="maxFiles"
+          *ngIf="maxFiles && hasStatus"
           [ngStyle]="{ color: !isDefault ? '#000' : null }"
           [id]="ID('max_file')"
         >
           {{ getFileMaxUpload() || maxFiles }} {{ getMaxFileText() }}
         </p>
         <p
-          *ngIf="fileTypes"
+          *ngIf="fileTypes && hasStatus"
           [ngStyle]="{ color: !isDefault ? '#000' : null }"
           [id]="ID('caption_type')"
         >
