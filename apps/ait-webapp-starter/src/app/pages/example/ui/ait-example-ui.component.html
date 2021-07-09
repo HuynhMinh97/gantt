@@ -239,14 +239,15 @@
           [required]="true"
           [fileKeys]="[
             'db1b0177-8301-c718-fa7a-da2824419653',
-            '1fc263c5-bf74-63fd-ee72-430d5ce8b3f4'
+            '1fc263c5-bf74-63fd-ee72-430d5ce8b3f4',
+
           ]"
           [classContainer]="iconFile"
           (onError)="result.error_file = $event.isValid"
-          [isReset]="result.file"
+          [isSubmit]="result.file"
           [errorMessages]="errors"
           [maxFiles]="3"
-          [fileTypes]="'jpg,json'"
+          [fileTypes]="'jpg,json,png'"
           [maxSize]="50"
 
         ></ait-input-file>
