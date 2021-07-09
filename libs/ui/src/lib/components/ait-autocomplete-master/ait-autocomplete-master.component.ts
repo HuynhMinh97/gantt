@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/no-output-on-prefix */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { CompanyInfoDto, RESULT_STATUS } from '@ait/shared';
@@ -100,6 +101,8 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   @Input() disabled = false;
   isShowTooltip = false;
   @Input() id;
+  @Input() isSubmit = false;
+  @Output() onError = new EventEmitter();
 
   ID(element: string) {
     return this.id + '_' + element;
@@ -177,6 +180,16 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
         // const element = changes[key].currentValue;
+        if (key === 'isSubmit') {
+          if (this.isSubmit) {
+            if (this.inputControlMaster.value === '' && this.selectItems.length === 0) {
+              this.isError = true;
+              const err = this.translateService.getMsg('E0001').replace('{0}', this.getFieldName());
+              this.errors = [err]
+            }
+            this.isSubmit = false;
+          }
+        }
         if (key === 'required') {
           console.log(this.required)
         }
@@ -217,11 +230,11 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
 
 
   getPlaceholder = () => {
-    if (this.selectItems.length !== 0) {
+    if (this.selectItems.length === 0) {
       return this.placeholder;
     }
     if (this.maxItem < 2) {
-      return this.placeholder;
+      return this.selectItems.length === 0 ? this.placeholder : '';
     }
     return this.isNew ?
       this.translateService.translate('c_10011') :
@@ -251,6 +264,26 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   clearErrors = () => {
     this.errors = [];
     this.isError = false;
+  }
+
+  checkReq = (value?: any) => {
+    if (this.required) {
+      if (!value) {
+        this.isError = true;
+        const msg = this.translateService.getMsg('E0001').replace('{0}', this.getFieldName());
+        this.errors = Array.from(new Set([...this.errors, msg]));
+        this.onError.emit({ isValid: false });
+      }
+      else {
+        this.errors = [];
+        if (this.errors.length === 0) {
+          this.isError = false;
+          this.onError.emit({ isValid: true });
+
+        }
+
+      }
+    }
   }
 
   handleInput($event) {
