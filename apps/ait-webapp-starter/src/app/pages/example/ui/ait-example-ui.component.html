@@ -155,8 +155,17 @@
           [collection]="'sys_caption'"
           (watchValue)="getValueMaster($event)"
           [styleLabel]="{ 'text-transform': 'initial' }"
+          [isSubmit]="result.submit_master"
         ></ait-autocomplete-master>
         <code>#Ouput : {{ result?.master | json }}</code>
+        <button
+        nbButton
+        status="primary"
+        (click)="subMitMaster()"
+        style="width: 100px; margin: 15px"
+      >
+        submit
+      </button>
 
         <ait-space></ait-space>
         <input
