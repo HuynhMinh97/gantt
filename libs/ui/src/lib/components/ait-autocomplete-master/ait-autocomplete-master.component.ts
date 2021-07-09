@@ -99,6 +99,11 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   @Input() dataTooltip = [];
   @Input() disabled = false;
   isShowTooltip = false;
+  @Input() id;
+
+  ID(element: string) {
+    return this.id + '_' + element;
+  }
 
   getCaptions = () => this.translateService.translate(this.guidance);
 
