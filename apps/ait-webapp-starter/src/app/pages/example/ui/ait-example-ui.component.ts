@@ -188,6 +188,11 @@ export class AitUiComponent extends AitBaseComponent {
     this.result.submit_datepicker = true;
   }
 
+  subMitMaster = () => {
+    this.result.submit_master = true;
+  }
+
+
   subMitMasterData1 = () => {
     this.result.master1 = true;
   }
