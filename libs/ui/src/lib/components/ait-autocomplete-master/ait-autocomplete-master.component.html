@@ -1,5 +1,10 @@
 <div [ngClass]="classContainer" style="max-width: 400px">
-  <ait-label [label]="label" [required]="required" *ngIf="label"></ait-label>
+  <ait-label
+    [label]="label"
+    [required]="required"
+    *ngIf="label"
+    [id]="id"
+  ></ait-label>
   <div
     class="input__container"
     style="margin-top: 8px; width: 100%; background-color: #fff"
@@ -33,6 +38,7 @@
         *ngFor="let o of selectItems"
         (action)="removeItems(chip)"
         [icon]="'close-outline'"
+        [id]="ID('chip_input')"
       ></ait-chip>
     </div>
     <input
@@ -41,6 +47,7 @@
       fullWidth
       nbInput
       #input
+      [id]="ID('input')"
       [maxlength]="maxLength"
       type="text"
       class="search"
@@ -57,6 +64,7 @@
       disabled
       (click)="handleClick()"
       fullWidth
+      [id]="ID('input_disabled')"
       nbInput
       #input
       [maxlength]="maxLength"
@@ -74,7 +82,10 @@
       <nb-icon [icon]="guidanceIcon"></nb-icon>
     </div>
     <div class="info">
-      <p style="word-break: break-word; color: #8f9bb3; font-size: 12px">
+      <p
+        style="word-break: break-word; color: #8f9bb3; font-size: 12px"
+        [id]="ID('caption')"
+      >
         {{ getCaptions() }}
       </p>
     </div>
@@ -85,13 +96,16 @@
     [ngStyle]="{ width: '100%' }"
     *ngIf="filteredData.length !== 0 && isOpenSuggest"
   >
-    <span class="caption">{{ getTitle() }}</span>
+    <span class="caption" [id]="ID('caption_suggestion')">{{
+      getTitle()
+    }}</span>
     <div class="suggestion__data" [ngStyle]="{ width: '100%' }">
       <ait-chip
         [title]="chip?.value"
         *ngFor="let chip of filteredData"
         (onClickChip)="addItems(chip)"
         [icon]="'plus-outline'"
+        [id]="ID('suggested_chip')"
       ></ait-chip>
     </div>
   </div>
@@ -102,16 +116,19 @@
     *ngIf="selectItems?.length !== 0 && maxItem !== 1"
     style="margin-top: 10px"
   >
-    <span class="caption"> {{ getLimitInput() }}</span>
+    <span class="caption" [id]="ID('caption_limit')">
+      {{ getLimitInput() }}</span
+    >
     <div class="select__data" [ngStyle]="{ width: '100%' }">
       <ait-chip
         [title]="chip?.value"
         *ngFor="let chip of selectItems"
         (action)="removeItems(chip)"
         [icon]="'close-outline'"
+        [id]="ID('selected_chip')"
       ></ait-chip>
     </div>
   </div>
 
-  <ait-error-message [errors]="errors"></ait-error-message>
+  <ait-error-message [errors]="errors" [id]="id"></ait-error-message>
 </div>
