@@ -167,6 +167,7 @@ export class AitUiComponent extends AitBaseComponent {
   }
 
   getValueDatePicker = (value) => {
+    console.log(value)
     this.result.date_picker = value
   }
 

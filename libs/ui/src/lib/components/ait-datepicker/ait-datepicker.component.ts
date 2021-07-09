@@ -235,14 +235,29 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   converToDateTime = (date) => (new Date(date)).getTime();
   handleInput = (event) => {
     if (event.target.value) {
-      this.translateDate(event.target.value);
-    }
-    else {
-      this.formatTransfrom = null;
-    }
+      if (event.target.value?.length > 2) {
+        try {
+          const dt = new Date(event.target.value);
+          this.watchValue.emit({ value: dt.getTime() });
+        } catch (error) {
+          this.watchValue.emit(null);
+        }
+        if (this.required) {
+          this.componentErrors = this.getMessage();
+        }
+      }
+      else {
+        if (event.target.value) {
+          this.translateDate(event.target.value);
+        }
+        else {
+          this.formatTransfrom = null;
+        }
 
-    if (this.required) {
-      this.componentErrors = this.getMessage();
+        if (this.required) {
+          this.componentErrors = this.getMessage();
+        }
+      }
     }
   }
 
