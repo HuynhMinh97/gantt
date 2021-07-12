@@ -117,6 +117,12 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
         if (key === 'isReset') {
           if (this.isReset) {
             this.date = null;
+            this.errorMessages = [];
+            this.componentErrors = [];
+            this.isError = false;
+            this.onError.emit({ isValid: null });
+
+            this.isReset = false;
           }
         }
 
