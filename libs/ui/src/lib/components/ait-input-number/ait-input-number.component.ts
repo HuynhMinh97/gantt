@@ -106,11 +106,15 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
         if (key === 'defaultValue') {
-          const transform: any = Number(this.defaultValue) < this.max ? this.defaultValue : this.max;
-          const res = Number(transform) > this.min ? transform : this.min;
-          this.watchValue.emit(res);
-          this.currentNumber = res;
-          this.defaultValue = res;
+          let res;
+          if (this.defaultValue) {
+
+            const transform: any = Number(this.defaultValue) < this.max ? this.defaultValue : this.max;
+            const res = Number(transform) > this.min ? transform : this.min;
+            this.watchValue.emit(res);
+            this.currentNumber = res;
+            this.defaultValue = res;
+          }
 
           if (this.required) {
             this.onError.emit({ isValid: res && (res || '').length !== 0 });
@@ -132,8 +136,18 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
           }
         }
         if (key === 'isReset') {
+          // console.log(this.isReset);
           if (this.isReset) {
-            this.inputCtrl.patchValue('');
+            this.isError = false;
+            this.componentErrors = [];
+            this.errorMessages = [];
+            this.currentNumber = null;
+            this.exactedValue = null;
+            this.inputCtrl.patchValue(null);
+            this.watchValue.emit(null);
+            this.onError.emit({ isValid: null });
+
+            this.isReset = false;
           }
         }
         if (key === 'isSubmit') {
@@ -172,8 +186,8 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   }
 
   handleFocus = () => {
-    if (this.currentNumber !== '') {
-      this.inputCtrl.patchValue(this.replaceAll(this.currentNumber));
+    if (this.currentNumber !== '' && this.inputCtrl.value !== '') {
+      this.inputCtrl.patchValue(this.replaceAll(this.inputCtrl.value));
     }
     else {
       this.inputCtrl.patchValue(null);
@@ -302,7 +316,8 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   onInputHandle = (text) => {
     if (text !== '') {
       const transform: any = Number(text) < this.max ? text : this.max;
-      const res = Number(transform) > this.min ? transform : this.min;
+      const res = Number(this.replaceAll(transform)) > this.min ? transform : this.min;
+      console.log(transform, res)
       setTimeout(() => {
         this.inputCtrl.patchValue(res);
         this.exactedValue = res;

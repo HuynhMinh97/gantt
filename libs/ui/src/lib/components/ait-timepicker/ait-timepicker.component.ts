@@ -5,11 +5,11 @@ import { FormControl } from '@angular/forms';
 @Component({
   selector: 'ait-timepicker',
   templateUrl: 'ait-timepicker.component.html',
-  styleUrls:['./ait-timepicker.component.scss']
+  styleUrls: ['./ait-timepicker.component.scss']
 
 })
 
-export class AitTimepickerComponent implements  OnChanges {
+export class AitTimepickerComponent implements OnChanges {
   constructor() {
     this.timeChanged = new FormControl('');
   }
@@ -24,6 +24,11 @@ export class AitTimepickerComponent implements  OnChanges {
   hourField: string;
   minField: string;
   @Input() isReset = false;
+  @Input() id;
+
+  ID(element: string): string {
+    return this.id + '_' + element;
+  }
 
 
   get PLACEHOLDER(): string {
@@ -121,14 +126,14 @@ export class AitTimepickerComponent implements  OnChanges {
       if (t.length !== 0) {
         if (this.ishourValue) {
           const date = new Date(0, 0, 0, t[0][this.hourField] || 8);
-        this.timeExact = date;
-        this.timeChanged.setValue(date);
+          this.timeExact = date;
+          this.timeChanged.setValue(date);
         }
         else {
-          const date = new Date(0, 0, 0,0,  t[0][this.minField] || 0);
+          const date = new Date(0, 0, 0, 0, t[0][this.minField] || 0);
           this.timeExact = date;
 
-        this.timeChanged.setValue(date);
+          this.timeChanged.setValue(date);
         }
       }
     }

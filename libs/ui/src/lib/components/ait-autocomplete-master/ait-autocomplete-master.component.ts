@@ -196,7 +196,10 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
         if (key === 'isReset') {
           if (this.isReset) {
             this.selectItems = [];
-            this.defaultValue = [];
+            this.errors = [];
+            this.isError = false;
+            this.onError.emit({ isValid: null });
+
             setTimeout(() => {
               this.isReset = false;
             }, 200)

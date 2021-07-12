@@ -56,6 +56,15 @@
     <ait-card-content [isColumn]="true" [label]="'Error styles'">
       <p>This is a component, which is used to input value from user 🎉</p>
 
+      <button
+        nbButton
+        status="primary"
+        (click)="resetAll()"
+        style="width: 100px; margin: 15px"
+      >
+        reset all
+      </button>
+
       <div
         style="
           margin-left: 20px;
@@ -78,6 +87,8 @@
           [isSubmit]="result.submit_text_input"
           [id]="'example1'"
           [errorMessages]="errors"
+          [isReset]="result.resetAll"
+          [required]="true"
         ></ait-input-text>
         <button
           nbButton
@@ -91,6 +102,7 @@
         <code>#Ouput : {{ result?.text_input }}</code>
         <ait-space></ait-space>
         <ait-input-number
+          [isReset]="result.resetAll"
           [label]="'c_2003'"
           [placeholder]="'c_2003'"
           [max]="9999999999999"
@@ -104,6 +116,8 @@
           [id]="'example2'"
           [isSubmit]="result.submit_text_number"
           [errorMessages]="errors"
+          [required]="true"
+
         ></ait-input-number>
 
         <button
@@ -120,7 +134,8 @@
         <code>#Ouput : {{ result?.number_input }}</code>
         <ait-space></ait-space>
         <ait-datepicker
-          [required]="false"
+          [isReset]="result.resetAll"
+          [required]="true"
           [label]="'Datepicker'"
           [styleLabel]="{ 'text-transform': 'initial' }"
           [width]="'400px'"
@@ -156,16 +171,19 @@
           (watchValue)="getValueMaster($event)"
           [styleLabel]="{ 'text-transform': 'initial' }"
           [isSubmit]="result.submit_master"
+          [isReset]="result.resetAll"
+          [required]="true"
+
         ></ait-autocomplete-master>
         <code>#Ouput : {{ result?.master | json }}</code>
         <button
-        nbButton
-        status="primary"
-        (click)="subMitMaster()"
-        style="width: 100px; margin: 15px"
-      >
-        submit
-      </button>
+          nbButton
+          status="primary"
+          (click)="subMitMaster()"
+          style="width: 100px; margin: 15px"
+        >
+          submit
+        </button>
 
         <ait-space></ait-space>
         <input
@@ -194,6 +212,9 @@
           [allowNew]="true"
           [errorMessages]="errors"
           [required]="true"
+          [isReset]="result.resetAll"
+          [required]="true"
+
         ></ait-autocomplete-master-data>
         <button
           nbButton
@@ -226,6 +247,7 @@
           [isSubmit]="result.master2"
           [allowNew]="true"
           [errorMessages]="errors"
+          [isReset]="result.resetAll"
           [required]="true"
         ></ait-autocomplete-master-data>
         <button
@@ -258,7 +280,6 @@
           [maxFiles]="3"
           [fileTypes]="'jpg,json,png'"
           [maxSize]="50"
-
         ></ait-input-file>
 
         <button
