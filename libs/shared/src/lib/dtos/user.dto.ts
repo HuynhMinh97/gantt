@@ -17,7 +17,7 @@ export interface UserJobSetting extends BaseDto {
   immigration_date: number,
   remark: string;
   qualification: string;
-  salary_desired: number;
+  desired_salary: number;
   salary_type: KeyValueDto;
 }
 export interface UserCertificateInfo extends BaseDto {
