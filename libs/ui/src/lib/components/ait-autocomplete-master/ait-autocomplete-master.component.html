@@ -96,9 +96,9 @@
     [ngStyle]="{ width: '100%' }"
     *ngIf="filteredData.length !== 0 && isOpenSuggest"
   >
-    <span class="caption" [id]="ID('caption_suggestion')">{{
+    <!-- <span class="caption" [id]="ID('caption_suggestion')">{{
       getTitle()
-    }}</span>
+    }}</span> -->
     <div class="suggestion__data" [ngStyle]="{ width: '100%' }">
       <ait-chip
         [title]="chip?.value"
