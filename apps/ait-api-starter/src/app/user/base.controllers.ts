@@ -1,5 +1,5 @@
 import { AitBaseController, AitBaseService } from "@ait/core";
-import {  EdgeCondition, KEYS, RequestCoreMatching, RequestCoreModel } from "@ait/shared";
+import { RequestCoreMatching, RequestCoreModel } from "@ait/shared";
 import { HttpService } from "@nestjs/common";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { environment } from "apps/ait-api-starter/src/environments/environment";
@@ -40,14 +40,6 @@ export class BaseController extends AitBaseController {
       .toPromise();
   }
 
-  async removeEdge(
-    condition: EdgeCondition,
-    collection: string
-  ): Promise<any> {
-    const req = new RequestCoreModel(collection);
-    req[KEYS.CONDITION] = condition || {};
-    return await this.remove(req);
-  }
 
   /**
   *
