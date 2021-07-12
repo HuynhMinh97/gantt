@@ -94,7 +94,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   isDropDownList = false;
   @Input() isReadOnly = false;
   @Input() disableOutputDefault = false;
-  @Input() isResetInput = false;
+  @Input() isReset = false;
   @Input() isError = false;
   @Input() required = false;
   @Input() label;
@@ -224,14 +224,19 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
         }
 
-        if (key === 'isResetInput') {
-          if (this.isResetInput) {
+        if (key === 'isReset') {
+          if (this.isReset) {
             this.selectOne = {};
+            this.componentErrors = [];
+            this.errorMessages = [];
+            this.isError = false
             this.optionSelected = [];
             this.inputControl.patchValue('');
             this.DataSource = AitAppUtils.deepCloneArray(this.dataSourceDf);
             this.filteredOptions$ = of(this.dataSourceDf);
-            this.isResetInput = false;
+            this.onError.emit({ isValid: null });
+
+            this.isReset = false;
           }
         }
       }
@@ -342,7 +347,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         const _keys = this.optionSelected.map((m) => m?.code);
 
         this.DataSource = AitAppUtils.deepCloneArray(this.dataSourceDf).map((d) => {
-          if (this.isResetInput) {
+          if (this.isReset) {
             return {
               ...d,
               isChecked: false,

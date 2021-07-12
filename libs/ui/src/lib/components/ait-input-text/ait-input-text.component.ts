@@ -32,6 +32,7 @@ export class AitTextInputComponent implements OnChanges {
   @Input() cols;
   @Input() classContainer;
   @Input() length = 255;
+  @Input() isReset = false;
   @Input() styleLabel;
   @Input() width;
   @Input() height;
@@ -41,6 +42,7 @@ export class AitTextInputComponent implements OnChanges {
   componentErrors = []
   msgRequired = '';
   errorArray = [];
+  value = '';
 
   inputCtrl: FormControl;
 
@@ -52,6 +54,7 @@ export class AitTextInputComponent implements OnChanges {
   constructor(private translateService: AitTranslationService) {
     this.inputCtrl = new FormControl('');
     this.msgRequired = this.translateService.getMsg('E0001').replace('{0}', this.getNameField());
+
   }
   ID(element: string): string {
     return this.id + '_' + element;
@@ -96,7 +99,16 @@ export class AitTextInputComponent implements OnChanges {
             this.onChange(this.inputCtrl.value);
           }
         }
+        if (key === 'isReset') {
 
+          if (this.isReset) {
+            this.reset();
+            this.isError = false;
+            this.componentErrors = [];
+            this.errorMessages = [];
+            this.onError.emit({ isValid: null });
+          }
+        }
       }
     }
   }
@@ -120,7 +132,6 @@ export class AitTextInputComponent implements OnChanges {
       }
       else {
         this.componentErrors = [];
-        console.log(this.messagesError())
         if (this.messagesError().length === 0) {
           this.isError = false;
           this.onError.emit({ isValid: true });
@@ -137,7 +148,9 @@ export class AitTextInputComponent implements OnChanges {
   getPlaceholder = () => this.translateService.translate(this.placeholder);
 
   onChange(value) {
+    this.value = value;
     this.checkReq(value);
     this.watchValue.emit(value);
+
   }
 }

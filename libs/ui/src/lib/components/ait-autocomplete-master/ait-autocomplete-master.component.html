@@ -77,6 +77,26 @@
       (focusout)="outFocus()"
     />
   </div>
+  <p
+    class="caption"
+    [id]="ID('empty_result')"
+    style="margin-top: 8px !important"
+    *ngIf="inputControlMaster.value !== '' && messageSearch"
+  >
+    {{ messageSearch }}
+  </p>
+  <p
+    class="caption"
+    [id]="ID('caption_limit')"
+    style="
+      word-break: break-word;
+      color: #8f9bb3;
+      font-size: 12px;
+      margin-top: 8px !important;
+    "
+  >
+    {{ getInfo() }}
+  </p>
   <div class="caption" *ngIf="guidance">
     <div class="icon" *ngIf="guidanceIcon">
       <nb-icon [icon]="guidanceIcon"></nb-icon>
@@ -96,14 +116,14 @@
     [ngStyle]="{ width: '100%' }"
     *ngIf="filteredData.length !== 0 && isOpenSuggest"
   >
-    <span class="caption" [id]="ID('caption_suggestion')">{{
+    <!-- <span class="caption" [id]="ID('caption_suggestion')">{{
       getTitle()
-    }}</span>
+    }}</span> -->
     <div class="suggestion__data" [ngStyle]="{ width: '100%' }">
       <ait-chip
         [title]="chip?.value"
         *ngFor="let chip of filteredData"
-        (onClickChip)="addItems(chip)"
+        (onClickChip)="addItems(chip); inputControlMaster.setValue('')"
         [icon]="'plus-outline'"
         [id]="ID('suggested_chip')"
       ></ait-chip>

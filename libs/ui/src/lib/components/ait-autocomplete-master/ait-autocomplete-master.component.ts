@@ -103,6 +103,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   @Input() id;
   @Input() isSubmit = false;
   @Output() onError = new EventEmitter();
+  messageSearch = '';
 
   ID(element: string) {
     return this.id + '_' + element;
@@ -119,6 +120,12 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   }
 
   getFieldName = () => this.translateService.translate(this.label);
+
+  getInfo = () => {
+    const msg = this.translateService.getMsg('I0044');
+    const res = (msg || '').replace('{0}', this.maxItem).replace('{1}', this.getFieldName());
+    return res;
+  }
 
   viewHandle(opt) {
     return opt?.value;
@@ -196,7 +203,10 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
         if (key === 'isReset') {
           if (this.isReset) {
             this.selectItems = [];
-            this.defaultValue = [];
+            this.errors = [];
+            this.isError = false;
+            this.onError.emit({ isValid: null });
+            this.messageSearch = '';
             setTimeout(() => {
               this.isReset = false;
             }, 200)
@@ -220,6 +230,12 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
         }
       }
     }
+  }
+
+  getEmptyMessage = (data: any[]) => {
+    const message = this.translateService.translate('データがありません。')
+
+    return data.length !== 0 ? '' : message;
   }
 
   getLimitInput = () => {
@@ -297,12 +313,15 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
     }
     if ($event.value === '') {
       this.filteredData = [];
+      this.messageSearch = '';
+
     }
   }
 
   outFocus = () => {
     this.clearErrors();
     this.inputControlMaster.reset();
+    this.messageSearch = '';
     if (this.required) {
       if (this.selectItems.length === 0) {
         this.isError = true;
@@ -352,9 +371,12 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
             const _keys = this.excludedValue.map(e => e?._key);
             if (_keys.length !== 0) {
               this.filteredData = AitAppUtils.deepCloneArray(this.DataSource).filter(f => !_keys.includes(f._key));
+              this.messageSearch = this.getEmptyMessage(this.filteredData);
             }
             else {
               this.filteredData = AitAppUtils.deepCloneArray(this.DataSource);
+              this.messageSearch = this.getEmptyMessage(this.filteredData);
+
             }
             this.isOpenSuggest = true;
           }
@@ -363,6 +385,8 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
       else {
         this.DataSource = [];
         this.filteredData = [];
+        this.messageSearch = '';
+
       }
     })
   }
@@ -416,6 +440,13 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   getFilteredData = () => {
     const _keys = (this.selectItems || []).map(m => m._key);
     this.filteredData = this.DataSource.filter(f => !_keys.includes(f._key));
+    if (this.filteredData.length !== 0) {
+      this.messageSearch = this.getEmptyMessage(this.filteredData);
+    }
+    else {
+      this.messageSearch = '';
+    }
+
   }
 
   addItems = (info) => {
