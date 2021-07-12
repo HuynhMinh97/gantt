@@ -21,7 +21,7 @@ export interface JobInfoDto extends BaseDto  {
   shift_3_to_minute: number,
   holiday: string,
   salary_type: KeyValueDto,
-  salary_desired: number,
+  desired_salary: number,
   salary: number,
   benefit: string,
   commission_amount: number,
