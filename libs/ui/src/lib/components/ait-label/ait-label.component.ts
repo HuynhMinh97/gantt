@@ -21,6 +21,10 @@ export class AitLabelComponent implements OnChanges  {
 
   }
 
+  get LANG() {
+    return this.translateService.currentLang;
+  }
+
   getLabelTranslate = () => {
     return this.translateService.translate(this.label || '');
   }

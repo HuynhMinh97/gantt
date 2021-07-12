@@ -167,7 +167,15 @@ export class AitUiComponent extends AitBaseComponent {
   }
 
   getValueDatePicker = (value) => {
+    console.log(value)
     this.result.date_picker = value
+  }
+
+  resetAll = () => {
+    this.result.resetAll = true;
+    setTimeout(() => {
+      this.result.resetAll = false;
+    }, 50)
   }
 
 
