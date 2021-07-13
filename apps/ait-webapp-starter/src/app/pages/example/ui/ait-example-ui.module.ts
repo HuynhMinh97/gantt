@@ -65,7 +65,8 @@ const AIT_UI_MODULES = [
   AitOutputTextModule,
   AitConfirmDialogModule,
   NbButtonModule,
-  NbInputModule
+  NbInputModule,
+  AitTimePickerModule
 ];
 
 // There are some service from @ait/ui you need

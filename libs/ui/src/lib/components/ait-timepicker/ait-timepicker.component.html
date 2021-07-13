@@ -4,12 +4,11 @@
 <div class="time_picker">
   <input
     [id]="ID('input')"
-    [nbTimepicker]="timepicker"
+    #inputTimepicker
     style="
       height: 40px;
       width: 50px;
       border-radius: 5px;
-      border: none;
       padding: 10px;
       font-weight: 600;
       margin: 5px;
@@ -17,20 +16,26 @@
       font-size: 12px;
       text-align: center;
     "
-    [ngStyle]="mode === 'dark' ? { border: '1px solid' } : null"
+    [ngStyle]="mode === 'light' ? {  border: '1px solid rgb(228, 233, 242)' } : {border : 'none'}"
     [placeholder]="PLACEHOLDER"
     [(ngModel)]="timeExact"
+    (input)="handleInput($event.target.value)"
+    (focusout)="focusout()"
+    (click)="openPanel()"
+    [maxLength]="2"
+    (keydown.enter)="onEnter()"
   />
-  <nb-timepicker
-    [hoursText]="'時間'"
-    [minutesText]="'分'"
-    [timeFormat]="TIME_FORMAT"
-    [step]="STEP"
-    [applyButtonText]="'OK'"
-    [singleColumn]="!isTuples"
-    #timepicker
-    [date]="timeExact"
-    (onSelectTime)="getTimeChanged($event)"
-    (blur)="outFocus()"
-  ></nb-timepicker>
+  <div class="header" *ngIf="isOpen">
+    <p>{{ getTimeText() }}</p>
+  </div>
+  <div class="suggestion" *ngIf="isOpen">
+    <div
+      class="item"
+      *ngFor="let time of getContentTime()"
+      (click)="onSelectTime(time)"
+      [class.active]="time === textCompared"
+    >
+      <span >{{ time }}</span>
+    </div>
+  </div>
 </div>

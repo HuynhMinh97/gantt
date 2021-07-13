@@ -117,7 +117,6 @@
           [isSubmit]="result.submit_text_number"
           [errorMessages]="errors"
           [required]="true"
-
         ></ait-input-number>
 
         <button
@@ -172,7 +171,6 @@
           [isSubmit]="result.submit_master"
           [isReset]="result.resetAll"
           [required]="true"
-
         ></ait-autocomplete-master>
         <code>#Ouput : {{ result?.master | json }}</code>
         <button
@@ -213,7 +211,6 @@
           [required]="true"
           [isReset]="result.resetAll"
           [required]="true"
-
         ></ait-autocomplete-master-data>
         <button
           nbButton
@@ -301,7 +298,53 @@
           [guidance]="'whatever you want'"
           [width]="'400px'"
         ></ait-input-text>
+        <ait-label [label]="'Time picker'"></ait-label>
+        <div style="display: flex; margin: 30px">
+          <ait-timepicker
+            [ishourValue]="true"
+            [defaultValue]="8"
+            [fieldName]="'time1'"
+            [placeholder]="'HH'"
+            (watchValue)="result.time1 = $event.time1"
+            [id]="'shift_1_from_hour'"
+          ></ait-timepicker>
+          <ait-timepicker
+            [isminuteValue]="true"
+            [fieldName]="'time1_min'"
+            [placeholder]="'mm'"
+            (watchValue)="result.time1_min = $event.time1_min"
+          ></ait-timepicker>
+          <span style="margin: 20px">~</span>
+
+          <ait-timepicker
+            [ishourValue]="true"
+            [defaultValue]="8"
+            [fieldName]="'time2'"
+            [placeholder]="'HH'"
+            (watchValue)="result.time2 = $event.time2"
+            [id]="'shift_1_from_hour'"
+          ></ait-timepicker>
+          <ait-timepicker
+            [isminuteValue]="true"
+            [fieldName]="'time2_min'"
+            [placeholder]="'mm'"
+            (watchValue)="result.time2_min = $event.time2_min"
+          ></ait-timepicker>
+        </div>
+        <code>#Ouput time1 : {{ result?.time1 | json }}</code>
+        <code>#Ouput time1_min : {{ result?.time1_min | json }}</code>
+
+        <code>#Ouput time2 : {{ result?.time2 | json }}</code>
+        <code>#Ouput time2_min : {{ result?.time2_min | json }}</code>
       </div>
+      <ait-space></ait-space>
+      <ait-space></ait-space>
+      <ait-space></ait-space>
+      <ait-space></ait-space>
+      <ait-space></ait-space>
+      <ait-space></ait-space>
+      <ait-space></ait-space>
+      <ait-space></ait-space>
     </ait-card-content>
 
     <ait-space></ait-space>
