@@ -314,10 +314,16 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   }
 
   onInputHandle = (text) => {
+
     if (text !== '') {
-      const transform: any = Number(text) < this.max ? text : this.max;
-      const res = Number(this.replaceAll(transform)) > this.min ? transform : this.min;
-      console.log(transform, res)
+      let res = null;
+      if (!isNaN(Number(this.replaceAll(text)))) {
+        const transform: any = Number(this.replaceAll(text)) < this.max ? Number(this.replaceAll(text)) : this.max;
+
+        res = Number(this.replaceAll(transform)) > this.min ? transform : this.min;
+        console.log(transform, res)
+
+      }
       setTimeout(() => {
         this.inputCtrl.patchValue(res);
         this.exactedValue = res;
@@ -325,6 +331,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
         this.onInput();
         this.checkReq(text);
       }, 50)
+
     }
     else {
       this.inputCtrl.patchValue(text);
