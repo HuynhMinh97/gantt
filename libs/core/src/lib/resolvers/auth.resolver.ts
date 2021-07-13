@@ -1,5 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { AuthLoginInput } from '../dtos/auth-login.dto';
+import { AuthLoginInput, RefreshToken } from '../dtos/auth-login.dto';
 import { AuthRegisterInput } from '../dtos/auth-register.dto';
 import { UserToken } from '../entities/user-token.entity';
 
@@ -27,11 +27,18 @@ export class AuthResolver {
   constructor(
     private readonly authService: AuthService,
     private readonly graphqlService: AitBaseService
-  ) {}
+  ) { }
   @Mutation(() => UserToken)
   login(@Args('input', { type: () => AuthLoginInput }) input: AuthLoginInput) {
     return this.authService.login(input);
   }
+
+  @Mutation(() => UserToken)
+  refreshToken(@Args('input', { type: () => RefreshToken }) input: RefreshToken) {
+    return this.authService.generateTokenByRefreshToken(input.refresh_token);
+  }
+
+
 
   @Mutation(() => UserToken)
   register(
