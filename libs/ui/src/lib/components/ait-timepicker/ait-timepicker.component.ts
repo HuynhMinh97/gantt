@@ -61,7 +61,12 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
   openPanel = () => this.isOpen = true;
 
 
-  getNum = (num: number) => num.toString().length >= 2 ? num.toString() : '0' + num;
+  getNum = (num: number) => {
+    if (num === null || num === undefined) {
+      return null;
+    }
+    return num.toString().length >= 2 ? num.toString() : '0' + num;
+  }
 
 
   get PLACEHOLDER(): string {
@@ -83,7 +88,7 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
 
 
   handleInput = (value) => {
-    const validNumber = Number(value)
+    const validNumber = value ? Number(value) : null;
     this.currentValue = validNumber;
     if (!isNaN(this.currentValue)) {
       if (this.ishourValue) {
@@ -116,8 +121,7 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
       }
       else {
         this.timeExact = this.getNum(this.currentValue);
-
-        this.watchValue.emit({ [this.fieldName]: Number(this.timeExact) })
+        this.watchValue.emit({ [this.fieldName]: this.timeExact ? Number(this.timeExact) : null })
       }
     }
     else {
@@ -167,6 +171,11 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
 
                   this.watchValue.emit({ [this.fieldName]: null })
                 }
+              }
+              else {
+                this.timeExact = this.getNum(this.defaultValue);
+                this.textCompared = this.timeExact;
+                this.watchValue.emit({ [this.fieldName]: Number(this.timeExact) })
               }
             }
             else {

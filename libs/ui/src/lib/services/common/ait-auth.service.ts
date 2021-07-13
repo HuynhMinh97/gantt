@@ -46,6 +46,23 @@ export class AitAuthService extends AitBaseService {
 
   getAccessToken = () => localStorage.getItem(this.ACCESS_TOKEN);
 
+  refreshToken = async () => {
+    const rf = localStorage.getItem('refresh_token');
+    return  await this.apollo.mutate({
+      mutation: gql`
+      mutation {
+        refreshToken(input : {
+          refresh_token : "${rf}"
+        }) {
+          timeLog
+          refreshToken
+          token
+        }
+      }
+      `
+    }).toPromise();
+  }
+
   checkPwd = async (password) => {
     return await this.apollo.query(
       {
@@ -124,11 +141,11 @@ export class AitAuthService extends AitBaseService {
   }
 
   /**
- *
- * @param email
- * @param password
- * @returns
- */
+  *
+  * @param email
+  * @param password
+  * @returns
+  */
   async login(email: string, password: string) {
     return await this.apollo
       .mutate({
