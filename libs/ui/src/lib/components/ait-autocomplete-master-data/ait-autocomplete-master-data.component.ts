@@ -115,6 +115,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   currentValue = '';
   dataFilter = [1];
   @Input() errorMessages;
+  @Input() isResetInput;
 
 
 
