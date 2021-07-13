@@ -10,6 +10,7 @@ import { AitEnvironmentService } from '../ait-environment.service';
 import gql from 'graphql-tag';
 import { AppState } from '../../state/selectors';
 import { Apollo } from 'apollo-angular';
+import { AitAuthService } from './ait-auth.service';
 
 export interface UserSetting {
   user_id?: string;
@@ -45,7 +46,7 @@ export class AitUserService extends AitBaseService {
     httpService: HttpClient,
     snackbarService: NbToastrService,
     envService: AitEnvironmentService,
-    apollo: Apollo
+    apollo: Apollo,
   ) {
     super(envService, store, httpService, snackbarService, apollo);
     this.storeManagement = store;
@@ -111,6 +112,7 @@ export class AitUserService extends AitBaseService {
   }
 
   getUserInfo = async (user_id: string) => {
+
     if (user_id && user_id !== '') {
       let user = null;
       const rest_user: any = await this.apollo.query({
