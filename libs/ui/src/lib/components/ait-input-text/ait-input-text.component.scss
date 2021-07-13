@@ -5,6 +5,13 @@
     &.isError {
       border-color: nb-theme(color-danger-500) !important;
     }
+    &.isSuccess {
+      border : 1px solid nb-theme(color-success-500) !important;
+
+    }
+    &.hasBorder {
+      border:1px solid rgb(228, 233, 242) !important;
+    }
   }
   ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
     color: #8f9bb3;

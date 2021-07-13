@@ -1,9 +1,100 @@
+@import "../../@theme/styles/themes.scss";
 .time_picker {
+  position: relative;
   input {
     height: 40px;
     width: 150px;
     border-radius: 5px;
-    border: none;
     padding: 10px;
+    outline: none;
+    border:none;
+    &.isError {
+      border : 1px solid nb-theme(color-danger-500);
+    }
+    &.isSuccess {
+      border : 1px solid nb-theme(color-success-500);
+
+    }
+    &.hasBorder {
+      border:1px solid rgb(228, 233, 242);
+    }
+  }
+
+  .suggestion::-webkit-scrollbar {
+    width: 2px !important;
+  }
+
+  .suggestion::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .suggestion::-webkit-scrollbar-thumb {
+    background-color: #10529d !important;
+    // outline: 1px solid slategrey;
+    border-radius: 3px !important;
+  }
+  .header {
+    position: absolute;
+    z-index: 9999;
+    bottom: -36px;
+    left: 5px;
+    width: 100px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border: 1px solid rgb(228, 233, 242);
+    p {
+      margin: 0;
+      color: #8f9bb3;
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+  .suggestion {
+    position: absolute;
+    bottom: -348px;
+    left: 5px;
+
+    background-color: #fff;
+    width: 100px;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    z-index: 999;
+    overflow-y: scroll;
+    padding-top: 40px;
+    border: 1px solid rgb(228, 233, 242);
+    border-top: 0;
+
+    .item {
+      width: 100%;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      cursor: pointer;
+      span {
+        font-weight: 550;
+        color: #8f9bb3;
+      }
+      &.active {
+        background-color: #10529d;
+        span {
+          color: #fff;
+        }
+      }
+      &:hover {
+        background-color: #10529d;
+        span {
+          color: #fff;
+        }
+      }
+    }
   }
 }

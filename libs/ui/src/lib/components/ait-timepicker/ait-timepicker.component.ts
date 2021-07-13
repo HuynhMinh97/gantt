@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/member-ordering */
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -9,9 +9,11 @@ import { FormControl } from '@angular/forms';
 
 })
 
-export class AitTimepickerComponent implements OnChanges {
+export class AitTimepickerComponent implements OnChanges, OnInit {
   constructor() {
     this.timeChanged = new FormControl('');
+
+
   }
 
   timeChanged: FormControl;
@@ -20,15 +22,46 @@ export class AitTimepickerComponent implements OnChanges {
   @Input() isminuteValue;
   @Output() watchValue = new EventEmitter();
   @Input() placeholder;
-  @Input() mode: 'dark' | 'light' = 'light';
   hourField: string;
   minField: string;
   @Input() isReset = false;
   @Input() id;
+  @Input() step;
+  currentValue: any;
+  isOpen = false;
+  hours: any[];
+  minutes: any[];
+  @Input() defaultValue;
+  @Input() fieldName: string;
+  @Input() mode: 'dark' | 'light' = 'light';
+  @Input() isTwelveFormat;
+  @Input() time;
+  timeExact;
+  textCompared = '';
+  @Input() isError = false;
+  @Input() isSuccess = false;
+
+  @ViewChild('inputTimepicker') inputTimepicker: ElementRef;
+
+  ngOnInit() {
+    const step = this.step ? this.step : this.STEP;
+    const hour = this.isTwelveFormat ? 12 : 24;
+    this.hours = Array.from({ length: hour / step - 1 }, (_, i) => this.getNum((i + 1) * step));
+    this.minutes = Array.from({ length: 60 / step }, (_, i) => this.getNum((i) * step));
+  }
 
   ID(element: string): string {
     return this.id + '_' + element;
   }
+
+  getTimeText = () => this.ishourValue ? '時' : '分';
+
+  getContentTime = () => this.ishourValue ? this.hours : this.minutes;
+
+  openPanel = () => this.isOpen = true;
+
+
+  getNum = (num: number) => num.toString().length >= 2 ? num.toString() : '0' + num;
 
 
   get PLACEHOLDER(): string {
@@ -41,48 +74,122 @@ export class AitTimepickerComponent implements OnChanges {
   }
 
   get STEP(): number {
-    return this.ishourValue ? 60 : 5;
+    return this.ishourValue ? 1 : 5;
   }
 
-  outFocus = () => {
-    this.getTime(this.time);
+  onEnter = () => {
+    this.inputTimepicker.nativeElement.blur();
   }
 
-  getTimeChanged = (value) => {
-    if (this.isTuples) {
-      const date = new Date(value.time);
-      this.watchValue.emit({
-        [this.minField]: date.getMinutes(),
-        [this.hourField]: date.getHours()
-      })
+
+  handleInput = (value) => {
+    const validNumber = Number(value)
+    this.currentValue = validNumber;
+    if (!isNaN(this.currentValue)) {
+      if (this.ishourValue) {
+        if (this.currentValue > 0) {
+          this.textCompared = this.getNum(value);
+        }
+      }
+      else {
+        this.textCompared = this.getNum(value);
+      }
     }
     else {
-      const date = new Date(value.time);
-      if (this.ishourValue) {
-        this.watchValue.emit({
-          [this.hourField]: date.getHours()
-        })
-      }
-      if (this.isminuteValue) {
-        this.watchValue.emit({
-          [this.minField]: date.getMinutes()
-        })
-      }
 
     }
   }
+
+  focusout = () => {
+    if (!isNaN(this.currentValue)) {
+      if (this.ishourValue) {
+        if (this.currentValue > 0) {
+          this.timeExact = this.getNum(this.currentValue);
+          this.watchValue.emit({ [this.fieldName]: Number(this.timeExact) })
+
+        }
+        else {
+          this.timeExact = null;
+          this.watchValue.emit({ [this.fieldName]: null })
+
+        }
+      }
+      else {
+        this.timeExact = this.getNum(this.currentValue);
+
+        this.watchValue.emit({ [this.fieldName]: Number(this.timeExact) })
+      }
+    }
+    else {
+      this.timeExact = null;
+      this.watchValue.emit({ [this.fieldName]: null })
+
+    }
+
+    setTimeout(() => {
+      this.isOpen = false;
+    }, 100)
+
+  }
+
+  onSelectTime = (value) => {
+    this.timeExact = value;
+    this.watchValue.emit({ [this.fieldName]: Number(value) })
+  }
+
+  onKeyDown = (event) => {
+    const BIRTHNUMBER_ALLOWED_CHARS_REGEXP = /[0-9]+/;
+    console.log(event.data)
+    if (!BIRTHNUMBER_ALLOWED_CHARS_REGEXP.test(event.data)) {
+      event.preventDefault();
+    }
+  }
+
 
   ngOnChanges(changes: SimpleChanges) {
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
-        const element = changes[key].currentValue;
-        if (key === 'time') {
+        if (key === 'defaultValue') {
+          if (this.defaultValue) {
+            const num = Number(this.defaultValue);
+            this.currentValue = num;
+            if (!isNaN(num)) {
+              if (this.ishourValue) {
+                if (num > 0) {
 
-          if (element) {
-            this.getTime(element)
+                  this.timeExact = this.getNum(this.defaultValue);
+                  this.textCompared = this.timeExact;
+                  this.watchValue.emit({ [this.fieldName]: Number(this.timeExact) })
+                }
+                else {
+                  this.timeExact = null;
+                  this.textCompared = this.timeExact;
 
+                  this.watchValue.emit({ [this.fieldName]: null })
+                }
+              }
+            }
+            else {
+              this.timeExact = this.getNum(this.defaultValue);
+              this.textCompared = this.timeExact;
+
+              this.watchValue.emit({ [this.fieldName]: Number(this.timeExact) })
+            }
           }
+          else {
+            this.timeExact = null;
+            this.textCompared = this.timeExact;
 
+            this.watchValue.emit({ [this.fieldName]: null })
+          }
+        }
+
+        if (key === 'isReset') {
+          if (this.isReset) {
+            this.timeExact = this.defaultValue || this.currentValue || undefined;
+            console.log(this.timeExact, this.defaultValue, this.currentValue)
+            this.watchValue.emit({ [this.fieldName]: !isNaN(Number(this.timeExact)) ? Number(this.timeExact) : null })
+          }
         }
 
       }
@@ -100,44 +207,9 @@ export class AitTimepickerComponent implements OnChanges {
     return res;
   }
 
-  @Input() time;
-  timeExact;
 
-  getTime = (time) => {
-    if (this.isTuples) {
-      const t = (time || []).filter(f => !!f);
-      Object.keys(t[0] || {}).forEach(key => this.hourField = key);
-      Object.keys(t[1] || {}).forEach(key => this.minField = key);
 
-      if (t.length !== 0) {
-        const date = new Date(0, 0, 0, t[0][this.hourField] || 8, t[1][this.minField] || 0);
-        this.timeExact = date;
-        this.timeChanged.setValue(date);
-      }
-    }
-    else {
-      const t = (time || []).filter(f => !!f);
-      if (this.ishourValue) {
-        Object.keys(t[0] || {}).forEach(key => this.hourField = key);
-      }
-      else {
-        Object.keys(t[0] || {}).forEach(key => this.minField = key);
-      }
-      if (t.length !== 0) {
-        if (this.ishourValue) {
-          const date = new Date(0, 0, 0, t[0][this.hourField] || 8);
-          this.timeExact = date;
-          this.timeChanged.setValue(date);
-        }
-        else {
-          const date = new Date(0, 0, 0, 0, t[0][this.minField] || 0);
-          this.timeExact = date;
 
-          this.timeChanged.setValue(date);
-        }
-      }
-    }
 
-  }
 
 }
