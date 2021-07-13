@@ -62,7 +62,6 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   ) {
     store.pipe(select(getEmpId)).subscribe(userId => this.user_id = userId);
     store.pipe(select(getLang_Company)).subscribe(ob => this.company = ob.company);
-    // console.log(this.image);
   }
   files: any[] = [];
   Files: File[] = [];
@@ -90,6 +89,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   @Output() onError = new EventEmitter();
   @Input() isSubmit = false;
   @Input() hasStatus = true;
+  @Input() isNew = false;
 
   ID(element: string): string {
     return this.id + '_' + element;
@@ -104,20 +104,28 @@ export class AitInputFileComponent implements OnInit, OnChanges {
         if (key === 'isReset') {
           if (this.isReset) {
             this.fileDatas = [];
-            this.displayedFiles = this.dataDisplayDf;
-            this.componentErrors = [];
-            this.errorMessages = [];
-            this.isError = false;
+            this.displayedFiles = this.isNew? [] : this.dataDisplayDf;
             setTimeout(() => {
               this.isReset = false;
             }, 100)
           }
         }
 
+        if(key === 'fileKeys') {
+          if (this.fileKeys && this.fileKeys.length !== 0) {
+            this.fileUploadService.getFilesByFileKeys(this.fileKeys || []).then((r: any) => {
+              if (r?.status === RESULT_STATUS.OK) {
+                this.dataDisplayDf = r.data;
+                this.displayedFiles = r.data;
+              }
+            })
+          }
+        }
+
         if (key === 'isSubmit') {
           if (this.isSubmit) {
             if (this.savedData.length !== 0) {
-              this.submitMultipleForm().then(r => {
+              this.submitMultipleForm().then(() => {
                 this.checkReq();
               })
             }
@@ -323,7 +331,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
       this.files.splice(index, 1);
       this.fileDatas = this.fileDatas.filter(f => f._key !== file?._key);
       this.displayedFiles = this.displayedFiles.filter(f => f._key !== file?._key);
-      this.watchValue.emit({ value: this.fileDatas });
+      this.watchValue.emit({ value: [...this.fileDatas, ...this.displayedFiles] });
       this.checkReq();
     }
   }
@@ -363,7 +371,6 @@ export class AitInputFileComponent implements OnInit, OnChanges {
     this.fileRequest = fileReq;
     // this.fileDatas = [...this.fileDatas, files[files.length - 1]];
     this.files = this.files = [files[files.length - 1]];
-    // // console.log(this.fileDatas);
 
 
     this.files = this.files = [files[files.length - 1]];
@@ -394,27 +401,12 @@ export class AitInputFileComponent implements OnInit, OnChanges {
         console.log(data)
         this.savedData = [...this.savedData, ...data];
         this.fileDatas = [...this.fileDatas, { ...data[0], progress: 0 }];
-
-        this.watchValue.emit({ value: this.fileDatas });
+        this.watchValue.emit({ value: [...this.fileDatas, ...this.displayedFiles] });
         this.fileDatas.forEach((file, index) => {
           this.uploadFilesSimulator(file._key);
         })
 
         this.checkReq();
-        // this.submitMultipleForm().then(
-        //   res => {
-        //     if (res.status !== 0) {
-
-
-
-
-        //     }
-        //     else {
-
-        //     }
-
-        //   }
-        // )
       }
 
     }
@@ -473,20 +465,10 @@ export class AitInputFileComponent implements OnInit, OnChanges {
     });
 
     try {
-      const response = await this.fileUploadService.uploadFile(data);
-      if (!response) {
-        throw new Error(response.statusText);
-      }
-      // originalname
-      if (response.status === 200) {
-        return {
-          status: 1,
-          data: response.data
-        }
-      }
-      return {
-        status: 0
-      }
+      data.forEach(async (file: any) => {
+        delete file.progress;
+        await this.fileUploadService.uploadFile(file);
+      });
     } catch (err) {
       return {
         status: 0
