@@ -1,3 +1,4 @@
+@import "../../@theme/styles/themes.scss";
 .time_picker {
   position: relative;
   input {
@@ -6,6 +7,17 @@
     border-radius: 5px;
     padding: 10px;
     outline: none;
+    border:none;
+    &.isError {
+      border : 1px solid nb-theme(color-danger-500);
+    }
+    &.isSuccess {
+      border : 1px solid nb-theme(color-success-500);
+
+    }
+    &.hasBorder {
+      border:1px solid rgb(228, 233, 242);
+    }
   }
 
   .suggestion::-webkit-scrollbar {
@@ -25,7 +37,7 @@
     position: absolute;
     z-index: 9999;
     bottom: -36px;
-    left: 0;
+    left: 5px;
     width: 100px;
     height: 40px;
     display: flex;
@@ -45,7 +57,9 @@
   .suggestion {
     position: absolute;
     bottom: -348px;
-    background-color: #f5f5f5;
+    left: 5px;
+
+    background-color: #fff;
     width: 100px;
     height: 350px;
     display: flex;

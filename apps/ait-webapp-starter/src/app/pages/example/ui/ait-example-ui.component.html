@@ -307,12 +307,14 @@
             [placeholder]="'HH'"
             (watchValue)="result.time1 = $event.time1"
             [id]="'shift_1_from_hour'"
+            [isReset]="result.resetAll"
           ></ait-timepicker>
           <ait-timepicker
             [isminuteValue]="true"
             [fieldName]="'time1_min'"
             [placeholder]="'mm'"
             (watchValue)="result.time1_min = $event.time1_min"
+            [isReset]="result.resetAll"
           ></ait-timepicker>
           <span style="margin: 20px">~</span>
 
@@ -323,12 +325,15 @@
             [placeholder]="'HH'"
             (watchValue)="result.time2 = $event.time2"
             [id]="'shift_1_from_hour'"
+            [isReset]="result.resetAll"
           ></ait-timepicker>
           <ait-timepicker
             [isminuteValue]="true"
             [fieldName]="'time2_min'"
             [placeholder]="'mm'"
             (watchValue)="result.time2_min = $event.time2_min"
+            [isReset]="result.resetAll"
+
           ></ait-timepicker>
         </div>
         <code>#Ouput time1 : {{ result?.time1 | json }}</code>

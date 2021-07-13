@@ -5,6 +5,9 @@
   <input
     [id]="ID('input')"
     #inputTimepicker
+    [class.isError]="isError"
+    [class.isSuccess]="isSuccess"
+    [class.hasBorder]="mode === 'light'"
     style="
       height: 40px;
       width: 50px;
@@ -16,7 +19,6 @@
       font-size: 12px;
       text-align: center;
     "
-    [ngStyle]="mode === 'light' ? {  border: '1px solid rgb(228, 233, 242)' } : {border : 'none'}"
     [placeholder]="PLACEHOLDER"
     [(ngModel)]="timeExact"
     (input)="handleInput($event.target.value)"

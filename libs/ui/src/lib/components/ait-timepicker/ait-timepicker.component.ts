@@ -38,6 +38,8 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
   @Input() time;
   timeExact;
   textCompared = '';
+  @Input() isError = false;
+  @Input() isSuccess = false;
 
   @ViewChild('inputTimepicker') inputTimepicker: ElementRef;
 
@@ -154,20 +156,39 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
             if (!isNaN(num)) {
               if (this.ishourValue) {
                 if (num > 0) {
-                  this.timeExact = this.getNum(this.defaultValue);
 
+                  this.timeExact = this.getNum(this.defaultValue);
+                  this.textCompared = this.timeExact;
                   this.watchValue.emit({ [this.fieldName]: Number(this.timeExact) })
                 }
                 else {
                   this.timeExact = null;
+                  this.textCompared = this.timeExact;
+
                   this.watchValue.emit({ [this.fieldName]: null })
                 }
               }
             }
             else {
               this.timeExact = this.getNum(this.defaultValue);
+              this.textCompared = this.timeExact;
+
               this.watchValue.emit({ [this.fieldName]: Number(this.timeExact) })
             }
+          }
+          else {
+            this.timeExact = null;
+            this.textCompared = this.timeExact;
+
+            this.watchValue.emit({ [this.fieldName]: null })
+          }
+        }
+
+        if (key === 'isReset') {
+          if (this.isReset) {
+            this.timeExact = this.defaultValue || this.currentValue || undefined;
+            console.log(this.timeExact, this.defaultValue, this.currentValue)
+            this.watchValue.emit({ [this.fieldName]: !isNaN(Number(this.timeExact)) ? Number(this.timeExact) : null })
           }
         }
 
