@@ -1,5 +1,5 @@
 import { AitBaseController, AitBaseService } from "@ait/core";
-import {  EdgeCondition, KEYS, RequestCoreMatching, RequestCoreModel } from "@ait/shared";
+import { RequestCoreModel } from "@ait/shared";
 import { HttpService } from "@nestjs/common";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { environment } from "apps/ait-api-starter/src/environments/environment";
@@ -38,65 +38,6 @@ export class BaseController extends AitBaseController {
     return await this.httpService
       .post<any>(CommonUtils.join(this.apiUrl, environment.API_CORE.GET), req)
       .toPromise();
-  }
-
-  async removeEdge(
-    condition: EdgeCondition,
-    collection: string
-  ): Promise<any> {
-    const req = new RequestCoreModel(collection);
-    req[KEYS.CONDITION] = condition || {};
-    return await this.remove(req);
-  }
-
-  /**
-  *
-  *
-  * @param {RequestCoreModel} req
-  * @returns {Promise<any>}
-  * @memberof BaseController
-  */
-  async syncPe(req: any): Promise<any> {
-    this.logger.log(LOG_TEMPLATE.CORE_URL);
-    this.logger.log(CommonUtils.join(this.apiUrl, environment.API_CORE.AUREOLE_V));
-    return await this.httpService
-      .post<any>(CommonUtils.join(this.apiUrl, environment.API_CORE.AUREOLE_V), req)
-      .toPromise();
-  }
-
-  /**
-   *
-   *
-   * @param {RequestCoreModel} req
-   * @returns {Promise<any>}
-   * @memberof BaseController
-   */
-  async excuteFunction(req: RequestCoreMatching): Promise<any> {
-    this.logger.log(LOG_TEMPLATE.CORE_URL);
-    this.logger.log(CommonUtils.join(this.apiUrl, environment.API_CORE.EXCUTE_FUCTION));
-    return await this.httpService
-      .post<any>(CommonUtils.join(this.apiUrl, environment.API_CORE.EXCUTE_FUCTION), req)
-      .toPromise();
-  }
-
-  /**
-   *
-   *
-   * @param {RequestCoreModel} req
-   * @returns {Promise<any>}
-   * @memberof BaseController
-   */
-  async matching(req: RequestCoreMatching): Promise<any> {
-    this.logger.log(LOG_TEMPLATE.CORE_URL);
-    this.logger.log(CommonUtils.join(this.apiUrl, environment.API_CORE.MATCHING));
-    return await this.httpService
-      .post<any>(CommonUtils.join(this.apiUrl, environment.API_CORE.MATCHING), req)
-      .toPromise();
-  }
-
-
-  async searchOnView(req: any): Promise<any> {
-    return await this.httpService.post<any>(CommonUtils.join(this.apiUrl, environment.API_CORE.SEARCH), req).toPromise();
   }
 
   /**

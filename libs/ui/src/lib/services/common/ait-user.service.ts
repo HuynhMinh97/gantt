@@ -223,7 +223,7 @@ export class AitUserInfo {
 export class UserCertificate {
   residence_status: KeyValueDto[];
   salary_type: KeyValueDto;
-  salary_desired: number;
+  desired_salary: number;
   business: KeyValueDto[];
   desired_occupation: KeyValueDto;
   prefecture: KeyValueDto[];

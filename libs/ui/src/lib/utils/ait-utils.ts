@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { isArrayFull, isEqual, Utils } from '@ait/shared';
 import jwt_decode from 'jwt-decode';
@@ -96,8 +97,29 @@ export class AitAppUtils extends Utils {
         continue;
       }
       if (typeof obj1[prop] === 'object') {
-        obj1[prop] = isArrayFull(obj1[prop]) ? Utils.getKeys(obj1[prop]) : Utils.getKey(obj1[prop]);
-        obj2[prop] = isArrayFull(obj2[prop]) ? Utils.getKeys(obj2[prop]) : Utils.getKey(obj2[prop]);
+        if (isArrayFull(obj1[prop])) {
+          obj1[prop] = obj1[prop].every((data: any) =>
+            Object.prototype.hasOwnProperty.call(data, '_key')
+          )
+            ? Utils.getKeys(obj1[prop])
+            : obj1[prop];
+        } else {
+          obj1[prop] = Object.prototype.hasOwnProperty.call((obj1[prop] || []), '_key')
+            ? Utils.getKey(obj1[prop])
+            : obj1[prop];
+        }
+
+        if (isArrayFull(obj2[prop])) {
+          obj2[prop] = obj2[prop].every((data: any) =>
+            Object.prototype.hasOwnProperty.call(data, '_key')
+          )
+            ? Utils.getKeys(obj2[prop])
+            : obj2[prop];
+        } else {
+          obj2[prop] = Object.prototype.hasOwnProperty.call((obj2[prop] || []), '_key')
+            ? Utils.getKey(obj2[prop])
+            : obj2[prop];
+        }
       }
       if (!isEqual(JSON.stringify(obj1[prop]), JSON.stringify(obj2[prop]))) {
         checked = false;
@@ -105,7 +127,7 @@ export class AitAppUtils extends Utils {
       }
     }
     return checked;
-  }
+  };
 
   static validateEmail = (email) => {
     // eslint-disable-next-line max-len
