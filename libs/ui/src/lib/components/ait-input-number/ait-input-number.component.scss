@@ -23,6 +23,13 @@ input {
     &.isError {
       border: 1px solid nb-theme(color-danger-500);
     }
+    &.isSuccess {
+      border : 1px solid nb-theme(color-success-500);
+
+    }
+    &.hasBorder {
+      border:1px solid rgb(228, 233, 242);
+    }
   }
 
 

@@ -602,15 +602,20 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
 
   isSelectMatch = (value) => {
-    const values = this.dataSourceDf.map(m => m?.value);
+    const values = this.dataSourceDf.find(m => m.value === value);
     if (this.maxItem === 1) {
 
-      if (!values.includes(value)) {
+      if (!values) {
         this.selectOne = {};
         this.inputControl.patchValue('');
+        this.watchValue.emit({ value: [] })
+
       }
       else {
+        this.selectOne = { _key: values?.code, value: values?.value };
         this.inputControl.patchValue(this.selectOne?.value || '');
+        this.watchValue.emit({ value: [this.selectOne] })
+
 
       }
     }
