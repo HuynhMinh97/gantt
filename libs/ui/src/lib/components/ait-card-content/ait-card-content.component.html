@@ -58,7 +58,8 @@
       class="content"
       [ngStyle]="{
         'flex-direction': isColumn ? 'column' : 'row',
-        'align-items': isColumn ? 'flex-start' : 'center'
+        'align-items': isColumn ? 'flex-start' : 'center',
+        'padding': padding ? padding : ''
       }"
       [ngClass]="isOpen ? null : 'isClose'"
     >
