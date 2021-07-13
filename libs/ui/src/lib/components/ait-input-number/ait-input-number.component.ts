@@ -199,7 +199,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   }
 
   handleFocusOut = () => {
-
+    console.log(this.inputCtrl.value)
     this.checkReq(this.inputCtrl.value);
     if (this.isReset) {
       this.currentNumber = null;
@@ -217,27 +217,37 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
 
     if (this.inputCtrl.value === '' || this.inputCtrl.value === null) {
       this.inputCtrl.patchValue(null);
+      this.watchValue.emit(null)
 
       return;
     }
 
     if (this.isCurrency) {
       this.inputCtrl.patchValue(this.numberPipe.transform(this.replaceAll(this.currentNumber), this.format) + this.symbol);
+      this.watchValue.emit(this.replaceAll(this.currentNumber))
+
     }
     else {
       if (this.inputCtrl.value === null || this.inputCtrl.value === undefined) {
         this.inputCtrl.setValue(null);
+        this.watchValue.emit(null)
       }
       else if (this.inputCtrl.value === 0 || this.inputCtrl.value === '0') {
         this.inputCtrl.setValue(0);
+        this.watchValue.emit(0)
+
       }
       else {
         if (this.inputCtrl.value) {
           const target = this.numberPipe.transform(this.replaceAll(this.currentNumber), this.format);
           this.inputCtrl.setValue(target);
+          this.watchValue.emit(this.inputCtrl.value)
+
         }
         else {
           this.inputCtrl.setValue(null);
+          this.watchValue.emit(null)
+
         }
 
 
@@ -288,7 +298,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
 
   checkReq = (value?: any) => {
     if (this.required) {
-      if (!value) {
+      if (!value && value !== 0 && value !== '0') {
         this.isError = true;
         const msg = this.translateService.getMsg('E0001').replace('{0}', this.getFieldName());
         this.componentErrors = Array.from(new Set([...this.componentErrors, msg]));
@@ -314,10 +324,16 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   }
 
   onInputHandle = (text) => {
+    console.log(Number(this.replaceAll(text)))
     if (text !== '') {
-      const transform: any = Number(text) < this.max ? text : this.max;
-      const res = Number(this.replaceAll(transform)) > this.min ? transform : this.min;
-      console.log(transform, res)
+      let res = null;
+      if (!isNaN(Number(this.replaceAll(text)))) {
+        const transform: any = Number(this.replaceAll(text)) < this.max ? Number(this.replaceAll(text)) : this.max;
+
+        res = Number(this.replaceAll(transform)) > this.min ? transform : this.min;
+        console.log(transform, res)
+
+      }
       setTimeout(() => {
         this.inputCtrl.patchValue(res);
         this.exactedValue = res;
@@ -325,6 +341,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
         this.onInput();
         this.checkReq(text);
       }, 50)
+
     }
     else {
       this.inputCtrl.patchValue(text);

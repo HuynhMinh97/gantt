@@ -21,6 +21,7 @@ export class AitCardContentComponent {
   @Input() loading = false;
   @Output() onClickButtonHeader = new EventEmitter();
   @Input() isColumn = false;
+  @Input() padding = '';
   @Input() actionBtn = [
 
   ]

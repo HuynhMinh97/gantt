@@ -91,6 +91,7 @@
   align-items: center;
   flex-direction: row;
   position: relative;
+  border: 1px solid nb-theme(color-basic-600);
   &.isError {
     border: 1px solid nb-theme(color-danger-500);
   }
@@ -116,7 +117,7 @@
   }
   .search {
     border: none;
-    background-color: transparent;
+    background: nb-theme(color-basic-200);
     width: 100%;
     flex-grow: 1;
     padding-left: 10px;
