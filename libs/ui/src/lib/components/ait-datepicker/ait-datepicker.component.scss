@@ -1,7 +1,16 @@
 @import "../../@theme/styles/themes.scss";
-.isError {
-  border: 1px solid nb-theme(color-danger-500);
+.datepicker {
+  &.isError {
+    border: 1px solid nb-theme(color-danger-500);
+  }
+  &.isSuccess {
+    border: 1px solid nb-theme(color-success-500) !important;
+  }
+  &.hasBorder {
+    border: 1px solid rgb(228, 233, 242) !important;
+  }
 }
+
 .caption {
   width: 100%;
   margin-top: 10px;
