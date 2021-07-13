@@ -11,3 +11,11 @@ export class AuthLoginInput {
   @Field(() => String)
   password: string;
 }
+
+
+@InputType()
+export class RefreshToken {
+  @Field(() => String, { nullable: true })
+  refresh_token?: string;
+
+}
