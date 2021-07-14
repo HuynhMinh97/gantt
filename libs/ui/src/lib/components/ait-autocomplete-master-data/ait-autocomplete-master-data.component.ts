@@ -624,7 +624,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
     }
 
-    return values.includes(value);
+    return !!values;
   }
 
   getUniqueSelection = (arr: any[]) => {
