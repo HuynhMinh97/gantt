@@ -238,10 +238,13 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
 
       }
       else {
+
         if (this.inputCtrl.value) {
+
           const target = this.numberPipe.transform(this.replaceAll(this.currentNumber), this.format);
+
           this.inputCtrl.setValue(target);
-          this.watchValue.emit(this.inputCtrl.value)
+          this.watchValue.emit(this.replaceAll(this.inputCtrl.value))
 
         }
         else {

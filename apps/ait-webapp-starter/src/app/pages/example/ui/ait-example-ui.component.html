@@ -105,9 +105,7 @@
           [isReset]="result.resetAll"
           [label]="'c_2003'"
           [placeholder]="'c_2003'"
-          [max]="9999999999999"
-          [length]="5"
-          [format]="'###,###,###.000'"
+          [max]="999999999999"
           [guidance]="'whatever you want'"
           [guidanceIcon]="'star'"
           (watchValue)="getValueNumberInput($event)"
@@ -302,7 +300,7 @@
         <div style="display: flex; margin: 30px">
           <ait-timepicker
             [ishourValue]="true"
-            [defaultValue]="8"
+            [defaultValue]="state.time1"
             [fieldName]="'time1'"
             [placeholder]="'HH'"
             (watchValue)="result.time1 = $event.time1"
@@ -314,13 +312,15 @@
             [fieldName]="'time1_min'"
             [placeholder]="'mm'"
             (watchValue)="result.time1_min = $event.time1_min"
+            [defaultValue]="state.time1_min"
             [isReset]="result.resetAll"
+            [id]="'shift_1_from_hour'"
           ></ait-timepicker>
           <span style="margin: 20px">~</span>
 
           <ait-timepicker
             [ishourValue]="true"
-            [defaultValue]="8"
+            [defaultValue]="state.time2"
             [fieldName]="'time2'"
             [placeholder]="'HH'"
             (watchValue)="result.time2 = $event.time2"
@@ -330,10 +330,10 @@
           <ait-timepicker
             [isminuteValue]="true"
             [fieldName]="'time2_min'"
+            [defaultValue]="state.time2_min"
             [placeholder]="'mm'"
             (watchValue)="result.time2_min = $event.time2_min"
             [isReset]="result.resetAll"
-
           ></ait-timepicker>
         </div>
         <code>#Ouput time1 : {{ result?.time1 | json }}</code>
