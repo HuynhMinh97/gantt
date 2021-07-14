@@ -65,10 +65,9 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     private layoutScrollService?: NbLayoutScrollService,
     public toastrService?: NbToastrService,
   ) {
-
-
     this.user_id = AitAppUtils.getUserId();
     this.env = _env;
+    this.company = this.env.COMMON.COMPANY_DEFAULT;
 
 
 
@@ -97,7 +96,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
   public initBaseComponent = () => {
     const userId = this.authService.getUserID();
     //setting default lang & company
-    this.company = this.env.COMMON.COMPANY_DEFAULT;
+
     this.store.pipe(select(getLang)).subscribe(lang => {
 
       if (this.lang !== lang) {
@@ -192,13 +191,15 @@ export class AitBaseComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.refreshToken().then((r: any) => {
+    if (localStorage.getItem('refresh_token')) {
+      this.refreshToken().then((r: any) => {
 
-      if (r?.data?.refreshToken) {
-        const result: any = r?.data?.refreshToken;
-        this.authService.saveTokens(result?.token, result?.refreshToken);
-      }
-    });
+        if (r?.data?.refreshToken) {
+          const result: any = r?.data?.refreshToken;
+          this.authService.saveTokens(result?.token, result?.refreshToken);
+        }
+      });
+    }
 
 
 
@@ -524,8 +525,8 @@ export class AitBaseComponent implements OnInit, OnDestroy {
       query: gql`
       query {
         findSystem(request : {
-          company: "${this.company}",
-          lang: "${this.lang || this.env.COMMON.LANG_DEFAULT}",
+          company: "${this.company || this.env?.COMMON?.COMPANY_DEFAULT}",
+          lang: "${this.lang || this.env?.COMMON?.LANG_DEFAULT}",
           collection: "sys_caption",
           user_id: "${this.user_id}",
           condition: {
