@@ -66,6 +66,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     public toastrService?: NbToastrService,
   ) {
     this.user_id = AitAppUtils.getUserId();
+    const userId = this.authService.getUserID();
     this.env = _env;
     this.company = this.env.COMMON.COMPANY_DEFAULT;
     // call api get all message follow by type as I : Information , W : Warning, E: Error
@@ -74,30 +75,6 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     //get caption common for buttons, header, label, ...
     this.getCommonCaptions().then();
 
-    // Listening event loading when the app is loading
-    store
-      .pipe(select(getLoading))
-      .subscribe((loading) => (this.isLoading = loading));
-
-
-
-
-
-    // apply user info for base component
-    store.subscribe({
-      next: state => {
-        const { userInfo } = state.commonReducer;
-        this.user_id = AitAppUtils.getUserId();
-        this.username = userInfo?.username;
-        this.userProfile = userInfo?.user_profile;
-        this.email = userInfo?.email;
-      }
-    });
-
-  }
-
-  public initBaseComponent = () => {
-    const userId = this.authService.getUserID();
     //setting default lang & company
 
     this.store.pipe(select(getLang)).subscribe(lang => {
@@ -193,6 +170,31 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
       }
     }
+
+    // Listening event loading when the app is loading
+    store
+      .pipe(select(getLoading))
+      .subscribe((loading) => (this.isLoading = loading));
+
+
+
+
+
+    // apply user info for base component
+    store.subscribe({
+      next: state => {
+        const { userInfo } = state.commonReducer;
+        this.user_id = AitAppUtils.getUserId();
+        this.username = userInfo?.username;
+        this.userProfile = userInfo?.user_profile;
+        this.email = userInfo?.email;
+      }
+    });
+
+  }
+
+  public initBaseComponent = () => {
+
 
     if (localStorage.getItem('refresh_token')) {
       this.refreshToken().then((r: any) => {
