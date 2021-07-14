@@ -68,7 +68,11 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     this.user_id = AitAppUtils.getUserId();
     this.env = _env;
     this.company = this.env.COMMON.COMPANY_DEFAULT;
+    // call api get all message follow by type as I : Information , W : Warning, E: Error
+    this.getAllMessages().then();
 
+    //get caption common for buttons, header, label, ...
+    this.getCommonCaptions().then();
 
 
     // Listening event loading when the app is loading
