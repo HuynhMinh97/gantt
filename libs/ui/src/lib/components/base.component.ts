@@ -75,7 +75,6 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     //get caption common for buttons, header, label, ...
     this.getCommonCaptions().then();
 
-
     //setting default lang & company
 
     this.store.pipe(select(getLang)).subscribe(lang => {

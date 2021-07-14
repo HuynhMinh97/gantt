@@ -166,7 +166,7 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
         if (key === 'defaultValue') {
-          if (this.defaultValue) {
+          if (this.defaultValue || [0,'0','00'].includes(this.defaultValue)) {
             const num = Number(this.defaultValue);
             this.currentValue = num;
             if (!isNaN(num)) {
