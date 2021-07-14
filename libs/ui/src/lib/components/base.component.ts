@@ -62,7 +62,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     public apollo: Apollo,
     public userService: AitUserService,
     _env: AitEnvironmentService,
-    private layoutScrollService?: NbLayoutScrollService,
+    public layoutScrollService?: NbLayoutScrollService,
     public toastrService?: NbToastrService,
   ) {
     this.user_id = AitAppUtils.getUserId();
@@ -73,7 +73,6 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
     //get caption common for buttons, header, label, ...
     this.getCommonCaptions().then();
-
 
     // Listening event loading when the app is loading
     store

@@ -244,7 +244,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
           const target = this.numberPipe.transform(this.replaceAll(this.currentNumber), this.format);
 
           this.inputCtrl.setValue(target);
-          this.watchValue.emit(this.replaceAll(this.inputCtrl.value))
+          this.watchValue.emit(Number(this.replaceAll(this.inputCtrl.value)))
 
         }
         else {
