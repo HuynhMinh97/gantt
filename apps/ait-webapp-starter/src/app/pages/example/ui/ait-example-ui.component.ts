@@ -44,6 +44,7 @@ export class AitUiComponent extends AitBaseComponent {
 
   date = Date.now();
   errors = [];
+  state: any = {};
 
   buttonGroups = {
     one: [
@@ -172,6 +173,7 @@ export class AitUiComponent extends AitBaseComponent {
   }
 
   resetAll = () => {
+
     this.result.resetAll = true;
     setTimeout(() => {
       this.result.resetAll = false;
