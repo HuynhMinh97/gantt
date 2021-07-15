@@ -4,7 +4,7 @@
     [nbSpinner]="loading"
     nbSpinnerStatus="primary"
   >
-    <div class="header__card">
+    <div class="header__card" *ngIf="!disableHeader">
       <div style="flex-grow: 1" (click)="toggleExpan()">
         <div
           class="text__gradient"
@@ -20,7 +20,7 @@
         </div>
       </div>
 
-      <div style="display: flex" (click)="toggleExpan(true)">
+      <div style="display: flex;position: relative;" (click)="toggleExpan(true)">
         <div
           class="button_header_card"
           *ngIf="actionBtn.length !== 0"
@@ -45,15 +45,17 @@
           style="cursor: pointer"
           *ngIf="!isOpen"
           icon="arrow-ios-downward-outline"
+          (click)="toggleExpan()"
         ></nb-icon>
         <nb-icon
           style="cursor: pointer"
           *ngIf="isOpen"
           icon="arrow-ios-upward-outline"
+          (click)="toggleExpan()"
         ></nb-icon>
       </div>
     </div>
-    <div class="divider"></div>
+    <div class="divider" *ngIf="!disableHeader"></div>
     <div
       class="content"
       [ngStyle]="{

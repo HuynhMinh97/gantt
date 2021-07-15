@@ -6,7 +6,8 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
   styleUrls: ['./ait-button-group.component.scss']
 })
 export class AitButtonGroupComponent implements OnChanges {
-  @Input() buttons: ButtonGroupInterface[] = []
+  @Input() buttons: ButtonGroupInterface[] = [];
+  @Input() display: 'default' | 'sticky';
 
   btnCtrl: ButtonGroupInterface[] = [];
 
@@ -41,4 +42,8 @@ export interface ButtonGroupInterface {
   styleIcon?: any;
   styleText?: any;
   toolTip?: string;
+  hide?: boolean;
+  isLoading?: boolean;
+  id?: string;
+  isDefault?: boolean;
 }
