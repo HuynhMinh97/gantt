@@ -1,4 +1,4 @@
-<div class="btn__container">
+<div class="btn__container" [class.sticky]="display === 'sticky'">
   <ait-button
     *ngFor="let b of btnCtrl"
     [style]="b.style"
@@ -6,6 +6,11 @@
     (click)="b.action()"
     [color]="'#000'"
     [classBtn]="'btn'"
+    [hide]="b.hide"
+    [id]="b.id"
+    [nbSpinner]="b.isLoading"
+    nbSpinnerStatus="primary"
+    [isDefault]="b.isDefault"
   >
   </ait-button>
 </div>

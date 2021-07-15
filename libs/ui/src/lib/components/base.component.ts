@@ -108,7 +108,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
                   )
                 );
 
-                //console.log(this.lang)
+                //// console.log(this.lang)
 
                 // //get caption common for buttons, header, label, ...
                 // this.getCommonCaptions(this.lang).then();
@@ -323,7 +323,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
   }
 
   async getUserSettingData(classMaster: string) {
-    //console.log(this.lang)
+    //// console.log(this.lang)
     let user_setting = [];
     const rest_user: any = await this.apollo.query({
       query: gql`
@@ -696,7 +696,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     // Parse to gql
     const gqlQuery = jsonToGraphQLQuery(query, { pretty: true });
 
-    // //console.log(gqlQuery);
+    // //// console.log(gqlQuery);
 
     return this.apollo
       .query({

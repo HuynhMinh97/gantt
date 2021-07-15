@@ -159,7 +159,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   }
 
   get VALUE(): string {
-    // //console.log(this.selectOne?.value, this.defaultValue[0]?.value, '')
+    // //// console.log(this.selectOne?.value, this.defaultValue[0]?.value, '')
     if (!this.defaultValue) {
       return this.selectOne?.value || ''
     }
@@ -376,7 +376,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
             f.code === this.defaultValue[0]?._key
         );
         this.selectOne = { _key: findByKey?.code, value: findByKey?.value };
-        // console.log(this.defaultValue, this.dataSourceDf, this.selectOne)
+        // // console.log(this.defaultValue, this.dataSourceDf, this.selectOne)
         if (!this.disableOutputDefault) {
           const res = this.selectOne?._key ? [this.selectOne] : []
           this.watchValue.emit({ value: res });

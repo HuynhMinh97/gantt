@@ -13,5 +13,7 @@
   justify-content: center;
   cursor: pointer;
   z-index: 555;
-  transition: 0.8s all ease-in-out;
+  &:hover {
+    transform: scale(1.1);
+  }
 }
