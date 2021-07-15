@@ -1,6 +1,6 @@
 import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NbDialogService, NbToastrService } from '@nebular/theme';
+import { NbDialogService, NbIconLibraries, NbToastrService } from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { AitAuthService, AitEnvironmentService, AitTranslationService, AitUserService } from '../../services';
@@ -34,9 +34,11 @@ export class AitMenuUserComponent extends AitBaseComponent implements OnInit {
     private toatsrService: NbToastrService,
     private layoutSerive: AitLayoutService,
     envService: AitEnvironmentService,
-    apollo: Apollo
+    apollo: Apollo,
+    private iconLibraries: NbIconLibraries
   ) {
     super(store, authService, apollo, userService, envService, null, toatsrService);
+    this.iconLibraries.registerFontPack('font-awesome', { packClass: 'far', iconClassPrefix: 'fa' });
     // tslint:disable-next-line: deprecation
     store.pipe(select(getUFullName)).subscribe(name => this.fullName = name);
     store.pipe(select(getUserInfo)).subscribe(ob => this.userInfo = ob);
@@ -69,7 +71,9 @@ export class AitMenuUserComponent extends AitBaseComponent implements OnInit {
 
   }
   navigate = (link) => {
-    this.router.navigateByUrl(link);
+    if (link) {
+      this.router.navigateByUrl(link);
+    }
   }
 
   navigateApiHistory = () => {
