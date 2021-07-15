@@ -71,7 +71,9 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   isClickedIcon = false;
   defaultValueDf: any;
   data = [];
+  currentValue = '';
 
+  @Input() hideLabel = false;
   @ViewChild('autoInput', { static: false }) auto: ElementRef;
   @ViewChild('input', { static: false }) input: ElementRef;
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
@@ -112,7 +114,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Input() isSubmit = false;
   @Input() allowNew = false;
   @Output() onError = new EventEmitter();
-  currentValue = '';
   dataFilter = [1];
   @Input() errorMessages;
   @Input() isResetInput;
@@ -762,6 +763,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     this.clearErrors();
     if (this.required) {
       if (value === '' && this.optionSelected.length === 0) {
+
         const err = this.translateSerivce.getMsg('E0001').replace('{0}', this.getFieldName());
         this.isError = true;
         this.componentErrors = [err];
@@ -776,15 +778,10 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     this.openAutocomplete();
     this.onInputValues.emit({ value: [{ value }] });
     if (this.maxItem === 1) {
-      const res = this._filter(value);
-      this.data = res;
-      this.filteredOptions$ = of(res);
       this.onInput.emit({ value });
       if (value === '') {
         this.selectOne = {};
-        this.defaultValue = [];
-        this.DataSource = AitAppUtils.deepCloneArray(this.dataSourceDf);
-        this.filteredOptions$ = of(this.DataSource);
+        this.filteredOptions$ = of(this.dataSourceDf);
         this.watchValue.emit({ value: [] })
       } else {
         const text = value;

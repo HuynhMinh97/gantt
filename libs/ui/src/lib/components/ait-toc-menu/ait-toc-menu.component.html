@@ -1,0 +1,20 @@
+<div class="toc_menu_wrapper">
+  <div class="container_toc_menu">
+    <div class="icon">
+      <nb-icon
+        class="nbicon"
+        icon="menu-2-outline"
+        style="color: #8f9bb3; font-size: 34px; cursor: pointer"
+        (click)="toggle()"
+      ></nb-icon>
+    </div>
+    <div
+      class="content"
+      [ngStyle]="isOpen ? { visibility: 'visible' } : { visibility: 'hidden' }"
+    >
+      <p *ngFor="let it of items" (click)="goToElemet(it.id)">
+        # {{ it.title }}
+      </p>
+    </div>
+  </div>
+</div>

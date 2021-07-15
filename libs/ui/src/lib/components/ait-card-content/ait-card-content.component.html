@@ -7,14 +7,14 @@
     <div class="header__card" *ngIf="!disableHeader">
       <div style="flex-grow: 1" (click)="toggleExpan()">
         <div
-          class="text__gradient"
+          class="text__gradient menu_toc_item"
           *ngIf="gradientString !== ''"
           [ngStyle]="{
             'background-image': gradientString,
             padding: 15 + 'px',
             'padding-left': '15px'
           }"
-
+          [id]="'menu_item_' + LABEL"
         >
           {{ LABEL }}
         </div>
