@@ -7,16 +7,16 @@
     border-radius: 5px;
     padding: 10px;
     outline: none;
-    border:none;
+    border: none;
     &.isError {
-      border : 1px solid nb-theme(color-danger-500);
+      border: 1px solid nb-theme(color-danger-500);
     }
     &.isSuccess {
-      border : 1px solid nb-theme(color-success-500);
-
+      border: 1px solid nb-theme(color-success-500);
     }
     &.hasBorder {
-      border:1px solid rgb(228, 233, 242);
+      border: 1px solid nb-theme(color-basic-600);
+      background: nb-theme(color-basic-200);
     }
   }
 
@@ -97,4 +97,6 @@
       }
     }
   }
+}
+.input_area {
 }

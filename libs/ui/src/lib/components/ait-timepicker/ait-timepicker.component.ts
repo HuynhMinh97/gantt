@@ -107,7 +107,7 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
 
   focusout = () => {
     setTimeout(() => {
-      console.log(this.currentValue);
+      // console.log(this.currentValue);
       if (!isNaN(Number(this.currentValue))) {
         if (this.ishourValue) {
           if (this.currentValue > 0) {
@@ -133,7 +133,7 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
         }
       }
       else {
-        console.log(this.currentValue)
+        // console.log(this.currentValue)
         this.timeExact = null;
         this.watchValue.emit({
           value : { [this.fieldName]: null }
@@ -155,7 +155,7 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
 
   onKeyDown = (event) => {
     const BIRTHNUMBER_ALLOWED_CHARS_REGEXP = /[0-9]+/;
-    console.log(event.data)
+    // console.log(event.data)
     if (!BIRTHNUMBER_ALLOWED_CHARS_REGEXP.test(event.data)) {
       event.preventDefault();
     }
@@ -218,7 +218,7 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
         if (key === 'isReset') {
           if (this.isReset) {
             this.timeExact = this.defaultValue || this.currentValue || undefined;
-            console.log(this.timeExact, this.defaultValue, this.currentValue)
+            // console.log(this.timeExact, this.defaultValue, this.currentValue)
             this.watchValue.emit({
               value : { [this.fieldName]: !isNaN(Number(this.timeExact)) ? Number(this.timeExact) : null }
             })

@@ -5,8 +5,8 @@
       [icon]="item.icon"
       [nbTooltip]="item.title"
       [nbTooltipPlacement]="'bottom'"
-      (click)="item.action()"
-      [link]="item?.link"
+      (click)="swipeScreen(item.link);item.action();"
+      class="action_icon"
     ></nb-action>
   </nb-actions>
 </div>
