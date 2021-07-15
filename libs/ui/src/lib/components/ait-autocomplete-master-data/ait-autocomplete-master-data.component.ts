@@ -117,6 +117,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   dataFilter = [1];
   @Input() errorMessages;
   @Input() isResetInput;
+  @Input() clearError = false;
 
 
 
@@ -239,6 +240,14 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
             this.onError.emit({ isValid: null });
 
             this.isReset = false;
+          }
+        }
+
+        if (key === 'clearError') {
+          if (this.clearError) {
+            this.componentErrors = [];
+            this.errorMessages = [];
+            this.isError = false;
           }
         }
       }

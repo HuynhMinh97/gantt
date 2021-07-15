@@ -61,6 +61,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   @Input() format = '';
   @Input() isSubmit = false;
   @Input() errorMessages = [];
+  @Input() clearError = false;
   msgRequired = ''
 
 
@@ -160,6 +161,14 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
         if (key === 'isSubmit') {
           if (this.isSubmit) {
             this.checkReq(this.inputCtrl.value);
+          }
+        }
+
+        if (key === 'clearError') {
+          if (this.clearError) {
+            this.isError = false;
+            this.componentErrors = [];
+            this.errorMessages = [];
           }
         }
 
