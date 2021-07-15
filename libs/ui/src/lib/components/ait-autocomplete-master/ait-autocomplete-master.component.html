@@ -7,7 +7,7 @@
   ></ait-label>
   <div
     class="input__container"
-    style="margin-top: 8px; width: 100%; background-color: #fff"
+    style="margin-top: 8px; width: 100%"
     [ngClass]="{ isError: isError }"
   >
     <div
@@ -80,7 +80,7 @@
   <p
     class="caption"
     [id]="ID('empty_result')"
-    style="margin-top: 8px !important"
+    style="margin: 0; margin-top: 8px !important"
     *ngIf="inputControlMaster.value !== '' && messageSearch"
   >
     {{ messageSearch }}
@@ -89,6 +89,7 @@
     class="caption"
     [id]="ID('caption_limit')"
     style="
+      margin: 0;
       word-break: break-word;
       color: #8f9bb3;
       font-size: 12px;

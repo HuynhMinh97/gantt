@@ -78,7 +78,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   ngOnInit() {
     this.inputCtrl.valueChanges.subscribe({
       next: value => {
-        // console.log(value)
+        // // console.log(value)
         // this.currentNumber = value;
 
       }
@@ -106,8 +106,9 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
         if (key === 'defaultValue') {
+          // console.log(this.defaultValue)
           let res;
-          if (this.defaultValue) {
+          if (this.defaultValue || [0, '0', '00'].includes(this.defaultValue)) {
 
             const transform: any = Number(this.defaultValue) < this.max ? this.defaultValue : this.max;
             const res = Number(transform) > this.min ? transform : this.min;
@@ -120,7 +121,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
             this.onError.emit({ isValid: res && (res || '').length !== 0 });
           }
 
-          if (this.defaultValue) {
+          if (this.defaultValue || [0, '0', '00'].includes(this.defaultValue)) {
             if (this.isCurrency) {
               const symbol = this.currencySymbolService.getCurrencyByLocale();
               this.symbol = symbol;
@@ -130,13 +131,19 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
               this.inputCtrl.setValue(this.defaultValue);
             }
             else {
-              this.inputCtrl.setValue(this.defaultValue ? this.numberPipe.transform(this.defaultValue, this.format) : null);
+              // console.log(this.defaultValue)
+              if ([0, '0', '00'].includes(this.defaultValue)) {
+                this.inputCtrl.setValue(0);
+              }
+              else {
+                this.inputCtrl.setValue(this.defaultValue ? this.numberPipe.transform(this.defaultValue, this.format) : null);
 
+              }
             }
           }
         }
         if (key === 'isReset') {
-          // console.log(this.isReset);
+          // // console.log(this.isReset);
           if (this.isReset) {
             this.isError = false;
             this.componentErrors = [];
@@ -199,7 +206,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   }
 
   handleFocusOut = () => {
-    console.log(this.inputCtrl.value)
+    // console.log(this.inputCtrl.value)
     this.checkReq(this.inputCtrl.value);
     if (this.isReset) {
       this.currentNumber = null;
@@ -327,14 +334,14 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   }
 
   onInputHandle = (text) => {
-    console.log(Number(this.replaceAll(text)))
+    // console.log(Number(this.replaceAll(text)))
     if (text !== '') {
       let res = null;
       if (!isNaN(Number(this.replaceAll(text)))) {
         const transform: any = Number(this.replaceAll(text)) < this.max ? Number(this.replaceAll(text)) : this.max;
 
         res = Number(this.replaceAll(transform)) > this.min ? transform : this.min;
-        console.log(transform, res)
+        // console.log(transform, res)
 
       }
       setTimeout(() => {
