@@ -91,6 +91,9 @@ export * from './lib/components/ait-autocomplete-master/ait-autocomplete-master.
 //output text
 export * from './lib/components/ait-output-text/ait-output-text.module';
 
+//ait toc menu
+export * from './lib/components/ait-toc-menu/ait-toc-menu.module';
+
 
 //layout modules
 export * from './lib/@theme/layouts/ait-common-layout/ait-common-layout.module'

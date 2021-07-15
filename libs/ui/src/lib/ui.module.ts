@@ -43,7 +43,8 @@ import {
   NbDialogModule,
   NbWindowModule,
   NbToastrModule,
-  NbCardModule
+  NbCardModule,
+  NbIconLibraries
 } from '@nebular/theme';
 import { AitEnvironmentService } from './services/ait-environment.service';
 import { Apollo } from 'apollo-angular';
@@ -58,6 +59,7 @@ import { AitUiComponent } from './ait-ui.component';
 import { AppState, } from './state/selectors';
 import { AitSettingAppService } from './services/ait-setting-app.service';
 import { AitTemplatePopupModule } from './components/ait-template-popup/ait-template-popup.module';
+import { AitTocMenuModule } from './components/ait-toc-menu/ait-toc-menu.module';
 
 export function initializeApp(appInitService: AitSettingAppService) {
   return () => {
@@ -120,6 +122,7 @@ const NB_MODULES = [
       ...inItialState
     }),
     ...NB_MODULES,
+    AitTocMenuModule
   ],
   exports: [
     CommonModule,
@@ -155,7 +158,8 @@ const NB_MODULES = [
     AitOutputTextModule,
     AitTranslatePipe,
     AitUiComponent,
-    AitBaseComponent
+    AitBaseComponent,
+    AitTocMenuModule
   ],
   providers: [
     AitBaseService,
@@ -177,7 +181,9 @@ export class AitUiModule {
     private httpLink: HttpLink,
     private apollo: Apollo,
     private store: Store<AppState>,
+    private iconLibraries: NbIconLibraries,
     @Optional() @SkipSelf() parentModule?: AitUiModule,
+
 
   ) {
     // console.log = () => { };
