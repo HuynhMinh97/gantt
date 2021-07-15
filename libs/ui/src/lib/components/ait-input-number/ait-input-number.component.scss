@@ -16,24 +16,24 @@ input {
 }
 
 .input__contrainer {
-  background: nb-theme(color-basic-200);
-  border: 1px solid nb-theme(color-basic-600);
+
   input {
+    &.isDefault {
+      background: nb-theme(color-basic-200);
+      border: 1px solid nb-theme(color-basic-600);
+    }
     font-size: 12px;
     text-align: right;
     &.isError {
       border: 1px solid nb-theme(color-danger-500);
     }
     &.isSuccess {
-      border : 1px solid nb-theme(color-success-500);
-
+      border: 1px solid nb-theme(color-success-500);
     }
     &.hasBorder {
-      border:1px solid rgb(228, 233, 242);
+      border: 1px solid rgb(228, 233, 242);
     }
   }
-
-
 }
 
 .caption {
