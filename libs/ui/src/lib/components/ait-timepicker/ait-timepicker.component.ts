@@ -107,20 +107,42 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
 
   focusout = () => {
     setTimeout(() => {
+      const target = Number(this.currentValue);
+      let res;
+      if (this.ishourValue) {
+        if (this.isTwelveFormat) {
+          res = (target > 11 || target < 1) ? null : target;
+        }
+        else {
+          res = (target > 23 || target < 1) ? null : target;
+        }
+      }
+      else {
+        if (target === 60) {
+          res = 0
+        }
+        else if (target > 60) {
+          res = null;
+        }
+        else {
+          res = target;
+        }
+      }
+      this.currentValue = res;
       // console.log(this.currentValue);
       if (!isNaN(Number(this.currentValue))) {
         if (this.ishourValue) {
           if (this.currentValue > 0) {
             this.timeExact = this.getNum(this.currentValue);
             this.watchValue.emit({
-              value : { [this.fieldName]: Number(this.timeExact) }
+              value: { [this.fieldName]: Number(this.timeExact) }
             })
 
           }
           else {
             this.timeExact = null;
             this.watchValue.emit({
-              value : { [this.fieldName]: null }
+              value: { [this.fieldName]: null }
             })
 
           }
@@ -128,7 +150,7 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
         else {
           this.timeExact = this.getNum(this.currentValue);
           this.watchValue.emit({
-            value : { [this.fieldName]: this.timeExact ? Number(this.timeExact) : null }
+            value: { [this.fieldName]: this.timeExact ? Number(this.timeExact) : null }
           })
         }
       }
@@ -136,17 +158,18 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
         // console.log(this.currentValue)
         this.timeExact = null;
         this.watchValue.emit({
-          value : { [this.fieldName]: null }
+          value: { [this.fieldName]: null }
         })
 
       }
       this.isOpen = false;
-    },100)
+    }, 100)
 
 
   }
 
   onSelectTime = (value) => {
+
     this.timeExact = value;
     this.currentValue = value;
     this.isOpen = false;
@@ -166,7 +189,7 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
         if (key === 'defaultValue') {
-          if (this.defaultValue || [0,'0','00'].includes(this.defaultValue)) {
+          if (this.defaultValue || [0, '0', '00'].includes(this.defaultValue)) {
             const num = Number(this.defaultValue);
             this.currentValue = num;
             if (!isNaN(num)) {
@@ -176,7 +199,7 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
                   this.timeExact = this.getNum(this.defaultValue);
                   this.textCompared = this.timeExact;
                   this.watchValue.emit({
-                    value : { [this.fieldName]: Number(this.timeExact) }
+                    value: { [this.fieldName]: Number(this.timeExact) }
                   })
                 }
                 else {
@@ -184,7 +207,7 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
                   this.textCompared = this.timeExact;
 
                   this.watchValue.emit({
-                    value : { [this.fieldName]: null }
+                    value: { [this.fieldName]: null }
                   })
                 }
               }
@@ -192,7 +215,7 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
                 this.timeExact = this.getNum(this.defaultValue);
                 this.textCompared = this.timeExact;
                 this.watchValue.emit({
-                  value : { [this.fieldName]: Number(this.timeExact) }
+                  value: { [this.fieldName]: Number(this.timeExact) }
                 })
               }
             }
@@ -201,7 +224,7 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
               this.textCompared = this.timeExact;
 
               this.watchValue.emit({
-                value : { [this.fieldName]: Number(this.timeExact) }
+                value: { [this.fieldName]: Number(this.timeExact) }
               })
             }
           }
@@ -210,17 +233,19 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
             this.textCompared = this.timeExact;
 
             this.watchValue.emit({
-              value : { [this.fieldName]: null }
+              value: { [this.fieldName]: null }
             })
           }
         }
 
         if (key === 'isReset') {
           if (this.isReset) {
+            this.currentValue = null;
+
             this.timeExact = this.defaultValue || this.currentValue || undefined;
             // console.log(this.timeExact, this.defaultValue, this.currentValue)
             this.watchValue.emit({
-              value : { [this.fieldName]: !isNaN(Number(this.timeExact)) ? Number(this.timeExact) : null }
+              value: { [this.fieldName]: !isNaN(Number(this.timeExact)) ? Number(this.timeExact) : null }
             })
           }
         }

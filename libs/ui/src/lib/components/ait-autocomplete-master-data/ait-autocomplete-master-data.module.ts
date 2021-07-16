@@ -4,11 +4,21 @@ import { AitAutoCompleteMasterDataComponent } from './ait-autocomplete-master-da
 import { NbCheckboxModule, NbIconModule, NbInputModule, NbTooltipModule } from '@nebular/theme';
 import { AitErrorMessageModule } from '../ait-error-message/ait-error-message.module';
 import { AitLabelModule } from '../ait-label/ait-label.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [AitAutoCompleteMasterDataComponent],
-  imports: [ CommonModule,NbInputModule,NbCheckboxModule,NbTooltipModule,NbIconModule, AitErrorMessageModule,AitLabelModule ],
+  imports: [
+    CommonModule,
+    NbInputModule,
+    NbCheckboxModule,
+    NbTooltipModule,
+    NbIconModule,
+    AitErrorMessageModule,
+    AitLabelModule,
+    FormsModule,
+    ReactiveFormsModule],
   exports: [AitAutoCompleteMasterDataComponent],
   providers: [],
 })
-export class AitAutocompleteMasterDataModule {}
+export class AitAutocompleteMasterDataModule { }
