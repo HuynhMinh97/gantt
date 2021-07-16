@@ -29,7 +29,13 @@ export class AitAuthModule {
           autoSchemaFile: 'schema.gql',
           path: environment.APP.GRAPHQL_PREFIX,
         }),
-      ]
+      ],
+      providers: [
+        {
+          provide: 'ENVIRONMENT',
+          useValue: environment
+        }
+      ],
     }
   }
 }

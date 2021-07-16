@@ -3,7 +3,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { AppState, getAllInfoRequest, getLang } from '../../state/selectors';
+import { AppState, getAllInfoRequest } from '../../state/selectors';
 import { Observable, of, Subscription } from 'rxjs';
 import { tap, catchError, map } from 'rxjs/operators';
 import { SHOWSNACKBAR } from '../../state/actions';
@@ -14,11 +14,6 @@ import { AitEnvironmentService } from '../ait-environment.service';
 import { AitAppUtils } from '../../utils/ait-utils';
 import { Apollo, gql } from 'apollo-angular';
 import { jsonToGraphQLQuery } from 'json-to-graphql-query';
-import { AitAuthService } from './ait-auth.service';
-
-
-
-
 @Injectable(
   {
     providedIn: 'root',
@@ -237,6 +232,7 @@ export class AitBaseService implements OnDestroy {
       }
     };
 
+    (!!this.env.isMatching) && (request['condition']['del_flag'] = !this.env.isMatching);
     query.query[name]['__args'] = { request };
     // Parse to gql
     const gqlQuery = jsonToGraphQLQuery(query, { pretty: true });
