@@ -60,8 +60,9 @@ export class AitBackButtonComponent {
           // page refreshes.
           const n = AitAppUtils.getParamsOnUrl();
           const m = AitAppUtils.getParamsOnUrl(true);
+          const j = location.hash;
 
-          this.isHide = n.includes('recommenced') || n.includes('new') || m.length > 30;
+          this.isHide =  j.includes('job/new') || m.length > 30;
           this.isChangeColor =
             n.includes('sign') || n.includes('change-password') || n.includes('user-setting') || n.includes('sync-pe-api-setting') ||
             n.includes('sync-pe-api-history') || n.includes('new') || n.includes('job') || n.includes('company-basic-info')

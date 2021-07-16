@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { GqlAuthGuard } from '../guards/gql-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
@@ -10,8 +11,8 @@ import { AitBaseService } from '../services/ait-base.service';
 
 @Resolver()
 export class SystemResolver extends AitBaseService {
-  constructor(db: Database) {
-    super(db);
+  constructor(db: Database, env: any) {
+    super(db, env);
   }
 
   @Query(() => SystemResponse, { name: 'findSystem' })

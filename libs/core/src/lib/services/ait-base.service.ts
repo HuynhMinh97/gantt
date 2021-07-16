@@ -18,7 +18,10 @@ import { AitUtils } from '../utils/ait-utils';
 
 @Injectable()
 export class AitBaseService {
-  constructor(@Inject(DB_CONNECTION_TOKEN) private readonly db: Database) {}
+  constructor(
+    @Inject(DB_CONNECTION_TOKEN) private readonly db: Database,
+    @Inject('ENVIRONMENT') private env: any
+  ) {}
 
   company = '';
   lang = '';
@@ -70,20 +73,31 @@ export class AitBaseService {
         return new BaseResponse(RESULT_STATUS.ERROR, [], error);
       }
     }
-     return new BaseResponse(RESULT_STATUS.OK, resData, KEYS.SUCCESS);
+    return new BaseResponse(RESULT_STATUS.OK, resData, KEYS.SUCCESS);
   }
 
   async remove(request: any, user?: SysUser) {
+    const isMatching = !!this.env.isMatching;
     const req = this.db.collection(request.collection) as DocumentCollection;
-    const rq = aql`
-    FOR data IN ${request.data}
-    REMOVE data._key IN ${req}
-    LET removed = OLD
-    RETURN removed
-  `;
-  const resData = [];
+
+    const aqlQuery = isMatching
+      ? aql`
+      FOR item IN ${request.data}
+      FOR data IN ${req}
+      FILTER data._key == item._key
+      UPDATE data WITH { del_flag: true } IN ${req}
+      RETURN data
+    `
+      : aql`
+      FOR data IN ${request.data}
+      REMOVE data._key IN ${req}
+      LET removed = OLD
+      RETURN removed
+    `;
+
+    const resData = [];
     try {
-      const res = await this.db.query(rq);
+      const res = await this.db.query(aqlQuery);
       for await (const data of res) {
         resData.push(data);
       }
@@ -108,10 +122,15 @@ export class AitBaseService {
 
   async find(request: any, user?: SysUser) {
     const lang = request.lang;
-    let aqlStr = `LET current_data = ( ${this.getSearchCondition(request, false)} ) `;
-    aqlStr += `LET result = LENGTH(current_data) > 0 ? current_data : ( ${this.getSearchCondition(request, true)} ) `;
+    let aqlStr = `LET current_data = ( ${this.getSearchCondition(
+      request,
+      false
+    )} ) `;
+    aqlStr += `LET result = LENGTH(current_data) > 0 ? current_data : ( ${this.getSearchCondition(
+      request,
+      true
+    )} ) `;
     aqlStr += `FOR data IN result RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name }) `;
-    console.log(aqlStr);
     try {
       const result = await this.db.query(aqlStr);
       const rawData = [];
@@ -130,13 +149,19 @@ export class AitBaseService {
     const lang = request.lang;
     const collection = request.collection;
     const options = request.options;
-    const collectionReq = [COLLECTIONS.MASTER_DATA , COLLECTIONS.COMPANY, COLLECTIONS.CAPTION];
+    const collectionReq = [
+      COLLECTIONS.MASTER_DATA,
+      COLLECTIONS.COMPANY,
+      COLLECTIONS.CAPTION,
+    ];
     const mapData = [];
 
-    isSystem && (collection === COLLECTIONS.USER_SETTING) && condition['user_id'] ? delete condition['user_id'] : '';
+    isSystem && collection === COLLECTIONS.USER_SETTING && condition['user_id']
+      ? delete condition['user_id']
+      : '';
 
     let aqlStr = `FOR data IN ${collection} `;
-    aqlStr += `FILTER data.company == "${company}" `
+    aqlStr += `FILTER data.company == "${company}" `;
     for (const prop in condition) {
       if (prop === KEYS.NAME && collectionReq.includes(collection)) {
         aqlStr += `&& LOWER(data.name.${lang}) `;
@@ -145,17 +170,24 @@ export class AitBaseService {
         const data = condition[prop];
         if (isObjectFull(data)) {
           if (data.operator && hasLength(data.value)) {
-            aqlStr += ` && data.${prop} ${data.operator} ${JSON.stringify(data.value)} `;
+            aqlStr += ` && data.${prop} ${data.operator} ${JSON.stringify(
+              data.value
+            )} `;
           }
-          if (data.attribute && data.ref_collection && data.ref_attribute && !isSystem) {
+          if (
+            data.attribute &&
+            data.ref_collection &&
+            data.ref_attribute &&
+            !isSystem
+          ) {
             mapData.push(data);
           }
         } else {
           aqlStr += `&& data.${prop} == `;
           aqlStr +=
-          typeof condition[prop] === 'string'
-            ? `"${condition[prop]}" `
-            : `${condition[prop]} `;
+            typeof condition[prop] === 'string'
+              ? `"${condition[prop]}" `
+              : `${condition[prop]} `;
         }
       }
     }
@@ -169,7 +201,7 @@ export class AitBaseService {
     }
 
     aqlStr += `RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name, `;
-    mapData.forEach(data => {
+    mapData.forEach((data) => {
       const ref_condition = data.ref_condition;
 
       aqlStr += ` ${data.attribute} : ( `;
@@ -182,16 +214,16 @@ export class AitBaseService {
           if (ref_condition[prop]) {
             aqlStr += ` && doc.${prop} == `;
             aqlStr +=
-            typeof ref_condition[prop] === 'string'
-              ? `"${ref_condition[prop]}" `
-              : `${ref_condition[prop]} `;
+              typeof ref_condition[prop] === 'string'
+                ? `"${ref_condition[prop]}" `
+                : `${ref_condition[prop]} `;
           }
         }
       }
       aqlStr += ` RETURN `;
-      aqlStr += data.return_field ? 
-      ` doc.${data.return_field}  ) : `:
-      `{ _key: doc.code, value: doc.name.${lang} } ) : `;
+      aqlStr += data.return_field
+        ? ` doc.${data.return_field}  ) : `
+        : `{ _key: doc.code, value: doc.name.${lang} } ) : `;
 
       aqlStr += ` (FOR doc IN ${data.ref_collection} `;
       aqlStr += ` FILTER doc.${data.ref_attribute} == data.${data.attribute} `;
@@ -200,17 +232,17 @@ export class AitBaseService {
           if (ref_condition[prop]) {
             aqlStr += ` && doc.${prop} == `;
             aqlStr +=
-            typeof ref_condition[prop] === 'string'
-              ? `"${ref_condition[prop]}" `
-              : `${ref_condition[prop]} `;
+              typeof ref_condition[prop] === 'string'
+                ? `"${ref_condition[prop]}" `
+                : `${ref_condition[prop]} `;
           }
         }
       }
       aqlStr += ` RETURN `;
-      aqlStr += data.return_field ? 
-      ` doc.${data.return_field} )[0] ), ` :
-      `{ _key: doc.code, value: doc.name.${lang} })[0] ), `;
-    })
+      aqlStr += data.return_field
+        ? ` doc.${data.return_field} )[0] ), `
+        : `{ _key: doc.code, value: doc.name.${lang} })[0] ), `;
+    });
     aqlStr += `  }) `;
     return aqlStr;
   }
