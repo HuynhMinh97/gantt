@@ -1,20 +1,25 @@
 <div class="toc_menu_wrapper">
   <div class="container_toc_menu">
+    <div class="panel_header"></div>
     <div class="icon">
       <nb-icon
         class="nbicon"
         icon="menu-2-outline"
-        style="color: #8f9bb3; font-size: 34px; cursor: pointer"
+        style="font-size: 34px; cursor: pointer"
+        [ngStyle]="{ color: !isOpen ? '#10529d' : '#8f9bb3' }"
         (click)="toggle()"
       ></nb-icon>
     </div>
     <div
       class="content"
-      [ngStyle]="isOpen ? { visibility: 'visible' } : { visibility: 'hidden' }"
+      [ngStyle]="isOpen ? { display: 'block' } : { display: 'none' }"
     >
-      <p *ngFor="let it of items" (click)="goToElemet(it.id)">
-        # {{ it.title }}
-      </p>
+      <div class="item" *ngFor="let it of items" (click)="goToElemet(it.title)">
+        <nb-icon icon="hash-outline" class="iconHash"></nb-icon>
+        <p>
+          {{ it.title }}
+        </p>
+      </div>
     </div>
   </div>
 </div>
