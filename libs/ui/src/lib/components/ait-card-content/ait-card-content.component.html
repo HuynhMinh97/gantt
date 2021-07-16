@@ -1,4 +1,8 @@
-<div [ngClass]="classContainer" style="width: 100%">
+<div
+  [ngClass]="classContainer"
+  style="width: 100%"
+  [id]="'menu_toc_item_' + LABEL"
+>
   <div
     class="card__content_container"
     [nbSpinner]="loading"
@@ -20,7 +24,10 @@
         </div>
       </div>
 
-      <div style="display: flex;position: relative;" (click)="toggleExpan(true)">
+      <div
+        style="display: flex; position: relative"
+        (click)="toggleExpan(true)"
+      >
         <div
           class="button_header_card"
           *ngIf="actionBtn.length !== 0"
@@ -42,12 +49,14 @@
           </span>
         </div>
         <nb-icon
+          class="icon_expan"
           style="cursor: pointer"
           *ngIf="!isOpen"
           icon="arrow-ios-downward-outline"
           (click)="toggleExpan()"
         ></nb-icon>
         <nb-icon
+          class="icon_expan"
           style="cursor: pointer"
           *ngIf="isOpen"
           icon="arrow-ios-upward-outline"
@@ -61,7 +70,7 @@
       [ngStyle]="{
         'flex-direction': isColumn ? 'column' : 'row',
         'align-items': isColumn ? 'flex-start' : 'center',
-        'padding': padding ? padding : ''
+        padding: padding ? padding : ''
       }"
       [ngClass]="isOpen ? null : 'isClose'"
     >

@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { NbDialogService, NbIconLibraries, NbToastrService } from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
@@ -50,6 +50,11 @@ export class AitMenuUserComponent extends AitBaseComponent implements OnInit {
         this.setupMenu();
       }
     });
+    router.events.subscribe(e => {
+      if (e instanceof NavigationEnd) {
+        this.isOpenMenu = false;
+      }
+    })
 
     // tslint:disable-next-line: deprecation
     store.pipe(select(getEmail)).subscribe(u => {

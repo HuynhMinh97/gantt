@@ -90,13 +90,20 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   @Input() isSubmit = false;
   @Input() hasStatus = true;
   @Input() isNew = false;
+  loading = false;
+  @Input() width;
+  @Input() height;
+
+  errorImage: any = {}
 
   ID(element: string): string {
     return this.id + '_' + element;
   }
   messagesError = () => Array.from(new Set([...this.componentErrors, ...(this.errorMessages || [])]))
 
-
+  getDataFiles = () => {
+    return [...this.fileDatas, ...this.displayedFiles].length !== 0;
+  }
   ngOnChanges(changes: SimpleChanges) {
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
@@ -104,14 +111,14 @@ export class AitInputFileComponent implements OnInit, OnChanges {
         if (key === 'isReset') {
           if (this.isReset) {
             this.fileDatas = [];
-            this.displayedFiles = this.isNew? [] : this.dataDisplayDf;
+            this.displayedFiles = this.isNew ? [] : this.dataDisplayDf;
             setTimeout(() => {
               this.isReset = false;
             }, 100)
           }
         }
 
-        if(key === 'fileKeys') {
+        if (key === 'fileKeys') {
           if (this.fileKeys && this.fileKeys.length !== 0) {
             this.fileUploadService.getFilesByFileKeys(this.fileKeys || []).then((r: any) => {
               if (r?.status === RESULT_STATUS.OK) {
@@ -176,8 +183,8 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   }
 
   handleErrorImage = (file) => {
-    this.isImgErr = true;
-    file.isError = true;
+    this.errorImage = { ...this.errorImage, [file?._key]: true }
+    // file.isError = true;
   }
 
   getTime = (time: number) => {
@@ -185,6 +192,17 @@ export class AitInputFileComponent implements OnInit, OnChanges {
       return this.dayJSService.calculateDateTime(time);
     }
     return null;
+  }
+
+  getImage = (file: any, isError = false) => {
+    if (!isError) {
+      return this.safelyURL(file.data_base64, file.file_type)
+    }
+    return 'https://d30y9cdsu7xlg0.cloudfront.net/png/47682-200.png';
+  }
+
+  editFileName = (file) => {
+    return `ait_${file.type}_${Date.now()}`;
   }
 
   getFileCount = () => {
@@ -283,6 +301,8 @@ export class AitInputFileComponent implements OnInit, OnChanges {
    * on file drop handler
    */
   onFileDropped($event) {
+
+    this.fileBrowseHandler($event)
     this.styleHover = {
       background: 'rgba(0,0,0,0.15)'
     }
@@ -298,7 +318,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
    */
   fileBrowseHandler(files) {
     if (files && files[0]) {
-
+      this.loading = true;
       const FR = new FileReader();
       FR.onload = (e: any) => {
         const index = e.target.result.indexOf(',');
@@ -364,7 +384,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
     for (const item of files) {
       fileReq.push({
         type: item.type,
-        name: item.name,
+        name: this.editFileName(item),
         size: item.size
       })
     }
@@ -387,29 +407,34 @@ export class AitInputFileComponent implements OnInit, OnChanges {
       this.files = [files[files.length - 1]];
 
       if (this.checkFileExt(fileReq[0])) {
-        const { type, ...objKeys } = this.fileRequest[0];
-        const data = [
-          {
-            ...objKeys,
-            file_type: type,
-            company: this.company,
-            user_id: AitAppUtils.getUserId(),
-            data_base64: this.currentBase64,
-            _key: Guid.create().toString()
-          }
-        ]
-        console.log(data)
-        this.savedData = [...this.savedData, ...data];
-        this.fileDatas = [...this.fileDatas, { ...data[0], progress: 0 }];
-        this.watchValue.emit({ value: [...this.fileDatas, ...this.displayedFiles] });
-        this.fileDatas.forEach((file, index) => {
-          this.uploadFilesSimulator(file._key);
-        })
+        setTimeout(() => {
+          const { type, ...objKeys } = this.fileRequest[0];
+          const data = [
+            {
+              ...objKeys,
+              file_type: type,
+              company: this.company,
+              user_id: AitAppUtils.getUserId(),
+              data_base64: this.currentBase64,
+              _key: Guid.create().toString()
+            }
+          ]
+          this.savedData = [...this.savedData, ...data];
+          this.fileDatas = [...this.fileDatas, { ...data[0], progress: 0 }];
+          this.watchValue.emit({ value: [...this.fileDatas, ...this.displayedFiles] });
+          this.fileDatas.forEach((file, index) => {
+            this.uploadFilesSimulator(file._key);
+          })
+          this.loading = false;
 
-        this.checkReq();
+          this.checkReq();
+        }, 400)
       }
 
     }
+    setTimeout(() => {
+      this.loading = false;
+    }, 100)
   }
 
   checkReq = () => {
