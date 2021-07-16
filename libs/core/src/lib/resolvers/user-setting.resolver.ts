@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { COLLECTIONS, RESULT_STATUS } from '@ait/shared';
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
@@ -11,8 +12,8 @@ import { UserSettingRequest } from '../requests/user-setting.request';
 
 @Resolver()
 export class UserSettingResolver extends AitBaseService {
-  constructor(db: Database) {
-    super(db);
+  constructor(db: Database, env: any) {
+    super(db, env);
   }
   collection: string = COLLECTIONS.USER_SETTING;
 
