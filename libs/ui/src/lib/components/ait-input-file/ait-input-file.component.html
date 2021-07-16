@@ -1,5 +1,5 @@
 <div [ngClass]="classContainer">
-  <div class="container_file">
+  <div class="container_file" [style.width]="width" [style.height]="height">
     <ait-label
       [label]="getTitle()"
       [required]="required"
@@ -9,7 +9,7 @@
 
     <div
       class="containerx"
-      appDnd
+      aitDnd
       (fileDropped)="onFileDropped($event)"
       *ngIf="!isLoading"
       (dragover)="onFileDropped()"
@@ -19,8 +19,10 @@
       style="cursor: pointer; margin-top: 8px"
       [ngStyle]="{ border: !isDefault ? '0.5px solid #000' : null }"
     >
-      <p *ngIf="placeholder" [ngStyle]="{ color: !isDefault ? '#000' : null }"
-      [id]="ID('placeholder')"
+      <p
+        *ngIf="placeholder"
+        [ngStyle]="{ color: !isDefault ? '#000' : null }"
+        [id]="ID('placeholder')"
       >
         {{ placeholder }}
       </p>
@@ -32,11 +34,11 @@
         >...
       </p>
       <input
-        [id]="ID(input_file)"
+        [id]="ID('input_file')"
         type="file"
         #fileDropRef
         id="fileDropRef"
-        (click)="fileDropRef.value = null;checkReq()"
+        (click)="fileDropRef.value = null; checkReq()"
         [ngStyle]="{ color: !isDefault ? '#000' : null }"
         value=""
         (change)="fileBrowseHandler($event.target.files)"
@@ -78,7 +80,7 @@
       </div>
     </div>
 
-    <div
+    <!-- <div
       class="files-list"
       *ngIf="displayedFiles && displayedFiles.length !== 0"
     >
@@ -199,6 +201,156 @@
           <nb-icon icon="trash-2-outline" style="color: #8f9bb3"></nb-icon>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
+</div>
+
+<div
+  aitDnd
+  (fileDropped)="onFileDropped($event)"
+  [nbSpinner]="loading"
+  nbSpinnerStatus="primary"
+  [style.width]="width"
+>
+  <drag-scroll
+    *ngIf="getDataFiles()"
+    [drag-scroll-y-disabled]="true"
+    [style.width]="width"
+    style="
+      max-width: 400px;
+      min-width: 280px;
+      min-height: 10px;
+      background: #f7f9fc;
+      border: 1px solid #8f9bb3;
+      border-radius: 5px;
+      margin-top: 5px;
+      padding-bottom: 5px;
+    "
+    [scrollbar-hidden]="false"
+  >
+    <div
+      class="img"
+      drag-scroll-item
+      *ngFor="let file of displayedFiles; let i = index"
+      [nbPopover]="templateRef"
+      [nbPopoverTrigger]="'hover'"
+    >
+      <ng-template #templateRef>
+        <div
+          style="
+            min-width: 130px;
+            height: 100%;
+            background-color: #282a36;
+            padding: 5px;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+          "
+        >
+          <div class="info">
+            <p class="name" style="color: #fff" [id]="ID('info_name_display')">
+              FileName : {{ file?.name }} ({{ formatBytes(file?.size) }})
+            </p>
+            <p class="size" style="color: #fff" [id]="ID('info_time_display')">
+              Last update : {{ getTime(file?.create_at) }}
+            </p>
+          </div>
+        </div>
+      </ng-template>
+      <div class="icon">
+        <nb-icon
+          icon="close-outline"
+          (click)="deleteFile(file, i)"
+          style="cursor: pointer"
+        ></nb-icon>
+      </div>
+      <img
+        [src]="getImage(file, errorImage[file?._key])"
+        *ngIf="(file?.file_type || '').includes('image')"
+        (error)="handleErrorImage(file)"
+      />
+      <div
+        style="
+          height: 100%;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        "
+      >
+        <nb-icon
+          [id]="ID('file_icon_display')"
+          *ngIf="!(file?.file_type || '').includes('image')"
+          icon="attach-2-outline"
+          style="color: #333; font-size: 32px; height: 100%"
+        ></nb-icon>
+      </div>
+    </div>
+    <div
+      class="img"
+      drag-scroll-item
+      *ngFor="let file of fileDatas; let i = index"
+      [nbPopover]="templateRef"
+      [nbPopoverTrigger]="'hover'"
+      [class.iconType]="!(file?.file_type || '').includes('image')"
+    >
+      <ng-template #templateRef>
+        <div
+          style="
+            min-width: 130px;
+            height: 100%;
+            background-color: #282a36;
+            padding: 5px;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+          "
+        >
+          <div class="info">
+            <p class="name" style="color: #fff" [id]="ID('info_name_display')">
+              FileName : {{ file?.name }} ({{ formatBytes(file?.size) }})
+            </p>
+            <p
+              class="size"
+              style="color: #fff"
+              [id]="ID('info_time_display')"
+              *ngIf="getTime(file?.create_at)"
+            >
+              Last update : {{ getTime(file?.create_at) }}
+            </p>
+          </div>
+        </div>
+      </ng-template>
+      <div class="icon">
+        <nb-icon
+          icon="close-outline"
+          (click)="deleteFile(file, i)"
+          style="cursor: pointer"
+        ></nb-icon>
+      </div>
+      <img
+        #image
+        [src]="getImage(file, errorImage[file?._key])"
+        *ngIf="(file?.file_type || '').includes('image')"
+        (error)="handleErrorImage(file)"
+      />
+      <div
+        style="
+          height: 100%;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        "
+      >
+        <nb-icon
+          [id]="ID('file_icon_display')"
+          *ngIf="!(file?.file_type || '').includes('image')"
+          icon="attach-2-outline"
+          style="color: #333; font-size: 32px; height: 100%"
+        ></nb-icon>
+      </div>
+    </div>
+    <div style="margin: 20px;" drag-scroll-item></div>
+  </drag-scroll>
 </div>

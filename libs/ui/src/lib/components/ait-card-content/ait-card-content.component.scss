@@ -20,6 +20,9 @@
   cursor: pointer;
 }
 .button_header_card {
+  &:hover {
+    transform: scale(1.1);
+  }
   min-width: 100px;
   height: 24px;
   display: flex;
@@ -59,6 +62,12 @@
   background-color: #10529d !important;
   // outline: 1px solid slategrey;
   border-radius: 3px !important;
+}
+
+.icon_expan {
+  &:hover {
+    transform: scale(1.5);
+  }
 }
 .content {
   display: flex;
@@ -123,7 +132,7 @@
   word-break: keep-all;
 }
 .text__gradient__no__string {
-  font-size:  2vmax;
+  font-size: 2vmax;
   word-break: keep-all;
 }
 
