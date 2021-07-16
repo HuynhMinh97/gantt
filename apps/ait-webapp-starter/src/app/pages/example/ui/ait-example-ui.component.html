@@ -263,17 +263,7 @@
           [isDefault]="false"
           [required]="true"
           [fileKeys]="[
-            'db1b0177-8301-c718-fa7a-da2824419653',
-            '1fc263c5-bf74-63fd-ee72-430d5ce8b3f4',
-            'bb47c7cd-9c28-9219-c891-7d2733c4799a',
-            '7ab913c3-ef2c-84c6-e992-971ed53b5bd5',
-            '61aeedef-5fdf-cd85-2d58-b8601340020d',
-            'eded1dc7-bbf9-0101-d91e-b305239f6110123',
-            '10ae5fe1-c75d-268e-c7e5-462d69e11ef2',
-            '10ae5fe1-c75d-268e-c7e5-462d69e11ef2',
-            'cbfec59b-3de7-f17a-ac7c-81b2bf734c47',
-            'bdcd7594-6935-daa8-233b-fb11ddab53c9',
-            'bd6249b4-7194-009a-f01e-8f35be111407'
+
           ]"
           [width]="'300px'"
           [hasStatus]="false"
@@ -313,7 +303,7 @@
             [defaultValue]="state.time1"
             [fieldName]="'time1'"
             [placeholder]="'HH'"
-            (watchValue)="result.time1 = $event.time1"
+            (watchValue)="result.time1 = $event.value.time1"
             [id]="'shift_1_from_hour'"
             [isReset]="result.resetAll"
           ></ait-timepicker>
@@ -321,7 +311,7 @@
             [isminuteValue]="true"
             [fieldName]="'time1_min'"
             [placeholder]="'mm'"
-            (watchValue)="result.time1_min = $event.time1_min"
+            (watchValue)="result.time1_min = $event.value.time1_min"
             [defaultValue]="state.time1_min"
             [isReset]="result.resetAll"
             [id]="'shift_1_from_hour'"
@@ -333,7 +323,7 @@
             [defaultValue]="state.time2"
             [fieldName]="'time2'"
             [placeholder]="'HH'"
-            (watchValue)="result.time2 = $event.time2"
+            (watchValue)="result.time2 = $event.value.time2"
             [id]="'shift_1_from_hour'"
             [isReset]="result.resetAll"
           ></ait-timepicker>
@@ -342,7 +332,7 @@
             [fieldName]="'time2_min'"
             [defaultValue]="state.time2_min"
             [placeholder]="'mm'"
-            (watchValue)="result.time2_min = $event.time2_min"
+            (watchValue)="result.time2_min = $event.value.time2_min"
             [isReset]="result.resetAll"
           ></ait-timepicker>
         </div>
