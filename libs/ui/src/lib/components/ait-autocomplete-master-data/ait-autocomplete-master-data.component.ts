@@ -117,6 +117,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   dataFilter = [1];
   @Input() errorMessages;
   @Input() isResetInput;
+  @Input() clearError = false;
 
 
 
@@ -239,6 +240,14 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
             this.onError.emit({ isValid: null });
 
             this.isReset = false;
+          }
+        }
+
+        if (key === 'clearError') {
+          if (this.clearError) {
+            this.componentErrors = [];
+            this.errorMessages = [];
+            this.isError = false;
           }
         }
       }
@@ -681,11 +690,12 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
 
   outFocus = () => {
+    console.log(this.selectOne?.value)
     this.isHideLabel = false;
     setTimeout(() => {
-      const values = this.dataSourceDf.map(m => m?.value);
+      const values = this.dataSourceDf.find(m => m?.value);
       if (this.maxItem === 1) {
-        if (!values.includes(this.selectOne?.value)) {
+        if (!values) {
           this.selectOne = {};
           this.watchValue.emit({
             value: [],
@@ -704,7 +714,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
           value: this.optionSelected,
         });
       }
-    }, 100)
+    }, 120)
     this.outFocusValues.emit(true);
     this.checkReq();
   }
@@ -761,22 +771,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   handleInput = (value) => {
     this.currentValue = value;
     this.clearErrors();
-    if (this.required) {
-      if (value === '' && this.optionSelected.length === 0) {
-
-        const err = this.translateSerivce.getMsg('E0001').replace('{0}', this.getFieldName());
-        this.isError = true;
-        this.componentErrors = [err];
-        this.onError.emit({ isValid: false });
-
-      }
-      else {
-        this.onError.emit({ isValid: true });
-
-      }
-    }
-    this.openAutocomplete();
-    this.onInputValues.emit({ value: [{ value }] });
     if (this.maxItem === 1) {
       this.onInput.emit({ value });
       if (value === '') {
@@ -804,12 +798,31 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       }
     }
 
+    if (this.required) {
+      if (value === '' && this.optionSelected.length === 0) {
+
+        const err = this.translateSerivce.getMsg('E0001').replace('{0}', this.getFieldName());
+        this.isError = true;
+        this.componentErrors = [err];
+        this.onError.emit({ isValid: false });
+
+      }
+      else {
+        this.onError.emit({ isValid: true });
+
+      }
+    }
+    this.openAutocomplete();
+    this.onInputValues.emit({ value: [{ value }] });
+
+
 
 
 
   };
 
   onSelectionChange($event) {
+    console.log($event)
     this.clearErrors();
     this.selectOne = { _key: $event?.code, value: $event?.value };
     this.inputControl.patchValue($event?.value || '')
