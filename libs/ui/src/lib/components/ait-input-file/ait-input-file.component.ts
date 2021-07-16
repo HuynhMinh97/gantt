@@ -202,7 +202,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   }
 
   editFileName = (file) => {
-    return `ait_${file.type}_${Date.now()}`;
+    return `ait_${Date.now()}_${Date.now()}`;
   }
 
   getFileCount = () => {
