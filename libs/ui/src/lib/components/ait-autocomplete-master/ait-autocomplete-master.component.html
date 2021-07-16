@@ -77,14 +77,7 @@
       (focusout)="outFocus()"
     />
   </div>
-  <p
-    class="caption"
-    [id]="ID('empty_result')"
-    style="margin: 0; margin-top: 8px !important"
-    *ngIf="inputControlMaster.value !== '' && messageSearch"
-  >
-    {{ messageSearch }}
-  </p>
+
   <!-- <p
     class="caption"
     [id]="ID('caption_limit')"
@@ -111,6 +104,20 @@
       </p>
     </div>
   </div>
+  <div
+    class="suggest__wrapper"
+    [ngStyle]="{ width: '100%' }"
+    *ngIf="inputControlMaster.value !== '' && messageSearch"
+  >
+    <p
+      class="caption"
+      [id]="ID('empty_result')"
+      style="margin: 0; margin-top: 8px !important"
+    >
+      {{ messageSearch }}
+    </p>
+  </div>
+
 
   <div
     class="suggest__wrapper"

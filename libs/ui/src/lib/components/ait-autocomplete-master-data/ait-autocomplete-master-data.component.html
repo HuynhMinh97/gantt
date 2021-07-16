@@ -1,4 +1,3 @@
-
 <div [ngClass]="classContainer">
   <ait-label
     [label]="label"
@@ -34,7 +33,7 @@
         <p
           [nbTooltip]="displayOptions()"
           [ngStyle]="styleInput"
-          style="font-weight: bold; font-size: 12px"
+          style="font-weight: bold; font-size: 12px; cursor: context-menu"
           id="{{ ID('selected_items') }}"
         >
           {{ getSelectedItems(optionSelected) }}
@@ -76,6 +75,7 @@
         (input)="handleInput($event.target.value)"
         (focus)="onFocus()"
         (focusout)="outFocus()"
+        (blur)="blur(input.value) ? (input.value = '') : null"
         (keydown.tab)="onTab()"
         (keydown.enter)="enter()"
       />
@@ -85,7 +85,7 @@
         *ngIf="MAXITEM !== 1 && isOpenAutocomplete && dataFilter.length !== 0"
       >
         <div
-          *ngFor="let option of filteredOptions$ | async"
+          *ngFor="let option of filteredOptions$ | async;let i=index"
           class="option__container"
           style="cursor: pointer; position: relative; height: 37px"
         >
@@ -103,6 +103,7 @@
             [(checked)]="option.isChecked"
             style="cursor: pointer; margin-left: 15px"
             [status]="'primary'"
+            [id]="ID('checkbox_' + i)"
           >
             <span
               style="cursor: pointer; font-size: 12px"
@@ -131,8 +132,9 @@
               margin-left: 15px;
             "
             id="{{ ID('selection_value') }}"
-            >{{ option?.value }}</div
           >
+            {{ option?.value }}
+          </div>
         </div>
       </div>
       <div class="icon" (click)="handleClick()">
@@ -172,7 +174,12 @@
     </div>
     <div class="info">
       <p
-        style="word-break: break-word; color: #8f9bb3; font-size: 12px; margin-bottom: 0"
+        style="
+          word-break: break-word;
+          color: #8f9bb3;
+          font-size: 12px;
+          margin-bottom: 0;
+        "
         id="{{ ID('caption') }}"
       >
         {{ getCaptions() }}

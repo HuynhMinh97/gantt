@@ -517,6 +517,9 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         this.filteredOptions$ = of(this.sortItems(this.DataSource))
       }
     }
+    else {
+      this.input.nativeElement.focus();
+    }
   }
 
 
@@ -689,12 +692,19 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   }
 
 
+  blur = (value) => {
+    const values = this.dataSourceDf.find(m => m?.value === value);
+    console.log(values, value)
+    return !!values
+  }
+
   outFocus = () => {
-    console.log(this.selectOne?.value)
+
     this.isHideLabel = false;
     setTimeout(() => {
-      const values = this.dataSourceDf.find(m => m?.value);
       if (this.maxItem === 1) {
+        const values = this.dataSourceDf.find(m => m?.value === this.selectOne?.value);
+
         if (!values) {
           this.selectOne = {};
           this.watchValue.emit({
@@ -706,17 +716,28 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
           this.onInput.emit({ value: '' })
         }
+        else {
+          this.inputControl.patchValue(this.selectOne?.value || '')
+        }
       }
       else {
-        this.dataFilter = [1];
+        // console.log(this.inputControl.value);
+        const values = this.dataSourceDf.find(m => m?.value === this.inputControl.value);
+        if (!values) {
+          this.watchValue.emit({
+            value: this.optionSelected,
+          });
+          this.inputControl.setValue(null)
+          this.dataFilter = [1];
 
-        this.watchValue.emit({
-          value: this.optionSelected,
-        });
+          this.onInput.emit({ value: '' })
+        }
+
       }
+      this.checkReq();
     }, 120)
     this.outFocusValues.emit(true);
-    this.checkReq();
+
   }
 
   checkReq = () => {
@@ -787,9 +808,8 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     }
     else {
       if (value === '') {
-        this.defaultValue = [];
         this.filteredOptions$ = of(this.DataSource);
-        this.watchValue.emit({ value: [] })
+        this.watchValue.emit({ value: this.optionSelected })
       } else {
 
         const text = value;
