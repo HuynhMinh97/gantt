@@ -115,6 +115,7 @@
           [isSubmit]="result.submit_text_number"
           [errorMessages]="errors"
           [required]="true"
+          [defaultValue]="1000"
         ></ait-input-number>
 
         <button
@@ -261,7 +262,6 @@
         <ait-input-file
           [title]="'input-file'"
           [isDefault]="false"
-          [required]="true"
           [fileKeys]="[
 
           ]"
@@ -271,7 +271,7 @@
           (onError)="result.error_file = $event.isValid"
           [isSubmit]="result.file"
           [errorMessages]="errors"
-          [maxFiles]="3"
+          [maxFiles]="1"
           [fileTypes]="'jpg,json,png'"
           [maxSize]="50"
         ></ait-input-file>
@@ -295,6 +295,8 @@
           [placeholder]="'one'"
           [guidance]="'whatever you want'"
           [width]="'400px'"
+          [isReset]="result.resetAll"
+
         ></ait-input-text>
         <ait-label [label]="'Time picker'"></ait-label>
         <div style="display: flex; margin: 30px">
