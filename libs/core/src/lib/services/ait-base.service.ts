@@ -257,6 +257,7 @@ export class AitBaseService {
     if (this.company) {
       data[KEYS.COMPANY] = this.company;
     }
+    data[KEYS.DEL_FLAG] = false;
     data[KEYS.KEY] = AitUtils.guid;
     data[KEYS.CREATE_BY] = this.username;
     data[KEYS.CHANGE_BY] = this.username;
