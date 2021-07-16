@@ -342,6 +342,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
         if (r.status === RESULT_STATUS.OK) {
 
           this.checkReq();
+          this.checkCommon()
         }
       })
     }
@@ -353,6 +354,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
       this.displayedFiles = this.displayedFiles.filter(f => f._key !== file?._key);
       this.watchValue.emit({ value: [...this.fileDatas, ...this.displayedFiles] });
       this.checkReq();
+      this.checkCommon()
     }
   }
 
@@ -370,6 +372,25 @@ export class AitInputFileComponent implements OnInit, OnChanges {
         }
       }, 10);
     }, 500);
+  }
+
+  checkCommon = () => {
+    this.messageErrorFileSp = '';
+    if (!this.checkMaxFile()) {
+      this.messageErrorFileSp =
+        this.translateService.getMsg('E0155').replace('{0}', this.getFileMaxUpload().toString());
+      return false;
+
+    }
+    else if (!this.checkMaxSize(this.fileRequest)) {
+      this.messageErrorFileSp =
+        this.translateService.getMsg('E0157').replace('{0}', this.formatBytes(this.getMaxSizeFile(), 2).toString());
+      return false;
+
+    }
+    else {
+      return true;
+    }
   }
 
 
@@ -393,17 +414,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
     this.files = this.files = [files[files.length - 1]];
 
 
-    this.files = this.files = [files[files.length - 1]];
-
-    if (!this.checkMaxFile()) {
-      this.messageErrorFileSp =
-        this.translateService.getMsg('E0155').replace('{0}', this.getFileMaxUpload().toString())
-    }
-    else if (!this.checkMaxSize(fileReq)) {
-      this.messageErrorFileSp =
-        this.translateService.getMsg('E0157').replace('{0}', this.formatBytes(this.getMaxSizeFile(), 2).toString())
-    }
-    else {
+    if (this.checkCommon()) {
       this.files = [files[files.length - 1]];
 
       if (this.checkFileExt(fileReq[0])) {
@@ -430,8 +441,9 @@ export class AitInputFileComponent implements OnInit, OnChanges {
           this.checkReq();
         }, 400)
       }
-
     }
+
+
     setTimeout(() => {
       this.loading = false;
     }, 100)

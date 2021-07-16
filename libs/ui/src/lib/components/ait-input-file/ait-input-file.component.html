@@ -249,10 +249,10 @@
         >
           <div class="info">
             <p class="name" style="color: #fff" [id]="ID('info_name_display')">
-              FileName : {{ file?.name }} ({{ formatBytes(file?.size) }})
+              {{ file?.name }} ({{ formatBytes(file?.size) }})
             </p>
             <p class="size" style="color: #fff" [id]="ID('info_time_display')">
-              Last update : {{ getTime(file?.create_at) }}
+              {{ getTime(file?.create_at) }}
             </p>
           </div>
         </div>
@@ -351,6 +351,6 @@
         ></nb-icon>
       </div>
     </div>
-    <div style="margin: 20px;" drag-scroll-item></div>
+    <div style="margin: 20px" drag-scroll-item></div>
   </drag-scroll>
 </div>
