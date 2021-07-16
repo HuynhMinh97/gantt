@@ -8,22 +8,30 @@ import { AitDayJSService } from '../../services/ait-dayjs.service';
 import { rootReducers } from '../../state/rootReducers';
 import { StoreModule } from '@ngrx/store';
 import { AitInputFileComponent } from './ait-input-file.component';
-import { NbIconModule, NbTooltipModule } from '@nebular/theme';
+import { NbIconModule, NbPopoverModule, NbSpinnerModule, NbTooltipModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { AitProgressModule } from '../ait-progress/ait-progress.module';
 import { AitLabelModule } from '../ait-label/ait-label.module';
 import { AitErrorMessageModule } from '../ait-error-message/ait-error-message.module';
+import { DragScrollModule } from 'ngx-drag-scroll';
+import { DndDirective } from '../../@theme/directives/dnd-file.directive';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [AitInputFileComponent],
+  declarations: [AitInputFileComponent,DndDirective],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     NbIconModule,
     NbEvaIconsModule,
     AitProgressModule,
     NbTooltipModule,
     AitLabelModule,
     AitErrorMessageModule,
+    DragScrollModule,
+    NbTooltipModule,
+    NbPopoverModule,
+    NbSpinnerModule,
     StoreModule.forRoot(
       { ...rootReducers },
       {

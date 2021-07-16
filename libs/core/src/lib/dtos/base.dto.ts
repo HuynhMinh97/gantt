@@ -24,4 +24,7 @@ export class BaseDto {
 
   @Field(() => ChangeByDto, { nullable: true })
   change_by: ChangeByDto;
+
+  @Field(() => Boolean, { nullable: true })
+  del_flag: boolean;
 }

@@ -22,4 +22,7 @@ export class BaseEntity {
 
   @Field(() => String, { nullable: true })
   change_by: string;
+
+  @Field(() => Boolean, { nullable: true })
+  del_flag: boolean;
 }
