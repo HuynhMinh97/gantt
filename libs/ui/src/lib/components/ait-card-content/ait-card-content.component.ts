@@ -20,6 +20,7 @@ export class AitCardContentComponent {
   @Input() label = 'Default';
   @Input() loading = false;
   @Output() onClickButtonHeader = new EventEmitter();
+  @Output() onToggle = new EventEmitter();
   @Input() isColumn = false;
   @Input() padding = '';
   @Input() actionBtn = [
@@ -46,7 +47,8 @@ export class AitCardContentComponent {
 
   toggleExpan = (isClick = false) => {
     if (!isClick) {
-      this.isOpen = !this.isOpen
+      this.isOpen = !this.isOpen;
+      this.onToggle.emit(this.isOpen);
     }
   };
 
