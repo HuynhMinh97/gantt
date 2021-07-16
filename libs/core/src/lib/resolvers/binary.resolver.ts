@@ -18,8 +18,8 @@ import { AitUtils } from '../utils/ait-utils';
 @Resolver()
 @UseGuards(GqlAuthGuard)
 export class BinaryResolver extends AitBaseService {
-  constructor(db: Database) {
-    super(db);
+  constructor(db: Database, env: any) {
+    super(db, env);
   }
   collection: string = COLLECTIONS.SYS_BINARY_DATA;
 
@@ -42,6 +42,7 @@ export class BinaryResolver extends AitBaseService {
     const dataInsert = [];
     const collection = request.collection;
     request.data.forEach((data: any) => {
+      data[KEYS.DEL_FLAG] = false;
       data[KEYS.COMPANY] = request.company;
       data[KEYS.CREATE_BY] = user?._key || request?.user_id || KEYS.ADMIN;
       data[KEYS.CHANGE_BY] = user?._key || request?.user_id || KEYS.ADMIN;

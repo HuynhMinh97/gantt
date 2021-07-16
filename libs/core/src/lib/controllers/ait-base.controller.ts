@@ -49,6 +49,7 @@ export class AitBaseController {
     if (this.company) {
       dto[KEYS.COMPANY] = this.company;
     }
+    dto[KEYS.DEL_FLAG] = false;
     dto[KEYS.CREATE_BY] = this.user_id;
     dto[KEYS.CHANGE_BY] = this.user_id;
     dto[KEYS.CREATE_AT] = this.getUnixTime();
