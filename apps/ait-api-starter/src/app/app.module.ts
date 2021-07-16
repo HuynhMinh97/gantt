@@ -5,7 +5,13 @@ import { ExampleResolver } from './example-graphql/example.resolver';
 import { ExampleRestController } from './example-rest/example-rest.controller';
 import { UserController } from './user/user.controller';
 
-const RESOLVERS = [ExampleResolver];
+const RESOLVERS = [
+  ExampleResolver,
+  {
+  provide: 'ENVIRONMENT',
+  useValue: environment
+  }
+  ];
 @Module({
   imports: [
     HttpModule,
