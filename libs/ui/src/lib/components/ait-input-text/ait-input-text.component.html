@@ -24,6 +24,7 @@
       pack="eva"
     ></nb-icon>
     <textarea
+      class="input_area"
       nbInput
       autocomplete="doNotAutoComplete"
       [status]="status"
@@ -37,7 +38,9 @@
       (input)="onChange($event.target.value)"
       [formControl]="inputCtrl"
       [class.isError]="isError"
-      style="border-color: #e4e9f2; max-width: 100% !important; resize: none"
+      style="
+      max-width: 100% !important; 
+      resize: none"
       *ngIf="rows !== 1 && readonly"
       [maxLength]="length"
       readonly
@@ -45,6 +48,7 @@
     ></textarea>
 
     <textarea
+      class="input_area"
       autocomplete="doNotAutoComplete"
       nbInput
       [status]="status"
@@ -57,7 +61,9 @@
       (input)="onChange($event.target.value)"
       [formControl]="inputCtrl"
       [class.isError]="isError"
-      style="border-color: #e4e9f2; resize: none; max-width: 100% !important"
+      style="
+      resize: none; 
+      max-width: 100% !important"
       *ngIf="rows !== 1 && !readonly"
       [maxLength]="length"
       id="{{ ID('textarea') }}"
@@ -67,6 +73,7 @@
     ></textarea>
 
     <input
+      class="input_area"
       autocomplete="doNotAutoComplete"
       nbInput
       [status]="status"
@@ -83,7 +90,6 @@
       [formControl]="inputCtrl"
       [class.isError]="isError"
       style="
-        border-color: #e4e9f2;
         width: 100%;
         max-width: 100%;
         padding-left: 10px;
@@ -92,6 +98,7 @@
     />
 
     <input
+      class="input_area"
       autocomplete="doNotAutoComplete"
       nbInput
       [status]="status"
@@ -108,7 +115,6 @@
       [class.isError]="isError"
       (focusout)="focusout()"
       style="
-        border-color: #e4e9f2;
         width: 100%;
         max-width: 100%;
         padding-left: 10px;
@@ -122,7 +128,7 @@
     </div>
     <div class="info">
       <p
-        style="word-break: break-word; color: #8f9bb3; font-size: 12px"
+        style="word-break: break-word; color: #8f9bb3; font-size: 12px; margin-bottom: 0;"
         id="{{ ID('caption') }}"
       >
         {{ getCaption() }}

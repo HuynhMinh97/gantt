@@ -20,10 +20,13 @@ export class AitCardContentComponent {
   @Input() label = 'Default';
   @Input() loading = false;
   @Output() onClickButtonHeader = new EventEmitter();
+  @Output() onToggle = new EventEmitter();
   @Input() isColumn = false;
+  @Input() padding = '';
   @Input() actionBtn = [
 
   ]
+  @Input() disableHeader = false;
   gradientString = 'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)';
   isShow = true;
   @Input()
@@ -44,7 +47,8 @@ export class AitCardContentComponent {
 
   toggleExpan = (isClick = false) => {
     if (!isClick) {
-      this.isOpen = !this.isOpen
+      this.isOpen = !this.isOpen;
+      this.onToggle.emit(this.isOpen);
     }
   };
 

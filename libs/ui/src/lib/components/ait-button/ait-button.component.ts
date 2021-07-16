@@ -30,6 +30,8 @@ export class AitButtonComponent implements OnChanges {
   @Input() styleIcon = {};
   @Input() styleText = {}
   @Input() id;
+  @Input() hide = false;
+  @Input() isDefault = false;
 
   @Input() title = '';
   @Input() toolTip = '';

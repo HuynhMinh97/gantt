@@ -198,7 +198,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
           }
         }
         if (key === 'required') {
-          console.log(this.required)
+          // console.log(this.required)
         }
         if (key === 'isReset') {
           if (this.isReset) {
@@ -356,7 +356,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
       debounceTime(200),
       distinctUntilChanged()
     ).subscribe(text => {
-      console.log(text)
+      // console.log(text)
       if (text) {
         const condition = {
           name: text

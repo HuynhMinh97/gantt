@@ -1,4 +1,4 @@
-<div [style]="style" *ngIf="style === 'disabled'">
+<div [style]="style" *ngIf="style === 'disabled' && !hide">
   <button
     shape="round"
     class="button__wrapper__disabled"
@@ -34,10 +34,10 @@
     </p>
   </button>
 </div>
-<div [style]="style" *ngIf="style === 'active'">
+<div [style]="style" *ngIf="style === 'active' && !hide">
   <button
     shape="round"
-    class="button__wrapper__active"
+    class="button__wrapper button__wrapper__active"
     [nbTooltip]="toolTip"
     nbButton
     [style.height]="height"
@@ -46,6 +46,7 @@
     [style.background]="background"
     [ngClass]="classBtn"
     [ngStyle]="styleBtn"
+    [class.isDefault]="isDefault"
   >
     <nb-icon
       [icon]="iconName"
@@ -68,10 +69,10 @@
     </p>
   </button>
 </div>
-<div [style]="style" *ngIf="style === 'normal'">
+<div [style]="style" *ngIf="style === 'normal' && !hide">
   <button
     shape="round"
-    class="button__wrapper__primary"
+    class="button__wrapper button__wrapper__primary"
     [nbTooltip]="toolTip"
     nbButton
     [style.height]="height"
@@ -80,6 +81,8 @@
     [style.background]="background"
     [ngClass]="classBtn"
     [ngStyle]="styleBtn"
+    [class.isDefault]="isDefault"
+
   >
     <nb-icon
       [icon]="iconName"

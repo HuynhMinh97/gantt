@@ -1,4 +1,16 @@
 @import "../../@theme/styles/themes.scss";
+
+.isDefault {
+  background: linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%) !important;
+  p {
+    color: #fff !important;
+  }
+}
+.button__wrapper {
+  &:hover {
+    transform: scale(1.1);
+  }
+}
 .button__wrapper__disabled {
   flex-direction: row;
   justify-content: center;
@@ -14,6 +26,10 @@
   height: 40px;
   border: 1px solid nb-theme(color-basic-100);
   border-radius: 25px;
+  &.isDefault {
+    background-color: nb-theme(background-gradient-blue);
+    color: #fff;
+  }
 }
 .button__wrapper__active {
   flex-direction: row;
@@ -30,6 +46,10 @@
   height: 40px;
   border: 1px solid nb-theme(color-basic-100);
   border-radius: 25px;
+  &.isDefault {
+    background-color: nb-theme(background-gradient-blue);
+    color: #fff;
+  }
 }
 .button__wrapper__primary {
   flex-direction: row;
@@ -46,6 +66,10 @@
   border: 1px solid nb-theme(color-basic-100);
   border-radius: 25px;
   background: transparent;
+  &.isDefault {
+    background-color: nb-theme(background-gradient-blue);
+    color: #fff;
+  }
 }
 p {
   font-weight: bold;
@@ -60,7 +84,7 @@ p {
   color: nb-theme(color-basic-100);
 }
 .disabled {
-  color: nb-theme(color-basic-100) !important;
+  color: #000 !important;
 }
 .active {
   color: nb-theme(color-basic-1100);

@@ -39,6 +39,7 @@ export class AitTextInputComponent implements OnChanges {
   @Input() isSubmit = false;
   @Input() readonly = false;
   @Input() errorMessages = [];
+  @Input() clearError = false;
   componentErrors = []
   msgRequired = '';
   errorArray = [];
@@ -107,6 +108,14 @@ export class AitTextInputComponent implements OnChanges {
             this.componentErrors = [];
             this.errorMessages = [];
             this.onError.emit({ isValid: null });
+          }
+        }
+
+        if (key === 'clearError') {
+          if (this.clearError) {
+            this.isError = false;
+            this.componentErrors = [];
+            this.errorMessages = [];
           }
         }
       }

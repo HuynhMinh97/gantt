@@ -39,7 +39,7 @@ export interface BaseInitData {
 })
 export class AitBaseComponent implements OnInit, OnDestroy {
   public module: string;
-  public lang = '';
+  public lang = 'ja_JP';
   public page: string;
   public sup = new Subscription();
   public title = 'PM';
@@ -54,6 +54,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
   public isLoading = false;
   public env: any;
   public dataUserSetting = [];
+  private isRefreshToken = false;
 
   constructor(
     public store: Store<AppState>,
@@ -61,17 +62,26 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     public apollo: Apollo,
     public userService: AitUserService,
     _env: AitEnvironmentService,
-    private layoutScrollService?: NbLayoutScrollService,
+    public layoutScrollService?: NbLayoutScrollService,
     public toastrService?: NbToastrService,
   ) {
-    const userId = this.authService.getUserID();
     this.user_id = AitAppUtils.getUserId();
+    const userId = this.authService.getUserID();
     this.env = _env;
-    //setting default lang & company
     this.company = this.env.COMMON.COMPANY_DEFAULT;
-    store.pipe(select(getLang)).subscribe(lang => {
+    // call api get all message follow by type as I : Information , W : Warning, E: Error
+    this.getAllMessages().then();
+
+    //get caption common for buttons, header, label, ...
+    this.getCommonCaptions().then();
+
+    //setting default lang & company
+
+    this.store.pipe(select(getLang)).subscribe(lang => {
+
       if (this.lang !== lang) {
         this.lang = lang;
+
 
         //get caption common for buttons, header, label, ...
         this.getCommonCaptions().then();
@@ -81,6 +91,8 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
         // call api get user setting
         // this.settingUpUser().then();
+
+
         if (localStorage.getItem('access_token')) {
           this.
             getUserSetting(userId).then(r => {
@@ -96,7 +108,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
                   )
                 );
 
-                //console.log(this.lang)
+                //// console.log(this.lang)
 
                 // //get caption common for buttons, header, label, ...
                 // this.getCommonCaptions(this.lang).then();
@@ -122,9 +134,8 @@ export class AitBaseComponent implements OnInit, OnDestroy {
       }
 
     })
-
     // get token from localStorage
-    this.token = authService.getAccessToken();
+    this.token = this.authService.getAccessToken();
 
     // call api get all message follow by type as I : Information , W : Warning, E: Error
     this.getAllMessages().then();
@@ -136,27 +147,29 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
     // CAll get user info , such as company, username, email, _key
     if (localStorage.getItem('access_token')) {
-
       if (userId && userId !== '') {
+
         this.getUserInfo(userId).then((res: any) => {
           if (!res || !res?.email) {
-            authService.removeTokens();
+            this.authService.removeTokens();
+
             location.reload();
           }
-          // Push company on store base on user-setting
-          this.store.dispatch(
-            new CHANGECOMPANY(res?.company || this.env.COMMON.COMPANY_DEFAULT)
-          );
-          localStorage.setItem('comp', res?.company || this.env.COMMON.COMPANY_DEFAULT);
-          store.dispatch(new StoreUserInfo(res));
+          else {
+
+
+            // Push company on store base on user-setting
+            this.store.dispatch(
+              new CHANGECOMPANY(res?.company || this.env.COMMON.COMPANY_DEFAULT)
+            );
+            localStorage.setItem('comp', res?.company || this.env.COMMON.COMPANY_DEFAULT);
+            this.store.dispatch(new StoreUserInfo(res));
+          }
 
         });
 
       }
     }
-
-
-
 
     // Listening event loading when the app is loading
     store
@@ -176,9 +189,26 @@ export class AitBaseComponent implements OnInit, OnDestroy {
         this.userProfile = userInfo?.user_profile;
         this.email = userInfo?.email;
       }
-    })
+    });
+
   }
 
+  public initBaseComponent = () => {
+
+
+    if (localStorage.getItem('refresh_token')) {
+      this.refreshToken().then((r: any) => {
+
+        if (r?.data?.refreshToken) {
+          const result: any = r?.data?.refreshToken;
+          this.authService.saveTokens(result?.token, result?.refreshToken);
+        }
+      });
+    }
+
+
+
+  }
   // api call user-setting from master-data
   private settingUpUser = async () => {
     const data = await this.getUserSettingData('USER_SETTING');
@@ -190,6 +220,23 @@ export class AitBaseComponent implements OnInit, OnDestroy {
   private getValueByCodeMaster = (code: string, data?: any) => {
     const find = (data || this.dataUserSetting).find(f => f.code === code);
     return find?.name;
+  }
+
+  refreshToken = async () => {
+    const rf = localStorage.getItem('refresh_token');
+    return await this.apollo.mutate({
+      mutation: gql`
+      mutation {
+        refreshToken(input : {
+          refresh_token : "${rf}"
+        }) {
+          timeLog
+          refreshToken
+          token
+        }
+      }
+      `
+    }).toPromise();
   }
 
 
@@ -276,7 +323,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
   }
 
   async getUserSettingData(classMaster: string) {
-    //console.log(this.lang)
+    //// console.log(this.lang)
     let user_setting = [];
     const rest_user: any = await this.apollo.query({
       query: gql`
@@ -483,8 +530,8 @@ export class AitBaseComponent implements OnInit, OnDestroy {
       query: gql`
       query {
         findSystem(request : {
-          company: "${this.company}",
-          lang: "${this.lang || this.env.COMMON.LANG_DEFAULT}",
+          company: "${this.company || this.env?.COMMON?.COMPANY_DEFAULT}",
+          lang: "${this.lang || this.env?.COMMON?.LANG_DEFAULT}",
           collection: "sys_caption",
           user_id: "${this.user_id}",
           condition: {
@@ -513,6 +560,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
   // Start basecomponent for initializing
   ngOnInit() {
+
 
     // register locale by language setting
     this.store.pipe(select(getSettingLangTime)).subscribe({
@@ -648,7 +696,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     // Parse to gql
     const gqlQuery = jsonToGraphQLQuery(query, { pretty: true });
 
-    // //console.log(gqlQuery);
+    // //// console.log(gqlQuery);
 
     return this.apollo
       .query({

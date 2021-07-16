@@ -249,6 +249,9 @@ nb-action {
     background-color: nb-theme(color-basic-100);
     object-fit: cover;
     cursor: pointer;
+    &:hover {
+      transform: scale(1.1);
+    }
   }
   .menu__user {
     position: absolute;
@@ -277,6 +280,10 @@ nb-action {
 
       &:hover .tab__title {
         color: nb-theme(color-primary-500);
+      }
+
+      &:hover .icon_tab {
+        transform: scale(1.1);
       }
       img {
         margin-left: 19px;

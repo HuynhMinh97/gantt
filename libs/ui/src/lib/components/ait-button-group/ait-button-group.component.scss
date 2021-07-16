@@ -1,6 +1,15 @@
 .btn__container {
   display: flex;
   align-items: center;
+  position: relative;
+  // &.sticky {
+  //   position: -webkit-sticky;
+  //   position: sticky;
+  //   bottom: 0;
+  //   background-color: yellow;
+  //   padding: 50px;
+  //   font-size: 20px;
+  // }
   .btn {
     min-width: 100px;
     max-width: 150px;

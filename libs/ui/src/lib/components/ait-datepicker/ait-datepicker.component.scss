@@ -1,5 +1,7 @@
 @import "../../@theme/styles/themes.scss";
 .datepicker {
+  background: nb-theme(color-basic-200) !important;
+  border: 1px solid nb-theme(color-basic-600) !important;
   &.isError {
     border: 1px solid nb-theme(color-danger-500);
   }
@@ -26,4 +28,10 @@
     flex-grow: 1;
     height: 100%;
   }
+}
+
+.input_area {
+  background-color: transparent !important;
+  border: none;
+  max-width: 100%
 }

@@ -51,14 +51,23 @@
                   color: #8f9bb3;
                 "
                 icon="{{ tab.iconName }}"
-                *ngIf="tab.iconName"
+                *ngIf="!tab?.pack"
               ></nb-icon>
-              <img
+              <nb-icon
+                class="icon_tab"
                 src="{{ tab.imgSrc }}"
-                *ngIf="!tab.iconName"
-                alt=""
-                style="height: 24px; width: 24px"
-              />
+                *ngIf="tab?.pack"
+                icon="{{ tab.iconName }}"
+                [pack]="tab.pack"
+                style="
+                  margin-left: 24px;
+                  margin-right: 10px;
+                  margin-top: 10px;
+                  height: 28px;
+                  width: 28px;
+                  color: #8f9bb3;
+                "
+              ></nb-icon>
               <p class="tab__title">{{ tab.title }}</p>
             </div>
             <div class="divider"></div>

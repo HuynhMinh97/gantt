@@ -71,7 +71,9 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   isClickedIcon = false;
   defaultValueDf: any;
   data = [];
+  currentValue = '';
 
+  @Input() hideLabel = false;
   @ViewChild('autoInput', { static: false }) auto: ElementRef;
   @ViewChild('input', { static: false }) input: ElementRef;
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
@@ -112,9 +114,10 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Input() isSubmit = false;
   @Input() allowNew = false;
   @Output() onError = new EventEmitter();
-  currentValue = '';
   dataFilter = [1];
   @Input() errorMessages;
+  @Input() isResetInput;
+  @Input() clearError = false;
 
 
 
@@ -158,7 +161,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   }
 
   get VALUE(): string {
-    // //console.log(this.selectOne?.value, this.defaultValue[0]?.value, '')
+    // //// console.log(this.selectOne?.value, this.defaultValue[0]?.value, '')
     if (!this.defaultValue) {
       return this.selectOne?.value || ''
     }
@@ -237,6 +240,14 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
             this.onError.emit({ isValid: null });
 
             this.isReset = false;
+          }
+        }
+
+        if (key === 'clearError') {
+          if (this.clearError) {
+            this.componentErrors = [];
+            this.errorMessages = [];
+            this.isError = false;
           }
         }
       }
@@ -375,7 +386,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
             f.code === this.defaultValue[0]?._key
         );
         this.selectOne = { _key: findByKey?.code, value: findByKey?.value };
-        // console.log(this.defaultValue, this.dataSourceDf, this.selectOne)
+        // // console.log(this.defaultValue, this.dataSourceDf, this.selectOne)
         if (!this.disableOutputDefault) {
           const res = this.selectOne?._key ? [this.selectOne] : []
           this.watchValue.emit({ value: res });
@@ -541,7 +552,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
     if (this.required) {
       if (this.optionSelected.length === 0) {
-        const err = this.getMsg('E0001').replace('{0}', this.getFieldName());
+        const err = this.translateSerivce.getMsg('E0001').replace('{0}', this.getFieldName());
         this.componentErrors = [err]
         this.onError.emit({ isValid: false });
       }
@@ -623,7 +634,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
     }
 
-    return values.includes(value);
+    return !!values;
   }
 
   getUniqueSelection = (arr: any[]) => {
@@ -679,11 +690,12 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
 
   outFocus = () => {
+    console.log(this.selectOne?.value)
     this.isHideLabel = false;
     setTimeout(() => {
-      const values = this.dataSourceDf.map(m => m?.value);
+      const values = this.dataSourceDf.find(m => m?.value);
       if (this.maxItem === 1) {
-        if (!values.includes(this.selectOne?.value)) {
+        if (!values) {
           this.selectOne = {};
           this.watchValue.emit({
             value: [],
@@ -702,7 +714,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
           value: this.optionSelected,
         });
       }
-    }, 100)
+    }, 120)
     this.outFocusValues.emit(true);
     this.checkReq();
   }
@@ -712,7 +724,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     if (this.required) {
       const check = this.maxItem === 1 ? !this.selectOne?.value : this.optionSelected.length === 0;
       if (check) {
-        const err = this.getMsg('E0001').replace('{0}', this.getFieldName());
+        const err = this.translateSerivce.getMsg('E0001').replace('{0}', this.getFieldName());
         this.isError = true;
         this.componentErrors = [err]
         this.onError.emit({ isValid: false });
@@ -759,31 +771,11 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   handleInput = (value) => {
     this.currentValue = value;
     this.clearErrors();
-    if (this.required) {
-      if (value === '' && this.optionSelected.length === 0) {
-        const err = this.getMsg('E0001').replace('{0}', this.getFieldName());
-        this.isError = true;
-        this.componentErrors = [err];
-        this.onError.emit({ isValid: false });
-
-      }
-      else {
-        this.onError.emit({ isValid: true });
-
-      }
-    }
-    this.openAutocomplete();
-    this.onInputValues.emit({ value: [{ value }] });
     if (this.maxItem === 1) {
-      const res = this._filter(value);
-      this.data = res;
-      this.filteredOptions$ = of(res);
       this.onInput.emit({ value });
       if (value === '') {
         this.selectOne = {};
-        this.defaultValue = [];
-        this.DataSource = AitAppUtils.deepCloneArray(this.dataSourceDf);
-        this.filteredOptions$ = of(this.DataSource);
+        this.filteredOptions$ = of(this.dataSourceDf);
         this.watchValue.emit({ value: [] })
       } else {
         const text = value;
@@ -806,12 +798,31 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       }
     }
 
+    if (this.required) {
+      if (value === '' && this.optionSelected.length === 0) {
+
+        const err = this.translateSerivce.getMsg('E0001').replace('{0}', this.getFieldName());
+        this.isError = true;
+        this.componentErrors = [err];
+        this.onError.emit({ isValid: false });
+
+      }
+      else {
+        this.onError.emit({ isValid: true });
+
+      }
+    }
+    this.openAutocomplete();
+    this.onInputValues.emit({ value: [{ value }] });
+
+
 
 
 
   };
 
   onSelectionChange($event) {
+    console.log($event)
     this.clearErrors();
     this.selectOne = { _key: $event?.code, value: $event?.value };
     this.inputControl.patchValue($event?.value || '')
@@ -825,7 +836,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     if (this.required) {
       if (!this.selectOne?.value) {
         this.isError = true;
-        const err = this.getMsg('E0001').replace('{0}', this.getFieldName());
+        const err = this.translateSerivce.getMsg('E0001').replace('{0}', this.getFieldName());
         this.componentErrors = [err];
         this.onError.emit({ isValid: false });
 

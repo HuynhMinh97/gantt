@@ -14,6 +14,7 @@ import { AitEnvironmentService } from '../ait-environment.service';
 import { AitAppUtils } from '../../utils/ait-utils';
 import { Apollo, gql } from 'apollo-angular';
 import { jsonToGraphQLQuery } from 'json-to-graphql-query';
+import { AitAuthService } from './ait-auth.service';
 
 
 
@@ -41,7 +42,8 @@ export class AitBaseService implements OnDestroy {
     private store?: Store<AppState>,
     public http?: HttpClient,
     private snackbar?: NbToastrService,
-    public apollo?: Apollo) {
+    public apollo?: Apollo,
+  ) {
     this.env = _env;
     this.baseURL = this.env?.API_PATH?.BASE_REST_PREFIX
     // AitAppUtils.checkTokens();
@@ -62,6 +64,23 @@ export class AitBaseService implements OnDestroy {
     if (this.token_valid !== null || this.token_valid !== undefined) {
       this.subcription.unsubscribe();
     }
+  }
+
+  refreshToken = async () => {
+    const rf = localStorage.getItem('refresh_token');
+    return  await this.apollo.mutate({
+      mutation: gql`
+      mutation {
+        refreshToken(input : {
+          refresh_token : "${rf}"
+        }) {
+          timeLog
+          refreshToken
+          token
+        }
+      }
+      `
+    }).toPromise();
   }
 
 
