@@ -107,25 +107,27 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
 
   focusout = () => {
     setTimeout(() => {
-      const target = Number(this.currentValue);
+      const target = this.currentValue === null ? null : Number(this.currentValue);
       let res;
-      if (this.ishourValue) {
-        if (this.isTwelveFormat) {
-          res = (target > 11 || target < 1) ? null : target;
+      if (target !== null) {
+        if (this.ishourValue) {
+          if (this.isTwelveFormat) {
+            res = (target > 11 || target < 1) ? null : target;
+          }
+          else {
+            res = (target > 23 || target < 1) ? null : target;
+          }
         }
         else {
-          res = (target > 23 || target < 1) ? null : target;
-        }
-      }
-      else {
-        if (target === 60) {
-          res = 0
-        }
-        else if (target > 60) {
-          res = null;
-        }
-        else {
-          res = target;
+          if (target === 60) {
+            res = 0
+          }
+          else if (target > 60) {
+            res = null;
+          }
+          else {
+            res = target;
+          }
         }
       }
       this.currentValue = res;
