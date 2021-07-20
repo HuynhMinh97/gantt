@@ -22,6 +22,7 @@ export class AitCardContentComponent {
   @Output() onClickButtonHeader = new EventEmitter();
   @Output() onToggle = new EventEmitter();
   @Input() isColumn = false;
+  @Input() isStart = false;
   @Input() padding = '';
   @Input() actionBtn = [
 
