@@ -15,6 +15,7 @@
       max-width: 100%;
     "
     class="datepicker"
+    [class.isReadOnly]="disable"
     [class.isError]="isError"
   >
     <nb-icon
@@ -49,6 +50,7 @@
       fullWidth
       #inputDateTime
       disabled
+
       [value]="valueDf"
       *ngIf="disable"
       [shape]="isRound ? 'semi-round' : 'rectangle'"
