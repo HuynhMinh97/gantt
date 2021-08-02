@@ -12,7 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
 import { aureoleRootReducers } from './state/rootReducers';
 import { AureoleRoutingModule } from './app-routing.module';
-import { NbButtonModule, NbIconModule, NbSpinnerModule, NbTooltipModule } from '@nebular/theme';
+import { NbButtonModule, NbIconModule, NbSpinnerModule, NbTooltipModule, NbCheckboxModule } from '@nebular/theme';
 import { AureoleVCardComponent } from './pages/aureole-v/recommenced-user/components/card/card.component';
 import { ContentRowComponent } from './pages/aureole-v/recommenced-user/components/content/content.component';
 import { CardSkeletonComponent } from './pages/aureole-v/recommenced-user/components/card-skeleton/card-skeleton.component';
@@ -21,6 +21,7 @@ import { SyncApiConfigService } from './services/sync_api_config.service';
 import { SyncPEService } from './services/sync_pe_history.service';
 import { ReactionService } from './services/reaction.service';
 import { RecommencedUserService } from './services/recommenced-user.service';
+import { UserExperienceComponent } from './pages/aureole-v/user/user-experience/user-experience.component';
 
 
 const AIT_UI_MODULES = [
@@ -37,7 +38,8 @@ const NB_UI_MODULES = [
   NbIconModule,
   NbSpinnerModule,
   NbTooltipModule,
-  NbButtonModule
+  NbButtonModule,
+  NbCheckboxModule
 ]
 
 const AUREOLE_V_COMPONENTS = [
@@ -47,7 +49,8 @@ const AUREOLE_V_COMPONENTS = [
 ]
 
 const PAGES = [
-  RecommencedComponent
+  RecommencedComponent,
+  UserExperienceComponent
 ]
 
 
