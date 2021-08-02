@@ -21,6 +21,7 @@ import { SyncApiConfigService } from './services/sync_api_config.service';
 import { SyncPEService } from './services/sync_pe_history.service';
 import { ReactionService } from './services/reaction.service';
 import { RecommencedUserService } from './services/recommenced-user.service';
+import { AddComponent } from './user/add/add.component';
 
 
 const AIT_UI_MODULES = [
@@ -52,7 +53,7 @@ const PAGES = [
 
 
 @NgModule({
-  declarations: [AppComponent, ...AUREOLE_V_COMPONENTS, ...PAGES],
+  declarations: [AppComponent, ...AUREOLE_V_COMPONENTS, ...PAGES, AddComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

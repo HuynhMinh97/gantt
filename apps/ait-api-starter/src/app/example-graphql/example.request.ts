@@ -10,3 +10,8 @@ export class ExampleRequest extends BaseRequest {
   @Field(() => [ExampleDto], { nullable: true })
   data: ExampleDto[];
 }
+
+
+client => {
+  
+}
