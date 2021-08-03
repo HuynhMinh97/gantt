@@ -11,7 +11,7 @@
     class="input_area"
     style="
       height: 40px;
-      width: 50px;
+      width: 50px !important;
       border-radius: 5px;
       padding: 10px;
       font-weight: 600;
@@ -23,6 +23,7 @@
     [placeholder]="PLACEHOLDER"
     [(ngModel)]="timeExact"
     (input)="handleInput($event.target.value)"
+    (keypress)="keyPressNumbers($event)"
     (focusout)="focusout()"
     (click)="openPanel()"
     [maxLength]="2"

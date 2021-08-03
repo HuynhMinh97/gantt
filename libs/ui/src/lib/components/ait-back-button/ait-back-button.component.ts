@@ -11,7 +11,7 @@ import { AitAppUtils } from '../../utils/ait-utils';
 })
 
 export class AitBackButtonComponent {
-  isHide = true;
+  isHide = false;
   isChangeColor = false;
   colorIcon = '#fff';
   backgroundBtn = null;
@@ -62,11 +62,11 @@ export class AitBackButtonComponent {
           const m = AitAppUtils.getParamsOnUrl(true);
           const j = location.hash;
 
-          this.isHide =  j.includes('job/new') || m.length > 30;
-          this.isChangeColor =
-            n.includes('sign') || n.includes('change-password') || n.includes('user-setting') || n.includes('sync-pe-api-setting') ||
-            n.includes('sync-pe-api-history') || n.includes('new') || n.includes('job') || n.includes('company-basic-info')
-            || n.includes('user-basic-info') || n.includes('user-certificate-info');
+          // this.isHide =  j.includes('job') || m.length > 30;
+          // this.isChangeColor =
+          //   n.includes('sign') || n.includes('change-password') || n.includes('user-setting') || n.includes('sync-pe-api-setting') ||
+          //   n.includes('sync-pe-api-history') || n.includes('new') || n.includes('job') || n.includes('company-basic-info')
+          //   || n.includes('user-basic-info') || n.includes('user-certificate-info');
           this.setColorBtn();
 
           // console.groupEnd();

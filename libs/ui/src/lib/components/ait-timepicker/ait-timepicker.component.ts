@@ -46,7 +46,7 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
   ngOnInit() {
     const step = this.step ? this.step : this.STEP;
     const hour = this.isTwelveFormat ? 12 : 24;
-    this.hours = Array.from({ length: hour / step - 1 }, (_, i) => this.getNum((i + 1) * step));
+    this.hours = Array.from({ length: hour / step }, (_, i) => this.getNum((i ) * step));
     this.minutes = Array.from({ length: 60 / step }, (_, i) => this.getNum((i) * step));
   }
 
@@ -90,9 +90,10 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
   handleInput = (value) => {
     const validNumber = value ? Number(value) : null;
     this.currentValue = validNumber;
+    console.log(this.currentValue);
     if (!isNaN(this.currentValue)) {
       if (this.ishourValue) {
-        if (this.currentValue > 0) {
+        if (this.currentValue >= 0) {
           this.textCompared = this.getNum(value);
         }
       }
@@ -108,15 +109,17 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
   focusout = () => {
     setTimeout(() => {
       const target = this.currentValue === null ? null : Number(this.currentValue);
+      console.log(target)
       let res;
       if (target !== null) {
         if (this.ishourValue) {
           if (this.isTwelveFormat) {
-            res = (target > 11 || target < 1) ? null : target;
+            res = (target > 11 || target < 0) ? null : target;
           }
           else {
-            res = (target > 23 || target < 1) ? null : target;
+            res = (target > 23 || target < 0) ? null : target;
           }
+          console.log(res)
         }
         else {
           if (target === 60) {
@@ -131,10 +134,9 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
         }
       }
       this.currentValue = res;
-      // console.log(this.currentValue);
       if (!isNaN(Number(this.currentValue))) {
         if (this.ishourValue) {
-          if (this.currentValue > 0) {
+          if (this.currentValue >= 0) {
             this.timeExact = this.getNum(this.currentValue);
             this.watchValue.emit({
               value: { [this.fieldName]: Number(this.timeExact) }
@@ -171,18 +173,21 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
   }
 
   onSelectTime = (value) => {
-
+    this.textCompared = this.getNum(value);
     this.timeExact = value;
     this.currentValue = value;
     this.isOpen = false;
 
   }
 
-  onKeyDown = (event) => {
-    const BIRTHNUMBER_ALLOWED_CHARS_REGEXP = /[0-9]+/;
-    // console.log(event.data)
-    if (!BIRTHNUMBER_ALLOWED_CHARS_REGEXP.test(event.data)) {
+  keyPressNumbers(event) {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    // Only Numbers 0-9
+    if ((charCode < 48 || charCode > 57)) {
       event.preventDefault();
+      return false;
+    } else {
+      return true;
     }
   }
 
