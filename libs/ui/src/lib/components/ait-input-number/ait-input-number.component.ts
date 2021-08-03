@@ -94,7 +94,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
 
 
   replaceAll(string: string) {
-    const target = string.toString();
+    const target = (string || '').toString();
     const split = target.split('.');
     const split2 = split.join().split(',');
     return split2.join('');
@@ -202,8 +202,15 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   }
 
   handleFocus = () => {
-    if (this.currentNumber !== '' && this.inputCtrl.value !== '') {
+
+    if (this.inputCtrl.value !== '' && this.inputCtrl.value !== null) {
+      if ([0, '0', '00'].includes(this.inputCtrl.value)) {
+        this.inputCtrl.patchValue(0);
+      }
+      else {
       this.inputCtrl.patchValue(this.replaceAll(this.inputCtrl.value));
+
+      }
     }
     else {
       this.inputCtrl.patchValue(null);

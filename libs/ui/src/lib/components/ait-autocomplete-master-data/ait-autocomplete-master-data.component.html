@@ -1,3 +1,4 @@
+
 <div [ngClass]="classContainer">
   <ait-label
     [label]="label"
@@ -29,6 +30,7 @@
         class="span"
         *ngIf="optionSelected.length !== 0 && !isReadOnly && !isHideLabel"
         nbPrefix
+
       >
         <p
           [nbTooltip]="displayOptions()"
