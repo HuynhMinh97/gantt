@@ -195,13 +195,18 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
   public initBaseComponent = () => {
 
+    // console.log(localStorage.getItem('refresh_token'))
 
     if (localStorage.getItem('refresh_token')) {
       this.refreshToken().then((r: any) => {
-
         if (r?.data?.refreshToken) {
           const result: any = r?.data?.refreshToken;
           this.authService.saveTokens(result?.token, result?.refreshToken);
+        }
+      }).catch(e => {
+        if (e.message.includes('expired')) {
+          this.authService.removeTokens();
+          location.reload();
         }
       });
     }
