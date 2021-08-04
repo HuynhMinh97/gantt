@@ -159,7 +159,8 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   }
 
   checkDefaultValue(data) {
-    if (data.length > 1) {
+    const target = !data ? [] : data.map(m => m?.value).filter(x => !!x);
+    if (target.length > 1) {
       return false;
     } else {
       return AitAppUtils.isObjectValueEmpty(data[0] || {});
@@ -212,8 +213,8 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
             }, 200)
           }
         }
-        if (!this.compareDeep(this.defaultValue, this.currentDataDef) && this.defaultValue) {
-
+        if (!this.compareDeep(this.defaultValue, this.currentDataDef)) {
+          console.log(this.defaultValue)
           this.currentDataDef = this.defaultValue;
           const checkNull = this.checkDefaultValue(this.defaultValue);
           this.selectItems = checkNull ? [] : this.defaultValue;

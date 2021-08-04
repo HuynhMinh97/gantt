@@ -511,8 +511,13 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   }
 
   handleClick = () => {
-    if (this.maxItem !== 1) {
 
+
+    if (this.maxItem !== 1) {
+      setTimeout(() => {
+        this.input.nativeElement.focus();
+      },0)
+      // this.filteredOptions$ = of(this.sortItems(this.DataSource))
       if (!this.isOpenAutocomplete && !this.isClickOption) {
         this.filteredOptions$ = of(this.sortItems(this.DataSource))
       }
@@ -520,6 +525,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     else {
       this.input.nativeElement.focus();
     }
+
   }
 
 
@@ -537,13 +543,13 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
       this.optionSelected = this.getSelectedOptions();
       target = this.DataSource;
-      this.watchValue.emit({ value: this.optionSelected });
+      this.watchValue.emit({ value: this.optionSelected.map(m => ({_key : m?._key, value : m?.value })) });
     } else {
       if (itemFind.isChecked) {
         itemFind.isChecked = !itemFind.isChecked;
         this.optionSelected = this.getSelectedOptions();
         target = this.DataSource;
-        this.watchValue.emit({ value: this.optionSelected });
+        this.watchValue.emit({ value: this.optionSelected.map(m => ({_key : m?._key, value : m?.value })) });
       }
     }
     setTimeout(() => {
@@ -662,6 +668,10 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
           this.data = this.dataSourceDf;
           this.filteredOptions$ = of(this.dataSourceDf);
         }
+        else {
+          // this.filteredOptions$ = of(this.DataSource);
+          this.input.nativeElement.focus();
+        }
 
 
         if (this.isOpenAutocomplete) {
@@ -694,7 +704,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   blur = (value) => {
     const values = this.dataSourceDf.find(m => m?.value === value);
-    console.log(values, value)
     return !!values
   }
 
@@ -725,7 +734,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         const values = this.dataSourceDf.find(m => m?.value === this.inputControl.value);
         if (!values) {
           this.watchValue.emit({
-            value: this.optionSelected,
+            value: this.optionSelected.map(x => ({_key:x?._key , value: x?.value})),
           });
           this.inputControl.setValue(null)
           this.dataFilter = [1];
@@ -768,7 +777,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       const values = this.dataSourceDf.find(f => f?.value === this.selectOne?.value);
       if (values) {
         this.watchValue.emit({
-          value: [values],
+          value: [{_key : values?._key,value:values?.value}],
         })
       }
       else {
@@ -808,8 +817,10 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     }
     else {
       if (value === '') {
+        this.dataFilter = [1];
+        this.watchValue.emit({ value: this.optionSelected.map(x => ({_key:x?._key , value: x?.value})) });
         this.filteredOptions$ = of(this.DataSource);
-        this.watchValue.emit({ value: this.optionSelected })
+
       } else {
 
         const text = value;
@@ -884,7 +895,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   private _filter(value: string): string[] {
     const filterValue = value?.toString().toLowerCase();
-    const result = this.dataSourceDf.filter((f) => {
+    const result = this.DataSource.filter((f) => {
 
       const target = f?.value;
 
