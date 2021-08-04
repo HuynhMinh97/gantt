@@ -112,6 +112,9 @@ export class AitInputFileComponent implements OnInit, OnChanges {
           if (this.isReset) {
             this.fileDatas = [];
             this.displayedFiles = this.isNew ? [] : this.dataDisplayDf;
+            this.componentErrors = [];
+            this.errorMessages = [];
+            this.messageErrorFileSp = '';
             setTimeout(() => {
               this.isReset = false;
             }, 100)

@@ -12,14 +12,14 @@ input[type="number"] {
 }
 
 input {
-  background-color: transparent;
+  background: transparent;
 }
 
 .input__contrainer {
 
   input {
     &.isDefault {
-      background: nb-theme(color-basic-200);
+      background: nb-theme(color-basic-200) !important;
       border: 1px solid nb-theme(color-basic-600);
     }
     font-size: 12px;
