@@ -404,7 +404,8 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
             setTimeout(() => {
             this.back();
 
-            },1000)
+            },1000);
+            window.location.reload();
           }
         });
       }
