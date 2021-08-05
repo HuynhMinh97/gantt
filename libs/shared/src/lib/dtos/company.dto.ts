@@ -40,7 +40,8 @@ export interface CompanyInfoDto extends BaseDto {
   representative_katakana: string,
   representative_position: KeyValueDto,
   representative_email: string,
-  acceptance_remark: string
+  acceptance_remark: string,
+  is_matching: boolean;
 }
 
 interface NameDto {

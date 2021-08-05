@@ -11,7 +11,6 @@ import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { Observable, of } from 'rxjs';
 import { distinctUntilChanged, debounceTime } from 'rxjs/operators';
-import { TYPE } from '../../@constant';
 import {
   AitAuthService,
   AitEnvironmentService,

@@ -308,7 +308,7 @@
         >
           <div class="info">
             <p class="name" style="color: #fff" [id]="ID('info_name_display')">
-              FileName : {{ file?.name }} ({{ formatBytes(file?.size) }})
+              {{ file?.name }} ({{ formatBytes(file?.size) }})
             </p>
             <p
               class="size"
@@ -316,7 +316,7 @@
               [id]="ID('info_time_display')"
               *ngIf="getTime(file?.create_at)"
             >
-              Last update : {{ getTime(file?.create_at) }}
+               {{ getTime(file?.create_at) }}
             </p>
           </div>
         </div>
