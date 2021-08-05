@@ -514,11 +514,13 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
 
     if (this.maxItem !== 1) {
-      setTimeout(() => {
-        this.input.nativeElement.focus();
-      },0)
+
       // this.filteredOptions$ = of(this.sortItems(this.DataSource))
       if (!this.isOpenAutocomplete && !this.isClickOption) {
+        setTimeout(() => {
+          this.input.nativeElement.focus();
+        }, 0)
+        this.dataFilter = [1];
         this.filteredOptions$ = of(this.sortItems(this.DataSource))
       }
     }
@@ -535,6 +537,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       .map((m) => ({ _key: m?.code, value: m?.value }));
 
   checkItem = (event: Event, opt: any) => {
+
     let target;
 
     const itemFind = this.DataSource.find((f) => f?.optionId === opt?.optionId || f?._key === opt?.code);
@@ -556,6 +559,8 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       if (target) {
         this.DataSource = target;
       }
+      this.isHideLabel = false;
+      this.input.nativeElement.blur();
       this.isClickOption = false;
     }, 10)
 
@@ -570,7 +575,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
       }
     }
-
+    this.isHideLabel = false;
   };
 
   displayOptions = () => {
@@ -605,6 +610,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
 
   optionClicked(event: Event, opt: any) {
+    this.isHideLabel = false;
     this.clearErrors();
     this.isClickOption = true;
     this.checkItem(event, opt);
@@ -669,7 +675,8 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
           this.filteredOptions$ = of(this.dataSourceDf);
         }
         else {
-          // this.filteredOptions$ = of(this.DataSource);
+          this.dataFilter = [1];
+          this.filteredOptions$ = of(this.DataSource);
           this.input.nativeElement.focus();
         }
 
@@ -795,6 +802,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   clearErrors = () => {
     this.componentErrors = [];
+    this.errorMessages = [];
     this.isError = false;
   }
 
@@ -880,15 +888,24 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   }
 
-  getSelectedItems = (data: any[]) => {
-    const target = Array.from(new Set(data.map((m) => m?.value)));
-    if (target.length === 1) {
-      const statement = data[0]?.value;
-      return statement;
-    } else if (data.length !== 1) {
+  getStringByLength = (a: string[], count = 0) => {
+    const i = count;
+    if ((a[i] || '').length > 12) {
+      return this.getStringByLength(a,i+1);
+    }
+    return a[i];
+  }
 
+  getSelectedItems = (data: any[]) => {
+    const itemsText = this.translateSerivce.translate('アイテム');
+    const target = Array.from(new Set(data.map((m) => m?.value)));
+    if ((target || []).length === 1) {
       const statement = target[0];
-      return statement + `（+${target.length - 1} items）`;
+      return statement;
+    } else if ((target || []).length !== 1) {
+
+      const statement = this.getStringByLength(target);
+      return statement + `（+${target.length - 1} ${itemsText})`;
     }
     return '';
   };
