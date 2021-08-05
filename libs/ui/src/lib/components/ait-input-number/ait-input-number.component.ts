@@ -332,6 +332,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
       }
       else {
         this.componentErrors = [];
+        this.errorMessages = [];
         if (this.componentErrors.length === 0) {
           this.isError = false;
           this.onError.emit({ isValid: true });
