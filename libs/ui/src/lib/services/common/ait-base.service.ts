@@ -232,6 +232,7 @@ export class AitBaseService implements OnDestroy {
       }
     };
 
+    request['condition'] = request['condition'] ?? {};
     (!!this.env.isMatching) && (request['condition']['del_flag'] = !this.env.isMatching);
     query.query[name]['__args'] = { request };
     // Parse to gql
