@@ -802,6 +802,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   clearErrors = () => {
     this.componentErrors = [];
+    this.errorMessages = [];
     this.isError = false;
   }
 
