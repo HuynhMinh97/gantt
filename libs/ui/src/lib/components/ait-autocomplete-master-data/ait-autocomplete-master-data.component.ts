@@ -118,7 +118,9 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Input() errorMessages;
   @Input() isResetInput;
   @Input() clearError = false;
+  monitorLabel = true;
 
+  isClickLabel = false;
 
 
   componentErrors = []
@@ -161,7 +163,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   }
 
   get VALUE(): string {
-    // //// console.log(this.selectOne?.value, this.defaultValue[0]?.value, '')
     if (!this.defaultValue) {
       return this.selectOne?.value || ''
     }
@@ -386,7 +387,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
             f.code === this.defaultValue[0]?._key
         );
         this.selectOne = { _key: findByKey?.code, value: findByKey?.value };
-        // // console.log(this.defaultValue, this.dataSourceDf, this.selectOne)
         if (!this.disableOutputDefault) {
           const res = this.selectOne?._key ? [this.selectOne] : []
           this.watchValue.emit({ value: res });
@@ -511,23 +511,28 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   }
 
   handleClick = () => {
-
-
+    this.isClickLabel = true;
     if (this.maxItem !== 1) {
 
-      // this.filteredOptions$ = of(this.sortItems(this.DataSource))
+      //
       if (!this.isOpenAutocomplete && !this.isClickOption) {
+        // this.isClickLabel = true;
         setTimeout(() => {
           this.input.nativeElement.focus();
+          this.dataFilter = [1];
+          this.filteredOptions$ = of(this.sortItems(this.DataSource));
+
+          this.isHideLabel = true;
         }, 0)
-        this.dataFilter = [1];
-        this.filteredOptions$ = of(this.sortItems(this.DataSource))
+
+
       }
     }
     else {
       this.input.nativeElement.focus();
     }
 
+    // this.isHideLabel = true;
   }
 
 
@@ -546,13 +551,13 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
       this.optionSelected = this.getSelectedOptions();
       target = this.DataSource;
-      this.watchValue.emit({ value: this.optionSelected.map(m => ({_key : m?._key, value : m?.value })) });
+      this.watchValue.emit({ value: this.optionSelected.map(m => ({ _key: m?._key, value: m?.value })) });
     } else {
       if (itemFind.isChecked) {
         itemFind.isChecked = !itemFind.isChecked;
         this.optionSelected = this.getSelectedOptions();
         target = this.DataSource;
-        this.watchValue.emit({ value: this.optionSelected.map(m => ({_key : m?._key, value : m?.value })) });
+        this.watchValue.emit({ value: this.optionSelected.map(m => ({ _key: m?._key, value: m?.value })) });
       }
     }
     setTimeout(() => {
@@ -575,7 +580,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
       }
     }
-    this.isHideLabel = false;
   };
 
   displayOptions = () => {
@@ -611,6 +615,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   optionClicked(event: Event, opt: any) {
     this.isHideLabel = false;
+    this.isClickLabel = false;
     this.clearErrors();
     this.isClickOption = true;
     this.checkItem(event, opt);
@@ -675,9 +680,10 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
           this.filteredOptions$ = of(this.dataSourceDf);
         }
         else {
-          this.dataFilter = [1];
-          this.filteredOptions$ = of(this.DataSource);
-          this.input.nativeElement.focus();
+          if (!this.isOpenAutocomplete && !this.isClickOption) {
+
+            // this.input.nativeElement.focus();
+          }
         }
 
 
@@ -694,6 +700,8 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
 
       } else {
+        this.isHideLabel = false;
+        this.isClickLabel = false;
         if (!this.isClickOption) {
           this.outFocusValues.emit(true);
           this.hideAutocomplete();
@@ -737,20 +745,21 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         }
       }
       else {
-        // console.log(this.inputControl.value);
         const values = this.dataSourceDf.find(m => m?.value === this.inputControl.value);
         if (!values) {
           this.watchValue.emit({
-            value: this.optionSelected.map(x => ({_key:x?._key , value: x?.value})),
+            value: this.optionSelected.map(x => ({ _key: x?._key, value: x?.value })),
           });
           this.inputControl.setValue(null)
           this.dataFilter = [1];
+          // this.filteredOptions$ = of (this.sortItems(this.DataSource))
 
           this.onInput.emit({ value: '' })
         }
 
       }
       this.checkReq();
+      this.isHideLabel = false;
     }, 120)
     this.outFocusValues.emit(true);
 
@@ -784,7 +793,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       const values = this.dataSourceDf.find(f => f?.value === this.selectOne?.value);
       if (values) {
         this.watchValue.emit({
-          value: [{_key : values?._key,value:values?.value}],
+          value: [{ _key: values?._key, value: values?.value }],
         })
       }
       else {
@@ -826,7 +835,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     else {
       if (value === '') {
         this.dataFilter = [1];
-        this.watchValue.emit({ value: this.optionSelected.map(x => ({_key:x?._key , value: x?.value})) });
+        this.watchValue.emit({ value: this.optionSelected.map(x => ({ _key: x?._key, value: x?.value })) });
         this.filteredOptions$ = of(this.DataSource);
 
       } else {
@@ -861,7 +870,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   };
 
   onSelectionChange($event) {
-    console.log($event)
     this.clearErrors();
     this.selectOne = { _key: $event?.code, value: $event?.value };
     this.inputControl.patchValue($event?.value || '')
@@ -891,7 +899,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   getStringByLength = (a: string[], count = 0) => {
     const i = count;
     if ((a[i] || '').length > 12) {
-      return this.getStringByLength(a,i+1);
+      return this.getStringByLength(a, i + 1);
     }
     return a[i];
   }
