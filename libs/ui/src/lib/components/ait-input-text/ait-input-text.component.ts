@@ -164,6 +164,7 @@ export class AitTextInputComponent implements OnChanges {
       }
       else {
         this.componentErrors = [];
+        this.errorMessages = [];
         if (this.messagesError().length === 0) {
           this.isError = false;
           this.onError.emit({ isValid: true });
