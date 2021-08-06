@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { DATA_TYPE, GRAPHQL, isObjectFull, RESULT_STATUS } from '@ait/shared';
+import { GRAPHQL, isObjectFull, RESULT_STATUS } from '@ait/shared';
 import {
   AitAppUtils,
   AitAuthService,
@@ -10,7 +10,6 @@ import {
   AitUserService,
   AppState,
   ChangeLangage,
-  getCaption,
   getLang,
   getUserSetting,
   StoreSetting
@@ -21,9 +20,6 @@ import { NbToastrService } from '@nebular/theme';
 import { Store, select } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { MODULES, PAGES } from '../../@constant';
-
-
-
 @Component({
   selector: 'ait-user-setting',
   templateUrl: 'ait-user-setting.component.html',
@@ -63,14 +59,21 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
     date_format_display?: string,
     number_format?: string
   } | any = {};
+
+  valueState: {
+    site_language?: string,
+    timezone?: string,
+    date_format_input?: string,
+    date_format_display?: string,
+    number_format?: string
+  } | any = {};
+
   langLabel = '1002';
   timeLabel = '1003';
   displayLabel = '1004';
   inputLabel = '1005';
   numberLabel = '1006';
   title = '';
-
-
 
   errors = {
     lang: [],
@@ -79,9 +82,7 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
     display: [],
     number: []
   }
-  defaultInputValues: any = {
-
-  }
+  defaultInputValues: any = {};
 
   setDefaultInputValues = (newState: any) =>
     this.defaultInputValues = newState ? { ...this.defaultInputValues, ...newState } : this.defaultInputValues
@@ -111,7 +112,6 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
     })
   }
 
-
   setDataObject = (newState:
     {
       dataLanguage?: any[],
@@ -122,7 +122,6 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
     }) => {
     this.dataObject = { ...this.dataObject, ...newState };
   }
-
 
   constructor(
     public masterData: AitMasterDataService,
@@ -140,16 +139,7 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
       page: PAGES.USER_SETTING,
       module: MODULES.USER
     })
-    store.pipe(select(getLang)).subscribe(() => {
 
-      this.langLabel = this.setLabel(this.langLabel);
-      this.timeLabel = this.setLabel(this.timeLabel);
-      this.displayLabel = this.setLabel(this.displayLabel);
-      this.inputLabel = this.setLabel(this.inputLabel);
-      this.numberLabel = this.setLabel(this.numberLabel);
-
-
-    });
 
     store.pipe(select(getLang)).subscribe(() => {
       const title = this.translatePipe.translate(
@@ -160,14 +150,12 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
       }
     })
 
-    // this.getUserSetting(this.user_id).then(r => console.log(r))
     store.pipe(select(getLang)).subscribe(lang => {
       this.currentLang = lang;
 
       store.pipe(select(getUserSetting)).subscribe(set => {
         if (!AitAppUtils.isObjectEqual(set, this.settingObj)) {
           this.settingObj = set;
-
           const target: any = set || {};
           masterData.find({
             class: {
@@ -183,7 +171,6 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
               this.dataLangs = this.dataObject.dataLanguage;
 
               this.langDf = this.getLangDefault(target?.site_language);
-
             }
           })
           masterData.find({
@@ -208,37 +195,29 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
               dataDateFormatInput: data.filter(d => d.parent_code === 'DATE_FORMAT_INPUT'),
               dataNumberFormat: data.filter(d => d.parent_code === 'NUMBER_FORMAT'),
             });
-            // console.log(target,this.dataObject)
             if (target?.date_format_display) {
               this.dateDisplayDf = this.dataObject.dataDateFormatDisplay.find(f => f.name === target?.date_format_display);
-
             }
             if (target?.date_format_input) {
               this.dateInputDf = this.dataObject.dataDateFormatInput.find(f => f.name === target?.date_format_input);
-
             }
             if (target?.number_format) {
               this.numberFormatDf = this.dataObject.dataNumberFormat.find(f => f.name === target?.number_format);
-
             }
-
             this.setDefaultInputValues({
               dateDisplayDf: this.dateDisplayDf,
               dateInputDf: this.dateInputDf,
               numberFormatDf: this.numberFormatDf
             })
-
-            // console.log(this.defaultInputValues)
           })
         }
-
       });
     });
-
-
   }
 
-
+  getTitle = (name: string) => {
+    return this.translatePipe.translate(name);
+  }
 
   clearDefaultValueInput = () => {
     this.langDf = null;
@@ -287,7 +266,6 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
     return dataMaster || [];
   }
 
-
   back = () => {
     history.back();
   }
@@ -313,6 +291,17 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
     this.formState = { ...this.formState, ...newState };
   }
 
+  setValueState = (newState:
+    {
+      site_language?: string,
+      timezone?: string,
+      date_format_input?: string,
+      date_format_display?: string,
+      number_format?: string,
+    }) => {
+    this.valueState = { ...this.valueState, ...newState };
+  }
+
   setUserSetting = () => {
     this.getUserSetting(this.user_id).then(r => {
       console.log(r)
@@ -335,7 +324,6 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
     });
   }
 
-
   getFieldNotNullFromState = () => {
     const objectDifference = AitAppUtils.difference(this.formState, this.getDataDefault());
 
@@ -355,11 +343,11 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
 
   checkBeforeSaving = () => {
     const { site_language, timezone, date_format_display, number_format } = this.formState;
-    this.getErrorMessageAll(site_language, this.langLabel, 'lang');
-    this.getErrorMessageAll(timezone, this.timeLabel, 'timezone');
-    this.getErrorMessageAll(this.formState.date_format_input, this.inputLabel, 'input');
-    this.getErrorMessageAll(date_format_display, this.displayLabel, 'display');
-    this.getErrorMessageAll(number_format, this.numberLabel, 'number');
+    this.getErrorMessageAll(site_language, this.getTitle(this.langLabel), 'lang');
+    this.getErrorMessageAll(timezone, this.getTitle(this.timeLabel), 'timezone');
+    this.getErrorMessageAll(this.formState.date_format_input, this.getTitle(this.inputLabel), 'input');
+    this.getErrorMessageAll(date_format_display, this.getTitle(this.displayLabel), 'display');
+    this.getErrorMessageAll(number_format, this.getTitle(this.numberLabel), 'number');
   }
 
   isErrors = () => {
@@ -389,23 +377,22 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
             const successToSave = this.translatePipe.getMsg('I0012')
             if (site_language) {
               this.store.dispatch(new ChangeLangage(site_language));
-              localStorage.setItem('lang',site_language)
+              localStorage.setItem('lang', site_language)
             }
-            // this.setUserSetting();
             const mapping = {
-              site_language: this.langLabel,
-              timezone: this.timeLabel,
-              date_format_display: this.displayLabel,
-              date_format_input: this.inputLabel,
-              number_format: this.numberLabel
+              site_language: this.getTitle(this.langLabel),
+              timezone: this.getTitle(this.timeLabel),
+              date_format_display: this.getTitle(this.displayLabel),
+              date_format_input: this.getTitle(this.inputLabel),
+              number_format: this.getTitle(this.numberLabel)
             }
             const fieldsTrans = this.getFieldNotNullFromState().map(m => this.jsUcfirst(mapping[m]));
             this.showToastr(this.title, `${fieldsTrans.join(', ')} ` + successToSave);
             setTimeout(() => {
-            this.back();
-
-            },1000);
-            window.location.reload();
+              const newSetting = { ...this.valueState, user_id: this.user_id };
+              this.store.dispatch(new StoreSetting(newSetting));
+              this.back();
+            }, 100);
           }
         });
       }
@@ -415,12 +402,7 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
         this.showToastr(this.title, nothingToSave, 'warning');
       }
     }
-
-
-
-
   }
-
 
   getLangDefault = (lang) => {
     if (!lang) {
@@ -442,8 +424,10 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
     if (val.length === 0) {
       this.getErrorMessageAll('', this.langLabel, 'lang')
     }
-
     this.setFormState({
+      site_language: val?.value[0]?._key,
+    });
+    this.setValueState({
       site_language: val?.value[0]?._key,
     });
   }
@@ -455,6 +439,9 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
     this.setFormState({
       date_format_input: val?.value[0]?._key,
     });
+    this.setValueState({
+      date_format_input: val?.value[0]?.value,
+    });
   }
 
   getValueDateDisplay = (val) => {
@@ -463,6 +450,9 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
     }
     this.setFormState({
       date_format_display: val?.value[0]?._key,
+    });
+    this.setValueState({
+      date_format_display: val?.value[0]?.value,
     });
   }
 
@@ -473,6 +463,9 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
     this.setFormState({
       number_format: val?.value[0]?._key,
     });
+    this.setValueState({
+      number_format: val?.value[0]?.value,
+    });
   }
 
   getValueTimeZone = (val) => {
@@ -480,6 +473,9 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
       this.getErrorMessageAll('', this.timeLabel, 'timezone')
     }
     this.setFormState({
+      timezone: val?.value[0]?._key || null,
+    });
+    this.setValueState({
       timezone: val?.value[0]?._key || null,
     });
   }

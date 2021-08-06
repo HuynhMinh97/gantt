@@ -758,7 +758,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
           }
           if (error === 'maxlength') {
             mess[key].push(
-              this.getMsg('E0002').replace(
+              this.getMsg('E0003').replace(
                 '{0}',
                 label[key]
               ).replace('{1}', controlErrors[error]?.requiredLength)
