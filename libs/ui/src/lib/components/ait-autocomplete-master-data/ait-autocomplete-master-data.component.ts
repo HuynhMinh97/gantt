@@ -75,7 +75,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   @Input() hideLabel = false;
   @ViewChild('autoInput', { static: false }) auto: ElementRef;
-  @ViewChild('input', { static: false }) input: ElementRef;
+  @ViewChild('input') input: ElementRef;
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
 
   @Input() class: string;
@@ -118,13 +118,21 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Input() errorMessages;
   @Input() isResetInput;
   @Input() clearError = false;
+  monitorLabel = true;
+  @Output() onSendAllowText
 
+  isFocusInput = false;
+
+  isClickLabel = false;
+
+  currentSortData = [];
 
 
   componentErrors = []
 
   isHideLabel = false;
   isClickOption = false;
+  isClickIcon = false;
 
   openAutocomplete = () => this.isOpenAutocomplete = true;
   hideAutocomplete = () => {
@@ -161,7 +169,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   }
 
   get VALUE(): string {
-    // //// console.log(this.selectOne?.value, this.defaultValue[0]?.value, '')
     if (!this.defaultValue) {
       return this.selectOne?.value || ''
     }
@@ -185,6 +192,10 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     }
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
+
+        if (key === 'allowNew') {
+          console.log(this.allowNew)
+        }
 
         if (key === 'errorMessages') {
           if (this.messagesError().length !== 0) {
@@ -262,6 +273,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   };
 
   enter = () => {
+    console.log(this.dataFilter.length === 0, this.allowNew)
     if (this.dataFilter.length === 0 && this.allowNew) {
       this.checkAllowNew(this.currentValue);
     }
@@ -269,6 +281,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   //TODO Khi nhấn enter sẽ chọn lun giá trị đó nếu save thành công
   checkAllowNew = (value: string) => {
+    console.log(value)
     // const title = this.translateSerivce.translate(
     //   'c_10020'
     // );
@@ -301,6 +314,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
                   this.dataFilter = [1];
                 }
                 this.hideAutocomplete();
+                this.DataSource = this.sortItems(this.DataSource);
                 this.filteredOptions$ = of(this.sortItems(this.DataSource));
                 setTimeout(() => {
                   this.openAutocomplete()
@@ -386,7 +400,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
             f.code === this.defaultValue[0]?._key
         );
         this.selectOne = { _key: findByKey?.code, value: findByKey?.value };
-        // // console.log(this.defaultValue, this.dataSourceDf, this.selectOne)
         if (!this.disableOutputDefault) {
           const res = this.selectOne?._key ? [this.selectOne] : []
           this.watchValue.emit({ value: res });
@@ -487,7 +500,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     this.setupDefault();
     if (this.maxItem !== 1) {
       this.inputControl.valueChanges.subscribe(value => {
-        this.filteredOptions$ = of(this.DataSource);
+        // this.filteredOptions$ = of(this.DataSource);
       })
     }
 
@@ -510,35 +523,68 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     return true;
   }
 
-  handleClick = () => {
+  getSortedDataSource = () => {
+    return this.sortItems(this.DataSource);
+  }
 
+  handleClickInput = () => {
+    this.isOpenAutocomplete = false;
+    // this.dataFilter = [];
+    setTimeout(() => {
+      //   if (!this.isClickOption) {
+      //     // this.isHideLabel = true;
+      //     this.dataFilter = [1];
+      // this.filteredOptions$ = of(this.DataSource);
+      this.isOpenAutocomplete = true;
+      // }
+    }, 50)
 
+  }
+
+  handleClick = (isClickInput = false) => {
+
+    this.isClickLabel = true;
+    // this.filteredOptions$ = of([]);
     if (this.maxItem !== 1) {
 
-      // this.filteredOptions$ = of(this.sortItems(this.DataSource))
+      //
       if (!this.isOpenAutocomplete && !this.isClickOption) {
+        // this.isClickLabel = true;
         setTimeout(() => {
-          this.input.nativeElement.focus();
+
+
+          const dataSort = this.getSortedDataSource();
+          this.dataFilter = [1];
+          this.filteredOptions$ = of(dataSort);
+
+
+          this.isHideLabel = true;
+
+
         }, 0)
-        this.dataFilter = [1];
-        this.filteredOptions$ = of(this.sortItems(this.DataSource))
+
+
       }
     }
     else {
-      this.input.nativeElement.focus();
+      // this.input.nativeElement.focus();
     }
 
+
+    //
+    // this.isHideLabel = true;
   }
 
 
   getSelectedOptions = () =>
-    this.DataSource
+    AitAppUtils.deepCloneArray(this.DataSource)
       .filter((f) => !!f.isChecked)
       .map((m) => ({ _key: m?.code, value: m?.value }));
 
   checkItem = (event: Event, opt: any) => {
 
     let target;
+    let targetId;
 
     const itemFind = this.DataSource.find((f) => f?.optionId === opt?.optionId || f?._key === opt?.code);
     if (this.optionSelected.length < this.MAXITEM) {
@@ -546,23 +592,18 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
       this.optionSelected = this.getSelectedOptions();
       target = this.DataSource;
-      this.watchValue.emit({ value: this.optionSelected.map(m => ({_key : m?._key, value : m?.value })) });
+      this.filteredOptions$ = of(this.DataSource);
+      this.watchValue.emit({ value: this.optionSelected.map(m => ({ _key: m?._key, value: m?.value })) });
     } else {
       if (itemFind.isChecked) {
         itemFind.isChecked = !itemFind.isChecked;
         this.optionSelected = this.getSelectedOptions();
         target = this.DataSource;
-        this.watchValue.emit({ value: this.optionSelected.map(m => ({_key : m?._key, value : m?.value })) });
+        this.filteredOptions$ = of(this.DataSource);
+        this.watchValue.emit({ value: this.optionSelected.map(m => ({ _key: m?._key, value: m?.value })) });
       }
     }
-    setTimeout(() => {
-      if (target) {
-        this.DataSource = target;
-      }
-      this.isHideLabel = false;
-      this.input.nativeElement.blur();
-      this.isClickOption = false;
-    }, 10)
+
 
     if (this.required) {
       if (this.optionSelected.length === 0) {
@@ -575,7 +616,16 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
       }
     }
-    this.isHideLabel = false;
+    setTimeout(() => {
+      if (target) {
+        this.DataSource = target
+        // this.filteredOptions$ = of(this.DataSource);
+
+        this.currentSortData = AitAppUtils.deepCloneArray(target);
+        this.isHideLabel = false;
+        this.isClickOption = false;
+      }
+    }, 10)
   };
 
   displayOptions = () => {
@@ -610,9 +660,11 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
 
   optionClicked(event: Event, opt: any) {
-    this.isHideLabel = false;
-    this.clearErrors();
     this.isClickOption = true;
+    this.isHideLabel = false;
+    this.isClickLabel = false;
+    this.clearErrors();
+
     this.checkItem(event, opt);
     this.inputControl.patchValue('');
 
@@ -675,28 +727,40 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
           this.filteredOptions$ = of(this.dataSourceDf);
         }
         else {
-          this.dataFilter = [1];
-          this.filteredOptions$ = of(this.DataSource);
-          this.input.nativeElement.focus();
+          this.isHideLabel = true;
+          if (!this.isOpenAutocomplete && !this.isClickOption && !this.isFocusInput) {
+            // alert('#in')
+
+            this.filteredOptions$ = of(this.sortItems(this.DataSource));
+            this.DataSource = this.sortItems(this.DataSource);
+            this.input.nativeElement.focus();
+          }
+
+
         }
 
 
-        if (this.isOpenAutocomplete) {
-          if (!this.isClickOption) {
-            this.hideAutocomplete();
+        setTimeout(() => {
+          if (this.isOpenAutocomplete) {
+            if (!this.isClickOption && this.isClickIcon) {
+              this.hideAutocomplete();
+            }
+            else {
+              this.openAutocomplete();
+            }
+          } else {
+            this.openAutocomplete()
           }
-          else {
-            this.openAutocomplete();
-          }
-        } else {
-          this.openAutocomplete()
-        }
+        }, 20)
 
 
       } else {
+        this.isHideLabel = false;
+        this.isClickLabel = false;
         if (!this.isClickOption) {
           this.outFocusValues.emit(true);
           this.hideAutocomplete();
+
 
         }
       }
@@ -704,13 +768,22 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   }
 
 
-  onFocus = () => {
+  onFocus = (e) => {
     this.isHideLabel = true;
+    this.isFocusInput = true;
+    this.isOpenAutocomplete = false;
+    setTimeout(() => {
+      this.dataFilter = [1];
+      // this.filteredOptions$ = of(this.DataSource);
+      this.isOpenAutocomplete = true;
+      this.isFocusInput = false;
+    }, 10)
   }
 
 
   blur = (value) => {
     const values = this.dataSourceDf.find(m => m?.value === value);
+
     return !!values
   }
 
@@ -737,20 +810,21 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         }
       }
       else {
-        // console.log(this.inputControl.value);
-        const values = this.dataSourceDf.find(m => m?.value === this.inputControl.value);
+        const values = AitAppUtils.deepCloneArray(this.dataSourceDf).find(m => m?.value === this.inputControl.value);
         if (!values) {
-          this.watchValue.emit({
-            value: this.optionSelected.map(x => ({_key:x?._key , value: x?.value})),
-          });
+          // this.watchValue.emit({
+          //   value: this.optionSelected.map(x => ({ _key: x?._key, value: x?.value })),
+          // });
           this.inputControl.setValue(null)
-          this.dataFilter = [1];
+          // this.dataFilter = [1];
+          // this.filteredOptions$ = of (this.sortItems(this.DataSource))
 
           this.onInput.emit({ value: '' })
         }
 
       }
       this.checkReq();
+      this.isHideLabel = false;
     }, 120)
     this.outFocusValues.emit(true);
 
@@ -784,7 +858,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       const values = this.dataSourceDf.find(f => f?.value === this.selectOne?.value);
       if (values) {
         this.watchValue.emit({
-          value: [{_key : values?._key,value:values?.value}],
+          value: [{ _key: values?._key, value: values?.value }],
         })
       }
       else {
@@ -806,7 +880,20 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     this.isError = false;
   }
 
+  handleClickIcon = () => {
+    if (this.isOpenAutocomplete) {
+      this.isClickedIcon = true;
+      this.dataFilter = [];
+      this.isOpenAutocomplete = false;
+      setTimeout(() => {
+      this.isHideLabel = false;
+    }, 50)
+    }
+
+  }
+
   handleInput = (value) => {
+    this.isHideLabel = true;
     this.currentValue = value;
     this.clearErrors();
     if (this.maxItem === 1) {
@@ -824,15 +911,21 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       }
     }
     else {
+      this.dataFilter = [1];
       if (value === '') {
-        this.dataFilter = [1];
-        this.watchValue.emit({ value: this.optionSelected.map(x => ({_key:x?._key , value: x?.value})) });
-        this.filteredOptions$ = of(this.DataSource);
+
+        this.watchValue.emit({ value: this.optionSelected.map(x => ({ _key: x?._key, value: x?.value })) });
+        setTimeout(() => {
+          this.DataSource = this.sortItems(this.DataSource);
+          this.filteredOptions$ = of(this.sortItems(this.DataSource));
+        },500)
+
 
       } else {
 
         const text = value;
-        this.data = this._filter(text)
+        this.data = this._filter(text);
+        this.DataSource = this._filter(text);
         this.filteredOptions$ = of(this._filter(text));
       }
     }
@@ -861,7 +954,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   };
 
   onSelectionChange($event) {
-    console.log($event)
     this.clearErrors();
     this.selectOne = { _key: $event?.code, value: $event?.value };
     this.inputControl.patchValue($event?.value || '')
@@ -891,7 +983,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   getStringByLength = (a: string[], count = 0) => {
     const i = count;
     if ((a[i] || '').length > 12) {
-      return this.getStringByLength(a,i+1);
+      return this.getStringByLength(a, i + 1);
     }
     return a[i];
   }
