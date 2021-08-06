@@ -911,21 +911,21 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       }
     }
     else {
-      this.dataFilter = [1];
-      if (value === '') {
 
+      if (value === '') {
         this.watchValue.emit({ value: this.optionSelected.map(x => ({ _key: x?._key, value: x?.value })) });
         setTimeout(() => {
-          this.DataSource = this.sortItems(this.DataSource);
+          // this.DataSource = this.sortItems(this.DataSource);
+        this.dataFilter = [1];
           this.filteredOptions$ = of(this.sortItems(this.DataSource));
-        },500)
+        },400)
 
 
       } else {
-
+        this.dataFilter = [1];
         const text = value;
         this.data = this._filter(text);
-        this.DataSource = this._filter(text);
+        // this.DataSource = this._filter(text);
         this.filteredOptions$ = of(this._filter(text));
       }
     }
