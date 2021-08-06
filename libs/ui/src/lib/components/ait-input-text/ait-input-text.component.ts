@@ -150,7 +150,8 @@ export class AitTextInputComponent implements OnChanges {
   }
 
   focusout = () => {
-    this.checkReq(this.inputCtrl.value)
+    this.checkReq(this.inputCtrl.value);
+    this.checkMaxLength(this.inputCtrl.value);
   }
 
   checkReq = (value) => {

@@ -43,8 +43,6 @@
     },
     "ait-api-starter": {
       "tags": []
-    },
-    "ait-matching-webapp": { "tags": [] },
-    "ait-matching-api": { "tags": [] }
+    }
   }
 }
