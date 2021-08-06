@@ -1,4 +1,3 @@
-
 <div [ngClass]="classContainer">
   <ait-label
     [label]="label"
@@ -24,13 +23,13 @@
         background-color: transparent;
         display: flex;
       "
+      (click)="handleClick()"
     >
       <div
         #myIdentifier
         class="span"
         *ngIf="optionSelected.length !== 0 && !isReadOnly && !isHideLabel"
         nbPrefix
-
       >
         <p
           [nbTooltip]="displayOptions()"
@@ -73,9 +72,8 @@
         class="search"
         style="padding-left: 10px; font-size: 12px"
         [ngStyle]="styleInput"
-        (click)="handleClick()"
         (input)="handleInput($event.target.value)"
-        (focus)="onFocus()"
+
         (focusout)="outFocus()"
         (blur)="blur(input.value) ? (input.value = '') : null"
         (keydown.tab)="onTab()"
@@ -87,7 +85,7 @@
         *ngIf="MAXITEM !== 1 && isOpenAutocomplete && dataFilter.length !== 0"
       >
         <div
-          *ngFor="let option of filteredOptions$ | async;let i=index"
+          *ngFor="let option of filteredOptions$ | async; let i = index"
           class="option__container"
           style="cursor: pointer; position: relative; height: 37px"
         >
@@ -139,7 +137,7 @@
           </div>
         </div>
       </div>
-      <div class="icon" (click)="handleClick()">
+      <div class="icon" (click)="handleClickIcon()">
         <div *ngIf="!isOpenAutocomplete">
           <nb-icon
             style="color: gray; margin: 8px; cursor: pointer"
@@ -162,6 +160,7 @@
       word-break: break-word;
       color: #8f9bb3;
       font-size: 12px;
+      margin: 0;
       margin-top: 10px;
     "
     id="{{ ID('information') }}"
