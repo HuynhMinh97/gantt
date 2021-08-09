@@ -67,7 +67,9 @@
       }
     }
   }
-  
+  div.content{
+    justify-content: center !important;
+  }
   @media only screen and (max-width: 992px) {
     .user__experience__wrapper {
       padding-left: 10px;
@@ -137,9 +139,6 @@
     width: 400px;
     margin-bottom: 14px;
     margin-top: 14px;
-    p{
-      margin-top: 15px;
-    }
   }
 
   .input_inline {
@@ -158,6 +157,11 @@
     margin-bottom: 5px;
   }
   
+  :host ::ng-deep .gray-text{
+    .text{
+      color:#8f9bb3 !important;
+    }
+  }
   
   .nb-radio + .nb-radio {
     margin-right: 20px;

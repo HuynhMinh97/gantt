@@ -22,6 +22,7 @@ import { SyncPEService } from './services/sync_pe_history.service';
 import { ReactionService } from './services/reaction.service';
 import { RecommencedUserService } from './services/recommenced-user.service';
 import { UserExperienceComponent } from './pages/aureole-v/user/user-experience/user-experience.component';
+import { AddComponent } from './user/add/add.component';
 
 
 const AIT_UI_MODULES = [
@@ -55,7 +56,7 @@ const PAGES = [
 
 
 @NgModule({
-  declarations: [AppComponent, ...AUREOLE_V_COMPONENTS, ...PAGES],
+  declarations: [AppComponent, ...AUREOLE_V_COMPONENTS, ...PAGES, AddComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

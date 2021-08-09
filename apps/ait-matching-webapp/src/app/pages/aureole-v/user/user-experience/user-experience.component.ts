@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { title } from 'node:process';
+import { isValue } from './../../../../../../../../libs/shared/src/lib/utils/checks.util';
+import { UserExperienceDto, UserExpInfoErrorsMessage } from './../../interface';
+import { UserExperienceService } from './../../../../services/user-experience.service';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -6,7 +10,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
+import {
+  NbDialogService,
+  NbLayoutScrollService,
+  NbToastrService,
+} from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import {
   AitAppUtils,
@@ -17,6 +25,8 @@ import {
   AitTranslationService,
   AppState,
   MODE,
+  MODULES,
+  PAGES,
 } from '@ait/ui';
 import {
   NbButtonModule,
@@ -25,6 +35,14 @@ import {
   NbTooltipModule,
 } from '@nebular/theme';
 import { Apollo } from 'apollo-angular';
+import { Subscription } from 'rxjs';
+import {
+  isArrayFull,
+  isObjectFull,
+  KEYS,
+  KeyValueDto,
+  RESULT_STATUS,
+} from '@ait/shared';
 
 @Component({
   selector: 'ait-user-experience',
@@ -32,77 +50,80 @@ import { Apollo } from 'apollo-angular';
   styleUrls: ['./user-experience.component.scss'],
 })
 export class UserExperienceComponent
-extends AitBaseComponent
-implements OnInit {
+  extends AitBaseComponent
+  implements OnInit {
   // Create form group
   userExperienceInfo: FormGroup;
+  stateForm: any = {} as UserExperienceDto;
+  stateUserExpInfoDf = {} as UserExperienceDto;
   userExperienceInfoClone: any;
-  
-  mode = MODE.NEW;
+
+  userExperienceInfoErros = new UserExpInfoErrorsMessage();
+
+  infoLabelList = {} as KeyValueDto;
+
+  // Form status change subscribe
+  private userExperienceInfoSubscr: Subscription;
+
+  mode = MODE.EDIT;
+  isReset = false;
+  isSubmit = false;
   isChanged = false;
   isDataInit = false;
-  isReset = false;
-  isError = false;
-  isInValidInput = false;
-
-  user_key = '';
+  isInValidTitle = false;
+  isInValidCompany = false;
+  isInValidLocation = false;
 
   resetUserInfo = {
     title: false,
-    company_working: false,
     location: false,
-    employment_type: false,
     is_working: false,
+    employee_type: false,
+    company_working: false,
     start_date_from: false,
     start_date_to: false,
     description: false,
   };
 
+  errors = {
+    title: [],
+    location: [],
+    is_working: [],
+    employee_type: [],
+    company_working: [],
+    start_date_from: [],
+    start_date_to: [],
+    description: [],
+  };
+
   isOpen = {
-    userExperienceInfo: true
+    userExperienceInfo: true,
   };
 
-  fakeData = {
-    id: '1',
-    user_id: '01442c21-0944-46e2-a946-0df9dc0d08c7',
-    title: [
-      { _key: '11a', value: 'HEHEHE123' },
-      { _key: '11b', value: '676767assad' },
-    ],
-    company_working: [
-      { _key: '1a', value: 'Bin' },
-      { _key: '1b', value: 'Thuan' },
-    ],
-    location: [
-      { _key: '2a', value: 'Alo HiHi' },
-      { _key: '2b', value: 'Hahaha' },
-      { _key: '2c', value: 'HUHUHU' },
-    ],
-    employment_type: [
-      { _key: '3a', value: 'HEHEHE' },
-      { _key: '3b', value: 'HOHOHOHO' },
-    ],
-    is_working: true,
-    start_date_from: 1641945600000,
-    start_date_to: 1627446494365,
-    description: 'Bin Bin Bin Bin Bin Bin',
-  };
+  dateField = ['start_date_from', 'start_date_to'];
 
-  dateField = [
-    'start_date_from',
-    'start_date_to'
-  ];
+  location: any = null;
+  titleName: any = null;
+  locationName: any = null;
+  employee_typeName: any = null;
+  company_workingName: any = null;
+  user_key = '';
 
   constructor(
+    private router: Router,
+    private element: ElementRef,
     private formBuilder: FormBuilder,
-    private dialogService: NbDialogService,
-    layoutScrollService: NbLayoutScrollService,
     public activeRouter: ActivatedRoute,
-    store: Store<AppState>,
-    authService: AitAuthService,
+    private dialogService: NbDialogService,
+    private translatePipe: AitTranslationService,
+    private userExpService: UserExperienceService,
+    private translateService: AitTranslationService,
     env: AitEnvironmentService,
+    store: Store<AppState>,
     apollo: Apollo,
-    toastrService: NbToastrService
+    authService: AitAuthService,
+    toastrService: NbToastrService,
+    layoutScrollService: NbLayoutScrollService
   ) {
     super(
       store,
@@ -114,20 +135,13 @@ implements OnInit {
       toastrService
     );
 
-    //Create form builder group
-    this.userExperienceInfo = this.formBuilder.group({
-      title: new FormControl(null, [
-        Validators.required,
-        Validators.maxLength(200),
-      ]),
-      company_working: new FormControl(null),
-      location: new FormControl(null),
-      employment_type: new FormControl(null),
-      is_working: new FormControl(null),
-      start_date_from: new FormControl(null),
-      start_date_to: new FormControl(null),
-      description: new FormControl(null, [Validators.maxLength(4000)]),
+    this.setModulePage({
+      module: MODULES.JOB,
+      page: PAGES.JOB_EDIT
     });
+
+    //Create form builder group
+    this.prepareForm();
 
     // get key form parameters
     this.user_key = this.activeRouter.snapshot.paramMap.get('id');
@@ -142,8 +156,25 @@ implements OnInit {
     }
   }
 
-  ngOnInit(): void {
+  prepareForm() {
+    this.userExperienceInfo = this.formBuilder.group({
+      title: new FormControl(null, [
+        Validators.required,
+        Validators.maxLength(200),
+      ]),
+      company_working: new FormControl(null, [Validators.required]),
+      location: new FormControl(null, [Validators.required]),
+      employee_type: new FormControl(null, [Validators.required]),
+      is_working: new FormControl(null),
+      start_date_from: new Date(),
+      start_date_to: new FormControl(null),
+      description: new FormControl(null),
+    });
+  }
+
+  async ngOnInit(): Promise<void> {
     this.callLoadingApp();
+
     // Run when form value change and only in edit mode
     this.userExperienceInfo.valueChanges.subscribe((data) => {
       if (this.userExperienceInfo.pristine) {
@@ -153,22 +184,77 @@ implements OnInit {
       }
     });
 
+    //check mode
     if (this.user_key) {
-      this.userExperienceInfo.patchValue({ ...this.fakeData });
+      const condition = { _key: this.user_key };
+      const resInfo = await this.userExpService.findUserExperienceByKey(
+        condition
+      );
+      let isUserExist = false;
+      if (resInfo.data.length > 0) {
+        const data = resInfo.data[0];
+        console.log(resInfo);
+        this.userExperienceInfo.patchValue({...data});
+        isUserExist = true;
+      }
+      !isUserExist && this.router.navigate([`/404`]);
     }
   }
 
-  resetForm = () => {
+  getTitleByMode() {
+    return this.mode === MODE.EDIT ? '求人要件更新' : '求人要件登録';
+  }
+
+  async getUserExperienceInfo() {
+    const id: any = AitAppUtils.getParamsOnUrl(true);
+    if (id === 'user_experience') {
+      this.mode = MODE.NEW;
+    }
+    if (this.mode === MODE.EDIT) {
+      // this.setupButton();
+      this.callLoadingApp();
+      // const _key: any = AitAppUtils.getParamsOnUrl(true);
+      const condition = { _key: AitAppUtils.getParamsOnUrl(true) };
+      // await this.userExpService.findUserExperienceByKey(condition).then((r) => {
+      //   if (r.status === RESULT_STATUS.OK) {
+      //     console.log(r.data[0]);
+      //   }
+      // });
+    }
+  }
+
+  setErrors = (newErrors: any) =>
+    (this.errors = { ...this.errors, ...newErrors });
+
+  clearErrors() {
+    this.setErrors({
+      title: [],
+      company_working: [],
+      location: [],
+      employee_type: [],
+      is_working: [],
+      start_date_from: [],
+      start_date_to: [],
+      description: [],
+    });
+  }
+
+  resetForm() {
+    this.clearErrors();
     if (this.mode === MODE.NEW) {
-      this.userExperienceInfo.reset();
+      this.prepareForm();
       for (const index in this.resetUserInfo) {
         this.resetUserInfo[index] = true;
         setTimeout(() => {
           this.resetUserInfo[index] = false;
         }, 100);
       }
+      this.userExperienceInfoSubscr.unsubscribe;
+      this.userExperienceInfoErros = new UserExpInfoErrorsMessage();
     } else {
-      this.userExperienceInfo.patchValue({ ...this.fakeData });
+      this.userExperienceInfo.patchValue({
+        ...this.userExperienceInfoClone,
+      });
       for (const index in this.resetUserInfo) {
         if (!this.userExperienceInfo.controls[index].value) {
           this.resetUserInfo[index] = true;
@@ -178,45 +264,128 @@ implements OnInit {
         }
       }
     }
-    this.showToastr('', this.getMsg('Reset Success !!!'));
-  };
+    this.showToastr('', this.getMsg('I0007'));
+  }
 
-  confirmBeforeDelete = () => {
+  confirmBeforeDelete() {
     this.dialogService
       .open(AitConfirmDialogComponent, {
         closeOnBackdropClick: true,
         hasBackdrop: true,
         autoFocus: false,
         context: {
-          title: this.getMsg('Delete ?'),
-        }
+          title: this.translateService.translate('このデータを削除しますか。'),
+        },
       })
       .onClose.subscribe(async (event) => {
         if (event) {
-          this.delete();
+          this.onDelete();
         }
       });
   }
 
-  async delete() {
-    const data = document.getElementById("1");
-    if(data == null){
-      this.showToastr('', this.getMsg('情報削除が成功しました。'));
-      this.callLoadingApp();
-      this.goBack()
+  async onDelete() {
+    await this.userExpService.remove(this.user_key).then((res) => {
+      console.log(res);
+      if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
+        this.showToastr('', this.getMsg('情報削除が成功しました。'));
+        this.router.navigate([`/recommenced-user`]);
+      } else {
+        this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+      }
+    });
+  }
+
+  //Get all form error messages
+  getErrors() {
+    this.userExperienceInfoErros = new UserExpInfoErrorsMessage();
+    this.userExperienceInfoErros = this.getFormErrorMessage(
+      this.userExperienceInfo,
+      this.infoLabelList
+    );
+  }
+
+  getErrorKey(group: string, key: string) {
+    if (key === 'residence_status') {
+      return (
+        key +
+        '_' +
+        group
+          .split(/(?=[A-Z])/)
+          .join()
+          .toLowerCase()
+          .replace(/,/g, '_')
+      );
+    } else {
+      return key;
     }
-  //   await this.userProfileService.removeAllByUserId(this.user_key).then(res => {
-  //     console.log(res);
-  //     if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
-  //       this.showToastr('', this.getMsg('情報削除が成功しました。'));
-  //       this.router.navigate([`/recommenced-user`]);
-  //     } else {
-  //       this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-  //     }
-  // });
-}
+  }
+
+  scrollIntoError() {
+    const group = this.userExperienceInfo as FormGroup;
+    let isFocus = false;
+    for (const key of Object.keys(group.controls)) {
+      if (group.controls[key].invalid) {
+        const errorKey = this.getErrorKey('userExperienceInfo', key);
+        const invalidControl = this.element.nativeElement.querySelector(
+          `#${errorKey}_input`
+        );
+        try {
+          this.isOpen['userExperienceInfo'] = true;
+          invalidControl.scrollIntoView({
+            behavior: 'auto',
+            block: 'center',
+          });
+          isFocus = true;
+          break;
+        } catch {
+          console.error('scroll into error failed!!!');
+        }
+      }
+    }
+  }
+
+  saveAndContinue() {
+    this.isSubmit = true;
+    setTimeout(() => {
+      this.isSubmit = false;
+    }, 100);
+    const saveData = this.userExperienceInfo.value;
+    if (this.userExperienceInfo.valid) {
+      this.userExpService
+        .save(saveData)
+        .then((res) => {
+          console.log(res);
+          if (res?.status === RESULT_STATUS.OK) {
+            const message =
+              this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
+            this.showToastr('', message);
+            this.router.navigateByUrl('/user-experience');
+          } else {
+            this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+          }
+        })
+        .catch(() => {
+          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+        });
+    } else {
+      // Form invalid, get all erros messages
+      this.getErrors();
+      this.scrollIntoError();
+
+      // Subscribe form status for onchange event error message
+      this.userExperienceInfoSubscr = this.userExperienceInfo.statusChanges.subscribe(
+        (status) => {
+          if (status === 'INVALID') {
+            this.getErrors();
+          }
+        }
+      );
+    }
+  }
 
   saveAndClose() {
+    //this.userExpService.save(this.userExperienceInfo.value);
     console.log(this.userExperienceInfo.value);
   }
 
@@ -228,6 +397,38 @@ implements OnInit {
     this.isOpen[group] = status;
   }
 
+  takeMasterValue(value: any, target: string): void {
+    if (target === 'title' && isObjectFull(value.value)) {
+      this.userExperienceInfo.controls['title'].setValue(value?.value[0]._key);
+      this.titleName = {
+        _key: value?.value[0]._key,
+        value: value?.value[0].value,
+      };
+    } else if (target === 'company_working' && isObjectFull(value.value)) {
+      this.userExperienceInfo.controls['company_working'].setValue(
+        value?.value[0]._key
+      );
+      this.company_workingName = {
+        _key: value?.value[0]._key,
+        value: value?.value[0].value,
+      };
+    } else if (target === 'location' && isObjectFull(value.value)) {
+      this.userExperienceInfo.controls['location'].setValue(
+        value?.value[0]._key
+      );
+      this.locationName = {
+        _key: value?.value[0]._key,
+        value: value?.value[0].value,
+      };
+    } else if (target === 'employee_type' && isObjectFull(value.value)) {
+      this.userExperienceInfo.controls['employee_type'].setValue(
+        value?.value[0]._key
+      );
+    } else {
+      this.userExperienceInfo.controls[target].setValue(null);
+    }
+  }
+
   takeInputValue(value: string, form: string): void {
     if (value) {
       this.userExperienceInfo.controls[form].markAsDirty();
@@ -237,10 +438,17 @@ implements OnInit {
     }
   }
 
-  checkValidate(target?: string) {
-    if (this.userExperienceInfo.controls[target].invalid) {
-      return this.isInValidInput = true;
+  takeDatePickerValue(value: number, group: string, form: string) {
+    if (value) {
+      const data = value as number;
+      value = new Date(data).setHours(0, 0, 0, 0);
+      this[group].controls[form].markAsDirty();
+      this[group].controls[form].setValue(value);
     }
+  }
+
+  getValue(value, target) {
+    this.userExperienceInfo.controls[target].setValue(value);
   }
 
   checkAllowSave() {
@@ -253,9 +461,7 @@ implements OnInit {
       { ...userInfo },
       { ...userInfoClone }
     );
-    this.isChanged = !(
-      isChangedUserInfo
-    );
+    this.isChanged = !isChangedUserInfo;
   }
 
   setHours(data: any) {
@@ -271,9 +477,7 @@ implements OnInit {
     }
   }
 
-  getFormValue(form) {
-    return this.userExperienceInfo.controls[form].value
-      ? this.userExperienceInfo.controls[form].value
-      : '';
+  ngOnDestroy() {
+    this.userExperienceInfoSubscr.unsubscribe;
   }
 }

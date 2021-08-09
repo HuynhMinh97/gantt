@@ -1,12 +1,14 @@
 <div class="user__experience__wrapper">
   <ait-text-gradient
-    [content]="'Add experience' | translate"
+    [content]="getTitleByMode()"
+    id="form_edit_user_experience"
   ></ait-text-gradient>
   <ait-space></ait-space>
 
   <ait-card-content
+    style="justify-content: center"
     class="content__card"
-    [label]="'基本情報' | translate"
+    [label]="'基本情報'"
     [padding]="'14px 90px 0 10px'"
     (onToggle)="toggleContent('userExperienceInfo', $event)"
     [isOpen]="isOpen.userExperienceInfo"
@@ -15,125 +17,123 @@
     <div style="margin-top: 14px">
       <ait-autocomplete-master
         [id]="'title'"
-        [label]="'TITLE '"
+        [label]="'TITLE'"
         [required]="true"
-        [collection]="'user_experience'"
+        [collection]="'m_title'"
         [placeholder]="'Developer'"
-        [maxItem]="1"
-        [isReset]="resetUserInfo.title"
         [style]="{ width: '400px' }"
-        (watchValue)="takeInputValue($event, 'title')"
-        [defaultValue]="
-          userExperienceInfo.controls['title'].value
-            ? userExperienceInfo.controls['title'].value
-            : null
-        "
-        (focusout)="checkValidate('company_working')"
+        [isReset]="resetUserInfo.title"
+        (watchValue)="takeMasterValue($event, 'title')"
+        [defaultValue]="[titleName]"
+        [isSubmit]="isSubmit"
       ></ait-autocomplete-master>
-      <ait-error-message
-        *ngIf="isInValidInput"
-        [errors]="['Please Enter Title']"
-      ></ait-error-message>
       <div style="margin-top: 14px; width: 400px">
         <ait-autocomplete-master
           [id]="'company_working'"
-          [label]="'COMPANY '"
+          [label]="'COMPANY'"
           [required]="true"
-          [collection]="'user_experience'"
+          [collection]="'m_title'"
           [placeholder]="'Aureole IT'"
-          [isReset]="resetUserInfo.title"
-          [maxItem]="1"
           [style]="{ width: '400px' }"
-          (watchValue)="takeInputValue($event, 'company_working')"
-          [defaultValue]="
-            userExperienceInfo.controls['company_working'].value
-              ? userExperienceInfo.controls['company_working'].value
-              : null
-          "
-          (focusout)="checkValidate('company_working')"
+          [isReset]="resetUserInfo.company_working"
+          (watchValue)="takeMasterValue($event, 'company_working')"
+          [defaultValue]="[company_workingName]"
+          [isSubmit]="isSubmit"
         ></ait-autocomplete-master>
         <ait-error-message
-          *ngIf="isInValidInput"
+          *ngIf="isInValidCompany"
           [errors]="['Please Enter Company']"
         ></ait-error-message>
       </div>
       <div class="input_area">
         <ait-autocomplete-master
           [id]="'location'"
-          [label]="'LOCATION '"
+          [label]="'LOCATION'"
           [required]="true"
-          [collection]="'user_experience'"
+          [collection]="'sys_master_data'"
           [placeholder]="'Ho Chi Minh City'"
-          [isReset]="resetUserInfo.title"
+          [isReset]="resetUserInfo.location"
           [maxItem]="1"
           [style]="{ width: '400px' }"
-          (watchValue)="takeInputValue($event, 'location')"
-          [defaultValue]="
-            userExperienceInfo.controls['location'].value
-              ? userExperienceInfo.controls['location'].value
-              : null
-          "
-          (focusout)="checkValidate('location')"
+          (watchValue)="takeMasterValue($event, 'location')"
+          [defaultValue]="[location]"
+          [isSubmit]="isSubmit"
         ></ait-autocomplete-master>
         <ait-error-message
-          *ngIf="isInValidInput"
+          *ngIf="isInValidLocation"
           [errors]="['Please Enter Location']"
         ></ait-error-message>
       </div>
 
       <div class="input_area">
-        <ait-autocomplete-master
-          [id]="'employment_type'"
-          [label]="'EMPLOYMENT TYPE '"
+        <ait-autocomplete-master-data
+          [id]="'employee_type'"
+          [label]="'EMPLOYMENT TYPE'"
           [placeholder]="'Select'"
-          [collection]="'user_experience'"
+          [required]="true"
+          [collection]="'sys_master_data'"
           [maxItem]="1"
-          [isReset]="resetUserInfo.title"
+          [isReset]="resetUserInfo.employee_type"
           [style]="{ width: '200px' }"
-          (watchValue)="takeInputValue($event, 'employment_type')"
+          (watchValue)="takeMasterValue($event, 'employee_type')"
           [dataSource]="
-            userExperienceInfo.controls['employment_type'].value
-              ? userExperienceInfo.controls['employment_type'].value
+            userExperienceInfo.controls['employee_type'].value
+              ? userExperienceInfo.controls['employee_type'].value
               : null
           "
+          [isSubmit]="isSubmit"
         >
-        </ait-autocomplete-master>
+        </ait-autocomplete-master-data>
       </div>
 
       <div class="input_area">
         <nb-checkbox
+          class="gray-text"
           [checked]="userExperienceInfo.controls['is_working']?.value"
           [id]="'is_working'"
           (checkedChange)="toggleCheckBox($event)"
-        >
-          <p>{{ 'I am currently working in this role' | translate }}</p>
+          >I am currently working in this role
         </nb-checkbox>
       </div>
 
       <div style="display: flex; align-items: flex-end">
         <ait-datepicker
-          [label]="'START DATE '"
+          [label]="'START DATE'"
           [placeholder]="'yyyy/MM/dd'"
           [id]="'start_date_from'"
           [style]="{ width: '170px' }"
           [isReset]="resetUserInfo.start_date_from"
           [dateInput]="userExperienceInfo.controls['start_date_from'].value"
-          (watchValue)="takeInputValue($event?.value, 'start_date_from')"
+          (watchValue)="
+            takeDatePickerValue(
+              $event?.value,
+              'userExperienceInfo',
+              'start_date_from'
+            )
+          "
         ></ait-datepicker>
-        <p style="margin: 10px">{{ ' ~ ' | translate }}</p>
+        <p style="margin: 10px">{{ ' ~ ' }}</p>
         <ait-datepicker
           [placeholder]="'yyyy/MM/dd'"
           [id]="'start_date_to'"
           [style]="{ width: '170px' }"
           [isReset]="resetUserInfo.start_date_to"
+          [disable]="userExperienceInfo.controls['is_working'].value === true"
           [dateInput]="userExperienceInfo.controls['start_date_to'].value"
-          (watchValue)="takeInputValue($event?.value, 'start_date_to')"
+          (watchValue)="
+            takeDatePickerValue(
+              $event?.value,
+              'userExperienceInfo',
+              'start_date_to'
+            )
+          "
         ></ait-datepicker>
       </div>
 
       <div class="input_area">
         <ait-input-text
           [id]="'description'"
+          [length]="4000"
           [rows]="4"
           [label]="'DESCRIPTION'"
           [placeholder]="'Place your text'"
@@ -185,7 +185,7 @@
         <ait-button
           *ngIf="mode === 'NEW'"
           [title]="'SAVE & CONTINUE'"
-          (click)="saveAndClose()"
+          (click)="saveAndContinue()"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
           "
@@ -196,6 +196,7 @@
           [id]="'save'"
           [width]="'200px'"
           [title]="'SAVE & CLOSE'"
+          (click)="saveAndClose()"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
           "

@@ -45,9 +45,9 @@ export class AitBaseService implements OnDestroy {
     this.token = localStorage.getItem('access_token');
     store.pipe(select(getAllInfoRequest)).subscribe(res => {
       const { lang, company, user_id, page, module } = res;
-      this.user_id = AitAppUtils.getUserId() || user_id;
+      this.user_id = '6178d828-2b92-4f99-acd2-3d3e561a36d8';
       this.currentLang = lang;
-      this.company = company;
+      this.company = 'a8cd83a1-5a4d-4500-8751-a790d649c398'||'000000000000000000000000000000000000';
       this.page = page;
       this.module = module;
 
@@ -216,7 +216,7 @@ export class AitBaseService implements OnDestroy {
     // Request to graphql query
     request['company'] = this.company || localStorage.comp || SYSTEM_COMPANY;
     request['lang'] = localStorage.lang || this.currentLang;
-    request['user_id'] = this.user_id;
+    request['user_id'] = this.user_id
 
     // Setup gql json
     const query = {

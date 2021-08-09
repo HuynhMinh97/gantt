@@ -21,7 +21,7 @@ export class AitBaseService {
   constructor(
     @Inject(DB_CONNECTION_TOKEN) private readonly db: Database,
     @Inject('ENVIRONMENT') private env: any
-  ) {}
+  ) { }
 
   company = '';
   lang = '';
@@ -131,6 +131,7 @@ export class AitBaseService {
       true
     )} ) `;
     aqlStr += `FOR data IN result RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name }) `;
+    console.log(aqlStr)
     try {
       const result = await this.db.query(aqlStr);
       const rawData = [];
@@ -153,6 +154,8 @@ export class AitBaseService {
       COLLECTIONS.MASTER_DATA,
       COLLECTIONS.COMPANY,
       COLLECTIONS.CAPTION,
+      COLLECTIONS.M_COMPANY,
+      COLLECTIONS.M_TITLE,
     ];
     const mapData = [];
 
