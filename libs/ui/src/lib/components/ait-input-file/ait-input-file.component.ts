@@ -116,6 +116,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
             this.errorMessages = [];
             this.messageErrorFileSp = '';
             setTimeout(() => {
+              this.messageErrorFileSp = '';
               this.isReset = false;
             }, 100)
           }
@@ -160,6 +161,10 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
       }
     }
+  }
+
+  getMessageErrorFile = () => {
+    return this.messageErrorFileSp ? [this.messageErrorFileSp] : [];
   }
 
   getNote = () => this.translateService.translate(this.guidance);
@@ -215,7 +220,8 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   safelyURL = (data, type) => this.santilizer.bypassSecurityTrustUrl(`data:${type};base64, ${data}`);
 
   checkMaxSize = (file: any[]) => {
-    return this.fileRequest[0]?.size <= this.maxSize * 1024;
+
+    return this.fileRequest.length > 0 ?  this.fileRequest[0]?.size <= this.maxSize * 1024 : true;
   }
   checkMaxFile = () => {
 

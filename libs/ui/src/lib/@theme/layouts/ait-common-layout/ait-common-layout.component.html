@@ -20,7 +20,11 @@
           <nb-icon icon="menu-2-outline"></nb-icon>
         </a>
         <div style="margin: 15px" *ngIf="hasSidebar"></div>
-        <div style="display: flex; align-items: center" *ngIf="!isAureoleV()">
+        <div
+          style="display: flex; align-items: center; cursor: pointer"
+          *ngIf="!isAureoleV()"
+          (click)="navigateHome()"
+        >
           <svg
             width="50"
             height="50"
@@ -57,7 +61,13 @@
           </svg>
           <h1 style="color: #10529d; margin-left: 10px">AIT FRAMEWORK</h1>
         </div>
-        <div (click)="navigateHome()" class="logo__header" *ngIf="isAureoleV()">
+        <div
+          (click)="navigateHome()"
+          class="logo__header"
+          style="cursor: pointer"
+          *ngIf="isAureoleV()"
+          (click)="navigateHome()"
+        >
           <svg
             width="367"
             height="44"
@@ -125,7 +135,12 @@
         </div>
       </div>
       <div
-        style="display: flex; align-items: center; justify-content: flex-end;flex: 1;"
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          flex: 1;
+        "
       >
         <ait-menu-actions [menu_actions]="menu_actions"></ait-menu-actions>
         <div style="margin: 15px"></div>
@@ -143,7 +158,23 @@
   </nb-sidebar>
 
   <nb-layout-column style="height: 100%; padding: 0">
-    <ng-content select="router-outlet"></ng-content>
+    <form (submit)="checkSubmit($event)" style="height: 100%; width: 100%">
+      <ng-content select="router-outlet"></ng-content>
+    </form>
+    <div
+      class="loading__app"
+      [nbSpinner]="isLoading"
+      nbSpinnerStatus="primary"
+      *ngIf="isLoading"
+      style="
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        background: rgba(0, 0, 0, 0.2);
+        z-index: 999999999999999;
+      "
+    ></div>
     <ait-back-button></ait-back-button>
     <ait-up-button></ait-up-button>
     <ait-footer></ait-footer>
