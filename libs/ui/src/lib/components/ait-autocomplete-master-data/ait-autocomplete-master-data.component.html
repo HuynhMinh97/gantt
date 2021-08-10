@@ -136,6 +136,7 @@
             {{ option?.value }}
           </div>
         </div>
+
       </div>
       <div class="icon" (click)="handleClickIcon()">
         <div *ngIf="!isOpenAutocomplete">
@@ -164,7 +165,8 @@
       margin-top: 10px;
     "
     id="{{ ID('information') }}"
-    *ngIf="allowNew && dataFilter.length === 0"
+    *ngIf="allowNew"
+    [style.width]="width"
   >
     {{ getAllowNewText() }}
   </p>

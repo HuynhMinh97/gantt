@@ -118,6 +118,10 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Input() errorMessages;
   @Input() isResetInput;
   @Input() clearError = false;
+  @Input()
+  includeNotActive = true;
+  @Input()
+  includeNotDelete = true
   monitorLabel = true;
   @Output() onSendAllowText
 
@@ -266,7 +270,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   }
 
   getAllowNewText = () => {
-    if (this.dataFilter.length === 0 && this.allowNew && this.currentValue) {
+    if (this.allowNew) {
       return this.translateSerivce.translate('allow_new');
     }
     return '';
@@ -455,7 +459,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         ...condition
       }, {
         _key: true, code: true, [this.targetValue]: true,
-      }, this.collection)
+      }, this.collection, this.includeNotDelete, this.includeNotActive);
 
 
       const result = rest?.data
@@ -886,8 +890,8 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       this.dataFilter = [];
       this.isOpenAutocomplete = false;
       setTimeout(() => {
-      this.isHideLabel = false;
-    }, 50)
+        this.isHideLabel = false;
+      }, 50)
     }
 
   }
@@ -916,9 +920,9 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         this.watchValue.emit({ value: this.optionSelected.map(x => ({ _key: x?._key, value: x?.value })) });
         setTimeout(() => {
           // this.DataSource = this.sortItems(this.DataSource);
-        this.dataFilter = [1];
+          this.dataFilter = [1];
           this.filteredOptions$ = of(this.sortItems(this.DataSource));
-        },400)
+        }, 400)
 
 
       } else {
@@ -982,7 +986,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   getStringByLength = (a: string[], count = 0) => {
     const i = count;
-    if ((a[i] || '').length > 12) {
+    if ((a[i] || '').length > 6) {
       return this.getStringByLength(a, i + 1);
     }
     return a[i];
