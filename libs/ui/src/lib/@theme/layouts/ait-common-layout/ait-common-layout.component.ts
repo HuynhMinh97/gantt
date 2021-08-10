@@ -2,8 +2,10 @@ import { Component, Input } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { NbSidebarService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
+import { Apollo } from 'apollo-angular';
 import { APP_TITLE } from '../../../@constant';
-import { AitEnvironmentService, AitTranslationService } from '../../../services';
+import { AitBaseComponent } from '../../../components/base.component';
+import { AitAuthService, AitEnvironmentService, AitTranslationService, AitUserService } from '../../../services';
 import { AppState } from '../../../state/selectors';
 import { AitAppUtils } from '../../../utils/ait-utils';
 
@@ -12,7 +14,7 @@ import { AitAppUtils } from '../../../utils/ait-utils';
   templateUrl: './ait-common-layout.component.html',
   styleUrls: ['./ait-common-layout.component.scss']
 })
-export class AitCommonLayoutComponent {
+export class AitCommonLayoutComponent extends AitBaseComponent {
   @Input() excludeHeaderScreens = [];
   currentPath = '';
   @Input() menu_actions: [];
@@ -24,12 +26,16 @@ export class AitCommonLayoutComponent {
   // logoHeader = aureole_logo_header;
   isExcludeScreen = () => this.excludeHeaderScreens.includes(this.currentPath);
   constructor(
-    router: Router,
+    private router: Router,
     private sidebarService: NbSidebarService,
-    private env: AitEnvironmentService,
+    env: AitEnvironmentService,
     private translateService: AitTranslationService,
-    private store: Store<AppState>
+    store: Store<AppState>,
+    authService: AitAuthService,
+    apollo: Apollo,
+    userService: AitUserService
   ) {
+    super(store, authService, apollo, userService, env);
     router.events.subscribe(e => {
       if (e instanceof NavigationEnd) {
         const path: any = AitAppUtils.getParamsOnUrl(true);
@@ -40,8 +46,12 @@ export class AitCommonLayoutComponent {
   }
   getTitle = () => {
     const target: any = this.env;
-    return this.translateService.translate(APP_TITLE) + target?.COMMON?.VERSION
+    return this.translateService.translate(APP_TITLE) + ' ' + target?.COMMON?.VERSION
   }
+
+  navigateHome = () => this.router.navigateByUrl('');
+
+  getTranslateTitle = (name) => this.translateService.translate(APP_TITLE)
 
   isAureoleV = () => {
     const target: any = this.env;
@@ -56,5 +66,14 @@ export class AitCommonLayoutComponent {
     return false;
   }
 
+  checkSubmit(event) {
+    event.preventDefault();
+    this.callLoadingApp();
+
+    setTimeout(() => {
+      this.cancelLoadingApp()
+    }, 1500)
+
+  }
 
 }
