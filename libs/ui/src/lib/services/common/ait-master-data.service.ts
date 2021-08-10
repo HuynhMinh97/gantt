@@ -114,7 +114,7 @@ export class AitMasterDataService extends AitBaseService {
   }
 
 
-  async find(condition: any, rf?: any, collection?: string) {
+  async find(condition: any, rf?: any, collection?: string, includeNotDelete: boolean = true, includeNotActive: boolean = false) {
     const returnFields = rf ? rf : this.returnFields;
     const request = {};
     if (isObjectFull(condition)) {
@@ -122,6 +122,6 @@ export class AitMasterDataService extends AitBaseService {
     }
     request['collection'] = collection || 'sys_master_data';
 
-    return await this.query(GRAPHQL.FIND_SYSTEM, request, returnFields);
+    return await this.query(GRAPHQL.FIND_SYSTEM, request, returnFields, includeNotDelete, includeNotActive);
   }
 }

@@ -101,6 +101,10 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   isShowTooltip = false;
   @Input() id;
   @Input() isSubmit = false;
+  @Input()
+  includeNotActive = false;
+  @Input()
+  includeNotDelete = true;
   @Output() onError = new EventEmitter();
   messageSearch = '';
 
@@ -340,8 +344,9 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
       name: true
     }
 
-    this.masterDataService.find(condition, returnFields, this.collection).then(r => {
+    this.masterDataService.find(condition, returnFields, this.collection, this.includeNotDelete, this.includeNotActive).then(r => {
       if (r?.status === RESULT_STATUS.OK) {
+        console.log(r.data)
         const result = r.data.map(m => ({ ...m, value: m?.name }));
         this.selectItems = [...(result || []), ...this.storeDataDraft];
       }
@@ -365,7 +370,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
           _key: true,
           name: true
         }
-        this.masterDataService.find(condition, returnFields, this.collection).then(r => {
+        this.masterDataService.find(condition, returnFields, this.collection, this.includeNotDelete, this.includeNotActive).then(r => {
           if (r.status === RESULT_STATUS.OK) {
             this.DataSource = (r.data || []).map(m => ({ _key: m._key, value: m?.name }));
             const _keys = this.excludedValue.map(e => e?._key);
