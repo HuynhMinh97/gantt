@@ -2,6 +2,9 @@
 .datepicker {
   background: nb-theme(color-basic-200) !important;
   border: 1px solid nb-theme(color-basic-600) !important;
+  &.focus {
+    border: 1px solid #10529D !important;
+  }
   &.isReadOnly {
     background: transparent !important;
     border: none !important;

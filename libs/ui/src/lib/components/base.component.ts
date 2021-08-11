@@ -18,15 +18,14 @@ import {
 } from '../state/actions';
 import { AitEnvironmentService } from '../services';
 import { registerLocaleData } from '@angular/common';
-import localeEn from '@angular/common/locales/en';
-import localeVn from '@angular/common/locales/vi';
-import localeJp from '@angular/common/locales/ja';
 import { AitAppUtils } from '../utils/ait-utils';
 import gql from 'graphql-tag';
 import { Apollo } from 'apollo-angular';
 import { jsonToGraphQLQuery } from 'json-to-graphql-query';
 import { map } from 'rxjs/operators';
-
+import localeEnn from '@angular/common/locales/en';
+import localeVnn from '@angular/common/locales/vi';
+import localeJpp from '@angular/common/locales/ja';
 
 export interface BaseInitData {
   module: string;
@@ -194,6 +193,24 @@ export class AitBaseComponent implements OnInit, OnDestroy {
   }
 
   public initBaseComponent = () => {
+
+    // register locale by language setting
+    // this.store.pipe(select(getLang)).subscribe({
+    //   next: (state) => {
+    //     console.log(state)
+    //     switch (state) {
+    //       case 'en_US':
+
+    //         return registerLocaleData(localeEnn);
+    //       case 'vi_VN':
+
+    //         return registerLocaleData(localeVnn);
+    //       default:
+
+    //         return registerLocaleData(localeJpp);
+    //     }
+    //   },
+    // });
 
     // console.log(localStorage.getItem('refresh_token'))
 
@@ -566,23 +583,23 @@ export class AitBaseComponent implements OnInit, OnDestroy {
   // Start basecomponent for initializing
   ngOnInit() {
 
-
     // register locale by language setting
     this.store.pipe(select(getSettingLangTime)).subscribe({
       next: (state) => {
         switch (state?.site_language) {
           case 'en_US':
 
-            return registerLocaleData(localeEn);
+            return registerLocaleData(localeEnn);
           case 'vi_VN':
 
-            return registerLocaleData(localeVn);
+            return registerLocaleData(localeVnn);
           default:
 
-            return registerLocaleData(localeJp);
+            return registerLocaleData(localeJpp);
         }
       },
     });
+
   }
 
   // convert date to unix_time
