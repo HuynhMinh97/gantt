@@ -40,15 +40,24 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
   textCompared = '';
   @Input() isError = false;
   @Input() isSuccess = false;
+  isFocus = false;
+
+  @Input() tabIndex;
 
   @ViewChild('inputTimepicker') inputTimepicker: ElementRef;
 
   ngOnInit() {
     const step = this.step ? this.step : this.STEP;
     const hour = this.isTwelveFormat ? 12 : 24;
-    this.hours = Array.from({ length: hour / step }, (_, i) => this.getNum((i ) * step));
+    this.hours = Array.from({ length: hour / step }, (_, i) => this.getNum((i) * step));
     this.minutes = Array.from({ length: 60 / step }, (_, i) => this.getNum((i) * step));
   }
+
+  focusInput() {
+    this.isFocus = true;
+  }
+
+  getFocus = () => this.isError ? false : this.isFocus;
 
   ID(element: string): string {
     return this.id + '_' + element;
@@ -176,7 +185,9 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
     this.textCompared = this.getNum(value);
     this.timeExact = value;
     this.currentValue = value;
-    this.isOpen = false;
+    setTimeout(() => {
+      this.isOpen = false;
+    },100)
 
   }
 
@@ -248,6 +259,7 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
         if (key === 'isReset') {
           if (this.isReset) {
             this.currentValue = null;
+            this.textCompared = null;
 
             this.timeExact = this.defaultValue || this.currentValue || undefined;
             // console.log(this.timeExact, this.defaultValue, this.currentValue)
