@@ -91,6 +91,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   @Input() required = false;
   @Input() label;
   errors = []
+  @Input() tabIndex;
   @Input() guidance = ''
   @Input() guidanceIcon = 'info-outline';
   @Input() collection;
@@ -99,7 +100,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   @Input() dataTooltip = [];
   @Input() disabled = false;
   isShowTooltip = false;
-  @Input() id;
+  @Input() id = Date.now();
   @Input() isSubmit = false;
   @Input()
   includeNotActive = false;
@@ -217,7 +218,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
           }
         }
         if (!this.compareDeep(this.defaultValue, this.currentDataDef)) {
-          console.log(this.defaultValue)
+          // console.log(this.defaultValue)
           this.currentDataDef = this.defaultValue;
           const checkNull = this.checkDefaultValue(this.defaultValue);
           this.selectItems = checkNull ? [] : this.defaultValue;

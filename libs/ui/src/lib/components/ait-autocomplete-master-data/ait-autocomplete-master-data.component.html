@@ -1,4 +1,4 @@
-<div [ngClass]="classContainer">
+<div [ngClass]="classContainer" >
   <ait-label
     [label]="label"
     [required]="required"
@@ -7,7 +7,7 @@
     [styleText]="styleLabel"
   ></ait-label>
 
-  <div style="display: flex;flex-wrap: wrap;">
+  <div style="display: flex;flex-wrap: wrap;flex-direction: column;" class="wrapper" >
     <div
       class="input__container"
       [ngStyle]="style"
@@ -16,6 +16,7 @@
       #inputContainer
       [style.width]="width"
       [style.height]="height"
+      [class.focus]="getFocus()"
     >
       <div
         style="
@@ -57,6 +58,9 @@
           *ngIf="isReadOnly"
           style="font-size: 12px"
           #input
+          (blur)="this.isFocus = false;"
+          (focus)="focusInput()"
+          tabindex="{{tabIndex}}"
         />
 
         <input
@@ -69,15 +73,17 @@
           nbInput
           #input
           autocomplete="doNotAutoComplete"
+          (focus)="focusInput()"
           type="text"
           class="search"
           style="padding-left: 10px; font-size: 12px"
           [ngStyle]="styleInput"
           (input)="handleInput($event.target.value)"
           (focusout)="outFocus()"
-          (blur)="blur(input.value) ? (input.value = '') : null"
+          (blur)="blur(input.value) ? (input.value = '') : null;this.isFocus = false;"
           (keydown.tab)="onTab()"
           (keydown.enter)="enter()"
+          tabindex="{{tabIndex}}"
         />
 
         <div

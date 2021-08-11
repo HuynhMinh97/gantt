@@ -44,8 +44,17 @@ export class AitTextInputComponent implements OnChanges {
   msgRequired = '';
   errorArray = [];
   value = '';
+  isFocus = false;
+  @Input() tabIndex;
+
 
   inputCtrl: FormControl;
+
+  focusInput = () => {
+    this.isFocus = true;
+  }
+
+  getFocus = () => this.isError ? false : this.isFocus;
 
   getNameField = () => this.translateService.translate(this.label || '');
 

@@ -81,7 +81,11 @@
   z-index: 999999999 !important;
 }
 
+
 .input__container {
+  &.focus {
+    border: 1px solid #10529D;
+  }
   height: 40px;
   background:transparent;
   border: 1px solid nb-theme(color-basic-400);
@@ -92,6 +96,7 @@
   flex-direction: row;
   position: relative;
   border: 1px solid nb-theme(color-basic-600);
+
   &.isError {
     border: 1px solid nb-theme(color-danger-500);
   }
