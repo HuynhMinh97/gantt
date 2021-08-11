@@ -72,6 +72,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   defaultValueDf: any;
   data = [];
   currentValue = '';
+  @Input() tabIndex;
 
   @Input() hideLabel = false;
   @ViewChild('autoInput', { static: false }) auto: ElementRef;
@@ -107,7 +108,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Input() collection = 'sys_master_data';
   @Input() targetValue = 'name';
   @Input() classContainer;
-  @Input() id;
+  @Input() id = Date.now();
   @Input() styleLabel;
   @Input() width;
   @Input() height;
@@ -137,6 +138,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   isHideLabel = false;
   isClickOption = false;
   isClickIcon = false;
+  isFocus = false;
 
   openAutocomplete = () => this.isOpenAutocomplete = true;
   hideAutocomplete = () => {
@@ -146,6 +148,17 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   ID(element: string): string {
     return this.id + '_' + element;
+  }
+
+  focusInput = () => {
+    this.isFocus = true;
+  }
+
+  getFocus = () => {
+    if (this.isError) {
+      return false;
+    }
+    return this.isFocus || this.isOpenAutocomplete;
   }
 
   getCaptions = () => this.translateSerivce.translate(this.guidance);

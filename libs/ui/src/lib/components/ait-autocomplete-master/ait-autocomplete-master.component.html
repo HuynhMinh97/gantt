@@ -57,6 +57,7 @@
       (keydown.tab)="enterItems(input.value); input.value = ''"
       (focusout)="outFocus()"
       *ngIf="!disabled"
+      tabindex="{{tabIndex}}"
     />
     <input
       [formControl]="inputControlMaster"
@@ -75,9 +76,9 @@
       (keydown.enter)="enterItems(input.value); input.value = ''"
       (keydown.tab)="enterItems(input.value); input.value = ''"
       (focusout)="outFocus()"
+      tabindex="{{tabIndex}}"
     />
   </div>
-
   <!-- <p
     class="caption"
     [id]="ID('caption_limit')"

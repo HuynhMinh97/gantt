@@ -12,6 +12,7 @@
     class="input__contrainer"
     [ngStyle]="{ width: widthInput }"
     style="margin-top: 8px; border-radius: 5px"
+
   >
     <input
       [id]="ID('input_number_readonly')"
@@ -31,6 +32,10 @@
       [style.width]="width"
       [style.height]="height"
       autocomplete="doNotAutoComplete"
+      tabindex="{{tabIndex}}"
+      (focusout)="isFocus=false"
+      (focus)="focusInput()"
+      [class.focus]="getFocus()"
     />
     <input
       [id]="ID('input_number')"
@@ -46,10 +51,10 @@
       [placeholder]="getPlaceHolder()"
       (input)="onInputHandle($event.target.value)"
       [formControl]="inputCtrl"
-      (focusout)="handleFocusOut()"
+      (focusout)="handleFocusOut();isFocus=false"
       (beforeinput)="onKeyDown($event)"
       (keydown)="onKeyUp($event)"
-      (focus)="handleFocus()"
+      (focus)="handleFocus();focusInput()"
       style="font-size: 12px; background-color: transparent"
       (click)="handleClick()"
       [ngStyle]="styleInput"
@@ -57,6 +62,8 @@
       [style.width]="width"
       [style.height]="height"
       class="isDefault"
+      tabindex="{{tabIndex}}"
+      [class.focus]="getFocus()"
     />
   </div>
   <!-- {{inputCtrl.value}} -->

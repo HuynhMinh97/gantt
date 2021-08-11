@@ -22,6 +22,9 @@ input {
       background: nb-theme(color-basic-200) !important;
       border: 1px solid nb-theme(color-basic-600);
     }
+    &.focus {
+      border: 1px solid #10529D !important;
+    }
     font-size: 12px;
     text-align: right;
     &.isError {

@@ -39,7 +39,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   isTrick = false;
   @ViewChild('inputNumber', { static: false }) input: ElementRef;
   isTooltip = false;
-  @Input() id;
+  @Input() id = Date.now();
   @Input() classContainer;
 
 
@@ -63,6 +63,9 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   @Input() errorMessages = [];
   @Input() clearError = false;
   msgRequired = ''
+  isFocus = false;
+  @Input() tabIndex;
+
 
 
   constructor(
@@ -74,6 +77,13 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
     this.msgRequired = this.translateService.getMsg('E0001').replace('{0}', this.getFieldName());
   }
 
+  focusInput() {
+    this.isFocus = true;
+  }
+
+  getFocus() {
+    return this.isError ? false : this.isFocus;
+  }
   getPlaceHolder = () => this.translateService.translate(this.placeholder);
 
   ngOnInit() {
