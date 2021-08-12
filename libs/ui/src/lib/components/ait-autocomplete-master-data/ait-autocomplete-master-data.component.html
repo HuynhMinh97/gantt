@@ -1,4 +1,4 @@
-<div [ngClass]="classContainer">
+<div [ngClass]="classContainer" >
   <ait-label
     [label]="label"
     [required]="required"
@@ -7,166 +7,177 @@
     [styleText]="styleLabel"
   ></ait-label>
 
-  <div
-    class="input__container"
-    [ngStyle]="style"
-    style="margin-top: 8px; background-color: #fff"
-    [ngClass]="{ isError: isError }"
-    #inputContainer
-    [style.width]="width"
-    [style.height]="height"
-  >
+  <div style="display: flex;flex-wrap: wrap;flex-direction: column;" class="wrapper" >
     <div
-      style="
-        width: 100%;
-        height: 100%;
-        background-color: transparent;
-        display: flex;
-      "
+      class="input__container"
+      [ngStyle]="style"
+      style="margin-top: 8px; background-color: #fff"
+      [ngClass]="{ isError: isError }"
+      #inputContainer
+      [style.width]="width"
+      [style.height]="height"
+      [class.focus]="getFocus()"
     >
       <div
-        #myIdentifier
-        class="span"
-        *ngIf="optionSelected.length !== 0 && !isReadOnly && !isHideLabel"
-        nbPrefix
-      >
-        <p
-          [nbTooltip]="displayOptions()"
-          [ngStyle]="styleInput"
-          style="font-weight: bold; font-size: 12px; cursor: context-menu"
-          id="{{ ID('selected_items') }}"
-        >
-          {{ getSelectedItems(optionSelected) }}
-        </p>
-      </div>
-
-      <input
-        id="{{ ID('input') }}"
-        fullWidth
-        nbInput
-        [value]="VALUE"
-        type="text"
-        autocomplete="doNotAutoComplete"
-        class="search"
-        [ngStyle]="styleInput"
-        [placeholder]="placeholder"
-        [disabled]="isReadOnly"
-        [readOnly]="isReadOnly"
-        *ngIf="isReadOnly"
-        style="font-size: 12px"
-        #input
-      />
-
-      <input
-        id="{{ ID('input') }}"
-        *ngIf="!isReadOnly"
-        [formControl]="inputControl"
-        [placeholder]="PLACEHOLDER"
-        [value]="VALUE"
-        fullWidth
-        nbInput
-        #input
-        autocomplete="doNotAutoComplete"
-        type="text"
-        class="search"
-        style="padding-left: 10px; font-size: 12px"
-        [ngStyle]="styleInput"
+        style="
+          width: 100%;
+          height: 100%;
+          background-color: transparent;
+          display: flex;
+        "
         (click)="handleClick()"
-        (input)="handleInput($event.target.value)"
-        (focus)="onFocus()"
-        (focusout)="outFocus()"
-        (blur)="blur(input.value) ? (input.value = '') : null"
-        (keydown.tab)="onTab()"
-        (keydown.enter)="enter()"
-      />
-
-      <div
-        class="autocompleteeeee emptyy"
-        *ngIf="MAXITEM !== 1 && isOpenAutocomplete && dataFilter.length !== 0"
       >
         <div
-          *ngFor="let option of filteredOptions$ | async;let i=index"
-          class="option__container"
-          style="cursor: pointer; position: relative; height: 37px"
+          #myIdentifier
+          class="span"
+          *ngIf="optionSelected.length !== 0 && !isReadOnly && !isHideLabel"
+          nbPrefix
         >
-          <div
-            (click)="optionClicked($event, option)"
-            style="
-              position: absolute;
-              height: 100%;
-              width: 100%;
-              z-index: 9999;
-              background-color: transparent;
-            "
-          ></div>
-          <nb-checkbox
-            [(checked)]="option.isChecked"
-            style="cursor: pointer; margin-left: 15px"
-            [status]="'primary'"
-            [id]="ID('checkbox_' + i)"
+          <p
+            [nbTooltip]="displayOptions()"
+            [ngStyle]="styleInput"
+            style="font-weight: bold; font-size: 12px; cursor: context-menu"
+            id="{{ ID('selected_items') }}"
           >
-            <span
-              style="cursor: pointer; font-size: 12px"
-              id="{{ ID('selection_value') }}"
-              >{{ option?.value }}</span
-            >
-          </nb-checkbox>
+            {{ getSelectedItems(optionSelected) }}
+          </p>
         </div>
-      </div>
-      <div
-        class="autocompleteeeee emptyy"
-        *ngIf="MAXITEM === 1 && isOpenAutocomplete && dataFilter.length !== 0"
-      >
+
+        <input
+          id="{{ ID('input') }}"
+          fullWidth
+          nbInput
+          [value]="VALUE"
+          type="text"
+          autocomplete="doNotAutoComplete"
+          class="search"
+          [ngStyle]="styleInput"
+          [placeholder]="placeholder"
+          [disabled]="isReadOnly"
+          [readOnly]="isReadOnly"
+          *ngIf="isReadOnly"
+          style="font-size: 12px"
+          #input
+          (blur)="this.isFocus = false;"
+          (focus)="focusInput()"
+          tabindex="{{tabIndex}}"
+        />
+
+        <input
+          id="{{ ID('input') }}"
+          *ngIf="!isReadOnly"
+          [formControl]="inputControl"
+          [placeholder]="PLACEHOLDER"
+          [value]="VALUE"
+          fullWidth
+          nbInput
+          #input
+          autocomplete="doNotAutoComplete"
+          (focus)="focusInput()"
+          type="text"
+          class="search"
+          style="padding-left: 10px; font-size: 12px"
+          [ngStyle]="styleInput"
+          (input)="handleInput($event.target.value)"
+          (focusout)="outFocus()"
+          (blur)="blur(input.value) ? (input.value = '') : null;this.isFocus = false;"
+          (keydown.tab)="onTab()"
+          (keydown.enter)="enter()"
+          tabindex="{{tabIndex}}"
+        />
+
         <div
-          *ngFor="let option of filteredOptions$ | async"
-          (click)="onSelectionChange(option)"
-          class="option__container"
-          style="cursor: pointer"
+          class="autocompleteeeee emptyy"
+          *ngIf="MAXITEM !== 1 && isOpenAutocomplete && dataFilter.length !== 0"
         >
           <div
-            style="
-              cursor: pointer;
-              font-weight: 600;
-              font-size: 12px;
-              margin: 5px;
-              margin-left: 15px;
-            "
-            id="{{ ID('selection_value') }}"
+            *ngFor="let option of filteredOptions$ | async; let i = index"
+            class="option__container"
+            style="cursor: pointer; position: relative; height: 37px"
           >
-            {{ option?.value }}
+            <div
+              (click)="optionClicked($event, option)"
+              style="
+                position: absolute;
+                height: 100%;
+                width: 100%;
+                z-index: 9999;
+                background-color: transparent;
+              "
+            ></div>
+            <nb-checkbox
+              [(checked)]="option.isChecked"
+              style="cursor: pointer; margin-left: 15px"
+              [status]="'primary'"
+              [id]="ID('checkbox_' + i)"
+            >
+              <span
+                style="cursor: pointer; font-size: 12px"
+                id="{{ ID('selection_value') }}"
+                >{{ option?.value }}</span
+              >
+            </nb-checkbox>
+          </div>
+        </div>
+        <div
+          class="autocompleteeeee emptyy"
+          *ngIf="MAXITEM === 1 && isOpenAutocomplete && dataFilter.length !== 0"
+        >
+          <div
+            *ngFor="let option of filteredOptions$ | async"
+            (click)="onSelectionChange(option)"
+            class="option__container"
+            style="cursor: pointer"
+          >
+            <div
+              style="
+                cursor: pointer;
+                font-weight: 600;
+                font-size: 12px;
+                margin: 5px;
+                margin-left: 15px;
+              "
+              id="{{ ID('selection_value') }}"
+            >
+              {{ option?.value }}
+            </div>
+          </div>
+        </div>
+        <div class="icon" (click)="handleClickIcon()">
+          <div *ngIf="!isOpenAutocomplete">
+            <nb-icon
+              style="color: gray; margin: 8px; cursor: pointer"
+              [icon]="'arrow-ios-downward-outline'"
+              pack="eva"
+            ></nb-icon>
+          </div>
+          <div *ngIf="isOpenAutocomplete">
+            <nb-icon
+              style="color: gray; margin: 8px; cursor: pointer"
+              [icon]="'arrow-ios-upward-outline'"
+              pack="eva"
+            ></nb-icon>
           </div>
         </div>
       </div>
-      <div class="icon" (click)="handleClick()">
-        <div *ngIf="!isOpenAutocomplete">
-          <nb-icon
-            style="color: gray; margin: 8px; cursor: pointer"
-            [icon]="'arrow-ios-downward-outline'"
-            pack="eva"
-          ></nb-icon>
-        </div>
-        <div *ngIf="isOpenAutocomplete">
-          <nb-icon
-            style="color: gray; margin: 8px; cursor: pointer"
-            [icon]="'arrow-ios-upward-outline'"
-            pack="eva"
-          ></nb-icon>
-        </div>
-      </div>
     </div>
+    <p
+      style="
+        word-break: break-word;
+        color: #8f9bb3;
+        font-size: 12px;
+        margin: 0;
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        margin-left: 5px;
+      "
+      id="{{ ID('information') }}"
+      *ngIf="allowNew"
+    >
+      {{ getAllowNewText() }}
+    </p>
   </div>
-  <p
-    style="
-      word-break: break-word;
-      color: #8f9bb3;
-      font-size: 12px;
-      margin-top: 10px;
-    "
-    id="{{ ID('information') }}"
-    *ngIf="allowNew && dataFilter.length === 0"
-  >
-    {{ getAllowNewText() }}
-  </p>
 
   <div class="caption" *ngIf="guidance" [style.width]="width">
     <div class="icon" *ngIf="guidanceIcon">

@@ -5,7 +5,7 @@ import { NbGlobalLogicalPosition, NbLayoutScrollService, NbToastrService } from 
 import { select, Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import _ from 'lodash';
-import { KEYS, RESULT_STATUS, SYSTEM_COMPANY } from '@ait/shared'
+import { KEYS, RESULT_STATUS, SysSaveTemp, SYSTEM_COMPANY } from '@ait/shared'
 import { FormGroup, ValidationErrors } from '@angular/forms';
 import { AitAuthService } from '../services/common/ait-auth.service';
 import { AitUserService } from '../services/common/ait-user.service';
@@ -18,15 +18,16 @@ import {
 } from '../state/actions';
 import { AitEnvironmentService } from '../services';
 import { registerLocaleData } from '@angular/common';
-import localeEn from '@angular/common/locales/en';
-import localeVn from '@angular/common/locales/vi';
-import localeJp from '@angular/common/locales/ja';
 import { AitAppUtils } from '../utils/ait-utils';
 import gql from 'graphql-tag';
 import { Apollo } from 'apollo-angular';
 import { jsonToGraphQLQuery } from 'json-to-graphql-query';
 import { map } from 'rxjs/operators';
-
+import localeEnn from '@angular/common/locales/en';
+import localeVnn from '@angular/common/locales/vi';
+import localeJpp from '@angular/common/locales/ja';
+import { MODE } from '@ait/ui';
+import { AitSaveTempService } from '../services/common/ait-save-temp.service';
 
 export interface BaseInitData {
   module: string;
@@ -64,6 +65,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     _env: AitEnvironmentService,
     public layoutScrollService?: NbLayoutScrollService,
     public toastrService?: NbToastrService,
+    public saveTempService?: AitSaveTempService,
   ) {
     this.user_id = AitAppUtils.getUserId();
     const userId = this.authService.getUserID();
@@ -195,13 +197,36 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
   public initBaseComponent = () => {
 
+    // register locale by language setting
+    // this.store.pipe(select(getLang)).subscribe({
+    //   next: (state) => {
+    //     console.log(state)
+    //     switch (state) {
+    //       case 'en_US':
+
+    //         return registerLocaleData(localeEnn);
+    //       case 'vi_VN':
+
+    //         return registerLocaleData(localeVnn);
+    //       default:
+
+    //         return registerLocaleData(localeJpp);
+    //     }
+    //   },
+    // });
+
+    // console.log(localStorage.getItem('refresh_token'))
 
     if (localStorage.getItem('refresh_token')) {
       this.refreshToken().then((r: any) => {
-
         if (r?.data?.refreshToken) {
           const result: any = r?.data?.refreshToken;
           this.authService.saveTokens(result?.token, result?.refreshToken);
+        }
+      }).catch(e => {
+        if (e.message.includes('expired')) {
+          this.authService.removeTokens();
+          location.reload();
         }
       });
     }
@@ -561,23 +586,23 @@ export class AitBaseComponent implements OnInit, OnDestroy {
   // Start basecomponent for initializing
   ngOnInit() {
 
-
     // register locale by language setting
     this.store.pipe(select(getSettingLangTime)).subscribe({
       next: (state) => {
         switch (state?.site_language) {
           case 'en_US':
 
-            return registerLocaleData(localeEn);
+            return registerLocaleData(localeEnn);
           case 'vi_VN':
 
-            return registerLocaleData(localeVn);
+            return registerLocaleData(localeVnn);
           default:
 
-            return registerLocaleData(localeJp);
+            return registerLocaleData(localeJpp);
         }
       },
     });
+
   }
 
   // convert date to unix_time
@@ -753,7 +778,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
           }
           if (error === 'maxlength') {
             mess[key].push(
-              this.getMsg('E0002').replace(
+              this.getMsg('E0003').replace(
                 '{0}',
                 label[key]
               ).replace('{1}', controlErrors[error]?.requiredLength)
@@ -777,6 +802,33 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
     return mess as any;
   };
+
+  async findTempData(mode: string, _key: string = '') {
+    const condition: SysSaveTemp = {
+      page: this.page,
+      module: this.module,
+      user_id: this.user_id,
+      mode
+    };
+    mode === MODE.EDIT && (condition['edit_id'] = _key);
+    await this.saveTempService.find(condition);
+  }
+
+  async saveTempData(mode: string, data: string, _key: string = '') {
+    const saveData: SysSaveTemp = {
+      page: this.page,
+      module: this.module,
+      mode,
+      data,
+    };
+    mode === MODE.EDIT && (saveData['edit_id'] = _key);
+    await this.saveTempService.save([saveData]);
+  }
+
+  async removeTempData(_key: string) {
+    _key && await this.saveTempService.remove(_key);
+  }
+
   // Destroy the unused supcritions
   ngOnDestroy() {
     this.sup.unsubscribe();

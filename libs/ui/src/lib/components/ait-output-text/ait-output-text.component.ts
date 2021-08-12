@@ -17,8 +17,13 @@ export class AitOutputTextComponent implements OnChanges {
   @Input() width;
   @Input() rows = 1;
   @Input() classContainer;
+  @Input() id = Date.now();
   constructor(private translateService: AitTranslationService) {
 
+  }
+
+  ID(element: string): string {
+    return this.id + '_' + element;
   }
 
   getCaption = () => this.translateService.translate(this.guidance);

@@ -71,7 +71,7 @@ export class AitUpButtonComponent {
           // page refreshes.
 
           const n: any = AitAppUtils.getParamsOnUrl(true);
-          this.isChangeColor = DarkScreen.includes(n);
+          // this.isChangeColor = DarkScreen.includes(n);
           ;
 
           this.setColorBtn();
