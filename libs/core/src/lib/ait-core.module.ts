@@ -6,10 +6,12 @@ import { AitLogger } from './utils/ait-logger.util';
 import { BinaryResolver } from './resolvers/binary.resolver';
 import { SystemResolver } from './resolvers/system.resolver';
 import { UserSettingResolver } from './resolvers/user-setting.resolver';
+import { SaveTempResolver } from './resolvers/save-temp.resolver';
 
 const RESOLVERS = [
   SystemResolver,
   BinaryResolver,
+  SaveTempResolver,
   UserSettingResolver
 ]
 @Module({
