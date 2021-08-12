@@ -5,7 +5,7 @@ import { NbGlobalLogicalPosition, NbLayoutScrollService, NbToastrService } from 
 import { select, Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import _ from 'lodash';
-import { KEYS, RESULT_STATUS, SYSTEM_COMPANY } from '@ait/shared'
+import { KEYS, RESULT_STATUS, SysSaveTemp, SYSTEM_COMPANY } from '@ait/shared'
 import { FormGroup, ValidationErrors } from '@angular/forms';
 import { AitAuthService } from '../services/common/ait-auth.service';
 import { AitUserService } from '../services/common/ait-user.service';
@@ -26,6 +26,8 @@ import { map } from 'rxjs/operators';
 import localeEnn from '@angular/common/locales/en';
 import localeVnn from '@angular/common/locales/vi';
 import localeJpp from '@angular/common/locales/ja';
+import { MODE } from '@ait/ui';
+import { AitSaveTempService } from '../services/common/ait-save-temp.service';
 
 export interface BaseInitData {
   module: string;
@@ -63,6 +65,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     _env: AitEnvironmentService,
     public layoutScrollService?: NbLayoutScrollService,
     public toastrService?: NbToastrService,
+    public saveTempService?: AitSaveTempService,
   ) {
     this.user_id = AitAppUtils.getUserId();
     const userId = this.authService.getUserID();
@@ -799,6 +802,33 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
     return mess as any;
   };
+
+  async findTempData(mode: string, _key: string = '') {
+    const condition: SysSaveTemp = {
+      page: this.page,
+      module: this.module,
+      user_id: this.user_id,
+      mode
+    };
+    mode === MODE.EDIT && (condition['edit_id'] = _key);
+    await this.saveTempService.find(condition);
+  }
+
+  async saveTempData(mode: string, data: string, _key: string = '') {
+    const saveData: SysSaveTemp = {
+      page: this.page,
+      module: this.module,
+      mode,
+      data,
+    };
+    mode === MODE.EDIT && (saveData['edit_id'] = _key);
+    await this.saveTempService.save([saveData]);
+  }
+
+  async removeTempData(_key: string) {
+    _key && await this.saveTempService.remove(_key);
+  }
+
   // Destroy the unused supcritions
   ngOnDestroy() {
     this.sup.unsubscribe();

@@ -86,6 +86,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   @Input() classContainer;
   @Input() id = Date.now();
   @Input() errorMessages;
+  @Input() clearError = false;
   @Output() onError = new EventEmitter();
   @Input() isSubmit = false;
   @Input() hasStatus = true;
@@ -168,6 +169,9 @@ export class AitInputFileComponent implements OnInit, OnChanges {
           }
         }
 
+        if (key === 'clearError') {
+          this.messageErrorFileSp = '';
+        }
       }
     }
   }
