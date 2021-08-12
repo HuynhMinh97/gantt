@@ -26,10 +26,16 @@ export class AitTocMenuComponent implements OnInit, AfterViewInit {
           id: m.id,
           title: m.innerHTML
         }
-      })
+      });
+      const ids = Array.from(new Set(this.items.map(x => x?.title)));
+      this.items = ids.map(x => {
+        const it = this.items.find(d => d.title === x);
+        return it
+      });
+
     }
 
-    console.log(this.items)
+    // console.log(this.items)
   }
   ngOnInit(): void {
     const doc = document.getElementsByClassName('menu_toc_item');

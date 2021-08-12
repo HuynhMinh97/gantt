@@ -15,7 +15,10 @@
       max-width: 100%;
     "
     class="datepicker"
+    [class.isReadOnly]="disable"
     [class.isError]="isError"
+    tabindex="{{ tabIndex }}"
+    [class.focus]="getFocus()"
   >
     <nb-icon
       nbSuffix
@@ -28,13 +31,15 @@
     <input
       nbInput
       #inputDateTime
-      [placeholder]="getPlaceHolder()"
+      [placeholder]="getFormat()"
       [nbDatepicker]="dateTimePicker"
       [(ngModel)]="date"
+      [formControl]="inputCtrl"
       *ngIf="!disable"
       [shape]="isRound ? 'semi-round' : 'rectangle'"
       [ngStyle]="styleInput"
-      (focusout)="checkValidDateInput()"
+      (focusout)="checkValidDateInput(); isFocus = false"
+      (focus)="focusInput()"
       (click)="clickInput($event)"
       (input)="handleInput($event)"
       (beforeinput)="onBeforeInput($event)"
@@ -83,5 +88,9 @@
       </p>
     </div>
   </div>
-  <ait-error-message *ngIf="required" [errors]="messagesError()" [id]="id"></ait-error-message>
+  <ait-error-message
+    *ngIf="required"
+    [errors]="messagesError()"
+    [id]="id"
+  ></ait-error-message>
 </div>

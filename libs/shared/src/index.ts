@@ -8,6 +8,7 @@ export * from './lib/dtos/jwt.dto';
 export * from './lib/dtos/company.dto';
 export * from './lib/dtos/key-value.dto';
 export * from './lib/dtos/user-setting.dto';
+export * from './lib/dtos/sys-save-temp.dto';
 
 // Models
 export * from './lib/models/message.model';

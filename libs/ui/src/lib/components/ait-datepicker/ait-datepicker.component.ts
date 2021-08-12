@@ -12,6 +12,8 @@ import { AitDateFormatService } from '../../services/common/ait-date.service';
 import { AppState } from '../../state/selectors';
 import { getSettingLangTime } from '../../state/selectors';
 import { AitAppUtils } from '../../utils/ait-utils';
+import * as dayjs from 'dayjs';
+import { StringDecoder } from 'string_decoder';
 
 
 @Component({
@@ -46,7 +48,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   @Input() label;
   @Input() guidance = ''
   @Input() guidanceIcon = '';
-  @Input() id;
+  @Input() id = Date.now();
   @Input() styleLabel;
   @Input() classContainer;
   @Input() width;
@@ -54,23 +56,33 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   @Output() onError = new EventEmitter();
   @Input() isSubmit = false;
   @Input() errorMessages;
+  @Input() tabIndex;
 
   @ViewChild('inputDateTime', { static: false }) input: ElementRef;
   @ViewChild(NbDatepickerDirective, { static: false }) nbDatepicker;
 
   formatTransfrom = null;
+  isFocus = false;
 
   inputCtrl: FormControl;
   constructor(
     private store: Store<AppState>,
     private datePipe: DatePipe,
-    @Inject(LOCALE_ID) private _locale: string,
+    @Inject(LOCALE_ID) public _locale: string,
     private dateService: NbDateFnsDateService,
     private translateService: AitTranslationService,
     private dateFormatService: AitDateFormatService) {
     this.inputCtrl = new FormControl(null);
 
 
+  }
+
+  focusInput() {
+    this.isFocus = true;
+  }
+
+  getFocus() {
+    return this.isError ? false : this.isFocus;
   }
 
   ID(element: string): string {
@@ -219,38 +231,351 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
     //Day 0 is the last day in the previous month
     return new Date(year, month, 0).getDate();
     // Here January is 0 based
-    // return new Date(year, month+1, 0).getDate();
+    // return new Date(year, month + 1, 0).getDate();
   };
 
-  translateDate = (value) => {
-    let target = Number(value)
-    const date = new Date();
-    const lastDay = this.getDaysInMonth(date.getMonth(), date.getFullYear());
+  checkValidFormatDate = () => {
+    const format = this.getFormat();
+    return dayjs(this.inputCtrl.value, format).isValid();
+  }
 
-    if (target < 1) {
-      target = 1;
-    } else if (value > lastDay) {
-      target = lastDay;
+  getCurrentDay = () => {
+
+    return (new Date()).getDate();
+  }
+
+  getCurrentYear = () => {
+
+    return (new Date()).getFullYear();
+  }
+
+  getCurrentMonth = () => {
+    return (new Date()).getMonth();
+  }
+
+  getFullDate = (dateString: string) => {
+    if (this.isDateValid(dateString)) {
+
     }
-    const format = new Date(date.getFullYear(), date.getMonth(), target);
+  }
+
+  translateDate = (value: string) => {
+    const target = Number(value);
+
+    const $target = target.toString();
+    let res = null;
+    const priorityDay = this.getFormat().indexOf('d') < this.getFormat().indexOf('M');
+    const priorityYear = this.getFormat().indexOf('y') < this.getFormat().indexOf('M');
+    // const date = new Date();
+    // const lastDay = this.getDaysInMonth(this.getCurrentMonth(), this.getCurrentYear());
+
+    // if (target < 1) {
+    //   target = 1;
+    // } else if (target > lastDay) {
+    //   target = lastDay;
+    // }
+    // const format = new Date(date.getFullYear(), date.getMonth(), target);
+    // console.log(target, format);
+    // this.date = format;
+
+    if ($target !== '0') {
+      if (value.length === 1) {
+        if ($target !== '0') {
+          res = new Date(this.getCurrentYear(), this.getCurrentMonth(), target);
+        }
+      }
+      else if (value.length === 2) {
+        // case target > lastday of this month
+        const lastDay = this.getDaysInMonth(this.getCurrentMonth(), this.getCurrentYear());
+        if (target < lastDay) {
+          res = new Date(this.getCurrentYear(), this.getCurrentMonth(), target);
+        }
+        else {
+          if (priorityDay) {
+            // for day first
+            const d_day = Number($target[0]);
+            let d_month = Number($target[1]);
+            if (d_month < 1 || d_month > 12) {
+              d_month = this.getCurrentMonth();
+            }
+            res = new Date(this.getCurrentYear(), d_month - 1, d_day);
+          }
+          else {
+            //for month first
+            const d_month = Number($target[0]);
+            const c2_lastDay = this.getDaysInMonth(d_month, this.getCurrentYear());
+            let d_day = Number($target[1]);
+            if (d_day > c2_lastDay || d_day < 1) {
+              d_day = this.getCurrentDay();
+            }
+            res = new Date(this.getCurrentYear(), d_month - 1, d_day);
+          }
+        }
+
+      }
+      else if (value.length === 3) {
+
+        if (!priorityDay) {
+          let c3_month = Number(value[0] + value[1]);
+          let c3_day = Number(value[2]);
+          if (c3_month > 12) {
+            c3_month = Number(value[0]);
+            c3_day = Number(value[1] + value[2])
+          }
+          const c3_lastDay = this.getDaysInMonth(c3_month, this.getCurrentYear());
+          console.log(c3_month, c3_lastDay, c3_day);
+          if (c3_day > c3_lastDay || c3_day < 1) {
+            res = null;
+          }
+          else {
+            res = new Date(this.getCurrentYear(), c3_month - 1, c3_day);
+          }
+
+        }
+        else {
+          let c3_e_day = Number(value[0] + value[1]);
+          let c3_e_month = Number(value[2]);
+          const c3_e_lastDay = this.getDaysInMonth(c3_e_month, this.getCurrentYear());
+          if (c3_e_day < 1 || c3_e_day > c3_e_lastDay) {
+            c3_e_day = Number(value[0]);
+            c3_e_month = Number(value[1] + value[2]);
+            if (c3_e_month < 1 || c3_e_month > 12) {
+              // c3_e_month = this.getCurrentMonth();
+              res = null;
+            }
+            else {
+              res = new Date(this.getCurrentYear(), c3_e_month - 1, c3_e_day);
+            }
+          }
+
+        }
+      }
+      else if (value.length === 4) {
+        if (!priorityDay) {
+          const c4_month = Number(value[0] + value[1]);
+          const c4_day = Number(value[2] + value[3]);
+          if (c4_month > 12) {
+            res = null;
+          }
+          else {
+            const c4_lastDay = this.getDaysInMonth(c4_month, this.getCurrentYear());
+
+            if (c4_day < 0 || c4_day > c4_lastDay) {
+              res = null;
+            }
+            else {
+
+              res = new Date(this.getCurrentYear(), c4_month - 1, c4_day);
+              // console.log(this.getCurrentYear(), c4_month -1, c4_day, res)
+            }
+          }
+        }
+        else {
+          const c4_day = Number(value[0] + value[1]);
+          const c4_month = Number(value[2] + value[3]);
+          if (c4_month > 12) {
+            res = null;
+          }
+          else {
+            const c4_lastDay = this.getDaysInMonth(c4_month, this.getCurrentYear());
+
+            if (c4_day < 0 || c4_day > c4_lastDay) {
+              res = null;
+            }
+            else {
+
+              res = new Date(this.getCurrentYear(), c4_month - 1, c4_day);
+              // console.log(this.getCurrentYear(), c4_month -1, c4_day, res)
+            }
+          }
+        }
+      }
+      else if (value.length < 8 && value.length > 4) {
+        if (priorityYear) {
+          let ct8_year = Number(value.slice(0, 4));
+          const $v = value.slice(4);
+          const $tar = Number($v);
+          console.log(ct8_year)
+          if (ct8_year.toString().length < 4) {
+            ct8_year = this.getCurrentYear();
+          }
+          if ($v.length <= 2) {
+            const lastDay = this.getDaysInMonth(this.getCurrentMonth(), ct8_year);
+            if ($tar < lastDay) {
+              res = new Date(ct8_year, this.getCurrentMonth(), $tar);
+            }
+            else {
+              if (priorityDay) {
+                // for day first
+                const d_day = Number($v[0]);
+                let d_month = Number($v[1]);
+                if (d_month < 1 || d_month > 12) {
+                  d_month = this.getCurrentMonth();
+                }
+                res = new Date(ct8_year, d_month - 1, d_day);
+              }
+              else {
+                //for month first
+                const d_month = Number($v[0]);
+                const c2_lastDay = this.getDaysInMonth(d_month, ct8_year);
+                let d_day = Number($v[1]);
+                if (d_day > c2_lastDay || d_day < 1) {
+                  d_day = this.getCurrentDay();
+                }
+                res = new Date(ct8_year, d_month - 1, d_day);
+              }
+            }
+          }
+          if ($v.length === 4) {
+            if (!priorityDay) {
+              const c4_month = Number($v[0] + $v[1]);
+              const c4_day = Number($v[2] + $v[3]);
+              if (c4_month > 12) {
+                res = null;
+              }
+              else {
+                const c4_lastDay = this.getDaysInMonth(c4_month, ct8_year);
+
+                if (c4_day < 0 || c4_day > c4_lastDay) {
+                  res = null;
+                }
+                else {
+
+                  res = new Date(ct8_year, c4_month - 1, c4_day);
+                  // console.log(this.getCurrentYear(), c4_month -1, c4_day, res)
+                }
+              }
+            }
+            else {
+              const c4_day = Number($v[0] + $v[1]);
+              const c4_month = Number($v[2] + $v[3]);
+              if (c4_month > 12) {
+                res = null;
+              }
+              else {
+                const c4_lastDay = this.getDaysInMonth(c4_month, ct8_year);
+
+                if (c4_day < 0 || c4_day > c4_lastDay) {
+                  res = null;
+                }
+                else {
+
+                  res = new Date(ct8_year, c4_month - 1, c4_day);
+                  // console.log(this.getCurrentYear(), c4_month -1, c4_day, res)
+                }
+              }
+            }
+          }
+
+          if ($v.length === 3) {
+            if (!priorityDay) {
+              let c3_month = Number($v[0] + $v[1]);
+              let c3_day = Number($v[2]);
+              if (c3_month > 12) {
+                c3_month = Number($v[0]);
+                c3_day = Number($v[1] + $v[2])
+              }
+              const c3_lastDay = this.getDaysInMonth(c3_month, ct8_year);
+              // console.log(c3_month, c3_lastDay, c3_day);
+              if (c3_day > c3_lastDay || c3_day < 1) {
+                res = null;
+              }
+              else {
+                res = new Date(ct8_year, c3_month - 1, c3_day);
+              }
+
+            }
+            else {
+              let c3_e_day = Number($v[0] + $v[1]);
+              let c3_e_month = Number($v[2]);
+              const c3_e_lastDay = this.getDaysInMonth(c3_e_month, ct8_year);
+              if (c3_e_day < 1 || c3_e_day > c3_e_lastDay) {
+                c3_e_day = Number($v[0]);
+                c3_e_month = Number($v[1] + $v[2]);
+                if (c3_e_month < 1 || c3_e_month > 12) {
+                  // c3_e_month = this.getCurrentMonth();
+                  res = null;
+                }
+                else {
+                  res = new Date(ct8_year, c3_e_month - 1, c3_e_day);
+                }
+              }
+
+            }
+          }
+
+        }
+        else {
+
+        }
+      }
+      else if (value.length === 8) {
+        if (!priorityYear) {
+          let ct_month = isNaN(Number(value[2] + value[3])) ? 0 : Number(value[2] + value[3]);
+          let ct_day = isNaN(Number(value[0] + value[1])) ? 0 : Number(value[0] + value[1]);
+          let ct_year = Number(value.slice(4, value.length));
 
 
-    this.formatTransfrom = format.getTime();
+          if (ct_year.toString().length < 4) {
+            ct_year = this.getCurrentYear()
+          }
+          if (ct_month < 1 || ct_month > 12) {
+            ct_month = this.getCurrentMonth();
+          }
+          const ct_lastDay = this.getDaysInMonth(ct_month, this.getCurrentYear());
+          if (ct_day < 1 || ct_day > ct_lastDay) {
+            ct_day = this.getCurrentDay();
+          }
+          res = new Date(ct_year, ct_month - 1, ct_day);
+        }
+        else {
+          let ct_month = isNaN(Number(value[4] + value[5])) ? 0 : Number(value[4] + value[5]);
+          let ct_day = isNaN(Number(value[6] + value[7])) ? 0 : Number(value[6] + value[7]);
+          let ct_year = Number(value.slice(0, 4));
+          console.log(ct_year, ct_month, ct_day)
+
+          if (ct_year.toString().length < 4) {
+            ct_year = this.getCurrentYear()
+          }
+          if (ct_month < 1 || ct_month > 12) {
+            ct_month = this.getCurrentMonth();
+          }
+          const ct_lastDay = this.getDaysInMonth(ct_month, this.getCurrentYear());
+          if (ct_day < 1 || ct_day > ct_lastDay) {
+            ct_day = this.getCurrentDay();
+          }
+          res = new Date(ct_year, ct_month - 1, ct_day);
+        }
+      }
+    }
+
+    console.log(res);
+
+
+    this.formatTransfrom = res?.getTime();
   }
 
   converToDateTime = (date) => (new Date(date)).getTime();
   handleInput = (event) => {
     if (event.target.value) {
+      this.translateDate(event.target.value);
       if (event.target.value?.length > 2) {
-        try {
-          const dt = new Date(event.target.value);
-          this.watchValue.emit({ value: dt.getTime() });
-        } catch (error) {
-          this.watchValue.emit(null);
-        }
-        if (this.required) {
-          this.componentErrors = this.getMessage();
-        }
+        // try {
+        //   const dt = new Date(event.target.value);
+        //   if (!this.isDateValid(dt)) {
+        //     this.date = null;
+        //     this.watchValue.emit(null);
+        //   }
+        //   else {
+        //     this.watchValue.emit({ value: dt.getTime() });
+        //   }
+        // } catch (error) {
+        //   this.date = null;
+        //   this.watchValue.emit(null);
+        // }
+        // if (this.required) {
+        //   this.componentErrors = this.getMessage();
+        // }
       }
       else {
         if (event.target.value) {
@@ -260,9 +585,10 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
           this.formatTransfrom = null;
         }
 
-        if (this.required) {
-          this.componentErrors = this.getMessage();
-        }
+
+      }
+      if (this.required) {
+        this.componentErrors = this.getMessage();
       }
     }
   }
@@ -285,10 +611,10 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   }
 
 
-  getFormat = () => {
+  getFormat = (): string => {
     const format = this.disable ? this.formatDateTimeDisplay : this.formatDateTimeInput;
-    const res = this.format || format;
 
+    const res = this.format || format;
     return res || 'yyyy/MM/dd';
   }
   isDateValid = (val) => {
@@ -299,6 +625,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   }
 
   checkValidDateInput = () => {
+
     if (this.formatTransfrom) {
       this.date = new Date(this.formatTransfrom);
       this.dateInput = this.formatTransfrom;
@@ -306,14 +633,28 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
       this.checkReq(this.formatTransfrom);
       this.formatTransfrom = null;
     }
+    else {
+      if (!this.isDateValid(this.date) || !this.inputCtrl.value) {
+        this.date = null;
+
+
+        this.inputCtrl.reset();
+        this.watchValue.emit({ value: null });
+      }
+      else {
+        this.watchValue.emit({ value: (new Date(this.date)).getTime() });
+      }
+    }
     if (!this.isDateValid(this.date)) {
       this.date = null;
 
       this.inputCtrl.reset();
       this.watchValue.emit({ value: null });
     }
+
     this.checkReq(this.date);
   }
+
 
 
   clickInput = (date) => {
@@ -329,6 +670,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
 
   setupDate = () => {
     this.store.pipe(select(getSettingLangTime)).subscribe(setting => {
+
       if (this.currentLang !== setting?.site_language) {
         this.currentLang = setting?.site_language || 'ja_JP';
 

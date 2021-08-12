@@ -8,6 +8,9 @@
     padding: 10px;
     outline: none;
     border: none;
+    &.focus {
+      border: 1px solid #10529D !important;
+    }
     &.isError {
       border: 1px solid nb-theme(color-danger-500);
     }

@@ -11,7 +11,6 @@ import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { Observable, of } from 'rxjs';
 import { distinctUntilChanged, debounceTime } from 'rxjs/operators';
-import { TYPE } from '../../@constant';
 import {
   AitAuthService,
   AitEnvironmentService,
@@ -92,6 +91,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   @Input() required = false;
   @Input() label;
   errors = []
+  @Input() tabIndex;
   @Input() guidance = ''
   @Input() guidanceIcon = 'info-outline';
   @Input() collection;
@@ -100,8 +100,12 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   @Input() dataTooltip = [];
   @Input() disabled = false;
   isShowTooltip = false;
-  @Input() id;
+  @Input() id = Date.now();
   @Input() isSubmit = false;
+  @Input()
+  includeNotActive = false;
+  @Input()
+  includeNotDelete = true;
   @Output() onError = new EventEmitter();
   messageSearch = '';
 
@@ -159,7 +163,8 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   }
 
   checkDefaultValue(data) {
-    if (data.length > 1) {
+    const target = !data ? [] : data.map(m => m?.value).filter(x => !!x);
+    if (target.length > 1) {
       return false;
     } else {
       return AitAppUtils.isObjectValueEmpty(data[0] || {});
@@ -212,8 +217,8 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
             }, 200)
           }
         }
-        if (!this.compareDeep(this.defaultValue, this.currentDataDef) && this.defaultValue) {
-
+        if (!this.compareDeep(this.defaultValue, this.currentDataDef)) {
+          // console.log(this.defaultValue)
           this.currentDataDef = this.defaultValue;
           const checkNull = this.checkDefaultValue(this.defaultValue);
           this.selectItems = checkNull ? [] : this.defaultValue;
@@ -340,8 +345,9 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
       name: true
     }
 
-    this.masterDataService.find(condition, returnFields, this.collection).then(r => {
+    this.masterDataService.find(condition, returnFields, this.collection, this.includeNotDelete, this.includeNotActive).then(r => {
       if (r?.status === RESULT_STATUS.OK) {
+        console.log(r.data)
         const result = r.data.map(m => ({ ...m, value: m?.name }));
         this.selectItems = [...(result || []), ...this.storeDataDraft];
       }
@@ -365,7 +371,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
           _key: true,
           name: true
         }
-        this.masterDataService.find(condition, returnFields, this.collection).then(r => {
+        this.masterDataService.find(condition, returnFields, this.collection, this.includeNotDelete, this.includeNotActive).then(r => {
           if (r.status === RESULT_STATUS.OK) {
             this.DataSource = (r.data || []).map(m => ({ _key: m._key, value: m?.name }));
             const _keys = this.excludedValue.map(e => e?._key);

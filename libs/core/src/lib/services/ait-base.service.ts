@@ -165,7 +165,7 @@ export class AitBaseService {
     for (const prop in condition) {
       if (prop === KEYS.NAME && collectionReq.includes(collection)) {
         aqlStr += `&& LOWER(data.name.${lang}) `;
-        aqlStr += `LIKE LOWER(CONCAT("${condition[prop]}", "%")) `;
+        aqlStr += `LIKE LOWER(CONCAT("%", "${condition[prop]}", "%")) `;
       } else {
         const data = condition[prop];
         if (isObjectFull(data)) {
@@ -256,6 +256,9 @@ export class AitBaseService {
   setCommonInsert(data: any) {
     if (this.company) {
       data[KEYS.COMPANY] = this.company;
+    }
+    if (this.env?.isMatching) {
+      data[KEYS.IS_MATCHING] = true;
     }
     data[KEYS.DEL_FLAG] = false;
     data[KEYS.KEY] = AitUtils.guid;

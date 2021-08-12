@@ -31,7 +31,7 @@ export class AitTextInputComponent implements OnChanges {
   @Input() rows = 1;
   @Input() cols;
   @Input() classContainer;
-  @Input() length = 255;
+  @Input() length = null;
   @Input() isReset = false;
   @Input() styleLabel;
   @Input() width;
@@ -44,8 +44,17 @@ export class AitTextInputComponent implements OnChanges {
   msgRequired = '';
   errorArray = [];
   value = '';
+  isFocus = false;
+  @Input() tabIndex;
+
 
   inputCtrl: FormControl;
+
+  focusInput = () => {
+    this.isFocus = true;
+  }
+
+  getFocus = () => this.isError ? false : this.isFocus;
 
   getNameField = () => this.translateService.translate(this.label || '');
 
@@ -69,6 +78,10 @@ export class AitTextInputComponent implements OnChanges {
         if (key === 'defaultValue') {
           this.inputCtrl.setValue(this.defaultValue);
           this.watchValue.emit(this.defaultValue);
+
+          if ((this.defaultValue || '').length !== 0 && this.length > 0) {
+            this.checkMaxLength();
+          }
           if (this.required) {
             this.onError.emit({ isValid: this.defaultValue && this.defaultValue.length !== 0 });
           }
@@ -100,6 +113,11 @@ export class AitTextInputComponent implements OnChanges {
             this.onChange(this.inputCtrl.value);
           }
         }
+        if (key === 'length') {
+          if ((this.defaultValue || '').length !== 0 && this.length) {
+            this.checkMaxLength();
+          }
+        }
         if (key === 'isReset') {
 
           if (this.isReset) {
@@ -122,12 +140,27 @@ export class AitTextInputComponent implements OnChanges {
     }
   }
 
+  checkMaxLength = (value?: string) => {
+    const target = (value || '').length !== 0 ? value : this.defaultValue;
+
+    const maxlengthMsg = this.translateService.getMsg('E0003').replace('{0}', this.getNameField()).replace('{1}', this.length)
+    if (target.length > this.length) {
+      this.onError.emit({ isValid: false });
+
+      this.componentErrors = [...this.componentErrors, maxlengthMsg];
+    }
+    else {
+      this.onError.emit({ isValid: true });
+      this.componentErrors = [...this.componentErrors].filter(f => f !== maxlengthMsg);
+    }
+  }
   public reset() {
     this.inputCtrl.reset();
   }
 
   focusout = () => {
-    this.checkReq(this.inputCtrl.value)
+    this.checkReq(this.inputCtrl.value);
+    this.checkMaxLength(this.inputCtrl.value);
   }
 
   checkReq = (value) => {
@@ -141,6 +174,7 @@ export class AitTextInputComponent implements OnChanges {
       }
       else {
         this.componentErrors = [];
+        this.errorMessages = [];
         if (this.messagesError().length === 0) {
           this.isError = false;
           this.onError.emit({ isValid: true });
@@ -159,6 +193,7 @@ export class AitTextInputComponent implements OnChanges {
   onChange(value) {
     this.value = value;
     this.checkReq(value);
+    this.checkMaxLength(value);
     this.watchValue.emit(value);
 
   }

@@ -18,6 +18,8 @@
       [ngClass]="{ isError: isError }"
       style="cursor: pointer; margin-top: 8px"
       [ngStyle]="{ border: !isDefault ? '0.5px solid #000' : null }"
+      tabindex="{{tabIndex}}"
+      [class.focus]="getFocus()"
     >
       <p
         *ngIf="placeholder"
@@ -41,13 +43,15 @@
         (click)="fileDropRef.value = null; checkReq()"
         [ngStyle]="{ color: !isDefault ? '#000' : null }"
         value=""
+        (focus)="focusInput()"
+        (focusout)="isFocus=false;"
         (change)="fileBrowseHandler($event.target.files)"
         style="cursor: pointer"
       />
     </div>
     <ait-error-message [errors]="messagesError()" [id]="id"></ait-error-message>
     <ait-error-message
-      [errors]="[messageErrorFileSp]"
+      [errors]="getMessageErrorFile()"
       [id]="id + '_sp'"
     ></ait-error-message>
 
@@ -308,7 +312,7 @@
         >
           <div class="info">
             <p class="name" style="color: #fff" [id]="ID('info_name_display')">
-              FileName : {{ file?.name }} ({{ formatBytes(file?.size) }})
+              {{ file?.name }} ({{ formatBytes(file?.size) }})
             </p>
             <p
               class="size"
@@ -316,7 +320,7 @@
               [id]="ID('info_time_display')"
               *ngIf="getTime(file?.create_at)"
             >
-              Last update : {{ getTime(file?.create_at) }}
+               {{ getTime(file?.create_at) }}
             </p>
           </div>
         </div>
