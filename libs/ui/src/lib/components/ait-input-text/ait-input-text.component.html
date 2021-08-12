@@ -10,6 +10,7 @@
   <nb-form-field
     class="ait-text-input"
     style="margin-top: 8px; max-width: 100%"
+
   >
     <nb-icon
       nbPrefix
@@ -39,12 +40,16 @@
       [formControl]="inputCtrl"
       [class.isError]="isError"
       style="
-      max-width: 100% !important; 
+      max-width: 100% !important;
       resize: none"
       *ngIf="rows !== 1 && readonly"
       [maxLength]="length"
       readonly
       id="{{ ID('textarea') }}"
+      (focus)="focusInput()"
+      (blur)="this.isFocus = false;"
+      [class.focus]="getFocus()"
+      tabindex="{{tabIndex}}"
     ></textarea>
 
     <textarea
@@ -62,7 +67,7 @@
       [formControl]="inputCtrl"
       [class.isError]="isError"
       style="
-      resize: none; 
+      resize: none;
       max-width: 100% !important"
       *ngIf="rows !== 1 && !readonly"
       [maxLength]="length"
@@ -70,6 +75,10 @@
       (focusout)="focusout()"
       [style.width]="width"
       [style.height]="height"
+      (focus)="focusInput()"
+      (blur)="this.isFocus = false;"
+      [class.focus]="getFocus()"
+      tabindex="{{tabIndex}}"
     ></textarea>
 
     <input
@@ -89,12 +98,16 @@
       (input)="onChange($event.target.value)"
       [formControl]="inputCtrl"
       [class.isError]="isError"
+      (focus)="focusInput()"
+      (blur)="this.isFocus = false;"
+      [class.focus]="getFocus()"
       style="
         width: 100%;
         max-width: 100%;
         padding-left: 10px;
       "
       id="{{ ID('input') }}"
+      tabindex="{{tabIndex}}"
     />
 
     <input
@@ -114,12 +127,16 @@
       [formControl]="inputCtrl"
       [class.isError]="isError"
       (focusout)="focusout()"
+      (focus)="focusInput()"
+      [class.focus]="getFocus()"
+      (blur)="this.isFocus = false;"
       style="
         width: 100%;
         max-width: 100%;
         padding-left: 10px;
       "
       id="{{ ID('input') }}"
+      tabindex="{{tabIndex}}"
     />
   </nb-form-field>
   <div class="caption" *ngIf="guidance">

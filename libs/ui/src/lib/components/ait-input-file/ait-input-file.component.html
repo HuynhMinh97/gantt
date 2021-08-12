@@ -18,6 +18,8 @@
       [ngClass]="{ isError: isError }"
       style="cursor: pointer; margin-top: 8px"
       [ngStyle]="{ border: !isDefault ? '0.5px solid #000' : null }"
+      tabindex="{{tabIndex}}"
+      [class.focus]="getFocus()"
     >
       <p
         *ngIf="placeholder"
@@ -41,6 +43,8 @@
         (click)="fileDropRef.value = null; checkReq()"
         [ngStyle]="{ color: !isDefault ? '#000' : null }"
         value=""
+        (focus)="focusInput()"
+        (focusout)="isFocus=false;"
         (change)="fileBrowseHandler($event.target.files)"
         style="cursor: pointer"
       />
