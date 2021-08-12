@@ -10,15 +10,17 @@ import { AddComponent } from './user/add/add.component';
 export const routes: Routes = [
   {
     path: 'recommenced-user',
-    //canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
     component : RecommencedComponent
   },
   {
     path: 'user-experience',
+    canActivate: [AitAuthGuardService],
     component : UserExperienceComponent
   },
   {
     path: 'user-experience/:id',
+    canActivate: [AitAuthGuardService],
     component : UserExperienceComponent
   },
   {

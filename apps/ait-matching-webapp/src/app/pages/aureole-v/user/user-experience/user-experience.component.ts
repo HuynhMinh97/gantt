@@ -43,7 +43,7 @@ import { Subscription } from 'rxjs';
 import { isArrayFull, KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
 
 @Component({
-  selector: 'ait-user-experience',
+  selector: 'ait-user-experience/',
   templateUrl: './user-experience.component.html',
   styleUrls: ['./user-experience.component.scss'],
 })
@@ -117,7 +117,7 @@ export class UserExperienceComponent
     apollo: Apollo,
     authService: AitAuthService,
     toastrService: NbToastrService,
-    layoutScrollService: NbLayoutScrollService
+    layoutScrollService: NbLayoutScrollService,
   ) {
     super(
       store,
@@ -128,7 +128,7 @@ export class UserExperienceComponent
       layoutScrollService,
       toastrService
     );
-
+      
     this.setModulePage({
       module: MODULES.JOB,
       page: PAGES.JOB_EDIT,
@@ -161,7 +161,8 @@ export class UserExperienceComponent
   }
 
   async ngOnInit(): Promise<void> {
-    this.callLoadingApp();
+    console.log(this.mode);
+    
 
     //check mode
     if (this.user_key) {
@@ -192,6 +193,8 @@ export class UserExperienceComponent
 
               this.userExperienceInfoClone = this.userExperienceInfo.value;
 
+              console.log(this.userExperienceInfo.value);
+              
               isUserExist = true;
             }
             !isUserExist && this.router.navigate([`/404`]);
@@ -339,6 +342,7 @@ export class UserExperienceComponent
   }
 
   saveAndClose() {
+    this.callLoadingApp();
     this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;
@@ -382,6 +386,7 @@ export class UserExperienceComponent
         }
       );
     }
+    this.cancelLoadingApp();
   }
 
   toggleCheckBox(checked: boolean) {
