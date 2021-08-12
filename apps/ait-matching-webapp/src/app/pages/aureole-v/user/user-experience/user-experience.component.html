@@ -24,7 +24,7 @@
         [style]="{ width: '400px' }"
         [isReset]="resetUserInfo.title"
         (watchValue)="takeMasterValue($event, 'title')"
-        [defaultValue]="[titleName]"
+        [defaultValue]="[userExperienceInfo.controls['title'].value]"
         [isSubmit]="isSubmit"
       ></ait-autocomplete-master>
       <div style="margin-top: 14px; width: 400px">
@@ -37,13 +37,11 @@
           [style]="{ width: '400px' }"
           [isReset]="resetUserInfo.company_working"
           (watchValue)="takeMasterValue($event, 'company_working')"
-          [defaultValue]="[company_workingName]"
+          [defaultValue]="[
+            userExperienceInfo.controls['company_working'].value
+          ]"
           [isSubmit]="isSubmit"
         ></ait-autocomplete-master>
-        <ait-error-message
-          *ngIf="isInValidCompany"
-          [errors]="['Please Enter Company']"
-        ></ait-error-message>
       </div>
       <div class="input_area">
         <ait-autocomplete-master
@@ -56,13 +54,9 @@
           [maxItem]="1"
           [style]="{ width: '400px' }"
           (watchValue)="takeMasterValue($event, 'location')"
-          [defaultValue]="[location]"
+          [defaultValue]="[userExperienceInfo.controls['location'].value]"
           [isSubmit]="isSubmit"
         ></ait-autocomplete-master>
-        <ait-error-message
-          *ngIf="isInValidLocation"
-          [errors]="['Please Enter Location']"
-        ></ait-error-message>
       </div>
 
       <div class="input_area">
@@ -72,15 +66,11 @@
           [placeholder]="'Select'"
           [required]="true"
           [collection]="'sys_master_data'"
-          [maxItem]="1"
           [isReset]="resetUserInfo.employee_type"
           [style]="{ width: '200px' }"
           (watchValue)="takeMasterValue($event, 'employee_type')"
-          [dataSource]="
-            userExperienceInfo.controls['employee_type'].value
-              ? userExperienceInfo.controls['employee_type'].value
-              : null
-          "
+          [defaultValue]="[userExperienceInfo.controls['employee_type'].value]"
+          [disableOutputDefault]="true"
           [isSubmit]="isSubmit"
         >
         </ait-autocomplete-master-data>
@@ -89,7 +79,7 @@
       <div class="input_area">
         <nb-checkbox
           class="gray-text"
-          [checked]="userExperienceInfo.controls['is_working']?.value"
+          [checked]="userExperienceInfo.controls['is_working'].value"
           [id]="'is_working'"
           (checkedChange)="toggleCheckBox($event)"
           >I am currently working in this role
@@ -112,13 +102,16 @@
             )
           "
         ></ait-datepicker>
-        <p style="margin: 10px">{{ ' ~ ' }}</p>
+        <span style="color: #8f9bb3; margin: 10px; font-weight: 600">〜</span>
         <ait-datepicker
           [placeholder]="'yyyy/MM/dd'"
           [id]="'start_date_to'"
           [style]="{ width: '170px' }"
           [isReset]="resetUserInfo.start_date_to"
-          [disable]="userExperienceInfo.controls['is_working'].value === true"
+          [disable]="userExperienceInfo.controls['is_working'].value"
+          [ngClass]="{
+            start_date_to: userExperienceInfo.controls['is_working'].value
+          }"
           [dateInput]="userExperienceInfo.controls['start_date_to'].value"
           (watchValue)="
             takeDatePickerValue(
@@ -129,6 +122,7 @@
           "
         ></ait-datepicker>
       </div>
+      <ait-error-message [errors]="errorArr"></ait-error-message>
 
       <div class="input_area">
         <ait-input-text
@@ -136,14 +130,11 @@
           [length]="4000"
           [rows]="4"
           [label]="'DESCRIPTION'"
+          [isReset]="resetUserInfo.description"
           [placeholder]="'Place your text'"
           [width]="'400px'"
           (watchValue)="takeInputValue($event, 'description')"
-          [defaultValue]="
-            userExperienceInfo.controls['description'].value
-              ? userExperienceInfo.controls['description'].value
-              : null
-          "
+          [defaultValue]="userExperienceInfo.controls['description'].value"
         >
         </ait-input-text>
       </div>
@@ -192,7 +183,7 @@
         ></ait-button>
 
         <ait-button
-          *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
+          *ngIf="mode === 'EDIT' || mode === 'NEW'"
           [id]="'save'"
           [width]="'200px'"
           [title]="'SAVE & CLOSE'"
@@ -202,14 +193,14 @@
           "
         >
         </ait-button>
-
+        <!-- 
         <ait-button
-          *ngIf="!isChanged && mode === 'EDIT'"
+          *ngIf="mode === 'EDIT'"
           [id]="'disabled'"
           [width]="'200px'"
           [title]="'SAVE & CLOSE'"
           [style]="'disabled'"
-        ></ait-button>
+        ></ait-button> -->
       </div>
     </div>
   </div>

@@ -1,12 +1,12 @@
 import { BaseRequest } from '@ait/core';
 import { InputType, Field } from '@nestjs/graphql';
-import { UserExperienceInfoDto } from './user-experience.dto';
+import { SaveUserExperienceInfoDto, UserExperienceInfoDto } from './user-experience.dto';
 
 @InputType()
 export class UserExperienceInfoRequest extends BaseRequest {
-  @Field(() => UserExperienceInfoDto, { nullable: true })
-  condition: UserExperienceInfoDto;
+  @Field(() => SaveUserExperienceInfoDto, { nullable: true })
+  condition: SaveUserExperienceInfoDto;
 
-  @Field(() => [UserExperienceInfoDto], { nullable: true })
-  data: UserExperienceInfoDto;
+  @Field(() => [SaveUserExperienceInfoDto], { nullable: true })
+  data: SaveUserExperienceInfoDto;
 }

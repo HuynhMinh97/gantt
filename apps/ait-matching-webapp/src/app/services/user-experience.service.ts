@@ -13,37 +13,37 @@ export class UserExperienceService extends AitBaseService {
     location: true,
     is_working: true,
     start_date_from: true,
-    //start_date_to: true,
+    start_date_to: true,
     description: true,
   };
 
-  async findUserExperienceByKey(condition?: any) {
+  async findUserExperienceByKey(_key?: string) {
+    const condition = {
+      _key: _key
+    }
     const returnFields = this.returnFields;
     const request = {};
     request['collection'] = this.collection;
-    if (isObjectFull(condition)) {
-      request['condition'] = condition;
-    }
-    console.log(request);
+    request['condition'] = condition;
     return await this.query('findUserExperienceInfo', request, returnFields);
   }
 
-  async save(data: any) {
+  async save(data: any[]) {
     const returnField = { user_id: true, _key: true };
     return await this.mutation(
       'saveUserExperienceInfo',
-      'user_experience',
-      [data],
+      this.collection,
+      data,
       returnField
     );
   }
 
-  async remove(data: any) {
+  async remove(data: any[]) {
     const returnFields = { _key: true, user_id: true };
     return await this.mutation(
       'removeUserExperienceInfo',
       this.collection,
-      [data],
+      data,
       returnFields
     );
   }

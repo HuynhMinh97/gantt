@@ -4,10 +4,6 @@ import { KeyValueEntity } from '@ait/core';
 
 @ObjectType()
 export class  NameEntity {
-
-    @Field(() => String, { nullable: true })
-    _key?: string;
-
     @Field(() => String, { nullable: true })
     en_US?: string;
 
@@ -20,20 +16,20 @@ export class  NameEntity {
 
 @ObjectType()
 export class UserExperienceInfoEntity extends BaseEntity {
-    @Field(() => NameEntity, { nullable: true })
-    title?: NameEntity;
+    @Field(() => String, { nullable: true })
+    title?: string;
 
-    @Field(() => NameEntity, { nullable: true })
-    company_working?: NameEntity;
+    @Field(() => String, { nullable: true })
+    company_working?: string;
 
-    @Field(() => NameEntity, { nullable: true })
-    location?: NameEntity;
+    @Field(() => String, { nullable: true })
+    location?: string;
 
     @Field(() => Boolean, { nullable: true })
     is_working?: boolean;
 
-    @Field(() => NameEntity, { nullable: true })
-    employee_type?: NameEntity;
+    @Field(() => String, { nullable: true })
+    employee_type?: string;
 
     @Field(() => Float, { nullable: true })
     start_date_from?: number;
