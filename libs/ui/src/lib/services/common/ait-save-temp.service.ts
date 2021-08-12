@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { isObjectFull, SysSaveTemp } from '@ait/shared';
-import { AitBaseService } from '@ait/ui';
 import { Injectable } from '@angular/core';
+import { AitBaseService } from './ait-base.service';
 
 @Injectable({ providedIn: 'root' })
 export class AitSaveTempService extends AitBaseService {
