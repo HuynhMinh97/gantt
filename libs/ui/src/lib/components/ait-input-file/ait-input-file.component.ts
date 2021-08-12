@@ -84,8 +84,9 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   @Input() required = false;
   componentErrors = []
   @Input() classContainer;
-  @Input() id;
+  @Input() id = Date.now();
   @Input() errorMessages;
+  @Input() clearError = false;
   @Output() onError = new EventEmitter();
   @Input() isSubmit = false;
   @Input() hasStatus = true;
@@ -93,11 +94,20 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   loading = false;
   @Input() width;
   @Input() height;
+  isFocus = false;
 
   errorImage: any = {}
 
   ID(element: string): string {
     return this.id + '_' + element;
+  }
+
+  focusInput() {
+    this.isFocus = true;
+  }
+
+  getFocus() {
+    return this.isError ? false : this.isFocus;
   }
   messagesError = () => Array.from(new Set([...this.componentErrors, ...(this.errorMessages || [])]))
 
@@ -159,6 +169,9 @@ export class AitInputFileComponent implements OnInit, OnChanges {
           }
         }
 
+        if (key === 'clearError') {
+          this.messageErrorFileSp = '';
+        }
       }
     }
   }

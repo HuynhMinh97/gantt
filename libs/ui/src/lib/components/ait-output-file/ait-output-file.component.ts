@@ -34,7 +34,7 @@ export class AitOutputFileComponent implements OnChanges {
   files: any[] = [
   ]
   url = '';
-  @Input() id;
+  @Input() id = Date.now();
 
   numberOfFilesI18 = 'c_3001';
 
