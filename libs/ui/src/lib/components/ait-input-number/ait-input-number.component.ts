@@ -39,7 +39,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   isTrick = false;
   @ViewChild('inputNumber', { static: false }) input: ElementRef;
   isTooltip = false;
-  @Input() id;
+  @Input() id = Date.now();
   @Input() classContainer;
 
 
@@ -63,6 +63,9 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   @Input() errorMessages = [];
   @Input() clearError = false;
   msgRequired = ''
+  isFocus = false;
+  @Input() tabIndex;
+
 
 
   constructor(
@@ -74,6 +77,13 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
     this.msgRequired = this.translateService.getMsg('E0001').replace('{0}', this.getFieldName());
   }
 
+  focusInput() {
+    this.isFocus = true;
+  }
+
+  getFocus() {
+    return this.isError ? false : this.isFocus;
+  }
   getPlaceHolder = () => this.translateService.translate(this.placeholder);
 
   ngOnInit() {
@@ -94,7 +104,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
 
 
   replaceAll(string: string) {
-    const target = string.toString();
+    const target = (string || '').toString();
     const split = target.split('.');
     const split2 = split.join().split(',');
     return split2.join('');
@@ -202,8 +212,15 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   }
 
   handleFocus = () => {
-    if (this.currentNumber !== '' && this.inputCtrl.value !== '') {
+
+    if (this.inputCtrl.value !== '' && this.inputCtrl.value !== null) {
+      if ([0, '0', '00'].includes(this.inputCtrl.value)) {
+        this.inputCtrl.patchValue(0);
+      }
+      else {
       this.inputCtrl.patchValue(this.replaceAll(this.inputCtrl.value));
+
+      }
     }
     else {
       this.inputCtrl.patchValue(null);
@@ -325,6 +342,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
       }
       else {
         this.componentErrors = [];
+        this.errorMessages = [];
         if (this.componentErrors.length === 0) {
           this.isError = false;
           this.onError.emit({ isValid: true });

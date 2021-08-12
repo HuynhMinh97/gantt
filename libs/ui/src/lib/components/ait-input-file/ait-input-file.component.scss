@@ -175,6 +175,12 @@
   align-items: center;
   justify-content: flex-start;
   cursor: pointer;
+  &:focus {
+    border: 1px solid #10529D !important;
+  }
+  &.focus {
+    border: 1px solid #10529D !important;
+  }
   &.isError {
     border: 1px solid nb-theme(color-danger-500) !important;
   }

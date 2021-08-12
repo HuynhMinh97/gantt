@@ -17,11 +17,11 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@ait/shared": ["libs/shared/src/index.ts"],
-      "@ait/ui": ["libs/ui/src/index.ts"],
-      "@ait/auth": ["libs/auth/src/index.ts"],
       "@ait/assets": ["libs/assets/src/index.ts"],
-      "@ait/core": ["libs/core/src/index.ts"]
+      "@ait/auth": ["libs/auth/src/index.ts"],
+      "@ait/core": ["libs/core/src/index.ts"],
+      "@ait/shared": ["libs/shared/src/index.ts"],
+      "@ait/ui": ["libs/ui/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -98,7 +98,8 @@ export enum KEYS {
   JOB_COMPANY = 'job_company',
   FILE_KEY = 'file_key',
   IDS = 'ids',
-  DEL_FLAG = 'del_flag'
+  DEL_FLAG = 'del_flag',
+  IS_MATCHING = 'is_matching',
 }
 
 export enum ACTIVE_FLAG {

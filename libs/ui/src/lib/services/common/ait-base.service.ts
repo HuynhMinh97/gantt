@@ -9,7 +9,7 @@ import { tap, catchError, map } from 'rxjs/operators';
 import { SHOWSNACKBAR } from '../../state/actions';
 import { NbToastrService } from '@nebular/theme';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { MessageModel, SYSTEM_COMPANY } from '@ait/shared';
+import { COLLECTIONS, MessageModel, SYSTEM_COMPANY } from '@ait/shared';
 import { AitEnvironmentService } from '../ait-environment.service';
 import { AitAppUtils } from '../../utils/ait-utils';
 import { Apollo, gql } from 'apollo-angular';
@@ -211,12 +211,13 @@ export class AitBaseService implements OnDestroy {
    * @param condition condition search
    * @returns data or error
    */
-  query(name: string, request: any, returnField?: any): Promise<any> {
-    // console.log(localStorage.lang)
+  query(name: string, request: any, returnField?: any, includeNotDelete : boolean = true, includeNotActive: boolean = false): Promise<any> {
     // Request to graphql query
+    const MASTER_COLLECTION = [COLLECTIONS.MASTER_DATA, COLLECTIONS.CAPTION, COLLECTIONS.MESSAGE];
     request['company'] = this.company || localStorage.comp || SYSTEM_COMPANY;
     request['lang'] = localStorage.lang || this.currentLang;
     request['user_id'] = this.user_id;
+    const collection = request['collection'];
 
     // Setup gql json
     const query = {
@@ -232,11 +233,12 @@ export class AitBaseService implements OnDestroy {
       }
     };
 
-    (!!this.env.isMatching) && (request['condition']['del_flag'] = !this.env.isMatching);
+    request['condition'] = request['condition'] ?? {};
+    (!!this.env.isMatching) && (includeNotDelete) && (request['condition']['del_flag'] = false);
+    (!!this.env.isMatching) && (includeNotActive || MASTER_COLLECTION.includes(collection)) && (request['condition']['active_flag'] = true);
     query.query[name]['__args'] = { request };
     // Parse to gql
     const gqlQuery = jsonToGraphQLQuery(query, { pretty: true });
-    console.log(gqlQuery)
 
     const result = this.apollo
       .query({

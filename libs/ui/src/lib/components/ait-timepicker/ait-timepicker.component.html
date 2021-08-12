@@ -8,10 +8,11 @@
     [class.isError]="isError"
     [class.isSuccess]="isSuccess"
     [class.hasBorder]="mode === 'light'"
+    [class.focus]="getFocus()"
     class="input_area"
     style="
       height: 40px;
-      width: 50px;
+      width: 50px !important;
       border-radius: 5px;
       padding: 10px;
       font-weight: 600;
@@ -23,10 +24,13 @@
     [placeholder]="PLACEHOLDER"
     [(ngModel)]="timeExact"
     (input)="handleInput($event.target.value)"
-    (focusout)="focusout()"
+    (keypress)="keyPressNumbers($event)"
+    (focusout)="focusout();isFocus=false"
+    (focus)="focusInput()"
     (click)="openPanel()"
     [maxLength]="2"
     (keydown.enter)="onEnter()"
+    tabindex="{{tabIndex}}"
   />
   <div class="header" *ngIf="isOpen">
     <p>{{ getTimeText() }}</p>

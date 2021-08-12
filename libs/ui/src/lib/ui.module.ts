@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { APP_INITIALIZER, ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { APP_INITIALIZER, LOCALE_ID, ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { AitButtonModule } from './components/ait-button/ait-button.module';
 import { AitThemeModule } from './@theme/theme.module';
 import { AitInputTextModule } from './components/ait-input-text/ait-input-text.module';
@@ -60,6 +60,13 @@ import { AppState, } from './state/selectors';
 import { AitSettingAppService } from './services/ait-setting-app.service';
 import { AitTemplatePopupModule } from './components/ait-template-popup/ait-template-popup.module';
 import { AitTocMenuModule } from './components/ait-toc-menu/ait-toc-menu.module';
+import localeEnn from '@angular/common/locales/en';
+import localeVnn from '@angular/common/locales/vi';
+import localeJpp from '@angular/common/locales/ja';
+import { LocaleProvider } from './@theme/locale/locale.provider';
+registerLocaleData(localeEnn);
+registerLocaleData(localeVnn);
+registerLocaleData(localeJpp);
 
 export function initializeApp(appInitService: AitSettingAppService) {
   return () => {
@@ -170,7 +177,8 @@ const NB_MODULES = [
       useFactory: initializeApp,
       deps: [AitSettingAppService],
       multi: true
-    }
+    },
+    LocaleProvider
   ]
 })
 export class AitUiModule {

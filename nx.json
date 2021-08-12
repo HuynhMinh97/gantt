@@ -1,50 +1,58 @@
 {
-  "implicitDependencies": {
-    "angular.json": "*",
-    "package.json": {
-      "dependencies": "*",
-      "devDependencies": "*"
+    "implicitDependencies": {
+        "angular.json": "*",
+        "package.json": {
+            "dependencies": "*",
+            "devDependencies": "*"
+        },
+        "tsconfig.base.json": "*",
+        "tslint.json": "*",
+        ".eslintrc.json": "*",
+        "nx.json": "*"
     },
-    "tsconfig.base.json": "*",
-    "tslint.json": "*",
-    ".eslintrc.json": "*",
-    "nx.json": "*"
-  },
-  "affected": {
-    "defaultBase": "master"
-  },
-  "npmScope": "ait",
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "@nrwl/workspace/tasks-runners/default",
-      "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"]
-      }
+    "affected": {
+        "defaultBase": "master"
+    },
+    "npmScope": "ait",
+    "tasksRunnerOptions": {
+        "default": {
+            "runner": "@nrwl/workspace/tasks-runners/default",
+            "options": {
+                "cacheableOperations": ["build", "lint", "test", "e2e"]
+            }
+        }
+    },
+    "projects": {
+        "ait-api-starter": {
+            "tags": []
+        },
+        "ait-matching-api": {
+            "tags": []
+        },
+        "ait-matching-webapp": {
+            "tags": []
+        },
+        "ait-webapp-starter": {
+            "tags": []
+        },
+        "ait-matching-e2e": {
+            "tags": [],
+            "implicitDependencies": ["ait-matching-webapp", "ait-matching-api"]
+        },
+        "assets": {
+            "tags": []
+        },
+        "auth": {
+            "tags": []
+        },
+        "core": {
+            "tags": []
+        },
+        "shared": {
+            "tags": []
+        },
+        "ui": {
+            "tags": ["ui"]
+        }
     }
-  },
-  "projects": {
-    "shared": {
-      "tags": []
-    },
-    "ui": {
-      "tags": ["ui"]
-    },
-    "core": {
-      "tags": []
-    },
-    "auth": {
-      "tags": []
-    },
-    "assets": {
-      "tags": []
-    },
-    "ait-webapp-starter": {
-      "tags": []
-    },
-    "ait-api-starter": {
-      "tags": []
-    },
-    "ait-matching-webapp": { "tags": [] },
-    "ait-matching-api": { "tags": [] }
-  }
 }
