@@ -14,7 +14,7 @@ import { AppState, getCaption } from '../../state/selectors';
 export class AitCardContentComponent {
   constructor(private envService: AitEnvironmentService, private store: Store<AppState>, private translate: AitTranslationService) {
     store.pipe(select(getCaption)).subscribe(() => {
-      this.buttonTitle = translate.translate('c_2003');
+      this.buttonTitle = translate.translate('追加する');
     })
   }
   @Input() label = 'Default';
@@ -39,7 +39,7 @@ export class AitCardContentComponent {
   @Input() classContainer: any;
 
   get textButton(): string {
-    return 'c_2003';
+    return '追加する';
   }
 
   get LABEL(): string {
