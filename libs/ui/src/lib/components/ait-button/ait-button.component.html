@@ -1,4 +1,9 @@
-<div [style]="style" *ngIf="style === 'disabled' && !hide">
+<div
+  [style]="style"
+  *ngIf="style === 'disabled' && !hide"
+  style="margin: 0; border-radius: 25px; outline-color: #10529d"
+  tabindex="{{ tabIndex }}"
+>
   <button
     shape="round"
     class="button__wrapper__disabled"
@@ -11,8 +16,11 @@
     ng-class="{ 'diabled-class': !isDisabled }"
     nbButton
     [ngClass]="classBtn"
+    style="margin: 0"
     [ngStyle]="styleBtn"
-    tabindex="{{ tabIndex }}"
+    (blur)="setFocus(false)"
+    (focus)="setFocus(true)"
+    [class.focus]="isFocus"
   >
     <nb-icon
       [icon]="iconName"
@@ -35,9 +43,13 @@
     </p>
   </button>
 </div>
-<div [style]="style" *ngIf="style === 'active' && !hide">
+<div
+  [style]="style"
+  *ngIf="style === 'active' && !hide"
+  style="margin: 0; border-radius: 25px; outline-color: #10529d"
+  tabindex="{{ tabIndex }}"
+>
   <button
-    tabindex="{{ tabIndex }}"
     shape="round"
     class="button__wrapper button__wrapper__active"
     [nbTooltip]="toolTip"
@@ -49,6 +61,10 @@
     [ngClass]="classBtn"
     [ngStyle]="styleBtn"
     [class.isDefault]="isDefault"
+    (focus)="setFocus(true)"
+    (blur)="setFocus(false)"
+    [class.focus]="isFocus"
+    style="margin: 0"
   >
     <nb-icon
       [icon]="iconName"
@@ -71,9 +87,13 @@
     </p>
   </button>
 </div>
-<div [style]="style" *ngIf="style === 'normal' && !hide">
+<div
+  [style]="style"
+  *ngIf="style === 'normal' && !hide"
+  style="border-radius: 25px; outline-color: #10529d"
+  tabindex="{{ tabIndex }}"
+>
   <button
-    tabindex="{{ tabIndex }}"
     shape="round"
     class="button__wrapper button__wrapper__primary"
     [nbTooltip]="toolTip"
@@ -85,6 +105,10 @@
     [ngClass]="classBtn"
     [ngStyle]="styleBtn"
     [class.isDefault]="isDefault"
+    (focus)="setFocus(true)"
+    (blur)="setFocus(false)"
+    [class.focus]="isFocus"
+    style="margin: 0"
   >
     <nb-icon
       [icon]="iconName"
