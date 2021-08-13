@@ -4,9 +4,10 @@
   size="small"
   [ngStyle]="{ background: background, color: colorText, 'max-width': '100%' }"
   [ngClass]="isChipInCard ? 'chipInCard' : 'chip'"
-  [nbTooltip]="title"
-  *ngIf="isTooltip && title"
+  [nbTooltip]="tooltip"
   (click)="onClickChipEvent()"
+  [nbTooltipTrigger]="tooltip ? 'hover' : 'noop'"
+  *ngIf="title"
 >
   <span
     style="
@@ -20,24 +21,4 @@
   </span>
   <nb-icon *ngIf="icon" [icon]="icon" (click)="iconAction()"></nb-icon>
 </button>
-<button
-  nbButton
-  shape="round"
-  size="small"
-  [ngClass]="isChipInCard ? 'chipInCard' : 'chip'"
-  [ngStyle]="{ background: background, color: colorText, 'max-width': '100%' }"
-  *ngIf="!isTooltip && title"
-  (click)="onClickChipEvent()"
->
-  <span
-    style="
-      text-transform: initial;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    "
-  >
-    <span [innerHTML]="title"></span>
-  </span>
-  <nb-icon *ngIf="icon" [icon]="icon" (click)="iconAction()"></nb-icon>
-</button>
+

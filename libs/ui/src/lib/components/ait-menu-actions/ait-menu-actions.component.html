@@ -1,11 +1,12 @@
 <div class="menu__actions">
   <nb-actions size="small">
     <nb-action
+      tabindex="-1"
       *ngFor="let item of buttons"
       [icon]="item.icon"
       [nbTooltip]="item.title"
       [nbTooltipPlacement]="'bottom'"
-      (click)="swipeScreen(item.link);item.action();"
+      (click)="swipeScreen(item.link); item.action()"
       class="action_icon"
     ></nb-action>
   </nb-actions>
