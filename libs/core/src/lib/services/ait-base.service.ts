@@ -166,6 +166,8 @@ export class AitBaseService {
       if (prop === KEYS.NAME && collectionReq.includes(collection)) {
         aqlStr += `&& LOWER(data.name.${lang}) `;
         aqlStr += `LIKE LOWER(CONCAT("%", "${condition[prop]}", "%")) `;
+      } else if (prop === KEYS.DEL_FLAG) {
+        aqlStr += `&& data.del_flag != true `;
       } else {
         const data = condition[prop];
         if (isObjectFull(data)) {

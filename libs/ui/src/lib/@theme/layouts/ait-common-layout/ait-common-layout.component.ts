@@ -68,11 +68,11 @@ export class AitCommonLayoutComponent extends AitBaseComponent {
 
   checkSubmit(event) {
     event.preventDefault();
-    this.callLoadingApp();
+    // this.callLoadingApp();
 
-    setTimeout(() => {
-      this.cancelLoadingApp()
-    }, 1500)
+    // setTimeout(() => {
+    //   this.cancelLoadingApp()
+    // }, 1500)
 
   }
 
