@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { isObjectFull, SysSaveTemp } from '@ait/shared';
-import { AitBaseService } from '@ait/ui';
 import { Injectable } from '@angular/core';
+import { AitBaseService } from './ait-base.service';
 
 @Injectable({ providedIn: 'root' })
 export class AitSaveTempService extends AitBaseService {
   collection = 'sys_save_temp';
-  find_name = 'findSysSaveTemp';
-  save_name = 'saveSysSaveTemp';
-  remove_name = 'removeSysSaveTemp';
+  find_name = 'findSaveTemp';
+  save_name = 'saveSaveTemp';
+  remove_name = 'removeSaveTemp';
 
   returnFields = {
     company: true,
