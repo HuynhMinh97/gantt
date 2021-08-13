@@ -41,12 +41,20 @@ export class SaveTempResolver extends AitBaseService {
       this.setCommonInsert(data);
     }
     
-    const aqlStr = `
+    let aqlStr = `
         LET data_saved = (
           UPSERT {
             user_id: "${data.user_id}",
             page: "${data.page}",
-            module: "${data.module}"
+            module: "${data.module}",
+            mode: "${data.mode}" `;
+
+    if (data.mode === "EDIT") {
+      aqlStr += `,
+            edit_id: "${data.edit_id}"`;
+    }
+    
+    aqlStr +=`
           }
           INSERT ${JSON.stringify(data)}
           UPDATE ${JSON.stringify(data)}
@@ -59,17 +67,24 @@ export class SaveTempResolver extends AitBaseService {
   }
 
   @Mutation(() => SaveTempResponse, { name: 'removeSaveTemp' })
-  removeSaveTemp(
+  async removeSaveTemp(
     @AitCtxUser() user: SysUser,
     @Args('request', { type: () => SaveTempRequest })
     request: SaveTempRequest
   ) {
-    return this.remove(request, user);
+    const aqlStr = `
+      FOR data IN ${JSON.stringify(request.data)}
+      REMOVE data._key IN ${this.collection}
+      LET removed = OLD
+      RETURN removed
+    `;
+
+    return await this.query(aqlStr);
   }
 
   private async isDataExist(request: SaveTempRequest, data: SaveTempDto) {
     let aqlStr = `
-        FOR data in ${this.collection}
+        FOR data IN ${this.collection}
           FILTER data.company == "${request.company}"
               && data.user_id == "${request.user_id}"
               && data.page == "${data.page}"
