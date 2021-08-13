@@ -29,13 +29,14 @@ export class AitButtonComponent implements OnChanges {
   @Input() styleBtn = {};
   @Input() styleIcon = {};
   @Input() styleText = {}
-  @Input() id;
+  @Input() id=Date.now();
   @Input() hide = false;
   @Input() isDefault = false;
 
   @Input() title = '';
   @Input() toolTip = '';
   @Input() style = 'normal';
+  @Input() tabIndex;
 
   ID(element: string): string {
     return this.id + '_' + element;

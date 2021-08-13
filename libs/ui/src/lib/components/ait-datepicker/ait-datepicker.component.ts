@@ -557,6 +557,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
 
   converToDateTime = (date) => (new Date(date)).getTime();
   handleInput = (event) => {
+    this.nbDatepicker.hidePicker()
     if (event.target.value) {
       this.translateDate(event.target.value);
       if (event.target.value?.length > 2) {

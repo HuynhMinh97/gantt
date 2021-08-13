@@ -20,6 +20,7 @@ export class AitTabsCommonComponent implements OnInit {
   tabs: TabView[] = [
 
   ]
+  @Input() tabIndex;
 
   constructor(private translateService: AitTranslationService, store: Store<AppState>) {
     store.pipe(select(getCaption)).subscribe(() => {
