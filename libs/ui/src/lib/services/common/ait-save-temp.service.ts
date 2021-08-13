@@ -7,9 +7,9 @@ import { AitBaseService } from './ait-base.service';
 @Injectable({ providedIn: 'root' })
 export class AitSaveTempService extends AitBaseService {
   collection = 'sys_save_temp';
-  find_name = 'findSysSaveTemp';
-  save_name = 'saveSysSaveTemp';
-  remove_name = 'removeSysSaveTemp';
+  find_name = 'findSaveTemp';
+  save_name = 'saveSaveTemp';
+  remove_name = 'removeSaveTemp';
 
   returnFields = {
     company: true,
