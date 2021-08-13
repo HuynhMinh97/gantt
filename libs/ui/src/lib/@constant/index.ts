@@ -33,7 +33,11 @@ export enum PAGES {
   COMPANY_INFO = 'company_info',
 
   //recommenced
-  RECOMMENCED_USER = 'recommenced_user'
+  RECOMMENCED_USER = 'recommenced_user',
+  RECOMMENCED_JOB = 'recommenced_job',
+
+  //job
+  JOB_EDIT = 'job_edit'
 
 }
 
@@ -41,8 +45,10 @@ export enum MODULES {
   AUTH = 'auth',
   USER = 'user',
   RECOMMENCED_USER = 'recommenced_user',
+  RECOMMENCED_JOB = 'recommenced_job',
   USER_PROFILE = 'user_profile',
-  COMPANY = 'company'
+  COMPANY = 'company',
+  JOB = 'job'
 }
 
 export enum COMMON_KEYS_I18N {

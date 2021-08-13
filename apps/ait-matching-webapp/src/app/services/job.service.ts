@@ -1,4 +1,4 @@
-import { JobInfoDto } from '@ait/shared';
+import * as shared from '@ait/shared';
 import { AitBaseService } from '@ait/ui';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
@@ -33,8 +33,8 @@ export class JobService extends AitBaseService {
     }).toPromise();
   }
 
-  async saveCompanyJob(data: JobInfoDto[]) {
-    return await this.post(this.saveJobUrl, { data }).toPromise();
-  }
+  // async saveCompanyJob(data: shared.JobInfoDto[]) {
+  //   return await this.post(this.saveJobUrl, { data }).toPromise();
+  // }
 
 }

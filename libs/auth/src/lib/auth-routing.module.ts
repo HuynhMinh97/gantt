@@ -1,3 +1,4 @@
+import { AddComponent } from './../../../../apps/ait-matching-webapp/src/app/user/add/add.component';
 import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { AitLoginComponent } from './pages/auth/ait-login/ait-login.component';
@@ -17,22 +18,27 @@ export const routes: Routes = [
   {
     path: 'sign-in',
     component: AitLoginComponent,
-    canActivate: [AitAuthScreenService],
+    // canActivate: [AitAuthScreenService],
   },
   {
     path: 'sign-up',
     component: AitSignUpComponent,
-    canActivate: [AitAuthScreenService],
+    // canActivate: [AitAuthScreenService],
   },
   {
     path: 'change-password',
     component: AitChangePwdComponent,
-    canActivate: [AitAuthGuardService],
+    // canActivate: [AitAuthGuardService],
   },
   {
     path: 'user-setting',
     component: AitUserSettingComponent,
-    canActivate: [AitAuthGuardService],
+    // canActivate: [AitAuthGuardService],
+  },
+  {
+    path: 'user',
+    component: AddComponent,
+    // canActivate: [AitAuthGuardService],
   },
   {
     path: '403',

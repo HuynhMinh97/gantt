@@ -26,8 +26,8 @@ import { map } from 'rxjs/operators';
 import localeEnn from '@angular/common/locales/en';
 import localeVnn from '@angular/common/locales/vi';
 import localeJpp from '@angular/common/locales/ja';
-import { MODE } from '@ait/ui';
 import { AitSaveTempService } from '../services/common/ait-save-temp.service';
+import { MODE } from '../@constant';
 
 export interface BaseInitData {
   module: string;
@@ -811,7 +811,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
       mode
     };
     mode === MODE.EDIT && (condition['edit_id'] = _key);
-    await this.saveTempService.find(condition);
+    return await this.saveTempService.find(condition);
   }
 
   async saveTempData(mode: string, data: string, _key: string = '') {

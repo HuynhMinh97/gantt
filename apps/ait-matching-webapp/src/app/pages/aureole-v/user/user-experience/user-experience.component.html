@@ -1,0 +1,207 @@
+<div class="user__experience__wrapper">
+  <ait-text-gradient
+    [content]="getTitleByMode()"
+    id="form_edit_user_experience"
+  ></ait-text-gradient>
+  <ait-space></ait-space>
+
+  <ait-card-content
+    style="justify-content: center"
+    class="content__card"
+    [label]="'基本情報'"
+    [padding]="'14px 90px 0 10px'"
+    (onToggle)="toggleContent('userExperienceInfo', $event)"
+    [isOpen]="isOpen.userExperienceInfo"
+    [isStart]="true"
+  >
+    <div style="margin-top: 14px">
+      <ait-autocomplete-master
+        [id]="'title'"
+        [label]="'TITLE'"
+        [required]="true"
+        [collection]="'m_title'"
+        [placeholder]="'Developer'"
+        [style]="{ width: '400px' }"
+        [isReset]="resetUserInfo.title"
+        (watchValue)="takeMasterValue($event, 'title')"
+        [defaultValue]="[userExperienceInfo.controls['title'].value]"
+        [isSubmit]="isSubmit"
+      ></ait-autocomplete-master>
+      <div style="margin-top: 14px; width: 400px">
+        <ait-autocomplete-master
+          [id]="'company_working'"
+          [label]="'COMPANY'"
+          [required]="true"
+          [collection]="'sys_company'"
+          [placeholder]="'Aureole IT'"
+          [style]="{ width: '400px' }"
+          [isReset]="resetUserInfo.company_working"
+          (watchValue)="takeMasterValue($event, 'company_working')"
+          [defaultValue]="[
+            userExperienceInfo.controls['company_working'].value
+          ]"
+          [isSubmit]="isSubmit"
+        ></ait-autocomplete-master>
+      </div>
+      <div class="input_area">
+        <ait-autocomplete-master
+          [id]="'location'"
+          [label]="'LOCATION'"
+          [required]="true"
+          [collection]="'sys_master_data'"
+          [placeholder]="'Ho Chi Minh City'"
+          [isReset]="resetUserInfo.location"
+          [maxItem]="1"
+          [style]="{ width: '400px' }"
+          (watchValue)="takeMasterValue($event, 'location')"
+          [defaultValue]="[userExperienceInfo.controls['location'].value]"
+          [isSubmit]="isSubmit"
+        ></ait-autocomplete-master>
+      </div>
+
+      <div class="input_area">
+        <ait-autocomplete-master-data
+          [id]="'employee_type'"
+          [label]="'EMPLOYMENT TYPE'"
+          [placeholder]="'Select'"
+          [required]="true"
+          [collection]="'sys_master_data'"
+          [isReset]="resetUserInfo.employee_type"
+          [style]="{ width: '200px' }"
+          (watchValue)="takeMasterValue($event, 'employee_type')"
+          [defaultValue]="[userExperienceInfo.controls['employee_type'].value]"
+          [disableOutputDefault]="true"
+          [isSubmit]="isSubmit"
+        >
+        </ait-autocomplete-master-data>
+      </div>
+
+      <div class="input_area">
+        <nb-checkbox
+          class="gray-text"
+          [checked]="userExperienceInfo.controls['is_working'].value"
+          [id]="'is_working'"
+          (checkedChange)="toggleCheckBox($event)"
+          >I am currently working in this role
+        </nb-checkbox>
+      </div>
+
+      <div style="display: flex; align-items: flex-end">
+        <ait-datepicker
+          [label]="'START DATE'"
+          [placeholder]="'yyyy/MM/dd'"
+          [id]="'start_date_from'"
+          [style]="{ width: '170px' }"
+          [isReset]="resetUserInfo.start_date_from"
+          [dateInput]="userExperienceInfo.controls['start_date_from'].value"
+          (watchValue)="
+            takeDatePickerValue(
+              $event?.value,
+              'userExperienceInfo',
+              'start_date_from'
+            )
+          "
+        ></ait-datepicker>
+        <span style="color: #8f9bb3; margin: 10px; font-weight: 600">〜</span>
+        <ait-datepicker
+          [placeholder]="'yyyy/MM/dd'"
+          [id]="'start_date_to'"
+          [style]="{ width: '170px' }"
+          [isReset]="resetUserInfo.start_date_to"
+          [disable]="userExperienceInfo.controls['is_working'].value"
+          [ngClass]="{
+            start_date_to: userExperienceInfo.controls['is_working'].value
+          }"
+          [dateInput]="userExperienceInfo.controls['start_date_to'].value"
+          (watchValue)="
+            takeDatePickerValue(
+              $event?.value,
+              'userExperienceInfo',
+              'start_date_to'
+            )
+          "
+        ></ait-datepicker>
+      </div>
+      <ait-error-message [errors]="errorArr"></ait-error-message>
+
+      <div class="input_area">
+        <ait-input-text
+          [id]="'description'"
+          [length]="4000"
+          [rows]="4"
+          [label]="'DESCRIPTION'"
+          [isReset]="resetUserInfo.description"
+          [placeholder]="'Place your text'"
+          [width]="'400px'"
+          (watchValue)="takeInputValue($event, 'description')"
+          [defaultValue]="userExperienceInfo.controls['description'].value"
+        >
+        </ait-input-text>
+      </div>
+    </div>
+  </ait-card-content>
+  <div class="sticky">
+    <div class="action-row">
+      <div class="block">
+        <ait-button
+          [title]="'CANCEL'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+        ></ait-button>
+
+        <ait-button
+          *ngIf="mode === 'EDIT'"
+          [id]="'delete'"
+          [width]="'200px'"
+          [title]="'DELETE'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+          (click)="confirmBeforeDelete()"
+        >
+        </ait-button>
+
+        <ait-button
+          [id]="'reset'"
+          [width]="'200px'"
+          [title]="'RESET'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+          (click)="resetForm()"
+        >
+        </ait-button>
+
+        <ait-button
+          *ngIf="mode === 'NEW'"
+          [title]="'SAVE & CONTINUE'"
+          (click)="saveAndContinue()"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+        ></ait-button>
+
+        <ait-button
+          *ngIf="mode === 'EDIT' || mode === 'NEW'"
+          [id]="'save'"
+          [width]="'200px'"
+          [title]="'SAVE & CLOSE'"
+          (click)="saveAndClose()"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+        >
+        </ait-button>
+        <!-- 
+        <ait-button
+          *ngIf="mode === 'EDIT'"
+          [id]="'disabled'"
+          [width]="'200px'"
+          [title]="'SAVE & CLOSE'"
+          [style]="'disabled'"
+        ></ait-button> -->
+      </div>
+    </div>
+  </div>
+</div>
