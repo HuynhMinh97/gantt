@@ -16,7 +16,6 @@
     ng-class="{ 'diabled-class': !isDisabled }"
     nbButton
     [ngClass]="classBtn"
-    style="margin: 0"
     [ngStyle]="styleBtn"
     (blur)="setFocus(false)"
     (focus)="setFocus(true)"
@@ -64,7 +63,6 @@
     (focus)="setFocus(true)"
     (blur)="setFocus(false)"
     [class.focus]="isFocus"
-    style="margin: 0"
   >
     <nb-icon
       [icon]="iconName"
@@ -108,7 +106,6 @@
     (focus)="setFocus(true)"
     (blur)="setFocus(false)"
     [class.focus]="isFocus"
-    style="margin: 0"
   >
     <nb-icon
       [icon]="iconName"
