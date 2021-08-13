@@ -79,6 +79,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   @Input() maxFiles: number;
   @Input() maxSize: number; // bytes
   @Input() isReset = false;
+  @Input() isClear = false;
   isImgErr = false;
   @Input() isError = false;
   @Input() required = false;
@@ -128,6 +129,20 @@ export class AitInputFileComponent implements OnInit, OnChanges {
             setTimeout(() => {
               this.messageErrorFileSp = '';
               this.isReset = false;
+            }, 100)
+          }
+        }
+
+        if (key === 'isClear') {
+          if (this.isClear) {
+            this.fileDatas = [];
+            this.displayedFiles = [];
+            this.componentErrors = [];
+            this.errorMessages = [];
+            this.messageErrorFileSp = '';
+            setTimeout(() => {
+              this.messageErrorFileSp = '';
+              this.isClear = false;
             }, 100)
           }
         }
