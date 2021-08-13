@@ -3,6 +3,7 @@
     class="tab__items"
     *ngFor="let tab of tabs"
     (click)="selectTab(tab.type)"
+    tabindex="{{tabIndex}}"
   >
     <div
       class="status__line"

@@ -17,7 +17,7 @@
     class="datepicker"
     [class.isReadOnly]="disable"
     [class.isError]="isError"
-    tabindex="{{ tabIndex }}"
+
     [class.focus]="getFocus()"
   >
     <nb-icon
@@ -40,13 +40,14 @@
       [ngStyle]="styleInput"
       (focusout)="checkValidDateInput(); isFocus = false"
       (focus)="focusInput()"
-      (click)="clickInput($event)"
+      (click)="clickInput($event);this.nbDatepicker.hidePicker()"
       (input)="handleInput($event)"
       (beforeinput)="onBeforeInput($event)"
       class="input_area"
       id="{{ ID('input') }}"
       [style.width]="width"
       [style.height]="height"
+      tabindex="{{ tabIndex }}"
     />
     <input
       [ngClass]="'border__bottom__input'"
@@ -66,6 +67,7 @@
         padding-left: 16px;
       "
       id="{{ ID('input') }}"
+      tabindex="{{ tabIndex }}"
     />
     <nb-datepicker
       #dateTimePicker
