@@ -56,4 +56,5 @@ export class AitTocMenuComponent implements OnInit, AfterViewInit {
   }
 
   toggle = () => this.isOpen = !this.isOpen;
+
 }
