@@ -1000,7 +1000,10 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   getStringByLength = (a: string[], count = 0) => {
     const i = count;
-    if ((a[i] || '').length > 6) {
+    if (a[i].length >= 10) {
+      return a[i].substr(0, 8) + '...';
+    }
+    else if ((a[i] || '').length > 8) {
       return this.getStringByLength(a, i + 1) ? this.getStringByLength(a, i + 1) : a[i - 1];
     }
     return a[i];

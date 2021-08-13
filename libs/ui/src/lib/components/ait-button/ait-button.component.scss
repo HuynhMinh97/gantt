@@ -89,3 +89,11 @@ p {
 .active {
   color: nb-theme(color-basic-1100);
 }
+
+
+button {
+  margin: 0;
+  &.focus {
+    border: 2px solid #10529D !important;
+  }
+}
