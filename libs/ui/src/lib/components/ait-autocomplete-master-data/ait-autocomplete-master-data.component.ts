@@ -289,7 +289,8 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     return '';
   };
 
-  enter = () => {
+  enter = (event) => {
+    event.preventDefault();
     console.log(this.dataFilter.length === 0, this.allowNew)
     if (this.dataFilter.length === 0 && this.allowNew) {
       this.checkAllowNew(this.currentValue);
@@ -1000,7 +1001,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   getStringByLength = (a: string[], count = 0) => {
     const i = count;
     if ((a[i] || '').length > 6) {
-      return this.getStringByLength(a, i + 1);
+      return this.getStringByLength(a, i + 1) ? this.getStringByLength(a, i + 1) : a[i - 1];
     }
     return a[i];
   }
