@@ -18,6 +18,7 @@ export class AitOutputTextComponent implements OnChanges {
   @Input() rows = 1;
   @Input() classContainer;
   @Input() id = Date.now();
+  @Input() tabIndex;
   constructor(private translateService: AitTranslationService) {
 
   }
