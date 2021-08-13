@@ -106,6 +106,7 @@ export class UserExperienceComponent
   constructor(
     private router: Router,
     private element: ElementRef,
+    private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
     private dialogService: NbDialogService,
@@ -117,7 +118,7 @@ export class UserExperienceComponent
     apollo: Apollo,
     authService: AitAuthService,
     toastrService: NbToastrService,
-    layoutScrollService: NbLayoutScrollService,
+    layoutScrollService: NbLayoutScrollService
   ) {
     super(
       store,
@@ -128,7 +129,7 @@ export class UserExperienceComponent
       layoutScrollService,
       toastrService
     );
-      
+
     this.setModulePage({
       module: MODULES.JOB,
       page: PAGES.JOB_EDIT,
@@ -150,7 +151,10 @@ export class UserExperienceComponent
         Validators.required,
         Validators.maxLength(200),
       ]),
-      company_working: new FormControl(null, [Validators.required]),
+      company_working: new FormControl(
+        { _key: '49b22ee2-4e5a-afb5-7fca-b9d36cb9174b' },
+        [Validators.required]
+      ),
       location: new FormControl(null, [Validators.required]),
       employee_type: [null, Validators.required],
       is_working: new FormControl(null),
@@ -161,16 +165,13 @@ export class UserExperienceComponent
   }
 
   async ngOnInit(): Promise<void> {
-    console.log(this.mode);
-    
-
-    //check mode
     if (this.user_key) {
-      const resInfo = await this.userExpService
+      await this.userExpService
         .findUserExperienceByKey(this.user_key)
         .then((r) => {
           if (r.status === RESULT_STATUS.OK) {
             let isUserExist = false;
+            console.log(r.data.length);
             if (r.data.length > 0) {
               const data = r.data[0];
               this.userExperienceInfo.patchValue({ ...data });
@@ -193,8 +194,6 @@ export class UserExperienceComponent
 
               this.userExperienceInfoClone = this.userExperienceInfo.value;
 
-              console.log(this.userExperienceInfo.value);
-              
               isUserExist = true;
             }
             !isUserExist && this.router.navigate([`/404`]);
@@ -210,21 +209,7 @@ export class UserExperienceComponent
   setErrors = (newErrors: any) =>
     (this.errors = { ...this.errors, ...newErrors });
 
-  clearErrors() {
-    this.setErrors({
-      title: [],
-      company_working: [],
-      location: [],
-      employee_type: [],
-      is_working: [],
-      start_date_from: [],
-      start_date_to: [],
-      description: [],
-    });
-  }
-
   resetForm() {
-    this.clearErrors();
     this.errorArr = [];
     if (this.mode === MODE.NEW) {
       this.prepareForm();
@@ -234,12 +219,7 @@ export class UserExperienceComponent
           this.resetUserInfo[index] = false;
         }, 100);
       }
-      this.userExperienceInfoSubscr.unsubscribe;
-      this.userExperienceInfoErros = new UserExpInfoErrorsMessage();
     } else {
-      this.userExperienceInfo.patchValue({
-        ...this.userExperienceInfoClone,
-      });
       for (const index in this.resetUserInfo) {
         if (!this.userExperienceInfo.controls[index].value) {
           this.resetUserInfo[index] = true;
@@ -248,6 +228,9 @@ export class UserExperienceComponent
           }, 100);
         }
       }
+      this.userExperienceInfo.patchValue({
+        ...this.userExperienceInfoClone,
+      });
     }
     this.showToastr('', this.getMsg('I0007'));
   }
@@ -259,7 +242,7 @@ export class UserExperienceComponent
         hasBackdrop: true,
         autoFocus: false,
         context: {
-          title: this.translateService.translate('このデータを削除しますか。'),
+          title: this.translateService.translate('I0004'),
         },
       })
       .onClose.subscribe(async (event) => {
@@ -275,7 +258,7 @@ export class UserExperienceComponent
       await this.userExpService.remove(_key).then((res) => {
         console.log(res);
         if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
-          this.showToastr('', this.getMsg('情報削除が成功しました。'));
+          this.showToastr('', this.getMsg('I0003'));
           this.router.navigate([`/recommenced-user`]);
         } else {
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
@@ -284,15 +267,6 @@ export class UserExperienceComponent
     } else {
       this.showToastr('', this.getMsg('E0050'), KEYS.WARNING);
     }
-  }
-
-  //Get all form error messages
-  getErrors() {
-    this.userExperienceInfoErros = new UserExpInfoErrorsMessage();
-    this.userExperienceInfoErros = this.getFormErrorMessage(
-      this.userExperienceInfo,
-      this.infoLabelList
-    );
   }
 
   saveAndContinue() {
@@ -318,7 +292,7 @@ export class UserExperienceComponent
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
-            this.router.navigateByUrl('/user-experience');
+            this.prepareForm();
           } else {
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
@@ -326,23 +300,10 @@ export class UserExperienceComponent
         .catch(() => {
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         });
-    } else {
-      // Form invalid, get all erros messages
-      this.getErrors();
-
-      // Subscribe form status for onchange event error message
-      this.userExperienceInfoSubscr = this.userExperienceInfo.statusChanges.subscribe(
-        (status) => {
-          if (status === 'INVALID') {
-            this.getErrors();
-          }
-        }
-      );
     }
   }
 
   saveAndClose() {
-    this.callLoadingApp();
     this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;
@@ -373,20 +334,7 @@ export class UserExperienceComponent
         .catch(() => {
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         });
-    } else {
-      // Form invalid, get all erros messages
-      this.getErrors();
-
-      // Subscribe form status for onchange event error message
-      this.userExperienceInfoSubscr = this.userExperienceInfo.statusChanges.subscribe(
-        (status) => {
-          if (status === 'INVALID') {
-            this.getErrors();
-          }
-        }
-      );
     }
-    this.cancelLoadingApp();
   }
 
   toggleCheckBox(checked: boolean) {
@@ -442,13 +390,13 @@ export class UserExperienceComponent
     const dateTo = this.userExperienceInfo.controls['start_date_to'].value;
     const isWorking = this.userExperienceInfo.controls['is_working'].value;
     const nowDate = new Date().getTime();
-    if (dateFrom > dateTo && isWorking == false) {
+    if (dateFrom > dateTo && !isWorking) {
       const transferMsg = (msg || '')
         .replace('{0}', this.getFieldName(' start_date_from '))
         .replace('{1}', this.getFieldName(' start_date_to '));
       res.push(transferMsg);
       this.isDateCompare = true;
-    } else if (isWorking == true && dateFrom > nowDate) {
+    } else if (dateFrom > nowDate && isWorking) {
       const transferMsg = (msg || '')
         .replace('{0}', this.getFieldName(' start_date_from '))
         .replace('{1}', this.getFieldName(' now_date '));

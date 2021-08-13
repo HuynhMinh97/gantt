@@ -101,9 +101,9 @@ Cypress.Commands.add('login', (email, password) => {
   cy.visit(Cypress.env('host') + Cypress.env('sign_in'));
   cy.get('#email').type(email);
   cy.get('#password').type(password);
-  // .type('{enter}');
+  // // .type('{enter}');
   cy.get('.button__submit').click();
-  cy.url().should('eq', Cypress.env('host') + Cypress.env('recommenced_url'));
+  // cy.url().should('eq', Cypress.env('host') + Cypress.env('recommenced_url'));
 
   // setting language ja_JP
   // cy.get('.avatar').click();

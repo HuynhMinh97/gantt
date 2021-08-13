@@ -19,43 +19,41 @@
         [id]="'title'"
         [label]="'TITLE'"
         [required]="true"
+        [isSubmit]="isSubmit"
         [collection]="'m_title'"
         [placeholder]="'Developer'"
         [style]="{ width: '400px' }"
         [isReset]="resetUserInfo.title"
         (watchValue)="takeMasterValue($event, 'title')"
         [defaultValue]="[userExperienceInfo.controls['title'].value]"
-        [isSubmit]="isSubmit"
       ></ait-autocomplete-master>
       <div style="margin-top: 14px; width: 400px">
         <ait-autocomplete-master
-          [id]="'company_working'"
-          [label]="'COMPANY'"
           [required]="true"
+          [label]="'COMPANY'"
+          [isSubmit]="isSubmit"
+          [id]="'company_working'"
+          [style]="{ width: '400px' }"
           [collection]="'sys_company'"
           [placeholder]="'Aureole IT'"
-          [style]="{ width: '400px' }"
           [isReset]="resetUserInfo.company_working"
           (watchValue)="takeMasterValue($event, 'company_working')"
-          [defaultValue]="[
-            userExperienceInfo.controls['company_working'].value
-          ]"
-          [isSubmit]="isSubmit"
+          [defaultValue]="[userExperienceInfo.controls['company_working'].value]"
         ></ait-autocomplete-master>
       </div>
       <div class="input_area">
         <ait-autocomplete-master
+          [maxItem]="1"
           [id]="'location'"
-          [label]="'LOCATION'"
           [required]="true"
+          [label]="'LOCATION'"
+          [isSubmit]="isSubmit"
+          [style]="{ width: '400px' }"
           [collection]="'sys_master_data'"
           [placeholder]="'Ho Chi Minh City'"
           [isReset]="resetUserInfo.location"
-          [maxItem]="1"
-          [style]="{ width: '400px' }"
           (watchValue)="takeMasterValue($event, 'location')"
           [defaultValue]="[userExperienceInfo.controls['location'].value]"
-          [isSubmit]="isSubmit"
         ></ait-autocomplete-master>
       </div>
 
@@ -63,6 +61,7 @@
         <ait-autocomplete-master-data
           [id]="'employee_type'"
           [label]="'EMPLOYMENT TYPE'"
+          [class]="'EMP_TYPE'"
           [placeholder]="'Select'"
           [required]="true"
           [collection]="'sys_master_data'"
