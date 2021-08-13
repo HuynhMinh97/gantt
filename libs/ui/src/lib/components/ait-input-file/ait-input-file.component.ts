@@ -96,6 +96,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   @Input() width;
   @Input() height;
   isFocus = false;
+  @Input() tabIndex;
 
   errorImage: any = {}
 
@@ -249,7 +250,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
   checkMaxSize = (file: any[]) => {
 
-    return this.fileRequest.length > 0 ?  this.fileRequest[0]?.size <= this.maxSize * 1024 : true;
+    return this.fileRequest.length > 0 ? this.fileRequest[0]?.size <= this.maxSize * 1024 : true;
   }
   checkMaxFile = () => {
 
