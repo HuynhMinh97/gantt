@@ -43,17 +43,11 @@ export class AitTocMenuComponent implements OnInit, AfterViewInit {
   }
 
   goToElemet = (id: string) => {
-    // this.router.navigate([this._route.url], {
-    //   relativeTo: this._route,
-    //   replaceUrl: true,
-    //   fragment: decodeURIComponent(id),
-    //   queryParamsHandling: 'merge',
-    //   // preserve the existing query params in the route
-    //   skipLocationChange: true
-    // })
+
     const element = document.getElementById('menu_toc_item_' + id.trim());
     element.scrollIntoView({ behavior: 'smooth', inline: 'start' });
   }
 
   toggle = () => this.isOpen = !this.isOpen;
+
 }
