@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { AitAppUtils } from '../../utils/ait-utils';
@@ -15,6 +15,7 @@ export class AitBackButtonComponent {
   isChangeColor = false;
   colorIcon = '#fff';
   backgroundBtn = null;
+  @Input() tabIndex;
   constructor(
     router: Router,
   ) {
