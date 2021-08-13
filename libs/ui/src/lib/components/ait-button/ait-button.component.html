@@ -12,6 +12,7 @@
     nbButton
     [ngClass]="classBtn"
     [ngStyle]="styleBtn"
+    tabindex="{{ tabIndex }}"
   >
     <nb-icon
       [icon]="iconName"
@@ -36,6 +37,7 @@
 </div>
 <div [style]="style" *ngIf="style === 'active' && !hide">
   <button
+    tabindex="{{ tabIndex }}"
     shape="round"
     class="button__wrapper button__wrapper__active"
     [nbTooltip]="toolTip"
@@ -71,6 +73,7 @@
 </div>
 <div [style]="style" *ngIf="style === 'normal' && !hide">
   <button
+    tabindex="{{ tabIndex }}"
     shape="round"
     class="button__wrapper button__wrapper__primary"
     [nbTooltip]="toolTip"
@@ -82,7 +85,6 @@
     [ngClass]="classBtn"
     [ngStyle]="styleBtn"
     [class.isDefault]="isDefault"
-
   >
     <nb-icon
       [icon]="iconName"

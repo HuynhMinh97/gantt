@@ -1,25 +1,22 @@
-
 <div
+  tabindex="{{ tabIndex }}"
   class="text__gradient"
   *ngIf="gradientString !== ''"
   [ngStyle]="{
     'background-image': gradientString,
     padding: padding + 'px',
     'font-size': fontsize,
-    'padding-left' : paddingLeft
+    'padding-left': paddingLeft
   }"
 >
   {{ getContent() }}
 </div>
 
 <div
+  tabindex="{{ tabIndex }}"
   class="text__gradient__no__string"
   *ngIf="gradientString === ''"
-  [ngStyle]="{ 'font-size': fontsize,
-  'padding-left' : paddingLeft }"
+  [ngStyle]="{ 'font-size': fontsize, 'padding-left': paddingLeft }"
 >
   {{ getContent() }}
 </div>
-
-
-
