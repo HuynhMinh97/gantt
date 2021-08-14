@@ -40,8 +40,10 @@
         <div
           class="button_header_card"
           *ngIf="actionBtn.length !== 0"
-          [ngClass]="'button_header_card'"
+          [ngClass]="tooltip ? 'button_header_card disable' : ''"
           (click)="handleClickBtnHeader()"
+          [nbTooltip]="tooltip"
+          [nbTooltipTrigger]="tooltip? 'hover' : 'noop'"
         >
           <span style="display: flex">
             <nb-icon style="color: #fff" [icon]="actionBtn[0].icon"></nb-icon>
