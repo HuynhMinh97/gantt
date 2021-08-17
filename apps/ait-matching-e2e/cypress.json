@@ -13,6 +13,9 @@
     "viewportWidth": 1679,
     "env": {
         "host": "http://localhost:4200/",
-        "sign_in": "#/sign-in"
+        "sign_in": "#/sign-in",
+        "user_experience": "#/user-experience",
+        "api_url": "api/v1",
+        "_key": "/3cf62ed3-b260-72ca-326d-67980b8d089c"
     }
 }

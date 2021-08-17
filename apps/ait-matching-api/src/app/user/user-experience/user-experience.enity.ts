@@ -16,20 +16,20 @@ export class  NameEntity {
 
 @ObjectType()
 export class UserExperienceInfoEntity extends BaseEntity {
-    @Field(() => String, { nullable: true })
-    title?: string;
+    @Field(() => KeyValueEntity, { nullable: true })
+    title?: KeyValueEntity;
 
-    @Field(() => String, { nullable: true })
-    company_working?: string;
+    @Field(() => KeyValueEntity, { nullable: true })
+    company_working?: KeyValueEntity;
 
-    @Field(() => String, { nullable: true })
-    location?: string;
+    @Field(() => KeyValueEntity, { nullable: true })
+    location?: KeyValueEntity;
 
     @Field(() => Boolean, { nullable: true })
     is_working?: boolean;
 
-    @Field(() => String, { nullable: true })
-    employee_type?: string;
+    @Field(() => KeyValueEntity, { nullable: true })
+    employee_type?: KeyValueEntity;
 
     @Field(() => Float, { nullable: true })
     start_date_from?: number;

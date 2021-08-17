@@ -59,7 +59,8 @@ export class UserExperienceComponent
   stateUserExpInfoDf = {} as UserExperienceDto;
   userExperienceInfoClone: any;
 
-  infoLabelList = {} as KeyValueDto;
+  defaultCompany = {} as KeyValueDto;
+  defaultStartDate: any;
 
   // Form status change subscribe
   private userExperienceInfoSubscr: Subscription;
@@ -147,24 +148,25 @@ export class UserExperienceComponent
   }
 
   async prepareForm() {
-    let keyCompany;
-
     await this.userExpService
       .findKeyCompany(this.env.COMMON.COMPANY_DEFAULT)
       .then((r) => {
-        keyCompany = r.data[0];
+        this.defaultCompany = { _key: r.data[0].code, value: r.data[0].code };
       });
+    this.defaultStartDate = new Date().getTime();
 
     this.userExperienceInfo = this.formBuilder.group({
       title: new FormControl(null, [
         Validators.required,
         Validators.maxLength(200),
       ]),
-      company_working: new FormControl(keyCompany, [Validators.required]),
+      company_working: new FormControl(this.defaultCompany, [
+        Validators.required,
+      ]),
       location: new FormControl(null, [Validators.required]),
       employee_type: [null, Validators.required],
       is_working: new FormControl(false),
-      start_date_from: new Date().getTime(),
+      start_date_from: this.defaultStartDate,
       start_date_to: new FormControl(null),
       description: new FormControl(null),
     });
@@ -176,26 +178,10 @@ export class UserExperienceComponent
         .findUserExperienceByKey(this.user_key)
         .then((r) => {
           if (r.status === RESULT_STATUS.OK) {
-            let isUserExist = false;
+            let isUserExist = false;            
             if (r.data.length > 0) {
               const data = r.data[0];
               this.userExperienceInfo.patchValue({ ...data });
-
-              this.userExperienceInfo.controls['title'].setValue({
-                _key: data.title,
-              });
-
-              this.userExperienceInfo.controls['company_working'].setValue({
-                _key: data.company_working,
-              });
-
-              this.userExperienceInfo.controls['location'].setValue({
-                _key: data.location,
-              });
-
-              this.userExperienceInfo.controls['employee_type'].setValue({
-                _key: data.employee_type,
-              });
 
               this.userExperienceInfoClone = this.userExperienceInfo.value;
 
@@ -214,18 +200,18 @@ export class UserExperienceComponent
   resetForm() {
     this.errorArr = [];
     if (this.mode === MODE.NEW) {
-      
       for (const index in this.resetUserInfo) {
         this.resetUserInfo[index] = true;
         setTimeout(() => {
           this.resetUserInfo[index] = false;
         }, 100);
       }
-      this.userExperienceInfo.patchValue({
-        ...this.prepareForm(),
+      this.userExperienceInfo.controls['start_date_from'].setValue({
+        ...this.defaultStartDate,
       });
-      console.log(this.userExperienceInfo.controls['company_working'].value);
-      
+      this.userExperienceInfo.controls['company_working'].setValue({
+        ...this.defaultCompany,
+      });
     } else {
       for (const index in this.resetUserInfo) {
         if (!this.userExperienceInfo.controls[index].value) {

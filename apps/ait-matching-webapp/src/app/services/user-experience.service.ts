@@ -7,10 +7,22 @@ export class UserExperienceService extends AitBaseService {
   collection = 'user_experience';
   returnFields = {
     _key: true,
-    title: true,
-    company_working: true,
-    employee_type: true,
-    location: true,
+    title: {
+      _key: true,
+      value: true
+    },
+    company_working: {
+      _key: true,
+      value: true
+    },
+    employee_type: {
+      _key: true,
+      value: true
+    },
+    location: {
+      _key: true,
+      value: true
+    },
     is_working: true,
     start_date_from: true,
     start_date_to: true,
@@ -18,9 +30,38 @@ export class UserExperienceService extends AitBaseService {
   };
 
   async findUserExperienceByKey(_key?: string) {
-    const condition = {
+    const condition: any = {
       _key: _key
     }
+    const specialFields = ['location', 'employee_type']
+
+    specialFields.forEach(item => {
+      condition[item] = {
+        attribute: item,
+        ref_collection: 'sys_master_data',
+        ref_attribute: 'code'
+      }
+    })
+
+    const keyMasterArray = [
+      {
+        att: 'title',
+        col: 'm_title'
+      },
+      {
+        att: 'company_working',
+        col: 'sys_company'
+      }
+    ]
+
+    keyMasterArray.forEach(item => {
+      condition[item.att] = {
+        attribute: item.att,
+        ref_collection: item.col,
+        ref_attribute: 'code'
+      }
+    })
+
     const returnFields = this.returnFields;
     const request = {};
     request['collection'] = this.collection;
@@ -32,7 +73,7 @@ export class UserExperienceService extends AitBaseService {
     const condition = {
       company: _key
     }
-    const returnFields = {_key: true};
+    const returnFields = {code: true};
     const request = {};
     request['collection'] = 'sys_company';
     request['condition'] = condition;    
@@ -40,7 +81,7 @@ export class UserExperienceService extends AitBaseService {
   }
 
   async save(data: any[]) {
-    const returnField = { user_id: true, _key: true };
+    const returnField = { _key: true };
     return await this.mutation(
       'saveUserExperienceInfo',
       this.collection,
@@ -50,7 +91,7 @@ export class UserExperienceService extends AitBaseService {
   }
 
   async remove(data: any[]) {
-    const returnFields = { _key: true, user_id: true };
+    const returnFields = { _key: true };
     return await this.mutation(
       'removeUserExperienceInfo',
       this.collection,

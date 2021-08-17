@@ -7,6 +7,6 @@ export class UserExperienceInfoRequest extends BaseRequest {
   @Field(() => UserExperienceInfoDto, { nullable: true })
   condition: UserExperienceInfoDto;
 
-  @Field(() => [UserExperienceInfoDto], { nullable: true })
-  data: UserExperienceInfoDto;
+  @Field(() => [SaveUserExperienceInfoDto], { nullable: true })
+  data: SaveUserExperienceInfoDto;
 }
