@@ -12,6 +12,7 @@
     "viewportHeight": 850,
     "viewportWidth": 1679,
     "env": {
-        "host": "http://localhost:4200/"
+        "host": "http://localhost:4200/",
+        "sign_in": "#/sign-in"
     }
 }

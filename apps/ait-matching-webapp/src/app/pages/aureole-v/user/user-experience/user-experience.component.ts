@@ -1,3 +1,4 @@
+import { UserExperienceInfoDto } from './../../../../../../../ait-matching-api/src/app/user/user-experience/user-experience.dto';
 import { title } from 'node:process';
 import {
   isValue,
@@ -26,6 +27,7 @@ import {
   AitBaseComponent,
   AitConfirmDialogComponent,
   AitEnvironmentService,
+  AitNavigationService,
   AitTranslationService,
   AppState,
   MODE,
@@ -57,8 +59,6 @@ export class UserExperienceComponent
   stateUserExpInfoDf = {} as UserExperienceDto;
   userExperienceInfoClone: any;
 
-  userExperienceInfoErros = new UserExpInfoErrorsMessage();
-
   infoLabelList = {} as KeyValueDto;
 
   // Form status change subscribe
@@ -68,8 +68,8 @@ export class UserExperienceComponent
   errorArr: any;
   isReset = false;
   isSubmit = false;
-  isDateCompare = false;
   isChanged = false;
+  isDateCompare = false;
   isInValidTitle = false;
   isInValidCompany = false;
   isInValidLocation = false;
@@ -78,22 +78,22 @@ export class UserExperienceComponent
     title: false,
     location: false,
     is_working: false,
+    description: false,
     employee_type: false,
+    start_date_to: false,
     company_working: false,
     start_date_from: false,
-    start_date_to: false,
-    description: false,
   };
 
   errors = {
     title: [],
     location: [],
     is_working: [],
+    description: [],
+    start_date_to: [],
     employee_type: [],
     company_working: [],
     start_date_from: [],
-    start_date_to: [],
-    description: [],
   };
 
   isOpen = {
@@ -110,6 +110,7 @@ export class UserExperienceComponent
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
     private dialogService: NbDialogService,
+    private navigation: AitNavigationService,
     private translatePipe: AitTranslationService,
     private userExpService: UserExperienceService,
     private translateService: AitTranslationService,
@@ -145,19 +146,24 @@ export class UserExperienceComponent
     }
   }
 
-  prepareForm() {
+  async prepareForm() {
+    let keyCompany;
+
+    await this.userExpService
+      .findKeyCompany(this.env.COMMON.COMPANY_DEFAULT)
+      .then((r) => {
+        keyCompany = r.data[0];
+      });
+
     this.userExperienceInfo = this.formBuilder.group({
       title: new FormControl(null, [
         Validators.required,
         Validators.maxLength(200),
       ]),
-      company_working: new FormControl(
-        { _key: '49b22ee2-4e5a-afb5-7fca-b9d36cb9174b' },
-        [Validators.required]
-      ),
+      company_working: new FormControl(keyCompany, [Validators.required]),
       location: new FormControl(null, [Validators.required]),
       employee_type: [null, Validators.required],
-      is_working: new FormControl(null),
+      is_working: new FormControl(false),
       start_date_from: new Date().getTime(),
       start_date_to: new FormControl(null),
       description: new FormControl(null),
@@ -171,7 +177,6 @@ export class UserExperienceComponent
         .then((r) => {
           if (r.status === RESULT_STATUS.OK) {
             let isUserExist = false;
-            console.log(r.data.length);
             if (r.data.length > 0) {
               const data = r.data[0];
               this.userExperienceInfo.patchValue({ ...data });
@@ -206,19 +211,21 @@ export class UserExperienceComponent
     return this.mode === MODE.EDIT ? '求人要件更新' : '求人要件登録';
   }
 
-  setErrors = (newErrors: any) =>
-    (this.errors = { ...this.errors, ...newErrors });
-
   resetForm() {
     this.errorArr = [];
     if (this.mode === MODE.NEW) {
-      this.prepareForm();
+      
       for (const index in this.resetUserInfo) {
         this.resetUserInfo[index] = true;
         setTimeout(() => {
           this.resetUserInfo[index] = false;
         }, 100);
       }
+      this.userExperienceInfo.patchValue({
+        ...this.prepareForm(),
+      });
+      console.log(this.userExperienceInfo.controls['company_working'].value);
+      
     } else {
       for (const index in this.resetUserInfo) {
         if (!this.userExperienceInfo.controls[index].value) {
@@ -269,23 +276,33 @@ export class UserExperienceComponent
     }
   }
 
-  saveAndContinue() {
-    this.isSubmit = true;
-    setTimeout(() => {
-      this.isSubmit = false;
-    }, 100);
-
+  saveData() {
+    const saveData = this.userExperienceInfo.value;
     this.userExperienceInfo.value.title = this.userExperienceInfo.value.title._key;
     this.userExperienceInfo.value.location = this.userExperienceInfo.value.location._key;
     this.userExperienceInfo.value.employee_type = this.userExperienceInfo.value.employee_type._key;
     this.userExperienceInfo.value.company_working = this.userExperienceInfo.value.company_working._key;
 
-    const saveData = this.userExperienceInfo.value;
-    saveData['_key'] = this.user_key;
+    if (this.userExperienceInfo.value.is_working) {
+      this.userExperienceInfo.controls['start_date_to'].setValue(null);
+    }
+    if (this.user_key) {
+      saveData['_key'] = this.user_key;
+    }
+    return saveData;
+  }
+
+  saveAndContinue() {
     this.errorArr = this.checkDatePicker();
+
+    this.isSubmit = true;
+    setTimeout(() => {
+      this.isSubmit = false;
+    }, 100);
+
     if (this.userExperienceInfo.valid && !this.isDateCompare) {
       this.userExpService
-        .save(saveData)
+        .save(this.saveData())
         .then((res) => {
           console.log(res);
           if (res?.status === RESULT_STATUS.OK) {
@@ -304,22 +321,16 @@ export class UserExperienceComponent
   }
 
   saveAndClose() {
+    this.errorArr = this.checkDatePicker();
+
     this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
 
-    this.userExperienceInfo.value.title = this.userExperienceInfo.value.title._key;
-    this.userExperienceInfo.value.location = this.userExperienceInfo.value.location._key;
-    this.userExperienceInfo.value.employee_type = this.userExperienceInfo.value.employee_type._key;
-    this.userExperienceInfo.value.company_working = this.userExperienceInfo.value.company_working._key;
-
-    const saveData = this.userExperienceInfo.value;
-    saveData['_key'] = this.user_key;
-    this.errorArr = this.checkDatePicker();
     if (this.userExperienceInfo.valid && !this.isDateCompare) {
       this.userExpService
-        .save(saveData)
+        .save(this.saveData())
         .then((res) => {
           console.log(res);
           if (res?.status === RESULT_STATUS.OK) {
@@ -406,6 +417,10 @@ export class UserExperienceComponent
       this.isDateCompare = false;
     }
     return res;
+  }
+
+  back() {
+    this.navigation.back();
   }
 
   ngOnDestroy() {

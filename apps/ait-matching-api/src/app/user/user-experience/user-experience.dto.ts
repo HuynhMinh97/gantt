@@ -2,7 +2,7 @@ import { BaseDto, ConditionDto} from '@ait/core';
 import { InputType, Field, Float } from '@nestjs/graphql';
 
 @InputType()
-export class UserExperienceInfoDto extends BaseDto {
+export class SaveUserExperienceInfoDto extends BaseDto {
     @Field(() => ConditionDto, { nullable: true })
     title?: ConditionDto;
 
@@ -29,7 +29,7 @@ export class UserExperienceInfoDto extends BaseDto {
 }
 
 @InputType()
-export class SaveUserExperienceInfoDto extends BaseDto {
+export class UserExperienceInfoDto extends BaseDto {
     @Field(() => String, { nullable: true })
     title?: string;
 

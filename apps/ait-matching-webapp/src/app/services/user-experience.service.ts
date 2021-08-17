@@ -28,6 +28,17 @@ export class UserExperienceService extends AitBaseService {
     return await this.query('findUserExperienceInfo', request, returnFields);
   }
 
+  async findKeyCompany(_key?: string){
+    const condition = {
+      company: _key
+    }
+    const returnFields = {_key: true};
+    const request = {};
+    request['collection'] = 'sys_company';
+    request['condition'] = condition;    
+    return await this.query('findSystem', request, returnFields);
+  }
+
   async save(data: any[]) {
     const returnField = { user_id: true, _key: true };
     return await this.mutation(

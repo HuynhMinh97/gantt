@@ -4,9 +4,9 @@ import { SaveUserExperienceInfoDto, UserExperienceInfoDto } from './user-experie
 
 @InputType()
 export class UserExperienceInfoRequest extends BaseRequest {
-  @Field(() => SaveUserExperienceInfoDto, { nullable: true })
-  condition: SaveUserExperienceInfoDto;
+  @Field(() => UserExperienceInfoDto, { nullable: true })
+  condition: UserExperienceInfoDto;
 
-  @Field(() => [SaveUserExperienceInfoDto], { nullable: true })
-  data: SaveUserExperienceInfoDto;
+  @Field(() => [UserExperienceInfoDto], { nullable: true })
+  data: UserExperienceInfoDto;
 }
