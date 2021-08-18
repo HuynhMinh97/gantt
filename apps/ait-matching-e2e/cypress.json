@@ -16,6 +16,8 @@
         "sign_in": "#/sign-in",
         "user_experience": "#/user-experience",
         "api_url": "api/v1",
-        "_key": "/3cf62ed3-b260-72ca-326d-67980b8d089c"
+        "company": "a8cd83a1-5a4d-4500-8751-a790d649c398",
+        "lang": "ja_JP",
+        "user_id": "157595ff-1a34-49c9-b40c-cb36447a5d3b"
     }
 }

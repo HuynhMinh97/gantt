@@ -178,7 +178,7 @@ export class UserExperienceComponent
         .findUserExperienceByKey(this.user_key)
         .then((r) => {
           if (r.status === RESULT_STATUS.OK) {
-            let isUserExist = false;            
+            let isUserExist = false;
             if (r.data.length > 0) {
               const data = r.data[0];
               this.userExperienceInfo.patchValue({ ...data });
@@ -228,7 +228,7 @@ export class UserExperienceComponent
     this.showToastr('', this.getMsg('I0007'));
   }
 
-  confirmBeforeDelete() {
+  onDelete() {
     this.dialogService
       .open(AitConfirmDialogComponent, {
         closeOnBackdropClick: true,
@@ -240,30 +240,27 @@ export class UserExperienceComponent
       })
       .onClose.subscribe(async (event) => {
         if (event) {
-          this.onDelete();
+          const _key = [{ _key: this.user_key }];
+          if (this.user_key) {
+            await this.userExpService.remove(_key).then((res) => {
+              console.log(res);
+              if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
+                this.showToastr('', this.getMsg('I0003'));
+                this.navigation.back();
+              } else {
+                this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+              }
+            });
+          } else {
+            this.showToastr('', this.getMsg('E0050'), KEYS.WARNING);
+          }
         }
       });
-  }
-
-  async onDelete() {
-    const _key = [{ _key: this.user_key }];
-    if (this.user_key) {
-      await this.userExpService.remove(_key).then((res) => {
-        console.log(res);
-        if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
-          this.showToastr('', this.getMsg('I0003'));
-          this.router.navigate([`/recommenced-user`]);
-        } else {
-          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-        }
-      });
-    } else {
-      this.showToastr('', this.getMsg('E0050'), KEYS.WARNING);
-    }
   }
 
   saveData() {
     const saveData = this.userExperienceInfo.value;
+    saveData['user_id'] = this.authService.getUserID();
     this.userExperienceInfo.value.title = this.userExperienceInfo.value.title._key;
     this.userExperienceInfo.value.location = this.userExperienceInfo.value.location._key;
     this.userExperienceInfo.value.employee_type = this.userExperienceInfo.value.employee_type._key;
@@ -290,7 +287,7 @@ export class UserExperienceComponent
       this.userExpService
         .save(this.saveData())
         .then((res) => {
-          console.log(res);
+          //console.log(res);
           if (res?.status === RESULT_STATUS.OK) {
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
@@ -318,7 +315,7 @@ export class UserExperienceComponent
       this.userExpService
         .save(this.saveData())
         .then((res) => {
-          console.log(res);
+          //console.log(res);
           if (res?.status === RESULT_STATUS.OK) {
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');

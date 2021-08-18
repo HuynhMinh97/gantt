@@ -1,13 +1,14 @@
 describe('Test Cypress', () => {
   it('Check Mode New', function () {
     cy.login('diennv', '12345678');
-    cy.wait(1000);
+    cy.wait(2000);
     cy.visit(Cypress.env('host') + Cypress.env('user_experience'));
 
     cy.url().should('eq', Cypress.env('host') + Cypress.env('user_experience'));
-    checkTitleAndPlaceholder();
-    checkValidate();
-    // insertData();
+    // checkTitleAndPlaceholder();
+    // checkValidate();
+    // checkValidOfDate();
+    insertData();
   });
 });
 
@@ -65,6 +66,32 @@ function checkValidate() {
   ]);
 }
 
+function checkValidOfDate(){
+  // default (case: wrong)
+  cy.clickButton('SaveAndClose');
+  cy.errorMessage('start-date', ' start_date_to 以下の値で start_date_from を入力してください。');
+
+  // choose start_date_from > current date (case: wrong)
+  cy.get('#is_working').click();
+  cy.chooseValueDate('start_date_from', '2021', '8', '27');
+  cy.clickButton('SaveAndClose');
+  cy.errorMessage('start-date', ' now_date 以下の値で start_date_from を入力してください。');
+
+  // choose start_date_from > start_date_to (case: wrong)
+  cy.get('#is_working').click();
+  cy.chooseValueDate('start_date_from', '2021', '8', '27');
+  cy.chooseValueDate('start_date_to', '2021', '8', '1');
+  cy.clickButton('SaveAndClose');
+  cy.errorMessage('start-date', ' start_date_to 以下の値で start_date_from を入力してください。');
+
+  // choose start_date_to < current date (case: right)
+  cy.chooseValueDate('start_date_from', '2021', '8', '13');
+  cy.chooseValueDate('start_date_to', '2021', '8', '19');
+  cy.clickButton('SaveAndClose');
+  // cy.clickButton('reset');
+
+}
+
 function insertData() {
   // Check save
   cy.chooseMasterData('title', 'Senior System Designer');
@@ -84,11 +111,84 @@ function insertData() {
   }).as('dataSaved');
   cy.clickButton('SaveAndClose');
   cy.wait('@dataSaved').then((req) => {
-    console.log(req);
+    //console.log(req);
     cy.status(req.response.statusCode);
     const _key = req.response.body.data.saveUserExperienceInfo.data[0]._key;
 
     cy.wait(1000)
     cy.visit(Cypress.env('host') + Cypress.env('user_experience') + '/' + `${_key}`)
+    let query = `
+    query {
+      findUserExperienceInfo(
+        request: {
+          collection: "user_experience"
+          condition: {
+            _key: "${_key}"
+            location: {
+              attribute: "location"
+              ref_collection: "sys_master_data"
+              ref_attribute: "code"
+            }
+            employee_type: {
+              attribute: "employee_type"
+              ref_collection: "sys_master_data"
+              ref_attribute: "code"
+            }
+            title: {
+              attribute: "title"
+              ref_collection: "m_title"
+              ref_attribute: "code"
+            }
+            company_working: {
+              attribute: "company_working"
+              ref_collection: "sys_company"
+              ref_attribute: "code"
+            }
+          }
+          company: "${Cypress.env('company')}"
+          lang: "${Cypress.env('lang')}"
+          user_id: "${Cypress.env('user_id')}"
+        }
+      ) {
+        data {
+          _key
+          title{
+            value
+          }
+          company_working{
+            value
+          }
+          employee_type{
+            value
+          }
+          location{
+            value
+          }
+          is_working
+          start_date_from
+          start_date_to
+          description
+        }
+        message
+        errors
+        status
+        numData
+        numError
+      }
+    }
+    `;
+    console.log(query);
+    
+    cy.request({
+      method: 'POST',
+      url: Cypress.env('host') + Cypress.env('api_url'),
+      body: { query },
+      failOnStatusCode: false
+  
+    }).then(response => {
+      console.log(response.body.data.findUserExperienceInfo.data[0].title.value);
+      
+      //return response.body.data.findUserExperienceInfo.data
+    })
   });
 }
