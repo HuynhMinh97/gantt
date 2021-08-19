@@ -5,10 +5,10 @@ describe('Test Cypress', () => {
     cy.visit(Cypress.env('host') + Cypress.env('user_experience'));
 
     cy.url().should('eq', Cypress.env('host') + Cypress.env('user_experience'));
-    // checkTitleAndPlaceholder();
+    //checkTitleAndPlaceholder();
     // checkValidate();
     // checkValidOfDate();
-    insertData();
+     insertData();
   });
 });
 
@@ -27,6 +27,7 @@ function checkTitleAndPlaceholder() {
   cy.label('employee_type', ' EMPLOYMENT TYPE*');
   cy.input('employee_type', 'Select');
 
+  cy.get('#is_working').should('have.attr', 'ng-reflect-checked','false');
   cy.get('#is_working').should(
     'have.text',
     'I am currently working in this role '
@@ -177,7 +178,6 @@ function insertData() {
       }
     }
     `;
-    console.log(query);
     
     cy.request({
       method: 'POST',
@@ -186,7 +186,15 @@ function insertData() {
       failOnStatusCode: false
   
     }).then(response => {
-      console.log(response.body.data.findUserExperienceInfo.data[0].title.value);
+      const data = response.body.data.findUserExperienceInfo.data[0];
+      cy.inputValue('title', data.title.value);
+      cy.inputValue('company_working', data.company_working.value);
+      cy.inputValue('location', data.location.value);
+      cy.inputValue('employee_type', data.employee_type.value);
+      cy.get('#is_working').should('have.attr', 'ng-reflect-checked', ''+ data.is_working);
+      cy.getValueDate('start_date_from', data.start_date_from);
+      cy.getValueDate('start_date_to', data.start_date_to);
+      cy.textareaValue('description', data.description);
       
       //return response.body.data.findUserExperienceInfo.data
     })

@@ -194,7 +194,7 @@ export class UserExperienceComponent
   }
 
   getTitleByMode() {
-    return this.mode === MODE.EDIT ? '求人要件更新' : '求人要件登録';
+    return this.mode === MODE.EDIT ? 'Edit experience' : 'Add experience';
   }
 
   resetForm() {
