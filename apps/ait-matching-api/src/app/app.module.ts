@@ -1,3 +1,4 @@
+import { UserEducationInfoResolver } from './user/user-education/user-education.resolver';
 import { AitCoreModule, AitAuthModule } from '@ait/core';
 import { HttpModule, Module } from '@nestjs/common';
 import { environment } from '../environments/environment';
@@ -5,6 +6,7 @@ import { UserExperienceInfoResolver } from './user/user-experience/user-experien
 
 const RESOLVERS = [
   UserExperienceInfoResolver,
+  UserEducationInfoResolver,
   {
   provide: 'ENVIRONMENT',
   useValue: environment

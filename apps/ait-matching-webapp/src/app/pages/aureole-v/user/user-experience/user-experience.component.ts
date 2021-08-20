@@ -1,11 +1,4 @@
-import { UserExperienceInfoDto } from './../../../../../../../ait-matching-api/src/app/user/user-experience/user-experience.dto';
-import { title } from 'node:process';
-import {
-  isValue,
-  isObjectFull,
-  isNumber,
-} from './../../../../../../../../libs/shared/src/lib/utils/checks.util';
-import { UserExperienceDto, UserExpInfoErrorsMessage } from './../../interface';
+import { isObjectFull } from './../../../../../../../../libs/shared/src/lib/utils/checks.util';
 import { UserExperienceService } from './../../../../services/user-experience.service';
 import { Component, ElementRef, OnInit } from '@angular/core';
 import {
@@ -20,7 +13,7 @@ import {
   NbLayoutScrollService,
   NbToastrService,
 } from '@nebular/theme';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import {
   AitAppUtils,
   AitAuthService,
@@ -34,15 +27,10 @@ import {
   MODULES,
   PAGES,
 } from '@ait/ui';
-import {
-  NbButtonModule,
-  NbIconModule,
-  NbSpinnerModule,
-  NbTooltipModule,
-} from '@nebular/theme';
 import { Apollo } from 'apollo-angular';
 import { Subscription } from 'rxjs';
-import { isArrayFull, KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
+import { KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
+import { UserExperienceDto } from './interface';
 
 @Component({
   selector: 'ait-user-experience/',
@@ -54,16 +42,12 @@ export class UserExperienceComponent
   implements OnInit {
   // Create form group
   userExperienceInfo: FormGroup;
-  stateForm: any = {} as UserExperienceDto;
   stateUserExpInfo = {} as UserExperienceDto;
   stateUserExpInfoDf = {} as UserExperienceDto;
   userExperienceInfoClone: any;
 
   defaultCompany = {} as KeyValueDto;
-  defaultStartDate: any;
-
-  // Form status change subscribe
-  private userExperienceInfoSubscr: Subscription;
+  defaultValueDate: Date = new Date();
 
   mode = MODE.NEW;
   errorArr: any;
@@ -84,21 +68,6 @@ export class UserExperienceComponent
     start_date_to: false,
     company_working: false,
     start_date_from: false,
-  };
-
-  errors = {
-    title: [],
-    location: [],
-    is_working: [],
-    description: [],
-    start_date_to: [],
-    employee_type: [],
-    company_working: [],
-    start_date_from: [],
-  };
-
-  isOpen = {
-    userExperienceInfo: true,
   };
 
   dateField = ['start_date_from', 'start_date_to'];
@@ -153,7 +122,6 @@ export class UserExperienceComponent
       .then((r) => {
         this.defaultCompany = { _key: r.data[0].code, value: r.data[0].code };
       });
-    this.defaultStartDate = new Date().getTime();
 
     this.userExperienceInfo = this.formBuilder.group({
       title: new FormControl(null, [
@@ -164,9 +132,9 @@ export class UserExperienceComponent
         Validators.required,
       ]),
       location: new FormControl(null, [Validators.required]),
-      employee_type: [null, Validators.required],
+      employee_type: new FormControl(null, [Validators.required]),
       is_working: new FormControl(false),
-      start_date_from: this.defaultStartDate,
+      start_date_from: this.defaultValueDate.getTime(),
       start_date_to: new FormControl(null),
       description: new FormControl(null),
     });
@@ -191,6 +159,25 @@ export class UserExperienceComponent
           }
         });
     }
+    // Run when form value change and only in edit mode
+    this.userExperienceInfo.valueChanges.subscribe((data) => {
+      if (this.userExperienceInfo.pristine) {
+        this.userExperienceInfoClone = AitAppUtils.deepCloneObject(data);
+      } else if (this.mode === MODE.EDIT) {
+        this.checkAllowSave();
+      }
+    });
+  }
+
+  checkAllowSave() {
+    const userInfo = { ...this.userExperienceInfo.value };
+    const userInfoClone = { ...this.userExperienceInfoClone };
+
+    const isChangedUserInfo = AitAppUtils.isObjectEqual(
+      { ...userInfo },
+      { ...userInfoClone }
+    );
+    this.isChanged = !isChangedUserInfo;
   }
 
   getTitleByMode() {
@@ -206,9 +193,11 @@ export class UserExperienceComponent
           this.resetUserInfo[index] = false;
         }, 100);
       }
-      this.userExperienceInfo.controls['start_date_from'].setValue({
-        ...this.defaultStartDate,
-      });
+      this.userExperienceInfo.reset();
+      this.userExperienceInfo.controls['start_date_from'].setValue(
+        this.defaultValueDate.getTime()
+      );
+
       this.userExperienceInfo.controls['company_working'].setValue({
         ...this.defaultCompany,
       });
@@ -235,7 +224,7 @@ export class UserExperienceComponent
         hasBackdrop: true,
         autoFocus: false,
         context: {
-          title: this.translateService.translate('I0004'),
+          title: this.getMsg('I0004'),
         },
       })
       .onClose.subscribe(async (event) => {
@@ -243,7 +232,6 @@ export class UserExperienceComponent
           const _key = [{ _key: this.user_key }];
           if (this.user_key) {
             await this.userExpService.remove(_key).then((res) => {
-              console.log(res);
               if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
                 this.showToastr('', this.getMsg('I0003'));
                 this.navigation.back();
@@ -292,7 +280,14 @@ export class UserExperienceComponent
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
-            this.prepareForm();
+            this.userExperienceInfo.reset();
+            this.userExperienceInfo.controls['start_date_from'].setValue(
+              this.defaultValueDate.getTime()
+            );
+            this.userExperienceInfo.controls['company_working'].setValue({
+              ...this.defaultCompany,
+            });
+            this.userExperienceInfo.controls['is_working'].setValue(false);
           } else {
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
@@ -320,7 +315,7 @@ export class UserExperienceComponent
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
-            this.router.navigate([`/recommenced-user`]);
+            history.back();
           } else {
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
@@ -335,22 +330,11 @@ export class UserExperienceComponent
     this.userExperienceInfo.controls['is_working'].setValue(checked);
   }
 
-  toggleContent(group: string, status: boolean) {
-    this.isOpen[group] = status;
-  }
-
   takeMasterValue(value: any, target: string): void {
-    if (target === 'title' && isObjectFull(value)) {
-      this.userExperienceInfo.controls['title'].setValue(value?.value[0]);
-    } else if (target === 'company_working' && isObjectFull(value)) {
-      this.userExperienceInfo.controls['company_working'].setValue(
-        value?.value[0]
-      );
-    } else if (target === 'location' && isObjectFull(value)) {
-      this.userExperienceInfo.controls['location'].setValue(value?.value[0]);
-    } else if (target === 'employee_type' && isObjectFull(value)) {
-      this.userExperienceInfo.controls['employee_type'].setValue(
-        value?.value[0]
+    if (isObjectFull(value)) {
+      this.userExperienceInfo.controls[target].markAsDirty();
+      this.userExperienceInfo.controls[target].setValue(
+         value?.value[0]
       );
     } else {
       this.userExperienceInfo.controls[target].setValue(null);
@@ -375,25 +359,22 @@ export class UserExperienceComponent
     }
   }
 
-  getFieldName = (name: string) => this.translatePipe.translate(name || '');
-
   checkDatePicker() {
     const res = [];
     const msg = this.translateService.getMsg('E0004');
     const dateFrom = this.userExperienceInfo.controls['start_date_from'].value;
     const dateTo = this.userExperienceInfo.controls['start_date_to'].value;
     const isWorking = this.userExperienceInfo.controls['is_working'].value;
-    const nowDate = new Date().getTime();
     if (dateFrom > dateTo && !isWorking) {
       const transferMsg = (msg || '')
-        .replace('{0}', this.getFieldName(' start_date_from '))
-        .replace('{1}', this.getFieldName(' start_date_to '));
+        .replace('{0}', ' start_date_from ')
+        .replace('{1}', ' start_date_to ');
       res.push(transferMsg);
       this.isDateCompare = true;
-    } else if (dateFrom > nowDate && isWorking) {
+    } else if (dateFrom > this.defaultValueDate && isWorking) {
       const transferMsg = (msg || '')
-        .replace('{0}', this.getFieldName(' start_date_from '))
-        .replace('{1}', this.getFieldName(' now_date '));
+        .replace('{0}', ' start_date_from ')
+        .replace('{1}', ' now_date ');
       res.push(transferMsg);
       this.isDateCompare = true;
     } else {
@@ -403,10 +384,20 @@ export class UserExperienceComponent
   }
 
   back() {
-    this.navigation.back();
-  }
-
-  ngOnDestroy() {
-    this.userExperienceInfoSubscr.unsubscribe;
+    this.dialogService
+      .open(AitConfirmDialogComponent, {
+        closeOnBackdropClick: true,
+        hasBackdrop: true,
+        autoFocus: false,
+        context: {
+          title: this.getMsg('I0006'),
+        },
+      })
+      .onClose.subscribe(async (event) => {
+        if (event) {
+          //this.navigation.back();
+          history.back();
+        }
+      });
   }
 }

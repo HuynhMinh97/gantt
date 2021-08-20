@@ -3,21 +3,21 @@ import { Field, Float, ObjectType } from '@nestjs/graphql';
 import { KeyValueEntity } from '@ait/core';
 
 @ObjectType()
-export class UserExperienceInfoEntity extends BaseEntity {
+export class UserEducationInfoEntity extends BaseEntity {
     @Field(() => KeyValueEntity, { nullable: true })
-    title?: KeyValueEntity;
+    school?: KeyValueEntity;
 
-    @Field(() => KeyValueEntity, { nullable: true })
-    company_working?: KeyValueEntity;
+    @Field(() => String, { nullable: true })
+    degree?: string;
 
-    @Field(() => KeyValueEntity, { nullable: true })
-    location?: KeyValueEntity;
+    @Field(() => String, { nullable: true })
+    field_of_study?: string;
 
-    @Field(() => Boolean, { nullable: true })
-    is_working?: boolean;
+    @Field(() => String, { nullable: true })
+    grade?: string;
 
-    @Field(() => KeyValueEntity, { nullable: true })
-    employee_type?: KeyValueEntity;
+    @Field(() => [String], { nullable: true })
+    file?: string[];
 
     @Field(() => Float, { nullable: true })
     start_date_from?: number;

@@ -1,0 +1,251 @@
+.user__education__wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    position: relative;
+    background: #f9f9f9;
+    flex-direction: column;
+    align-items: center;
+    padding: 100px;
+    padding-top: 50px;
+    .content__card {
+      width: 65%;
+    }
+    .row__date {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      .item__row__date {
+        width: 400px;
+        display: flex;
+        align-items: flex-end;
+      }
+    }
+    .number__group {
+      width: 400px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .radio__input {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 400px;
+    }
+    .input__group__inline {
+      // margin-top: 16px;
+      width: 400px;
+      &.date {
+        width: auto;
+        // flex: 1;
+      }
+      .info {
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+      }
+      /* margin-right:100px; */
+      .inpput {
+        color: #8f9bb3;
+        font-size: 15px;
+        width: 100%;
+      }
+      .label {
+        margin: 0;
+        font-weight: bold;
+        font-size: 12px;
+        text-transform: uppercase;
+  
+        /* Text Color / Hint */
+  
+        color: #8f9bb3;
+        margin-bottom: 0px;
+      }
+    }
+  }
+  div.content {
+    justify-content: center !important;
+  }
+  @media only screen and (max-width: 992px) {
+    .user__education__wrapper {
+      padding-left: 10px;
+      padding-right: 10px;
+      .content__card {
+        width: 100%;
+      }
+      .number__group {
+        width: 90%;
+      }
+      .radio__input {
+        width: 90%;
+      }
+      .input__group__inline {
+        width: auto;
+        width: 90%;
+        input {
+          width: 100%;
+        }
+      }
+    }
+  }
+  
+  @media only screen and (max-width: 1466px) {
+    .user__education__wrapper {
+      padding-left: 10px;
+      padding-right: 10px;
+      .content__card {
+        width: 70%;
+      }
+      .number__group {
+        width: 90%;
+      }
+      .radio__input {
+        width: 90%;
+      }
+      .input__group__inline {
+        width: auto;
+        width: 90%;
+        input {
+          width: 100%;
+        }
+      }
+    }
+  }
+  
+  .action-row {
+    .block {
+      justify-content: center;
+      align-items: center;
+      display: flex;
+    }
+    margin-top: 50px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    button {
+      width: 180px;
+    }
+    ait-button + ait-button {
+      padding-left: 20px;
+    }
+  }
+  
+  .input_area {
+    width: 400px;
+    margin-bottom: 14px;
+    margin-top: 14px;
+  }
+  
+  .input_inline {
+    width: 100%;
+    margin-bottom: 14px;
+    margin-top: 4px;
+  }
+  
+  .width_400 {
+    width: 400px;
+  }
+  
+  nb-radio-group {
+    display: flex;
+    margin-bottom: 5px;
+  }
+  
+  :host ::ng-deep .gray-text {
+    .text {
+      color: #8f9bb3 !important;
+    }
+  }
+  
+  :host ::ng-deep .start_date_to {
+    input {
+      height: 40px;
+    }
+  }
+  
+  .nb-radio + .nb-radio {
+    margin-right: 20px;
+  }
+  
+  .check-form {
+    display: flex;
+    label {
+      border: 2px solid white;
+      border-radius: 2px;
+    }
+    .pcontent {
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 24px;
+      color: #8f9bb3;
+      margin-left: 6px;
+      margin-bottom: 0;
+    }
+  }
+  
+  ::ng-deep.nb-theme-default
+    nb-radio.status-basic
+    .native-input:enabled:checked
+    ~ .inner-circle,
+  ::ng-deep.nb-theme-default nb-radio.status-basic .native-input:active,
+  ::ng-deep.nb-theme-default nb-radio.status-basic .native-input:focus {
+    background-color: nb-theme(color-basic-100) !important;
+  }
+  
+  ::ng-deep.nb-theme-default
+    nb-radio.status-basic
+    label:hover
+    .native-input:checked:enabled
+    ~ .inner-circle {
+    background-color: nb-theme(color-basic-100) !important;
+  }
+  
+  ::ng-deep.nb-theme-default
+    nb-radio.status-basic
+    .native-input:enabled:checked
+    + .outer-circle {
+    background-color: none !important;
+    border-color: nb-theme(color-basic-100) !important;
+  }
+  
+  ::ng-deep.nb-theme-default
+    nb-radio.status-basic
+    .native-input:hover
+    + .outer-circle {
+    border-color: nb-theme(color-basic-100) !important;
+  }
+  
+  ::ng-deep.nb-theme-default nb-radio.status-basic .text {
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0em;
+    color: #8f9bb3;
+  }
+  
+  ::ng-deep .ait-label span {
+    color: #8f9bb3 !important;
+  }
+  
+  .start-date {
+    display: flex;
+    align-items: flex-end;
+    width: 400px;
+  
+    span {
+      color: #8f9bb3;
+      margin: 12px;
+      font-weight: 600;
+    }
+  }
+  label.file-max {
+    margin-top: 5px;
+    margin-bottom: 0;
+    color: #8F9BB3;
+    font-size: 12px;
+  }

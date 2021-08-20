@@ -1,4 +1,3 @@
-import { isObjectFull } from '@ait/shared';
 import { AitBaseService } from '@ait/ui';
 import { Injectable } from '@angular/core';
 

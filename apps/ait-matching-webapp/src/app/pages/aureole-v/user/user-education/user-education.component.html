@@ -1,10 +1,9 @@
-<div class="user__experience__wrapper">
+<div class="user__education__wrapper">
   <ait-text-gradient
     [content]="getTitleByMode()"
-    id="form_edit_user_experience"
+    id="form_edit_user_education"
   ></ait-text-gradient>
   <ait-space></ait-space>
-
   <ait-card-content
     style="justify-content: center"
     class="content__card"
@@ -14,109 +13,88 @@
     <div style="margin-top: 14px">
       <div class="input_area">
         <ait-autocomplete-master-data
-          [id]="'title'"
-          [label]="'TITLE'"
+          [id]="'school'"
+          [label]="'SCHOOL'"
           [required]="true"
-          [isSubmit]="isSubmit"
-          [placeholder]="'Developer'"
-          [collection]="'m_title'"
+          [placeholder]="'BACK KHOA HCM Technology University'"
+          [collection]="'m_school'"
           [disableOutputDefault]="true"
-          [isReset]="resetUserInfo.title"
-          (watchValue)="takeMasterValue($event, 'title')"
-          [defaultValue]="[userExperienceInfo.controls['title'].value]"
+          [isReset]="resetUserInfo.school"
+          (watchValue)="takeMasterValue($event, 'school')"
+          [defaultValue]="[userEducationInfo.controls['school'].value]"
+          [isSubmit]="isSubmit"
         ></ait-autocomplete-master-data>
       </div>
       <div class="input_area">
-        <ait-autocomplete-master-data
-          [required]="true"
-          [label]="'COMPANY'"
-          [isSubmit]="isSubmit"
-          [id]="'company_working'"
-          [collection]="'sys_company'"
-          [placeholder]="'Aureole IT'"
-          [disableOutputDefault]="false"
-          [isReset]="resetUserInfo.company_working"
-          [disableOutputDefault]="true"
-          (watchValue)="takeMasterValue($event, 'company_working')"
-          [defaultValue]="[
-            userExperienceInfo.controls['company_working'].value
-          ]"
-        ></ait-autocomplete-master-data>
-      </div>
-      <div class="input_area">
-        <ait-autocomplete-master-data
-          [id]="'location'"
-          [required]="true"
-          [label]="'LOCATION'"
-          [class]="'COUNTRY'"
-          [isSubmit]="isSubmit"
-          [disableOutputDefault]="true"
-          [collection]="'sys_master_data'"
-          [placeholder]="'Ho Chi Minh City'"
-          [isReset]="resetUserInfo.location"
-          (watchValue)="takeMasterValue($event, 'location')"
-          [defaultValue]="[userExperienceInfo.controls['location'].value]"
-        ></ait-autocomplete-master-data>
-      </div>
-
-      <div class="input_area">
-        <ait-autocomplete-master-data
-          [required]="true"
-          [class]="'EMP_TYPE'"
-          [isSubmit]="isSubmit"
-          [id]="'employee_type'"
-          [placeholder]="'Select'"
-          [label]="'EMPLOYMENT TYPE'"
-          [disableOutputDefault]="true"
-          [collection]="'sys_master_data'"
-          [isReset]="resetUserInfo.employee_type"
-          (watchValue)="takeMasterValue($event, 'employee_type')"
-          [defaultValue]="[userExperienceInfo.controls['employee_type'].value]"
+        <ait-input-text
+          [length]="400"
+          [id]="'degree'"
+          [label]="'DEGREE'"
+          [placeholder]="'Ex: Engineer`s'"
+          [isReset]="resetUserInfo.degree"
+          (watchValue)="takeInputValue($event, 'degree')"
+          [defaultValue]="userEducationInfo.controls['degree'].value"
         >
-        </ait-autocomplete-master-data>
+        </ait-input-text>
       </div>
 
       <div class="input_area">
-        <nb-checkbox
-          class="gray-text"
-          [checked]="userExperienceInfo.controls['is_working']?.value"
-          [id]="'is_working'"
-          (checkedChange)="toggleCheckBox($event)"
-          >I am currently working in this role
-        </nb-checkbox>
+        <ait-input-text
+          [length]="400"
+          [id]="'field_of_study'"
+          [label]="'FIELD OF STUDY'"
+          [placeholder]="'Ex: Computer'"
+          [isReset]="resetUserInfo.field_of_study"
+          (watchValue)="takeInputValue($event, 'field_of_study')"
+          [defaultValue]="userEducationInfo.controls['field_of_study'].value"
+        >
+        </ait-input-text>
+      </div>
+
+      <div class="input_area">
+        <ait-input-text
+          [length]="400"
+          [id]="'grade'"
+          [label]="'GRADE'"
+          [placeholder]="'Good'"
+          [isReset]="resetUserInfo.grade"
+          (watchValue)="takeInputValue($event, 'grade')"
+          [defaultValue]="userEducationInfo.controls['grade'].value"
+        >
+        </ait-input-text>
       </div>
 
       <div class="start-date">
         <ait-datepicker
           [label]="'START DATE'"
-          [placeholder]="'yyyy/MM/dd'"
+          [placeholder]="'yyyy/MM'"
+          [format]="'yyyy/MM'"
           [id]="'start_date_from'"
           [style]="{ width: '180px' }"
           [isReset]="resetUserInfo.start_date_from"
-          [dateInput]="userExperienceInfo.controls['start_date_from'].value"
+          [dateInput]="userEducationInfo.controls['start_date_from'].value"
+          [dateInput]="userEducationInfo.controls['start_date_from'].value"
           (watchValue)="
             takeDatePickerValue(
               $event?.value,
-              'userExperienceInfo',
+              'userEducationInfo',
               'start_date_from'
             )
           "
         ></ait-datepicker>
         <span>〜</span>
         <ait-datepicker
-          [placeholder]="'yyyy/MM/dd'"
+          [placeholder]="'yyyy/MM'"
+          [format]="'yyyy/MM'"
           [id]="'start_date_to'"
           [style]="{ width: '180px' }"
           [isReset]="resetUserInfo.start_date_to"
-          [disable]="userExperienceInfo.controls['is_working'].value"
-          [ngClass]="{
-            start_date_to: userExperienceInfo.controls['is_working'].value
-          }"
-          [dateInput]="userExperienceInfo.controls['start_date_to'].value"
+          [dateInput]="userEducationInfo.controls['start_date_to'].value"
+          [dateInput]="userEducationInfo.controls['start_date_to'].value"
           (watchValue)="
             takeDatePickerValue(
               $event?.value,
-              'userExperienceInfo',
+              'userEducationInfo',
               'start_date_to'
             )
           "
@@ -133,13 +111,35 @@
           [length]="4000"
           [rows]="4"
           [label]="'DESCRIPTION'"
-          [isReset]="resetUserInfo.description"
           [placeholder]="'Place your text'"
           [width]="'400px'"
+          [isReset]="resetUserInfo.description"
           (watchValue)="takeInputValue($event, 'description')"
-          [defaultValue]="userExperienceInfo.controls['description'].value"
+          [defaultValue]="userEducationInfo.controls['description'].value"
         >
         </ait-input-text>
+
+        <div class="input_area">
+          <ait-label [label]="'FILEs'"></ait-label>
+          <label class="file-max"
+            ><nb-icon icon="attach-outline"></nb-icon>Upload max 5 files and
+            10MB/file</label
+          >
+          <ait-input-file
+            [id]="'file'"
+            [maxSize]="10000"
+            [maxFiles]="5"
+            [hasStatus]="false"
+            [placeholder]="'Select file'"
+            [isReset]="isResetFile"
+            [isClear]="isClear"
+            [fileKeys]="userEducationInfo.controls['file'].value"
+            (watchValue)="
+              takeFiles($event.value, 'userEducationInfo', 'file')
+            "
+            [isSubmit]="isSubmit"
+          ></ait-input-file>
+        </div>
       </div>
     </div>
   </ait-card-content>
@@ -160,10 +160,10 @@
           [id]="'delete'"
           [width]="'200px'"
           [title]="'DELETE'"
+          (click)="onDelete()"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
           "
-          (click)="onDelete()"
         >
         </ait-button>
 
@@ -171,10 +171,10 @@
           [id]="'reset'"
           [width]="'200px'"
           [title]="'RESET'"
+          (click)="resetForm()"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
           "
-          (click)="resetForm()"
         >
         </ait-button>
 
@@ -189,8 +189,8 @@
         ></ait-button>
 
         <ait-button
-          *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
           [id]="'saveAndClose'"
+          *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
           [width]="'200px'"
           [title]="'SAVE & CLOSE'"
           (click)="saveAndClose()"

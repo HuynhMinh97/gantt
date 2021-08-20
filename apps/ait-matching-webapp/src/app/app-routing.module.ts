@@ -1,3 +1,4 @@
+import { UserEducationComponent } from './pages/aureole-v/user/user-education/user-education.component';
 import { UserExperienceComponent } from './pages/aureole-v/user/user-experience/user-experience.component';
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
@@ -22,6 +23,16 @@ export const routes: Routes = [
     path: 'user-experience/:id',
     canActivate: [AitAuthGuardService],
     component : UserExperienceComponent
+  },
+  {
+    path: 'user-education',
+    canActivate: [AitAuthGuardService],
+    component : UserEducationComponent
+  },
+  {
+    path: 'user-education/:id',
+    canActivate: [AitAuthGuardService],
+    component : UserEducationComponent
   },
   {
     path: 'user/:id',
