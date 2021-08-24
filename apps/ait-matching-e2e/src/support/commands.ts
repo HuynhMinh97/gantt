@@ -290,6 +290,7 @@ Cypress.Commands.add('getCountFile', (id, value) => {
       failOnStatusCode: false
     }).then(response => {
       const data = response.body.data.findBinaryData.data;
+      console.log(data)
       return cy.get('#' + id + '_input_file').should('have.text', 'ファイル数： ' + data.length)
     })
   } else {

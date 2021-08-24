@@ -5,14 +5,14 @@ describe('Test Cypress', () => {
     cy.visit(Cypress.env('host') + Cypress.env('user_experience'));
 
     cy.url().should('eq', Cypress.env('host') + Cypress.env('user_experience'));
-    checkTitleAndPlaceholder();
-    // checkValidate();
-    // checkValidOfDate();
-    //insertData();
+    checkTitleAndPlaceholderUserExp();
+    // checkValidateUserExp();
+    // checkValidOfDateUserExp();
+    //insertDataUserExp();
   });
 });
 
-function checkTitleAndPlaceholder() {
+function checkTitleAndPlaceholderUserExp() {
   // Check title and placeholder
 
   cy.label('title', ' TITLE*');
@@ -46,7 +46,7 @@ function checkTitleAndPlaceholder() {
   cy.styleButton('saveAndClose', ' SAVE & CLOSE ');
 }
 
-function checkAllButton(){
+function checkAllButtonUserExp(){
   cy.get('cancel_text_button').should('exist');
   cy.get('delete_text_button').should('exist');
   cy.get('reset_text_button').should('exist');
@@ -54,7 +54,7 @@ function checkAllButton(){
   cy.get('saveAndClose_text_button').should('exist');
 }
 
-function checkValidate() {
+function checkValidateUserExp() {
   // Check validate when click save
   cy.clickButton('saveAndContinue');
 
@@ -80,7 +80,7 @@ function checkValidate() {
   ]);
 }
 
-function checkValidOfDate() {
+function checkValidOfDateUserExp() {
   // default (case: wrong)
   cy.clickButton('saveAndClose');
   cy.errorMessage(
@@ -114,7 +114,7 @@ function checkValidOfDate() {
   // cy.clickButton('reset');
 }
 
-function insertData() {
+function insertDataUserExp() {
   // Check save
   cy.chooseMasterData('title', 'Senior System Designer');
   cy.chooseMasterData('location', 'Hue');

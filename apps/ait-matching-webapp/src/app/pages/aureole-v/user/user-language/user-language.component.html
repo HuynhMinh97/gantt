@@ -1,0 +1,103 @@
+<div class="user__language__wrapper" id="user_language">
+  <ait-text-gradient
+    [content]="getTitleByMode()"
+    id="form_edit_user_language"
+  ></ait-text-gradient>
+  <ait-space></ait-space>
+  <ait-card-content
+    style="justify-content: center"
+    class="content__card"
+    [label]="'基本情報'"
+    [padding]="'14px 90px 0 10px'"
+  >
+    <div style="margin-top: 14px">
+      <div class="input_area">
+        <ait-autocomplete-master-data
+          [id]="'Language'"
+          [label]="'LANGUAGE'"
+          [required]="true"
+          [placeholder]="'Please select language'"
+          [collection]="'sys_master_data'"
+          [class]="'LANGUAGE'"
+          [disableOutputDefault]="true"
+          [isSubmit]="isSubmit"
+        ></ait-autocomplete-master-data>
+      </div>
+
+      <div class="input_area">
+        <ait-autocomplete-master-data
+          [id]="'Proficiency'"
+          [label]="'PROFICIENCY'"
+          [placeholder]="'Please select proficiency'"
+          [collection]="'sys_master_data'"
+          [class]="'LANGUAGE_PROFICIENCY'"
+          [disableOutputDefault]="true"
+        ></ait-autocomplete-master-data>
+      </div>
+    </div>
+  </ait-card-content>
+  <div class="sticky">
+    <div class="action-row">
+      <div class="block">
+        <ait-button
+          [id]="'cancel'"
+          [title]="'CANCEL'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+        ></ait-button>
+
+        <ait-button
+          *ngIf="mode === 'EDIT'"
+          [id]="'delete'"
+          [width]="'200px'"
+          [title]="'DELETE'"
+          (click)="onDelete()"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+        >
+        </ait-button>
+
+        <ait-button
+          [id]="'reset'"
+          [width]="'200px'"
+          [title]="'RESET'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+        >
+        </ait-button>
+
+        <ait-button
+          *ngIf="mode === 'NEW'"
+          [id]="'saveAndContinue'"
+          [title]="'SAVE & CONTINUE'"
+          (click)="saveAndContinue()"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+        ></ait-button>
+
+        <ait-button
+          [id]="'saveAndClose'"
+          *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
+          [width]="'200px'"
+          [title]="'SAVE & CLOSE'"
+          (click)="saveAndClose()"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+        >
+        </ait-button>
+        <ait-button
+          *ngIf="!isChanged && mode === 'EDIT'"
+          [id]="'saveAndClose'"
+          [width]="'200px'"
+          [title]="'SAVE & CLOSE'"
+          [style]="'disabled'"
+        ></ait-button>
+      </div>
+    </div>
+  </div>
+</div>

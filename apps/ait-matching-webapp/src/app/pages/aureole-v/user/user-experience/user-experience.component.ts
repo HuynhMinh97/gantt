@@ -28,7 +28,6 @@ import {
   PAGES,
 } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
-import { Subscription } from 'rxjs';
 import { KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
 import { UserExperienceDto } from './interface';
 
@@ -399,5 +398,9 @@ export class UserExperienceComponent
           history.back();
         }
       });
+  }
+
+  ngOnDestroy(){
+    
   }
 }

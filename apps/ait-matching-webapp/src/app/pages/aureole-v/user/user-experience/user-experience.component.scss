@@ -243,3 +243,8 @@ nb-radio-group {
     font-weight: 600;
   }
 }
+::ng-deep #user_experience input,
+::ng-deep #user_experience textarea{
+  font-size: 12px !important;
+}
+

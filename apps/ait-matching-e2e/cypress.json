@@ -15,6 +15,7 @@
         "host": "http://localhost:4200/",
         "sign_in": "#/sign-in",
         "user_experience": "#/user-experience",
+        "user_education": "#/user-education",
         "api_url": "api/v1",
         "company": "a8cd83a1-5a4d-4500-8751-a790d649c398",
         "lang": "ja_JP",

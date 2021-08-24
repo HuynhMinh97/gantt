@@ -31,8 +31,7 @@ import {
   PAGES,
 } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
-import { Subscription } from 'rxjs';
-import { KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
+import { KEYS, RESULT_STATUS } from '@ait/shared';
 import { UserEducationDto } from './interface';
 
 @Component({
@@ -267,12 +266,14 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
 
   resetForm() {
     this.errorArr = [];
+    this.isResetFile = true;
+    setTimeout(() => {
+      this.isResetFile = false;      
+    }, 100);
     if (this.mode === MODE.NEW) {
       for (const index in this.resetUserInfo) {
         this.resetUserInfo[index] = true;
-        this.isResetFile = true;
         setTimeout(() => {
-          this.isResetFile = false;
           this.resetUserInfo[index] = false;
         }, 100);
       }
@@ -375,5 +376,9 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
       this.userEducationInfo.markAsDirty();
       this[group].controls[form].setValue(null);
     }
+  }
+
+  ngOnDestroy(){
+    
   }
 }

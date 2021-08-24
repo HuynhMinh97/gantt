@@ -1,4 +1,4 @@
-<div class="user__education__wrapper">
+<div class="user__education__wrapper" id="user_education">
   <ait-text-gradient
     [content]="getTitleByMode()"
     id="form_edit_user_education"
@@ -120,14 +120,14 @@
         </ait-input-text>
 
         <div class="input_area">
-          <ait-label [label]="'FILEs'"></ait-label>
+          <ait-label [label]="'FILES'"></ait-label>
           <label class="file-max"
             ><nb-icon icon="attach-outline"></nb-icon>Upload max 5 files and
             10MB/file</label
           >
           <ait-input-file
             [id]="'file'"
-            [maxSize]="10000"
+            [maxSize]="1000000"
             [maxFiles]="5"
             [hasStatus]="false"
             [placeholder]="'Select file'"

@@ -24,6 +24,7 @@ import { RecommencedUserService } from './services/recommenced-user.service';
 import { UserExperienceComponent } from './pages/aureole-v/user/user-experience/user-experience.component';
 import { AddComponent } from './user/add/add.component';
 import { UserEducationComponent } from './pages/aureole-v/user/user-education/user-education.component';
+import { UserLanguageComponent } from './pages/aureole-v/user/user-language/user-language.component';
 
 
 const AIT_UI_MODULES = [
@@ -55,12 +56,13 @@ const AUREOLE_V_COMPONENTS = [
 const PAGES = [
   RecommencedComponent,
   UserExperienceComponent,
-  UserEducationComponent
+  UserEducationComponent,
+  UserLanguageComponent
 ]
 
 
 @NgModule({
-  declarations: [AppComponent, ...AUREOLE_V_COMPONENTS, ...PAGES, AddComponent],
+  declarations: [AppComponent, ...AUREOLE_V_COMPONENTS, ...PAGES, AddComponent, UserLanguageComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
