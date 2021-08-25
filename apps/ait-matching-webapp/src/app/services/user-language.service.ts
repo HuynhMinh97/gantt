@@ -6,44 +6,36 @@ export class UserLanguageService extends AitBaseService {
   collection = 'user_language';
   returnFields = {
     _key: true,
-    school: {
+    language: {
       _key: true,
       value: true,
     },
-    degree: true,
-    field_of_study: true,
-    grade: true,
-    file: true,
-    start_date_from: true,
-    start_date_to: true,
-    description: true,
+    proficiency: {
+      _key: true,
+      value: true,
+    },
   };
 
-  async findUserlanguageByKey(_key?: string) {
+  async findUserLanguageByKey(_key?: string) {
     const condition: any = {
       _key: _key,
     };
 
-    const keyMasterArray = [
-      {
-        att: 'school',
-        col: 'm_school',
-      }
-    ];
+    const specialFields = ['language', 'proficiency']
 
-    keyMasterArray.forEach((item) => {
-      condition[item.att] = {
-        attribute: item.att,
-        ref_collection: item.col,
-        ref_attribute: 'code',
-      };
-    });
+    specialFields.forEach(item => {
+      condition[item] = {
+        attribute: item,
+        ref_collection: 'sys_master_data',
+        ref_attribute: 'code'
+      }
+    })
 
     const returnFields = this.returnFields;
     const request = {};
     request['collection'] = this.collection;
     request['condition'] = condition;
-    return await this.query('findUserlanguageInfo', request, returnFields);
+    return await this.query('findUserLanguageInfo', request, returnFields);
   }
 
   async findKeyCompany(_key?: string) {
@@ -60,7 +52,7 @@ export class UserLanguageService extends AitBaseService {
   async save(data: any[]) {
     const returnField = { _key: true };
     return await this.mutation(
-      'saveUserlanguageInfo',
+      'saveUserLanguageInfo',
       this.collection,
       data,
       returnField
@@ -70,7 +62,7 @@ export class UserLanguageService extends AitBaseService {
   async remove(data: any[]) {
     const returnFields = { _key: true };
     return await this.mutation(
-      'removeUserlanguageInfo',
+      'removeUserLanguageInfo',
       this.collection,
       data,
       returnFields

@@ -57,6 +57,22 @@ export class UserEducationService extends AitBaseService {
     return await this.query('findSystem', request, returnFields);
   }
 
+  async findFiles(_key?: string) {
+    const returnField = { _key: true };
+    const condition = {
+      _key: _key,
+      del_flag: false
+    };
+    const request = {};
+    request['collection'] = 'sys_binary_data';
+    request['condition'] = condition;
+    return await this.query(
+      'findSystem',
+      request,
+      returnField
+    );
+  }
+
   async save(data: any[]) {
     const returnField = { _key: true };
     return await this.mutation(

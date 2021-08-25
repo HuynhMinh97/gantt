@@ -13,25 +13,31 @@
     <div style="margin-top: 14px">
       <div class="input_area">
         <ait-autocomplete-master-data
-          [id]="'Language'"
+          [id]="'language'"
           [label]="'LANGUAGE'"
           [required]="true"
           [placeholder]="'Please select language'"
           [collection]="'sys_master_data'"
           [class]="'LANGUAGE'"
           [disableOutputDefault]="true"
+          [isReset]="resetUserLangInfo.language"
+          (watchValue)="takeMasterValue($event, 'language')"
+          [defaultValue]="[userLanguageInfo.controls['language'].value]"
           [isSubmit]="isSubmit"
         ></ait-autocomplete-master-data>
       </div>
 
       <div class="input_area">
         <ait-autocomplete-master-data
-          [id]="'Proficiency'"
+          [id]="'proficiency'"
           [label]="'PROFICIENCY'"
           [placeholder]="'Please select proficiency'"
           [collection]="'sys_master_data'"
           [class]="'LANGUAGE_PROFICIENCY'"
           [disableOutputDefault]="true"
+          [isReset]="resetUserLangInfo.proficiency"
+          (watchValue)="takeMasterValue($event, 'proficiency')"
+          [defaultValue]="[userLanguageInfo.controls['proficiency'].value]"
         ></ait-autocomplete-master-data>
       </div>
     </div>
@@ -42,6 +48,7 @@
         <ait-button
           [id]="'cancel'"
           [title]="'CANCEL'"
+          (click)="back()"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
           "
@@ -63,6 +70,7 @@
           [id]="'reset'"
           [width]="'200px'"
           [title]="'RESET'"
+          (click)="resetForm()"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
           "

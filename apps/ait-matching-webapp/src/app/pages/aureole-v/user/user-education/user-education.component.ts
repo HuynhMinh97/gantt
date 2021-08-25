@@ -33,6 +33,7 @@ import {
 import { Apollo } from 'apollo-angular';
 import { KEYS, RESULT_STATUS } from '@ait/shared';
 import { UserEducationDto } from './interface';
+import { forEach, values } from 'lodash';
 
 @Component({
   selector: 'ait-user-education',
@@ -53,9 +54,6 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
   isChanged = false;
   isResetFile = false;
   isDateCompare = false;
-  isInValidTitle = false;
-  isInValidCompany = false;
-  isInValidLocation = false;
 
   resetUserInfo = {
     file: false,
@@ -100,8 +98,8 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     );
 
     this.setModulePage({
-      module: MODULES.JOB,
-      page: PAGES.JOB_EDIT,
+      module: 'user',
+      page: 'user_education',
     });
 
     this.userEducationInfo = this.formBuilder.group({
@@ -120,19 +118,34 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     if (this.user_key) {
       this.mode = MODE.EDIT;
     }
+
+    console.log(this.userEducationInfo.value.start_date_from);
   }
 
   async ngOnInit(): Promise<void> {
     if (this.user_key) {
       await this.userEduService
         .findUserEducationByKey(this.user_key)
-        .then((r) => {
+        .then(async (r) => {
           if (r.status === RESULT_STATUS.OK) {
             let isUserExist = false;
+            let files = [];
             if (r.data.length > 0) {
               const data = r.data[0];
+              console.log(data.file);
+              
               this.userEducationInfo.patchValue({ ...data });
-              this.userEducationInfo.controls['file'].setValue([...data.file]);
+              await data.file.forEach(async (e) => {
+                await this.userEduService.findFiles(e).then((x) => {
+                  files.push(x.data[0]._key);
+                });
+                console.log(files);
+                setTimeout(() => {
+                  this.userEducationInfo.controls['file'].setValue([...files]);
+                }, 100);
+              });
+              console.log(this.userEducationInfo.value.file);
+              
               this.userEducationInfoClone = this.userEducationInfo.value;
               isUserExist = true;
             }
@@ -140,11 +153,12 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
           }
         });
     }
-    // Run when form value change and only in edit mode
+
+    // Run when form value change
     this.userEducationInfo.valueChanges.subscribe((data) => {
       if (this.userEducationInfo.pristine) {
         this.userEducationInfoClone = AitAppUtils.deepCloneObject(data);
-      } else if (this.mode === MODE.EDIT) {
+      } else {
         this.checkAllowSave();
       }
     });
@@ -204,6 +218,8 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
         .catch(() => {
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         });
+    } else {
+      this.scrollIntoError();
     }
   }
 
@@ -232,6 +248,25 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
         .catch(() => {
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         });
+    } else {
+      this.scrollIntoError();
+    }
+  }
+
+  scrollIntoError() {
+    for (const key of Object.keys(this.userEducationInfo.controls)) {
+      if (this.userEducationInfo.controls[key].invalid) {
+        const invalidControl = this.element.nativeElement.querySelector(
+          `#${key}_input`
+        );
+        try {
+          invalidControl.scrollIntoView({
+            behavior: 'auto',
+            block: 'center',
+          });
+          break;
+        } catch {}
+      }
     }
   }
 
@@ -268,7 +303,8 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     this.errorArr = [];
     this.isResetFile = true;
     setTimeout(() => {
-      this.isResetFile = false;      
+      this.isResetFile = false;
+      this.isChanged = false;
     }, 100);
     if (this.mode === MODE.NEW) {
       for (const index in this.resetUserInfo) {
@@ -278,9 +314,11 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
         }, 100);
       }
       this.userEducationInfo.reset();
-      this.userEducationInfo.controls['start_date_from'].setValue(
-        this.defaultValueDate.getTime()
-      );
+      setTimeout(() => {
+        this.userEducationInfo.controls['start_date_from'].setValue(
+          this.defaultValueDate.getTime()
+        );
+      }, 100);
     } else {
       for (const index in this.resetUserInfo) {
         if (!this.userEducationInfo.controls[index].value) {
@@ -316,21 +354,26 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
   }
 
   back() {
-    this.dialogService
-      .open(AitConfirmDialogComponent, {
-        closeOnBackdropClick: true,
-        hasBackdrop: true,
-        autoFocus: false,
-        context: {
-          title: this.getMsg('I0006'),
-        },
-      })
-      .onClose.subscribe(async (event) => {
-        if (event) {
-          //this.navigation.back();
-          history.back();
-        }
-      });
+    console.log(this.isChanged);
+
+    if (this.isChanged) {
+      this.dialogService
+        .open(AitConfirmDialogComponent, {
+          closeOnBackdropClick: true,
+          hasBackdrop: true,
+          autoFocus: false,
+          context: {
+            title: this.getMsg('I0006'),
+          },
+        })
+        .onClose.subscribe(async (event) => {
+          if (event) {
+            history.back();
+          }
+        });
+    } else {
+      history.back();
+    }
   }
 
   getTitleByMode() {
@@ -358,7 +401,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
   takeDatePickerValue(value: number, group: string, form: string) {
     if (value) {
       const data = value as number;
-      value = new Date(data).setHours(0, 0, 0, 0);
+      value = new Date(data).getTime();
       this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(value);
     }
@@ -378,7 +421,5 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     }
   }
 
-  ngOnDestroy(){
-    
-  }
+  ngOnDestroy() {}
 }

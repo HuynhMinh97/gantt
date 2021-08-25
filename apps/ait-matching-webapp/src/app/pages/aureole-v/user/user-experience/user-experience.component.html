@@ -17,6 +17,7 @@
           [id]="'title'"
           [label]="'TITLE'"
           [required]="true"
+          [allowNew]="true"
           [isSubmit]="isSubmit"
           [placeholder]="'Developer'"
           [collection]="'m_title'"
@@ -29,14 +30,14 @@
       <div class="input_area">
         <ait-autocomplete-master-data
           [required]="true"
+          [allowNew]="true"
           [label]="'COMPANY'"
           [isSubmit]="isSubmit"
           [id]="'company_working'"
           [collection]="'sys_company'"
           [placeholder]="'Aureole IT'"
-          [disableOutputDefault]="false"
-          [isReset]="resetUserInfo.company_working"
           [disableOutputDefault]="true"
+          [isReset]="resetUserInfo.company_working"
           (watchValue)="takeMasterValue($event, 'company_working')"
           [defaultValue]="[
             userExperienceInfo.controls['company_working'].value

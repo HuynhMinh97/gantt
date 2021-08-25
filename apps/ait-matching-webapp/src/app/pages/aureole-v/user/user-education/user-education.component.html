@@ -16,7 +16,8 @@
           [id]="'school'"
           [label]="'SCHOOL'"
           [required]="true"
-          [placeholder]="'BACK KHOA HCM Technology University'"
+          [allowNew]="true"
+          [placeholder]="'bachkhoahcm'"
           [collection]="'m_school'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.school"
@@ -29,8 +30,8 @@
         <ait-input-text
           [length]="400"
           [id]="'degree'"
-          [label]="'DEGREE'"
-          [placeholder]="'Ex: Engineer`s'"
+          [label]="'degree'"
+          [placeholder]="'engineer'"
           [isReset]="resetUserInfo.degree"
           (watchValue)="takeInputValue($event, 'degree')"
           [defaultValue]="userEducationInfo.controls['degree'].value"
@@ -42,8 +43,8 @@
         <ait-input-text
           [length]="400"
           [id]="'field_of_study'"
-          [label]="'FIELD OF STUDY'"
-          [placeholder]="'Ex: Computer'"
+          [label]="'field_of_study'"
+          [placeholder]="'computer'"
           [isReset]="resetUserInfo.field_of_study"
           (watchValue)="takeInputValue($event, 'field_of_study')"
           [defaultValue]="userEducationInfo.controls['field_of_study'].value"
@@ -55,7 +56,7 @@
         <ait-input-text
           [length]="400"
           [id]="'grade'"
-          [label]="'GRADE'"
+          [label]="'grade'"
           [placeholder]="'Good'"
           [isReset]="resetUserInfo.grade"
           (watchValue)="takeInputValue($event, 'grade')"
@@ -66,7 +67,7 @@
 
       <div class="start-date">
         <ait-datepicker
-          [label]="'START DATE'"
+          [label]="'start_date'"
           [placeholder]="'yyyy/MM'"
           [format]="'yyyy/MM'"
           [id]="'start_date_from'"
@@ -110,8 +111,8 @@
           [id]="'description'"
           [length]="4000"
           [rows]="4"
-          [label]="'DESCRIPTION'"
-          [placeholder]="'Place your text'"
+          [label]="'description'"
+          [placeholder]="'place your text'"
           [width]="'400px'"
           [isReset]="resetUserInfo.description"
           (watchValue)="takeInputValue($event, 'description')"

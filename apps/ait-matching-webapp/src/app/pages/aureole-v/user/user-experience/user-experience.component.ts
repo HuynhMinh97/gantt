@@ -41,8 +41,6 @@ export class UserExperienceComponent
   implements OnInit {
   // Create form group
   userExperienceInfo: FormGroup;
-  stateUserExpInfo = {} as UserExperienceDto;
-  stateUserExpInfoDf = {} as UserExperienceDto;
   userExperienceInfoClone: any;
 
   defaultCompany = {} as KeyValueDto;
@@ -54,9 +52,6 @@ export class UserExperienceComponent
   isSubmit = false;
   isChanged = false;
   isDateCompare = false;
-  isInValidTitle = false;
-  isInValidCompany = false;
-  isInValidLocation = false;
 
   resetUserInfo = {
     title: false,
@@ -101,22 +96,12 @@ export class UserExperienceComponent
     );
 
     this.setModulePage({
-      module: MODULES.JOB,
-      page: PAGES.JOB_EDIT,
+      module: 'user',
+      page: 'user_experience',
     });
-
+    
     //Create form builder group
-    this.prepareForm();
-
-    // get key form parameters
-    this.user_key = this.activeRouter.snapshot.paramMap.get('id');
-    if (this.user_key) {
-      this.mode = MODE.EDIT;
-    }
-  }
-
-  async prepareForm() {
-    await this.userExpService
+    this.userExpService
       .findKeyCompany(this.env.COMMON.COMPANY_DEFAULT)
       .then((r) => {
         this.defaultCompany = { _key: r.data[0].code, value: r.data[0].code };
@@ -137,6 +122,12 @@ export class UserExperienceComponent
       start_date_to: new FormControl(null),
       description: new FormControl(null),
     });
+
+    // get key form parameters
+    this.user_key = this.activeRouter.snapshot.paramMap.get('id');
+    if (this.user_key) {
+      this.mode = MODE.EDIT;
+    }
   }
 
   async ngOnInit(): Promise<void> {
@@ -149,20 +140,19 @@ export class UserExperienceComponent
             if (r.data.length > 0) {
               const data = r.data[0];
               this.userExperienceInfo.patchValue({ ...data });
-
               this.userExperienceInfoClone = this.userExperienceInfo.value;
-
               isUserExist = true;
             }
             !isUserExist && this.router.navigate([`/404`]);
           }
         });
     }
-    // Run when form value change and only in edit mode
+
+    // Run when form value change
     this.userExperienceInfo.valueChanges.subscribe((data) => {
       if (this.userExperienceInfo.pristine) {
         this.userExperienceInfoClone = AitAppUtils.deepCloneObject(data);
-      } else if (this.mode === MODE.EDIT) {
+      } else {
         this.checkAllowSave();
       }
     });
@@ -172,11 +162,10 @@ export class UserExperienceComponent
     const userInfo = { ...this.userExperienceInfo.value };
     const userInfoClone = { ...this.userExperienceInfoClone };
 
-    const isChangedUserInfo = AitAppUtils.isObjectEqual(
+    this.isChanged = AitAppUtils.isObjectEqual(
       { ...userInfo },
       { ...userInfoClone }
     );
-    this.isChanged = !isChangedUserInfo;
   }
 
   getTitleByMode() {
@@ -185,6 +174,7 @@ export class UserExperienceComponent
 
   resetForm() {
     this.errorArr = [];
+    this.isChanged = false;
     if (this.mode === MODE.NEW) {
       for (const index in this.resetUserInfo) {
         this.resetUserInfo[index] = true;
@@ -193,13 +183,14 @@ export class UserExperienceComponent
         }, 100);
       }
       this.userExperienceInfo.reset();
-      this.userExperienceInfo.controls['start_date_from'].setValue(
-        this.defaultValueDate.getTime()
-      );
-
-      this.userExperienceInfo.controls['company_working'].setValue({
-        ...this.defaultCompany,
-      });
+      setTimeout(() => {
+        this.userExperienceInfo.controls['start_date_from'].setValue(
+          this.defaultValueDate.getTime()
+        );
+        this.userExperienceInfo.controls['company_working'].setValue({
+          ...this.defaultCompany,
+        });
+      }, 100);
     } else {
       for (const index in this.resetUserInfo) {
         if (!this.userExperienceInfo.controls[index].value) {
@@ -294,6 +285,8 @@ export class UserExperienceComponent
         .catch(() => {
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         });
+    } else {
+      this.scrollIntoError();
     }
   }
 
@@ -322,6 +315,25 @@ export class UserExperienceComponent
         .catch(() => {
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         });
+    } else {
+      this.scrollIntoError();
+    }
+  }
+
+  scrollIntoError() {
+    for (const key of Object.keys(this.userExperienceInfo.controls)) {
+      if (this.userExperienceInfo.controls[key].invalid) {
+        const invalidControl = this.element.nativeElement.querySelector(
+          `#${key}_input`
+        );
+        try {
+          invalidControl.scrollIntoView({
+            behavior: 'auto',
+            block: 'center',
+          });
+          break;
+        } catch {}
+      }
     }
   }
 
@@ -332,9 +344,7 @@ export class UserExperienceComponent
   takeMasterValue(value: any, target: string): void {
     if (isObjectFull(value)) {
       this.userExperienceInfo.controls[target].markAsDirty();
-      this.userExperienceInfo.controls[target].setValue(
-         value?.value[0]
-      );
+      this.userExperienceInfo.controls[target].setValue(value?.value[0]);
     } else {
       this.userExperienceInfo.controls[target].setValue(null);
     }
@@ -352,7 +362,7 @@ export class UserExperienceComponent
   takeDatePickerValue(value: number, group: string, form: string) {
     if (value) {
       const data = value as number;
-      value = new Date(data).setHours(0, 0, 0, 0);
+      value = new Date(data).getTime();
       this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(value);
     }
@@ -383,24 +393,25 @@ export class UserExperienceComponent
   }
 
   back() {
-    this.dialogService
-      .open(AitConfirmDialogComponent, {
-        closeOnBackdropClick: true,
-        hasBackdrop: true,
-        autoFocus: false,
-        context: {
-          title: this.getMsg('I0006'),
-        },
-      })
-      .onClose.subscribe(async (event) => {
-        if (event) {
-          //this.navigation.back();
-          history.back();
-        }
-      });
+    if (this.isChanged) {
+      this.dialogService
+        .open(AitConfirmDialogComponent, {
+          closeOnBackdropClick: true,
+          hasBackdrop: true,
+          autoFocus: false,
+          context: {
+            title: this.getMsg('I0006'),
+          },
+        })
+        .onClose.subscribe(async (event) => {
+          if (event) {
+            history.back();
+          }
+        });
+    } else {
+      history.back();
+    }
   }
 
-  ngOnDestroy(){
-    
-  }
+  ngOnDestroy() {}
 }
