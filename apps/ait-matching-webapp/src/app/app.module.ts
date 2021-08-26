@@ -25,6 +25,7 @@ import { UserExperienceComponent } from './pages/aureole-v/user/user-experience/
 import { AddComponent } from './user/add/add.component';
 import { UserEducationComponent } from './pages/aureole-v/user/user-education/user-education.component';
 import { UserLanguageComponent } from './pages/aureole-v/user/user-language/user-language.component';
+import { UserOnboardingComponent } from './pages/aureole-v/user/user-onboarding/user-onboarding.component';
 
 
 const AIT_UI_MODULES = [
@@ -62,7 +63,7 @@ const PAGES = [
 
 
 @NgModule({
-  declarations: [AppComponent, ...AUREOLE_V_COMPONENTS, ...PAGES, AddComponent, UserLanguageComponent],
+  declarations: [AppComponent, ...AUREOLE_V_COMPONENTS, ...PAGES, AddComponent, UserOnboardingComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

@@ -5,9 +5,9 @@ describe('Test Cypress', () => {
     cy.visit(Cypress.env('host') + Cypress.env('user_education'));
 
     cy.url().should('eq', Cypress.env('host') + Cypress.env('user_education'));
-    //checkInitUserEducation();
-    //checkValidateUserEducation();
-    //checkValidOfDateUserEducation();
+    checkInitUserEducation();
+    checkValidateUserEducation();
+    checkValidOfDateUserEducation();
     insertDataUserEducation();
   });
 });
@@ -19,7 +19,7 @@ function checkInitUserEducation() {
   cy.input('school', 'BACK KHOA HCM Technology University');
 
   cy.label('degree', ' DEGREE');
-  cy.input('degree', 'Ex: Engineer`s');
+  //cy.input('degree', 'Ex: Engineer`s');
 
   cy.label('field_of_study', ' FIELD OF STUDY');
   cy.input('field_of_study', 'Ex: Computer');
@@ -55,12 +55,12 @@ function checkValidateUserEducation() {
 
   cy.typeText('school', 'a');
   cy.typeText('degree', 'a');
-  cy.errorMessage('school', 'SCHOOL を入力してください。');
+  cy.errorMessage('school', ' SCHOOL を入力してください。');
 
   // Check validate when click save
   cy.clickButton('saveAndContinue');
 
-  cy.errorMessage('school', 'SCHOOL を入力してください。');
+  cy.errorMessage('school', ' SCHOOL を入力してください。');
   cy.errorMessage(
     'start-date',
     ' start_date_to 以下の値で start_date_from を入力してください。'

@@ -5,10 +5,10 @@ describe('Test Cypress', () => {
     cy.visit(Cypress.env('host') + Cypress.env('user_experience'));
 
     cy.url().should('eq', Cypress.env('host') + Cypress.env('user_experience'));
-    checkTitleAndPlaceholderUserExp();
+    // checkTitleAndPlaceholderUserExp();
     // checkValidateUserExp();
     // checkValidOfDateUserExp();
-    //insertDataUserExp();
+    insertDataUserExp();
   });
 });
 
@@ -111,7 +111,7 @@ function checkValidOfDateUserExp() {
   cy.chooseValueDate('start_date_from', '2021', '8', '13');
   cy.chooseValueDate('start_date_to', '2021', '8', '19');
   cy.clickButton('saveAndClose');
-  // cy.clickButton('reset');
+  cy.clickButton('reset');
 }
 
 function insertDataUserExp() {

@@ -8,19 +8,19 @@ export class UserExperienceService extends AitBaseService {
     _key: true,
     title: {
       _key: true,
-      value: true
+      value: true,
     },
     company_working: {
       _key: true,
-      value: true
+      value: true,
     },
     employee_type: {
       _key: true,
-      value: true
+      value: true,
     },
     location: {
       _key: true,
-      value: true
+      value: true,
     },
     is_working: true,
     start_date_from: true,
@@ -30,36 +30,36 @@ export class UserExperienceService extends AitBaseService {
 
   async findUserExperienceByKey(_key?: string) {
     const condition: any = {
-      _key: _key
-    }
-    const specialFields = ['location', 'employee_type']
+      _key: _key,
+    };
+    const specialFields = ['location', 'employee_type'];
 
-    specialFields.forEach(item => {
+    specialFields.forEach((item) => {
       condition[item] = {
         attribute: item,
         ref_collection: 'sys_master_data',
-        ref_attribute: 'code'
-      }
-    })
+        ref_attribute: 'code',
+      };
+    });
 
     const keyMasterArray = [
       {
         att: 'title',
-        col: 'm_title'
+        col: 'm_title',
       },
       {
         att: 'company_working',
-        col: 'sys_company'
-      }
-    ]
+        col: 'sys_company',
+      },
+    ];
 
-    keyMasterArray.forEach(item => {
+    keyMasterArray.forEach((item) => {
       condition[item.att] = {
         attribute: item.att,
         ref_collection: item.col,
-        ref_attribute: 'code'
-      }
-    })
+        ref_attribute: 'code',
+      };
+    });
 
     const returnFields = this.returnFields;
     const request = {};
@@ -68,14 +68,25 @@ export class UserExperienceService extends AitBaseService {
     return await this.query('findUserExperienceInfo', request, returnFields);
   }
 
-  async findKeyCompany(_key?: string){
+  async findKeyCompany(_key?: string) {
     const condition = {
-      company: _key
-    }
-    const returnFields = {code: true};
+      company: _key,
+    };
+    const returnFields = { code: true };
     const request = {};
     request['collection'] = 'sys_company';
-    request['condition'] = condition;    
+    request['condition'] = condition;
+    return await this.query('findSystem', request, returnFields);
+  }
+
+  async findUserProfile(_key?: string) {
+    const condition = {
+      company: _key,
+    };
+    const returnFields = { code: true };
+    const request = {};
+    request['collection'] = 'sys_company';
+    request['condition'] = condition;
     return await this.query('findSystem', request, returnFields);
   }
 
