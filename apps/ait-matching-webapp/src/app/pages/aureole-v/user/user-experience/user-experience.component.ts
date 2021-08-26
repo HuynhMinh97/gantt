@@ -24,15 +24,12 @@ import {
   AitTranslationService,
   AppState,
   MODE,
-  MODULES,
-  PAGES,
 } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
 import { KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
-import { UserExperienceDto } from './interface';
 
 @Component({
-  selector: 'ait-user-experience/',
+  selector: 'ait-user-experience',
   templateUrl: './user-experience.component.html',
   styleUrls: ['./user-experience.component.scss'],
 })
@@ -44,7 +41,7 @@ export class UserExperienceComponent
   userExperienceInfoClone: any;
 
   defaultCompany = {} as KeyValueDto;
-  defaultValueDate: Date = new Date();
+  defaultValueDate = new Date().setHours(0, 0, 0, 0);
 
   mode = MODE.NEW;
   errorArr: any;
@@ -64,18 +61,14 @@ export class UserExperienceComponent
     start_date_from: false,
   };
 
-  dateField = ['start_date_from', 'start_date_to'];
   user_key = '';
 
   constructor(
     private router: Router,
     private element: ElementRef,
-    private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
     private dialogService: NbDialogService,
-    private navigation: AitNavigationService,
-    private translatePipe: AitTranslationService,
     private userExpService: UserExperienceService,
     private translateService: AitTranslationService,
     env: AitEnvironmentService,
@@ -99,12 +92,15 @@ export class UserExperienceComponent
       module: 'user',
       page: 'user_experience',
     });
-    
+
     //Create form builder group
     this.userExpService
       .findKeyCompany(this.env.COMMON.COMPANY_DEFAULT)
       .then((r) => {
         this.defaultCompany = { _key: r.data[0].code, value: r.data[0].code };
+        this.userExperienceInfo.controls['company_working'].setValue({
+          ...this.defaultCompany,
+        });
       });
 
     this.userExperienceInfo = this.formBuilder.group({
@@ -112,13 +108,11 @@ export class UserExperienceComponent
         Validators.required,
         Validators.maxLength(200),
       ]),
-      company_working: new FormControl(this.defaultCompany, [
-        Validators.required,
-      ]),
+      company_working: new FormControl(null, [Validators.required]),
       location: new FormControl(null, [Validators.required]),
       employee_type: new FormControl(null, [Validators.required]),
       is_working: new FormControl(false),
-      start_date_from: this.defaultValueDate.getTime(),
+      start_date_from: this.defaultValueDate,
       start_date_to: new FormControl(null),
       description: new FormControl(null),
     });
@@ -149,7 +143,7 @@ export class UserExperienceComponent
     }
 
     // Run when form value change
-    this.userExperienceInfo.valueChanges.subscribe((data) => {
+    await this.userExperienceInfo.valueChanges.subscribe((data) => {
       if (this.userExperienceInfo.pristine) {
         this.userExperienceInfoClone = AitAppUtils.deepCloneObject(data);
       } else {
@@ -162,7 +156,10 @@ export class UserExperienceComponent
     const userInfo = { ...this.userExperienceInfo.value };
     const userInfoClone = { ...this.userExperienceInfoClone };
 
-    this.isChanged = AitAppUtils.isObjectEqual(
+    console.log(userInfo);
+    console.log(userInfoClone);
+    
+    this.isChanged = !AitAppUtils.isObjectEqual(
       { ...userInfo },
       { ...userInfoClone }
     );
@@ -185,7 +182,7 @@ export class UserExperienceComponent
       this.userExperienceInfo.reset();
       setTimeout(() => {
         this.userExperienceInfo.controls['start_date_from'].setValue(
-          this.defaultValueDate.getTime()
+          this.defaultValueDate
         );
         this.userExperienceInfo.controls['company_working'].setValue({
           ...this.defaultCompany,
@@ -224,7 +221,7 @@ export class UserExperienceComponent
             await this.userExpService.remove(_key).then((res) => {
               if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
                 this.showToastr('', this.getMsg('I0003'));
-                this.navigation.back();
+                history.back();
               } else {
                 this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
               }
@@ -272,7 +269,7 @@ export class UserExperienceComponent
             this.showToastr('', message);
             this.userExperienceInfo.reset();
             this.userExperienceInfo.controls['start_date_from'].setValue(
-              this.defaultValueDate.getTime()
+              this.defaultValueDate
             );
             this.userExperienceInfo.controls['company_working'].setValue({
               ...this.defaultCompany,
@@ -362,8 +359,8 @@ export class UserExperienceComponent
   takeDatePickerValue(value: number, group: string, form: string) {
     if (value) {
       const data = value as number;
-      value = new Date(data).getTime();
-      this[group].controls[form].markAsDirty();
+      value = new Date(data).setHours(0, 0, 0, 0);
+      //this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(value);
     }
   }
@@ -393,6 +390,8 @@ export class UserExperienceComponent
   }
 
   back() {
+    console.log(this.isChanged);
+    
     if (this.isChanged) {
       this.dialogService
         .open(AitConfirmDialogComponent, {

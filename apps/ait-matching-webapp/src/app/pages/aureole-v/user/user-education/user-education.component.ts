@@ -44,7 +44,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
   // Create form group
   userEducationInfo: FormGroup;
   userEducationInfoClone: any;
-  defaultValueDate: Date = new Date();
+  defaultValueDate = new Date().setHours(0, 0, 0, 0);
 
   mode = MODE.NEW;
   errorArr: any;
@@ -66,18 +66,14 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     start_date_from: false,
   };
 
-  dateField = ['start_date_from', 'start_date_to'];
   user_key = '';
 
   constructor(
     private router: Router,
     private element: ElementRef,
-    private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
     private dialogService: NbDialogService,
-    private navigation: AitNavigationService,
-    private translatePipe: AitTranslationService,
     private userEduService: UserEducationService,
     private translateService: AitTranslationService,
     env: AitEnvironmentService,
@@ -108,7 +104,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
       grade: new FormControl(null),
       field_of_study: new FormControl(null),
       file: new FormControl(null),
-      start_date_from: this.defaultValueDate.getTime(),
+      start_date_from: this.defaultValueDate,
       start_date_to: new FormControl(null),
       description: new FormControl(null),
     });
@@ -118,8 +114,6 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     if (this.user_key) {
       this.mode = MODE.EDIT;
     }
-
-    console.log(this.userEducationInfo.value.start_date_from);
   }
 
   async ngOnInit(): Promise<void> {
@@ -133,19 +127,16 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
             if (r.data.length > 0) {
               const data = r.data[0];
               console.log(data.file);
-              
+
               this.userEducationInfo.patchValue({ ...data });
               await data.file.forEach(async (e) => {
                 await this.userEduService.findFiles(e).then((x) => {
                   files.push(x.data[0]._key);
                 });
-                console.log(files);
                 setTimeout(() => {
                   this.userEducationInfo.controls['file'].setValue([...files]);
                 }, 100);
               });
-              console.log(this.userEducationInfo.value.file);
-              
               this.userEducationInfoClone = this.userEducationInfo.value;
               isUserExist = true;
             }
@@ -155,7 +146,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     }
 
     // Run when form value change
-    this.userEducationInfo.valueChanges.subscribe((data) => {
+    await this.userEducationInfo.valueChanges.subscribe((data) => {
       if (this.userEducationInfo.pristine) {
         this.userEducationInfoClone = AitAppUtils.deepCloneObject(data);
       } else {
@@ -167,12 +158,13 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
   checkAllowSave() {
     const userInfo = { ...this.userEducationInfo.value };
     const userInfoClone = { ...this.userEducationInfoClone };
+    console.log(userInfo);
+    console.log(userInfoClone);
 
-    const isChangedUserInfo = AitAppUtils.isObjectEqual(
+    this.isChanged = !AitAppUtils.isObjectEqual(
       { ...userInfo },
       { ...userInfoClone }
     );
-    this.isChanged = !isChangedUserInfo;
   }
 
   saveData() {
@@ -205,7 +197,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
             this.showToastr('', message);
             this.userEducationInfo.reset();
             this.userEducationInfo.controls['start_date_from'].setValue(
-              this.defaultValueDate.getTime()
+              this.defaultValueDate
             );
             this.isResetFile = true;
             setTimeout(() => {
@@ -316,7 +308,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
       this.userEducationInfo.reset();
       setTimeout(() => {
         this.userEducationInfo.controls['start_date_from'].setValue(
-          this.defaultValueDate.getTime()
+          this.defaultValueDate
         );
       }, 100);
     } else {
@@ -401,7 +393,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
   takeDatePickerValue(value: number, group: string, form: string) {
     if (value) {
       const data = value as number;
-      value = new Date(data).getTime();
+      value = new Date(data).setHours(0, 0, 0, 0);
       this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(value);
     }

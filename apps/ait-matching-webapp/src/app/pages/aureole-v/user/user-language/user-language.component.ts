@@ -126,8 +126,6 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
     }
     // Run when form value change 
     this.userLanguageInfo.valueChanges.subscribe((data) => {
-      console.log(1);
-      
       if (this.userLanguageInfo.pristine) {
         this.userLanguageInfoClone = AitAppUtils.deepCloneObject(data);
       } else {
@@ -237,6 +235,7 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
   }
 
   resetForm() {
+    this.isChanged = false;
     if (this.mode === MODE.NEW) {
       for (const index in this.resetUserLangInfo) {
         this.resetUserLangInfo[index] = true;
