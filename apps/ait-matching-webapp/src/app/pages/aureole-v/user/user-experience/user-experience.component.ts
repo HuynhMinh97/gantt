@@ -95,12 +95,14 @@ export class UserExperienceComponent
 
     //Create form builder group
     this.userExpService
-      .findKeyCompany(this.env.COMMON.COMPANY_DEFAULT)
-      .then((r) => {
-        this.defaultCompany = { _key: r.data[0].code, value: r.data[0].code };
-        this.userExperienceInfo.controls['company_working'].setValue({
-          ...this.defaultCompany,
-        });
+      .findUserProfile(this.authService.getUserID())
+      .then(x => {
+          this.defaultCompany = {_key: x.data[0].company_working.value, value: x.data[0].company_working.value};
+          console.log(this.defaultCompany);
+          
+          this.userExperienceInfo.controls['company_working'].setValue({
+            ...this.defaultCompany,
+          });
       });
 
     this.userExperienceInfo = this.formBuilder.group({
@@ -155,9 +157,6 @@ export class UserExperienceComponent
   checkAllowSave() {
     const userInfo = { ...this.userExperienceInfo.value };
     const userInfoClone = { ...this.userExperienceInfoClone };
-
-    console.log(userInfo);
-    console.log(userInfoClone);
     
     this.isChanged = !AitAppUtils.isObjectEqual(
       { ...userInfo },

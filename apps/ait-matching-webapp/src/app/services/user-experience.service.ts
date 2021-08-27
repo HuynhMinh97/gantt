@@ -81,13 +81,22 @@ export class UserExperienceService extends AitBaseService {
 
   async findUserProfile(_key?: string) {
     const condition = {
-      company: _key,
+      user_id: _key,
+      company_working: {
+        attribute: "company_working",
+        ref_collection: "sys_company",
+        ref_attribute: "_key"
+      }
     };
-    const returnFields = { code: true };
+    const returnFields = {
+      company_working: {
+        value: true,
+      },
+    };
     const request = {};
-    request['collection'] = 'sys_company';
+    request['collection'] = 'user_profile';
     request['condition'] = condition;
-    return await this.query('findSystem', request, returnFields);
+    return await this.query('findUserOnboardingInfo', request, returnFields);
   }
 
   async save(data: any[]) {

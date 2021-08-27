@@ -1,3 +1,4 @@
+import { UserOnboardingInfoResolver } from './user/user-onboarding/user-onboarding.resolver';
 import { UserLanguageInfoResolver } from './user/user-language/user-language.resolver';
 import { UserEducationInfoResolver } from './user/user-education/user-education.resolver';
 import { AitCoreModule, AitAuthModule } from '@ait/core';
@@ -9,6 +10,7 @@ const RESOLVERS = [
   UserExperienceInfoResolver,
   UserEducationInfoResolver,
   UserLanguageInfoResolver,
+  UserOnboardingInfoResolver,
   {
   provide: 'ENVIRONMENT',
   useValue: environment

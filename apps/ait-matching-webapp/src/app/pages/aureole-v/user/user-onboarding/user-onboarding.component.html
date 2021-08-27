@@ -1,1 +1,297 @@
-<p>user-onboarding works!</p>
+<div class="user__onboarding__wrapper" id="user_onboarding">
+  <ait-text-gradient
+    [content]="getTitleByMode()"
+    id="form_edit_user_onboarding"
+  ></ait-text-gradient>
+  <ait-space></ait-space>
+  <ait-card-content
+    style="justify-content: center"
+    class="content__card"
+    [label]="'基本情報'"
+    [padding]="'14px 90px 0 10px'"
+  >
+    <div style="margin-top: 14px">
+      <div class="input_area">
+        <ait-input-text
+          [id]="'first_name'"
+          [label]="'FIRST NAME'"
+          [length]="200"
+          [required]="true"
+          [isSubmit]="isSubmit"
+          [isReset]="resetUserInfo.first_name"
+          [placeholder]="'Please input your first name'"
+        ></ait-input-text>
+      </div>
+      <div class="input_area">
+        <ait-input-text
+          [id]="'last_name'"
+          [label]="'LAST NAME'"
+          [length]="200"
+          [required]="true"
+          [isSubmit]="isSubmit"
+          [isReset]="resetUserInfo.last_name"
+          [placeholder]="'Please input your last name'"
+        ></ait-input-text>
+      </div>
+      <div class="input_area">
+        <ait-input-text
+          [id]="'katakana'"
+          [label]="'KATAKANA'"
+          [length]="200"
+          [required]="true"
+          [isSubmit]="isSubmit"
+          [isReset]="resetUserInfo.katakana"
+          [placeholder]="'Please input your fullname (katakana)'"
+        ></ait-input-text>
+      </div>
+      <div class="input_area">
+        <ait-input-text
+          [id]="'romaji'"
+          [label]="'ROMAJI'"
+          [length]="200"
+          [required]="true"
+          [isSubmit]="isSubmit"
+          [isReset]="resetUserInfo.romaji"
+          [placeholder]="'Please input your fullname (romaji)'"
+        ></ait-input-text>
+      </div>
+      <div class="input_area">
+        <ait-label class="ait-label" [label]="'GENDER'" id="gender"></ait-label>
+        <div>
+          <nb-radio-group>
+            <nb-radio
+              [tabIndex]="5"
+              *ngFor="let option of options"
+              [value]="option.value"
+              [checked]="option.checked"
+            >
+              {{ option.label }}
+            </nb-radio>
+          </nb-radio-group>
+        </div>
+      </div>
+      <div class="input_area">
+        <ait-datepicker
+          [id]="'bod'"
+          [label]="'BORN ON DATE'"
+          [required]="true"
+          [style]="{ width: '180px' }"
+          [isReset]="resetUserInfo.bod"
+        ></ait-datepicker>
+      </div>
+      <div class="input_area">
+        <ait-input-text
+          [id]="'phone_number'"
+          [placeholder]="'Please input phone number'"
+          [label]="'PHONE NUMBER'"
+          [required]="true"
+          [length]="15"
+          [isReset]="resetUserInfo.phone_number"
+        >
+        </ait-input-text>
+      </div>
+      <div class="input_area">
+        <ait-input-text
+          [id]="'about'"
+          [length]="4000"
+          [rows]="4"
+          [label]="'ABOUT'"
+          [placeholder]="'Please input about'"
+          [width]="'400px'"
+          [isReset]="resetUserInfo.about"
+        >
+        </ait-input-text>
+      </div>
+      <div class="input_area">
+        <ait-autocomplete-master-data
+          [id]="'country'"
+          [label]="'COUNTRY'"
+          [required]="true"
+          [isSubmit]="isSubmit"
+          [placeholder]="'Please select country'"
+          [collection]="'sys_master_data'"
+          [class]="'COUNTRY'"
+          [disableOutputDefault]="true"
+          [isReset]="resetUserInfo.country"
+        ></ait-autocomplete-master-data>
+      </div>
+      <div class="input_area">
+        <ait-input-text
+          [id]="'postcode'"
+          [placeholder]="'Please input postcode'"
+          [label]="'POSTCODE'"
+          [required]="true"
+          [length]="20"
+          [isReset]="resetUserInfo.postcode"
+        >
+        </ait-input-text>
+      </div>
+      <div class="input_area">
+        <ait-autocomplete-master-data
+          [id]="'city'"
+          [label]="'PROVINE/CITY'"
+          [required]="true"
+          [isSubmit]="isSubmit"
+          [placeholder]="'Please select city'"
+          [collection]="'sys_master_data'"
+          [class]="'COUNTRY'"
+          [disableOutputDefault]="true"
+          [isReset]="resetUserInfo.city"
+        ></ait-autocomplete-master-data>
+      </div>
+      <div class="input_area">
+        <ait-autocomplete-master-data
+          [id]="'district'"
+          [label]="'DISTRICT'"
+          [required]="true"
+          [isSubmit]="isSubmit"
+          [placeholder]="'Please select district'"
+          [collection]="'sys_master_data'"
+          [class]="'DISTRICT'"
+          [disableOutputDefault]="true"
+          [isReset]="resetUserInfo.district"
+        ></ait-autocomplete-master-data>
+      </div>
+      <div class="input_area">
+        <ait-autocomplete-master-data
+          [id]="'ward'"
+          [label]="'WARD'"
+          [required]="true"
+          [isSubmit]="isSubmit"
+          [placeholder]="'Please select ward'"
+          [collection]="'sys_master_data'"
+          [class]="'WARD'"
+          [disableOutputDefault]="true"
+          [isReset]="resetUserInfo.ward"
+        ></ait-autocomplete-master-data>
+      </div>
+      <div class="input_area">
+        <ait-input-text
+          [id]="'address'"
+          [length]="500"
+          [required]="true"
+          [label]="'ADDRESS'"
+          [placeholder]="'Please input address'"
+          [isReset]="resetUserInfo.address"
+        >
+        </ait-input-text>
+      </div>
+      <div class="input_area">
+        <ait-input-text
+          [id]="'floor_building'"
+          [length]="500"
+          [label]="'FLOOR/BUILDING'"
+          [placeholder]="'Please input floor/building'"
+          [isReset]="resetUserInfo.floor_building"
+        >
+        </ait-input-text>
+      </div>
+      <div class="input_area">
+        <ait-autocomplete-master-data
+          [id]="'company_working'"
+          [label]="'COMPANY WORKING'"
+          [isSubmit]="isSubmit"
+          [allowNew]="true"
+          [placeholder]="'Please select company'"
+          [collection]="'sys_company'"
+          [disableOutputDefault]="true"
+          [isReset]="resetUserInfo.company_working"
+        ></ait-autocomplete-master-data>
+      </div>
+      <div class="input_area">
+        <ait-autocomplete-master-data
+          [id]="'title'"
+          [label]="'TITLE'"
+          [isSubmit]="isSubmit"
+          [allowNew]="true"
+          [placeholder]="'Please select title'"
+          [collection]="'m_title'"
+          [disableOutputDefault]="true"
+          [isReset]="resetUserInfo.title"
+        ></ait-autocomplete-master-data>
+      </div>
+      <div class="input_area">
+        <ait-autocomplete-master-data
+          [id]="'industry'"
+          [label]="'INDUSTRY'"
+          [required]="true"
+          [isSubmit]="isSubmit"
+          [allowNew]="true"
+          [placeholder]="'Please select industry'"
+          [collection]="'m_industry'"
+          [disableOutputDefault]="true"
+          [isReset]="resetUserInfo.industry"
+        ></ait-autocomplete-master-data>
+      </div>
+      <div class="input_area">
+        <ait-autocomplete-master-data
+          [id]="'skill'"
+          [label]="'SKILLS (MAX 10)'"
+          [required]="true"
+          [isSubmit]="isSubmit"
+          [allowNew]="true"
+          [maxItem]="10"
+          [placeholder]="'Please select skill'"
+          [collection]="'m_skill'"
+          [disableOutputDefault]="true"
+          [isReset]="resetUserInfo.skills"
+        ></ait-autocomplete-master-data>
+      </div>
+    </div>
+  </ait-card-content>
+  <div class="sticky">
+    <div class="action-row">
+      <div class="block">
+        <ait-button
+          [id]="'cancel'"
+          [title]="'CANCEL'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+        ></ait-button>
+
+        <ait-button
+          *ngIf="mode === 'EDIT'"
+          [id]="'delete'"
+          [width]="'200px'"
+          [title]="'DELETE'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+          (click)="onDelete()"
+        >
+        </ait-button>
+
+        <ait-button
+          [id]="'reset'"
+          [width]="'200px'"
+          [title]="'RESET'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+          (click)="resetForm()"
+        >
+        </ait-button>
+
+        <ait-button
+          *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
+          [id]="'save'"
+          [width]="'200px'"
+          [title]="'SAVE'"
+          (click)="save()"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+        >
+        </ait-button>
+        <ait-button
+          *ngIf="!isChanged && mode === 'EDIT'"
+          [id]="'save'"
+          [width]="'200px'"
+          [title]="'SAVE'"
+          [style]="'disabled'"
+        ></ait-button>
+      </div>
+    </div>
+  </div>
+</div>

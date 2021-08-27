@@ -12,7 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
 import { aureoleRootReducers } from './state/rootReducers';
 import { AureoleRoutingModule } from './app-routing.module';
-import { NbButtonModule, NbIconModule, NbSpinnerModule, NbTooltipModule, NbCheckboxModule, NbCardModule, NbInputModule, NbFormFieldModule } from '@nebular/theme';
+import { NbButtonModule, NbIconModule, NbSpinnerModule, NbTooltipModule, NbCheckboxModule, NbCardModule, NbInputModule, NbFormFieldModule, NbRadioModule } from '@nebular/theme';
 import { AureoleVCardComponent } from './pages/aureole-v/recommenced-user/components/card/card.component';
 import { ContentRowComponent } from './pages/aureole-v/recommenced-user/components/content/content.component';
 import { CardSkeletonComponent } from './pages/aureole-v/recommenced-user/components/card-skeleton/card-skeleton.component';
@@ -45,7 +45,8 @@ const NB_UI_MODULES = [
   NbButtonModule,
   NbCheckboxModule,
   NbInputModule,
-  NbFormFieldModule
+  NbFormFieldModule,
+  NbRadioModule
 ]
 
 const AUREOLE_V_COMPONENTS = [
@@ -58,12 +59,13 @@ const PAGES = [
   RecommencedComponent,
   UserExperienceComponent,
   UserEducationComponent,
-  UserLanguageComponent
+  UserLanguageComponent,
+  UserOnboardingComponent
 ]
 
 
 @NgModule({
-  declarations: [AppComponent, ...AUREOLE_V_COMPONENTS, ...PAGES, AddComponent, UserOnboardingComponent],
+  declarations: [AppComponent, ...AUREOLE_V_COMPONENTS, ...PAGES, AddComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

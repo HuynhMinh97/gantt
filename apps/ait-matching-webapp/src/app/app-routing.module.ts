@@ -1,3 +1,4 @@
+import { UserOnboardingComponent } from './pages/aureole-v/user/user-onboarding/user-onboarding.component';
 import { UserLanguageComponent } from './pages/aureole-v/user/user-language/user-language.component';
 import { UserEducationComponent } from './pages/aureole-v/user/user-education/user-education.component';
 import { UserExperienceComponent } from './pages/aureole-v/user/user-experience/user-experience.component';
@@ -44,6 +45,16 @@ export const routes: Routes = [
     path: 'user-language/:id',
     canActivate: [AitAuthGuardService],
     component : UserLanguageComponent
+  },
+  {
+    path: 'user-onboarding',
+    canActivate: [AitAuthGuardService],
+    component : UserOnboardingComponent
+  },
+  {
+    path: 'user-onboarding/:id',
+    canActivate: [AitAuthGuardService],
+    component : UserOnboardingComponent
   },
   {
     path: 'user/:id',
