@@ -97,14 +97,15 @@ export class UserExperienceComponent
     this.userExpService
       .findUserProfile(this.authService.getUserID())
       .then(x => {
-          this.defaultCompany = {_key: x.data[0].company_working.value, value: x.data[0].company_working.value};
-          console.log(this.defaultCompany);
+          this.defaultCompany = {_key: x.data[0].company_working._key, value: x.data[0].company_working.value};
           
           this.userExperienceInfo.controls['company_working'].setValue({
             ...this.defaultCompany,
           });
+          console.log(this.userExperienceInfo.value.company_working);
+          
       });
-
+    
     this.userExperienceInfo = this.formBuilder.group({
       title: new FormControl(null, [
         Validators.required,
@@ -235,12 +236,12 @@ export class UserExperienceComponent
   saveData() {
     const saveData = this.userExperienceInfo.value;
     saveData['user_id'] = this.authService.getUserID();
-    this.userExperienceInfo.value.title = this.userExperienceInfo.value.title._key;
-    this.userExperienceInfo.value.location = this.userExperienceInfo.value.location._key;
-    this.userExperienceInfo.value.employee_type = this.userExperienceInfo.value.employee_type._key;
-    this.userExperienceInfo.value.company_working = this.userExperienceInfo.value.company_working._key;
+    saveData.title = saveData.title._key;
+    saveData.location = saveData.location._key;
+    saveData.employee_type = saveData.employee_type._key;
+    saveData.company_working = saveData.company_working._key;
 
-    if (this.userExperienceInfo.value.is_working) {
+    if (saveData.is_working) {
       this.userExperienceInfo.controls['start_date_to'].setValue(null);
     }
     if (this.user_key) {

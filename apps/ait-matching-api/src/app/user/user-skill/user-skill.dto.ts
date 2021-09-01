@@ -1,8 +1,18 @@
-import { BaseDto } from '@ait/core';
+import { BaseDto, ConditionDto } from '@ait/core';
 import { InputType, Field, Float } from '@nestjs/graphql';
 
 @InputType()
 export class UserSkillDto extends BaseDto {
+
+  @Field(() => ConditionDto, { nullable: true })
+    skill?: ConditionDto;
+
+  @Field(() => String, { nullable: true })
+  _from?: string;
+
+  @Field(() => String, { nullable: true })
+  _to?: string;
+
   @Field(() => String, { nullable: true })
   relationship?: string;
 

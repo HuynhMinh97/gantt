@@ -1,4 +1,8 @@
-import { isObjectFull } from './../../../../../../../../libs/shared/src/lib/utils/checks.util';
+import { forEach } from 'lodash';
+import {
+  isArrayFull,
+  isObjectFull,
+} from './../../../../../../../../libs/shared/src/lib/utils/checks.util';
 import { UserOnboardingService } from './../../../../services/user-onboarding.service';
 import { Component, ElementRef, OnInit } from '@angular/core';
 import {
@@ -20,6 +24,7 @@ import {
   AitBaseComponent,
   AitConfirmDialogComponent,
   AitEnvironmentService,
+  AitMasterDataService,
   AitNavigationService,
   AitTranslationService,
   AppState,
@@ -43,13 +48,17 @@ export class UserOnboardingComponent
 
   defaultCompany = {} as KeyValueDto;
   genderList: KeyValueCheckedDto[];
+  defaultGender = {} as KeyValueDto;
 
   mode = MODE.NEW;
   errorArr: any;
+  countryCode: any;
+  cityCode: any;
+  districtCode: any;
   isReset = false;
   isSubmit = false;
   isChanged = false;
-  isDateCompare = false;
+  isLangJP = false;
 
   resetUserInfo = {
     first_name: false,
@@ -73,6 +82,13 @@ export class UserOnboardingComponent
     skills: false,
   };
 
+  user_skill = {
+    _from: '',
+    _to: '',
+    relationship: '',
+    sort_no: 0,
+  };
+
   user_key = '';
 
   constructor(
@@ -82,6 +98,7 @@ export class UserOnboardingComponent
     public activeRouter: ActivatedRoute,
     private dialogService: NbDialogService,
     private userOnbService: UserOnboardingService,
+    private masterDataService: AitMasterDataService,
     private translateService: AitTranslationService,
     env: AitEnvironmentService,
     store: Store<AppState>,
@@ -148,6 +165,15 @@ export class UserOnboardingComponent
       ]),
     });
 
+    this.userOnbService.findSiteLanguageById(this.user_id).then((r) => {
+      if (r.status === RESULT_STATUS.OK) {
+        const language = 'ja_JP';
+        if (language === r.data[0].site_language) {
+          this.isLangJP = true;
+        }
+      }
+    });
+
     // get key form parameters
     this.user_key = this.activeRouter.snapshot.paramMap.get('id');
     if (this.user_key) {
@@ -155,21 +181,102 @@ export class UserOnboardingComponent
     }
   }
 
-  async ngOnInit(): Promise<void> {}
+  async ngOnInit(): Promise<void> {
+    if (this.user_key) {
+      await this.userOnbService
+        .findUserOnboardingByKey(this.user_key)
+        .then(async (r) => {
+          if (r.status === RESULT_STATUS.OK) {
+            let isUserExist = false;
+            let skills = [];
+            if (r.data.length > 0) {
+              const data = r.data[0];
+              this.userOnboardingInfo.patchValue({ ...data });
+              console.log(this.userOnboardingInfo.value);
+              
+              this.userOnboardingInfoClone = this.userOnboardingInfo.value;
+              isUserExist = true;
+            }
+            !isUserExist && this.router.navigate([`/404`]);
+          }
+        });
+    }
 
-  options = [
-    { value: 'This is value 1', label: 'MALE' },
-    { value: 'This is value 2', label: 'FEMALE' },
-    { value: 'This is value 3', label: 'Other', checked: true},
-  ];
-  option;
+    await this.getGenderList();
+    this.setDefaultGenderValue();
+
+    // Run when form value change
+    await this.userOnboardingInfo.valueChanges.subscribe((data) => {
+      if (this.userOnboardingInfo.pristine) {
+        this.userOnboardingInfo = AitAppUtils.deepCloneObject(data);
+      } else {
+        this.checkAllowSave();
+      }
+    });
+  }
+
+  checkAllowSave() {
+    const userInfo = { ...this.userOnboardingInfo.value };
+    const userInfoClone = { ...this.userOnboardingInfoClone };
+
+    this.isChanged = !AitAppUtils.isObjectEqual(
+      { ...userInfo },
+      { ...userInfoClone }
+    );
+  }
 
   getTitleByMode() {
-    return this.mode === MODE.EDIT ? 'Edit basic information' : 'Add basic information';
+    return this.mode === MODE.EDIT
+      ? 'Edit basic information'
+      : 'Add basic information';
+  }
+
+  // Get gender list from master-data, param class = GENDER
+  async getGenderList(): Promise<void> {
+    const condition = { class: { value: ['GENDER'] } };
+    await this.masterDataService.find(condition).then((res) => {
+      if (res.status && res.status === RESULT_STATUS.OK) {
+        this.genderList = res.data;
+      }
+    });
+  }
+
+  // In create mode default = 男性, edit mode = user.gender
+  setDefaultGenderValue() {
+    const genderObj = this.userOnboardingInfo.controls['gender']
+      .value as KeyValueDto;
+
+    if (genderObj) {
+      this.genderList = this.genderList.map((gender) =>
+        Object.assign({}, gender, {
+          checked: gender._key === genderObj._key ? true : false,
+        })
+      );
+
+      const gender = this.genderList.find((gender) => gender.checked === true);
+      this.userOnboardingInfo.controls['gender'].setValue({
+        _key: gender.code,
+        value: gender.name,
+      });
+      const defaultGender = this.genderList[0];
+      this.defaultGender = {
+        _key: defaultGender.code,
+        value: defaultGender.name,
+      };
+    } else {
+      const genderList = [...this.genderList].map((gender, index) =>
+        Object.assign({}, gender, { checked: index === 0 ? true : false })
+      );
+      const gender = genderList[2];
+      this.userOnboardingInfo.controls['gender'].setValue({
+        _key: gender.code,
+        value: gender.name,
+      });
+      this.defaultGender = { _key: gender.code, value: gender.name };
+    }
   }
 
   resetForm() {
-    this.errorArr = [];
     this.isChanged = false;
     if (this.mode === MODE.NEW) {
       for (const index in this.resetUserInfo) {
@@ -179,6 +286,9 @@ export class UserOnboardingComponent
         }, 100);
       }
       this.userOnboardingInfo.reset();
+      this.userOnboardingInfo.controls['gender'].setValue({
+        ...this.defaultGender,
+      });
     } else {
       for (const index in this.resetUserInfo) {
         if (!this.userOnboardingInfo.controls[index].value) {
@@ -193,5 +303,158 @@ export class UserOnboardingComponent
       });
     }
     this.showToastr('', this.getMsg('I0007'));
+  }
+
+  saveDataUserProfile() {
+    const saveData = this.userOnboardingInfo.value;
+    saveData['user_id'] = this.authService.getUserID();
+    saveData.ward = saveData.ward._key;
+    saveData.title = saveData.title._key;
+    saveData.city = saveData.city._key;
+    saveData.gender = saveData.gender._key;
+    saveData.country = saveData.country._key;
+    saveData.district = saveData.district._key;
+    saveData.industry = saveData.industry._key;
+    saveData.company_working = saveData.company_working._key;
+
+    if (this.user_key) {
+      saveData['_key'] = this.user_key;
+    }
+    console.log(saveData);
+
+    return saveData;
+  }
+
+  saveDataUserSkill() {
+    this.user_skill._from = 'sys_user/' + this.authService.getUserID();
+    this.user_skill.relationship = 'user_skill';
+    this.user_skill.sort_no = 1;
+
+    const skills = this.userOnboardingInfo.value.skills;
+    skills.forEach(async (skill) => {
+      this.user_skill._to = 'm_skill/' + skill;
+
+      if (this.user_key) {
+        this.user_skill['_key'] = this.user_key;
+      }
+      await this.userOnbService.saveUserSkill([this.user_skill]);
+    });
+  }
+
+  save() {
+    this.isSubmit = true;
+    setTimeout(() => {
+      this.isSubmit = false;
+    }, 100);
+
+    if (this.userOnboardingInfo.valid) {
+      this.userOnbService
+        .save(this.saveDataUserProfile())
+        .then((res) => {
+          //console.log(res);
+          if (res?.status === RESULT_STATUS.OK) {
+            this.saveDataUserSkill();
+            const message =
+              this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
+            this.showToastr('', message);
+            history.back();
+          } else {
+            this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+          }
+        })
+        .catch(() => {
+          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+        });
+    } else {
+      this.scrollIntoError();
+    }
+  }
+
+  scrollIntoError() {
+    for (const key of Object.keys(this.userOnboardingInfo.controls)) {
+      if (this.userOnboardingInfo.controls[key].invalid) {
+        const invalidControl = this.element.nativeElement.querySelector(
+          `#${key}_input`
+        );
+        try {
+          invalidControl.scrollIntoView({
+            behavior: 'auto',
+            block: 'center',
+          });
+          break;
+        } catch {}
+      }
+    }
+  }
+
+  takeGenderValue(value: KeyValueCheckedDto): void {
+    if (isObjectFull(value)) {
+      this.userOnboardingInfo.controls['gender'].markAsDirty();
+      this.userOnboardingInfo.controls['gender'].setValue({
+        _key: value.code,
+        value: value.name,
+      });
+    } else {
+      this.userOnboardingInfo.controls['gender'].setValue(null);
+    }
+  }
+
+  takeMasterValue(value: any, target: string): void {
+    if (isObjectFull(value)) {
+      this.userOnboardingInfo.controls[target].markAsDirty();
+      this.userOnboardingInfo.controls[target].setValue(value?.value[0]);
+      if (target === 'country') {
+        this.countryCode = value?.value[0]._key;
+        this.resetUserInfo['district'] = true;
+        this.resetUserInfo['ward'] = true;
+        setTimeout(() => {
+          this.resetUserInfo['district'] = false;
+          this.resetUserInfo['ward'] = false;
+        }, 100);
+      }
+      if (target === 'city') {
+        this.cityCode = value?.value[0]._key;
+        this.resetUserInfo['ward'] = true;
+        setTimeout(() => {
+          this.resetUserInfo['ward'] = false;
+        }, 100);
+      }
+      if (target === 'district') {
+        this.districtCode = value?.value[0]._key;
+      }
+    } else {
+      this.userOnboardingInfo.controls[target].setValue(null);
+    }
+  }
+
+  takeInputValue(value: string, form: string): void {
+    if (value) {
+      this.userOnboardingInfo.controls[form].markAsDirty();
+      this.userOnboardingInfo.controls[form].setValue(value);
+    } else {
+      this.userOnboardingInfo.controls[form].setValue(null);
+    }
+  }
+
+  takeDatePickerValue(value: number, group: string, form: string) {
+    if (value) {
+      const data = value as number;
+      value = new Date(data).setHours(0, 0, 0, 0);
+      this[group].controls[form].markAsDirty();
+      this[group].controls[form].setValue(value);
+    }
+  }
+  // Take values form components and assign to form
+  takeMasterValues(value: KeyValueDto[], group: string, form: string): void {
+    if (isArrayFull(value)) {
+      const data = [];
+      value.forEach((file) => {
+        data.push(file._key);
+      });
+      this.userOnboardingInfo.markAsDirty();
+      this[group].controls[form].setValue(data);
+    } else {
+      this[group].controls[form].setValue(null);
+    }
   }
 }

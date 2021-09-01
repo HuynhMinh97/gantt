@@ -80,6 +80,8 @@ export class UserExperienceService extends AitBaseService {
   }
 
   async findUserProfile(_key?: string) {
+    console.log(_key);
+    
     const condition = {
       user_id: _key,
       company_working: {
@@ -90,6 +92,7 @@ export class UserExperienceService extends AitBaseService {
     };
     const returnFields = {
       company_working: {
+        _key: true,
         value: true,
       },
     };

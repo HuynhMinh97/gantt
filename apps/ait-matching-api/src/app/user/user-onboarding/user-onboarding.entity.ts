@@ -16,8 +16,8 @@ export class UserOnboardingInfoEntity extends BaseEntity {
     @Field(() => String, { nullable: true })
     romaji?: string;
 
-    @Field(() => String, { nullable: true })
-    gender?: string;
+    @Field(() => KeyValueEntity, { nullable: true })
+    gender?: KeyValueEntity;
 
     @Field(() => Float, { nullable: true })
     bod?: number;
@@ -58,6 +58,6 @@ export class UserOnboardingInfoEntity extends BaseEntity {
     @Field(() => KeyValueEntity, { nullable: true })
     industry?: KeyValueEntity;
 
-    @Field(() => KeyValueEntity, { nullable: true })
-    skills?: KeyValueEntity;
+    @Field(() => [KeyValueEntity], { nullable: true })
+    skills?: [KeyValueEntity];
 }

@@ -5,7 +5,16 @@ import { KeyValueEntity } from '@ait/core';
 @ObjectType()
 export class UserSkillEntity extends BaseEntity {
 
-    @Field(() => String, { nullable: true })
+  @Field(() => KeyValueEntity, { nullable: true })
+    skill?: KeyValueEntity;
+
+  @Field(() => String, { nullable: true })
+  _from?: string;
+
+  @Field(() => String, { nullable: true })
+  _to?: string;
+
+  @Field(() => String, { nullable: true })
   relationship?: string;
 
   @Field(() => Float, { nullable: true })

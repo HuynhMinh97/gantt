@@ -24,20 +24,11 @@ export class UserEducationService extends AitBaseService {
       _key: _key,
     };
 
-    const keyMasterArray = [
-      {
-        att: 'school',
-        col: 'm_school',
-      }
-    ];
-
-    keyMasterArray.forEach((item) => {
-      condition[item.att] = {
-        attribute: item.att,
-        ref_collection: item.col,
-        ref_attribute: 'code',
-      };
-    });
+    condition['school'] = {
+      attribute: 'school',
+      ref_collection: 'm_school',
+      ref_attribute: 'code',
+    };
 
     const returnFields = this.returnFields;
     const request = {};
@@ -61,16 +52,12 @@ export class UserEducationService extends AitBaseService {
     const returnField = { _key: true };
     const condition = {
       _key: _key,
-      del_flag: false
+      del_flag: false,
     };
     const request = {};
     request['collection'] = 'sys_binary_data';
     request['condition'] = condition;
-    return await this.query(
-      'findSystem',
-      request,
-      returnField
-    );
+    return await this.query('findSystem', request, returnField);
   }
 
   async save(data: any[]) {

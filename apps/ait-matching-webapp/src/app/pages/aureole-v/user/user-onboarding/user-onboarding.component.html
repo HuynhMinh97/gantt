@@ -20,6 +20,8 @@
           [isSubmit]="isSubmit"
           [isReset]="resetUserInfo.first_name"
           [placeholder]="'Please input your first name'"
+          (watchValue)="takeInputValue($event, 'first_name')"
+          [defaultValue]="userOnboardingInfo.controls['first_name'].value"
         ></ait-input-text>
       </div>
       <div class="input_area">
@@ -31,10 +33,13 @@
           [isSubmit]="isSubmit"
           [isReset]="resetUserInfo.last_name"
           [placeholder]="'Please input your last name'"
+          (watchValue)="takeInputValue($event, 'last_name')"
+          [defaultValue]="userOnboardingInfo.controls['last_name'].value"
         ></ait-input-text>
       </div>
       <div class="input_area">
         <ait-input-text
+          *ngIf="isLangJP"
           [id]="'katakana'"
           [label]="'KATAKANA'"
           [length]="200"
@@ -42,10 +47,13 @@
           [isSubmit]="isSubmit"
           [isReset]="resetUserInfo.katakana"
           [placeholder]="'Please input your fullname (katakana)'"
+          (watchValue)="takeInputValue($event, 'katakana')"
+          [defaultValue]="userOnboardingInfo.controls['katakana'].value"
         ></ait-input-text>
       </div>
       <div class="input_area">
         <ait-input-text
+          *ngIf="isLangJP"
           [id]="'romaji'"
           [label]="'ROMAJI'"
           [length]="200"
@@ -53,6 +61,8 @@
           [isSubmit]="isSubmit"
           [isReset]="resetUserInfo.romaji"
           [placeholder]="'Please input your fullname (romaji)'"
+          (watchValue)="takeInputValue($event, 'romaji')"
+          [defaultValue]="userOnboardingInfo.controls['romaji'].value"
         ></ait-input-text>
       </div>
       <div class="input_area">
@@ -61,11 +71,17 @@
           <nb-radio-group>
             <nb-radio
               [tabIndex]="5"
-              *ngFor="let option of options"
-              [value]="option.value"
-              [checked]="option.checked"
+              *ngFor="let option of genderList; let isFirst = first"
+              [value]="option"
+              [checked]="
+                userOnboardingInfo.controls['gender'].value
+                  ? userOnboardingInfo.controls['gender'].value?._key ==
+                    option.code
+                  : isFirst
+              "
+              (valueChange)="takeGenderValue($event)"
             >
-              {{ option.label }}
+              {{ option.name }}
             </nb-radio>
           </nb-radio-group>
         </div>
@@ -75,8 +91,13 @@
           [id]="'bod'"
           [label]="'BORN ON DATE'"
           [required]="true"
+          [isSubmit]="isSubmit"
           [style]="{ width: '180px' }"
           [isReset]="resetUserInfo.bod"
+          (watchValue)="
+            takeDatePickerValue($event?.value, 'userOnboardingInfo', 'bod')
+          "
+          [dateInput]="userOnboardingInfo.controls['bod'].value"
         ></ait-datepicker>
       </div>
       <div class="input_area">
@@ -84,9 +105,12 @@
           [id]="'phone_number'"
           [placeholder]="'Please input phone number'"
           [label]="'PHONE NUMBER'"
+          [isSubmit]="isSubmit"
           [required]="true"
           [length]="15"
           [isReset]="resetUserInfo.phone_number"
+          (watchValue)="takeInputValue($event, 'phone_number')"
+          [defaultValue]="userOnboardingInfo.controls['phone_number'].value"
         >
         </ait-input-text>
       </div>
@@ -99,6 +123,8 @@
           [placeholder]="'Please input about'"
           [width]="'400px'"
           [isReset]="resetUserInfo.about"
+          (watchValue)="takeInputValue($event, 'about')"
+          [defaultValue]="userOnboardingInfo.controls['about'].value"
         >
         </ait-input-text>
       </div>
@@ -113,6 +139,12 @@
           [class]="'COUNTRY'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.country"
+          [defaultValue]="[
+            {
+              _key: '8305f916-efc9-d096-3445-04de535449a9',
+              value: 'HCM'
+            }
+          ]"
         ></ait-autocomplete-master-data>
       </div>
       <div class="input_area">
@@ -123,6 +155,8 @@
           [required]="true"
           [length]="20"
           [isReset]="resetUserInfo.postcode"
+          (watchValue)="takeInputValue($event, 'postcode')"
+          [defaultValue]="userOnboardingInfo.controls['postcode'].value"
         >
         </ait-input-text>
       </div>
@@ -134,9 +168,12 @@
           [isSubmit]="isSubmit"
           [placeholder]="'Please select city'"
           [collection]="'sys_master_data'"
-          [class]="'COUNTRY'"
+          [parentCode]="countryCode"
+          [class]="'CITY'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.city"
+          (watchValue)="takeMasterValue($event, 'city')"
+          [defaultValue]="[userOnboardingInfo.controls['city'].value]"
         ></ait-autocomplete-master-data>
       </div>
       <div class="input_area">
@@ -148,8 +185,11 @@
           [placeholder]="'Please select district'"
           [collection]="'sys_master_data'"
           [class]="'DISTRICT'"
+          [parentCode]="cityCode"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.district"
+          (watchValue)="takeMasterValue($event, 'district')"
+          [defaultValue]="[userOnboardingInfo.controls['district'].value]"
         ></ait-autocomplete-master-data>
       </div>
       <div class="input_area">
@@ -161,8 +201,11 @@
           [placeholder]="'Please select ward'"
           [collection]="'sys_master_data'"
           [class]="'WARD'"
+          [parentCode]="districtCode"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.ward"
+          (watchValue)="takeMasterValue($event, 'ward')"
+          [defaultValue]="[userOnboardingInfo.controls['ward'].value]"
         ></ait-autocomplete-master-data>
       </div>
       <div class="input_area">
@@ -173,6 +216,8 @@
           [label]="'ADDRESS'"
           [placeholder]="'Please input address'"
           [isReset]="resetUserInfo.address"
+          (watchValue)="takeInputValue($event, 'address')"
+          [defaultValue]="userOnboardingInfo.controls['address'].value"
         >
         </ait-input-text>
       </div>
@@ -183,6 +228,8 @@
           [label]="'FLOOR/BUILDING'"
           [placeholder]="'Please input floor/building'"
           [isReset]="resetUserInfo.floor_building"
+          (watchValue)="takeInputValue($event, 'floor_building')"
+          [defaultValue]="userOnboardingInfo.controls['floor_building'].value"
         >
         </ait-input-text>
       </div>
@@ -196,6 +243,10 @@
           [collection]="'sys_company'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.company_working"
+          (watchValue)="takeMasterValue($event, 'company_working')"
+          [defaultValue]="[
+            userOnboardingInfo.controls['company_working'].value
+          ]"
         ></ait-autocomplete-master-data>
       </div>
       <div class="input_area">
@@ -208,6 +259,8 @@
           [collection]="'m_title'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.title"
+          (watchValue)="takeMasterValue($event, 'title')"
+          [defaultValue]="[userOnboardingInfo.controls['title'].value]"
         ></ait-autocomplete-master-data>
       </div>
       <div class="input_area">
@@ -221,11 +274,13 @@
           [collection]="'m_industry'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.industry"
+          (watchValue)="takeMasterValue($event, 'industry')"
+          [defaultValue]="[userOnboardingInfo.controls['industry'].value]"
         ></ait-autocomplete-master-data>
       </div>
       <div class="input_area">
         <ait-autocomplete-master-data
-          [id]="'skill'"
+          [id]="'skills'"
           [label]="'SKILLS (MAX 10)'"
           [required]="true"
           [isSubmit]="isSubmit"
@@ -235,6 +290,10 @@
           [collection]="'m_skill'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.skills"
+          (watchValue)="
+            takeMasterValues($event?.value, 'userOnboardingInfo', 'skills')
+          "
+          [defaultValue]="userOnboardingInfo.controls['skills'].value"
         ></ait-autocomplete-master-data>
       </div>
     </div>

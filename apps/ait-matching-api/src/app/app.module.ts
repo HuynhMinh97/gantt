@@ -1,3 +1,4 @@
+import { UserSkillResolver } from './user/user-skill/user-skill.resolver';
 import { UserOnboardingInfoResolver } from './user/user-onboarding/user-onboarding.resolver';
 import { UserLanguageInfoResolver } from './user/user-language/user-language.resolver';
 import { UserEducationInfoResolver } from './user/user-education/user-education.resolver';
@@ -11,6 +12,7 @@ const RESOLVERS = [
   UserEducationInfoResolver,
   UserLanguageInfoResolver,
   UserOnboardingInfoResolver,
+  UserSkillResolver,
   {
   provide: 'ENVIRONMENT',
   useValue: environment

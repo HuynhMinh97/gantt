@@ -158,8 +158,6 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
   checkAllowSave() {
     const userInfo = { ...this.userEducationInfo.value };
     const userInfoClone = { ...this.userEducationInfoClone };
-    console.log(userInfo);
-    console.log(userInfoClone);
 
     this.isChanged = !AitAppUtils.isObjectEqual(
       { ...userInfo },
@@ -170,7 +168,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
   saveData() {
     const saveData = this.userEducationInfo.value;
     saveData['user_id'] = this.authService.getUserID();
-    this.userEducationInfo.value.school = this.userEducationInfo.value.school._key;
+    saveData.school = saveData.school._key;
 
     if (this.user_key) {
       saveData['_key'] = this.user_key;

@@ -5,8 +5,6 @@ import { UserSkillResponse } from './user-skill.response';
 
 @Resolver()
 export class UserSkillResolver extends AitBaseService {
-  collection = 'user_skill';
-
   @Query(() => UserSkillResponse, { name: 'findUserSkill' })
   findUserSkill(
     @AitCtxUser() user: SysUser,
