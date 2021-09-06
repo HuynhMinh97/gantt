@@ -1,4 +1,4 @@
-import { COLLECTIONS, OPERATOR } from '@ait/shared';
+import { COLLECTIONS, KEYS, OPERATOR } from '@ait/shared';
 import { InputType, Field } from '@nestjs/graphql';
 
 @InputType()
@@ -43,4 +43,7 @@ export class ConditionDto {
 
   @Field(() => String, { nullable: true })
   return_field: string;
+
+  @Field(() => String, { nullable: true, defaultValue: KEYS.CODE })
+  get_by: string;
 }
