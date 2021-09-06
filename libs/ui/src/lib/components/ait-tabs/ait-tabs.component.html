@@ -3,6 +3,8 @@
     class="tab__items"
     *ngFor="let tab of tabs"
     (click)="selectTab(tab.type)"
+    tabindex="{{tabIndex}}"
+    style="outline-color: #10529d"
   >
     <div
       class="status__line"

@@ -11,7 +11,8 @@ export class AitLabelComponent implements OnChanges  {
   @Input() isTranslate = true;
   @Input() styleText = {};
   @Input() required = false;
-  @Input() id;
+  @Input() id = Date.now();
+  @Input() tabIndex;
 
   ID(element : string): string {
     return this.id + '_' + element;

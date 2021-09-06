@@ -35,6 +35,7 @@ export class AitOutputFileComponent implements OnChanges {
   ]
   url = '';
   @Input() id = Date.now();
+  @Input() tabIndex;
 
   numberOfFilesI18 = 'c_3001';
 
