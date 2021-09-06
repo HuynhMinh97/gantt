@@ -225,6 +225,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
           const getObjecKeyEqualNull = this.selectItems.filter(s => !s?._key);
           this.storeDataDraft = getObjecKeyEqualNull;
           const _keys = this.selectItems.map(m => m?._key);
+          console.log(_keys);
           if (_keys.length !== 0) {
             this.getDefaultValueByLang(_keys).then(
             );
@@ -347,9 +348,11 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
 
     this.masterDataService.find(condition, returnFields, this.collection, this.includeNotDelete, this.includeNotActive).then(r => {
       if (r?.status === RESULT_STATUS.OK) {
-        console.log(r.data)
+
         const result = r.data.map(m => ({ ...m, value: m?.name }));
         this.selectItems = [...(result || []), ...this.storeDataDraft];
+
+        console.log(this.selectItems);
       }
     })
 

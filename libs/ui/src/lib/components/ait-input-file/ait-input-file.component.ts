@@ -96,6 +96,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   @Input() width;
   @Input() height;
   isFocus = false;
+  @Input() tabIndex;
 
   errorImage: any = {}
 
@@ -249,7 +250,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
   checkMaxSize = (file: any[]) => {
 
-    return this.fileRequest.length > 0 ?  this.fileRequest[0]?.size <= this.maxSize * 1024 : true;
+    return this.fileRequest.length > 0 ? this.fileRequest[0]?.size <= this.maxSize * 1024 : true;
   }
   checkMaxFile = () => {
 
@@ -275,6 +276,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
     }).then(r => {
       const settings = r.data.filter(d => settingFiles.includes(d?.code));
       this.settings = settings.map((s: any) => ({ ...s, value: s?.name }));
+      console.log(settings)
 
       if (settings.length !== 0) {
         if (!this.maxSize) {
@@ -314,7 +316,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   }
 
   getMaxSizeFile = () => {
-    return this.maxSize ? this.maxSize * 1024 : 5000000;
+    return this.maxSize ? this.maxSize * 1024 : null;
   }
 
   getValueByCode = (code) => {
@@ -413,13 +415,13 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
   checkCommon = () => {
     this.messageErrorFileSp = '';
-    if (!this.checkMaxFile()) {
+    if (!this.checkMaxFile() && this.getFileMaxUpload().toString()) {
       this.messageErrorFileSp =
         this.translateService.getMsg('E0155').replace('{0}', this.getFileMaxUpload().toString());
       return false;
 
     }
-    else if (!this.checkMaxSize(this.fileRequest)) {
+    else if (!this.checkMaxSize(this.fileRequest) && this.getMaxSizeFile()) {
       this.messageErrorFileSp =
         this.translateService.getMsg('E0157').replace('{0}', this.formatBytes(this.getMaxSizeFile(), 2).toString());
       return false;

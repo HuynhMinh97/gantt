@@ -1,6 +1,6 @@
 <div [ngClass]="classContainer">
   <ait-label [label]="label" *ngIf="label" [id]="id"></ait-label>
-  <div class="display__files" style="margin-top: 8px">
+  <div class="display__files" style="margin-top: 8px" tabindex="{{tabIndex}}">
     <div class="card__display">
       <div class="info">
         <p class="count" [id]="ID('input_file')">{{ numberOfFilesI18 }}： {{ files.length }}</p>

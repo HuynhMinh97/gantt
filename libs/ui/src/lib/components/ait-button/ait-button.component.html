@@ -1,4 +1,9 @@
-<div [style]="style" *ngIf="style === 'disabled' && !hide">
+<div
+  [style]="style"
+  *ngIf="style === 'disabled' && !hide"
+  style="margin: 0; border-radius: 25px; outline-color: #10529d"
+  tabindex="{{ tabIndex }}"
+>
   <button
     shape="round"
     class="button__wrapper__disabled"
@@ -12,6 +17,9 @@
     nbButton
     [ngClass]="classBtn"
     [ngStyle]="styleBtn"
+    (blur)="setFocus(false)"
+    (focus)="setFocus(true)"
+    [class.focus]="isFocus"
   >
     <nb-icon
       [icon]="iconName"
@@ -34,7 +42,12 @@
     </p>
   </button>
 </div>
-<div [style]="style" *ngIf="style === 'active' && !hide">
+<div
+  [style]="style"
+  *ngIf="style === 'active' && !hide"
+  style="margin: 0; border-radius: 25px; outline-color: #10529d"
+  tabindex="{{ tabIndex }}"
+>
   <button
     shape="round"
     class="button__wrapper button__wrapper__active"
@@ -47,6 +60,9 @@
     [ngClass]="classBtn"
     [ngStyle]="styleBtn"
     [class.isDefault]="isDefault"
+    (focus)="setFocus(true)"
+    (blur)="setFocus(false)"
+    [class.focus]="isFocus"
   >
     <nb-icon
       [icon]="iconName"
@@ -69,7 +85,12 @@
     </p>
   </button>
 </div>
-<div [style]="style" *ngIf="style === 'normal' && !hide">
+<div
+  [style]="style"
+  *ngIf="style === 'normal' && !hide"
+  style="border-radius: 25px; outline-color: #10529d"
+  tabindex="{{ tabIndex }}"
+>
   <button
     shape="round"
     class="button__wrapper button__wrapper__primary"
@@ -82,7 +103,9 @@
     [ngClass]="classBtn"
     [ngStyle]="styleBtn"
     [class.isDefault]="isDefault"
-
+    (focus)="setFocus(true)"
+    (blur)="setFocus(false)"
+    [class.focus]="isFocus"
   >
     <nb-icon
       [icon]="iconName"

@@ -82,7 +82,7 @@
           (focusout)="outFocus()"
           (blur)="blur(input.value) ? (input.value = '') : null;this.isFocus = false;"
           (keydown.tab)="onTab()"
-          (keydown.enter)="enter()"
+          (keydown.enter)="enter( $event)"
           tabindex="{{tabIndex}}"
         />
 

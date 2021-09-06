@@ -14,7 +14,12 @@
       class="content"
       [ngStyle]="isOpen ? { display: 'block' } : { display: 'none' }"
     >
-      <div class="item" *ngFor="let it of items" (click)="goToElemet(it.title)">
+      <div
+        class="item"
+        *ngFor="let it of items"
+        (click)="goToElemet(it.title)"
+        tabindex="{{ tabIndex + index }}"
+      >
         <nb-icon icon="hash-outline" class="iconHash"></nb-icon>
         <p>
           {{ it.title }}
