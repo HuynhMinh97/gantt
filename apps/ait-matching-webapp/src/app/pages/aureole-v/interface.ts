@@ -1,5 +1,3 @@
-import { BaseDto } from './../../../../../../libs/shared/src/lib/dtos/base.dto';
-import { UserExperienceService } from './../../services/user-experience.service';
 import { KeyValueDto } from '@ait/shared';
 
 export class CompanyInfo {
@@ -34,29 +32,6 @@ export class CompanyInfoErrorsMessage {
   representative_email: string[];
   acceptance_remark: string[];
   agreement: string[];
-}
-
-export class UserExpInfoErrorsMessage {
-  title: string[];
-  company_working: string[];
-  loacation: string[];
-  is_working: string[];
-  employee_type: string[];
-  start_date_from: string[];
-  start_date_to: string[];
-  description: string[];
-}
-
-export interface UserExperienceDto extends BaseDto{
-
-    title: KeyValueDto,
-    company_working: KeyValueDto,
-    location: KeyValueDto,
-    employee_type: KeyValueDto,
-    is_working: boolean,
-    start_date_from: string,
-    start_date_to: string,
-    description: string,
 }
 
 export interface NameDto {

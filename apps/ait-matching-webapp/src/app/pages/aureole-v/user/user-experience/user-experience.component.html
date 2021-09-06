@@ -1,4 +1,4 @@
-<div class="user__experience__wrapper">
+<div class="user__experience__wrapper" id="user_experience">
   <ait-text-gradient
     [content]="getTitleByMode()"
     id="form_edit_user_experience"
@@ -10,68 +10,68 @@
     class="content__card"
     [label]="'基本情報'"
     [padding]="'14px 90px 0 10px'"
-    (onToggle)="toggleContent('userExperienceInfo', $event)"
-    [isOpen]="isOpen.userExperienceInfo"
-    [isStart]="true"
   >
     <div style="margin-top: 14px">
-      <ait-autocomplete-master
-        [id]="'title'"
-        [label]="'TITLE'"
-        [required]="true"
-        [collection]="'m_title'"
-        [placeholder]="'Developer'"
-        [style]="{ width: '400px' }"
-        [isReset]="resetUserInfo.title"
-        (watchValue)="takeMasterValue($event, 'title')"
-        [defaultValue]="[userExperienceInfo.controls['title'].value]"
-        [isSubmit]="isSubmit"
-      ></ait-autocomplete-master>
-      <div style="margin-top: 14px; width: 400px">
-        <ait-autocomplete-master
-          [id]="'company_working'"
-          [label]="'COMPANY'"
+      <div class="input_area">
+        <ait-autocomplete-master-data
+          [id]="'title'"
+          [label]="'TITLE'"
           [required]="true"
+          [allowNew]="true"
+          [isSubmit]="isSubmit"
+          [placeholder]="'Developer'"
+          [collection]="'m_title'"
+          [disableOutputDefault]="true"
+          [isReset]="resetUserInfo.title"
+          (watchValue)="takeMasterValue($event, 'title')"
+          [defaultValue]="[userExperienceInfo.controls['title'].value]"
+        ></ait-autocomplete-master-data>
+      </div>
+      <div class="input_area">
+        <ait-autocomplete-master-data
+          [required]="true"
+          [label]="'COMPANY'"
+          [isSubmit]="isSubmit"
+          [id]="'company_working'"
           [collection]="'sys_company'"
           [placeholder]="'Aureole IT'"
-          [style]="{ width: '400px' }"
+          [disableOutputDefault]="true"
           [isReset]="resetUserInfo.company_working"
           (watchValue)="takeMasterValue($event, 'company_working')"
           [defaultValue]="[
             userExperienceInfo.controls['company_working'].value
           ]"
-          [isSubmit]="isSubmit"
-        ></ait-autocomplete-master>
+        ></ait-autocomplete-master-data>
       </div>
       <div class="input_area">
-        <ait-autocomplete-master
+        <ait-autocomplete-master-data
           [id]="'location'"
-          [label]="'LOCATION'"
           [required]="true"
+          [label]="'LOCATION'"
+          [class]="'COUNTRY'"
+          [isSubmit]="isSubmit"
+          [disableOutputDefault]="true"
           [collection]="'sys_master_data'"
           [placeholder]="'Ho Chi Minh City'"
           [isReset]="resetUserInfo.location"
-          [maxItem]="1"
-          [style]="{ width: '400px' }"
           (watchValue)="takeMasterValue($event, 'location')"
           [defaultValue]="[userExperienceInfo.controls['location'].value]"
-          [isSubmit]="isSubmit"
-        ></ait-autocomplete-master>
+        ></ait-autocomplete-master-data>
       </div>
 
       <div class="input_area">
         <ait-autocomplete-master-data
-          [id]="'employee_type'"
-          [label]="'EMPLOYMENT TYPE'"
-          [placeholder]="'Select'"
           [required]="true"
+          [class]="'EMP_TYPE'"
+          [isSubmit]="isSubmit"
+          [id]="'employee_type'"
+          [placeholder]="'Select'"
+          [label]="'EMPLOYMENT TYPE'"
+          [disableOutputDefault]="true"
           [collection]="'sys_master_data'"
           [isReset]="resetUserInfo.employee_type"
-          [style]="{ width: '200px' }"
           (watchValue)="takeMasterValue($event, 'employee_type')"
           [defaultValue]="[userExperienceInfo.controls['employee_type'].value]"
-          [disableOutputDefault]="true"
-          [isSubmit]="isSubmit"
         >
         </ait-autocomplete-master-data>
       </div>
@@ -79,19 +79,18 @@
       <div class="input_area">
         <nb-checkbox
           class="gray-text"
-          [checked]="userExperienceInfo.controls['is_working'].value"
+          [checked]="userExperienceInfo.controls['is_working']?.value"
           [id]="'is_working'"
           (checkedChange)="toggleCheckBox($event)"
           >I am currently working in this role
         </nb-checkbox>
       </div>
 
-      <div style="display: flex; align-items: flex-end">
+      <div class="start-date">
         <ait-datepicker
           [label]="'START DATE'"
-          [placeholder]="'yyyy/MM/dd'"
           [id]="'start_date_from'"
-          [style]="{ width: '170px' }"
+          [style]="{ width: '180px' }"
           [isReset]="resetUserInfo.start_date_from"
           [dateInput]="userExperienceInfo.controls['start_date_from'].value"
           (watchValue)="
@@ -102,11 +101,10 @@
             )
           "
         ></ait-datepicker>
-        <span style="color: #8f9bb3; margin: 10px; font-weight: 600">〜</span>
+        <span>〜</span>
         <ait-datepicker
-          [placeholder]="'yyyy/MM/dd'"
           [id]="'start_date_to'"
-          [style]="{ width: '170px' }"
+          [style]="{ width: '180px' }"
           [isReset]="resetUserInfo.start_date_to"
           [disable]="userExperienceInfo.controls['is_working'].value"
           [ngClass]="{
@@ -122,7 +120,10 @@
           "
         ></ait-datepicker>
       </div>
-      <ait-error-message [errors]="errorArr"></ait-error-message>
+      <ait-error-message
+        [id]="'start-date'"
+        [errors]="errorArr"
+      ></ait-error-message>
 
       <div class="input_area">
         <ait-input-text
@@ -144,10 +145,12 @@
     <div class="action-row">
       <div class="block">
         <ait-button
+          [id]="'cancel'"
           [title]="'CANCEL'"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
           "
+          (click)="back()"
         ></ait-button>
 
         <ait-button
@@ -158,7 +161,7 @@
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
           "
-          (click)="confirmBeforeDelete()"
+          (click)="onDelete()"
         >
         </ait-button>
 
@@ -175,6 +178,7 @@
 
         <ait-button
           *ngIf="mode === 'NEW'"
+          [id]="'saveAndContinue'"
           [title]="'SAVE & CONTINUE'"
           (click)="saveAndContinue()"
           [background]="
@@ -183,8 +187,8 @@
         ></ait-button>
 
         <ait-button
-          *ngIf="mode === 'EDIT' || mode === 'NEW'"
-          [id]="'save'"
+          *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
+          [id]="'saveAndClose'"
           [width]="'200px'"
           [title]="'SAVE & CLOSE'"
           (click)="saveAndClose()"
@@ -193,14 +197,13 @@
           "
         >
         </ait-button>
-        <!-- 
         <ait-button
-          *ngIf="mode === 'EDIT'"
-          [id]="'disabled'"
+          *ngIf="!isChanged && mode === 'EDIT'"
+          [id]="'saveAndClose'"
           [width]="'200px'"
           [title]="'SAVE & CLOSE'"
           [style]="'disabled'"
-        ></ait-button> -->
+        ></ait-button>
       </div>
     </div>
   </div>

@@ -231,3 +231,20 @@ nb-radio-group {
 ::ng-deep .ait-label span {
   color: #8f9bb3 !important;
 }
+
+.start-date {
+  display: flex;
+  align-items: flex-end;
+  width: 400px;
+
+  span {
+    color: #8f9bb3;
+    margin: 12px;
+    font-weight: 600;
+  }
+}
+::ng-deep #user_experience input,
+::ng-deep #user_experience textarea{
+  font-size: 12px !important;
+}
+

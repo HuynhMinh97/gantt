@@ -61,6 +61,7 @@ declare namespace Cypress {
     scrollTo();
     clearText(id);
     chooseMasterNotData(id, value, classMaster, parent_code?);
+    chooseValueDate(id, year, month, day);
   }
 
 };
@@ -101,9 +102,9 @@ Cypress.Commands.add('login', (email, password) => {
   cy.visit(Cypress.env('host') + Cypress.env('sign_in'));
   cy.get('#email').type(email);
   cy.get('#password').type(password);
-  // .type('{enter}');
+  // // .type('{enter}');
   cy.get('.button__submit').click();
-  cy.url().should('eq', Cypress.env('host') + Cypress.env('recommenced_url'));
+  // cy.url().should('eq', Cypress.env('host') + Cypress.env('recommenced_url'));
 
   // setting language ja_JP
   // cy.get('.avatar').click();
@@ -289,6 +290,7 @@ Cypress.Commands.add('getCountFile', (id, value) => {
       failOnStatusCode: false
     }).then(response => {
       const data = response.body.data.findBinaryData.data;
+      console.log(data)
       return cy.get('#' + id + '_input_file').should('have.text', 'ファイル数： ' + data.length)
     })
   } else {
@@ -420,5 +422,16 @@ Cypress.Commands.add('scrollTo', () => {
 Cypress.Commands.add('status', (data) => {
   expect(data).to.eq(200);
 });
+// Chọn gia tri ngày
+Cypress.Commands.add('chooseValueDate', (id, year, month, day) => {
 
+  cy.get('#' + id + '_input').first().then((dtp) => {
+    cy.wrap(dtp).click()
+      .get('nb-calendar-view-mode > .appearance-ghost').click()
+      .get('nb-calendar-picker').contains(year).click()
+      .get('nb-calendar-picker').contains(month + '月').click()
+      .get('nb-calendar-day-cell:not(.bounding-month)').contains(day).click() //.invoke('text')
+      // bounding-month
+});
+});
 

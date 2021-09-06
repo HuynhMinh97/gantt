@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
   COMMON: {
-    COMPANY_DEFAULT: 'd3415d06-601b-42c4-9ede-f5d9ff2bcac3',
+    COMPANY_DEFAULT: 'a8cd83a1-5a4d-4500-8751-a790d649c398',
     LANG_DEFAULT: 'ja_JP',
     LOCALE_DEFAULT: 'ja-JP',
     VERSION: 'v1.1',

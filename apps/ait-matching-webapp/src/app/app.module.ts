@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 import { AitAuthGuardService, AitAuthScreenService, AitChipModule, AitTabsModule, AitUiModule, rootReducers } from '@ait/ui';
 import { AitAuthModule } from '@ait/auth';
 import { environment } from '../environments/environment';
@@ -12,7 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
 import { aureoleRootReducers } from './state/rootReducers';
 import { AureoleRoutingModule } from './app-routing.module';
-import { NbButtonModule, NbIconModule, NbSpinnerModule, NbTooltipModule, NbCheckboxModule } from '@nebular/theme';
+import { NbButtonModule, NbIconModule, NbSpinnerModule, NbTooltipModule, NbCheckboxModule, NbCardModule, NbInputModule, NbFormFieldModule, NbRadioModule } from '@nebular/theme';
 import { AureoleVCardComponent } from './pages/aureole-v/recommenced-user/components/card/card.component';
 import { ContentRowComponent } from './pages/aureole-v/recommenced-user/components/content/content.component';
 import { CardSkeletonComponent } from './pages/aureole-v/recommenced-user/components/card-skeleton/card-skeleton.component';
@@ -23,6 +23,9 @@ import { ReactionService } from './services/reaction.service';
 import { RecommencedUserService } from './services/recommenced-user.service';
 import { UserExperienceComponent } from './pages/aureole-v/user/user-experience/user-experience.component';
 import { AddComponent } from './user/add/add.component';
+import { UserEducationComponent } from './pages/aureole-v/user/user-education/user-education.component';
+import { UserLanguageComponent } from './pages/aureole-v/user/user-language/user-language.component';
+import { UserOnboardingComponent } from './pages/aureole-v/user/user-onboarding/user-onboarding.component';
 
 
 const AIT_UI_MODULES = [
@@ -40,7 +43,10 @@ const NB_UI_MODULES = [
   NbSpinnerModule,
   NbTooltipModule,
   NbButtonModule,
-  NbCheckboxModule
+  NbCheckboxModule,
+  NbInputModule,
+  NbFormFieldModule,
+  NbRadioModule
 ]
 
 const AUREOLE_V_COMPONENTS = [
@@ -51,7 +57,10 @@ const AUREOLE_V_COMPONENTS = [
 
 const PAGES = [
   RecommencedComponent,
-  UserExperienceComponent
+  UserExperienceComponent,
+  UserEducationComponent,
+  UserLanguageComponent,
+  UserOnboardingComponent
 ]
 
 

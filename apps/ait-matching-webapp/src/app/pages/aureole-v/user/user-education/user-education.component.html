@@ -1,0 +1,211 @@
+<div class="user__education__wrapper" id="user_education">
+  <ait-text-gradient
+    [content]="getTitleByMode()"
+    id="form_edit_user_education"
+  ></ait-text-gradient>
+  <ait-space></ait-space>
+  <ait-card-content
+    style="justify-content: center"
+    class="content__card"
+    [label]="'基本情報'"
+    [padding]="'14px 90px 0 10px'"
+  >
+    <div style="margin-top: 14px">
+      <div class="input_area">
+        <ait-autocomplete-master-data
+          [id]="'school'"
+          [label]="'SCHOOL'"
+          [required]="true"
+          [allowNew]="true"
+          [placeholder]="'bachkhoahcm'"
+          [collection]="'m_school'"
+          [disableOutputDefault]="true"
+          [isReset]="resetUserInfo.school"
+          (watchValue)="takeMasterValue($event, 'school')"
+          [defaultValue]="[userEducationInfo.controls['school'].value]"
+          [isSubmit]="isSubmit"
+        ></ait-autocomplete-master-data>
+      </div>
+      <div class="input_area">
+        <ait-input-text
+          [length]="400"
+          [id]="'degree'"
+          [label]="'degree'"
+          [placeholder]="'engineer'"
+          [isReset]="resetUserInfo.degree"
+          (watchValue)="takeInputValue($event, 'degree')"
+          [defaultValue]="userEducationInfo.controls['degree'].value"
+        >
+        </ait-input-text>
+      </div>
+
+      <div class="input_area">
+        <ait-input-text
+          [length]="400"
+          [id]="'field_of_study'"
+          [label]="'field_of_study'"
+          [placeholder]="'computer'"
+          [isReset]="resetUserInfo.field_of_study"
+          (watchValue)="takeInputValue($event, 'field_of_study')"
+          [defaultValue]="userEducationInfo.controls['field_of_study'].value"
+        >
+        </ait-input-text>
+      </div>
+
+      <div class="input_area">
+        <ait-input-text
+          [length]="400"
+          [id]="'grade'"
+          [label]="'grade'"
+          [placeholder]="'Good'"
+          [isReset]="resetUserInfo.grade"
+          (watchValue)="takeInputValue($event, 'grade')"
+          [defaultValue]="userEducationInfo.controls['grade'].value"
+        >
+        </ait-input-text>
+      </div>
+
+      <div class="start-date">
+        <ait-datepicker
+          [label]="'start_date'"
+          [placeholder]="'yyyy/MM'"
+          [format]="'yyyy/MM'"
+          [id]="'start_date_from'"
+          [style]="{ width: '180px' }"
+          [isReset]="resetUserInfo.start_date_from"
+          [dateInput]="userEducationInfo.controls['start_date_from'].value"
+          (watchValue)="
+            takeDatePickerValue(
+              $event?.value,
+              'userEducationInfo',
+              'start_date_from'
+            )
+          "
+        ></ait-datepicker>
+        <span>〜</span>
+        <ait-datepicker
+          [placeholder]="'yyyy/MM'"
+          [format]="'yyyy/MM'"
+          [id]="'start_date_to'"
+          [style]="{ width: '180px' }"
+          [isReset]="resetUserInfo.start_date_to"
+          [dateInput]="userEducationInfo.controls['start_date_to'].value"
+          (watchValue)="
+            takeDatePickerValue(
+              $event?.value,
+              'userEducationInfo',
+              'start_date_to'
+            )
+          "
+        ></ait-datepicker>
+      </div>
+      <ait-error-message
+        [id]="'start-date'"
+        [errors]="errorArr"
+      ></ait-error-message>
+
+      <div class="input_area">
+        <ait-input-text
+          [id]="'description'"
+          [length]="4000"
+          [rows]="4"
+          [label]="'description'"
+          [placeholder]="'place your text'"
+          [width]="'400px'"
+          [isReset]="resetUserInfo.description"
+          (watchValue)="takeInputValue($event, 'description')"
+          [defaultValue]="userEducationInfo.controls['description'].value"
+        >
+        </ait-input-text>
+
+        <div class="input_area">
+          <ait-label [label]="'FILES'"></ait-label>
+          <label class="file-max"
+            ><nb-icon icon="attach-outline"></nb-icon>Upload max 5 files and
+            10MB/file</label
+          >
+          <ait-input-file
+            [id]="'file'"
+            [maxSize]="1000000"
+            [maxFiles]="5"
+            [hasStatus]="false"
+            [placeholder]="'Select file'"
+            [isReset]="isResetFile"
+            [isClear]="isClear"
+            [fileKeys]="userEducationInfo.controls['file'].value"
+            (watchValue)="
+              takeFiles($event.value, 'userEducationInfo', 'file')
+            "
+            [isSubmit]="isSubmit"
+          ></ait-input-file>
+        </div>
+      </div>
+    </div>
+  </ait-card-content>
+  <div class="sticky">
+    <div class="action-row">
+      <div class="block">
+        <ait-button
+          [id]="'cancel'"
+          [title]="'CANCEL'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+          (click)="back()"
+        ></ait-button>
+
+        <ait-button
+          *ngIf="mode === 'EDIT'"
+          [id]="'delete'"
+          [width]="'200px'"
+          [title]="'DELETE'"
+          (click)="onDelete()"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+        >
+        </ait-button>
+
+        <ait-button
+          [id]="'reset'"
+          [width]="'200px'"
+          [title]="'RESET'"
+          (click)="resetForm()"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+        >
+        </ait-button>
+
+        <ait-button
+          *ngIf="mode === 'NEW'"
+          [id]="'saveAndContinue'"
+          [title]="'SAVE & CONTINUE'"
+          (click)="saveAndContinue()"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+        ></ait-button>
+
+        <ait-button
+          [id]="'saveAndClose'"
+          *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
+          [width]="'200px'"
+          [title]="'SAVE & CLOSE'"
+          (click)="saveAndClose()"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+        >
+        </ait-button>
+        <ait-button
+          *ngIf="!isChanged && mode === 'EDIT'"
+          [id]="'saveAndClose'"
+          [width]="'200px'"
+          [title]="'SAVE & CLOSE'"
+          [style]="'disabled'"
+        ></ait-button>
+      </div>
+    </div>
+  </div>
+</div>
