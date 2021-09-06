@@ -393,13 +393,14 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
 
 
   onKeyDown = (event) => {
+    const originValue = event.data?.normalize('NFKC');
     // eslint-disable-next-line no-useless-escape
     const BIRTHNUMBER_ALLOWED_CHARS_REGEXP = /[0-9]+/;
     if (this.currentKey === 8) {
       this.isTooltip = false;
       return true;
     }
-    else if (!BIRTHNUMBER_ALLOWED_CHARS_REGEXP.test(event.data)) {
+    else if (!BIRTHNUMBER_ALLOWED_CHARS_REGEXP.test(originValue)) {
       event.preventDefault();
       this.input.nativeElement.blur();
       this.isTooltip = true;
