@@ -14,7 +14,7 @@ import { AppState, getCaption } from '../../state/selectors';
 export class AitCardContentComponent {
   constructor(private envService: AitEnvironmentService, private store: Store<AppState>, private translate: AitTranslationService) {
     store.pipe(select(getCaption)).subscribe(() => {
-      this.buttonTitle = translate.translate('追加する');
+      this.buttonTitle = translate.translate(this.buttonTitle || '追加する');
     })
   }
   @Input() label = 'Default';
@@ -24,9 +24,10 @@ export class AitCardContentComponent {
   @Input() isColumn = false;
   @Input() isStart = false;
   @Input() padding = '';
+  @Input() tooltip = '';
   @Input() actionBtn = [
 
-  ]
+  ];
   @Input() disableHeader = false;
   gradientString = 'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)';
   isShow = true;
@@ -35,7 +36,7 @@ export class AitCardContentComponent {
   isDev = false;
   @Input()
   disableButton = false;
-  buttonTitle = ''
+  @Input() buttonTitle = '';
   @Input() classContainer: any;
 
   get textButton(): string {
@@ -55,8 +56,6 @@ export class AitCardContentComponent {
 
 
   handleClickBtnHeader = () => {
-    // this.isShow = !this.isShow;
-    this.onClickButtonHeader.emit({ clicked: true });
+    !this.tooltip && this.onClickButtonHeader.emit({ clicked: true });
   }
-
 }
