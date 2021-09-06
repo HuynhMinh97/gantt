@@ -5,10 +5,10 @@ describe('Test Cypress', () => {
     cy.visit(Cypress.env('host') + Cypress.env('user_education'));
 
     cy.url().should('eq', Cypress.env('host') + Cypress.env('user_education'));
-    checkInitUserEducation();
-    checkValidateUserEducation();
+    // checkInitUserEducation();
+    // checkValidateUserEducation();
     checkValidOfDateUserEducation();
-    insertDataUserEducation();
+    // insertDataUserEducation();
   });
 });
 
@@ -89,17 +89,19 @@ function checkValidOfDateUserEducation() {
 
   // choose start_date_from > start_date_to (case: wrong)
   cy.chooseValueDate('start_date_from', '2021', '8', '27');
-  cy.chooseValueDate('start_date_to', '2021', '8', '1');
-  cy.clickButton('saveAndClose');
-  cy.errorMessage(
-    'start-date',
-    ' start_date_to 以下の値で start_date_from を入力してください。'
-  );
+  cy.get("#start_date_to_input").type("19970801");
+  cy.typeTextarea('description', 'bin test cypress');
+  //cy.chooseValueDate('start_date_to', '1997', '8', '1');
+  // cy.clickButton('saveAndClose');
+  // cy.errorMessage(
+  //   'start-date',
+  //   ' start_date_to 以下の値で start_date_from を入力してください。'
+  // );
 
-  // choose start_date_to < current date (case: right)
-  cy.chooseValueDate('start_date_from', '2021', '8', '13');
-  cy.chooseValueDate('start_date_to', '2021', '9', '19');
-  cy.clickButton('saveAndClose');
+  // // choose start_date_to < current date (case: right)
+  // cy.chooseValueDate('start_date_from', '2021', '8', '13');
+  // cy.chooseValueDate('start_date_to', '2021', '9', '19');
+  // cy.clickButton('saveAndClose');
   // cy.clickButton('reset');
 }
 
