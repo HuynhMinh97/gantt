@@ -155,6 +155,7 @@ export class AitBaseService {
       COLLECTIONS.CAPTION,
     ];
     const mapData = [];
+    const getBy = isObjectFull(options?.get_by) ? options.get_by : KEYS.CODE;
 
     isSystem && collection === COLLECTIONS.USER_SETTING && condition['user_id']
       ? delete condition['user_id']
@@ -225,7 +226,7 @@ export class AitBaseService {
       aqlStr += ` RETURN `;
       aqlStr += data.return_field
         ? ` doc.${data.return_field}  ) : `
-        : `{ _key: doc.code, value: doc.name.${lang} } ) : `;
+        : `{ _key: doc.${getBy}, value: doc.name.${lang} } ) : `;
 
       aqlStr += ` (FOR doc IN ${data.ref_collection} `;
       aqlStr += ` FILTER doc.${data.ref_attribute} == data.${data.attribute} `;
@@ -243,7 +244,7 @@ export class AitBaseService {
       aqlStr += ` RETURN `;
       aqlStr += data.return_field
         ? ` doc.${data.return_field} )[0] ), `
-        : `{ _key: doc.code, value: doc.name.${lang} })[0] ), `;
+        : `{ _key: doc.${getBy}, value: doc.name.${lang} })[0] ), `;
     });
     aqlStr += `  }) `;
     return aqlStr;
