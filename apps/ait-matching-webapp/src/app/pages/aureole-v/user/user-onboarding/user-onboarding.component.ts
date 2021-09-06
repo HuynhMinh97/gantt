@@ -159,10 +159,7 @@ export class UserOnboardingComponent
       company_working: new FormControl(null),
       title: new FormControl(null),
       industry: new FormControl(null, [Validators.required]),
-      skills: new FormControl(null, [
-        Validators.required,
-        Validators.maxLength(10),
-      ]),
+      skills: new FormControl(null, [Validators.required]),
     });
 
     this.userOnbService.findSiteLanguageById(this.user_id).then((r) => {
@@ -188,12 +185,9 @@ export class UserOnboardingComponent
         .then(async (r) => {
           if (r.status === RESULT_STATUS.OK) {
             let isUserExist = false;
-            let skills = [];
             if (r.data.length > 0) {
               const data = r.data[0];
               this.userOnboardingInfo.patchValue({ ...data });
-              console.log(this.userOnboardingInfo.value);
-              
               this.userOnboardingInfoClone = this.userOnboardingInfo.value;
               isUserExist = true;
             }
@@ -218,6 +212,7 @@ export class UserOnboardingComponent
   checkAllowSave() {
     const userInfo = { ...this.userOnboardingInfo.value };
     const userInfoClone = { ...this.userOnboardingInfoClone };
+    
 
     this.isChanged = !AitAppUtils.isObjectEqual(
       { ...userInfo },
@@ -243,31 +238,26 @@ export class UserOnboardingComponent
 
   // In create mode default = 男性, edit mode = user.gender
   setDefaultGenderValue() {
-    const genderObj = this.userOnboardingInfo.controls['gender']
-      .value as KeyValueDto;
-
-    if (genderObj) {
+    const genderObj = this.userOnboardingInfo.controls['gender'].value as KeyValueDto; 
+    
+    if (genderObj) { 
       this.genderList = this.genderList.map((gender) =>
         Object.assign({}, gender, {
-          checked: gender._key === genderObj._key ? true : false,
+          checked: gender.code === genderObj._key ? true : false,
         })
       );
-
       const gender = this.genderList.find((gender) => gender.checked === true);
       this.userOnboardingInfo.controls['gender'].setValue({
         _key: gender.code,
         value: gender.name,
       });
       const defaultGender = this.genderList[0];
-      this.defaultGender = {
-        _key: defaultGender.code,
-        value: defaultGender.name,
-      };
-    } else {
+      this.defaultGender = { _key: defaultGender.code, value: defaultGender.name };
+    } else { 
       const genderList = [...this.genderList].map((gender, index) =>
         Object.assign({}, gender, { checked: index === 0 ? true : false })
       );
-      const gender = genderList[2];
+      const gender = genderList[0];
       this.userOnboardingInfo.controls['gender'].setValue({
         _key: gender.code,
         value: gender.name,
@@ -286,9 +276,11 @@ export class UserOnboardingComponent
         }, 100);
       }
       this.userOnboardingInfo.reset();
-      this.userOnboardingInfo.controls['gender'].setValue({
-        ...this.defaultGender,
-      });
+      console.log(this.defaultGender);
+      
+      // this.userOnboardingInfo.controls['gender'].setValue({
+      //   ...this.defaultGender,
+      // });
     } else {
       for (const index in this.resetUserInfo) {
         if (!this.userOnboardingInfo.controls[index].value) {
@@ -307,6 +299,7 @@ export class UserOnboardingComponent
 
   saveDataUserProfile() {
     const saveData = this.userOnboardingInfo.value;
+
     saveData['user_id'] = this.authService.getUserID();
     saveData.ward = saveData.ward._key;
     saveData.title = saveData.title._key;
@@ -316,11 +309,15 @@ export class UserOnboardingComponent
     saveData.district = saveData.district._key;
     saveData.industry = saveData.industry._key;
     saveData.company_working = saveData.company_working._key;
-
+    const skills = this.userOnboardingInfo.value.skills;
+    const _keySkill = [];
+    skills.forEach(async (skill) => {
+      _keySkill.push(skill._key);
+    });
+    saveData.skills = _keySkill;
     if (this.user_key) {
       saveData['_key'] = this.user_key;
     }
-    console.log(saveData);
 
     return saveData;
   }
@@ -332,12 +329,8 @@ export class UserOnboardingComponent
 
     const skills = this.userOnboardingInfo.value.skills;
     skills.forEach(async (skill) => {
-      this.user_skill._to = 'm_skill/' + skill;
-
-      if (this.user_key) {
-        this.user_skill['_key'] = this.user_key;
-      }
-      await this.userOnbService.saveUserSkill([this.user_skill]);
+      this.user_skill._to = 'm_skill/' + skill._key;
+      await this.userOnbService.saveUserSkills([this.user_skill]);
     });
   }
 
@@ -351,7 +344,6 @@ export class UserOnboardingComponent
       this.userOnbService
         .save(this.saveDataUserProfile())
         .then((res) => {
-          //console.log(res);
           if (res?.status === RESULT_STATUS.OK) {
             this.saveDataUserSkill();
             const message =
@@ -367,6 +359,61 @@ export class UserOnboardingComponent
         });
     } else {
       this.scrollIntoError();
+    }
+  }
+
+  onDelete() {
+    this.dialogService
+      .open(AitConfirmDialogComponent, {
+        closeOnBackdropClick: true,
+        hasBackdrop: true,
+        autoFocus: false,
+        context: {
+          title: this.getMsg('I0004'),
+        },
+      })
+      .onClose.subscribe(async (event) => {
+        if (event) {
+          const _key = [{ _key: this.user_key }];
+          if (this.user_key) {
+            await this.userOnbService.remove(_key).then((res) => {
+              if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
+                const skills = this.userOnboardingInfo.value.skills;
+                skills.forEach(async (skill) => {
+                  const _fromUserSkill = [{ _from: skill._key }];
+                  await this.userOnbService.removeUserSkills(_fromUserSkill);
+                });
+                this.showToastr('', this.getMsg('I0003'));
+                history.back();
+              } else {
+                this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+              }
+            });
+          } else {
+            this.showToastr('', this.getMsg('E0050'), KEYS.WARNING);
+          }
+        }
+      });
+  }
+
+  back() {
+    if (this.isChanged) {
+      this.dialogService
+        .open(AitConfirmDialogComponent, {
+          closeOnBackdropClick: true,
+          hasBackdrop: true,
+          autoFocus: false,
+          context: {
+            title: this.getMsg('I0006'),
+          },
+        })
+        .onClose.subscribe(async (event) => {
+          if (event) {
+            history.back();
+          }
+        });
+    } else {
+      history.back();
     }
   }
 
@@ -449,7 +496,7 @@ export class UserOnboardingComponent
     if (isArrayFull(value)) {
       const data = [];
       value.forEach((file) => {
-        data.push(file._key);
+        data.push(file);
       });
       this.userOnboardingInfo.markAsDirty();
       this[group].controls[form].setValue(data);

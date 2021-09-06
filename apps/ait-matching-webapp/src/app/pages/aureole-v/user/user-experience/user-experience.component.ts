@@ -96,16 +96,18 @@ export class UserExperienceComponent
     //Create form builder group
     this.userExpService
       .findUserProfile(this.authService.getUserID())
-      .then(x => {
-          this.defaultCompany = {_key: x.data[0].company_working._key, value: x.data[0].company_working.value};
-          
-          this.userExperienceInfo.controls['company_working'].setValue({
-            ...this.defaultCompany,
-          });
-          console.log(this.userExperienceInfo.value.company_working);
-          
+      .then((x) => {
+        this.defaultCompany = {
+          _key: x.data[0].company_working._key,
+          value: x.data[0].company_working.value,
+        };
+
+        this.userExperienceInfo.controls['company_working'].setValue({
+          ...this.defaultCompany,
+        });
+        console.log(this.userExperienceInfo.value.company_working);
       });
-    
+
     this.userExperienceInfo = this.formBuilder.group({
       title: new FormControl(null, [
         Validators.required,
@@ -114,8 +116,6 @@ export class UserExperienceComponent
       company_working: new FormControl(null, [Validators.required]),
       location: new FormControl(null, [Validators.required]),
       employee_type: new FormControl(null, [Validators.required]),
-      is_working: new FormControl(false),
-      start_date_from: this.defaultValueDate,
       start_date_to: new FormControl(null),
       description: new FormControl(null),
     });
@@ -124,6 +124,13 @@ export class UserExperienceComponent
     this.user_key = this.activeRouter.snapshot.paramMap.get('id');
     if (this.user_key) {
       this.mode = MODE.EDIT;
+    }
+    if (this.mode === MODE.NEW) {
+      this.userExperienceInfo.addControl(
+        'start_date_from',
+        new FormControl(this.defaultValueDate)
+      );
+      this.userExperienceInfo.addControl('is_working', new FormControl(false));
     }
   }
 
@@ -158,7 +165,7 @@ export class UserExperienceComponent
   checkAllowSave() {
     const userInfo = { ...this.userExperienceInfo.value };
     const userInfoClone = { ...this.userExperienceInfoClone };
-    
+
     this.isChanged = !AitAppUtils.isObjectEqual(
       { ...userInfo },
       { ...userInfoClone }
@@ -391,7 +398,7 @@ export class UserExperienceComponent
 
   back() {
     console.log(this.isChanged);
-    
+
     if (this.isChanged) {
       this.dialogService
         .open(AitConfirmDialogComponent, {

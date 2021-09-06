@@ -104,7 +104,6 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
       grade: new FormControl(null),
       field_of_study: new FormControl(null),
       file: new FormControl(null),
-      start_date_from: this.defaultValueDate,
       start_date_to: new FormControl(null),
       description: new FormControl(null),
     });
@@ -113,6 +112,12 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     this.user_key = this.activeRouter.snapshot.paramMap.get('id');
     if (this.user_key) {
       this.mode = MODE.EDIT;
+    }
+    if (this.mode === MODE.NEW) {
+      this.userEducationInfo.addControl(
+        'start_date_from',
+        new FormControl(this.defaultValueDate)
+      );
     }
   }
 
@@ -126,8 +131,6 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
             let files = [];
             if (r.data.length > 0) {
               const data = r.data[0];
-              console.log(data.file);
-
               this.userEducationInfo.patchValue({ ...data });
               await data.file.forEach(async (e) => {
                 await this.userEduService.findFiles(e).then((x) => {
@@ -344,8 +347,6 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
   }
 
   back() {
-    console.log(this.isChanged);
-
     if (this.isChanged) {
       this.dialogService
         .open(AitConfirmDialogComponent, {

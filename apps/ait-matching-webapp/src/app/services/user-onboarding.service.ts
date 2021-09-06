@@ -126,7 +126,7 @@ export class UserOnboardingService extends AitBaseService {
     );
   }
 
-  async saveUserSkill(data: any[]) {
+  async saveUserSkills(data: any[]) {
     const returnField = { _key: true };
     return await this.mutation(
       'saveUserSkill',
@@ -141,6 +141,16 @@ export class UserOnboardingService extends AitBaseService {
     return await this.mutation(
       'removeUserOnboardingInfo',
       this.collection,
+      data,
+      returnFields
+    );
+  }
+
+  async removeUserSkills(data: any[]) {
+    const returnFields = { _key: true };
+    return await this.mutation(
+      'removeUserSkill',
+      'user_skill',
       data,
       returnFields
     );

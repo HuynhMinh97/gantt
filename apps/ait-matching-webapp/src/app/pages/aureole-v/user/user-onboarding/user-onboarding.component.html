@@ -39,7 +39,7 @@
       </div>
       <div class="input_area">
         <ait-input-text
-          *ngIf="isLangJP"
+          *ngIf="isLangJP" 
           [id]="'katakana'"
           [label]="'KATAKANA'"
           [length]="200"
@@ -53,7 +53,7 @@
       </div>
       <div class="input_area">
         <ait-input-text
-          *ngIf="isLangJP"
+          *ngIf="isLangJP" 
           [id]="'romaji'"
           [label]="'ROMAJI'"
           [length]="200"
@@ -75,8 +75,7 @@
               [value]="option"
               [checked]="
                 userOnboardingInfo.controls['gender'].value
-                  ? userOnboardingInfo.controls['gender'].value?._key ==
-                    option.code
+                  ? userOnboardingInfo.controls['gender'].value?._key == option.code
                   : isFirst
               "
               (valueChange)="takeGenderValue($event)"
@@ -95,8 +94,12 @@
           [style]="{ width: '180px' }"
           [isReset]="resetUserInfo.bod"
           (watchValue)="
-            takeDatePickerValue($event?.value, 'userOnboardingInfo', 'bod')
-          "
+            takeDatePickerValue(
+              $event?.value,
+              'userOnboardingInfo',
+              'bod'
+            )
+          " 
           [dateInput]="userOnboardingInfo.controls['bod'].value"
         ></ait-datepicker>
       </div>
@@ -139,12 +142,8 @@
           [class]="'COUNTRY'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.country"
-          [defaultValue]="[
-            {
-              _key: '8305f916-efc9-d096-3445-04de535449a9',
-              value: 'HCM'
-            }
-          ]"
+          (watchValue)="takeMasterValue($event, 'country')"
+          [defaultValue]="[userOnboardingInfo.controls['country'].value]"
         ></ait-autocomplete-master-data>
       </div>
       <div class="input_area">
@@ -244,9 +243,7 @@
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.company_working"
           (watchValue)="takeMasterValue($event, 'company_working')"
-          [defaultValue]="[
-            userOnboardingInfo.controls['company_working'].value
-          ]"
+          [defaultValue]="[userOnboardingInfo.controls['company_working'].value]"
         ></ait-autocomplete-master-data>
       </div>
       <div class="input_area">
@@ -290,9 +287,7 @@
           [collection]="'m_skill'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.skills"
-          (watchValue)="
-            takeMasterValues($event?.value, 'userOnboardingInfo', 'skills')
-          "
+          (watchValue)="takeMasterValues($event?.value, 'userOnboardingInfo', 'skills')"
           [defaultValue]="userOnboardingInfo.controls['skills'].value"
         ></ait-autocomplete-master-data>
       </div>
@@ -307,6 +302,7 @@
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
           "
+          (click)="back()"
         ></ait-button>
 
         <ait-button

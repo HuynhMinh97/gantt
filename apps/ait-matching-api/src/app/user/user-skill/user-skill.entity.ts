@@ -5,9 +5,6 @@ import { KeyValueEntity } from '@ait/core';
 @ObjectType()
 export class UserSkillEntity extends BaseEntity {
 
-  @Field(() => KeyValueEntity, { nullable: true })
-    skill?: KeyValueEntity;
-
   @Field(() => String, { nullable: true })
   _from?: string;
 

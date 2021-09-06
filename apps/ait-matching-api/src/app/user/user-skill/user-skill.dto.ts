@@ -4,9 +4,6 @@ import { InputType, Field, Float } from '@nestjs/graphql';
 @InputType()
 export class UserSkillDto extends BaseDto {
 
-  @Field(() => ConditionDto, { nullable: true })
-    skill?: ConditionDto;
-
   @Field(() => String, { nullable: true })
   _from?: string;
 
