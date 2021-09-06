@@ -32,10 +32,6 @@ export interface ConditionSearch {
 
 @Injectable()
 export class AitMasterDataService extends AitBaseService {
-
-  private CHECKED = '<div class="checkbox-center"><input type="checkbox" checked="checked" onclick="return false" style=""></input></div>';
-  private UNCHECKED = '<div class="checkbox-center"><input type="checkbox" onclick="return false" style=""></input></div>';
-
   private save = this.env?.API_PATH?.SYS?.MASTER_DATA + '/save';
   private getmaster = this.env?.API_PATH?.SYS?.MASTER_DATA + '/get';
   private remove = this.env?.API_PATH?.SYS?.MASTER_DATA + '/remove';
@@ -114,13 +110,23 @@ export class AitMasterDataService extends AitBaseService {
   }
 
 
-  async find(condition: any, rf?: any, collection?: string, includeNotDelete: boolean = true, includeNotActive: boolean = false) {
+  async find(
+    condition: any,
+    rf?: any,
+    collection: string = 'sys_master_data',
+    options: any = {},
+    includeNotDelete: boolean = true,
+    includeNotActive: boolean = false
+  ) {
     const returnFields = rf ? rf : this.returnFields;
     const request = {};
     if (isObjectFull(condition)) {
       request['condition'] = condition;
     }
-    request['collection'] = collection || 'sys_master_data';
+    if (isObjectFull(options)) {
+      request['options'] = options;
+    }
+    request['collection'] = collection;
 
     return await this.query(GRAPHQL.FIND_SYSTEM, request, returnFields, includeNotDelete, includeNotActive);
   }
