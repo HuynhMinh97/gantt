@@ -82,6 +82,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Input() class: string;
   @Input() parentCode: string;
   @Input() code: string;
+  @Input() sortBy: string;
   @Input()
   placeholder: string = '';
   @Input() maxItem: number = 1;
@@ -431,22 +432,25 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   settingData = (cb?: any) => {
     const cond = {};
+    const options = {};
     if (this.parentCode) {
       cond['parent_code'] = this.parentCode;
     }
     if (this.code) {
       cond['code'] = this.code;
     }
-
+    if (this.sortBy) {
+      options['sort_by'] = { value: this.sortBy };
+    }
     if (this.class && this.collection === 'sys_master_data') {
-      this.usingGraphQL(cond).then(() => {
+      this.usingGraphQL(cond, options).then(() => {
         if (cb) {
           cb();
         }
       });
     }
     else {
-      this.usingGraphQL({}, false).then(() => {
+      this.usingGraphQL({}, {}, false).then(() => {
         if (cb) {
           cb();
         }
@@ -455,7 +459,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   };
 
-  usingGraphQL = async (cond, hasClass = true) => {
+  usingGraphQL = async (cond, option, hasClass = true) => {
     let dataMaster = [];
     if (this.dataSource) {
       dataMaster = this.dataSource;
@@ -463,6 +467,9 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     else {
       const condition = {
         ...cond
+      };
+      const options = {
+        ...option
       };
       if (hasClass) {
         condition.class = {
@@ -473,7 +480,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         ...condition
       }, {
         _key: true, code: true, [this.targetValue]: true,
-      }, this.collection, this.includeNotDelete, this.includeNotActive);
+      }, this.collection, options, this.includeNotDelete, this.includeNotActive);
 
 
       const result = rest?.data
