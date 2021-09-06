@@ -81,13 +81,12 @@ function checkButtonUserOnboarding() {
   cy.get('cancel_text_button').should('exist');
   cy.get('delete_text_button').should('exist');
   cy.get('reset_text_button').should('exist');
-  cy.get('saveAndContinue_text_button').should('exist');
-  cy.get('saveAndClose_text_button').should('exist');
+  cy.get('save_text_button').should('exist');
 }
 
 function checkValidateUserOnboarding() {
-  cy.typeText('school', 'a');
-  cy.typeText('degree', 'a');
+  cy.typeText('first_name', '');
+  cy.typeText('last_name', '');
   cy.errorMessage('school', ' SCHOOL を入力してください。');
 
   // Check validate when click save
@@ -102,38 +101,24 @@ function checkValidateUserOnboarding() {
   // Check reset Form
   cy.clickButton('reset');
   cy.resetForm([
-    'school_input',
-    'degree_input',
-    'field_of_study_input',
-    'grade_input',
-    'file_input_file',
-    'start_date_to_input',
-    'description_textarea',
+    'first_name_input',
+    'last_name_input',
+    'katakana_input',
+    'romaji_input',
+    'bod_input',
+    'phone_number_input',
+    'about_textarea',
+    'first_name_input',
+    'last_name_input',
+    'katakana_input',
+    'romaji_input',
+    'bod_input',
+    'first_name_input',
+    'last_name_input',
+    'katakana_input',
+    'romaji_input',
+    'bod_input',
   ]);
-}
-
-function checkValidOfDateUserOnboarding() {
-  // default (case: wrong)
-  cy.clickButton('saveAndClose');
-  cy.errorMessage(
-    'start-date',
-    ' start_date_to 以下の値で start_date_from を入力してください。'
-  );
-
-  // choose start_date_from > start_date_to (case: wrong)
-  cy.chooseValueDate('start_date_from', '2021', '8', '27');
-  cy.chooseValueDate('start_date_to', '2021', '8', '1');
-  cy.clickButton('saveAndClose');
-  cy.errorMessage(
-    'start-date',
-    ' start_date_to 以下の値で start_date_from を入力してください。'
-  );
-
-  // choose start_date_to < current date (case: right)
-  cy.chooseValueDate('start_date_from', '2021', '8', '13');
-  cy.chooseValueDate('start_date_to', '2021', '9', '19');
-  cy.clickButton('saveAndClose');
-  // cy.clickButton('reset');
 }
 
 function insertDataUserOnboarding() {

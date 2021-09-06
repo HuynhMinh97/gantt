@@ -116,6 +116,8 @@ export class UserExperienceComponent
       company_working: new FormControl(null, [Validators.required]),
       location: new FormControl(null, [Validators.required]),
       employee_type: new FormControl(null, [Validators.required]),
+      is_working: new FormControl(null),
+      start_date_from: new FormControl(null),
       start_date_to: new FormControl(null),
       description: new FormControl(null),
     });

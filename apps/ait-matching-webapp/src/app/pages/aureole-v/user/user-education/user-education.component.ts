@@ -32,8 +32,6 @@ import {
 } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
 import { KEYS, RESULT_STATUS } from '@ait/shared';
-import { UserEducationDto } from './interface';
-import { forEach, values } from 'lodash';
 
 @Component({
   selector: 'ait-user-education',
@@ -104,6 +102,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
       grade: new FormControl(null),
       field_of_study: new FormControl(null),
       file: new FormControl(null),
+      start_date_from: new FormControl(null),
       start_date_to: new FormControl(null),
       description: new FormControl(null),
     });
@@ -127,6 +126,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
         .findUserEducationByKey(this.user_key)
         .then(async (r) => {
           if (r.status === RESULT_STATUS.OK) {
+            
             let isUserExist = false;
             let files = [];
             if (r.data.length > 0) {

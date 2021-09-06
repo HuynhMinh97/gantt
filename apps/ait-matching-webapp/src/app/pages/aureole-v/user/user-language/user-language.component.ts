@@ -114,9 +114,9 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
             let isUserExist = false;
             if (r.data.length > 0) {
               const data = r.data[0];
-              console.log(data);
-
+              
               this.userLanguageInfo.patchValue({ ...data });
+              console.log(this.userLanguageInfo.value);
               this.userLanguageInfoClone = this.userLanguageInfo.value;
               isUserExist = true;
             }

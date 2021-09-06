@@ -46,7 +46,6 @@ export class UserOnboardingComponent
   userOnboardingInfo: FormGroup;
   userOnboardingInfoClone: any;
 
-  defaultCompany = {} as KeyValueDto;
   genderList: KeyValueCheckedDto[];
   defaultGender = {} as KeyValueDto;
 
@@ -65,7 +64,6 @@ export class UserOnboardingComponent
     last_name: false,
     katakana: false,
     romaji: false,
-    gender: false,
     bod: false,
     phone_number: false,
     about: false,
@@ -188,6 +186,8 @@ export class UserOnboardingComponent
             if (r.data.length > 0) {
               const data = r.data[0];
               this.userOnboardingInfo.patchValue({ ...data });
+              console.log(this.userOnboardingInfo.value);
+
               this.userOnboardingInfoClone = this.userOnboardingInfo.value;
               isUserExist = true;
             }
@@ -197,7 +197,7 @@ export class UserOnboardingComponent
     }
 
     await this.getGenderList();
-    this.setDefaultGenderValue();
+    //this.setDefaultGenderValue();
 
     // Run when form value change
     await this.userOnboardingInfo.valueChanges.subscribe((data) => {
@@ -212,7 +212,9 @@ export class UserOnboardingComponent
   checkAllowSave() {
     const userInfo = { ...this.userOnboardingInfo.value };
     const userInfoClone = { ...this.userOnboardingInfoClone };
-    
+
+    console.log(userInfo);
+    console.log(userInfoClone);
 
     this.isChanged = !AitAppUtils.isObjectEqual(
       { ...userInfo },
@@ -238,9 +240,9 @@ export class UserOnboardingComponent
 
   // In create mode default = 男性, edit mode = user.gender
   setDefaultGenderValue() {
-    const genderObj = this.userOnboardingInfo.controls['gender'].value as KeyValueDto; 
-    
-    if (genderObj) { 
+    const genderObj = this.userOnboardingInfo.controls['gender']
+      .value as KeyValueDto;
+    if (genderObj) {
       this.genderList = this.genderList.map((gender) =>
         Object.assign({}, gender, {
           checked: gender.code === genderObj._key ? true : false,
@@ -252,16 +254,21 @@ export class UserOnboardingComponent
         value: gender.name,
       });
       const defaultGender = this.genderList[0];
-      this.defaultGender = { _key: defaultGender.code, value: defaultGender.name };
-    } else { 
+      this.defaultGender = {
+        _key: defaultGender.code,
+        value: defaultGender.name,
+      };
+    } else {
       const genderList = [...this.genderList].map((gender, index) =>
         Object.assign({}, gender, { checked: index === 0 ? true : false })
       );
+
       const gender = genderList[0];
       this.userOnboardingInfo.controls['gender'].setValue({
         _key: gender.code,
         value: gender.name,
       });
+
       this.defaultGender = { _key: gender.code, value: gender.name };
     }
   }
@@ -270,14 +277,15 @@ export class UserOnboardingComponent
     this.isChanged = false;
     if (this.mode === MODE.NEW) {
       for (const index in this.resetUserInfo) {
-        this.resetUserInfo[index] = true;
-        setTimeout(() => {
-          this.resetUserInfo[index] = false;
-        }, 100);
+        if (!this.userOnboardingInfo.controls[index].value) {
+          this.resetUserInfo[index] = true;
+          setTimeout(() => {
+            this.resetUserInfo[index] = false;
+          }, 100);
+        }
       }
       this.userOnboardingInfo.reset();
-      console.log(this.defaultGender);
-      
+
       // this.userOnboardingInfo.controls['gender'].setValue({
       //   ...this.defaultGender,
       // });
