@@ -17,4 +17,7 @@ export class OptionDto {
 
   @Field(() => SortOptionDto, { nullable: true })
   sort_by: SortOptionDto;
+
+  @Field(() => String, { nullable: true, defaultValue: KEYS.CODE })
+  get_by: string;
 }
