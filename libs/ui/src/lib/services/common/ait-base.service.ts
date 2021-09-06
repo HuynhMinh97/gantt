@@ -234,6 +234,7 @@ export class AitBaseService implements OnDestroy {
     };
 
     request['condition'] = request['condition'] ?? {};
+    request['options'] = request['options'] ?? {};
     (!!this.env.isMatching) && (includeNotDelete) && (request['condition']['del_flag'] = false);
     (!!this.env.isMatching) && (includeNotActive || MASTER_COLLECTION.includes(collection)) && (request['condition']['active_flag'] = true);
     query.query[name]['__args'] = { request };
