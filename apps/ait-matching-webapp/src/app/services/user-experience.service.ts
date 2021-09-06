@@ -57,7 +57,8 @@ export class UserExperienceService extends AitBaseService {
       condition[item.att] = {
         attribute: item.att,
         ref_collection: item.col,
-        ref_attribute: 'code',
+        ref_attribute: '_key',
+        get_by: "_key"
       };
     });
 
@@ -87,7 +88,8 @@ export class UserExperienceService extends AitBaseService {
       company_working: {
         attribute: "company_working",
         ref_collection: "sys_company",
-        ref_attribute: "_key"
+        ref_attribute: "_key",
+        get_by: "_key"
       }
     };
     const returnFields = {

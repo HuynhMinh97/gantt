@@ -93,6 +93,7 @@ export class UserOnboardingService extends AitBaseService {
         attribute: item.att,
         ref_collection: item.col,
         ref_attribute: '_key',
+        get_by: "_key"
       };
     });
 
