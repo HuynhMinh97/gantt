@@ -186,8 +186,6 @@ export class UserOnboardingComponent
             if (r.data.length > 0) {
               const data = r.data[0];
               this.userOnboardingInfo.patchValue({ ...data });
-              console.log(this.userOnboardingInfo.value);
-
               this.userOnboardingInfoClone = this.userOnboardingInfo.value;
               isUserExist = true;
             }
@@ -197,7 +195,7 @@ export class UserOnboardingComponent
     }
 
     await this.getGenderList();
-    //this.setDefaultGenderValue();
+    this.setDefaultGenderValue();
 
     // Run when form value change
     await this.userOnboardingInfo.valueChanges.subscribe((data) => {
@@ -212,9 +210,6 @@ export class UserOnboardingComponent
   checkAllowSave() {
     const userInfo = { ...this.userOnboardingInfo.value };
     const userInfoClone = { ...this.userOnboardingInfoClone };
-
-    console.log(userInfo);
-    console.log(userInfoClone);
 
     this.isChanged = !AitAppUtils.isObjectEqual(
       { ...userInfo },
@@ -277,18 +272,17 @@ export class UserOnboardingComponent
     this.isChanged = false;
     if (this.mode === MODE.NEW) {
       for (const index in this.resetUserInfo) {
-        if (!this.userOnboardingInfo.controls[index].value) {
-          this.resetUserInfo[index] = true;
-          setTimeout(() => {
-            this.resetUserInfo[index] = false;
-          }, 100);
-        }
+        this.resetUserInfo[index] = true;
+        setTimeout(() => {
+          this.resetUserInfo[index] = false;
+        }, 100);
       }
-      this.userOnboardingInfo.reset();
-
-      // this.userOnboardingInfo.controls['gender'].setValue({
-      //   ...this.defaultGender,
-      // });
+      // this.userOnboardingInfo.reset();
+      console.log(this.defaultGender);
+      
+        this.userOnboardingInfo.controls['gender'].setValue({
+          ...this.defaultGender,
+        });
     } else {
       for (const index in this.resetUserInfo) {
         if (!this.userOnboardingInfo.controls[index].value) {

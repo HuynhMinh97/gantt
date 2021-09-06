@@ -102,7 +102,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
       grade: new FormControl(null),
       field_of_study: new FormControl(null),
       file: new FormControl(null),
-      start_date_from: new FormControl(null),
+      start_date_from: new FormControl(this.defaultValueDate),
       start_date_to: new FormControl(null),
       description: new FormControl(null),
     });
@@ -111,12 +111,6 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     this.user_key = this.activeRouter.snapshot.paramMap.get('id');
     if (this.user_key) {
       this.mode = MODE.EDIT;
-    }
-    if (this.mode === MODE.NEW) {
-      this.userEducationInfo.addControl(
-        'start_date_from',
-        new FormControl(this.defaultValueDate)
-      );
     }
   }
 

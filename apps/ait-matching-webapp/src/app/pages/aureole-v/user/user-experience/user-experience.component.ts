@@ -105,7 +105,6 @@ export class UserExperienceComponent
         this.userExperienceInfo.controls['company_working'].setValue({
           ...this.defaultCompany,
         });
-        console.log(this.userExperienceInfo.value.company_working);
       });
 
     this.userExperienceInfo = this.formBuilder.group({
@@ -116,8 +115,8 @@ export class UserExperienceComponent
       company_working: new FormControl(null, [Validators.required]),
       location: new FormControl(null, [Validators.required]),
       employee_type: new FormControl(null, [Validators.required]),
-      is_working: new FormControl(null),
-      start_date_from: new FormControl(null),
+      is_working: new FormControl(false),
+      start_date_from: new FormControl(this.defaultValueDate),
       start_date_to: new FormControl(null),
       description: new FormControl(null),
     });
@@ -126,13 +125,6 @@ export class UserExperienceComponent
     this.user_key = this.activeRouter.snapshot.paramMap.get('id');
     if (this.user_key) {
       this.mode = MODE.EDIT;
-    }
-    if (this.mode === MODE.NEW) {
-      this.userExperienceInfo.addControl(
-        'start_date_from',
-        new FormControl(this.defaultValueDate)
-      );
-      this.userExperienceInfo.addControl('is_working', new FormControl(false));
     }
   }
 
