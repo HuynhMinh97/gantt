@@ -130,6 +130,8 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   monitorLabel = true;
   @Output() onSendAllowText
 
+  lastSortNo = 0;
+
   isFocusInput = false;
 
   isClickLabel = false;
@@ -354,11 +356,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   //TODO Khi nhấn enter sẽ chọn lun giá trị đó nếu save thành công
   checkAllowNew = (value: string) => {
-    // console.log(value)
-    // const title = this.translateSerivce.translate(
-    //   'c_10020'
-    // );
-    // const successToSave = this.translateSerivce.getMsg('I0012')
     if (this.allowNew) {
       const find = this.dataSourceDf.find(d => d.value === value);
       if (!find) {
@@ -371,6 +368,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
             ja_JP: value,
             en_US: value
           },
+          sort_no: this.lastSortNo + 1
         }]).then(r => {
           if (r?.status === RESULT_STATUS.OK) {
 
@@ -497,6 +495,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     if (this.sortBy) {
       options['sort_by'] = { value: this.sortBy };
     }
+
     if (this.class && this.collection === 'sys_master_data') {
       this.usingGraphQL(cond, options).then(() => {
         if (cb) {
@@ -505,7 +504,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       });
     }
     else {
-      this.usingGraphQL({}, {}, false).then(() => {
+      this.usingGraphQL({}, options, false).then(() => {
         if (cb) {
           cb();
         }
@@ -534,7 +533,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       const rest = await this.masterDataService.find({
         ...condition
       }, {
-        _key: true, code: true, [this.targetValue]: true, isMatching: true
+        _key: true, code: true, [this.targetValue]: true, isMatching: true, sort_no: true
       }, this.collection, options, this.includeNotDelete, this.includeNotActive);
 
 
@@ -550,6 +549,9 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       isMatching: r?.isMatching,
       id: r?._key
     }));
+
+    const sortNoArr = dataMaster.map(x => x?.sort_no).filter(s => !!s);
+    this.lastSortNo = sortNoArr.length !== 0 ? Math.max.apply(null, sortNoArr) : dataMaster.length;
 
 
 
