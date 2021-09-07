@@ -85,7 +85,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   @Input() required = false;
   componentErrors = []
   @Input() classContainer;
-  @Input() id = Date.now();
+  @Input() id;
   @Input() errorMessages;
   @Input() clearError = false;
   @Output() onError = new EventEmitter();
@@ -100,9 +100,11 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
   errorImage: any = {}
 
-  ID(element: string): string {
-    return this.id + '_' + element;
+  ID(element: string) {
+    const idx = this.id && this.id !== '' ? this.id : Date.now();
+    return idx + '_' + element;
   }
+
 
   focusInput() {
     this.isFocus = true;

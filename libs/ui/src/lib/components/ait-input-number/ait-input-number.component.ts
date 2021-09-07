@@ -39,7 +39,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   isTrick = false;
   @ViewChild('inputNumber', { static: false }) input: ElementRef;
   isTooltip = false;
-  @Input() id = Date.now();
+  @Input() id;
   @Input() classContainer;
 
 
@@ -96,9 +96,11 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
     })
   }
 
-  ID(element: string): string {
-    return this.id + '_' + element;
+  ID(element: string) {
+    const idx = this.id && this.id !== '' ? this.id : Date.now();
+    return idx + '_' + element;
   }
+
 
   getCaption = () => this.translateService.translate(this.guidance);
 

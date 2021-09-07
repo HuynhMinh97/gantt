@@ -11,12 +11,14 @@ export class AitLabelComponent implements OnChanges  {
   @Input() isTranslate = true;
   @Input() styleText = {};
   @Input() required = false;
-  @Input() id = Date.now();
+  @Input() id;
   @Input() tabIndex;
 
-  ID(element : string): string {
-    return this.id + '_' + element;
+  ID(element: string) {
+    const idx = this.id && this.id !== '' ? this.id : Date.now();
+    return idx + '_' + element;
   }
+
 
   constructor(private translateService : AitTranslationService) {
 

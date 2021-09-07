@@ -48,7 +48,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   @Input() label;
   @Input() guidance = ''
   @Input() guidanceIcon = '';
-  @Input() id = Date.now();
+  @Input() id;
   @Input() styleLabel;
   @Input() classContainer;
   @Input() width;
@@ -85,9 +85,11 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
     return this.isError ? false : this.isFocus;
   }
 
-  ID(element: string): string {
-    return this.id + '_' + element;
+  ID(element: string) {
+    const idx = this.id && this.id !== '' ? this.id : Date.now();
+    return idx + '_' + element;
   }
+
 
   getPlaceHolder = () => this.translateService.translate(this.placeholder);
 
