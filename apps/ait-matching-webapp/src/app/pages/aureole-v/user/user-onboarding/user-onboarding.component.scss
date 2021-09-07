@@ -135,7 +135,7 @@ div.content {
 }
 
 .input_area {
-  width: 400px;
+  width: 410px;
   margin-bottom: 14px;
   margin-top: 14px;
 }
@@ -246,4 +246,15 @@ nb-radio-group {
 ::ng-deep #user_onboarding input,
 ::ng-deep #user_onboarding textarea {
   font-size: 12px !important;
+}
+::ng-deep #user_onboarding nb-icon.icon_expan,
+::ng-deep #user_onboarding .divider,
+::ng-deep #user_onboarding .header__card {
+  display: none;
+}
+::ng-deep #user_onboarding .card__content_container{
+  padding: 30px;
+}
+::ng-deep #user_onboarding .content{
+  padding-top: 0;
 }

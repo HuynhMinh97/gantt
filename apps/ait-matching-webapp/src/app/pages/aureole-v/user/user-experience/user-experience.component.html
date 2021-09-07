@@ -3,13 +3,10 @@
     [content]="getTitleByMode()"
     id="form_edit_user_experience"
   ></ait-text-gradient>
-  <ait-space></ait-space>
 
   <ait-card-content
     style="justify-content: center"
     class="content__card"
-    [label]="'基本情報'"
-    [padding]="'14px 90px 0 10px'"
   >
     <div style="margin-top: 14px">
       <div class="input_area">
@@ -90,7 +87,7 @@
         <ait-datepicker
           [label]="'START DATE'"
           [id]="'start_date_from'"
-          [style]="{ width: '180px' }"
+          [style]="{ width: '185px' }"
           [isReset]="resetUserInfo.start_date_from"
           [dateInput]="userExperienceInfo.controls['start_date_from'].value"
           (watchValue)="
@@ -104,7 +101,7 @@
         <span>〜</span>
         <ait-datepicker
           [id]="'start_date_to'"
-          [style]="{ width: '180px' }"
+          [style]="{ width: '185px' }"
           [isReset]="resetUserInfo.start_date_to"
           [disable]="userExperienceInfo.controls['is_working'].value"
           [ngClass]="{
@@ -130,10 +127,11 @@
           [id]="'description'"
           [length]="4000"
           [rows]="4"
+          [width]="'410px'"s
           [label]="'DESCRIPTION'"
           [isReset]="resetUserInfo.description"
           [placeholder]="'Place your text'"
-          [width]="'400px'"
+          [width]="'410px'"
           (watchValue)="takeInputValue($event, 'description')"
           [defaultValue]="userExperienceInfo.controls['description'].value"
         >

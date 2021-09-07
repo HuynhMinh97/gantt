@@ -135,7 +135,7 @@ div.content {
 }
 
 .input_area {
-  width: 400px;
+  width: 410px;
   margin-bottom: 14px;
   margin-top: 14px;
 }
@@ -250,6 +250,18 @@ label.file-max {
   font-size: 12px;
 }
 
-::ng-deep #user_education input{
-    font-size: 12px !important;
-  }
+::ng-deep #user_education input {
+  font-size: 12px !important;
+}
+
+::ng-deep #user_education nb-icon.icon_expan,
+::ng-deep #user_education .divider,
+::ng-deep #user_education .header__card {
+  display: none;
+}
+::ng-deep #user_education .card__content_container{
+  padding: 30px;
+}
+::ng-deep #user_education .content{
+  padding-top: 0;
+}

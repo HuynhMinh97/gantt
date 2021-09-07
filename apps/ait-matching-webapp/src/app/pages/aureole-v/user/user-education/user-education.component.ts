@@ -362,7 +362,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
   }
 
   getTitleByMode() {
-    return this.mode === MODE.EDIT ? 'Edit education' : 'Add education';
+    return this.mode === MODE.EDIT ? 'Edit Education' : 'Add Education';
   }
 
   takeMasterValue(value: any, target: string): void {
