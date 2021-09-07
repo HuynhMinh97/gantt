@@ -18,6 +18,7 @@ import {
   HostListener,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { NbToastrService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { Observable, of } from 'rxjs';
@@ -49,9 +50,10 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     userService: AitUserService,
     _envService: AitEnvironmentService,
     private translateSerivce: AitTranslationService,
-    apollo: Apollo
+    apollo: Apollo,
+    toastrService: NbToastrService
   ) {
-    super(store, authService, apollo, userService, _envService);
+    super(store, authService, apollo, userService, _envService, null, toastrService);
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     this.inputControl = new FormControl({ value: '', disabled: this.isReadOnly });
     this.currentLang = this.lang;
@@ -83,6 +85,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Input() parentCode: string;
   @Input() code: string;
   @Input() sortBy: string;
+  @Input() allowDelete = false;
   @Input()
   placeholder: string = '';
   @Input() maxItem: number = 1;
@@ -200,7 +203,58 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   compareDeep = (agr1: any, agr2: any) => JSON.stringify(agr1) === JSON.stringify(agr2);
 
-  messagesError = () => Array.from(new Set([...this.componentErrors, ...(this.errorMessages || [])]))
+  messagesError = () => Array.from(new Set([...this.componentErrors, ...(this.errorMessages || [])]));
+
+  handleRemove = (option: any) => {
+    // console.log(option);
+    if (option?.isMatching) {
+      this.masterDataService.deleteDataEachItem({ _key: option?.id }).then(res => {
+        if (res) {
+          this.DataSource = this.DataSource.filter(f => f._key !== option._key);
+          this.dataSourceDf = this.dataSourceDf.filter(f => f._key !== option._key);
+
+          if (this.maxItem === 1) {
+            if (this.selectOne?._key === option?._key) {
+              this.selectOne = {};
+              this.watchValue.emit({ value: [] });
+            }
+          }
+          else {
+            this.optionSelected = this.optionSelected.filter(f => f._key !== option?._key);
+            this.watchValue.emit({ value: this.optionSelected.map(s => ({ _key: s?._key, value: s?.value })) });
+          }
+
+          setTimeout(() => {
+            if (this.errorMessages?.length === 0) {
+              this.isError = false;
+              // this.errorMessages = [];
+              this.componentErrors = [];
+            }
+            else {
+              this.componentErrors = [];
+            }
+
+          }, 150)
+          this.filteredOptions$ = of(this.DataSource);
+        }
+      })
+    }
+    else {
+      setTimeout(() => {
+        this.isError = false;
+        // this.errorMessages = [];
+        this.componentErrors = [];
+      }, 150)
+      this.showToastr('Thông báo', 'Không thể xóa vì dữ liệu không hệ thống Matching!', 'warning');
+    }
+
+  }
+
+  // removeData = () => {
+
+  // }
+
+
 
 
   ngOnChanges(changes: SimpleChanges) {
@@ -212,7 +266,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
 
         if (key === 'allowNew') {
-          console.log(this.allowNew)
+          // console.log(this.allowNew)
         }
 
         if (key === 'errorMessages') {
@@ -292,7 +346,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   enter = (event) => {
     event.preventDefault();
-    console.log(this.dataFilter.length === 0, this.allowNew)
+    // console.log(this.dataFilter.length === 0, this.allowNew)
     if (this.dataFilter.length === 0 && this.allowNew) {
       this.checkAllowNew(this.currentValue);
     }
@@ -300,7 +354,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   //TODO Khi nhấn enter sẽ chọn lun giá trị đó nếu save thành công
   checkAllowNew = (value: string) => {
-    console.log(value)
+    // console.log(value)
     // const title = this.translateSerivce.translate(
     //   'c_10020'
     // );
@@ -319,6 +373,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
           },
         }]).then(r => {
           if (r?.status === RESULT_STATUS.OK) {
+
             const func = () => {
               if (this.maxItem !== 1) {
 
@@ -479,7 +534,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       const rest = await this.masterDataService.find({
         ...condition
       }, {
-        _key: true, code: true, [this.targetValue]: true,
+        _key: true, code: true, [this.targetValue]: true, isMatching: true
       }, this.collection, options, this.includeNotDelete, this.includeNotActive);
 
 
@@ -488,7 +543,13 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         dataMaster = result || [];
       }
     }
-    const r = dataMaster.map(r => ({ code: r.code || r._key, value: r[this.targetValue] || r?.value, _key: r.code || r._key }));
+    const r = dataMaster.map(r => ({
+      code: r.code || r._key,
+      value: r[this.targetValue] || r?.value,
+      _key: r.code || r._key,
+      isMatching: r?.isMatching,
+      id: r?._key
+    }));
 
 
 

@@ -1,4 +1,4 @@
-<div [ngClass]="classContainer" >
+<div [ngClass]="classContainer">
   <ait-label
     [label]="label"
     [required]="required"
@@ -7,12 +7,15 @@
     [styleText]="styleLabel"
   ></ait-label>
 
-  <div style="display: flex;flex-wrap: wrap;flex-direction: column;" class="wrapper" >
+  <div
+    style="display: flex; flex-wrap: wrap; flex-direction: column"
+    class="wrapper"
+  >
     <div
       class="input__container"
       [ngStyle]="style"
       style="margin-top: 8px; background-color: #fff"
-      [ngClass]="{ isError: isError }"
+      [class.isError]="isError"
       #inputContainer
       [style.width]="width"
       [style.height]="height"
@@ -58,9 +61,9 @@
           *ngIf="isReadOnly"
           style="font-size: 12px"
           #input
-          (blur)="this.isFocus = false;"
+          (blur)="this.isFocus = false"
           (focus)="focusInput()"
-          tabindex="{{tabIndex}}"
+          tabindex="{{ tabIndex }}"
         />
 
         <input
@@ -80,10 +83,12 @@
           [ngStyle]="styleInput"
           (input)="handleInput($event.target.value)"
           (focusout)="outFocus()"
-          (blur)="blur(input.value) ? (input.value = '') : null;this.isFocus = false;"
+          (blur)="
+            blur(input.value) ? (input.value = '') : null; this.isFocus = false
+          "
           (keydown.tab)="onTab()"
-          (keydown.enter)="enter( $event)"
-          tabindex="{{tabIndex}}"
+          (keydown.enter)="enter($event)"
+          tabindex="{{ tabIndex }}"
         />
 
         <div
@@ -117,6 +122,17 @@
                 >{{ option?.value }}</span
               >
             </nb-checkbox>
+            <nb-icon
+              icon="close-outline"
+              nbTooltipPlacement="right"
+              [nbTooltip]="'Remove item'"
+              (click)="handleRemove(option)"
+              style="
+                position: absolute;
+                z-index: 99991;
+                right:0;
+              "
+            ></nb-icon>
           </div>
         </div>
         <div
@@ -125,22 +141,35 @@
         >
           <div
             *ngFor="let option of filteredOptions$ | async"
-            (click)="onSelectionChange(option)"
+
             class="option__container"
             style="cursor: pointer"
           >
             <div
+            (click)="onSelectionChange(option)"
               style="
                 cursor: pointer;
                 font-weight: 600;
                 font-size: 12px;
                 margin: 5px;
-                margin-left: 15px;
+                padding-left: 15px;
+                width: 100%;
               "
               id="{{ ID('selection_value') }}"
             >
               {{ option?.value }}
             </div>
+            <nb-icon
+              icon="close-outline"
+              nbTooltipPlacement="right"
+              [nbTooltip]="'Remove item'"
+              (click)="handleRemove(option)"
+              style="
+                position: absolute;
+                z-index: 99991;
+                right:0;
+              "
+            ></nb-icon>
           </div>
         </div>
         <div class="icon" (click)="handleClickIcon()">
