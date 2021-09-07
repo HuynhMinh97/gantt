@@ -54,7 +54,7 @@ export class AitMasterDataService extends AitBaseService {
     change_by: true,
     name: true,
     active_flag: true,
-    isMatching: true
+    is_matching: true
   };
 
   async getSuggestData(condition?: ConditionSearch) {
