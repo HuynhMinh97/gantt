@@ -8,6 +8,7 @@
   (click)="onClickChipEvent()"
   [nbTooltipTrigger]="tooltip ? 'hover' : 'noop'"
   *ngIf="title"
+  [id]="ID('chip')"
 >
   <span
     style="
@@ -17,8 +18,8 @@
       justify-content: center;
     "
   >
-    <span [innerHTML]="title"></span>
+    <span [id]="ID('chip_title')" [innerHTML]="title"></span>
   </span>
-  <nb-icon *ngIf="icon" [icon]="icon" (click)="iconAction()"></nb-icon>
+  <nb-icon [id]="ID('chip_icon')" *ngIf="icon" [icon]="icon" (click)="iconAction()"></nb-icon>
 </button>
 

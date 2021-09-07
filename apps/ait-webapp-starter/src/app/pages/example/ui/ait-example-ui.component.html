@@ -210,6 +210,9 @@
           [required]="true"
           [isReset]="result.resetAll"
           [required]="true"
+          [allowDelete]="true"
+          [sortBy]="'sort_no'"
+          [maxItem]="1"
         ></ait-autocomplete-master-data>
         <button
           nbButton
@@ -228,7 +231,6 @@
           [styleLabel]="{ 'text-transform': 'initial' }"
           [width]="'400px'"
           [label]="'autocomplete master data'"
-          [maxItem]="3"
           [placeholder]="'one'"
           [guidance]="'c_2003'"
           [guidanceIcon]="'star'"

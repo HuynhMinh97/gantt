@@ -15,6 +15,13 @@ export class AitTextGradientComponent {
   @Input() paddingLeft = 15;
   @Input() tabIndex;
   @Input() fontsize: string = null;
+  @Input() id;
+
+  ID(element: string) {
+    const idx = this.id && this.id !== '' ? this.id : Date.now();
+    return idx + '_' + element;
+  }
+
 
   constructor(private translateService: AitTranslationService) {
 
