@@ -122,7 +122,7 @@ export class AitMasterDataService extends AitBaseService {
     includeNotDelete: boolean = true,
     includeNotActive: boolean = false
   ) {
-    console.log(includeNotDelete)
+    // console.log(includeNotDelete)
     const returnFields = rf ? rf : this.returnFields;
     const request = {};
     if (isObjectFull(condition)) {
