@@ -2,6 +2,17 @@
 .ait-text-input {
   max-width: 400px;
 
+  textarea {
+    &.isError {
+      border-color: nb-theme(color-danger-500) !important;
+    }
+    &.isSuccess {
+      border: 1px solid nb-theme(color-success-500) !important;
+    }
+    &.hasBorder {
+      border: 1px solid rgb(228, 233, 242) !important;
+    }
+  }
   input {
     &.isError {
       border-color: nb-theme(color-danger-500) !important;
