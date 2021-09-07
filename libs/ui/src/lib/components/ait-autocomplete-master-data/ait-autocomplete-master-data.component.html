@@ -127,11 +127,8 @@
               nbTooltipPlacement="right"
               [nbTooltip]="'Remove item'"
               (click)="handleRemove(option)"
-              style="
-                position: absolute;
-                z-index: 99991;
-                right:0;
-              "
+              *ngIf="allowDelete"
+              style="position: absolute; z-index: 99991; right: 0"
             ></nb-icon>
           </div>
         </div>
@@ -141,12 +138,11 @@
         >
           <div
             *ngFor="let option of filteredOptions$ | async"
-
             class="option__container"
             style="cursor: pointer"
           >
             <div
-            (click)="onSelectionChange(option)"
+              (click)="onSelectionChange(option)"
               style="
                 cursor: pointer;
                 font-weight: 600;
@@ -164,11 +160,8 @@
               nbTooltipPlacement="right"
               [nbTooltip]="'Remove item'"
               (click)="handleRemove(option)"
-              style="
-                position: absolute;
-                z-index: 99991;
-                right:0;
-              "
+              *ngIf="allowDelete"
+              style="position: absolute; z-index: 99991; right: 0"
             ></nb-icon>
           </div>
         </div>
