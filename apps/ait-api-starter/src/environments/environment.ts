@@ -1,5 +1,6 @@
 export const environment = {
   production: false,
+  isMatching : true,
   APP: {
     SECRET_KEY: 'ait',
     HOST: 'http://127.0.0.1',
@@ -21,8 +22,8 @@ export const environment = {
   },
   DATABASE: {
     HOST: 'http://192.168.136.17:8529/',
-    NAME: 'ait-matching-system-starter',
-    USER: 'ait-matching-system-starter',
-    PASS: 'ait-matching-system-starter',
+    NAME: 'ait_starter',
+    USER: 'ait_starter',
+    PASS: 'ait_starter',
   },
 };
