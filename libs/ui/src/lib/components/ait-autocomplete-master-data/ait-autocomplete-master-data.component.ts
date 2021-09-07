@@ -969,13 +969,19 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   }
 
   handleClickIcon = () => {
+    this.isClickedIcon = true;
     if (this.isOpenAutocomplete) {
-      this.isClickedIcon = true;
+
       this.dataFilter = [];
       this.isOpenAutocomplete = false;
       setTimeout(() => {
         this.isHideLabel = false;
       }, 50)
+    }
+    else {
+      setTimeout(() => {
+        this.dataFilter = [1];
+      },50)
     }
 
   }
