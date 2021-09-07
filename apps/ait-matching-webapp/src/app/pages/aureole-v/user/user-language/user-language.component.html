@@ -3,12 +3,9 @@
     [content]="getTitleByMode()"
     id="form_edit_user_language"
   ></ait-text-gradient>
-  <ait-space></ait-space>
   <ait-card-content
     style="justify-content: center"
     class="content__card"
-    [label]="'基本情報'"
-    [padding]="'14px 90px 0 10px'"
   >
     <div style="margin-top: 14px">
       <div class="input_area">
@@ -35,6 +32,7 @@
           [collection]="'sys_master_data'"
           [class]="'LANGUAGE_PROFICIENCY'"
           [disableOutputDefault]="true"
+          [width]="'205px'"
           [isReset]="resetUserLangInfo.proficiency"
           (watchValue)="takeMasterValue($event, 'proficiency')"
           [defaultValue]="[userLanguageInfo.controls['proficiency'].value]"

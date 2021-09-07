@@ -135,7 +135,7 @@ div.content {
 }
 
 .input_area {
-  width: 400px;
+  width: 410px;
   margin-bottom: 14px;
   margin-top: 14px;
 }
@@ -248,3 +248,15 @@ nb-radio-group {
   font-size: 12px !important;
 }
 
+
+::ng-deep #user_experience nb-icon.icon_expan,
+::ng-deep #user_experience .divider,
+::ng-deep #user_experience .header__card {
+  display: none;
+}
+::ng-deep #user_experience .card__content_container{
+  padding: 30px;
+}
+::ng-deep #user_experience .content{
+  padding-top: 0;
+}

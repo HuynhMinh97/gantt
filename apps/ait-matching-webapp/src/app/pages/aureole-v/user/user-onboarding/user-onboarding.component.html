@@ -3,12 +3,9 @@
     [content]="getTitleByMode()"
     id="form_edit_user_onboarding"
   ></ait-text-gradient>
-  <ait-space></ait-space>
   <ait-card-content
     style="justify-content: center"
     class="content__card"
-    [label]="'基本情報'"
-    [padding]="'14px 90px 0 10px'"
   >
     <div style="margin-top: 14px">
       <div class="input_area">
@@ -124,7 +121,7 @@
           [rows]="4"
           [label]="'ABOUT'"
           [placeholder]="'Please input about'"
-          [width]="'400px'"
+          [width]="'410px'"
           [isReset]="resetUserInfo.about"
           (watchValue)="takeInputValue($event, 'about')"
           [defaultValue]="userOnboardingInfo.controls['about'].value"

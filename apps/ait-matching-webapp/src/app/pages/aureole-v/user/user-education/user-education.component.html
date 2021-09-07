@@ -3,12 +3,9 @@
     [content]="getTitleByMode()"
     id="form_edit_user_education"
   ></ait-text-gradient>
-  <ait-space></ait-space>
   <ait-card-content
     style="justify-content: center"
     class="content__card"
-    [label]="'基本情報'"
-    [padding]="'14px 90px 0 10px'"
   >
     <div style="margin-top: 14px">
       <div class="input_area">
@@ -71,7 +68,7 @@
           [placeholder]="'yyyy/MM'"
           [format]="'yyyy/MM'"
           [id]="'start_date_from'"
-          [style]="{ width: '180px' }"
+          [style]="{ width: '185px' }"
           [isReset]="resetUserInfo.start_date_from"
           [dateInput]="userEducationInfo.controls['start_date_from'].value"
           (watchValue)="
@@ -87,7 +84,7 @@
           [placeholder]="'yyyy/MM'"
           [format]="'yyyy/MM'"
           [id]="'start_date_to'"
-          [style]="{ width: '180px' }"
+          [style]="{ width: '185px' }"
           [isReset]="resetUserInfo.start_date_to"
           [dateInput]="userEducationInfo.controls['start_date_to'].value"
           (watchValue)="
@@ -111,7 +108,7 @@
           [rows]="4"
           [label]="'description'"
           [placeholder]="'place your text'"
-          [width]="'400px'"
+          [width]="'410px'"
           [isReset]="resetUserInfo.description"
           (watchValue)="takeInputValue($event, 'description')"
           [defaultValue]="userEducationInfo.controls['description'].value"

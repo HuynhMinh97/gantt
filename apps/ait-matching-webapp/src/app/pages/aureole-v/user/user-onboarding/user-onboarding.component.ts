@@ -1,4 +1,3 @@
-import { forEach } from 'lodash';
 import {
   isArrayFull,
   isObjectFull,
@@ -97,7 +96,6 @@ export class UserOnboardingComponent
     private dialogService: NbDialogService,
     private userOnbService: UserOnboardingService,
     private masterDataService: AitMasterDataService,
-    private translateService: AitTranslationService,
     env: AitEnvironmentService,
     store: Store<AppState>,
     apollo: Apollo,
@@ -200,7 +198,7 @@ export class UserOnboardingComponent
     // Run when form value change
     await this.userOnboardingInfo.valueChanges.subscribe((data) => {
       if (this.userOnboardingInfo.pristine) {
-        this.userOnboardingInfo = AitAppUtils.deepCloneObject(data);
+        this.userOnboardingInfoClone = AitAppUtils.deepCloneObject(data);
       } else {
         this.checkAllowSave();
       }
@@ -259,12 +257,11 @@ export class UserOnboardingComponent
       );
 
       const gender = genderList[0];
-      this.userOnboardingInfo.controls['gender'].setValue({
-        _key: gender.code,
-        value: gender.name,
-      });
 
       this.defaultGender = { _key: gender.code, value: gender.name };
+      this.userOnboardingInfo.controls['gender'].setValue({
+        ...this.defaultGender,
+      });
     }
   }
 
@@ -277,12 +274,12 @@ export class UserOnboardingComponent
           this.resetUserInfo[index] = false;
         }, 100);
       }
-      // this.userOnboardingInfo.reset();
-      console.log(this.defaultGender);
-      
+      this.userOnboardingInfo.reset();
+      setTimeout(() => {
         this.userOnboardingInfo.controls['gender'].setValue({
           ...this.defaultGender,
         });
+      }, 100);
     } else {
       for (const index in this.resetUserInfo) {
         if (!this.userOnboardingInfo.controls[index].value) {
@@ -460,16 +457,22 @@ export class UserOnboardingComponent
           this.resetUserInfo['district'] = false;
           this.resetUserInfo['ward'] = false;
         }, 100);
+        this.userOnboardingInfo.controls['city'].reset();
+        this.userOnboardingInfo.controls['district'].reset();
+        this.userOnboardingInfo.controls['ward'].reset();
       }
       if (target === 'city') {
         this.cityCode = value?.value[0]._key;
-        this.resetUserInfo['ward'] = true;
+        this.resetUserInfo['district'] = true;
         setTimeout(() => {
-          this.resetUserInfo['ward'] = false;
+          this.resetUserInfo['district'] = false;
         }, 100);
+        this.userOnboardingInfo.controls['district'].reset();
+        this.userOnboardingInfo.controls['ward'].reset();
       }
       if (target === 'district') {
         this.districtCode = value?.value[0]._key;
+        this.userOnboardingInfo.controls['ward'].reset();
       }
     } else {
       this.userOnboardingInfo.controls[target].setValue(null);
