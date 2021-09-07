@@ -88,7 +88,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Input() allowDelete = false;
   @Input()
   placeholder: string = '';
-  @Input() maxItem: number = 9999999*100;
+  @Input() maxItem: number = 9999999 * 100;
   @Input() icon: string = 'search-outline';
   @Input() widthInput: number = 400;
   @Input() defaultValue: any[] = [];
@@ -112,7 +112,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Input() collection = 'sys_master_data';
   @Input() targetValue = 'name';
   @Input() classContainer;
-  @Input() id = Date.now();
+  @Input() id;
   @Input() styleLabel;
   @Input() width;
   @Input() height;
@@ -152,8 +152,9 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   }
 
-  ID(element: string): string {
-    return this.id + '_' + element;
+  ID(element: string) {
+    const idx = this.id && this.id !== '' ? this.id : Date.now();
+    return idx + '_' + element;
   }
 
   focusInput = () => {
@@ -981,7 +982,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     else {
       setTimeout(() => {
         this.dataFilter = [1];
-      },50)
+      }, 50)
     }
 
   }
