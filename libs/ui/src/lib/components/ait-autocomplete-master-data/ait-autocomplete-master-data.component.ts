@@ -210,7 +210,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   handleRemove = (option: any) => {
     // console.log(option);
-    if (option?.isMatching) {
+    if (option?.is_matching) {
       this.masterDataService.deleteDataEachItem({ _key: option?.id }).then(res => {
         if (res) {
           this.DataSource = this.DataSource.filter(f => f._key !== option._key);
@@ -369,7 +369,8 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
             ja_JP: value,
             en_US: value
           },
-          sort_no: this.lastSortNo + 1
+          sort_no: this.lastSortNo + 1,
+          is_matching : true
         }]).then(r => {
           if (r?.status === RESULT_STATUS.OK) {
 
@@ -534,7 +535,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       const rest = await this.masterDataService.find({
         ...condition
       }, {
-        _key: true, code: true, [this.targetValue]: true, isMatching: true, sort_no: true
+        _key: true, code: true, [this.targetValue]: true, is_matching: true, sort_no: true
       }, this.collection, options, this.includeNotDelete, this.includeNotActive);
 
 
@@ -547,7 +548,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       code: r.code || r._key,
       value: r[this.targetValue] || r?.value,
       _key: r.code || r._key,
-      isMatching: r?.isMatching,
+      is_matching: r?.is_matching,
       id: r?._key
     }));
 
