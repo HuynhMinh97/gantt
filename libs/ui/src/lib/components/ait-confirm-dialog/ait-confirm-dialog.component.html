@@ -1,9 +1,10 @@
 <div class="form-container">
-  <div class="title">
+  <div class="title" [id]="ID('dialog_title')">
     <p>{{ title }}</p>
   </div>
   <div class="button-group">
     <ait-button
+      [id]="ID('dialog_title')"
       [title]="btn_left || 'c_b002' | translate"
       [background]="'transparent'"
       [style]="'normal'"
@@ -12,6 +13,7 @@
     >
     </ait-button>
     <ait-button
+      [id]="ID('dialog_title')"
       [title]="btn_right || 'c_b001' | translate"
       [background]="'#FFFFFF'"
       [style]="'active'"

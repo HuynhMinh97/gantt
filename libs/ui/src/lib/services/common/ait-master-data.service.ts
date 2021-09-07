@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { GRAPHQL, isObjectFull } from '@ait/shared';
+import { GRAPHQL, isObjectFull, KeyValueDto } from '@ait/shared';
 import { AitBaseService } from './ait-base.service';
 
 
@@ -54,6 +54,7 @@ export class AitMasterDataService extends AitBaseService {
     change_by: true,
     name: true,
     active_flag: true,
+    isMatching: true
   };
 
   async getSuggestData(condition?: ConditionSearch) {
@@ -98,16 +99,19 @@ export class AitMasterDataService extends AitBaseService {
     return await this.post(this.getLang, { condition }).toPromise();
   }
 
-  async deleteData(data: string) {
-    return await this.post(this.remove, {
-      data,
-    }).toPromise();
+  async deleteDataEachItem(data: { _key: string }) {
+    if (data._key) {
+      return await this.mutation('removeSystem', 'sys_master_data', [data], { _key: true });
+    }
+    return false;
   }
 
   async saveData(data: any[]) {
 
     return await this.mutation('saveSystem', 'sys_master_data', data, this.returnFields);
   }
+
+
 
 
   async find(
@@ -118,6 +122,7 @@ export class AitMasterDataService extends AitBaseService {
     includeNotDelete: boolean = true,
     includeNotActive: boolean = false
   ) {
+    // console.log(options)
     const returnFields = rf ? rf : this.returnFields;
     const request = {};
     if (isObjectFull(condition)) {

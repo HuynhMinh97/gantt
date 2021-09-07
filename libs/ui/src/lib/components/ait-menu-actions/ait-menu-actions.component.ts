@@ -75,7 +75,7 @@ export class AitMenuActionsComponent implements OnInit {
   applyButtons = () => {
     this.screenCurrent.subscribe(val => {
       const target: any = [
-        ...this.menu_actions
+        ...(this.menu_actions || [])
 
       ]
       this.buttons = target.map(m => {
