@@ -44,5 +44,5 @@ export class SysEntity extends BaseEntity {
   active_flag?: boolean;
 
   @Field(() => Boolean, { nullable: true })
-  isMatching?: boolean;
+  is_matching?: boolean;
 }
