@@ -683,13 +683,42 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       target = this.DataSource;
       this.filteredOptions$ = of(this.DataSource);
       this.watchValue.emit({ value: this.optionSelected.map(m => ({ _key: m?._key, value: m?.value })) });
+      setTimeout(() => {
+        if (target) {
+          this.DataSource = target
+          // this.filteredOptions$ = of(this.DataSource);
+
+          this.currentSortData = AitAppUtils.deepCloneArray(target);
+          this.isHideLabel = false;
+          this.isClickOption = false;
+        }
+      }, 10)
     } else {
+      console.log(itemFind);
       if (itemFind.isChecked) {
         itemFind.isChecked = !itemFind.isChecked;
         this.optionSelected = this.getSelectedOptions();
         target = this.DataSource;
         this.filteredOptions$ = of(this.DataSource);
         this.watchValue.emit({ value: this.optionSelected.map(m => ({ _key: m?._key, value: m?.value })) });
+        setTimeout(() => {
+          if (target) {
+            this.DataSource = target
+            // this.filteredOptions$ = of(this.DataSource);
+
+            this.currentSortData = AitAppUtils.deepCloneArray(target);
+            this.isHideLabel = false;
+            this.isClickOption = false;
+          }
+        }, 10)
+      }
+      else {
+        this.dataFilter = [];
+        setTimeout(() => {
+          this.dataFilter = [1];
+          this.isHideLabel = false;
+          this.isClickOption = false;
+        },10)
       }
     }
 
@@ -705,16 +734,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
       }
     }
-    setTimeout(() => {
-      if (target) {
-        this.DataSource = target
-        // this.filteredOptions$ = of(this.DataSource);
 
-        this.currentSortData = AitAppUtils.deepCloneArray(target);
-        this.isHideLabel = false;
-        this.isClickOption = false;
-      }
-    }, 10)
   };
 
   displayOptions = () => {
