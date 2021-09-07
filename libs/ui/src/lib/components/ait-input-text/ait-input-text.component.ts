@@ -19,7 +19,7 @@ export class AitTextInputComponent implements OnChanges {
   @Output() watchValue = new EventEmitter();
   // eslint-disable-next-line @angular-eslint/no-output-on-prefix
   @Output() onError = new EventEmitter();
-  @Input() id = Date.now();
+  @Input() id;
   @Input() defaultValue: string;
   @Input() isError = false;
   @Input() required = false;
@@ -66,9 +66,11 @@ export class AitTextInputComponent implements OnChanges {
     this.msgRequired = this.translateService.getMsg('E0001').replace('{0}', this.getNameField());
 
   }
-  ID(element: string): string {
-    return this.id + '_' + element;
+  ID(element: string) {
+    const idx = this.id && this.id !== '' ? this.id : Date.now();
+    return idx + '_' + element;
   }
+
 
   messagesError = () => Array.from(new Set([...this.componentErrors, ...this.errorMessages]))
 
