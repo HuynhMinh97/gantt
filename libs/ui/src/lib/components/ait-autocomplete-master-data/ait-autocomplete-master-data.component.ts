@@ -88,7 +88,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Input() allowDelete = false;
   @Input()
   placeholder: string = '';
-  @Input() maxItem: number = 1;
+  @Input() maxItem: number = 9999999*100;
   @Input() icon: string = 'search-outline';
   @Input() widthInput: number = 400;
   @Input() defaultValue: any[] = [];
