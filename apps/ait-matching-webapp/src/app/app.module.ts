@@ -22,10 +22,12 @@ import { SyncPEService } from './services/sync_pe_history.service';
 import { ReactionService } from './services/reaction.service';
 import { RecommencedUserService } from './services/recommenced-user.service';
 import { UserExperienceComponent } from './pages/aureole-v/user/user-experience/user-experience.component';
-import { AddComponent } from './user/add/add.component';
 import { UserEducationComponent } from './pages/aureole-v/user/user-education/user-education.component';
 import { UserLanguageComponent } from './pages/aureole-v/user/user-language/user-language.component';
 import { UserOnboardingComponent } from './pages/aureole-v/user/user-onboarding/user-onboarding.component';
+import { UserProjectComponent } from './pages/aureole-v/user/user-project/user-project/user-project.component';
+import { UserCourseComponent } from './pages/aureole-v/user/user-course/user-course.component';
+import { UsesCertificateComponent } from './pages/aureole-v/user/uses-certificate/uses-certificate.component';
 
 
 const AIT_UI_MODULES = [
@@ -60,12 +62,15 @@ const PAGES = [
   UserExperienceComponent,
   UserEducationComponent,
   UserLanguageComponent,
-  UserOnboardingComponent
+  UserOnboardingComponent,
+  UserProjectComponent,
+  UserCourseComponent,
+  UsesCertificateComponent
 ]
 
 
 @NgModule({
-  declarations: [AppComponent, ...AUREOLE_V_COMPONENTS, ...PAGES, AddComponent],
+  declarations: [AppComponent, ...AUREOLE_V_COMPONENTS, ...PAGES],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

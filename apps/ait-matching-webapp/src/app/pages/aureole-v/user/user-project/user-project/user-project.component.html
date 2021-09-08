@@ -1,0 +1,250 @@
+<div class="company__info__wrapper">
+  <ait-text-gradient [content]="'Add project'"></ait-text-gradient>
+  <ait-space></ait-space>
+  <div class="content__card">
+    <div class="form">
+      <!-- name -->
+      <div class="input_inline">
+        <ait-input-text
+          [required]="true"
+          [label]="'NAME'"
+          [id]="'name'"
+          [placeholder]="'Please input project name'"
+          [fullWidth]="true"
+          [width]="'400px'"
+          [length]="200"
+          (watchValue)="takeInputValue($event, 'name')"
+          [isReset]="resetUserProject.name"
+          [defaultValue]="userProject.controls['name'].value"
+          [isSubmit]="isSubmit"
+        >
+        </ait-input-text>
+      </div>
+      <div class="input_inline">
+          <ait-datepicker
+            [required]="true"
+            [placeholder]="''"
+            [id]="'start_date_from'"
+            [label]="'START DATE'"
+            [style]="{ width: '170px' }"
+            (watchValue)="takeDatePickerValue($event?.value, 'start_date_from')"
+            [isReset]="resetUserProject.start_date_from"
+            [dateInput]="
+              userProject.controls['start_date_from'].value
+                ? userProject.controls['start_date_from'].value
+                : null
+            "
+            [isSubmit]="isSubmit"
+          ></ait-datepicker>
+          <div class="lac">
+            <p class="label-datepiker">{{ '~' }}</p>
+          </div>
+          <ait-datepicker
+            [required]="true"
+            [placeholder]="''"
+            [id]="'start_date_to'"
+            [label]="''"
+            [style]="{ width: '170px' }"
+            (watchValue)="takeDatePickerValue($event?.value, 'start_date_to')"
+            [isReset]="resetUserProject.start_date_from"
+            [dateInput]="
+              userProject.controls['start_date_to'].value
+                ? userProject.controls['start_date_to'].value
+                : null
+            "
+            [isSubmit]="isSubmit"
+          ></ait-datepicker>        
+      </div>
+
+      <ait-error-message
+        [errors]="error"
+        [id]="'messagError'"
+      ></ait-error-message>
+
+      <div class="input_inline">
+        <ait-autocomplete-master-data
+          [id]="'company_working'"
+          [label]="'COMPANY'"
+          [placeholder]="'Aureole IT'"
+          [required]="true"
+          [collection]="'sys_company'"
+          [isReset]="resetUserProject.company"
+          [style]="{ width: '400px' }"
+          (watchValue)="takeInputValue($event, 'company_working')"
+          [defaultValue]="[{ _key: userProject.value.company_working }]"
+          [disableOutputDefault]="true"
+          [isSubmit]="isSubmit"
+        ></ait-autocomplete-master-data>
+      </div>
+
+      <div class="input_inline">
+        <ait-autocomplete-master-data
+          [id]="'title'"
+          [label]="'TITLE'"
+          [placeholder]="'Developer'"
+          [required]="true"
+          [collection]="'m_title'"
+          [isReset]="resetUserProject.title"
+          [style]="{ width: '400px' }"
+          (watchValue)="takeInputValue($event, 'title')"
+          [defaultValue]="[{ _key: userProject.value.title }]"
+          [disableOutputDefault]="true"
+          [isSubmit]="isSubmit"
+        ></ait-autocomplete-master-data>
+      </div>
+
+      <div class="input_inline">
+        <ait-input-text
+          [required]="true"
+          [label]="'DESCRIPTION'"
+          [id]="'description'"
+          [placeholder]="'Please input project name'"
+          [fullWidth]="true"
+          [rows]="5"
+          [length]="4000"
+          [width]="'400px'"
+          (watchValue)="takeInputValue($event, 'description')"
+          [isReset]="resetUserProject.description"
+          [defaultValue]="userProject.controls['description'].value"
+          [isSubmit]="isSubmit"
+        >
+        </ait-input-text>
+      </div>
+
+      <div class="input_inline">
+        <ait-autocomplete-master-data
+          [id]="'skills'"
+          [label]="'SKILLS (MAX 10)'"
+          [placeholder]="'Fill name and enter to add your skills'"
+          [required]="true"
+          [collection]="'m_skill'"
+          [maxItem] = "'10'"
+          [isReset]="resetUserProject.skills"
+          [style]="{ width: '400px' }"
+          (watchValue)="takeInputValue($event, 'skills')"
+          [defaultValue]="listSkills"
+          [disableOutputDefault]="true"
+          [isSubmit]="isSubmit"
+        ></ait-autocomplete-master-data>
+      </div>
+
+      <div class="input_inline">
+        <ait-input-text
+          [required]="true"
+          [label]="'RESPONSIBILITY'"
+          [id]="'responsibility'"
+          [placeholder]="'Place your text'"
+          [fullWidth]="true"
+          [rows]="5"
+          [length]="4000"
+          [width]="'400px'"
+          (watchValue)="takeInputValue($event, 'responsibility')"
+          [isReset]="resetUserProject.responsibility"
+          [defaultValue]="userProject.controls['responsibility'].value"
+          [isSubmit]="isSubmit"
+        >
+        </ait-input-text>
+      </div>
+      <div class="input_inline">
+        <ait-input-text
+          [required]="true"
+          [label]="'ACHIEVEMENT'"
+          [id]="'achievement'"
+          [placeholder]="'Place your text'"
+          [fullWidth]="true"
+          [rows]="5"
+          [length]="4000"
+          [width]="'400px'"
+          (watchValue)="takeInputValue($event, 'achievement')"
+          [isReset]="resetUserProject.achievement"
+          [defaultValue]="userProject.controls['achievement'].value"
+          [isSubmit]="isSubmit"
+        >
+        </ait-input-text>
+      </div>
+    </div>
+  </div>
+  <div 
+    class="sticky"
+    style="
+      min-width: 370px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    "
+  >
+    <div class="action-row">
+      <div class="block">
+        <ait-button
+          *ngIf="mode === 'NEW' || mode === 'EDIT'"
+          [id]="'cancel'"
+          [title]="'CANCEL'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+          (click)="cancel()"
+          [nbSpinner]="isLoading"
+          [isDefault]="true"
+          nbSpinnerStatus="primary"
+          [tabIndex]="40"
+
+        >
+        </ait-button>
+        <ait-button
+          *ngIf="mode === 'EDIT'"
+          [id]="'remove'"
+          [width]="'200px'"
+          [title]="'DELETE'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+          (click)="remove()"
+        >
+        </ait-button>
+
+        <ait-button
+          [id]="'reset'"
+          [width]="'200px'"
+          [title]="'RESET'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+          (click)="resetForm()"
+        >
+        </ait-button>
+
+        <ait-button
+          *ngIf="mode === 'NEW'"
+          [id]="'saveContinue'"
+          [width]="'200px'"
+          [title]="'SAVE & CONTINUE'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+          (click)="saveContinue()"
+        >
+        </ait-button>
+        <ait-button
+          *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
+          [id]="'saveClose'"
+          [width]="'200px'"
+          [title]="'SAVE & CLOSE'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+          (click)="saveClose()"
+        >
+        </ait-button>
+
+        <ait-button
+          *ngIf="!isChanged && mode === 'EDIT'"
+          [id]="'disabled'"
+          [width]="'200px'"
+          [title]="'SAVE & CONTINUE'"
+          [style]="'disabled'"
+        >
+        </ait-button>
+      </div>
+    </div>
+  </div>
+</div>
