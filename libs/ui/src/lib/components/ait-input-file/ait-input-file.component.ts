@@ -291,7 +291,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
           this.maxFiles = isNaN(v) ? null : v;
         }
         if (!this.fileTypes) {
-          // this.fileTypes = this.getValueByCode('FILE_TYPE_SUPPORT')?.value;
+          this.fileTypes = this.getValueByCode('FILE_TYPE_SUPPORT')?.value;
         }
 
       }
