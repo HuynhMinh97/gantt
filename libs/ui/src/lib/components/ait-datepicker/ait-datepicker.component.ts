@@ -560,7 +560,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   converToDateTime = (date) => (new Date(date)).getTime();
   handleInput = (event) => {
     this.nbDatepicker.hidePicker()
-    if (event.target.value) {
+    if (event.target.value && event.target.value !== '') {
       this.translateDate(event.target.value);
       if (event.target.value?.length > 2) {
         // try {
@@ -593,6 +593,15 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
       if (this.required) {
         this.componentErrors = this.getMessage();
       }
+    }
+    else {
+      this.formatTransfrom = null;
+      setTimeout(() => {
+        this.watchValue.emit({ value: null });
+        if (this.required) {
+          this.componentErrors = this.getMessage();
+        }
+      }, 100)
     }
   }
 
@@ -628,7 +637,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   }
 
   checkValidDateInput = () => {
-
+    console.log(this.formatTransfrom);
     if (this.formatTransfrom) {
       this.date = new Date(this.formatTransfrom);
       this.dateInput = this.formatTransfrom;

@@ -17,7 +17,6 @@
     class="datepicker"
     [class.isReadOnly]="disable"
     [class.isError]="isError"
-
     [class.focus]="getFocus()"
   >
     <nb-icon
@@ -31,7 +30,7 @@
     <input
       nbInput
       #inputDateTime
-      [placeholder]="getFormat()"
+      [placeholder]="placeholder !== null ? placeholder : getFormat()"
       [nbDatepicker]="dateTimePicker"
       [(ngModel)]="date"
       [formControl]="inputCtrl"
@@ -40,7 +39,7 @@
       [ngStyle]="styleInput"
       (focusout)="checkValidDateInput(); isFocus = false"
       (focus)="focusInput()"
-      (click)="clickInput($event);this.nbDatepicker.hidePicker()"
+      (click)="clickInput($event); this.nbDatepicker.hidePicker()"
       (input)="handleInput($event)"
       (beforeinput)="onBeforeInput($event)"
       class="input_area"
