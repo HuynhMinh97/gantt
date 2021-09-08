@@ -359,19 +359,23 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   checkAllowNew = (value: string) => {
     if (this.allowNew) {
       const find = this.dataSourceDf.find(d => d.value === value);
+      const dataReq: any = {
+        code: value,
+        name: {
+          vi_VN: value,
+          ja_JP: value,
+          en_US: value
+        },
+        sort_no: this.lastSortNo + 1,
+        is_matching: true,
+        active_flag: true,
+      }
+      if (this.class && this.collection === 'sys_master_data') {
+        dataReq.class = this.class || '';
+      }
+      // console.log(dataReq);
       if (!find) {
-        this.masterDataService.saveData([{
-          active_flag: true,
-          class: this.class || '',
-          code: value,
-          name: {
-            vi_VN: value,
-            ja_JP: value,
-            en_US: value
-          },
-          sort_no: this.lastSortNo + 1,
-          is_matching : true
-        }]).then(r => {
+        this.masterDataService.saveData([dataReq], this.collection).then(r => {
           if (r?.status === RESULT_STATUS.OK) {
 
             const func = () => {
@@ -695,7 +699,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         }
       }, 10)
     } else {
-      console.log(itemFind);
+      // console.log(itemFind);
       if (itemFind.isChecked) {
         itemFind.isChecked = !itemFind.isChecked;
         this.optionSelected = this.getSelectedOptions();
@@ -719,7 +723,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
           this.dataFilter = [1];
           this.isHideLabel = false;
           this.isClickOption = false;
-        },10)
+        }, 10)
       }
     }
 

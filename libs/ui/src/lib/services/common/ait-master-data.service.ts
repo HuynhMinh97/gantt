@@ -106,9 +106,9 @@ export class AitMasterDataService extends AitBaseService {
     return false;
   }
 
-  async saveData(data: any[]) {
+  async saveData(data: any[], collection = 'sys_master_data') {
 
-    return await this.mutation('saveSystem', 'sys_master_data', data, this.returnFields);
+    return await this.mutation('saveSystem', collection, data, this.returnFields);
   }
 
 
