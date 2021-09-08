@@ -1,4 +1,4 @@
-@import '../../../styles/themes.scss';
+@import '../../../../../styles/themes.scss';
 .template__popup {
   height: 100%;
   width: 100%;
@@ -72,6 +72,7 @@
     width: 400px;
     display: flex;
     justify-content: space-between;
+    margin-top: 20px;
 }
 .undefined_label{
     position: relative;
@@ -118,4 +119,7 @@ p.label-datepiker {
   flex-direction: column;
   box-shadow: 0 1px 6px rgb(0 0 0 / 6%), 0 1px 1px rgb(0 0 0 / 3%);
   transition: 0.8s all ease-in-out;
+}
+p.label-datepiker {
+  color: black;
 }

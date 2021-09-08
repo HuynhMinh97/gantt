@@ -6,6 +6,9 @@ import { AitCoreModule, AitAuthModule } from '@ait/core';
 import { HttpModule, Module } from '@nestjs/common';
 import { environment } from '../environments/environment';
 import { UserExperienceInfoResolver } from './user/user-experience/user-experience.resolver';
+import { CourseResolver } from './user/user-course/user_certificate.resolver';
+import { UserCertificateResolver } from './user/user-certificate/user_certificate.resolver';
+import { UserProjectResolver } from './user/user-project/user-project.resolver';
 
 const RESOLVERS = [
   UserExperienceInfoResolver,
@@ -13,6 +16,9 @@ const RESOLVERS = [
   UserLanguageInfoResolver,
   UserOnboardingInfoResolver,
   UserSkillResolver,
+  UserProjectResolver,
+  UserCertificateResolver,
+  CourseResolver,
   {
   provide: 'ENVIRONMENT',
   useValue: environment
