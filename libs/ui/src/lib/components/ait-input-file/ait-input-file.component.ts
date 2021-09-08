@@ -251,8 +251,9 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   safelyURL = (data, type) => this.santilizer.bypassSecurityTrustUrl(`data:${type};base64, ${data}`);
 
   checkMaxSize = (file: any[]) => {
-
-    return this.fileRequest.length > 0 ? this.fileRequest[0]?.size <= this.maxSize * 1024 : true;
+    // File nhận vào định dạng theo kiểu bytes
+    // console.log(this.fileRequest[0]?.size, this.convertMb2B(this.maxSize));
+    return this.fileRequest.length > 0 ? this.fileRequest[0]?.size <= this.convertMb2B(this.maxSize) : true;
   }
   checkMaxFile = () => {
 
@@ -278,14 +279,16 @@ export class AitInputFileComponent implements OnInit, OnChanges {
     }).then(r => {
       const settings = r.data.filter(d => settingFiles.includes(d?.code));
       this.settings = settings.map((s: any) => ({ ...s, value: s?.name }));
-      console.log(settings)
+      // console.log(settings)
 
       if (settings.length !== 0) {
         if (!this.maxSize) {
-          this.maxSize = Number(this.settings.find(f => f.code === 'FILE_MAX_SIZE_MB')?.value);
+          const v = Number(this.settings.find(f => f.code === 'FILE_MAX_SIZE_MB')?.value)
+          this.maxSize = isNaN(v) ? null : v;
         }
         if (!this.maxFiles) {
-          this.maxFiles = Number(this.getValueByCode('FILE_MAX_UPLOAD')?.value);
+          const v = Number(this.getValueByCode('FILE_MAX_UPLOAD')?.value);
+          this.maxFiles = isNaN(v) ? null : v;
         }
         if (!this.fileTypes) {
           this.fileTypes = this.getValueByCode('FILE_TYPE_SUPPORT')?.value;
@@ -318,7 +321,11 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   }
 
   getMaxSizeFile = () => {
-    return this.maxSize ? this.maxSize * 1024 : null;
+    return this.maxSize ? this.convertMb2B(this.maxSize) : null;
+  }
+
+  convertMb2B(num: number) {
+    return num * 1048576;
   }
 
   getValueByCode = (code) => {
@@ -327,13 +334,16 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
 
   checkFileExt = (file) => {
-    const check = AitAppUtils.checkFileExt(this.fileTypes || FILE_TYPE_SUPPORT_DEFAULT, file);
-    if (check.status !== 1) {
-      this.messageErrorFileSp = this.translateService.getMsg('E0012')
-        .replace('{0}', this.fileTypes || this.getValueByCode('FILE_TYPE_SUPPORT') || FILE_TYPE_SUPPORT_DEFAULT);
-      return false;
+    if (this.fileTypes) {
+      const check = AitAppUtils.checkFileExt(this.fileTypes, file);
+      if (check.status !== 1) {
+        this.messageErrorFileSp = this.translateService.getMsg('E0012')
+          .replace('{0}', this.fileTypes);
+        return false;
+      }
+      return check?.status === 1;
     }
-    return check?.status === 1;
+    return true;
   }
 
 
@@ -417,6 +427,8 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
   checkCommon = () => {
     this.messageErrorFileSp = '';
+    // console.log('Max upload', this.maxFiles, this.checkMaxFile(), this.getFileMaxUpload());
+    // console.log('Max size', this.maxSize, this.checkMaxSize(this.fileRequest), this.getMaxSizeFile());
     if (!this.checkMaxFile() && this.getFileMaxUpload().toString()) {
       this.messageErrorFileSp =
         this.translateService.getMsg('E0155').replace('{0}', this.getFileMaxUpload().toString());
