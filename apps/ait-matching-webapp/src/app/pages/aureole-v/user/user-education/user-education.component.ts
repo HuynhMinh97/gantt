@@ -124,22 +124,8 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
             let files = [];
             const data = r.data[0];
             if (r.data.length > 0 && !data.del_flag) {
-
               this.userEducationInfo.patchValue({ ...data });
-              // await data.file.forEach(async (e) => {
-              //   await this.userEduService.findFiles(e).then((x) => {
-              //     files.push(x.data[0]._key);
-              //   });
-              //   setTimeout(() => {
-              //     this.userEducationInfo.controls['file'].setValue([...files]);
-              //   }, 100);
-              //   console.log(this.userEducationInfo.controls['file'].value);
-                
-              // });
-              // console.log(this.userEducationInfo.value);
-              
               this.userEducationInfoClone = this.userEducationInfo.value;
-              console.log(this.userEducationInfoClone);
               isUserExist = true;
             }
             !isUserExist && this.router.navigate([`/404`]);
@@ -161,8 +147,8 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     const userInfo = { ...this.userEducationInfo.value };
     const userInfoClone = { ...this.userEducationInfoClone };
 
-    // console.log(userInfo);
-    // console.log(userInfoClone);
+    console.log(userInfo);
+    console.log(userInfoClone);
 
     this.isChanged = !AitAppUtils.isObjectEqual(
       { ...userInfo },
@@ -194,7 +180,6 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
       this.userEduService
         .save(this.saveData())
         .then((res) => {
-          //console.log(res);
           if (res?.status === RESULT_STATUS.OK) {
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
@@ -224,7 +209,6 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
       this.userEduService
         .save(this.saveData())
         .then((res) => {
-          //console.log(res);
           if (res?.status === RESULT_STATUS.OK) {
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
