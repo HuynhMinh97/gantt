@@ -100,7 +100,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   @Input() dataTooltip = [];
   @Input() disabled = false;
   isShowTooltip = false;
-  @Input() id = Date.now();
+  @Input() id;
   @Input() isSubmit = false;
   @Input()
   includeNotActive = false;
@@ -110,7 +110,8 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   messageSearch = '';
 
   ID(element: string) {
-    return this.id + '_' + element;
+    const idx = this.id && this.id !== '' ? this.id : Date.now();
+    return idx + '_' + element;
   }
 
   getCaptions = () => this.translateService.translate(this.guidance);

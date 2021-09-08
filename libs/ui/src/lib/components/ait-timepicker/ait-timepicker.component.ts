@@ -59,8 +59,9 @@ export class AitTimepickerComponent implements OnChanges, OnInit {
 
   getFocus = () => this.isError ? false : this.isFocus;
 
-  ID(element: string): string {
-    return this.id + '_' + element;
+  ID(element: string) {
+    const idx = this.id && this.id !== '' ? this.id : Date.now();
+    return idx + '_' + element;
   }
 
   getTimeText = () => this.ishourValue ? '時' : '分';
