@@ -6,7 +6,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { AitAuthGuardService, AitAppUtils } from '@ait/ui';
 import { RecommencedComponent } from './pages/aureole-v/recommenced-user/recommenced-user.component';
-import { AddComponent } from './user/add/add.component';
+import { UserCourseComponent } from './pages/aureole-v/user/user-course/user-course.component';
+import { UsesCertificateComponent } from './pages/aureole-v/user/uses-certificate/uses-certificate.component';
+import { UserProjectComponent } from './pages/aureole-v/user/user-project/user-project/user-project.component';
 
 // Push your routes here one by one 🎉
 
@@ -57,9 +59,34 @@ export const routes: Routes = [
     component : UserOnboardingComponent
   },
   {
-    path: 'user/:id',
+    path: 'user-course',
     canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
-    component : AddComponent
+    component : UserCourseComponent 
+  },
+  {
+    path: 'user-course/:id',
+    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    component : UserCourseComponent 
+  },
+  {
+    path: 'user-certificate/:id',
+    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    component : UsesCertificateComponent
+  },
+  {
+    path: 'user-certificate',
+    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    component : UsesCertificateComponent
+  },
+  {
+    path: 'user-project',
+    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    component: UserProjectComponent
+  },
+  {
+    path: 'user-project/:id',
+    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    component: UserProjectComponent
   },
   {
     path: '',
