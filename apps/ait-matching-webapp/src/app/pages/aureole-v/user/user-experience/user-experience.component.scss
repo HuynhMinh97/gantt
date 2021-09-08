@@ -140,6 +140,12 @@ div.content {
   margin-top: 14px;
 }
 
+.nb_checkbox {
+  display: flex;
+  margin-bottom: 14px;
+  margin-top: 18px;
+}
+
 .input_inline {
   width: 100%;
   margin-bottom: 14px;
@@ -153,12 +159,6 @@ div.content {
 nb-radio-group {
   display: flex;
   margin-bottom: 5px;
-}
-
-:host ::ng-deep .gray-text {
-  .text {
-    color: #8f9bb3 !important;
-  }
 }
 
 :host ::ng-deep .start_date_to {

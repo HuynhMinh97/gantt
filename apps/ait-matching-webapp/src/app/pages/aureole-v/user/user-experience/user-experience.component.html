@@ -15,6 +15,7 @@
           [label]="'title'"
           [required]="true"
           [allowNew]="true"
+          [maxItem]="1"
           [isSubmit]="isSubmit"
           [placeholder]="'title_plh'"
           [collection]="'m_title'"
@@ -29,6 +30,8 @@
           [required]="true"
           [label]="'company_working'"
           [isSubmit]="isSubmit"
+          [maxItem]="1"
+          [allowNew]="true"
           [id]="'company_working'"
           [collection]="'sys_company'"
           [placeholder]="'company_working_plh'"
@@ -45,7 +48,8 @@
           [id]="'location'"
           [required]="true"
           [label]="'location'"
-          [class]="'COUNTRY'"
+          [class]="'CITY'"
+          [maxItem]="1"
           [isSubmit]="isSubmit"
           [disableOutputDefault]="true"
           [collection]="'sys_master_data'"
@@ -58,10 +62,10 @@
 
       <div class="input_area">
         <ait-autocomplete-master-data
-          [required]="true"
           [class]="'EMP_TYPE'"
-          [isSubmit]="isSubmit"
           [id]="'employee_type'"
+          [maxItem]="1"
+          [width]="'205px'"
           [placeholder]="'employee_type_plh'"
           [label]="'employee_type'"
           [disableOutputDefault]="true"
@@ -73,16 +77,15 @@
         </ait-autocomplete-master-data>
       </div>
 
-      <div class="input_area" style="display: flex;">
+      <div class="input_area nb_checkbox">
         <nb-checkbox
-          class="gray-text"
           [checked]="userExperienceInfo.controls['is_working']?.value"
           [id]="'is_working'"
           (checkedChange)="toggleCheckBox($event)"
           >
         </nb-checkbox>
         <p class="pcontent" tabIndex="15">
-          {{ '個人情報の取り扱いについての同意' | translate }}
+          {{ 'is_working' | translate }}
         </p>
       </div>
 
@@ -90,7 +93,7 @@
         <ait-datepicker
           [label]="'start_date_from'"
           [id]="'start_date_from'"
-          [style]="{ width: '185px' }"
+          [width]="'185px'"
           [isReset]="resetUserInfo.start_date_from"
           [dateInput]="userExperienceInfo.controls['start_date_from'].value"
           (watchValue)="
@@ -104,7 +107,7 @@
         <span>〜</span>
         <ait-datepicker
           [id]="'start_date_to'"
-          [style]="{ width: '185px' }"
+          [width]="'185px'"
           [isReset]="resetUserInfo.start_date_to"
           [disable]="userExperienceInfo.controls['is_working'].value"
           [ngClass]="{

@@ -122,8 +122,8 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
           if (r.status === RESULT_STATUS.OK) {
             let isUserExist = false;
             let files = [];
-            if (r.data.length > 0) {
-              const data = r.data[0];
+            const data = r.data[0];
+            if (r.data.length > 0 && !data.del_flag) {
               this.userEducationInfo.patchValue({ ...data });
               await data.file.forEach(async (e) => {
                 await this.userEduService.findFiles(e).then((x) => {
@@ -163,11 +163,12 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
 
   saveData() {
     const saveData = this.userEducationInfo.value;
-    saveData['user_id'] = this.authService.getUserID();
+    
     saveData.school = saveData.school._key;
-
     if (this.user_key) {
       saveData['_key'] = this.user_key;
+    } else {
+      saveData['user_id'] = this.authService.getUserID();
     }
     return saveData;
   }

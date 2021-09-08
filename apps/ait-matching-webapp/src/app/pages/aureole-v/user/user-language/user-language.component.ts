@@ -112,9 +112,8 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
         .then((r) => {
           if (r.status === RESULT_STATUS.OK) {
             let isUserExist = false;
-            if (r.data.length > 0) {
-              const data = r.data[0];
-              
+            const data = r.data[0];
+            if (r.data.length > 0 && !data.del_flag) {
               this.userLanguageInfo.patchValue({ ...data });
               console.log(this.userLanguageInfo.value);
               this.userLanguageInfoClone = this.userLanguageInfo.value;
@@ -124,7 +123,7 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
           }
         });
     }
-    // Run when form value change 
+    // Run when form value change
     this.userLanguageInfo.valueChanges.subscribe((data) => {
       if (this.userLanguageInfo.pristine) {
         this.userLanguageInfoClone = AitAppUtils.deepCloneObject(data);
@@ -147,7 +146,7 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
 
   saveData() {
     const saveData = this.userLanguageInfo.value;
-    saveData['user_id'] = this.authService.getUserID();
+
     this.userLanguageInfo.value.language = this.userLanguageInfo.value.language._key;
     if (this.userLanguageInfo.value.proficiency) {
       this.userLanguageInfo.value.proficiency = this.userLanguageInfo.value.proficiency._key;
@@ -157,6 +156,8 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
 
     if (this.user_key) {
       saveData['_key'] = this.user_key;
+    } else {
+      saveData['user_id'] = this.authService.getUserID();
     }
     return saveData;
   }
