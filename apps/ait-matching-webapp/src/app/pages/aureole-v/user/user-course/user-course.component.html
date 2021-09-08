@@ -18,7 +18,7 @@
           [defaultValue]="course.controls['name'].value"
           [isReset]="resetCourse.name"
           [isSubmit]="isSubmit"
-          [length]="400"
+          [length]="200"
         ></ait-input-text>
       </div>
 
@@ -30,7 +30,7 @@
             [id]="'is_online'"
             (checkedChange)="toggleCheckBox($event)"
           >
-            Online?
+            <p id="online">Online?</p>            
           </nb-checkbox>
         </div>
       </div>
@@ -115,7 +115,7 @@
           [defaultValue]="course.controls['description'].value"
           [isReset]="resetCourse.description"
           [isSubmit]="isSubmit"
-          [length]="400"
+          [length]="4000"
         ></ait-input-text>
       </div>
 
@@ -140,58 +140,68 @@
   </div>
   <ait-space></ait-space>
 
-  <div class="button__group">
-    <ait-button
-      [title]="'CANCEL'"
-      [id]="'cancel'"
-      [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
-      (click)="back()"
-    ></ait-button>
-    <ait-button
-      [title]="'RESET'"
-      [id]="'reset'"
-      [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
-      (click)="resetForm()"
-    ></ait-button>
-    <ait-button
-      *ngIf="mode === 'EDIT'"
-      [id]="'delete'"
-      [title]="'DELETE'"
-      [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
-      (click)="deleteUserById()"
-    ></ait-button>
-    <ait-button
-      *ngIf="mode === 'NEW'"
-      [title]="'SAVE & CONTINUE'"
-      [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
-      [id]="'saveContinue'"
-      (click)="saveAndContinue()"
-    ></ait-button>
-    <!-- <ait-button
-        [background]="changeData ? 'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)' : 'linear-gradient( 89.75deg, rgb(70 70 70) 0.23%, rgb(148 148 148) 99.81%)'"               
-        [id]="'saveClose'"
-        [title]="'SAVE & CLOSE'"
-        (click)="changeData ? saveAndClose() : ''"
-      ></ait-button> -->
+  <div
+    class="sticky"
+    style="
+      min-width: 370px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    "
+  >
+    <div class="button__group">
+      <ait-button
+        [title]="'CANCEL'"
+        [id]="'cancel'"
+        [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
+        (click)="back()"
+      ></ait-button>
+      <ait-button
+        [title]="'RESET'"
+        [id]="'reset'"
+        [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
+        (click)="resetForm()"
+      ></ait-button>
+      <ait-button
+        *ngIf="mode === 'EDIT'"
+        [id]="'delete'"
+        [title]="'DELETE'"
+        [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
+        (click)="deleteUserById()"
+      ></ait-button>
+      <ait-button
+        *ngIf="mode === 'NEW'"
+        [title]="'SAVE & CONTINUE'"
+        [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
+        [id]="'saveContinue'"
+        (click)="saveAndContinue()"
+      ></ait-button>
+      <!-- <ait-button
+          [background]="changeData ? 'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)' : 'linear-gradient( 89.75deg, rgb(70 70 70) 0.23%, rgb(148 148 148) 99.81%)'"               
+          [id]="'saveClose'"
+          [title]="'SAVE & CLOSE'"
+          (click)="changeData ? saveAndClose() : ''"
+        ></ait-button> -->
 
-    <ait-button
-      [id]="'saveClose'"
-      *ngIf="(changeData && mode === 'EDIT') || mode === 'NEW'"
-      [width]="'200px'"
-      [title]="'SAVE & CLOSE'"
-      (click)="saveAndClose()"
-      [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
-    >
-    </ait-button>
-    <ait-button
-      *ngIf="!changeData && mode === 'EDIT'"
-      [id]="'saveClose'"
-      [width]="'200px'"
-      [title]="'SAVE & CLOSE'"
-      [style]="'disabled'"
-      [background]="
-        'linear-gradient( 89.75deg, rgb(70 70 70) 0.23%, rgb(148 148 148) 99.81%)'
-      "
-    ></ait-button>
+      <ait-button
+        [id]="'saveClose'"
+        *ngIf="(changeData && mode === 'EDIT') || mode === 'NEW'"
+        [width]="'200px'"
+        [title]="'SAVE & CLOSE'"
+        (click)="saveAndClose()"
+        [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
+      >
+      </ait-button>
+      <ait-button
+        *ngIf="!changeData && mode === 'EDIT'"
+        [id]="'saveClose'"
+        [width]="'200px'"
+        [title]="'SAVE & CLOSE'"
+        [style]="'disabled'"
+        [background]="
+          'linear-gradient( 89.75deg, rgb(70 70 70) 0.23%, rgb(148 148 148) 99.81%)'
+        "
+      ></ait-button>
+    </div>
   </div>
 </div>
