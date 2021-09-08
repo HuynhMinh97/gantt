@@ -161,7 +161,7 @@ export class UserExperienceComponent
     const userInfoClone = { ...this.userExperienceInfoClone };
 
     console.log(userInfo);
-    console.log(userInfoClone);
+    
 
     this.isChanged = !AitAppUtils.isObjectEqual(
       { ...userInfo },
@@ -303,7 +303,6 @@ export class UserExperienceComponent
       this.userExpService
         .save(this.saveData())
         .then((res) => {
-          //console.log(res);
           if (res?.status === RESULT_STATUS.OK) {
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
@@ -365,7 +364,7 @@ export class UserExperienceComponent
     if (value) {
       const data = value as number;
       value = new Date(data).setHours(0, 0, 0, 0);
-      //this[group].controls[form].markAsDirty();
+      this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(value);
     }
   }

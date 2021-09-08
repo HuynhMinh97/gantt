@@ -117,7 +117,7 @@
         </ait-input-text>
 
         <div class="input_area">
-          <ait-label [label]="'FILES'"></ait-label>
+          <ait-label [label]="'files'"></ait-label>
           <label class="file-max"
             ><nb-icon icon="attach-outline"></nb-icon>Upload max 5 files and
             10MB/file</label
@@ -127,7 +127,6 @@
             [maxSize]="1000000"
             [maxFiles]="5"
             [hasStatus]="false"
-            [placeholder]="'Select file'"
             [isReset]="isResetFile"
             [isClear]="isClear"
             [fileKeys]="userEducationInfo.controls['file'].value"

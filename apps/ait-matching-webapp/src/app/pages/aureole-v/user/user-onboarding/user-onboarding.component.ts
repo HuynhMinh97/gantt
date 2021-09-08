@@ -246,7 +246,7 @@ export class UserOnboardingComponent
         _key: gender.code,
         value: gender.name,
       });
-      const defaultGender = this.genderList[0];
+      const defaultGender = this.genderList[2];
       this.defaultGender = {
         _key: defaultGender.code,
         value: defaultGender.name,
@@ -256,7 +256,7 @@ export class UserOnboardingComponent
         Object.assign({}, gender, { checked: index === 0 ? true : false })
       );
 
-      const gender = genderList[0];
+      const gender = genderList[2];
 
       this.defaultGender = { _key: gender.code, value: gender.name };
       this.userOnboardingInfo.controls['gender'].setValue({

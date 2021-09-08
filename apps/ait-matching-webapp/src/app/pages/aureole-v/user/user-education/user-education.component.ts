@@ -147,9 +147,6 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     const userInfo = { ...this.userEducationInfo.value };
     const userInfoClone = { ...this.userEducationInfoClone };
 
-    console.log(userInfo);
-    console.log(userInfoClone);
-
     this.isChanged = !AitAppUtils.isObjectEqual(
       { ...userInfo },
       { ...userInfoClone }
@@ -297,6 +294,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     if (this.mode === MODE.NEW) {
       this.resetModeNew();
     } else {
+      
       for (const index in this.resetUserInfo) {
         if (!this.userEducationInfo.controls[index].value) {
           this.resetUserInfo[index] = true;
@@ -305,9 +303,12 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
           }, 100);
         }
       }
+      console.log(this.userEducationInfoClone);
       this.userEducationInfo.patchValue({
         ...this.userEducationInfoClone,
       });
+      
+      console.log(this.userEducationInfo.value);
     }
     this.showToastr('', this.getMsg('I0007'));
   }
