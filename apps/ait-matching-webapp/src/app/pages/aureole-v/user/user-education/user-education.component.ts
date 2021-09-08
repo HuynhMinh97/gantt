@@ -120,7 +120,6 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
         .findUserEducationByKey(this.user_key)
         .then(async (r) => {
           if (r.status === RESULT_STATUS.OK) {
-            
             let isUserExist = false;
             let files = [];
             if (r.data.length > 0) {
@@ -362,7 +361,9 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
   }
 
   getTitleByMode() {
-    return this.mode === MODE.EDIT ? 'Edit Education' : 'Add Education';
+    return this.mode === MODE.EDIT
+      ? this.translateService.translate('edit_education')
+      : this.translateService.translate('add_education');
   }
 
   takeMasterValue(value: any, target: string): void {

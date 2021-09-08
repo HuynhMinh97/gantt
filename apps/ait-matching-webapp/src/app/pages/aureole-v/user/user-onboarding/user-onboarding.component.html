@@ -11,12 +11,12 @@
       <div class="input_area">
         <ait-input-text
           [id]="'first_name'"
-          [label]="'FIRST NAME'"
+          [label]="'firstname'"
           [length]="200"
           [required]="true"
           [isSubmit]="isSubmit"
           [isReset]="resetUserInfo.first_name"
-          [placeholder]="'Please input your first name'"
+          [placeholder]="'first_name_plh'"
           (watchValue)="takeInputValue($event, 'first_name')"
           [defaultValue]="userOnboardingInfo.controls['first_name'].value"
         ></ait-input-text>
@@ -24,12 +24,12 @@
       <div class="input_area">
         <ait-input-text
           [id]="'last_name'"
-          [label]="'LAST NAME'"
+          [label]="'lastname'"
           [length]="200"
           [required]="true"
           [isSubmit]="isSubmit"
           [isReset]="resetUserInfo.last_name"
-          [placeholder]="'Please input your last name'"
+          [placeholder]="'last_name_plh'"
           (watchValue)="takeInputValue($event, 'last_name')"
           [defaultValue]="userOnboardingInfo.controls['last_name'].value"
         ></ait-input-text>
@@ -38,12 +38,12 @@
         <ait-input-text
           *ngIf="isLangJP" 
           [id]="'katakana'"
-          [label]="'KATAKANA'"
+          [label]="'katakana'"
           [length]="200"
           [required]="true"
           [isSubmit]="isSubmit"
           [isReset]="resetUserInfo.katakana"
-          [placeholder]="'Please input your fullname (katakana)'"
+          [placeholder]="'katakana_plh'"
           (watchValue)="takeInputValue($event, 'katakana')"
           [defaultValue]="userOnboardingInfo.controls['katakana'].value"
         ></ait-input-text>
@@ -52,18 +52,18 @@
         <ait-input-text
           *ngIf="isLangJP" 
           [id]="'romaji'"
-          [label]="'ROMAJI'"
+          [label]="'romaji'"
           [length]="200"
           [required]="true"
           [isSubmit]="isSubmit"
           [isReset]="resetUserInfo.romaji"
-          [placeholder]="'Please input your fullname (romaji)'"
+          [placeholder]="'romaji_plh'"
           (watchValue)="takeInputValue($event, 'romaji')"
           [defaultValue]="userOnboardingInfo.controls['romaji'].value"
         ></ait-input-text>
       </div>
       <div class="input_area">
-        <ait-label class="ait-label" [label]="'GENDER'" id="gender"></ait-label>
+        <ait-label class="ait-label" [label]="'gender'" id="gender"></ait-label>
         <div>
           <nb-radio-group>
             <nb-radio
@@ -85,7 +85,7 @@
       <div class="input_area">
         <ait-datepicker
           [id]="'bod'"
-          [label]="'BORN ON DATE'"
+          [label]="'bod'"
           [required]="true"
           [isSubmit]="isSubmit"
           [style]="{ width: '180px' }"
@@ -103,8 +103,8 @@
       <div class="input_area">
         <ait-input-text
           [id]="'phone_number'"
-          [placeholder]="'Please input phone number'"
-          [label]="'PHONE NUMBER'"
+          [placeholder]="'phone_number_plh'"
+          [label]="'phonenumber'"
           [isSubmit]="isSubmit"
           [required]="true"
           [length]="15"
@@ -119,8 +119,8 @@
           [id]="'about'"
           [length]="4000"
           [rows]="4"
-          [label]="'ABOUT'"
-          [placeholder]="'Please input about'"
+          [label]="'about'"
+          [placeholder]="'about_plh'"
           [width]="'410px'"
           [isReset]="resetUserInfo.about"
           (watchValue)="takeInputValue($event, 'about')"
@@ -131,10 +131,10 @@
       <div class="input_area">
         <ait-autocomplete-master-data
           [id]="'country'"
-          [label]="'COUNTRY'"
+          [label]="'country'"
           [required]="true"
           [isSubmit]="isSubmit"
-          [placeholder]="'Please select country'"
+          [placeholder]="'country_plh'"
           [collection]="'sys_master_data'"
           [class]="'COUNTRY'"
           [disableOutputDefault]="true"
@@ -146,7 +146,7 @@
       <div class="input_area">
         <ait-input-text
           [id]="'postcode'"
-          [placeholder]="'Please input postcode'"
+          [placeholder]="'postcode_plh'"
           [label]="'POSTCODE'"
           [required]="true"
           [length]="20"
@@ -159,10 +159,10 @@
       <div class="input_area">
         <ait-autocomplete-master-data
           [id]="'city'"
-          [label]="'PROVINE/CITY'"
+          [label]="'city'"
           [required]="true"
           [isSubmit]="isSubmit"
-          [placeholder]="'Please select city'"
+          [placeholder]="'city_plh'"
           [collection]="'sys_master_data'"
           [parentCode]="countryCode"
           [class]="'CITY'"
@@ -175,10 +175,10 @@
       <div class="input_area">
         <ait-autocomplete-master-data
           [id]="'district'"
-          [label]="'DISTRICT'"
+          [label]="'district'"
           [required]="true"
           [isSubmit]="isSubmit"
-          [placeholder]="'Please select district'"
+          [placeholder]="'district_plh'"
           [collection]="'sys_master_data'"
           [class]="'DISTRICT'"
           [parentCode]="cityCode"
@@ -191,10 +191,10 @@
       <div class="input_area">
         <ait-autocomplete-master-data
           [id]="'ward'"
-          [label]="'WARD'"
+          [label]="'ward'"
           [required]="true"
           [isSubmit]="isSubmit"
-          [placeholder]="'Please select ward'"
+          [placeholder]="'ward_plh'"
           [collection]="'sys_master_data'"
           [class]="'WARD'"
           [parentCode]="districtCode"
@@ -209,8 +209,8 @@
           [id]="'address'"
           [length]="500"
           [required]="true"
-          [label]="'ADDRESS'"
-          [placeholder]="'Please input address'"
+          [label]="'address'"
+          [placeholder]="'address_plh'"
           [isReset]="resetUserInfo.address"
           (watchValue)="takeInputValue($event, 'address')"
           [defaultValue]="userOnboardingInfo.controls['address'].value"
@@ -221,8 +221,8 @@
         <ait-input-text
           [id]="'floor_building'"
           [length]="500"
-          [label]="'FLOOR/BUILDING'"
-          [placeholder]="'Please input floor/building'"
+          [label]="'floor_building'"
+          [placeholder]="'floor_building_plh'"
           [isReset]="resetUserInfo.floor_building"
           (watchValue)="takeInputValue($event, 'floor_building')"
           [defaultValue]="userOnboardingInfo.controls['floor_building'].value"
@@ -232,10 +232,10 @@
       <div class="input_area">
         <ait-autocomplete-master-data
           [id]="'company_working'"
-          [label]="'COMPANY WORKING'"
+          [label]="'company_working'"
           [isSubmit]="isSubmit"
           [allowNew]="true"
-          [placeholder]="'Please select company'"
+          [placeholder]="'company_plh'"
           [collection]="'sys_company'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.company_working"
@@ -246,10 +246,10 @@
       <div class="input_area">
         <ait-autocomplete-master-data
           [id]="'title'"
-          [label]="'TITLE'"
+          [label]="'title'"
           [isSubmit]="isSubmit"
           [allowNew]="true"
-          [placeholder]="'Please select title'"
+          [placeholder]="'title_plh'"
           [collection]="'m_title'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.title"
@@ -260,11 +260,11 @@
       <div class="input_area">
         <ait-autocomplete-master-data
           [id]="'industry'"
-          [label]="'INDUSTRY'"
+          [label]="'industry'"
           [required]="true"
           [isSubmit]="isSubmit"
           [allowNew]="true"
-          [placeholder]="'Please select industry'"
+          [placeholder]="'industry_plh'"
           [collection]="'m_industry'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.industry"
@@ -275,12 +275,12 @@
       <div class="input_area">
         <ait-autocomplete-master-data
           [id]="'skills'"
-          [label]="'SKILLS (MAX 10)'"
+          [label]="'skills'"
           [required]="true"
           [isSubmit]="isSubmit"
           [allowNew]="true"
           [maxItem]="10"
-          [placeholder]="'Please select skill'"
+          [placeholder]="'skill_plh'"
           [collection]="'m_skill'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.skills"
@@ -295,7 +295,7 @@
       <div class="block">
         <ait-button
           [id]="'cancel'"
-          [title]="'CANCEL'"
+          [title]="'cancel'"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
           "
@@ -306,7 +306,7 @@
           *ngIf="mode === 'EDIT'"
           [id]="'delete'"
           [width]="'200px'"
-          [title]="'DELETE'"
+          [title]="'delete'"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
           "
@@ -317,7 +317,7 @@
         <ait-button
           [id]="'reset'"
           [width]="'200px'"
-          [title]="'RESET'"
+          [title]="'reset'"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
           "
@@ -329,7 +329,7 @@
           *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
           [id]="'save'"
           [width]="'200px'"
-          [title]="'SAVE'"
+          [title]="'save'"
           (click)="save()"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
@@ -340,7 +340,7 @@
           *ngIf="!isChanged && mode === 'EDIT'"
           [id]="'save'"
           [width]="'200px'"
-          [title]="'SAVE'"
+          [title]="'save'"
           [style]="'disabled'"
         ></ait-button>
       </div>

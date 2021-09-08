@@ -244,19 +244,24 @@ nb-radio-group {
   }
 }
 ::ng-deep #user_experience input,
-::ng-deep #user_experience textarea{
+::ng-deep #user_experience textarea {
   font-size: 12px !important;
 }
-
 
 ::ng-deep #user_experience nb-icon.icon_expan,
 ::ng-deep #user_experience .divider,
 ::ng-deep #user_experience .header__card {
   display: none;
 }
-::ng-deep #user_experience .card__content_container{
+::ng-deep #user_experience .card__content_container {
   padding: 30px;
 }
-::ng-deep #user_experience .content{
+::ng-deep #user_experience .content {
   padding-top: 0;
+}
+
+.pcontent {
+  color: #8f9bb3;
+  margin-left: 12px;
+  font-weight: 600;
 }

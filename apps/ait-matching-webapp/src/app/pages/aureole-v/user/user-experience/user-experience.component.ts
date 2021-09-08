@@ -165,9 +165,11 @@ export class UserExperienceComponent
       { ...userInfoClone }
     );
   }
-
+  
   getTitleByMode() {
-    return this.mode === MODE.EDIT ? 'Edit experience' : 'Add experience';
+    return this.mode === MODE.EDIT
+      ? this.translateService.translate('edit_experience')
+      : this.translateService.translate('add_experience');
   }
 
   resetForm() {

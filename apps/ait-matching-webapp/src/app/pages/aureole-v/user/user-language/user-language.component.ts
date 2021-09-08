@@ -87,8 +87,8 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
     );
 
     this.setModulePage({
-      module: MODULES.JOB,
-      page: PAGES.JOB_EDIT,
+      module: 'user',
+      page: 'user_language',
     });
 
     this.userLanguageInfo = this.formBuilder.group({
@@ -320,6 +320,8 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
   }
 
   getTitleByMode() {
-    return this.mode === MODE.EDIT ? 'Edit language' : 'Add language';
+    return this.mode === MODE.EDIT
+      ? this.translateService.translate('edit_language')
+      : this.translateService.translate('add_language');
   }
 }
