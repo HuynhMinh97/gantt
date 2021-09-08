@@ -560,7 +560,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   converToDateTime = (date) => (new Date(date)).getTime();
   handleInput = (event) => {
     this.nbDatepicker.hidePicker()
-    if (event.target.value) {
+    if (event.target.value && event.target.value !== '') {
       this.translateDate(event.target.value);
       if (event.target.value?.length > 2) {
         // try {
@@ -593,6 +593,15 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
       if (this.required) {
         this.componentErrors = this.getMessage();
       }
+    }
+    else {
+      this.formatTransfrom = null;
+      setTimeout(() => {
+        this.watchValue.emit({ value: null });
+        if (this.required) {
+          this.componentErrors = this.getMessage();
+        }
+      }, 100)
     }
   }
 
@@ -628,7 +637,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   }
 
   checkValidDateInput = () => {
-
+    console.log(this.formatTransfrom);
     if (this.formatTransfrom) {
       this.date = new Date(this.formatTransfrom);
       this.dateInput = this.formatTransfrom;
@@ -686,10 +695,10 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
         this.formatDateTimeInput = setting?.date_format_input;
 
       }
-      const formatTime = this.formatDateTimeInput || this.formatDateTimeDisplay;
+      // const formatTime = this.formatDateTimeInput || this.formatDateTimeDisplay;
       this.format = this.getFormat();
 
-      if (formatTime) {
+      if (this.format) {
         if (AitAppUtils.isValidDate(this.dateInput) || typeof this.dateInput === 'number') {
           if (this.dateInput) {
             let dateFormat;
@@ -714,8 +723,13 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
 
 
   ngOnInit() {
-    this.setupDate();
-    const target = this.defaultValue || this.dateInput
-    this.watchValue.emit({ value: target ? (new Date(target)).getTime() : target });
+    if (this.defaultValue && this.defaultValue !== '') {
+      this.setupDate();
+      const target = this.defaultValue || this.dateInput
+      this.watchValue.emit({ value: target ? (new Date(target)).getTime() : target });
+    }
+    else {
+      this.watchValue.emit({ value: this.defaultValue });
+    }
   }
 }
