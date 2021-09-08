@@ -149,7 +149,7 @@ export class UserExperienceComponent
     // Run when form value change
     await this.userExperienceInfo.valueChanges.subscribe((data) => {
       if (this.userExperienceInfo.pristine) {
-        this.userExperienceInfoClone = AitAppUtils.deepCloneObject(data);        
+        this.userExperienceInfoClone = AitAppUtils.deepCloneObject(data);
       } else {
         this.checkAllowSave();
       }
@@ -159,6 +159,9 @@ export class UserExperienceComponent
   checkAllowSave() {
     const userInfo = { ...this.userExperienceInfo.value };
     const userInfoClone = { ...this.userExperienceInfoClone };
+
+    console.log(userInfo);
+    console.log(userInfoClone);
 
     this.isChanged = !AitAppUtils.isObjectEqual(
       { ...userInfo },
@@ -249,8 +252,7 @@ export class UserExperienceComponent
     saveData.company_working = saveData.company_working._key;
     console.log(saveData.is_working);
     if (saveData.is_working) {
-      console.log(11);
-      saveData.start_date_to = null
+      delete saveData.start_date_to;
     }
     if (this.user_key) {
       saveData['_key'] = this.user_key;
@@ -375,22 +377,24 @@ export class UserExperienceComponent
     const dateTo = this.userExperienceInfo.controls['start_date_to'].value;
     const isWorking = this.userExperienceInfo.controls['is_working'].value;
 
-    if (dateFrom > dateTo && !isWorking) {
-      const transferMsg = (msg || '')
-        .replace('{0}', this.translateService.translate('start_date_from'))
-        .replace('{1}', this.translateService.translate('start_date_to'));
-      res.push(transferMsg);
-      this.isDateCompare = true;
-    } else if (dateFrom > this.defaultValueDate && isWorking) {
-      const transferMsg = (msg || '')
-        .replace('{0}', this.translateService.translate('start_date_from'))
-        .replace('{1}', this.translateService.translate('now_date'));
-      res.push(transferMsg);
-      this.isDateCompare = true;
-    } else {
+    if (dateFrom == null || dateTo == null) {
       this.isDateCompare = false;
+    } else {
+      if (dateFrom > dateTo && !isWorking) {
+        const transferMsg = (msg || '')
+          .replace('{0}', this.translateService.translate('start_date_from'))
+          .replace('{1}', this.translateService.translate('start_date_to'));
+        res.push(transferMsg);
+        this.isDateCompare = true;
+      } else if (dateFrom > this.defaultValueDate && isWorking) {
+        const transferMsg = (msg || '')
+          .replace('{0}', this.translateService.translate('start_date_from'))
+          .replace('{1}', this.translateService.translate('now_date'));
+        res.push(transferMsg);
+        this.isDateCompare = true;
+      }
+      return res;
     }
-    return res;
   }
 
   back() {

@@ -4,10 +4,7 @@
     id="form_edit_user_experience"
   ></ait-text-gradient>
 
-  <ait-card-content
-    style="justify-content: center"
-    class="content__card"
-  >
+  <ait-card-content style="justify-content: center" class="content__card">
     <div style="margin-top: 14px">
       <div class="input_area">
         <ait-autocomplete-master-data
@@ -82,7 +79,7 @@
           [checked]="userExperienceInfo.controls['is_working']?.value"
           [id]="'is_working'"
           (checkedChange)="toggleCheckBox($event)"
-          >
+        >
         </nb-checkbox>
         <p class="pcontent" tabIndex="15">
           {{ 'is_working' | translate }}
@@ -109,7 +106,26 @@
           [id]="'start_date_to'"
           [width]="'185px'"
           [isReset]="resetUserInfo.start_date_to"
-          [disable]="userExperienceInfo.controls['is_working'].value"
+          *ngIf="!userExperienceInfo.controls['is_working'].value"
+          [dateInput]="userExperienceInfo.controls['start_date_to'].value"
+          (watchValue)="
+            takeDatePickerValue(
+              $event?.value,
+              'userExperienceInfo',
+              'start_date_to'
+            )
+          "
+        ></ait-datepicker>
+
+        <ait-datepicker
+          [id]="'start_date_to'"
+          [width]="'185px'"
+          [isReset]="resetUserInfo.start_date_to"
+          [disable]="true"
+          *ngIf="!!userExperienceInfo.controls['is_working'].value"
+          [ngClass]="{
+            start_date_to: userExperienceInfo.controls['is_working'].value
+          }"
           [ngClass]="{
             start_date_to: userExperienceInfo.controls['is_working'].value
           }"
@@ -133,11 +149,10 @@
           [id]="'description'"
           [length]="4000"
           [rows]="4"
-          [width]="'410px'"s
+          [width]="'415px'"
           [label]="'description'"
           [isReset]="resetUserInfo.description"
           [placeholder]="'description_plh'"
-          [width]="'410px'"
           (watchValue)="takeInputValue($event, 'description')"
           [defaultValue]="userExperienceInfo.controls['description'].value"
         >
