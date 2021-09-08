@@ -325,7 +325,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
             c3_day = Number(value[1] + value[2])
           }
           const c3_lastDay = this.getDaysInMonth(c3_month, this.getCurrentYear());
-          console.log(c3_month, c3_lastDay, c3_day);
+          // console.log(c3_month, c3_lastDay, c3_day);
           if (c3_day > c3_lastDay || c3_day < 1) {
             res = null;
           }
@@ -397,7 +397,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
           let ct8_year = Number(value.slice(0, 4));
           const $v = value.slice(4);
           const $tar = Number($v);
-          console.log(ct8_year)
+          // console.log(ct8_year)
           if (ct8_year.toString().length < 4) {
             ct8_year = this.getCurrentYear();
           }
@@ -534,7 +534,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
           let ct_month = isNaN(Number(value[4] + value[5])) ? 0 : Number(value[4] + value[5]);
           let ct_day = isNaN(Number(value[6] + value[7])) ? 0 : Number(value[6] + value[7]);
           let ct_year = Number(value.slice(0, 4));
-          console.log(ct_year, ct_month, ct_day)
+          // console.log(ct_year, ct_month, ct_day)
 
           if (ct_year.toString().length < 4) {
             ct_year = this.getCurrentYear()
@@ -551,7 +551,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
       }
     }
 
-    console.log(res);
+    // console.log(res);
 
 
     this.formatTransfrom = res?.getTime();
@@ -637,7 +637,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   }
 
   checkValidDateInput = () => {
-    console.log(this.formatTransfrom);
+    // console.log(this.formatTransfrom);
     if (this.formatTransfrom) {
       this.date = new Date(this.formatTransfrom);
       this.dateInput = this.formatTransfrom;
