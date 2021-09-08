@@ -14,6 +14,7 @@
           [label]="'SCHOOL'"
           [required]="true"
           [allowNew]="true"
+          [maxItem]="1"
           [placeholder]="'bachkhoahcm'"
           [collection]="'m_school'"
           [disableOutputDefault]="true"
@@ -64,7 +65,7 @@
 
       <div class="start-date">
         <ait-datepicker
-          [label]="'start_date'"
+          [label]="'start_date_from'"
           [placeholder]="'yyyy/MM'"
           [format]="'yyyy/MM'"
           [id]="'start_date_from'"
@@ -116,7 +117,7 @@
         </ait-input-text>
 
         <div class="input_area">
-          <ait-label [label]="'FILES'"></ait-label>
+          <ait-label [label]="'files'"></ait-label>
           <label class="file-max"
             ><nb-icon icon="attach-outline"></nb-icon>Upload max 5 files and
             10MB/file</label
@@ -126,7 +127,6 @@
             [maxSize]="1000000"
             [maxFiles]="5"
             [hasStatus]="false"
-            [placeholder]="'Select file'"
             [isReset]="isResetFile"
             [isClear]="isClear"
             [fileKeys]="userEducationInfo.controls['file'].value"
@@ -144,7 +144,7 @@
       <div class="block">
         <ait-button
           [id]="'cancel'"
-          [title]="'CANCEL'"
+          [title]="'cancel'"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
           "
@@ -155,7 +155,7 @@
           *ngIf="mode === 'EDIT'"
           [id]="'delete'"
           [width]="'200px'"
-          [title]="'DELETE'"
+          [title]="'delete'"
           (click)="onDelete()"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
@@ -166,7 +166,7 @@
         <ait-button
           [id]="'reset'"
           [width]="'200px'"
-          [title]="'RESET'"
+          [title]="'reset'"
           (click)="resetForm()"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
@@ -177,7 +177,7 @@
         <ait-button
           *ngIf="mode === 'NEW'"
           [id]="'saveAndContinue'"
-          [title]="'SAVE & CONTINUE'"
+          [title]="'saveandcontinue'"
           (click)="saveAndContinue()"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
@@ -188,7 +188,7 @@
           [id]="'saveAndClose'"
           *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
           [width]="'200px'"
-          [title]="'SAVE & CLOSE'"
+          [title]="'saveandclose'"
           (click)="saveAndClose()"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
@@ -199,7 +199,7 @@
           *ngIf="!isChanged && mode === 'EDIT'"
           [id]="'saveAndClose'"
           [width]="'200px'"
-          [title]="'SAVE & CLOSE'"
+          [title]="'saveandclose'"
           [style]="'disabled'"
         ></ait-button>
       </div>

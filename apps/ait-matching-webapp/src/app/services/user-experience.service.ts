@@ -26,6 +26,7 @@ export class UserExperienceService extends AitBaseService {
     start_date_from: true,
     start_date_to: true,
     description: true,
+    del_flag: true
   };
 
   async findUserExperienceByKey(_key?: string) {
@@ -81,8 +82,6 @@ export class UserExperienceService extends AitBaseService {
   }
 
   async findUserProfile(_key?: string) {
-    console.log(_key);
-    
     const condition = {
       user_id: _key,
       company_working: {

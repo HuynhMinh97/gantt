@@ -17,6 +17,7 @@ export class UserEducationService extends AitBaseService {
     start_date_from: true,
     start_date_to: true,
     description: true,
+    del_flag: true
   };
 
   async findUserEducationByKey(_key?: string) {

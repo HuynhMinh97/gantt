@@ -18,6 +18,7 @@ import {
   HostListener,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { NbToastrService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { Observable, of } from 'rxjs';
@@ -49,9 +50,10 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     userService: AitUserService,
     _envService: AitEnvironmentService,
     private translateSerivce: AitTranslationService,
-    apollo: Apollo
+    apollo: Apollo,
+    toastrService: NbToastrService
   ) {
-    super(store, authService, apollo, userService, _envService);
+    super(store, authService, apollo, userService, _envService, null, toastrService);
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     this.inputControl = new FormControl({ value: '', disabled: this.isReadOnly });
     this.currentLang = this.lang;
@@ -83,9 +85,10 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Input() parentCode: string;
   @Input() code: string;
   @Input() sortBy: string;
+  @Input() allowDelete = false;
   @Input()
   placeholder: string = '';
-  @Input() maxItem: number = 1;
+  @Input() maxItem: number = 9999999 * 100;
   @Input() icon: string = 'search-outline';
   @Input() widthInput: number = 400;
   @Input() defaultValue: any[] = [];
@@ -109,7 +112,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Input() collection = 'sys_master_data';
   @Input() targetValue = 'name';
   @Input() classContainer;
-  @Input() id = Date.now();
+  @Input() id;
   @Input() styleLabel;
   @Input() width;
   @Input() height;
@@ -126,6 +129,8 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   includeNotDelete = true
   monitorLabel = true;
   @Output() onSendAllowText
+
+  lastSortNo = 0;
 
   isFocusInput = false;
 
@@ -147,8 +152,9 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   }
 
-  ID(element: string): string {
-    return this.id + '_' + element;
+  ID(element: string) {
+    const idx = this.id && this.id !== '' ? this.id : Date.now();
+    return idx + '_' + element;
   }
 
   focusInput = () => {
@@ -200,7 +206,58 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   compareDeep = (agr1: any, agr2: any) => JSON.stringify(agr1) === JSON.stringify(agr2);
 
-  messagesError = () => Array.from(new Set([...this.componentErrors, ...(this.errorMessages || [])]))
+  messagesError = () => Array.from(new Set([...this.componentErrors, ...(this.errorMessages || [])]));
+
+  handleRemove = (option: any) => {
+    // console.log(option);
+    if (option?.is_matching) {
+      this.masterDataService.deleteDataEachItem({ _key: option?.id }).then(res => {
+        if (res) {
+          this.DataSource = this.DataSource.filter(f => f._key !== option._key);
+          this.dataSourceDf = this.dataSourceDf.filter(f => f._key !== option._key);
+
+          if (this.maxItem === 1) {
+            if (this.selectOne?._key === option?._key) {
+              this.selectOne = {};
+              this.watchValue.emit({ value: [] });
+            }
+          }
+          else {
+            this.optionSelected = this.optionSelected.filter(f => f._key !== option?._key);
+            this.watchValue.emit({ value: this.optionSelected.map(s => ({ _key: s?._key, value: s?.value })) });
+          }
+
+          setTimeout(() => {
+            if (this.errorMessages?.length === 0) {
+              this.isError = false;
+              // this.errorMessages = [];
+              this.componentErrors = [];
+            }
+            else {
+              this.componentErrors = [];
+            }
+
+          }, 150)
+          this.filteredOptions$ = of(this.DataSource);
+        }
+      })
+    }
+    else {
+      setTimeout(() => {
+        this.isError = false;
+        // this.errorMessages = [];
+        this.componentErrors = [];
+      }, 150)
+      this.showToastr('Thông báo', 'Không thể xóa vì dữ liệu không hệ thống Matching!', 'warning');
+    }
+
+  }
+
+  // removeData = () => {
+
+  // }
+
+
 
 
   ngOnChanges(changes: SimpleChanges) {
@@ -212,7 +269,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
 
         if (key === 'allowNew') {
-          console.log(this.allowNew)
+          // console.log(this.allowNew)
         }
 
         if (key === 'errorMessages') {
@@ -292,7 +349,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   enter = (event) => {
     event.preventDefault();
-    console.log(this.dataFilter.length === 0, this.allowNew)
+    // console.log(this.dataFilter.length === 0, this.allowNew)
     if (this.dataFilter.length === 0 && this.allowNew) {
       this.checkAllowNew(this.currentValue);
     }
@@ -300,25 +357,27 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   //TODO Khi nhấn enter sẽ chọn lun giá trị đó nếu save thành công
   checkAllowNew = (value: string) => {
-    console.log(value)
-    // const title = this.translateSerivce.translate(
-    //   'c_10020'
-    // );
-    // const successToSave = this.translateSerivce.getMsg('I0012')
     if (this.allowNew) {
       const find = this.dataSourceDf.find(d => d.value === value);
+      const dataReq: any = {
+        code: value,
+        name: {
+          vi_VN: value,
+          ja_JP: value,
+          en_US: value
+        },
+        sort_no: this.lastSortNo + 1,
+        is_matching: true,
+        active_flag: true,
+      }
+      if (this.class && this.collection === 'sys_master_data') {
+        dataReq.class = this.class || '';
+      }
+      // console.log(dataReq);
       if (!find) {
-        this.masterDataService.saveData([{
-          active_flag: true,
-          class: this.class || '',
-          code: value,
-          name: {
-            vi_VN: value,
-            ja_JP: value,
-            en_US: value
-          },
-        }]).then(r => {
+        this.masterDataService.saveData([dataReq], this.collection).then(r => {
           if (r?.status === RESULT_STATUS.OK) {
+
             const func = () => {
               if (this.maxItem !== 1) {
 
@@ -442,6 +501,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     if (this.sortBy) {
       options['sort_by'] = { value: this.sortBy };
     }
+
     if (this.class && this.collection === 'sys_master_data') {
       this.usingGraphQL(cond, options).then(() => {
         if (cb) {
@@ -450,7 +510,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       });
     }
     else {
-      this.usingGraphQL({}, {}, false).then(() => {
+      this.usingGraphQL({}, options, false).then(() => {
         if (cb) {
           cb();
         }
@@ -479,7 +539,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       const rest = await this.masterDataService.find({
         ...condition
       }, {
-        _key: true, code: true, [this.targetValue]: true,
+        _key: true, code: true, [this.targetValue]: true, is_matching: true, sort_no: true
       }, this.collection, options, this.includeNotDelete, this.includeNotActive);
 
 
@@ -488,7 +548,16 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         dataMaster = result || [];
       }
     }
-    const r = dataMaster.map(r => ({ code: r.code || r._key, value: r[this.targetValue] || r?.value, _key: r.code || r._key }));
+    const r = dataMaster.map(r => ({
+      code: r.code || r._key,
+      value: r[this.targetValue] || r?.value,
+      _key: r.code || r._key,
+      is_matching: r?.is_matching,
+      id: r?._key
+    }));
+
+    const sortNoArr = dataMaster.map(x => x?.sort_no).filter(s => !!s);
+    this.lastSortNo = sortNoArr.length !== 0 ? Math.max.apply(null, sortNoArr) : dataMaster.length;
 
 
 
@@ -619,13 +688,42 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       target = this.DataSource;
       this.filteredOptions$ = of(this.DataSource);
       this.watchValue.emit({ value: this.optionSelected.map(m => ({ _key: m?._key, value: m?.value })) });
+      setTimeout(() => {
+        if (target) {
+          this.DataSource = target
+          // this.filteredOptions$ = of(this.DataSource);
+
+          this.currentSortData = AitAppUtils.deepCloneArray(target);
+          this.isHideLabel = false;
+          this.isClickOption = false;
+        }
+      }, 10)
     } else {
+      // console.log(itemFind);
       if (itemFind.isChecked) {
         itemFind.isChecked = !itemFind.isChecked;
         this.optionSelected = this.getSelectedOptions();
         target = this.DataSource;
         this.filteredOptions$ = of(this.DataSource);
         this.watchValue.emit({ value: this.optionSelected.map(m => ({ _key: m?._key, value: m?.value })) });
+        setTimeout(() => {
+          if (target) {
+            this.DataSource = target
+            // this.filteredOptions$ = of(this.DataSource);
+
+            this.currentSortData = AitAppUtils.deepCloneArray(target);
+            this.isHideLabel = false;
+            this.isClickOption = false;
+          }
+        }, 10)
+      }
+      else {
+        this.dataFilter = [];
+        setTimeout(() => {
+          this.dataFilter = [1];
+          this.isHideLabel = false;
+          this.isClickOption = false;
+        }, 10)
       }
     }
 
@@ -641,16 +739,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
       }
     }
-    setTimeout(() => {
-      if (target) {
-        this.DataSource = target
-        // this.filteredOptions$ = of(this.DataSource);
 
-        this.currentSortData = AitAppUtils.deepCloneArray(target);
-        this.isHideLabel = false;
-        this.isClickOption = false;
-      }
-    }, 10)
   };
 
   displayOptions = () => {
@@ -906,12 +995,18 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   }
 
   handleClickIcon = () => {
+    this.isClickedIcon = true;
     if (this.isOpenAutocomplete) {
-      this.isClickedIcon = true;
+
       this.dataFilter = [];
       this.isOpenAutocomplete = false;
       setTimeout(() => {
         this.isHideLabel = false;
+      }, 50)
+    }
+    else {
+      setTimeout(() => {
+        this.dataFilter = [1];
       }, 50)
     }
 

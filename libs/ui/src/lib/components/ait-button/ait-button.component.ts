@@ -29,7 +29,7 @@ export class AitButtonComponent implements OnChanges {
   @Input() styleBtn = {};
   @Input() styleIcon = {};
   @Input() styleText = {}
-  @Input() id=Date.now();
+  @Input() id;
   @Input() hide = false;
   @Input() isDefault = false;
 
@@ -41,8 +41,9 @@ export class AitButtonComponent implements OnChanges {
 
   setFocus = (value) => this.isFocus = !!value;
 
-  ID(element: string): string {
-    return this.id + '_' + element;
+  ID(element: string) {
+    const idx = this.id && this.id !== '' ? this.id : Date.now();
+    return idx + '_' + element;
   }
 
 

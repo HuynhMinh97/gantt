@@ -181,8 +181,8 @@ export class UserOnboardingComponent
         .then(async (r) => {
           if (r.status === RESULT_STATUS.OK) {
             let isUserExist = false;
-            if (r.data.length > 0) {
-              const data = r.data[0];
+            const data = r.data[0];
+            if (r.data.length > 0 && !data.del_flag) {
               this.userOnboardingInfo.patchValue({ ...data });
               this.userOnboardingInfoClone = this.userOnboardingInfo.value;
               isUserExist = true;
@@ -246,7 +246,7 @@ export class UserOnboardingComponent
         _key: gender.code,
         value: gender.name,
       });
-      const defaultGender = this.genderList[0];
+      const defaultGender = this.genderList[2];
       this.defaultGender = {
         _key: defaultGender.code,
         value: defaultGender.name,
@@ -256,7 +256,7 @@ export class UserOnboardingComponent
         Object.assign({}, gender, { checked: index === 0 ? true : false })
       );
 
-      const gender = genderList[0];
+      const gender = genderList[2];
 
       this.defaultGender = { _key: gender.code, value: gender.name };
       this.userOnboardingInfo.controls['gender'].setValue({
@@ -299,7 +299,6 @@ export class UserOnboardingComponent
   saveDataUserProfile() {
     const saveData = this.userOnboardingInfo.value;
 
-    saveData['user_id'] = this.authService.getUserID();
     saveData.ward = saveData.ward._key;
     saveData.title = saveData.title._key;
     saveData.city = saveData.city._key;
@@ -316,6 +315,8 @@ export class UserOnboardingComponent
     saveData.skills = _keySkill;
     if (this.user_key) {
       saveData['_key'] = this.user_key;
+    } else {
+      saveData['user_id'] = this.authService.getUserID();
     }
 
     return saveData;

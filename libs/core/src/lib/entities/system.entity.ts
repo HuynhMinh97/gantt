@@ -36,10 +36,13 @@ export class SysEntity extends BaseEntity {
 
   @Field(() => String, { nullable: true })
   slug?: string;
-  
+
   @Field(() => String, { nullable: true })
   param?: string;
 
   @Field(() => Boolean, { nullable: true })
   active_flag?: boolean;
+
+  @Field(() => Boolean, { nullable: true })
+  is_matching?: boolean;
 }

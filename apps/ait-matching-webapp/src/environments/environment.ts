@@ -1,5 +1,6 @@
 export const environment = {
   production: false,
+  isMatching: true,
   COMMON: {
     COMPANY_DEFAULT: 'a8cd83a1-5a4d-4500-8751-a790d649c398',
     LANG_DEFAULT: 'ja_JP',

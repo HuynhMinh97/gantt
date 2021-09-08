@@ -34,10 +34,12 @@ export class UserOnboardingService extends AitBaseService {
       _key: true,
       value: true,
     },
-    skills: [{
-      _key: true,
-      value: true,
-    }],
+    skills: [
+      {
+        _key: true,
+        value: true,
+      },
+    ],
     gender: {
       _key: true,
       value: true,
@@ -52,6 +54,7 @@ export class UserOnboardingService extends AitBaseService {
     postcode: true,
     address: true,
     floor_building: true,
+    del_flag: true,
   };
 
   async findUserOnboardingByKey(_key?: string) {
@@ -93,7 +96,7 @@ export class UserOnboardingService extends AitBaseService {
         attribute: item.att,
         ref_collection: item.col,
         ref_attribute: '_key',
-        get_by: "_key"
+        get_by: '_key',
       };
     });
 
