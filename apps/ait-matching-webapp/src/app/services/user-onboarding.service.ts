@@ -34,12 +34,6 @@ export class UserOnboardingService extends AitBaseService {
       _key: true,
       value: true,
     },
-    skills: [
-      {
-        _key: true,
-        value: true,
-      },
-    ],
     gender: {
       _key: true,
       value: true,
@@ -85,18 +79,13 @@ export class UserOnboardingService extends AitBaseService {
         att: 'industry',
         col: 'm_industry',
       },
-      {
-        att: 'skills',
-        col: 'm_skill',
-      },
     ];
 
     keyMasterArray.forEach((item) => {
       condition[item.att] = {
         attribute: item.att,
         ref_collection: item.col,
-        ref_attribute: '_key',
-        get_by: '_key',
+        ref_attribute: 'code',
       };
     });
 
@@ -105,6 +94,30 @@ export class UserOnboardingService extends AitBaseService {
     request['collection'] = this.collection;
     request['condition'] = condition;
     return await this.query('findUserOnboardingInfo', request, returnFields);
+  }
+
+  async findUserSkills(_id?: string) {
+    const condition: any = {
+      _from: _id,
+      skills: {
+        attribute: "skills",
+        ref_collection: "m_skill",
+        ref_attribute: '_key',
+        get_by: '_key',
+      }
+    };
+    const returnFields = {
+      skills: [
+        {
+          _key: true,
+          value: true,
+        },
+      ],
+    };
+    const request = {};
+    request['collection'] = 'user_skill';
+    request['condition'] = condition;
+    return await this.query('findUserSkill', request, returnFields);
   }
 
   async findSiteLanguageById(_id?: string) {

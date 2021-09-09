@@ -61,6 +61,8 @@ export class UserExperienceComponent
     start_date_from: false,
   };
 
+  dateField = ['start_date_to', 'start_date_from'];
+
   user_key = '';
 
   constructor(
@@ -160,13 +162,25 @@ export class UserExperienceComponent
     const userInfo = { ...this.userExperienceInfo.value };
     const userInfoClone = { ...this.userExperienceInfoClone };
 
-    console.log(userInfo);
-    
+    this.setHours(userInfo);
 
     this.isChanged = !AitAppUtils.isObjectEqual(
       { ...userInfo },
       { ...userInfoClone }
     );
+  }
+
+  setHours(data: any) {
+    for (const prop in data) {
+      if (this.dateField.includes(prop)) {
+        if (data[prop]) {
+          data[prop] = new Date(data[prop]).setHours(0, 0, 0, 0);
+        }
+        if (data[prop]) {
+          data[prop] = new Date(data[prop]).setHours(0, 0, 0, 0);
+        }
+      }
+    }
   }
 
   getTitleByMode() {
@@ -195,7 +209,6 @@ export class UserExperienceComponent
 
   resetForm() {
     this.errorArr = [];
-    this.isChanged = false;
     if (this.mode === MODE.NEW) {
       this.resetModeNew();
     } else {
@@ -361,6 +374,9 @@ export class UserExperienceComponent
   }
 
   takeDatePickerValue(value: number, group: string, form: string) {
+    if (value == null) {
+      this.isChanged = true;
+    }
     if (value) {
       const data = value as number;
       value = new Date(data).setHours(0, 0, 0, 0);
@@ -378,6 +394,13 @@ export class UserExperienceComponent
 
     if (dateFrom == null || dateTo == null) {
       this.isDateCompare = false;
+      if (dateFrom > this.defaultValueDate && isWorking) {
+        const transferMsg = (msg || '')
+          .replace('{0}', this.translateService.translate('start_date_from'))
+          .replace('{1}', this.translateService.translate('now_date'));
+        res.push(transferMsg);
+        this.isDateCompare = true;
+      }
     } else {
       if (dateFrom > dateTo && !isWorking) {
         const transferMsg = (msg || '')
@@ -385,15 +408,11 @@ export class UserExperienceComponent
           .replace('{1}', this.translateService.translate('start_date_to'));
         res.push(transferMsg);
         this.isDateCompare = true;
-      } else if (dateFrom > this.defaultValueDate && isWorking) {
-        const transferMsg = (msg || '')
-          .replace('{0}', this.translateService.translate('start_date_from'))
-          .replace('{1}', this.translateService.translate('now_date'));
-        res.push(transferMsg);
-        this.isDateCompare = true;
       }
-      return res;
     }
+    console.log(res);
+    console.log(this.isDateCompare);
+    return res;
   }
 
   back() {
