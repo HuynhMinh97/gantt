@@ -3,15 +3,13 @@ describe('Test Cypress', () => {
     it('Check Mode New', function () {
         cy.login('thuannv', '12345678');  
         cy.wait(3000); 
-        cy.get("#user",{ timeout: 100 }).click().then(() =>{
-
-            // checkTitleAndPlaceholder();
-            //checkValidate();
-            //checkValidOfDate();
-            addData();
-            // checkReset();
-            //  checkSave()
-        });
+        cy.visit(Cypress.env('host') + Cypress.env('user_course'));
+        cy.url().should('eq', Cypress.env('host') + Cypress.env('user_course'));
+        checkValidate();
+        // checkTitleAndPlaceholder();
+        // addData();
+        // checkReset();
+        // checkSave();
      
     });
   });
@@ -20,9 +18,9 @@ describe('Test Cypress', () => {
       name:"thuan",
       course_number: "AIT0001",
       description: "Please input description",
-      file: "hoa.jpg",
+      file: ["anh.jpg","AIT-Starter-Component.xlsx","test.docx"],
       is_online: true,
-      start_date_to: ['2021', '8', '25'],
+      start_date_to: ['2021', '12', '25'],
       training_center: "Computer Network Architect",       
   }
   function checkTitleAndPlaceholder() {
@@ -33,7 +31,7 @@ describe('Test Cypress', () => {
 
     cy.get('#is_online').should(
         'have.text',
-        ' Online? '
+        'Online?'
       );
   
     cy.label('training_center', ' Center');
@@ -92,7 +90,9 @@ describe('Test Cypress', () => {
     cy.typeTextarea("course_number",datas.course_number);
     cy.chooseValueDate('start_date_to', datas.start_date_to[0],datas.start_date_to[1],datas.start_date_to[2]);
     cy.typeTextarea("description",datas.description);
-    cy.chooseFile('file_input_file',datas.file);
+    cy.chooseFile('file_input_file',datas.file[0]);
+    cy.chooseFile('file_input_file',datas.file[1]);
+    cy.chooseFile('file_input_file',datas.file[2]);
     cy.wait(1000);
   }
 

@@ -9,7 +9,7 @@
           [placeholder]="'Japanese N1'"
           [required]="true"
           [collection]="'m_certificate_award'"
-          [isReset]="resetUser.name"
+          [isReset]="resetCertificate.name"
           [style]="{ width: '400px' }"
           (watchValue)="takeInputValue($event, 'name')"
           [defaultValue]="[companyName]"
@@ -20,16 +20,16 @@
 
       <div class="input_inline">
         <ait-input-text
+          [id]="'certificate_award_number'"
+          [label]="'CERTIFICATE NUMBER'"
           [height]="'40px'"
           [width]="'400px'"
           [rows]="4"
-          [label]="'CERTIFICATE NUMBER'"
           [required]="false"
-          [id]="'certificate'"
           [placeholder]="'EX: AIT001'"
-          (watchValue)="takeInputValue($event, 'certificate')"
-          [defaultValue]="certificate.controls['certificate'].value"
-          [isReset]="resetUser.certificate"
+          (watchValue)="takeInputValue($event, 'certificate_award_number')"
+          [defaultValue]="certificate.controls['certificate_award_number'].value"
+          [isReset]="resetCertificate.certificate_award_number"
           [isSubmit]="isSubmit"
           [length]="400"
         ></ait-input-text>
@@ -46,7 +46,7 @@
           [placeholder]="'90/120'"
           (watchValue)="takeInputValue($event, 'grade')"
           [defaultValue]="certificate.controls['grade'].value"
-          [isReset]="resetUser.grade"
+          [isReset]="resetCertificate.grade"
           [isSubmit]="isSubmit"
           [length]="400"
         ></ait-input-text>
@@ -54,14 +54,14 @@
 
       <div class="input_inline">
         <ait-autocomplete-master-data
-          [id]="'issue'"
+          [id]="'issue_by'"
           [label]="'Issue BY'"
           [placeholder]="'BACH KHOA Ho Chi Minh Technology University'"
           [required]="false"
           [collection]="'m_training_center'"
-          [isReset]="resetUser.issue"
+          [isReset]="resetCertificate.issue_by"
           [style]="{ width: '400px' }"
-          (watchValue)="takeInputValue($event, 'issue')"
+          (watchValue)="takeInputValue($event, 'issue_by')"
           [defaultValue]="[companyIssue]"
           [disableOutputDefault]="true"
           [isSubmit]="isSubmit"
@@ -73,28 +73,28 @@
           [required]="false"
           [label]="'ISSUE DATE'"
           [placeholder]="'yyyy/MM/dd'"
-          [id]="'issueDate'"
+          [id]="'issue_date_from'"
           [style]="{ width: '170px' }"
-          [isReset]="resetUser.issueDate"
           (watchValue)="
-            takeDatePickerValue($event?.value, 'userInfo', 'issueDate')
+            takeDatePickerValue($event?.value,'issue_date_from')
           "
-          [dateInput]="certificate.controls['issueDate'].value"
-          [isReset]="resetUser.issueDate"
+          [dateInput]="certificate.controls['issue_date_from'].value"
+          [isReset]="resetCertificate.issue_date_from"
           [isSubmit]="isSubmit"
         ></ait-datepicker>
+
         <p class="label-datepiker">{{ '~' }}</p>
+
         <ait-datepicker
           [required]="false"
           [placeholder]="'yyyy/MM/dd'"
-          [id]="'immigration'"
+          [id]="'issue_date_to'"
           [style]="{ width: '170px' }"
-          [isReset]="resetUser.immigration"
+          [isReset]="resetCertificate.issue_date_to"
           (watchValue)="
-            takeDatePickerValue($event?.value, 'userInfo', 'immigration')
+            takeDatePickerValue($event?.value, 'issue_date_to')
           "
-          [dateInput]="certificate.controls['immigration'].value"
-          [isReset]="resetUser.immigration"
+          [dateInput]="certificate.controls['issue_date_to'].value"
         ></ait-datepicker>
       </div>
       <ait-error-message [errors]="error"></ait-error-message>
@@ -110,7 +110,7 @@
           [placeholder]="'Place your text'"
           (watchValue)="takeInputValue($event, 'description')"
           [defaultValue]="certificate.controls['description'].value"
-          [isReset]="resetUser.description"
+          [isReset]="resetCertificate.description"
           [isSubmit]="isSubmit"
           [length]="400"
         ></ait-input-text>
@@ -128,7 +128,7 @@
           [guidance]="'「個人情報の取り扱いについての同意」を添付して下さい。'"
           [fileKeys]=""
           [isSubmit]="isSubmit"
-          [isReset]="resetUser.file"
+          [isReset]="resetCertificate.file"
           [fileKeys]="files"
         ></ait-input-file>
       </div>
