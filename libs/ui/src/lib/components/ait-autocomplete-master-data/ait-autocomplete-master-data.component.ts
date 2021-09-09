@@ -128,7 +128,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Input()
   includeNotDelete = true
   monitorLabel = true;
-  @Output() onSendAllowText
+  @Output() onSendAllowText;
 
   lastSortNo = 0;
 
@@ -172,6 +172,8 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
 
   getFieldName = () => this.translateSerivce.translate(this.label);
+
+  getPlaceHolder = () => this.translateSerivce.translate(this.placeholder);
 
 
   ngAfterViewChecked() {

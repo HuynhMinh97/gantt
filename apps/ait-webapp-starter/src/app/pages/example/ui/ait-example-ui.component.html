@@ -214,6 +214,7 @@
           [sortBy]="'sort_no'"
           [maxItem]="1"
           [collection]="'sys_caption'"
+          [isReadOnly]="true"
         ></ait-autocomplete-master-data>
         <button
           nbButton
@@ -263,7 +264,7 @@
 
         <ait-space></ait-space>
 
-        <ait-input-file
+        <!-- <ait-input-file
           [title]="'input-file'"
           [isDefault]="false"
           [fileKeys]="[
@@ -275,10 +276,9 @@
           (onError)="result.error_file = $event.isValid"
           [isSubmit]="result.file"
           [errorMessages]="errors"
-          [maxFiles]="1"
           [fileTypes]="'jpg,json,png'"
-          [maxSize]="50"
-        ></ait-input-file>
+
+        ></ait-input-file> -->
 
         <button
           nbButton
@@ -469,6 +469,8 @@
         <ait-input-file
           [isDefault]="false"
           [file_keys]="['7bfedd70-a3db-f0c5-6340-d0e728d407ba']"
+          [maxSize]="40"
+          [maxFiles]="6"
         ></ait-input-file>
       </div>
     </ait-card-content>
