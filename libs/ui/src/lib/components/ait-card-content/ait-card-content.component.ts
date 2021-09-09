@@ -38,6 +38,12 @@ export class AitCardContentComponent {
   disableButton = false;
   @Input() buttonTitle = '';
   @Input() classContainer: any;
+  @Input() id;
+
+  ID(element: string) {
+    const idx = this.id && this.id !== '' ? this.id : Date.now();
+    return idx + '_' + element;
+  }
 
   get textButton(): string {
     return '追加する';

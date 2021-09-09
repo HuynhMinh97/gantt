@@ -26,6 +26,11 @@ export class AitChipComponent implements OnChanges {
   @Input() background = '#ffffff';
   @Input() colorText = '#10529D';
   @Input() is18n = true;
+  @Input() id;
+  ID(element: string) {
+    const idx = this.id && this.id !== '' ? this.id : Date.now();
+    return idx + '_' + element;
+  }
   constructor(private translateService : AitTranslationService,private store:Store<AppState>) {
 
   }

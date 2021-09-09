@@ -140,6 +140,12 @@ div.content {
   margin-top: 14px;
 }
 
+.nb_checkbox {
+  display: flex;
+  margin-bottom: 14px;
+  margin-top: 18px;
+}
+
 .input_inline {
   width: 100%;
   margin-bottom: 14px;
@@ -155,15 +161,10 @@ nb-radio-group {
   margin-bottom: 5px;
 }
 
-:host ::ng-deep .gray-text {
-  .text {
-    color: #8f9bb3 !important;
-  }
-}
-
 :host ::ng-deep .start_date_to {
   input {
-    height: 40px;
+    height: 42px;
+    width: 185px !important;
   }
 }
 
@@ -244,19 +245,25 @@ nb-radio-group {
   }
 }
 ::ng-deep #user_experience input,
-::ng-deep #user_experience textarea{
+::ng-deep #user_experience textarea {
   font-size: 12px !important;
 }
-
 
 ::ng-deep #user_experience nb-icon.icon_expan,
 ::ng-deep #user_experience .divider,
 ::ng-deep #user_experience .header__card {
   display: none;
 }
-::ng-deep #user_experience .card__content_container{
+::ng-deep #user_experience .card__content_container {
   padding: 30px;
 }
-::ng-deep #user_experience .content{
+::ng-deep #user_experience .content {
   padding-top: 0;
+}
+
+.pcontent {
+  color: #8f9bb3;
+  margin-left: 12px;
+  font-weight: bold;
+  font-size: 12px;
 }

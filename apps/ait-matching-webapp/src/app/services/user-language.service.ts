@@ -14,6 +14,7 @@ export class UserLanguageService extends AitBaseService {
       _key: true,
       value: true,
     },
+    del_flag: true,
   };
 
   async findUserLanguageByKey(_key?: string) {
@@ -21,15 +22,15 @@ export class UserLanguageService extends AitBaseService {
       _key: _key,
     };
 
-    const specialFields = ['language', 'proficiency']
+    const specialFields = ['language', 'proficiency'];
 
-    specialFields.forEach(item => {
+    specialFields.forEach((item) => {
       condition[item] = {
         attribute: item,
         ref_collection: 'sys_master_data',
-        ref_attribute: 'code'
-      }
-    })
+        ref_attribute: 'code',
+      };
+    });
 
     const returnFields = this.returnFields;
     const request = {};

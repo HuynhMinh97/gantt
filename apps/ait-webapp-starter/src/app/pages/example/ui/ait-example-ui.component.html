@@ -138,10 +138,10 @@
           [styleLabel]="{ 'text-transform': 'initial' }"
           [width]="'400px'"
           (onError)="result.error_datepicker = $event.isValid"
-          [placeholder]="'c_2003'"
+          [placeholder]="null"
           [guidance]="'c_2003'"
           (watchValue)="getValueDatePicker($event)"
-          [format]="'dd/MM/yyyy'"
+
           [guidanceIcon]="'star'"
           [defaultValue]="null"
           [isSubmit]="result.submit_datepicker"
@@ -210,6 +210,10 @@
           [required]="true"
           [isReset]="result.resetAll"
           [required]="true"
+          [allowDelete]="true"
+          [sortBy]="'sort_no'"
+          [maxItem]="1"
+          [collection]="'sys_caption'"
         ></ait-autocomplete-master-data>
         <button
           nbButton
@@ -228,7 +232,6 @@
           [styleLabel]="{ 'text-transform': 'initial' }"
           [width]="'400px'"
           [label]="'autocomplete master data'"
-          [maxItem]="3"
           [placeholder]="'one'"
           [guidance]="'c_2003'"
           [guidanceIcon]="'star'"
@@ -244,6 +247,7 @@
           [errorMessages]="errors"
           [isReset]="result.resetAll"
           [required]="true"
+          [allowDelete]="true"
         ></ait-autocomplete-master-data>
         <button
           nbButton

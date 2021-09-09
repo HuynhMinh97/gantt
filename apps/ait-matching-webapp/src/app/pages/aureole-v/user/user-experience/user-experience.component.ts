@@ -114,7 +114,7 @@ export class UserExperienceComponent
       ]),
       company_working: new FormControl(null, [Validators.required]),
       location: new FormControl(null, [Validators.required]),
-      employee_type: new FormControl(null, [Validators.required]),
+      employee_type: new FormControl(null),
       is_working: new FormControl(false),
       start_date_from: new FormControl(this.defaultValueDate),
       start_date_to: new FormControl(null),
@@ -135,8 +135,8 @@ export class UserExperienceComponent
         .then((r) => {
           if (r.status === RESULT_STATUS.OK) {
             let isUserExist = false;
-            if (r.data.length > 0) {
-              const data = r.data[0];
+            const data = r.data[0];
+            if (r.data.length > 0 && !data.del_flag) {
               this.userExperienceInfo.patchValue({ ...data });
               this.userExperienceInfoClone = this.userExperienceInfo.value;
               isUserExist = true;
@@ -160,6 +160,9 @@ export class UserExperienceComponent
     const userInfo = { ...this.userExperienceInfo.value };
     const userInfoClone = { ...this.userExperienceInfoClone };
 
+    console.log(userInfo);
+    
+
     this.isChanged = !AitAppUtils.isObjectEqual(
       { ...userInfo },
       { ...userInfoClone }
@@ -167,28 +170,34 @@ export class UserExperienceComponent
   }
 
   getTitleByMode() {
-    return this.mode === MODE.EDIT ? 'Edit experience' : 'Add experience';
+    return this.mode === MODE.EDIT
+      ? this.translateService.translate('edit_experience')
+      : this.translateService.translate('add_experience');
+  }
+
+  resetModeNew() {
+    for (const index in this.resetUserInfo) {
+      this.resetUserInfo[index] = true;
+      setTimeout(() => {
+        this.resetUserInfo[index] = false;
+      }, 100);
+    }
+    this.userExperienceInfo.reset();
+    setTimeout(() => {
+      this.userExperienceInfo.controls['start_date_from'].setValue(
+        this.defaultValueDate
+      );
+      this.userExperienceInfo.controls['company_working'].setValue({
+        ...this.defaultCompany,
+      });
+    }, 100);
   }
 
   resetForm() {
     this.errorArr = [];
     this.isChanged = false;
     if (this.mode === MODE.NEW) {
-      for (const index in this.resetUserInfo) {
-        this.resetUserInfo[index] = true;
-        setTimeout(() => {
-          this.resetUserInfo[index] = false;
-        }, 100);
-      }
-      this.userExperienceInfo.reset();
-      setTimeout(() => {
-        this.userExperienceInfo.controls['start_date_from'].setValue(
-          this.defaultValueDate
-        );
-        this.userExperienceInfo.controls['company_working'].setValue({
-          ...this.defaultCompany,
-        });
-      }, 100);
+      this.resetModeNew();
     } else {
       for (const index in this.resetUserInfo) {
         if (!this.userExperienceInfo.controls[index].value) {
@@ -236,17 +245,19 @@ export class UserExperienceComponent
 
   saveData() {
     const saveData = this.userExperienceInfo.value;
-    saveData['user_id'] = this.authService.getUserID();
+
     saveData.title = saveData.title._key;
     saveData.location = saveData.location._key;
     saveData.employee_type = saveData.employee_type._key;
     saveData.company_working = saveData.company_working._key;
-
+    console.log(saveData.is_working);
     if (saveData.is_working) {
-      this.userExperienceInfo.controls['start_date_to'].setValue(null);
+      delete saveData.start_date_to;
     }
     if (this.user_key) {
       saveData['_key'] = this.user_key;
+    } else {
+      saveData['user_id'] = this.authService.getUserID();
     }
     return saveData;
   }
@@ -263,19 +274,11 @@ export class UserExperienceComponent
       this.userExpService
         .save(this.saveData())
         .then((res) => {
-          //console.log(res);
           if (res?.status === RESULT_STATUS.OK) {
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
-            this.userExperienceInfo.reset();
-            this.userExperienceInfo.controls['start_date_from'].setValue(
-              this.defaultValueDate
-            );
-            this.userExperienceInfo.controls['company_working'].setValue({
-              ...this.defaultCompany,
-            });
-            this.userExperienceInfo.controls['is_working'].setValue(false);
+            this.resetModeNew();
           } else {
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
@@ -300,7 +303,6 @@ export class UserExperienceComponent
       this.userExpService
         .save(this.saveData())
         .then((res) => {
-          //console.log(res);
           if (res?.status === RESULT_STATUS.OK) {
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
@@ -336,6 +338,7 @@ export class UserExperienceComponent
   }
 
   toggleCheckBox(checked: boolean) {
+    this.userExperienceInfo.controls['is_working'].markAsDirty();
     this.userExperienceInfo.controls['is_working'].setValue(checked);
   }
 
@@ -361,7 +364,7 @@ export class UserExperienceComponent
     if (value) {
       const data = value as number;
       value = new Date(data).setHours(0, 0, 0, 0);
-      //this[group].controls[form].markAsDirty();
+      this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(value);
     }
   }
@@ -372,27 +375,28 @@ export class UserExperienceComponent
     const dateFrom = this.userExperienceInfo.controls['start_date_from'].value;
     const dateTo = this.userExperienceInfo.controls['start_date_to'].value;
     const isWorking = this.userExperienceInfo.controls['is_working'].value;
-    if (dateFrom > dateTo && !isWorking) {
-      const transferMsg = (msg || '')
-        .replace('{0}', ' start_date_from ')
-        .replace('{1}', ' start_date_to ');
-      res.push(transferMsg);
-      this.isDateCompare = true;
-    } else if (dateFrom > this.defaultValueDate && isWorking) {
-      const transferMsg = (msg || '')
-        .replace('{0}', ' start_date_from ')
-        .replace('{1}', ' now_date ');
-      res.push(transferMsg);
-      this.isDateCompare = true;
-    } else {
+
+    if (dateFrom == null || dateTo == null) {
       this.isDateCompare = false;
+    } else {
+      if (dateFrom > dateTo && !isWorking) {
+        const transferMsg = (msg || '')
+          .replace('{0}', this.translateService.translate('start_date_from'))
+          .replace('{1}', this.translateService.translate('start_date_to'));
+        res.push(transferMsg);
+        this.isDateCompare = true;
+      } else if (dateFrom > this.defaultValueDate && isWorking) {
+        const transferMsg = (msg || '')
+          .replace('{0}', this.translateService.translate('start_date_from'))
+          .replace('{1}', this.translateService.translate('now_date'));
+        res.push(transferMsg);
+        this.isDateCompare = true;
+      }
+      return res;
     }
-    return res;
   }
 
   back() {
-    console.log(this.isChanged);
-
     if (this.isChanged) {
       this.dialogService
         .open(AitConfirmDialogComponent, {

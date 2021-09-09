@@ -42,4 +42,7 @@ export class SystemDto extends BaseDto {
 
   @Field(() => Boolean, { nullable: true })
   active_flag?: boolean;
+
+  @Field(() => Boolean, { nullable: true })
+  is_matching?: boolean;
 }
