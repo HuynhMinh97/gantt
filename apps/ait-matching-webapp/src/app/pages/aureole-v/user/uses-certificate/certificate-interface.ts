@@ -2,14 +2,13 @@ import { BaseDto, KeyValueDto } from '@ait/shared';
 
 export interface UserProjectDto extends BaseDto {
     name: string,
-    start_date_from: number,
-    start_date_to: number,
-    company: string,
-    title: string,
-    description: string,
-    skills: KeyValueDto[],
-    responsibility: string,
-    achievement: string
+    certificate_award_number: number,
+    grade: number,
+    issue_by: string,
+    issue_date_from: string,
+    issue_date_to: string,
+    description: KeyValueDto[],
+    file: string,
 };
 export class UserProjectErrorsMessage {
     name: string[];

@@ -95,9 +95,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
   ngOnChanges(changes: SimpleChanges) {    
   }
 
-  takeInputValue(val : any, form: string): void {    
-    console.log(val);
-        
+  takeInputValue(val : any, form: string): void {          
    if(isObjectFull(val)){
       this.course.controls[form].setValue(val?.value[0]?._key);
     } 
@@ -141,6 +139,9 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
       this[group].controls[form].setValue(value);
       // set jp_dob format japan cadidates    
       form === 'dob' && this.setKanjiDate();
+      if(form == 'start_date_to'){
+        this.error = this.checkDatePicker();
+      }
     } else {
       this[group].controls[form].setValue(null);
       form === 'dob' && this.course.controls['dob_jp'].setValue(null);
@@ -220,7 +221,6 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
   }
 
   async saveAndContinue(){  
-    this.error = this.checkDatePicker();
     this.isSubmit = true;    
     if(!this.course.valid || this.error.length > 0 ){
       return;     
@@ -240,7 +240,6 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
     }
   }
   async saveAndClose(){
-    this.error = this.checkDatePicker();
     this.isSubmit = true;    
     if(!this.course.valid || this.error.length > 0 ){
       return;     
