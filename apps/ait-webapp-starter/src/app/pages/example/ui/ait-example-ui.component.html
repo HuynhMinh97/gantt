@@ -141,12 +141,12 @@
           [placeholder]="null"
           [guidance]="'c_2003'"
           (watchValue)="getValueDatePicker($event)"
-
           [guidanceIcon]="'star'"
-          [defaultValue]="null"
+          [defaultValue]="date"
           [isSubmit]="result.submit_datepicker"
           [required]="true"
           [errorMessages]="errors"
+          [format]="'yyyy/MM'"
         ></ait-datepicker>
 
         <button
@@ -531,6 +531,7 @@
           (onDateChange)="getDate($event)"
           [label]="'date picker'"
           [dateInput]="date"
+          [format]="'yyyy'"
         ></ait-datepicker>
         <br />
         <code>#Result output : {{ result.date?.value }}</code>
