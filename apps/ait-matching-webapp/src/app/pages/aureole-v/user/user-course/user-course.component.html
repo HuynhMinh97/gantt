@@ -118,24 +118,28 @@
           [length]="4000"
         ></ait-input-text>
       </div>
-
-      <div class="input_inline">
-        <ait-input-file
-          (watchValue)="getFiles($event.value)"
-          [maxFiles]="10"
-          [hasStatus]="false"
-          [title]="'職務経歴'"
-          [maxSize]="200"
-          [id]="'file'"
-          [guidanceIcon]="'info-outline'"
-          [guidance]="'「個人情報の取り扱いについての同意」を添付して下さい。'"
-          [fileKeys]="files"
-          [isSubmit]="submitFile"
-          [isReset]="resetCourse.file"
-          [tabIndex]="16"
-          [isClear]="isClear"
-        ></ait-input-file>
+      <div class="input_inline">   
       </div>
+      <div class="input_area">
+        <ait-label [label]="'FILES'"></ait-label>
+        <label class="file-max"
+          ><nb-icon icon="attach-outline"></nb-icon>Upload max 5 files and
+          10MB/file</label
+        >
+        <ait-input-file
+          [id]="'file'"
+          [maxSize]="1000"
+          [maxFiles]="5"
+          [hasStatus]="false"
+          [placeholder]="'Select file'"
+          [isReset]="resetCourse.file"
+          [isClear]="isClear"
+          [fileKeys]="files"
+          (watchValue)="getFiles($event.value)"
+          [isSubmit]="isSubmit"
+      ></ait-input-file>
+      </div>
+
     </div>
   </div>
   <ait-space></ait-space>
@@ -176,13 +180,6 @@
         [id]="'saveContinue'"
         (click)="saveAndContinue()"
       ></ait-button>
-      <!-- <ait-button
-          [background]="changeData ? 'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)' : 'linear-gradient( 89.75deg, rgb(70 70 70) 0.23%, rgb(148 148 148) 99.81%)'"               
-          [id]="'saveClose'"
-          [title]="'SAVE & CLOSE'"
-          (click)="changeData ? saveAndClose() : ''"
-        ></ait-button> -->
-
       <ait-button
         [id]="'saveClose'"
         *ngIf="(changeData && mode === 'EDIT') || mode === 'NEW'"
@@ -198,9 +195,6 @@
         [width]="'200px'"
         [title]="'SAVE & CLOSE'"
         [style]="'disabled'"
-        [background]="
-          'linear-gradient( 89.75deg, rgb(70 70 70) 0.23%, rgb(148 148 148) 99.81%)'
-        "
       ></ait-button>
     </div>
   </div>
