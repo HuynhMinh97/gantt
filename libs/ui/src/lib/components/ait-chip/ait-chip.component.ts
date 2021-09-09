@@ -29,9 +29,9 @@ export class AitChipComponent implements OnChanges {
   @Input() id;
   ID(element: string) {
     const idx = this.id && this.id !== '' ? this.id : Date.now();
-    return idx + '_' + element;
+    return element + '_' + idx;
   }
-  constructor(private translateService : AitTranslationService,private store:Store<AppState>) {
+  constructor(private translateService: AitTranslationService, private store: Store<AppState>) {
 
   }
 
