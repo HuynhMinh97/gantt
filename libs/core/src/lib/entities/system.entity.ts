@@ -45,4 +45,10 @@ export class SysEntity extends BaseEntity {
 
   @Field(() => Boolean, { nullable: true })
   is_matching?: boolean;
+
+  @Field(() => String, { nullable: true })
+  file_max_size?: string;
+
+  @Field(() => String, { nullable: true })
+  file_max_upload?: string;
 }

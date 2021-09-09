@@ -209,3 +209,5 @@ export const FILE_TYPE_SUPPORT_DEFAULT = 'jpg,jpeg,png,gif,doc,docx,xls,xlsx,jso
 
 export const aureole_logo_header = `
 `
+
+export const SYSTEM_DEFAULT_COMPANY = Array(36).fill(0).join('');
