@@ -55,7 +55,7 @@
           autocomplete="doNotAutoComplete"
           class="search"
           [ngStyle]="styleInput"
-          [placeholder]="placeholder"
+          [placeholder]="getPlaceHolder()"
           [disabled]="isReadOnly"
           [readOnly]="isReadOnly"
           *ngIf="isReadOnly"
