@@ -171,8 +171,8 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
 
     if(dateFrom > dateTo && dateTo != null){
       const transferMsg = (msg || '')
-        .replace('{0}', 'start_date_from ')
-        .replace('{1}','start_date_to ');
+        .replace('{0}', ' start date from ')
+        .replace('{1}',' start date to ');
       res.push(transferMsg);
     }   
     return res;

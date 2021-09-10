@@ -160,8 +160,8 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
 
     if(dateFrom > dateTo && dateTo != null){
       const transferMsg = (msg || '')
-        .replace('{0}', 'issue_date_from ')
-        .replace('{1}','issue_date_to ');
+        .replace('{0}', ' issue date from ')
+        .replace('{1}',' issue date to ');
       res.push(transferMsg);
     }
     return res;
