@@ -138,15 +138,15 @@
           [styleLabel]="{ 'text-transform': 'initial' }"
           [width]="'400px'"
           (onError)="result.error_datepicker = $event.isValid"
-          [placeholder]="'c_2003'"
+          [placeholder]="null"
           [guidance]="'c_2003'"
           (watchValue)="getValueDatePicker($event)"
-          [format]="'dd/MM/yyyy'"
           [guidanceIcon]="'star'"
-          [defaultValue]="null"
+          [defaultValue]="date"
           [isSubmit]="result.submit_datepicker"
           [required]="true"
           [errorMessages]="errors"
+          [format]="'yyyy/MM'"
         ></ait-datepicker>
 
         <button
@@ -210,6 +210,11 @@
           [required]="true"
           [isReset]="result.resetAll"
           [required]="true"
+          [allowDelete]="true"
+          [sortBy]="'sort_no'"
+          [maxItem]="1"
+          [collection]="'sys_caption'"
+          [isReadOnly]="true"
         ></ait-autocomplete-master-data>
         <button
           nbButton
@@ -228,7 +233,6 @@
           [styleLabel]="{ 'text-transform': 'initial' }"
           [width]="'400px'"
           [label]="'autocomplete master data'"
-          [maxItem]="3"
           [placeholder]="'one'"
           [guidance]="'c_2003'"
           [guidanceIcon]="'star'"
@@ -244,6 +248,7 @@
           [errorMessages]="errors"
           [isReset]="result.resetAll"
           [required]="true"
+          [allowDelete]="true"
         ></ait-autocomplete-master-data>
         <button
           nbButton
@@ -259,7 +264,7 @@
 
         <ait-space></ait-space>
 
-        <ait-input-file
+        <!-- <ait-input-file
           [title]="'input-file'"
           [isDefault]="false"
           [fileKeys]="[
@@ -271,10 +276,9 @@
           (onError)="result.error_file = $event.isValid"
           [isSubmit]="result.file"
           [errorMessages]="errors"
-          [maxFiles]="1"
           [fileTypes]="'jpg,json,png'"
-          [maxSize]="50"
-        ></ait-input-file>
+
+        ></ait-input-file> -->
 
         <button
           nbButton
@@ -465,6 +469,8 @@
         <ait-input-file
           [isDefault]="false"
           [file_keys]="['7bfedd70-a3db-f0c5-6340-d0e728d407ba']"
+          [maxSize]="40"
+          [maxFiles]="6"
         ></ait-input-file>
       </div>
     </ait-card-content>
@@ -525,6 +531,7 @@
           (onDateChange)="getDate($event)"
           [label]="'date picker'"
           [dateInput]="date"
+          [format]="'yyyy'"
         ></ait-datepicker>
         <br />
         <code>#Result output : {{ result.date?.value }}</code>

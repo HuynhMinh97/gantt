@@ -26,6 +26,7 @@ export class UserExperienceService extends AitBaseService {
     start_date_from: true,
     start_date_to: true,
     description: true,
+    del_flag: true
   };
 
   async findUserExperienceByKey(_key?: string) {
@@ -57,8 +58,7 @@ export class UserExperienceService extends AitBaseService {
       condition[item.att] = {
         attribute: item.att,
         ref_collection: item.col,
-        ref_attribute: '_key',
-        get_by: "_key"
+        ref_attribute: 'code'
       };
     });
 
@@ -81,15 +81,12 @@ export class UserExperienceService extends AitBaseService {
   }
 
   async findUserProfile(_key?: string) {
-    console.log(_key);
-    
     const condition = {
       user_id: _key,
       company_working: {
         attribute: "company_working",
         ref_collection: "sys_company",
-        ref_attribute: "_key",
-        get_by: "_key"
+        ref_attribute: "code",
       }
     };
     const returnFields = {

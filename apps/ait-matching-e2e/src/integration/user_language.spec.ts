@@ -6,47 +6,43 @@ describe('Test Cypress', () => {
 
     cy.url().should('eq', Cypress.env('host') + Cypress.env('user_language'));
     // checkInitUserLanguage();
+    // resetFormUserLang();
     // checkValidateUserLanguage();
+    // resetFormUserLang();
     insertDataUserLanguage();
   });
+});
 
+  // Check title and placeholder
   function checkInitUserLanguage() {
-    // Check languague and placeholder
+    cy.label('language', ' 言語*');
+    cy.input('language', '日本');
 
-    cy.label('language', ' LANGUAGE*');
-    cy.input('language', 'Please select language');
+    cy.label('proficiency', ' 習熟度');
+    cy.input('proficiency', '選択する');
 
-    cy.label('proficiency', ' PROFICIENCY');
-    cy.input('proficiency', 'Please select proficiency');
-
-    cy.styleButton('cancel', ' CANCEL ');
-    cy.styleButton('reset', ' RESET ');
-    cy.styleButton('saveAndContinue', ' SAVE & CONTINUE ');
-    cy.styleButton('saveAndClose', ' SAVE & CLOSE ');
+    cy.styleButton('cancel', ' キャンセル ');
+    cy.styleButton('reset', ' リセット ');
+    cy.styleButton('saveAndContinue', ' 保存して続行 ');
+    cy.styleButton('saveAndClose', ' 保存して閉じます ');
   }
 
+  // check validate
   function checkValidateUserLanguage() {
-
-    cy.typeText('language', 'a');
-    cy.typeText('proficiency', 'a');
-    cy.errorMessage('language', 'LANGUAGE を入力してください。');
-  
-    // Check validate when click save
     cy.clickButton('saveAndContinue');
-  
-    // Check reset Form
-    cy.clickButton('reset');
-    cy.resetForm([
-      'language_input',
-      'proficiency_input',
-    ]);
+    cy.errorMessage('language', '言語 を入力してください。');
   }
 
+  //check reset
+  function resetFormUserLang() {
+    cy.clickButton('reset');
+    cy.resetForm(['language_input', 'proficiency_input']);
+  }
+
+  // Check save and delete
   function insertDataUserLanguage() {
-    // Check save
     cy.chooseMasterData('language', '日');
     cy.chooseMasterData('proficiency', 'N2');
-    // Check if the data is saved or not
     cy.intercept({
       method: 'POST',
       url: Cypress.env('host') + Cypress.env('api_url'),
@@ -56,11 +52,9 @@ describe('Test Cypress', () => {
       //console.log(req);
       cy.status(req.response.statusCode);
       const _key = req.response.body.data.saveUserLanguageInfo.data[0]._key;
-  
+
       cy.wait(1000);
-      cy.visit(
-        Cypress.env('host') + Cypress.env('user_language') + '/' + `${_key}`
-      );
+      cy.visit(Cypress.env('host') + Cypress.env('user_language') + `${_key}`);
       let query = `
       query {
         findUserLanguageInfo(
@@ -101,38 +95,32 @@ describe('Test Cypress', () => {
         }
       }
       `;
-  
+
       cy.request({
         method: 'POST',
         url: Cypress.env('host') + Cypress.env('api_url'),
         body: { query },
         failOnStatusCode: false,
       }).then((response) => {
-        
         const data = response.body.data.findUserLanguageInfo.data[0];
-        
+
         cy.inputValue('language', data.language.value);
         cy.inputValue('proficiency', data.proficiency.value);
-        
-        // cy.getCountFile('file', data.file);
-  
-        // check disable button Save & Close
-        // cy.get('button.button__wrapper__disabled').should('be.disabled')
-        // cy.typeTextarea('description', 'a');
-        // cy.get('button.button__wrapper').should('not.be.disabled')
-  
-        // check button Delete
-        cy.intercept({
-          method: 'POST',
-          url: Cypress.env('host') + Cypress.env('api_url'),
-        }).as('Deleted');
-        cy.clickButton('delete');
-        //cy.get('#cancel_text_button').click({ force: true });
-        cy.clickButton('ok');
-        cy.wait('@Deleted').then((req) => {
-          cy.status(req.response.statusCode);
-        });
+
+        checkDeleteUserLang();
       });
     });
   }
-});
+
+// check delete in user_experience
+function checkDeleteUserLang() {
+  cy.intercept({
+    method: 'POST',
+    url: Cypress.env('host') + Cypress.env('api_url'),
+  }).as('Deleted');
+  cy.clickButton('delete');
+  cy.clickButton('ok');
+  cy.wait('@Deleted').then((req) => {
+    cy.status(req.response.statusCode);
+  });
+}

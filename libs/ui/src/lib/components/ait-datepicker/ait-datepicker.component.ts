@@ -48,7 +48,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   @Input() label;
   @Input() guidance = ''
   @Input() guidanceIcon = '';
-  @Input() id = Date.now();
+  @Input() id;
   @Input() styleLabel;
   @Input() classContainer;
   @Input() width;
@@ -76,6 +76,9 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
 
 
   }
+  // handleBlur = (event) => {
+  //   console.log(event);
+  // }
 
   focusInput() {
     this.isFocus = true;
@@ -85,9 +88,11 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
     return this.isError ? false : this.isFocus;
   }
 
-  ID(element: string): string {
-    return this.id + '_' + element;
+  ID(element: string) {
+    const idx = this.id && this.id !== '' ? this.id : Date.now();
+    return idx + '_' + element;
   }
+
 
   getPlaceHolder = () => this.translateService.translate(this.placeholder);
 
@@ -323,7 +328,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
             c3_day = Number(value[1] + value[2])
           }
           const c3_lastDay = this.getDaysInMonth(c3_month, this.getCurrentYear());
-          console.log(c3_month, c3_lastDay, c3_day);
+          // console.log(c3_month, c3_lastDay, c3_day);
           if (c3_day > c3_lastDay || c3_day < 1) {
             res = null;
           }
@@ -395,7 +400,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
           let ct8_year = Number(value.slice(0, 4));
           const $v = value.slice(4);
           const $tar = Number($v);
-          console.log(ct8_year)
+          // console.log(ct8_year)
           if (ct8_year.toString().length < 4) {
             ct8_year = this.getCurrentYear();
           }
@@ -532,7 +537,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
           let ct_month = isNaN(Number(value[4] + value[5])) ? 0 : Number(value[4] + value[5]);
           let ct_day = isNaN(Number(value[6] + value[7])) ? 0 : Number(value[6] + value[7]);
           let ct_year = Number(value.slice(0, 4));
-          console.log(ct_year, ct_month, ct_day)
+          // console.log(ct_year, ct_month, ct_day)
 
           if (ct_year.toString().length < 4) {
             ct_year = this.getCurrentYear()
@@ -549,48 +554,101 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
       }
     }
 
-    console.log(res);
+    // console.log(res);
 
 
     this.formatTransfrom = res?.getTime();
   }
+  evaluteYear(value: string) {
+    const evalue = new Date(Number(value), this.getCurrentMonth());
+    this.formatTransfrom = evalue.getTime();
+  }
+
+  evaluteMonth(value: string) {
+    const evalue = new Date(this.getCurrentYear(), Number(value) - 1);
+    this.formatTransfrom = evalue.getTime();
+  }
+
+  evaluteDay(value: string) {
+    const evalue = new Date(this.getCurrentYear(), this.getCurrentMonth(), Number(value));
+    this.formatTransfrom = evalue.getTime();
+  }
+
+  evaluteYearMonth(value: string, isReverse = false) {
+    let mainVal = [];
+    if (value.includes('-')) {
+      const v = value.split('-');
+      mainVal = [v[0], v[1]];
+      if (isReverse) {
+        mainVal = [v[1], v[0]];
+      }
+    }
+    else if (value.includes('/')) {
+      const v = value.split('/');
+      mainVal = [v[0], v[1]];
+      if (isReverse) {
+        mainVal = [v[1], v[0]];
+      }
+    }
+    else {
+      if (isReverse) {
+        const d = value.substring(0, 2);
+        const y = value.substring(2);
+        mainVal = [y, d];
+      }
+      else {
+        const y = value.substring(0, 4);
+        const d = value.substring(4);
+        mainVal = [y, d];
+      }
+    }
+    const evalue = new Date(Number(mainVal[0]), Number(mainVal[1]) - 1, this.getCurrentDay());
+    this.formatTransfrom = evalue.getTime();
+  }
 
   converToDateTime = (date) => (new Date(date)).getTime();
   handleInput = (event) => {
-    this.nbDatepicker.hidePicker()
-    if (event.target.value) {
-      this.translateDate(event.target.value);
-      if (event.target.value?.length > 2) {
-        // try {
-        //   const dt = new Date(event.target.value);
-        //   if (!this.isDateValid(dt)) {
-        //     this.date = null;
-        //     this.watchValue.emit(null);
-        //   }
-        //   else {
-        //     this.watchValue.emit({ value: dt.getTime() });
-        //   }
-        // } catch (error) {
-        //   this.date = null;
-        //   this.watchValue.emit(null);
-        // }
-        // if (this.required) {
-        //   this.componentErrors = this.getMessage();
-        // }
+    this.nbDatepicker.hidePicker();
+    if (event.target.value && event.target.value !== '') {
+      if (this.format === 'yyyy') {
+        this.evaluteYear(event.target.value);
+      }
+      else if (this.format === 'MM') {
+        this.evaluteMonth(event.target.value);
+      }
+      else if (this.format === 'dd') {
+        this.evaluteDay(event.target.value);
+      }
+      else if (this.format === 'yyyy/MM' || this.format === 'MM/yyyy') {
+        this.evaluteYearMonth(event.target.value, this.format === 'MM/yyyy');
       }
       else {
-        if (event.target.value) {
-          this.translateDate(event.target.value);
+        this.translateDate(event.target.value);
+        if (event.target.value?.length > 2) {
         }
         else {
-          this.formatTransfrom = null;
+          if (event.target.value) {
+            this.translateDate(event.target.value);
+          }
+          else {
+            this.formatTransfrom = null;
+          }
+
+
         }
-
-
+        if (this.required) {
+          this.componentErrors = this.getMessage();
+        }
       }
-      if (this.required) {
-        this.componentErrors = this.getMessage();
-      }
+    }
+    else {
+      this.formatTransfrom = null;
+      setTimeout(() => {
+        this.watchValue.emit({ value: null });
+        if (this.required) {
+          this.componentErrors = this.getMessage();
+        }
+      }, 100)
     }
   }
 
@@ -608,6 +666,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
     this.checkReq(unix);
     this.dateInput = unix;
     this.date = new Date(this.dateInput);
+    // console.log(unix)
     this.watchValue.emit({ value: unix })
   }
 
@@ -626,7 +685,8 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   }
 
   checkValidDateInput = () => {
-
+    // console.log('out')
+    // console.log(this.formatTransfrom);
     if (this.formatTransfrom) {
       this.date = new Date(this.formatTransfrom);
       this.dateInput = this.formatTransfrom;
@@ -643,7 +703,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
         this.watchValue.emit({ value: null });
       }
       else {
-        this.watchValue.emit({ value: (new Date(this.date)).getTime() });
+        // this.watchValue.emit({ value: (new Date(this.date)).getTime() });
       }
     }
     if (!this.isDateValid(this.date)) {
@@ -684,10 +744,10 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
         this.formatDateTimeInput = setting?.date_format_input;
 
       }
-      const formatTime = this.formatDateTimeInput || this.formatDateTimeDisplay;
+      // const formatTime = this.formatDateTimeInput || this.formatDateTimeDisplay;
       this.format = this.getFormat();
 
-      if (formatTime) {
+      if (this.format) {
         if (AitAppUtils.isValidDate(this.dateInput) || typeof this.dateInput === 'number') {
           if (this.dateInput) {
             let dateFormat;
@@ -712,8 +772,13 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
 
 
   ngOnInit() {
-    this.setupDate();
-    const target = this.defaultValue || this.dateInput
-    this.watchValue.emit({ value: target ? (new Date(target)).getTime() : target });
+    if (this.defaultValue && this.defaultValue !== '') {
+      this.setupDate();
+      const target = this.defaultValue || this.dateInput
+      this.watchValue.emit({ value: target ? (new Date(target)).getTime() : target });
+    }
+    else {
+      this.watchValue.emit({ value: this.defaultValue });
+    }
   }
 }

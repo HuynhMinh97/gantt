@@ -50,6 +50,7 @@ export class UserOnboardingComponent
 
   mode = MODE.NEW;
   errorArr: any;
+  skills: any;
   countryCode: any;
   cityCode: any;
   districtCode: any;
@@ -57,6 +58,9 @@ export class UserOnboardingComponent
   isSubmit = false;
   isChanged = false;
   isLangJP = false;
+  isCountry = true;
+  isCity = true;
+  isDistrict = true;
 
   resetUserInfo = {
     first_name: false,
@@ -181,8 +185,8 @@ export class UserOnboardingComponent
         .then(async (r) => {
           if (r.status === RESULT_STATUS.OK) {
             let isUserExist = false;
-            if (r.data.length > 0) {
-              const data = r.data[0];
+            const data = r.data[0];
+            if (r.data.length > 0 && !data.del_flag) {
               this.userOnboardingInfo.patchValue({ ...data });
               this.userOnboardingInfoClone = this.userOnboardingInfo.value;
               isUserExist = true;
@@ -190,6 +194,9 @@ export class UserOnboardingComponent
             !isUserExist && this.router.navigate([`/404`]);
           }
         });
+      this.isCountry = false;
+      this.isCity = false;
+      this.isDistrict = false;
     }
 
     await this.getGenderList();
@@ -246,7 +253,7 @@ export class UserOnboardingComponent
         _key: gender.code,
         value: gender.name,
       });
-      const defaultGender = this.genderList[0];
+      const defaultGender = this.genderList[2];
       this.defaultGender = {
         _key: defaultGender.code,
         value: defaultGender.name,
@@ -256,7 +263,7 @@ export class UserOnboardingComponent
         Object.assign({}, gender, { checked: index === 0 ? true : false })
       );
 
-      const gender = genderList[0];
+      const gender = genderList[2];
 
       this.defaultGender = { _key: gender.code, value: gender.name };
       this.userOnboardingInfo.controls['gender'].setValue({
@@ -266,7 +273,6 @@ export class UserOnboardingComponent
   }
 
   resetForm() {
-    this.isChanged = false;
     if (this.mode === MODE.NEW) {
       for (const index in this.resetUserInfo) {
         this.resetUserInfo[index] = true;
@@ -299,7 +305,6 @@ export class UserOnboardingComponent
   saveDataUserProfile() {
     const saveData = this.userOnboardingInfo.value;
 
-    saveData['user_id'] = this.authService.getUserID();
     saveData.ward = saveData.ward._key;
     saveData.title = saveData.title._key;
     saveData.city = saveData.city._key;
@@ -308,14 +313,12 @@ export class UserOnboardingComponent
     saveData.district = saveData.district._key;
     saveData.industry = saveData.industry._key;
     saveData.company_working = saveData.company_working._key;
-    const skills = this.userOnboardingInfo.value.skills;
-    const _keySkill = [];
-    skills.forEach(async (skill) => {
-      _keySkill.push(skill._key);
-    });
-    saveData.skills = _keySkill;
+    this.skills = saveData.skills;
+    delete saveData.skills;
     if (this.user_key) {
       saveData['_key'] = this.user_key;
+    } else {
+      saveData['user_id'] = this.authService.getUserID();
     }
 
     return saveData;
@@ -326,8 +329,10 @@ export class UserOnboardingComponent
     this.user_skill.relationship = 'user_skill';
     this.user_skill.sort_no = 1;
 
-    const skills = this.userOnboardingInfo.value.skills;
+    const skills = this.skills;
     skills.forEach(async (skill) => {
+      const _fromUserSkill = [{ _from: skill._key }];
+      await this.userOnbService.removeUserSkills(_fromUserSkill);
       this.user_skill._to = 'm_skill/' + skill._key;
       await this.userOnbService.saveUserSkills([this.user_skill]);
     });
@@ -450,6 +455,7 @@ export class UserOnboardingComponent
       this.userOnboardingInfo.controls[target].markAsDirty();
       this.userOnboardingInfo.controls[target].setValue(value?.value[0]);
       if (target === 'country') {
+        this.isCountry = false;
         this.countryCode = value?.value[0]._key;
         this.resetUserInfo['district'] = true;
         this.resetUserInfo['ward'] = true;
@@ -462,6 +468,7 @@ export class UserOnboardingComponent
         this.userOnboardingInfo.controls['ward'].reset();
       }
       if (target === 'city') {
+        this.isCity = false;
         this.cityCode = value?.value[0]._key;
         this.resetUserInfo['district'] = true;
         setTimeout(() => {
@@ -471,6 +478,7 @@ export class UserOnboardingComponent
         this.userOnboardingInfo.controls['ward'].reset();
       }
       if (target === 'district') {
+        this.isDistrict = false;
         this.districtCode = value?.value[0]._key;
         this.userOnboardingInfo.controls['ward'].reset();
       }
@@ -480,6 +488,9 @@ export class UserOnboardingComponent
   }
 
   takeInputValue(value: string, form: string): void {
+    if (value == null) {
+      this.isChanged = true;
+    }
     if (value) {
       this.userOnboardingInfo.controls[form].markAsDirty();
       this.userOnboardingInfo.controls[form].setValue(value);

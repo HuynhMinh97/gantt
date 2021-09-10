@@ -120,20 +120,11 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
         .findUserEducationByKey(this.user_key)
         .then(async (r) => {
           if (r.status === RESULT_STATUS.OK) {
-            
             let isUserExist = false;
             let files = [];
-            if (r.data.length > 0) {
-              const data = r.data[0];
+            const data = r.data[0];
+            if (r.data.length > 0 && !data.del_flag) {
               this.userEducationInfo.patchValue({ ...data });
-              await data.file.forEach(async (e) => {
-                await this.userEduService.findFiles(e).then((x) => {
-                  files.push(x.data[0]._key);
-                });
-                setTimeout(() => {
-                  this.userEducationInfo.controls['file'].setValue([...files]);
-                }, 100);
-              });
               this.userEducationInfoClone = this.userEducationInfo.value;
               isUserExist = true;
             }
@@ -164,11 +155,12 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
 
   saveData() {
     const saveData = this.userEducationInfo.value;
-    saveData['user_id'] = this.authService.getUserID();
-    saveData.school = saveData.school._key;
 
+    saveData.school = saveData.school._key;
     if (this.user_key) {
       saveData['_key'] = this.user_key;
+    } else {
+      saveData['user_id'] = this.authService.getUserID();
     }
     return saveData;
   }
@@ -185,19 +177,11 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
       this.userEduService
         .save(this.saveData())
         .then((res) => {
-          //console.log(res);
           if (res?.status === RESULT_STATUS.OK) {
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
-            this.userEducationInfo.reset();
-            this.userEducationInfo.controls['start_date_from'].setValue(
-              this.defaultValueDate
-            );
-            this.isResetFile = true;
-            setTimeout(() => {
-              this.isResetFile = false;
-            }, 100);
+            this.resetModeNew();
           } else {
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
@@ -222,7 +206,6 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
       this.userEduService
         .save(this.saveData())
         .then((res) => {
-          //console.log(res);
           if (res?.status === RESULT_STATUS.OK) {
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
@@ -286,26 +269,31 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
       });
   }
 
+  resetModeNew() {
+    for (const index in this.resetUserInfo) {
+      this.resetUserInfo[index] = true;
+      setTimeout(() => {
+        this.resetUserInfo[index] = false;
+      }, 100);
+    }
+    this.userEducationInfo.reset();
+    console.log(this.defaultValueDate);
+
+    setTimeout(() => {
+      this.userEducationInfo.controls['start_date_from'].setValue(
+        this.defaultValueDate
+      );
+    }, 100);
+  }
+
   resetForm() {
     this.errorArr = [];
     this.isResetFile = true;
     setTimeout(() => {
       this.isResetFile = false;
-      this.isChanged = false;
     }, 100);
     if (this.mode === MODE.NEW) {
-      for (const index in this.resetUserInfo) {
-        this.resetUserInfo[index] = true;
-        setTimeout(() => {
-          this.resetUserInfo[index] = false;
-        }, 100);
-      }
-      this.userEducationInfo.reset();
-      setTimeout(() => {
-        this.userEducationInfo.controls['start_date_from'].setValue(
-          this.defaultValueDate
-        );
-      }, 100);
+      this.resetModeNew();
     } else {
       for (const index in this.resetUserInfo) {
         if (!this.userEducationInfo.controls[index].value) {
@@ -328,17 +316,22 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     const dateFrom = this.userEducationInfo.controls['start_date_from'].value;
     const dateTo = this.userEducationInfo.controls['start_date_to'].value;
 
-    if (dateFrom > dateTo) {
-      const transferMsg = (msg || '')
-        .replace('{0}', ' start_date_from ')
-        .replace('{1}', ' start_date_to ');
-      res.push(transferMsg);
-      this.isDateCompare = true;
-    } else {
+    if (dateFrom == null || dateTo == null) {
       this.isDateCompare = false;
+    } else {
+      if (dateFrom > dateTo) {
+        const transferMsg = (msg || '')
+          .replace('{0}', this.translateService.translate('start_date_from'))
+          .replace('{1}', this.translateService.translate('start_date_to'));
+        res.push(transferMsg);
+        this.isDateCompare = true;
+      } else {
+        this.isDateCompare = false;
+      }
+      return res;
     }
-    return res;
   }
+  s;
 
   back() {
     if (this.isChanged) {
@@ -362,7 +355,9 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
   }
 
   getTitleByMode() {
-    return this.mode === MODE.EDIT ? 'Edit Education' : 'Add Education';
+    return this.mode === MODE.EDIT
+      ? this.translateService.translate('edit_education')
+      : this.translateService.translate('add_education');
   }
 
   takeMasterValue(value: any, target: string): void {
@@ -384,6 +379,11 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
   }
 
   takeDatePickerValue(value: number, group: string, form: string) {
+    if (value == null) {
+      this.isChanged = true;
+      this[group].controls[form].markAsDirty();
+      this[group].controls[form].setValue(value);
+    }
     if (value) {
       const data = value as number;
       value = new Date(data).setHours(0, 0, 0, 0);

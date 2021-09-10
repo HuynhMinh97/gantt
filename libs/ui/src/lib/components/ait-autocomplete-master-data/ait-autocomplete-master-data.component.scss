@@ -1,6 +1,10 @@
 @import "../../@theme/styles/themes.scss";
 
 .option__container {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding-right: 10px;
 }
 
 .selected__items {

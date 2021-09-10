@@ -7,7 +7,7 @@ import { objKeys, RESULT_STATUS } from '@ait/shared';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { select, Store } from '@ngrx/store';
-import { FILE_TYPE_SUPPORT_DEFAULT, MAX_FILE_DEFAULT } from '../../@constant';
+import { FILE_TYPE_SUPPORT_DEFAULT, MAX_FILE_DEFAULT, SYSTEM_DEFAULT_COMPANY } from '../../@constant';
 import { AitBinaryDataService } from '../../services/ait-binary-data.service';
 import { AitDayJSService } from '../../services/ait-dayjs.service';
 import { AitFileUploaderService } from '../../services/common/ait-file-upload.service';
@@ -85,7 +85,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   @Input() required = false;
   componentErrors = []
   @Input() classContainer;
-  @Input() id = Date.now();
+  @Input() id;
   @Input() errorMessages;
   @Input() clearError = false;
   @Output() onError = new EventEmitter();
@@ -100,9 +100,11 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
   errorImage: any = {}
 
-  ID(element: string): string {
-    return this.id + '_' + element;
+  ID(element: string) {
+    const idx = this.id && this.id !== '' ? this.id : Date.now();
+    return idx + '_' + element;
   }
+
 
   focusInput() {
     this.isFocus = true;
@@ -249,8 +251,9 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   safelyURL = (data, type) => this.santilizer.bypassSecurityTrustUrl(`data:${type};base64, ${data}`);
 
   checkMaxSize = (file: any[]) => {
-
-    return this.fileRequest.length > 0 ? this.fileRequest[0]?.size <= this.maxSize * 1024 : true;
+    // File nhận vào định dạng theo kiểu bytes
+    // console.log(this.fileRequest[0]?.size, this.convertMb2B(this.maxSize));
+    return this.fileRequest.length > 0 ? this.fileRequest[0]?.size <= this.convertMb2B(this.maxSize) : true;
   }
   checkMaxFile = () => {
 
@@ -263,36 +266,111 @@ export class AitInputFileComponent implements OnInit, OnChanges {
     return bytes ? bytes / 1024 : null;
   }
 
-  ngOnInit() {
-    const settingFiles = ['FILE_TYPE_SUPPORT', 'FILE_MAX_UPLOAD', 'FILE_MAX_SIZE_MB'];
-    this.masterDataService.find({
+  getBackupSetting = async () => {
+    const res = await this.masterDataService.find(
+      { company: SYSTEM_DEFAULT_COMPANY, user_id: SYSTEM_DEFAULT_COMPANY },
+      {
+        file_max_size: true,
+        file_max_upload: true
+      },
+      'user_setting'
+    );
+    // console.log(res)
+    if (res?.status === RESULT_STATUS.OK) {
+      const settingByCode = res?.data[0];
+
+      const codeTypes = [settingByCode?.file_max_size, settingByCode?.file_max_upload];
+      const codes = codeTypes.map(m => {
+        if (!m) {
+          return '';
+        }
+        const split = m.split('.');
+        return split ? split[1] : '';
+      })
+      //FILE_MAX_SIZE_MB
+      this.applyMasterDataToSetting(codes).then();
+    }
+  }
+
+  applyMasterDataToSetting = async (codeInCodes: string[]) => {
+    const rest = await this.masterDataService.find({
       parent_code: CLASS.SYSTEM_SETTING,
+      code: {
+        value: codeInCodes || []
+      }
     }, {
       _key: true,
       code: true,
       parent_code: true,
       class: true,
       name: true
-    }).then(r => {
-      const settings = r.data.filter(d => settingFiles.includes(d?.code));
+    });
+    // console.log(rest)
+    if (rest?.status === RESULT_STATUS.OK) {
+      const settings = rest.data;
       this.settings = settings.map((s: any) => ({ ...s, value: s?.name }));
-      console.log(settings)
-
       if (settings.length !== 0) {
+        const vMaxSize = Number(this.settings.find(f => f.code === 'FILE_MAX_SIZE')?.value);
+        const vMaxUpload = Number(this.settings.find(f => f.code === 'FILE_MAX_UPLOAD')?.value);
         if (!this.maxSize) {
-          this.maxSize = Number(this.settings.find(f => f.code === 'FILE_MAX_SIZE_MB')?.value);
+
+          this.maxSize = isNaN(vMaxSize) ? null : vMaxSize;
+        }
+        else {
+          const maxSizeFromComponent = this.maxSize;
+
+          if (!isNaN(vMaxSize) && maxSizeFromComponent > vMaxSize) {
+            this.maxSize = vMaxSize;
+          }
         }
         if (!this.maxFiles) {
-          this.maxFiles = Number(this.getValueByCode('FILE_MAX_UPLOAD')?.value);
+          this.maxFiles = isNaN(vMaxUpload) ? null : vMaxUpload;
         }
-        if (!this.fileTypes) {
-          this.fileTypes = this.getValueByCode('FILE_TYPE_SUPPORT')?.value;
+        else {
+          if (!isNaN(vMaxUpload) && this.maxFiles > vMaxUpload) {
+            this.maxFiles = vMaxUpload;
+          }
         }
-
+        // if (!this.fileTypes) {
+        //   this.fileTypes = this.getValueByCode('FILE_TYPE_SUPPORT')?.value;
+        // }
+        // console.log(this.maxSize, this.maxFiles);
       }
+    }
+  }
 
+  ngOnInit() {
 
-    })
+    // Lấy setting file từ user-setting với company default
+    this.masterDataService.find(
+      { company: this.company, user_id: this.company },
+      {
+        file_max_size: true,
+        file_max_upload: true
+      },
+      'user_setting'
+    ).then(res => {
+      if (res?.status === RESULT_STATUS.OK) {
+        if (res?.data.length === 0) {
+          this.getBackupSetting().then();
+        }
+        else {
+          const settingByCode = res?.data[0];
+
+          const codeTypes = [settingByCode?.file_max_size, settingByCode?.file_max_upload];
+          const codes = codeTypes.map(m => {
+            if (!m) {
+              return '';
+            }
+            const split = m.split('.');
+            return split ? split[1] : '';
+          })
+          //FILE_MAX_SIZE_MB
+          this.applyMasterDataToSetting(codes).then();
+
+        }
+      }
+    });
 
 
     if (this.fileKeys && this.fileKeys.length !== 0) {
@@ -316,7 +394,11 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   }
 
   getMaxSizeFile = () => {
-    return this.maxSize ? this.maxSize * 1024 : null;
+    return this.maxSize ? this.convertMb2B(this.maxSize) : null;
+  }
+
+  convertMb2B(num: number) {
+    return num * 1048576;
   }
 
   getValueByCode = (code) => {
@@ -325,13 +407,16 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
 
   checkFileExt = (file) => {
-    const check = AitAppUtils.checkFileExt(this.fileTypes || FILE_TYPE_SUPPORT_DEFAULT, file);
-    if (check.status !== 1) {
-      this.messageErrorFileSp = this.translateService.getMsg('E0012')
-        .replace('{0}', this.fileTypes || this.getValueByCode('FILE_TYPE_SUPPORT') || FILE_TYPE_SUPPORT_DEFAULT);
-      return false;
+    if (this.fileTypes) {
+      const check = AitAppUtils.checkFileExt(this.fileTypes, file);
+      if (check.status !== 1) {
+        this.messageErrorFileSp = this.translateService.getMsg('E0012')
+          .replace('{0}', this.fileTypes);
+        return false;
+      }
+      return check?.status === 1;
     }
-    return check?.status === 1;
+    return true;
   }
 
 
@@ -415,6 +500,8 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
   checkCommon = () => {
     this.messageErrorFileSp = '';
+    // console.log('Max upload', this.maxFiles, this.checkMaxFile(), this.getFileMaxUpload());
+    // console.log('Max size', this.maxSize, this.checkMaxSize(this.fileRequest), this.getMaxSizeFile());
     if (!this.checkMaxFile() && this.getFileMaxUpload().toString()) {
       this.messageErrorFileSp =
         this.translateService.getMsg('E0155').replace('{0}', this.getFileMaxUpload().toString());

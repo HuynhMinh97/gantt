@@ -8,6 +8,7 @@
     'font-size': fontsize,
     'padding-left': paddingLeft
   }"
+  [id]="ID('text__gradient')"
 >
   {{ getContent() }}
 </div>
@@ -17,6 +18,7 @@
   class="text__gradient__no__string"
   *ngIf="gradientString === ''"
   [ngStyle]="{ 'font-size': fontsize, 'padding-left': paddingLeft }"
+  [id]="ID('text__gradient')"
 >
   {{ getContent() }}
 </div>
