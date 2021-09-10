@@ -119,7 +119,7 @@ function checkDeleteUserLang() {
     url: Cypress.env('host') + Cypress.env('api_url'),
   }).as('Deleted');
   cy.clickButton('delete');
-  cy.clickButton('ok');
+  cy.clickButton(new Date().getTime() + '_dialog_title_right');
   cy.wait('@Deleted').then((req) => {
     cy.status(req.response.statusCode);
   });

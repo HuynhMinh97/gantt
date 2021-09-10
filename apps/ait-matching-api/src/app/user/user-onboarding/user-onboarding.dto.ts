@@ -57,8 +57,6 @@ export class UserOnboardingInfoDto extends BaseDto {
     @Field(() => ConditionDto, { nullable: true })
     industry?: ConditionDto;
 
-    @Field(() => ConditionDto, { nullable: true })
-    skills?: ConditionDto;
 }
 
 @InputType()
@@ -117,6 +115,4 @@ export class SaveUserOnboardingInfoDto extends BaseDto {
     @Field(() => String, { nullable: true })
     industry?: string;
 
-    @Field(() => [String], { nullable: true })
-    skills?: string[];
 }

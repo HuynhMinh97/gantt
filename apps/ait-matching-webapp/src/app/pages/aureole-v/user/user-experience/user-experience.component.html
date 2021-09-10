@@ -92,7 +92,7 @@
           [id]="'start_date_from'"
           [width]="'185px'"
           [isReset]="resetUserInfo.start_date_from"
-          [dateInput]="userExperienceInfo.controls['start_date_from'].value"
+          [defaultValue]="userExperienceInfo.controls['start_date_from'].value"
           (watchValue)="
             takeDatePickerValue(
               $event?.value,
@@ -107,7 +107,7 @@
           [width]="'185px'"
           [isReset]="resetUserInfo.start_date_to"
           *ngIf="!userExperienceInfo.controls['is_working'].value"
-          [dateInput]="userExperienceInfo.controls['start_date_to'].value"
+          [defaultValue]="userExperienceInfo.controls['start_date_to'].value"
           (watchValue)="
             takeDatePickerValue(
               $event?.value,
@@ -118,25 +118,11 @@
         ></ait-datepicker>
 
         <ait-datepicker
-          [id]="'start_date_to'"
-          [width]="'185px'"
-          [isReset]="resetUserInfo.start_date_to"
           [disable]="true"
-          *ngIf="!!userExperienceInfo.controls['is_working'].value"
+          *ngIf="userExperienceInfo.controls['is_working'].value"
           [ngClass]="{
             start_date_to: userExperienceInfo.controls['is_working'].value
           }"
-          [ngClass]="{
-            start_date_to: userExperienceInfo.controls['is_working'].value
-          }"
-          [dateInput]="userExperienceInfo.controls['start_date_to'].value"
-          (watchValue)="
-            takeDatePickerValue(
-              $event?.value,
-              'userExperienceInfo',
-              'start_date_to'
-            )
-          "
         ></ait-datepicker>
       </div>
       <ait-error-message
@@ -166,9 +152,7 @@
         <ait-button
           [id]="'cancel'"
           [title]="'cancel'"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
           (click)="back()"
         ></ait-button>
 
@@ -177,9 +161,7 @@
           [id]="'delete'"
           [width]="'200px'"
           [title]="'delete'"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
           (click)="onDelete()"
         >
         </ait-button>
@@ -188,9 +170,7 @@
           [id]="'reset'"
           [width]="'200px'"
           [title]="'reset'"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
           (click)="resetForm()"
         >
         </ait-button>
@@ -200,20 +180,15 @@
           [id]="'saveAndContinue'"
           [title]="'saveandcontinue'"
           (click)="saveAndContinue()"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
         ></ait-button>
-
         <ait-button
-          *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
           [id]="'saveAndClose'"
+          *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
           [width]="'200px'"
           [title]="'saveandclose'"
           (click)="saveAndClose()"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
         >
         </ait-button>
         <ait-button

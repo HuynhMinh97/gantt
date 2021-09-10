@@ -10,7 +10,7 @@ describe('Test Cypress', () => {
     // checkValidateUserExp();
     // resetFormUserExp();
     // checkDateUserExp();
-    insertDataUserExp();
+    dataProcessingUserExp();
   });
 });
 
@@ -84,10 +84,9 @@ function checkDateUserExp() {
   cy.errorMessage('start-date', '最終日以下の値で開始日を入力してください。');
 }
 
-function insertDataUserExp() {
-  // Check save
+// Check save and delete in user_experience
+function dataProcessingUserExp() {
   cy.chooseMasterData('title', 'Infomation technology');
-  cy.chooseMasterData('company_working', 'AIT');
   cy.chooseMasterData('location', 'Hue');
   cy.chooseMasterData('employee_type', 'オレオウ組合');
   cy.get('#is_working').click();
@@ -175,8 +174,7 @@ function insertDataUserExp() {
       failOnStatusCode: false,
     }).then((response) => {
       const data = response.body.data.findUserExperienceInfo.data[0];
-      console.log(data);
-      
+
       cy.inputValue('title', data.title.value);
       cy.inputValue('company_working', data.company_working.value);
       cy.inputValue('location', data.location.value);
@@ -187,15 +185,10 @@ function insertDataUserExp() {
         '' + data.is_working
       );
       cy.getValueDate('start_date_from', data.start_date_from);
-      // cy.getValueDate('start_date_to', data.start_date_to);
       cy.textareaValue('description', data.description);
-
-      // check disable button Save & Close
-      // cy.get('button.button__wrapper__disabled').should('be.disabled');
-      // cy.typeTextarea('description', 'a');
-      // cy.get('button.button__wrapper').should('not.be.disabled');
-      console.log('ok');
-
+      cy.get('button.button__wrapper__disabled').should('be.disabled');
+      cy.typeTextarea('description', 'a');
+      cy.get('button.button__wrapper').should('not.be.disabled');
       checkDeleteUserExp();
     });
   });

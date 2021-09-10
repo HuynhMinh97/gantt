@@ -3,10 +3,7 @@
     [content]="getTitleByMode()"
     id="form_edit_user_education"
   ></ait-text-gradient>
-  <ait-card-content
-    style="justify-content: center"
-    class="content__card"
-  >
+  <ait-card-content style="justify-content: center" class="content__card">
     <div style="margin-top: 14px">
       <div class="input_area">
         <ait-autocomplete-master-data
@@ -71,7 +68,7 @@
           [id]="'start_date_from'"
           [style]="{ width: '185px' }"
           [isReset]="resetUserInfo.start_date_from"
-          [dateInput]="userEducationInfo.controls['start_date_from'].value"
+          [defaultValue]="userEducationInfo.controls['start_date_from'].value"
           (watchValue)="
             takeDatePickerValue(
               $event?.value,
@@ -87,7 +84,7 @@
           [id]="'start_date_to'"
           [style]="{ width: '185px' }"
           [isReset]="resetUserInfo.start_date_to"
-          [dateInput]="userEducationInfo.controls['start_date_to'].value"
+          [defaultValue]="userEducationInfo.controls['start_date_to'].value"
           (watchValue)="
             takeDatePickerValue(
               $event?.value,
@@ -109,7 +106,7 @@
           [rows]="4"
           [label]="'description'"
           [placeholder]="'place your text'"
-          [width]="'410px'"
+          [width]="'415px'"
           [isReset]="resetUserInfo.description"
           (watchValue)="takeInputValue($event, 'description')"
           [defaultValue]="userEducationInfo.controls['description'].value"
@@ -130,9 +127,7 @@
             [isReset]="isResetFile"
             [isClear]="isClear"
             [fileKeys]="userEducationInfo.controls['file'].value"
-            (watchValue)="
-              takeFiles($event.value, 'userEducationInfo', 'file')
-            "
+            (watchValue)="takeFiles($event.value, 'userEducationInfo', 'file')"
             [isSubmit]="isSubmit"
           ></ait-input-file>
         </div>
@@ -157,9 +152,7 @@
           [width]="'200px'"
           [title]="'delete'"
           (click)="onDelete()"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
         >
         </ait-button>
 
@@ -168,9 +161,7 @@
           [width]="'200px'"
           [title]="'reset'"
           (click)="resetForm()"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
         >
         </ait-button>
 
@@ -179,9 +170,7 @@
           [id]="'saveAndContinue'"
           [title]="'saveandcontinue'"
           (click)="saveAndContinue()"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
         ></ait-button>
 
         <ait-button
@@ -190,9 +179,7 @@
           [width]="'200px'"
           [title]="'saveandclose'"
           (click)="saveAndClose()"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
         >
         </ait-button>
         <ait-button

@@ -109,6 +109,8 @@
                 z-index: 9999;
                 background-color: transparent;
               "
+              nbTooltipPlacement="right"
+              [nbTooltip]="option?.value"
             ></div>
             <nb-checkbox
               [(checked)]="option.isChecked"
@@ -119,7 +121,7 @@
               <span
                 style="cursor: pointer; font-size: 12px"
                 id="{{ ID('selection_value') }}"
-                >{{ option?.value }}</span
+                >{{ modifileOption(option?.value) }}</span
               >
             </nb-checkbox>
             <nb-icon
@@ -153,7 +155,7 @@
               "
               id="{{ ID('selection_value') }}"
             >
-              {{ option?.value }}
+              {{ modifileOption(option?.value) }}
             </div>
             <nb-icon
               icon="close-outline"
