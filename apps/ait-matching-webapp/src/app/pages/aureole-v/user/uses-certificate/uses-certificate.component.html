@@ -6,16 +6,17 @@
         <ait-autocomplete-master-data
           [id]="'name'"
           [label]="'NAME'"
-          [placeholder]="'Japanese N1'"
           [required]="true"
           [allowNew]="true"
+          [maxItem]="1"
+          [placeholder]="'Japanese N1'"
           [collection]="'m_certificate_award'"
           [isReset]="resetCertificate.name"
           [style]="{ width: '400px' }"
           (watchValue)="takeInputValue($event, 'name')"
           [defaultValue]="[companyName]"
-          [disableOutputDefault]="true"
           [isSubmit]="isSubmit"
+          [disableOutputDefault]="true"
         ></ait-autocomplete-master-data>
       </div>
 
