@@ -357,6 +357,13 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     }
   }
 
+  modifileOption = (value: string) => {
+    if (value.length > 35) {
+      return value.substring(0, 34) + '...';
+    }
+    return value;
+  }
+
   //TODO Khi nhấn enter sẽ chọn lun giá trị đó nếu save thành công
   checkAllowNew = (value: string) => {
     if (this.allowNew) {
@@ -433,9 +440,10 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
       if (this.MAXITEM !== 1) {
         const typeDF = this.getUniqueSelection(AitAppUtils.getArrayNotFalsy(this.defaultValue));
+
         const findByKeys = typeDF.map((m) => {
           const result = this.dataSourceDf.find(
-            (f) => f._key === m?._key || f.code === m?._key
+            (f) => f._key === m?._key || f.code === m?._key || f?.id === m?._key
           );
           return result;
         });
@@ -824,8 +832,8 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     const res = [];
     const target = [];
     arr.forEach(item => {
-      if (!res.includes(item?.value)) {
-        res.push(item?.value)
+      if (!res.includes(item?._key)) {
+        res.push(item?._key)
         target.push(item)
       }
     })
@@ -1118,7 +1126,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     const target = Array.from(new Set(data.map((m) => m?.value)));
     if ((target || []).length === 1) {
       const statement = target[0];
-      return statement;
+      return this.modifileOption(statement);
     } else if ((target || []).length !== 1) {
 
       const statement = this.getStringByLength(target);
