@@ -35,6 +35,7 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
   messageArlet = 'common.menu-user.user-setting.alert';
   currentLang = '';
   data: any;
+  loadingSetting = false;
   dataLangs = [];
   dataTimeZone = [];
   langList = ['vi_VN', 'ja_JP', 'en_US'];
@@ -149,70 +150,81 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
         this.title = title;
       }
     })
+    store.pipe(select(getUserSetting)).subscribe(set => {
+
+      if (!AitAppUtils.isObjectEqual(set, this.settingObj)) {
+        this.settingObj = set;
+        const target: any = set || {};
+        masterData.find({
+          class: {
+            value: ['LANGUAGE']
+          }
+        }).then(r => {
+
+          if (r?.status === RESULT_STATUS.OK) {
+            const data = r.data.map(f => ({ ...f, value: f?.name, _key: f?.code }))
+            this.setDataObject({
+              dataLanguage: data,
+            });
+            this.dataLangs = this.dataObject.dataLanguage;
+
+            this.langDf = this.getLangDefault(target?.site_language);
+          }
+        })
+        masterData.find({
+          class: {
+            value: ['TIMEZONE']
+          }
+        }).then(r => {
+          if (r?.status === RESULT_STATUS.OK) {
+            const data = r.data.map(f => ({ ...f, value: f?.name, _key: f?.code }))
+
+            this.setDataObject({
+              dataTimezone: data,
+            });
+            this.dataTimeZone = this.dataObject.dataTimezone;
+            this.timeDf = this.getTimezoneDefault(target?.timezone);
+          }
+        })
+        this.setupUserSetting(target);
+      }
+    });
 
     store.pipe(select(getLang)).subscribe(lang => {
       this.currentLang = lang;
 
-      store.pipe(select(getUserSetting)).subscribe(set => {
-        if (!AitAppUtils.isObjectEqual(set, this.settingObj)) {
-          this.settingObj = set;
-          const target: any = set || {};
-          masterData.find({
-            class: {
-              value: ['LANGUAGE']
-            }
-          }).then(r => {
 
-            if (r?.status === RESULT_STATUS.OK) {
-              const data = r.data.map(f => ({ ...f, value: f?.name, _key: f?.code }))
-              this.setDataObject({
-                dataLanguage: data,
-              });
-              this.dataLangs = this.dataObject.dataLanguage;
-
-              this.langDf = this.getLangDefault(target?.site_language);
-            }
-          })
-          masterData.find({
-            class: {
-              value: ['TIMEZONE']
-            }
-          }).then(r => {
-            if (r?.status === RESULT_STATUS.OK) {
-              const data = r.data.map(f => ({ ...f, value: f?.name, _key: f?.code }))
-
-              this.setDataObject({
-                dataTimezone: data,
-              });
-              this.dataTimeZone = this.dataObject.dataTimezone;
-              this.timeDf = this.getTimezoneDefault(target?.timezone);
-            }
-          })
-          this.queryUserSetting('USER_SETTING').then(r => {
-            const data = r.map(f => ({ ...f, value: f?.name, _key: f?.code }));
-            this.setDataObject({
-              dataDateFormatDisplay: data.filter(d => d.parent_code === 'DATE_FORMAT_DISPLAY'),
-              dataDateFormatInput: data.filter(d => d.parent_code === 'DATE_FORMAT_INPUT'),
-              dataNumberFormat: data.filter(d => d.parent_code === 'NUMBER_FORMAT'),
-            });
-            if (target?.date_format_display) {
-              this.dateDisplayDf = this.dataObject.dataDateFormatDisplay.find(f => f.name === target?.date_format_display);
-            }
-            if (target?.date_format_input) {
-              this.dateInputDf = this.dataObject.dataDateFormatInput.find(f => f.name === target?.date_format_input);
-            }
-            if (target?.number_format) {
-              this.numberFormatDf = this.dataObject.dataNumberFormat.find(f => f.name === target?.number_format);
-            }
-            this.setDefaultInputValues({
-              dateDisplayDf: this.dateDisplayDf,
-              dateInputDf: this.dateInputDf,
-              numberFormatDf: this.numberFormatDf
-            })
-          })
-        }
-      });
     });
+  }
+
+
+  setupUserSetting = (target: any) => {
+    console.log(target)
+    this.queryUserSetting('USER_SETTING').then(r => {
+
+      const data = r.map(f => ({ ...f, value: f?.name, _key: f?.code }));
+      this.setDataObject({
+        dataDateFormatDisplay: data.filter(d => d.parent_code === 'DATE_FORMAT_DISPLAY'),
+        dataDateFormatInput: data.filter(d => d.parent_code === 'DATE_FORMAT_INPUT'),
+        dataNumberFormat: data.filter(d => d.parent_code === 'NUMBER_FORMAT'),
+      });
+
+      if (target?.date_format_display) {
+        this.dateDisplayDf = this.dataObject.dataDateFormatDisplay.find(f => f.name === target?.date_format_display);
+      }
+      if (target?.date_format_input) {
+        this.dateInputDf = this.dataObject.dataDateFormatInput.find(f => f.name === target?.date_format_input);
+      }
+      if (target?.number_format) {
+        this.numberFormatDf = this.dataObject.dataNumberFormat.find(f => f.name === target?.number_format);
+      }
+      this.setDefaultInputValues({
+        dateDisplayDf: this.dateDisplayDf,
+        dateInputDf: this.dateInputDf,
+        numberFormatDf: this.numberFormatDf
+      })
+      // console.log(this.defaultInputValues);
+    })
   }
 
   getTitle = (name: string) => {
@@ -304,7 +316,7 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
 
   setUserSetting = () => {
     this.getUserSetting(this.user_id).then(r => {
-      console.log(r)
+      // console.log(r)
       if (r?.data[0]?.site_language) {
         this.store.dispatch(new ChangeLangage(r.data[0].site_language || 'ja_JP'));
       }
@@ -366,6 +378,7 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
   }
 
   save = () => {
+    this.loadingSetting = true;
     this.clearErrors();
     const fields = this.getFieldNotNullFromState().map(m => ({ [m]: this.formState[m] }));
     this.checkBeforeSaving();
@@ -374,32 +387,41 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
       if (fields.length !== 0) {
         this.userService.saveUserSetting([{ ...this.formState, user_id: this.user_id, _key: this.user_id }]).then(r => {
           if (r.status === RESULT_STATUS.OK) {
-            const successToSave = this.translatePipe.getMsg('I0012')
+
+            // this.store.dispatch(new StoreSetting(r.data[0]));
+
+            const newSetting = { ...this.valueState, user_id: this.user_id };
+            this.store.dispatch(new StoreSetting(newSetting));
             if (site_language) {
               this.store.dispatch(new ChangeLangage(site_language));
               localStorage.setItem('lang', site_language)
             }
-            const mapping = {
-              site_language: this.getTitle(this.langLabel),
-              timezone: this.getTitle(this.timeLabel),
-              date_format_display: this.getTitle(this.displayLabel),
-              date_format_input: this.getTitle(this.inputLabel),
-              number_format: this.getTitle(this.numberLabel)
-            }
-            const fieldsTrans = this.getFieldNotNullFromState().map(m => this.jsUcfirst(mapping[m]));
-            this.showToastr(this.title, `${fieldsTrans.join(', ')} ` + successToSave);
             setTimeout(() => {
-              const newSetting = { ...this.valueState, user_id: this.user_id };
-              this.store.dispatch(new StoreSetting(newSetting));
+              const mapping = {
+                site_language: this.getTitle(this.langLabel),
+                timezone: this.getTitle(this.timeLabel),
+                date_format_display: this.getTitle(this.displayLabel),
+                date_format_input: this.getTitle(this.inputLabel),
+                number_format: this.getTitle(this.numberLabel)
+              }
+              const fieldsTrans = this.getFieldNotNullFromState().map(m => this.jsUcfirst(mapping[m]));
+              const title = this.translatePipe.translate(
+                'c_10020'
+              );
+              const successToSave = this.translatePipe.getMsg('I0012');
+              this.loadingSetting = false;
+              this.showToastr(title, `${fieldsTrans.join(', ')} ` + successToSave);
               this.back();
             }, 100);
           }
+          this.loadingSetting = false;
         });
       }
       else {
 
         const nothingToSave = this.getMsg('W0001');
         this.showToastr(this.title, nothingToSave, 'warning');
+        this.loadingSetting = false;
       }
     }
   }
@@ -421,6 +443,7 @@ export class AitUserSettingComponent extends AitBaseComponent implements OnInit 
   }
 
   getValueLang = (val) => {
+    // console.log(val)
     if (val.length === 0) {
       this.getErrorMessageAll('', this.langLabel, 'lang')
     }
