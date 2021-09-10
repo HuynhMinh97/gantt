@@ -57,7 +57,7 @@
       <div class="input_inline">
         <ait-autocomplete-master-data
           [id]="'issue_by'"
-          [label]="'Issue BY'"
+          [label]="'issue by'"
           [placeholder]="'BACH KHOA Ho Chi Minh Technology University'"
           [required]="false"
           [allowNew]="true"
@@ -67,6 +67,7 @@
           (watchValue)="takeInputValue($event, 'issue_by')"
           [defaultValue]="[companyIssue]"
           [disableOutputDefault]="true"
+          [maxItem]="1"
           [isSubmit]="isSubmit"
         ></ait-autocomplete-master-data>
       </div>
@@ -124,8 +125,7 @@
       <div class="input_area">
         <ait-label [label]="'FILES'"></ait-label>
         <label class="file-max"
-          ><nb-icon icon="attach-outline"></nb-icon>Upload max 5 files and
-          10MB/file</label
+          ><nb-icon icon="attach-outline"></nb-icon>Upload max 5 files and 10MB/file</label
         >
         <ait-input-file
           [id]="'file'"
