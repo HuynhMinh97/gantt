@@ -230,9 +230,6 @@ export class UserOnboardingComponent
     const userInfo = { ...this.userOnboardingInfo.value };
     const userInfoClone = { ...this.userOnboardingInfoClone };
 
-    console.log(userInfo);
-    console.log(userInfoClone);
-
     this.isChanged = !AitAppUtils.isObjectEqual(
       { ...userInfo },
       { ...userInfoClone }
