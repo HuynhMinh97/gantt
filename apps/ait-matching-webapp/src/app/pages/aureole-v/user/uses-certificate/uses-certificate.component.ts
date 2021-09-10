@@ -26,7 +26,7 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
   isSubmit = false;  
   submitFile = false;  
   isChanged = false;
-  error = null;
+  error = [];
   resetCertificate = {
       name:false,
       certificate_award_number: false,
@@ -83,20 +83,23 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
     }
   }
  // get value form
-  async ngOnInit(): Promise<any> {     
+  async ngOnInit(): Promise<any> {    
     if(this.mode == MODE.NEW){
-      this.certificate.controls["issue_date_from"].setValue(this.dateNow);
+      this.certificate.controls["issue_date_from"].setValue(this.dateNow); 
     }else{
       await this.find(this.certificate_key); 
-    }  
-    
+    }     
     await this.certificate.valueChanges.subscribe((data) => {
       if (this.certificate.pristine) {
-        this.certificateClone = AitAppUtils.deepCloneObject(data);
+        this.certificateClone = AitAppUtils.deepCloneObject(data);       
       } else {
         this.checkAllowSave();
       }
-    });   
+    });
+
+    if(this.certificate.value.issue_date_from == null){
+      this.certificate.controls["issue_date_from"].setValue(this.dateNow); 
+    }
   }
 
   checkAllowSave() {
@@ -132,7 +135,7 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
     this.certificate.controls['dob_jp'].setValue(dob_jp);
   }
 
-  takeDatePickerValue(value: number, form: string) {     
+  takeDatePickerValue(value: number, form: string) {    
     if (value) {
       const data = value as number;
       value = new Date(data).setHours(0, 0, 0, 0);
@@ -227,7 +230,7 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
     if (this.certificate_key) {
       saveData['_key'] = this.certificate_key;
     }
-    if(!this.certificate.valid  ){
+    if(!this.certificate.valid  || this.error.length > 0){
       return;     
     }else{      
       this.submitFile = true;
@@ -238,9 +241,12 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
       else{
         this.showToastr('', this.getMsg('I0002'));
       }   
+      await this.reset();
       setTimeout(() =>{
-        this.reset();
-      },100)        
+        this.certificate.controls['issue_date_from'].setValue(this.dateNow);
+      },100) 
+     
+       
     }
   }
   async saveAndClose(){
@@ -250,7 +256,8 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
     if (this.certificate_key) {
       saveData['_key'] = this.certificate_key;
     }
-    if(!this.certificate.valid  ){
+    debugger;
+    if(!this.certificate.valid || this.error.length > 0 ){
       return;     
     }else{      
       this.submitFile = true;
