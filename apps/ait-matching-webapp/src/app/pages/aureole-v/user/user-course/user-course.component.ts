@@ -1,5 +1,5 @@
 import { RESULT_STATUS } from './../../../../../../../../libs/shared/src/lib/commons/enums';
-import { AitAuthService, AitConfirmDialogComponent, AitEnvironmentService, AitTranslationService, AppState, MODE, AitBaseComponent } from '@ait/ui';
+import { AitAuthService, AitConfirmDialogComponent, AitEnvironmentService, AitTranslationService, AppState, MODE, AitBaseComponent, AitAppUtils } from '@ait/ui';
 import { Component, OnInit, SimpleChanges, OnChanges } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import { NbToastrService, NbLayoutScrollService, NbDialogService } from '@nebular/theme';
@@ -19,6 +19,7 @@ import { UserCourseService } from 'apps/ait-matching-webapp/src/app/services/use
 })
 export class UserCourseComponent  extends AitBaseComponent implements OnInit, OnChanges {
   course: FormGroup;
+  courseClone: any;
   dataCourse;
   courseStart;
   mode = MODE.NEW;
@@ -29,7 +30,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
   submitFile = false;  
   files = [];
   error = null;
-  changeData = false;
+  isChanged = false;
   isClear = false;
   resetCourse = {
     _key:false,
@@ -65,6 +66,10 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
     apollo: Apollo
   ) {
     super(store, authService, apollo, null, env, layoutScrollService, toastrService); 
+    this.setModulePage({
+      module: 'user',
+      page: 'user_cerfiticate',
+    });
     this.course = this.formBuilder.group({
       _key : new FormControl(null),
       course_number: new FormControl(null),
@@ -79,45 +84,55 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
     });
     // get key form parameters
     this.course_key = this.activeRouter.snapshot.paramMap.get('id');
+    if(this.course_key){
+      this.mode = MODE.EDIT;
+    }
   }
  // get value form
   async ngOnInit(): Promise<any> {
-    if(this.course_key == null){
+    if(this.mode == MODE.NEW){
       this.course.controls["start_date_from"].setValue(this.dateNow);
       this.courseStart = this.course.value
-      console.log(this.course.value.start_date_from);
     }
    else{
-    this.find(this.course_key, 'user_course');    
-   }  
-  }
+    await this.find(this.course_key, 'user_course');    
+   }
 
+   await this.course.valueChanges.subscribe((data) => {
+    if (this.course.pristine) {
+      this.courseClone = AitAppUtils.deepCloneObject(data);
+    } else {
+      this.checkAllowSave();
+    }
+  });     
+  }
+  checkAllowSave() {
+    const certificateInfo = { ...this.course.value };
+    const certificateClone = { ...this.courseClone };
+    // this.setHours(userInfo);
+    const isChangedUserInfo = AitAppUtils.isObjectEqual(
+      { ...certificateInfo },
+      { ...certificateClone }
+    );
+    this.isChanged = !(isChangedUserInfo);
+  }
   ngOnChanges(changes: SimpleChanges) {    
   }
 
-  takeInputValue(val : any, form: string): void {          
-   if(isObjectFull(val)){
-      this.course.controls[form].setValue(val?.value[0]?._key);
-    } 
-    else {
-      this.course.controls[form].setValue(val);
-    }  
-    if(this.mode === "EDIT"){
-      if( (JSON.stringify(this.dataCourse) !== JSON.stringify(this.course.value))){
-        this.changeData = true;          
-      }
-      else{
-        this.changeData = false; 
-      }   
-    }    
-    else{     
-      if( (JSON.stringify(this.courseStart) !== JSON.stringify(this.course.value))){
-        this.changeData = true;              
-      }
-      else{
-        this.changeData = false; 
-      }   
-    }    
+  takeInputValue(val : any, form: string): void {   
+    if(val){
+      if(isObjectFull(val)){
+        this.course.controls[form].markAsDirty();
+        this.course.controls[form].setValue(val?.value[0]?._key);
+      } 
+      else {
+        this.course.controls[form].markAsDirty();
+        this.course.controls[form].setValue(val);
+      }  
+    }else{
+      this.course.controls[form].setValue(null);
+    }      
+   
   }
 
   toggleCheckBox(checked: boolean) {  
@@ -156,8 +171,8 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
 
     if(dateFrom > dateTo && dateTo != null){
       const transferMsg = (msg || '')
-        .replace('{0}', 'start_date_from')
-        .replace('{1}','start_date_to');
+        .replace('{0}', 'start_date_from ')
+        .replace('{1}','start_date_to ');
       res.push(transferMsg);
     }   
     return res;
@@ -172,22 +187,13 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
       this.course.controls['file'].setValue(data);
     } else {
       this.course.controls['file'].setValue(null);
-    }
-    
-    if(this.mode === "EDIT"){
-      if( (JSON.stringify(this.resetCourse) !== JSON.stringify(this.course.value))){
-        this.changeData = true;          
-      }
-      else{
-        this.changeData = false; 
-      }   
     }    
-    
   }
    //end file
   reset(){
     this.isSubmit = false;
     this.submitFile = false;
+    this.isChanged = false;
     this.error = null;
     this.companyCenter = null;
     this.course.reset();
@@ -280,10 +286,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
                                        
             }
             else{
-              this.router.navigate([`/user/`]);
-              setTimeout(() => {                
-                this.showToastr('', this.getMsg('E0005'),'warning');
-              }, 50);              
+              this.router.navigate([`/404`]);               
             }
            }
         });
@@ -293,13 +296,16 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
   //delete
   async deleteUserById() {
     this.dialogService.open(AitConfirmDialogComponent, {
+      closeOnBackdropClick: true,
+      hasBackdrop: true,
+      autoFocus: false,
       context: {
-        title: this.translateService.translate('このデータを削除しますか。'),
+        title: this.getMsg('I0004'),
       },
     })
     .onClose.subscribe(async (event) => {
       if (event) {
-        this.onDelete();
+        await this.userCartificateService.deleteCourseByKey(this.dataCourse._key);
         setTimeout(() => {        
           this.showToastr('', this.getMsg('I0003'));
           history.back();
@@ -307,29 +313,26 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
       }
     });
   }
-  async onDelete() {
-    await this.userCartificateService.deleteCourseByKey(this.dataCourse._key)
-  }
   //end delete
 
   back(){  
-    console.log(JSON.stringify(this.dataCourse));
-
-    console.log(JSON.stringify(this.course.value));
-    
-    if(JSON.stringify(this.dataCourse) == JSON.stringify(this.course.value)){
-      history.back();
-    }
-    else{
-      this.dialogService.open(AitConfirmDialogComponent, {
-        context: {
-          title: this.translateService.translate('I0006'),
-        },
-      }).onClose.subscribe(async (event) => {
+    if(this.isChanged){
+      this.dialogService
+      .open(AitConfirmDialogComponent, {
+        closeOnBackdropClick: true,
+          hasBackdrop: true,
+          autoFocus: false,
+          context: {
+            title: this.getMsg('I0006'),
+          },
+      })
+      .onClose.subscribe(async (event) => {
         if (event) {
-          history.back();
+          history.back()
         }
       });
+    }else{
+      history.back()
     }
   }
 }
