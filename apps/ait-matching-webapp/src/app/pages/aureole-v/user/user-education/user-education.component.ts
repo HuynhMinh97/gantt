@@ -166,12 +166,10 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
 
   saveAndContinue() {
     this.errorArr = this.checkDatePicker();
-
     this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
-
     if (this.userEducationInfo.valid && !this.isDateCompare) {
       this.userEduService
         .save(this.saveData())
@@ -276,8 +274,6 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
       }, 100);
     }
     this.userEducationInfo.reset();
-    console.log(this.defaultValueDate);
-
     setTimeout(() => {
       this.userEducationInfo.controls['start_date_from'].setValue(
         this.defaultValueDate
@@ -324,11 +320,9 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
           .replace('{1}', this.translateService.translate('start_date_to'));
         res.push(transferMsg);
         this.isDateCompare = true;
-      } else {
-        this.isDateCompare = false;
       }
-      return res;
     }
+    return res;
   }
   s;
 
@@ -380,8 +374,6 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
   takeDatePickerValue(value: number, group: string, form: string) {
     if (value == null) {
       this.isChanged = true;
-      this[group].controls[form].markAsDirty();
-      this[group].controls[form].setValue(value);
     }
     if (value) {
       const data = value as number;

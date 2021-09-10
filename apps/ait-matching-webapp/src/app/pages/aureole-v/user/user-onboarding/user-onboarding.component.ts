@@ -211,8 +211,6 @@ export class UserOnboardingComponent
               skills.push(x.data[0]);
             });
           }
-          console.log(skills);
-          
           this.userOnboardingInfo.controls['skills'].setValue({
             ...skills,
           });

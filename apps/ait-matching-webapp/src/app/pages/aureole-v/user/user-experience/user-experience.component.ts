@@ -61,8 +61,6 @@ export class UserExperienceComponent
     start_date_from: false,
   };
 
-  dateField = ['start_date_to', 'start_date_from'];
-
   user_key = '';
 
   constructor(
@@ -103,7 +101,6 @@ export class UserExperienceComponent
           _key: x.data[0].company_working._key,
           value: x.data[0].company_working.value,
         };
-
         this.userExperienceInfo.controls['company_working'].setValue({
           ...this.defaultCompany,
         });
@@ -150,37 +147,25 @@ export class UserExperienceComponent
 
     // Run when form value change
     await this.userExperienceInfo.valueChanges.subscribe((data) => {
+      console.log(111111111111111);
+
+      this.checkAllowSave(data);
+
       if (this.userExperienceInfo.pristine) {
         this.userExperienceInfoClone = AitAppUtils.deepCloneObject(data);
       } else {
-        this.checkAllowSave();
       }
     });
   }
 
-  checkAllowSave() {
-    const userInfo = { ...this.userExperienceInfo.value };
-    const userInfoClone = { ...this.userExperienceInfoClone };
-
-    this.setHours(userInfo);
-
-    this.isChanged = !AitAppUtils.isObjectEqual(
-      { ...userInfo },
-      { ...userInfoClone }
-    );
+  compareObject(obj1: any, obj2: any) {
+    return JSON.stringify(obj1) === JSON.stringify(obj2);
   }
 
-  setHours(data: any) {
-    for (const prop in data) {
-      if (this.dateField.includes(prop)) {
-        if (data[prop]) {
-          data[prop] = new Date(data[prop]).setHours(0, 0, 0, 0);
-        }
-        if (data[prop]) {
-          data[prop] = new Date(data[prop]).setHours(0, 0, 0, 0);
-        }
-      }
-    }
+  checkAllowSave(data: any) {
+    const userInfo = { ...data };
+    const userInfoClone = { ...this.userExperienceInfoClone };
+    this.isChanged = !this.compareObject({ ...userInfo }, { ...userInfoClone });
   }
 
   getTitleByMode() {
@@ -374,8 +359,12 @@ export class UserExperienceComponent
   }
 
   takeDatePickerValue(value: number, group: string, form: string) {
+    console.log(value);
+
     if (value == null) {
-      this.isChanged = true;
+      this.isChanged = !this.isChanged;
+      // this[group].controls[form].markAsDirty();
+      // this[group].controls[form].setValue(value);
     }
     if (value) {
       const data = value as number;
@@ -392,9 +381,9 @@ export class UserExperienceComponent
     const dateTo = this.userExperienceInfo.controls['start_date_to'].value;
     const isWorking = this.userExperienceInfo.controls['is_working'].value;
 
-    if (dateFrom == null || dateTo == null) {
+    if (dateFrom == null || isWorking || dateTo == null) {
       this.isDateCompare = false;
-      if (dateFrom > this.defaultValueDate && isWorking) {
+      if (dateFrom > this.defaultValueDate) {
         const transferMsg = (msg || '')
           .replace('{0}', this.translateService.translate('start_date_from'))
           .replace('{1}', this.translateService.translate('now_date'));
@@ -410,8 +399,6 @@ export class UserExperienceComponent
         this.isDateCompare = true;
       }
     }
-    console.log(res);
-    console.log(this.isDateCompare);
     return res;
   }
 
