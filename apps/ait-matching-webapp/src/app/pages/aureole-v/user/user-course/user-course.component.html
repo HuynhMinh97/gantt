@@ -137,7 +137,7 @@
           [fileKeys]="files"
           (watchValue)="getFiles($event.value)"
           [isSubmit]="isSubmit"
-      ></ait-input-file>
+        ></ait-input-file>
       </div>
 
     </div>
@@ -182,7 +182,7 @@
       ></ait-button>
       <ait-button
         [id]="'saveClose'"
-        *ngIf="(changeData && mode === 'EDIT') || mode === 'NEW'"
+        *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
         [width]="'200px'"
         [title]="'SAVE & CLOSE'"
         (click)="saveAndClose()"
@@ -190,7 +190,7 @@
       >
       </ait-button>
       <ait-button
-        *ngIf="!changeData && mode === 'EDIT'"
+        *ngIf="!isChanged && mode === 'EDIT'"
         [id]="'saveClose'"
         [width]="'200px'"
         [title]="'SAVE & CLOSE'"
