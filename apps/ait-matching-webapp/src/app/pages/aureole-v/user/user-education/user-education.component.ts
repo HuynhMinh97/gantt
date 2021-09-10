@@ -270,11 +270,6 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
   }
 
   resetModeNew() {
-    this.isResetFile = true;
-    setTimeout(() => {
-      this.isResetFile = false;
-      this.isChanged = false;
-    }, 100);
     for (const index in this.resetUserInfo) {
       this.resetUserInfo[index] = true;
       setTimeout(() => {
@@ -282,6 +277,8 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
       }, 100);
     }
     this.userEducationInfo.reset();
+    console.log(this.defaultValueDate);
+
     setTimeout(() => {
       this.userEducationInfo.controls['start_date_from'].setValue(
         this.defaultValueDate
@@ -291,10 +288,13 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
 
   resetForm() {
     this.errorArr = [];
+    this.isResetFile = true;
+    setTimeout(() => {
+      this.isResetFile = false;
+    }, 100);
     if (this.mode === MODE.NEW) {
       this.resetModeNew();
     } else {
-      
       for (const index in this.resetUserInfo) {
         if (!this.userEducationInfo.controls[index].value) {
           this.resetUserInfo[index] = true;
@@ -303,12 +303,9 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
           }, 100);
         }
       }
-      console.log(this.userEducationInfoClone);
       this.userEducationInfo.patchValue({
         ...this.userEducationInfoClone,
       });
-      
-      console.log(this.userEducationInfo.value);
     }
     this.showToastr('', this.getMsg('I0007'));
   }
@@ -382,6 +379,11 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
   }
 
   takeDatePickerValue(value: number, group: string, form: string) {
+    if (value == null) {
+      this.isChanged = true;
+      this[group].controls[form].markAsDirty();
+      this[group].controls[form].setValue(value);
+    }
     if (value) {
       const data = value as number;
       value = new Date(data).setHours(0, 0, 0, 0);

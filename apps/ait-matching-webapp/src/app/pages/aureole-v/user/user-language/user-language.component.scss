@@ -265,3 +265,9 @@ label.file-max {
 ::ng-deep #user_language .content {
   padding-top: 0;
 }
+::ng-deep #user_language .sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  bottom: 30px;
+  z-index: 1;
+}

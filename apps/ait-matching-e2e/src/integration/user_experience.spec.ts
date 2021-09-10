@@ -5,48 +5,40 @@ describe('Test Cypress', () => {
     cy.visit(Cypress.env('host') + Cypress.env('user_experience'));
 
     cy.url().should('eq', Cypress.env('host') + Cypress.env('user_experience'));
-    // checkTitleAndPlaceholderUserExp();
+    // checkUIUserExp();
+    // resetFormUserExp();
     // checkValidateUserExp();
-    // checkValidOfDateUserExp();
+    // resetFormUserExp();
+    // checkDateUserExp();
     insertDataUserExp();
   });
 });
 
-function checkTitleAndPlaceholderUserExp() {
-  // Check title and placeholder
+// Check title and placeholder
+function checkUIUserExp() {
+  cy.label('title', ' 題名*');
+  cy.input('title', 'デベロッパー');
 
-  cy.label('title', ' TITLE*');
-  cy.input('title', 'Developer');
+  cy.label('company_working', ' 会社*');
+  cy.input('company_working', 'Aureole IT');
 
-  cy.label('company_working', ' COMPANY*');
-  cy.inputValue('company_working', 'AIT');
+  cy.label('location', ' 位置*');
+  cy.input('location', 'ホーチミン市');
 
-  cy.label('location', ' LOCATION*');
-  cy.input('location', 'Ho Chi Minh City');
-
-  cy.label('employee_type', ' EMPLOYMENT TYPE*');
-  cy.input('employee_type', 'Select');
+  cy.label('employee_type', ' 雇用形態');
+  cy.input('employee_type', '開始日');
 
   cy.get('#is_working').should('have.attr', 'ng-reflect-checked', 'false');
-  cy.get('#is_working').should(
-    'have.text',
-    'I am currently working in this role '
-  );
+  cy.get('.pcontent').should('have.text', ' 私は現在この役割で働いています ');
 
-  cy.label('start_date_from', ' START DATE');
+  cy.label('start_date_from', ' 開始日');
   cy.getValueDate('start_date_from', new Date().getTime());
-  cy.input('start_date_to', 'yyyy/MM/dd');
 
-  cy.label('description', ' DESCRIPTION');
-  cy.textarea('description', 'Place your text');
-
-  cy.styleButton('cancel', ' CANCEL ');
-  cy.styleButton('reset', ' RESET ');
-  cy.styleButton('saveAndContinue', ' SAVE & CONTINUE ');
-  cy.styleButton('saveAndClose', ' SAVE & CLOSE ');
+  cy.label('description', ' 説明');
+  cy.textarea('description', 'テキストを配置します');
 }
 
-function checkAllButtonUserExp(){
+function checkButtonUserExp() {
   cy.get('cancel_text_button').should('exist');
   cy.get('delete_text_button').should('exist');
   cy.get('reset_text_button').should('exist');
@@ -54,94 +46,67 @@ function checkAllButtonUserExp(){
   cy.get('saveAndClose_text_button').should('exist');
 }
 
+// Check validate when click save
 function checkValidateUserExp() {
-  // Check validate when click save
   cy.clickButton('saveAndContinue');
+  cy.errorMessage('title', '題名 を入力してください。');
+  cy.errorMessage('company_working', '会社 を入力してください。');
+  cy.errorMessage('location', '位置 を入力してください。');
+}
 
-  cy.errorMessage('title', 'TITLE を入力してください。');
-  cy.errorMessage('location', 'LOCATION を入力してください。');
-  cy.errorMessage('employee_type', 'EMPLOYMENT TYPE を入力してください。');
-  cy.errorMessage(
-    'start-date',
-    ' start_date_to 以下の値で start_date_from を入力してください。'
-  );
-
-  // Check reset Form
+// Check reset Form
+function resetFormUserExp() {
   cy.clickButton('reset');
   cy.resetForm([
     'title_input',
-    //'company_working_input',
     'location_input',
     'employee_type_input',
     'is_working',
-    //'start_date_from_input',
     'start_date_to_input',
     'description_textarea',
   ]);
 }
 
-function checkValidOfDateUserExp() {
-  // default (case: wrong)
-  cy.clickButton('saveAndClose');
-  cy.errorMessage(
-    'start-date',
-    ' start_date_to 以下の値で start_date_from を入力してください。'
-  );
-
-  // choose start_date_from > current date (case: wrong)
+//check Valid Of Date UserExp
+function checkDateUserExp() {
   cy.get('#is_working').click();
-  cy.chooseValueDate('start_date_from', '2021', '8', '27');
+  cy.chooseValueDate('start_date_from', '2022', '8', '27');
   cy.clickButton('saveAndClose');
   cy.errorMessage(
     'start-date',
-    ' now_date 以下の値で start_date_from を入力してください。'
+    '現在の日付以下の値で開始日を入力してください。'
   );
 
-  // choose start_date_from > start_date_to (case: wrong)
   cy.get('#is_working').click();
-  cy.chooseValueDate('start_date_from', '2021', '8', '27');
-  cy.chooseValueDate('start_date_to', '2021', '8', '1');
+  cy.chooseValueDate('start_date_from', '2022', '8', '27');
+  cy.chooseValueDate('start_date_to', '2022', '8', '1');
   cy.clickButton('saveAndClose');
-  cy.errorMessage(
-    'start-date',
-    ' start_date_to 以下の値で start_date_from を入力してください。'
-  );
-
-  // choose start_date_to < current date (case: right)
-  cy.chooseValueDate('start_date_from', '2021', '8', '13');
-  cy.chooseValueDate('start_date_to', '2021', '8', '19');
-  cy.clickButton('saveAndClose');
-  cy.clickButton('reset');
+  cy.errorMessage('start-date', '最終日以下の値で開始日を入力してください。');
 }
 
 function insertDataUserExp() {
   // Check save
-  cy.chooseMasterData('title', 'Senior System Designer');
+  cy.chooseMasterData('title', 'Infomation technology');
+  cy.chooseMasterData('company_working', 'AIT');
   cy.chooseMasterData('location', 'Hue');
   cy.chooseMasterData('employee_type', 'オレオウ組合');
-
   cy.get('#is_working').click();
-  cy.chooseDate('start_date_from');
+  cy.chooseValueDate('start_date_from', '2021', '8', '1');
   if (!cy.get('#is_working').find('input').check()) {
-    cy.chooseDate('start_date_to');
+    cy.chooseValueDate('start_date_to', '2022', '8', '1');
   }
   cy.typeTextarea('description', 'bin test cypress');
-
-  // Check if the data is saved or not
   cy.intercept({
     method: 'POST',
     url: Cypress.env('host') + Cypress.env('api_url'),
   }).as('dataSaved');
   cy.clickButton('saveAndClose');
   cy.wait('@dataSaved').then((req) => {
-    //console.log(req);
     cy.status(req.response.statusCode);
     const _key = req.response.body.data.saveUserExperienceInfo.data[0]._key;
 
     cy.wait(1000);
-    cy.visit(
-      Cypress.env('host') + Cypress.env('user_experience') + '/' + `${_key}`
-    );
+    cy.visit(Cypress.env('host') + Cypress.env('user_experience') + `${_key}`);
     let query = `
     query {
       findUserExperienceInfo(
@@ -210,6 +175,8 @@ function insertDataUserExp() {
       failOnStatusCode: false,
     }).then((response) => {
       const data = response.body.data.findUserExperienceInfo.data[0];
+      console.log(data);
+      
       cy.inputValue('title', data.title.value);
       cy.inputValue('company_working', data.company_working.value);
       cy.inputValue('location', data.location.value);
@@ -220,25 +187,29 @@ function insertDataUserExp() {
         '' + data.is_working
       );
       cy.getValueDate('start_date_from', data.start_date_from);
-      cy.getValueDate('start_date_to', data.start_date_to);
+      // cy.getValueDate('start_date_to', data.start_date_to);
       cy.textareaValue('description', data.description);
 
       // check disable button Save & Close
-      cy.get('button.button__wrapper__disabled').should('be.disabled')
-      cy.typeTextarea('description', 'a');
-      cy.get('button.button__wrapper').should('not.be.disabled')
+      // cy.get('button.button__wrapper__disabled').should('be.disabled');
+      // cy.typeTextarea('description', 'a');
+      // cy.get('button.button__wrapper').should('not.be.disabled');
+      console.log('ok');
 
-      // check button Delete
-      // cy.intercept({
-      //   method: 'POST',
-      //   url: Cypress.env('host') + Cypress.env('api_url'),
-      // }).as('Deleted');
-      // cy.clickButton('delete');
-      // //cy.get('#cancel_text_button').click({ force: true });
-      // cy.clickButton('ok');
-      // cy.wait('@Deleted').then((req) => {
-      //   cy.status(req.response.statusCode);
-      // });
+      checkDeleteUserExp();
     });
+  });
+}
+
+// check delete in user_experience
+function checkDeleteUserExp() {
+  cy.intercept({
+    method: 'POST',
+    url: Cypress.env('host') + Cypress.env('api_url'),
+  }).as('Deleted');
+  cy.clickButton('delete');
+  cy.clickButton('ok');
+  cy.wait('@Deleted').then((req) => {
+    cy.status(req.response.statusCode);
   });
 }

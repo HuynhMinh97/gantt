@@ -258,3 +258,9 @@ nb-radio-group {
 ::ng-deep #user_onboarding .content{
   padding-top: 0;
 }
+::ng-deep #user_onboarding .sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  bottom: 30px;
+  z-index: 1;
+}
