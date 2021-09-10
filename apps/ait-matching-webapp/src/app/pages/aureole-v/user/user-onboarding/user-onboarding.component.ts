@@ -163,15 +163,6 @@ export class UserOnboardingComponent
       skills: new FormControl(null, [Validators.required]),
     });
 
-    this.userOnbService.findSiteLanguageById(this.user_id).then((r) => {
-      if (r.status === RESULT_STATUS.OK) {
-        const language = 'ja_JP';
-        if (language === r.data[0].site_language) {
-          this.isLangJP = true;
-        }
-      }
-    });
-
     // get key form parameters
     this.user_key = this.activeRouter.snapshot.paramMap.get('id');
     if (this.user_key) {
@@ -180,6 +171,14 @@ export class UserOnboardingComponent
   }
 
   async ngOnInit(): Promise<void> {
+    await this.userOnbService.findSiteLanguageById(this.user_id).then((r) => {
+      if (r.status === RESULT_STATUS.OK) {
+        const language = 'ja_JP';
+        if (language === r.data[0].site_language) {
+          this.isLangJP = true;
+        }
+      }
+    });
     if (this.user_key) {
       const skill_from = 'sys_user/' + this.authService.getUserID();
       const skills = [];
@@ -230,6 +229,9 @@ export class UserOnboardingComponent
   checkAllowSave() {
     const userInfo = { ...this.userOnboardingInfo.value };
     const userInfoClone = { ...this.userOnboardingInfoClone };
+
+    console.log(userInfo);
+    console.log(userInfoClone);
 
     this.isChanged = !AitAppUtils.isObjectEqual(
       { ...userInfo },
