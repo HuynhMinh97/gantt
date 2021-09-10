@@ -282,7 +282,7 @@
           [defaultValue]="[userOnboardingInfo.controls['industry'].value]"
         ></ait-autocomplete-master-data>
       </div>
-      <div class="input_area">
+      <div *ngIf="mode === 'NEW'" class="input_area">
         <ait-autocomplete-master-data
           [id]="'skills'"
           [label]="'skills'"

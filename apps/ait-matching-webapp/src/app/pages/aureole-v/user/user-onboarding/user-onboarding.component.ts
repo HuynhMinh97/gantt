@@ -183,13 +183,14 @@ export class UserOnboardingComponent
       const skill_from = 'sys_user/' + this.authService.getUserID();
       const skills = [];
       await this.userOnbService
-        .findUserOnboardingByKey(this.user_key)
+        .findUserOnboardingByKey(this.authService.getUserID())
         .then(async (r) => {
           if (r.status === RESULT_STATUS.OK) {
             let isUserExist = false;
             const data = r.data[0];
             if (r.data.length > 0 && !data.del_flag) {
               this.userOnboardingInfo.patchValue({ ...data });
+              this.userOnboardingInfoClone = this.userOnboardingInfo.value;
 
               isUserExist = true;
             }
@@ -197,20 +198,19 @@ export class UserOnboardingComponent
           }
         });
 
-      await this.userOnbService.findUserSkills(skill_from).then(async (res) => {
-        if (res.status === RESULT_STATUS.OK) {
-          for (let i = 0; i < res.data.length; i++) {
-            const data = res.data[i];
-            this.sort_no = data.sort_no;
-            const _id = data._to.substr(8);
-            await this.userOnbService.findMSkills(_id).then((x) => {
-              skills.push(x.data[0]);
-            });
-          }
-          this.userOnboardingInfo.controls['skills'].setValue(skills);
-        }
-      });
-      this.userOnboardingInfoClone = this.userOnboardingInfo.value;
+      // await this.userOnbService.findUserSkills(skill_from).then(async (res) => {
+      //   if (res.status === RESULT_STATUS.OK) {
+      //     for (let i = 0; i < res.data.length; i++) {
+      //       const data = res.data[i];
+      //       this.sort_no = data.sort_no;
+      //       const _id = data._to.substr(8);
+      //       await this.userOnbService.findMSkills(_id).then((x) => {
+      //         skills.push(x.data[0]);
+      //       });
+      //     }
+      //     this.userOnboardingInfo.controls['skills'].setValue(skills);
+      //   }
+      // });
     }
 
     await this.getGenderList();
@@ -507,9 +507,6 @@ export class UserOnboardingComponent
   }
 
   takeInputValue(value: string, form: string): void {
-    if (value == null) {
-      this.isChanged = true;
-    }
     if (value) {
       this.userOnboardingInfo.controls[form].markAsDirty();
       this.userOnboardingInfo.controls[form].setValue(value);

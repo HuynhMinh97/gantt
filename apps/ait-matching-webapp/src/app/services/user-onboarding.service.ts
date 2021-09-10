@@ -53,7 +53,7 @@ export class UserOnboardingService extends AitBaseService {
 
   async findUserOnboardingByKey(_key?: string) {
     const condition: any = {
-      _key: _key,
+      user_id: _key,
     };
 
     const specialFields = ['gender', 'country', 'city', 'district', 'ward'];
