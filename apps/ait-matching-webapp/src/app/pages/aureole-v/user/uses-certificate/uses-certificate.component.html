@@ -5,9 +5,10 @@
       <div class="input_inline">
         <ait-autocomplete-master-data
           [id]="'name'"
-          [label]="'Name'"
+          [label]="'NAME'"
           [placeholder]="'Japanese N1'"
           [required]="true"
+          [allowNew]="true"
           [collection]="'m_certificate_award'"
           [isReset]="resetCertificate.name"
           [style]="{ width: '400px' }"
@@ -58,6 +59,7 @@
           [label]="'Issue BY'"
           [placeholder]="'BACH KHOA Ho Chi Minh Technology University'"
           [required]="false"
+          [allowNew]="true"
           [collection]="'m_training_center'"
           [isReset]="resetCertificate.issue_by"
           [style]="{ width: '400px' }"
@@ -116,71 +118,83 @@
         ></ait-input-text>
       </div>
 
-      <div class="input_inline">
+      <div class="input_inline">   
+      </div>
+      <div class="input_area">
+        <ait-label [label]="'FILES'"></ait-label>
+        <label class="file-max"
+          ><nb-icon icon="attach-outline"></nb-icon>Upload max 5 files and
+          10MB/file</label
+        >
         <ait-input-file
-          (watchValue)="getFiles($event.value)"
-          [maxFiles]="10"
-          [hasStatus]="false"
-          [title]="'職務経歴' "
-          [maxSize]="20000"
           [id]="'file'"
-          [guidanceIcon]="'info-outline'"
-          [guidance]="'「個人情報の取り扱いについての同意」を添付して下さい。'"
-          [fileKeys]=""
-          [isSubmit]="isSubmit"
+          [maxSize]="1000"
+          [maxFiles]="5"
+          [hasStatus]="false"
+          [placeholder]="'Select file'"
           [isReset]="resetCertificate.file"
           [fileKeys]="files"
+          (watchValue)="getFiles($event.value)"
+          [isSubmit]="isSubmit"
         ></ait-input-file>
       </div>
     </div>
   </div>
-
+  <!-- [isMatching] = "true" -->
   <ait-space></ait-space>
-
-  <div class="button__group">
+  <div 
+    class="sticky"
+    style="
+      min-width: 370px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    "
+    >
+    <div class="button__group">
+      <ait-button
+        [title]="'CANCEL'"
+        [id]="'cancel'"
+        [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
+        (click)="back()"
+      ></ait-button>
+      <ait-button
+        [title]="'RESET'"
+        [id]="'reset'"
+        [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
+        (click)="resetForm()"
+      ></ait-button>
+      <ait-button
+        *ngIf="mode ==='EDIT'"
+        [id]="'delete'"
+        [title]="'DELETE'"
+        [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
+        (click)="deleteUserById()"
+      ></ait-button>
+      <ait-button
+        *ngIf="mode === 'NEW'"
+        [title]="'SAVE & CONTINUE'"
+        [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
+        [id]="'saveContinue'"
+        (click)="saveAndContinue()"
+      ></ait-button>
+  
     <ait-button
-      [title]="'CANCEL'"
-      [id]="'cancel'"
+      [id]="'saveClose'"
+      *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
+      [width]="'200px'"
+      [title]="'SAVE & CLOSE'"
+      (click)="saveAndClose()"
       [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
-      (click)="back()"
-    ></ait-button>
+    >
+    </ait-button>
     <ait-button
-      [title]="'RESET'"
-      [id]="'reset'"
-      [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
-      (click)="resetForm()"
+      *ngIf="!isChanged && mode === 'EDIT'"
+      [id]="'saveClose'"
+      [width]="'200px'"
+      [title]="'SAVE & CLOSE'"
+      [style]="'disabled'"
     ></ait-button>
-    <ait-button
-      *ngIf="mode ==='EDIT'"
-      [id]="'delete'"
-      [title]="'DELETE'"
-      [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
-      (click)="deleteUserById()"
-    ></ait-button>
-    <ait-button
-      *ngIf="mode === 'NEW'"
-      [title]="'SAVE & CONTINUE'"
-      [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
-      [id]="'saveContinue'"
-      (click)="saveAndContinue()"
-    ></ait-button>
-
-  <ait-button
-    [id]="'saveClose'"
-    *ngIf="(isChangeData && mode === 'EDIT') || mode === 'NEW'"
-    [width]="'200px'"
-    [title]="'SAVE & CLOSE'"
-    (click)="saveAndClose()"
-    [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
-  >
-  </ait-button>
-  <ait-button
-    *ngIf="!isChangeData && mode === 'EDIT'"
-    [id]="'saveClose'"
-    [width]="'200px'"
-    [title]="'SAVE & CLOSE'"
-    [style]="'disabled'"
-    [background]="'linear-gradient( 89.75deg, rgb(70 70 70) 0.23%, rgb(148 148 148) 99.81%)'"
-  ></ait-button>
+    </div>
   </div>
 </div>
