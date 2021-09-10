@@ -3,7 +3,7 @@
     {{ '1001' | translate }}
   </p>
   <ait-space></ait-space>
-  <div class="form__wrapper">
+  <div class="form__wrapper" nbSpinnerStatus="primary" [nbSpinner]="loadingSetting">
     <div class="input__group">
       <p class="label">{{ '1002' | translate }} *</p>
       <ait-autocomplete-master-data
@@ -13,7 +13,7 @@
         [icon]="'search-outline'"
         [style]="{ width: '400px' }"
         [defaultValue]="[langDf]"
-        (watchValues)="
+        (watchValue)="
           getValueLang($event); handleInput($event, 'lang', langLabel)
         "
         [style]="{ width: '100%' }"
@@ -33,7 +33,7 @@
         [icon]="'search-outline'"
         [style]="{ width: '400px' }"
         [defaultValue]="[timeDf]"
-        (watchValues)="
+        (watchValue)="
           getValueTimeZone($event); handleInput($event, 'timezone', timeLabel)
         "
         [style]="{ width: '100%' }"
@@ -52,8 +52,8 @@
         [maxItem]="1" [id]="'date_format_display'"
         [icon]="'search-outline'"
         [style]="{ width: '400px' }"
-        [defaultValue]="[dateDisplayDf]"
-        (watchValues)="
+        [defaultValue]="[defaultInputValues?.dateDisplayDf]"
+        (watchValue)="
           getValueDateDisplay($event);
           handleInput($event, 'display', displayLabel)
         "
@@ -74,8 +74,8 @@
         [maxItem]="1" [id]="'date_format_input'"
         [icon]="'search-outline'"
         [style]="{ width: '400px' }"
-        [defaultValue]="[dateInputDf]"
-        (watchValues)="
+        [defaultValue]="[defaultInputValues?.dateInputDf]"
+        (watchValue)="
           getValueDateInf($event); handleInput($event, 'input', inputLabel)
         "
         [style]="{ width: '100%' }"
@@ -94,8 +94,8 @@
         [maxItem]="1" [id]="'number_format'"
         [icon]="'search-outline'"
         [style]="{ width: '400px' }"
-        [defaultValue]="[numberFormatDf]"
-        (watchValues)="
+        [defaultValue]="[defaultInputValues?.numberFormatDf]"
+        (watchValue)="
           getValueNumberFormat($event);
           handleInput($event, 'number', numberLabel)
         "
