@@ -116,9 +116,10 @@
             )
           "
         ></ait-datepicker>
+
         <ait-datepicker
           [disable]="true"
-          *ngIf="!!userExperienceInfo.controls['is_working'].value"
+          *ngIf="userExperienceInfo.controls['is_working'].value"
           [ngClass]="{
             start_date_to: userExperienceInfo.controls['is_working'].value
           }"
@@ -151,9 +152,7 @@
         <ait-button
           [id]="'cancel'"
           [title]="'cancel'"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
           (click)="back()"
         ></ait-button>
 
@@ -162,9 +161,7 @@
           [id]="'delete'"
           [width]="'200px'"
           [title]="'delete'"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
           (click)="onDelete()"
         >
         </ait-button>
@@ -173,9 +170,7 @@
           [id]="'reset'"
           [width]="'200px'"
           [title]="'reset'"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
           (click)="resetForm()"
         >
         </ait-button>
@@ -185,29 +180,23 @@
           [id]="'saveAndContinue'"
           [title]="'saveandcontinue'"
           (click)="saveAndContinue()"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
         ></ait-button>
-
-        <!-- <ait-button
-          *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
+        <ait-button
           [id]="'saveAndClose'"
+          *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
           [width]="'200px'"
           [title]="'saveandclose'"
           (click)="saveAndClose()"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
         >
-        </ait-button> -->
-
+        </ait-button>
         <ait-button
+          *ngIf="!isChanged && mode === 'EDIT'"
           [id]="'saveAndClose'"
           [width]="'200px'"
           [title]="'saveandclose'"
-          [isDefault]="true"
-          [style]="!isChanged ? 'disabled' : 'active'"
+          [style]="'disabled'"
         ></ait-button>
       </div>
     </div>

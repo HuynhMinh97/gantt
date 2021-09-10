@@ -93,19 +93,6 @@ export class UserExperienceComponent
       page: 'user_experience',
     });
 
-    //Create form builder group
-    this.userExpService
-      .findUserProfile(this.authService.getUserID())
-      .then((x) => {
-        this.defaultCompany = {
-          _key: x.data[0].company_working._key,
-          value: x.data[0].company_working.value,
-        };
-        this.userExperienceInfo.controls['company_working'].setValue({
-          ...this.defaultCompany,
-        });
-      });
-
     this.userExperienceInfo = this.formBuilder.group({
       title: new FormControl(null, [
         Validators.required,
@@ -128,6 +115,25 @@ export class UserExperienceComponent
   }
 
   async ngOnInit(): Promise<void> {
+    //Create form builder group
+    await this.userExpService
+      .findUserProfile(this.authService.getUserID())
+      .then((x) => {
+        this.defaultCompany = {
+          _key: x.data[0].company_working._key,
+          value: x.data[0].company_working.value,
+        };
+        this.userExperienceInfo.controls['company_working'].setValue({
+          ...this.defaultCompany,
+        });
+      });
+    this.userExperienceInfoClone = this.userExperienceInfo.value;
+
+    this.isChanged = !AitAppUtils.isObjectEqual(
+      { ...this.userExperienceInfo.value },
+      { ...this.userExperienceInfoClone }
+    );
+
     if (this.user_key) {
       await this.userExpService
         .findUserExperienceByKey(this.user_key)
@@ -147,25 +153,23 @@ export class UserExperienceComponent
 
     // Run when form value change
     await this.userExperienceInfo.valueChanges.subscribe((data) => {
-      console.log(111111111111111);
-
-      this.checkAllowSave(data);
-
       if (this.userExperienceInfo.pristine) {
         this.userExperienceInfoClone = AitAppUtils.deepCloneObject(data);
+        this.checkAllowSave();
       } else {
+        this.checkAllowSave();
       }
     });
   }
 
-  compareObject(obj1: any, obj2: any) {
-    return JSON.stringify(obj1) === JSON.stringify(obj2);
-  }
-
-  checkAllowSave(data: any) {
-    const userInfo = { ...data };
+  checkAllowSave() {
+    const userInfo = { ...this.userExperienceInfo.value };
     const userInfoClone = { ...this.userExperienceInfoClone };
-    this.isChanged = !this.compareObject({ ...userInfo }, { ...userInfoClone });
+
+    this.isChanged = !AitAppUtils.isObjectEqual(
+      { ...userInfo },
+      { ...userInfoClone }
+    );
   }
 
   getTitleByMode() {
@@ -175,6 +179,7 @@ export class UserExperienceComponent
   }
 
   resetModeNew() {
+    this.isChanged = false;
     for (const index in this.resetUserInfo) {
       this.resetUserInfo[index] = true;
       setTimeout(() => {
@@ -359,12 +364,8 @@ export class UserExperienceComponent
   }
 
   takeDatePickerValue(value: number, group: string, form: string) {
-    console.log(value);
-
     if (value == null) {
-      this.isChanged = !this.isChanged;
-      // this[group].controls[form].markAsDirty();
-      // this[group].controls[form].setValue(value);
+      this.isChanged = true;
     }
     if (value) {
       const data = value as number;

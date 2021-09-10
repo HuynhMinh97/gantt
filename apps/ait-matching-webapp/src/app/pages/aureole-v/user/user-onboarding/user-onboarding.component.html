@@ -3,10 +3,7 @@
     [content]="getTitleByMode()"
     id="form_edit_user_onboarding"
   ></ait-text-gradient>
-  <ait-card-content
-    style="justify-content: center"
-    class="content__card"
-  >
+  <ait-card-content style="justify-content: center" class="content__card">
     <div style="margin-top: 14px">
       <div class="input_area">
         <ait-input-text
@@ -36,7 +33,7 @@
       </div>
       <div class="input_area">
         <ait-input-text
-          *ngIf="isLangJP" 
+          *ngIf="isLangJP"
           [id]="'katakana'"
           [label]="'katakana'"
           [length]="200"
@@ -50,7 +47,7 @@
       </div>
       <div class="input_area">
         <ait-input-text
-          *ngIf="isLangJP" 
+          *ngIf="isLangJP"
           [id]="'romaji'"
           [label]="'romaji'"
           [length]="200"
@@ -63,17 +60,23 @@
         ></ait-input-text>
       </div>
       <div class="input_area">
-        <ait-label class="ait-label" [label]="'gender'" id="gender"></ait-label>
+        <ait-label
+          class="ait-label"
+          [label]="'gender'"
+          id="gender"
+          [required]="true"
+        ></ait-label>
         <div>
           <nb-radio-group>
             <nb-radio
               [tabIndex]="5"
-              *ngFor="let option of genderList; let isFirst = first"
+              *ngFor="let option of genderList; let isDefault = three"
               [value]="option"
               [checked]="
                 userOnboardingInfo.controls['gender'].value
-                  ? userOnboardingInfo.controls['gender'].value?._key == option.code
-                  : isFirst
+                  ? userOnboardingInfo.controls['gender'].value?._key ==
+                    option.code
+                  : isDefault
               "
               (valueChange)="takeGenderValue($event)"
             >
@@ -92,12 +95,8 @@
           [isReset]="resetUserInfo.bod"
           [placeholder]="'1985/01/01'"
           (watchValue)="
-            takeDatePickerValue(
-              $event?.value,
-              'userOnboardingInfo',
-              'bod'
-            )
-          " 
+            takeDatePickerValue($event?.value, 'userOnboardingInfo', 'bod')
+          "
           [dateInput]="userOnboardingInfo.controls['bod'].value"
         ></ait-datepicker>
       </div>
@@ -152,6 +151,7 @@
           [label]="'POSTCODE'"
           [required]="true"
           [length]="20"
+          [isSubmit]="isSubmit"
           [isReset]="resetUserInfo.postcode"
           (watchValue)="takeInputValue($event, 'postcode')"
           [defaultValue]="userOnboardingInfo.controls['postcode'].value"
@@ -246,7 +246,9 @@
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.company_working"
           (watchValue)="takeMasterValue($event, 'company_working')"
-          [defaultValue]="[userOnboardingInfo.controls['company_working'].value]"
+          [defaultValue]="[
+            userOnboardingInfo.controls['company_working'].value
+          ]"
         ></ait-autocomplete-master-data>
       </div>
       <div class="input_area">
@@ -292,7 +294,9 @@
           [collection]="'m_skill'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.skills"
-          (watchValue)="takeMasterValues($event?.value, 'userOnboardingInfo', 'skills')"
+          (watchValue)="
+            takeMasterValues($event?.value, 'userOnboardingInfo', 'skills')
+          "
           [defaultValue]="userOnboardingInfo.controls['skills'].value"
         ></ait-autocomplete-master-data>
       </div>
@@ -304,9 +308,7 @@
         <ait-button
           [id]="'cancel'"
           [title]="'cancel'"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
           (click)="back()"
         ></ait-button>
 
@@ -315,9 +317,7 @@
           [id]="'delete'"
           [width]="'200px'"
           [title]="'delete'"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
           (click)="onDelete()"
         >
         </ait-button>
@@ -326,9 +326,7 @@
           [id]="'reset'"
           [width]="'200px'"
           [title]="'reset'"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
           (click)="resetForm()"
         >
         </ait-button>
@@ -339,9 +337,7 @@
           [width]="'200px'"
           [title]="'save'"
           (click)="save()"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
         >
         </ait-button>
         <ait-button

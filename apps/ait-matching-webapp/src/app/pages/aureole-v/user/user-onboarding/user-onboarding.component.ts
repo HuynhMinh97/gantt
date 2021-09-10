@@ -191,15 +191,12 @@ export class UserOnboardingComponent
             const data = r.data[0];
             if (r.data.length > 0 && !data.del_flag) {
               this.userOnboardingInfo.patchValue({ ...data });
-              this.userOnboardingInfoClone = this.userOnboardingInfo.value;
+
               isUserExist = true;
             }
             !isUserExist && this.router.navigate([`/404`]);
           }
         });
-      this.isCountry = false;
-      this.isCity = false;
-      this.isDistrict = false;
 
       await this.userOnbService.findUserSkills(skill_from).then(async (res) => {
         if (res.status === RESULT_STATUS.OK) {
@@ -211,14 +208,10 @@ export class UserOnboardingComponent
               skills.push(x.data[0]);
             });
           }
-          this.userOnboardingInfo.controls['skills'].setValue({
-            ...skills,
-          });
-
-          console.log(this.userOnboardingInfo.controls['skills'].value);
-          
+          this.userOnboardingInfo.controls['skills'].setValue(skills);
         }
       });
+      this.userOnboardingInfoClone = this.userOnboardingInfo.value;
     }
 
     await this.getGenderList();
@@ -228,7 +221,7 @@ export class UserOnboardingComponent
     await this.userOnboardingInfo.valueChanges.subscribe((data) => {
       if (this.userOnboardingInfo.pristine) {
         this.userOnboardingInfoClone = AitAppUtils.deepCloneObject(data);
-      } else {
+      } else if (this.mode == MODE.EDIT) {
         this.checkAllowSave();
       }
     });
@@ -282,7 +275,7 @@ export class UserOnboardingComponent
       };
     } else {
       const genderList = [...this.genderList].map((gender, index) =>
-        Object.assign({}, gender, { checked: index === 0 ? true : false })
+        Object.assign({}, gender, { checked: index === 2 ? true : false })
       );
 
       const gender = genderList[2];
@@ -346,15 +339,17 @@ export class UserOnboardingComponent
     return saveData;
   }
 
-  saveDataUserSkill() {
+  async saveDataUserSkill() {
     this.user_skill._from = 'sys_user/' + this.authService.getUserID();
     this.user_skill.relationship = 'user_skill';
-    this.user_skill.sort_no = 1;
+    this.user_skill.sort_no = this.sort_no + 1;
 
     const skills = this.skills;
+    const _fromUserSkill = [
+      { _from: 'sys_user/' + this.authService.getUserID() },
+    ];
+    await this.userOnbService.removeSkills(_fromUserSkill);
     skills.forEach(async (skill) => {
-      const _fromUserSkill = [{ _from: skill._key }];
-      await this.userOnbService.removeUserSkills(_fromUserSkill);
       this.user_skill._to = 'm_skill/' + skill._key;
       await this.userOnbService.saveUserSkills([this.user_skill]);
     });

@@ -23,12 +23,9 @@ import {
   AitBaseComponent,
   AitConfirmDialogComponent,
   AitEnvironmentService,
-  AitNavigationService,
   AitTranslationService,
   AppState,
   MODE,
-  MODULES,
-  PAGES,
 } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
 import { KEYS, RESULT_STATUS } from '@ait/shared';
@@ -267,6 +264,11 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
   }
 
   resetModeNew() {
+    this.isChanged = false;
+    this.isResetFile = true;
+    setTimeout(() => {
+      this.isResetFile = false;
+    }, 100);
     for (const index in this.resetUserInfo) {
       this.resetUserInfo[index] = true;
       setTimeout(() => {
