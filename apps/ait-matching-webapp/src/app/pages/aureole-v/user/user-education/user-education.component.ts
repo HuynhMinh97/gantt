@@ -121,7 +121,6 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
         .then(async (r) => {
           if (r.status === RESULT_STATUS.OK) {
             let isUserExist = false;
-            let files = [];
             const data = r.data[0];
             if (r.data.length > 0 && !data.del_flag) {
               this.userEducationInfo.patchValue({ ...data });

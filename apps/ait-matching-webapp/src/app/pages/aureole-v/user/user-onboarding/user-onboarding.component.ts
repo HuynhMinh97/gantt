@@ -49,17 +49,18 @@ export class UserOnboardingComponent
   defaultGender = {} as KeyValueDto;
 
   mode = MODE.NEW;
-  errorArr: any;
   skills: any;
-  countryCode: any;
+  errorArr: any;
   cityCode: any;
+  countryCode: any;
   districtCode: any;
+  sort_no: number;
+  isCity = true;
   isReset = false;
+  isCountry = true;
+  isLangJP = false;
   isSubmit = false;
   isChanged = false;
-  isLangJP = false;
-  isCountry = true;
-  isCity = true;
   isDistrict = true;
 
   resetUserInfo = {
@@ -180,6 +181,8 @@ export class UserOnboardingComponent
 
   async ngOnInit(): Promise<void> {
     if (this.user_key) {
+      const skill_from = 'sys_user/' + this.authService.getUserID();
+      const skills = [];
       await this.userOnbService
         .findUserOnboardingByKey(this.user_key)
         .then(async (r) => {
@@ -197,6 +200,27 @@ export class UserOnboardingComponent
       this.isCountry = false;
       this.isCity = false;
       this.isDistrict = false;
+
+      await this.userOnbService.findUserSkills(skill_from).then(async (res) => {
+        if (res.status === RESULT_STATUS.OK) {
+          for (let i = 0; i < res.data.length; i++) {
+            const data = res.data[i];
+            this.sort_no = data.sort_no;
+            const _id = data._to.substr(8);
+            await this.userOnbService.findMSkills(_id).then((x) => {
+              skills.push(x.data[0]);
+            });
+          }
+          console.log(skills);
+          
+          this.userOnboardingInfo.controls['skills'].setValue({
+            ...skills,
+          });
+
+          console.log(this.userOnboardingInfo.controls['skills'].value);
+          
+        }
+      });
     }
 
     await this.getGenderList();

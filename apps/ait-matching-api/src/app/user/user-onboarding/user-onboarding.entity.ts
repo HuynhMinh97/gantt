@@ -58,6 +58,4 @@ export class UserOnboardingInfoEntity extends BaseEntity {
     @Field(() => KeyValueEntity, { nullable: true })
     industry?: KeyValueEntity;
 
-    @Field(() => [KeyValueEntity], { nullable: true })
-    skills?: [KeyValueEntity];
 }
