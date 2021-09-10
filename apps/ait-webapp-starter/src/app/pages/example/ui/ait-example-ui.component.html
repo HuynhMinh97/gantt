@@ -231,7 +231,7 @@
 
         <ait-autocomplete-master-data
           [styleLabel]="{ 'text-transform': 'initial' }"
-          [width]="'400px'"
+          [width]="'300px'"
           [label]="'autocomplete master data'"
           [placeholder]="'one'"
           [guidance]="'c_2003'"
@@ -239,7 +239,6 @@
           [class]="'RESIDENCE_STATUS'"
           (onError)="result.error_data2 = $event.isValid"
           (watchValue)="result.multi_data = $event"
-          [defaultValue]="[{_key: '24155517'},{_key : '24155519'}]"
           [isSubmit]="result.master2"
           [allowNew]="true"
           [errorMessages]="errors"
