@@ -358,8 +358,8 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   }
 
   modifileOption = (value: string) => {
-    if (value.length > 35) {
-      return value.substring(0, 34) + '...';
+    if (value.length > 17) {
+      return value.substring(0, 16) + '...';
     }
     return value;
   }
