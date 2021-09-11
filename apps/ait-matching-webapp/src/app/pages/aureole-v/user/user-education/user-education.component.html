@@ -16,6 +16,7 @@
           [collection]="'m_school'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.school"
+          [isReadOnly]="resetUserInfo.school"
           (watchValue)="takeMasterValue($event, 'school')"
           [defaultValue]="[userEducationInfo.controls['school'].value]"
           [isSubmit]="isSubmit"
@@ -28,6 +29,7 @@
           [label]="'degree'"
           [placeholder]="'engineer'"
           [isReset]="resetUserInfo.degree"
+          [readonly]="resetUserInfo.degree"
           (watchValue)="takeInputValue($event, 'degree')"
           [defaultValue]="userEducationInfo.controls['degree'].value"
         >
@@ -41,6 +43,7 @@
           [label]="'field_of_study'"
           [placeholder]="'computer'"
           [isReset]="resetUserInfo.field_of_study"
+          [readonly]="resetUserInfo.field_of_study"
           (watchValue)="takeInputValue($event, 'field_of_study')"
           [defaultValue]="userEducationInfo.controls['field_of_study'].value"
         >
@@ -54,6 +57,7 @@
           [label]="'grade'"
           [placeholder]="'Good'"
           [isReset]="resetUserInfo.grade"
+          [readonly]="resetUserInfo.grade"
           (watchValue)="takeInputValue($event, 'grade')"
           [defaultValue]="userEducationInfo.controls['grade'].value"
         >
@@ -107,7 +111,8 @@
           [label]="'description'"
           [placeholder]="'place your text'"
           [width]="'415px'"
-          [isReset]="resetUserInfo.description"
+          [isReset]="resetUserInfo.degree"
+          [readonly]="resetUserInfo.degree"
           (watchValue)="takeInputValue($event, 'description')"
           [defaultValue]="userEducationInfo.controls['description'].value"
         >
@@ -126,6 +131,7 @@
             [hasStatus]="false"
             [isReset]="isResetFile"
             [isClear]="isClear"
+            [isDefault]="true"
             [fileKeys]="userEducationInfo.controls['file'].value"
             (watchValue)="takeFiles($event.value, 'userEducationInfo', 'file')"
             [isSubmit]="isSubmit"
@@ -138,6 +144,7 @@
     <div class="action-row">
       <div class="block">
         <ait-button
+          *ngIf="mode !== 'VIEW'"
           [id]="'cancel'"
           [title]="'cancel'"
           [background]="
@@ -157,6 +164,7 @@
         </ait-button>
 
         <ait-button
+         *ngIf="mode !== 'VIEW'"
           [id]="'reset'"
           [width]="'200px'"
           [title]="'reset'"
