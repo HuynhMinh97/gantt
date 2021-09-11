@@ -62,6 +62,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
   };
 
   user_key = '';
+  user_id = '';
 
   constructor(
     private router: Router,
@@ -122,6 +123,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
             if (r.data.length > 0 && !data.del_flag) {
               this.userEducationInfo.patchValue({ ...data });
               this.userEducationInfoClone = this.userEducationInfo.value;
+              this.user_id = data.user_id;
               isUserExist = true;
             }
             !isUserExist && this.router.navigate([`/404`]);
@@ -137,6 +139,13 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
         this.checkAllowSave();
       }
     });
+
+    if (this.user_id != this.authService.getUserID()) {
+      this.mode = MODE.VIEW;
+      for (const index in this.resetUserInfo) {
+        this.resetUserInfo[index] = true;
+      }
+    }
   }
 
   checkAllowSave() {

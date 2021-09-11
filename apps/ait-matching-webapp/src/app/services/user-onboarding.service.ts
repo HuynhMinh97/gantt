@@ -6,6 +6,7 @@ export class UserOnboardingService extends AitBaseService {
   collection = 'user_profile';
   returnFields = {
     _key: true,
+    user_id: true,
     country: {
       _key: true,
       value: true,

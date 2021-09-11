@@ -18,6 +18,7 @@
           [collection]="'m_title'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.title"
+          [isReadOnly]="resetUserInfo.title"
           (watchValue)="takeMasterValue($event, 'title')"
           [defaultValue]="[userExperienceInfo.controls['title'].value]"
         ></ait-autocomplete-master-data>
@@ -34,6 +35,7 @@
           [placeholder]="'company_working_plh'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.company_working"
+          [isReadOnly]="resetUserInfo.company_working"
           (watchValue)="takeMasterValue($event, 'company_working')"
           [defaultValue]="[
             userExperienceInfo.controls['company_working'].value
@@ -52,6 +54,7 @@
           [collection]="'sys_master_data'"
           [placeholder]="'location_plh'"
           [isReset]="resetUserInfo.location"
+          [isReadOnly]="resetUserInfo.location"
           (watchValue)="takeMasterValue($event, 'location')"
           [defaultValue]="[userExperienceInfo.controls['location'].value]"
         ></ait-autocomplete-master-data>
@@ -68,6 +71,7 @@
           [disableOutputDefault]="true"
           [collection]="'sys_master_data'"
           [isReset]="resetUserInfo.employee_type"
+          [isReadOnly]="resetUserInfo.employee_type"
           (watchValue)="takeMasterValue($event, 'employee_type')"
           [defaultValue]="[userExperienceInfo.controls['employee_type'].value]"
         >
@@ -76,9 +80,17 @@
 
       <div class="input_area nb_checkbox">
         <nb-checkbox
+          *ngIf="mode === 'EDIT' || mode === 'NEW'"
           [checked]="userExperienceInfo.controls['is_working']?.value"
           [id]="'is_working'"
           (checkedChange)="toggleCheckBox($event)"
+        >
+        </nb-checkbox>
+        <nb-checkbox
+          *ngIf="mode === 'VIEW'"
+          [checked]="userExperienceInfo.controls['is_working']?.value"
+          [id]="'is_working'"
+          disabled
         >
         </nb-checkbox>
         <p class="pcontent" tabIndex="15">
@@ -100,13 +112,17 @@
               'start_date_from'
             )
           "
+          [ngClass]="{
+            start_date_to: userExperienceInfo.controls['is_working'].value
+          }"
         ></ait-datepicker>
         <span>〜</span>
         <ait-datepicker
+          *ngIf="!userExperienceInfo.controls['is_working'].value"
           [id]="'start_date_to'"
           [width]="'185px'"
           [isReset]="resetUserInfo.start_date_to"
-          *ngIf="!userExperienceInfo.controls['is_working'].value"
+          [disable]="resetUserInfo.start_date_from"
           [defaultValue]="userExperienceInfo.controls['start_date_to'].value"
           (watchValue)="
             takeDatePickerValue(
@@ -115,6 +131,9 @@
               'start_date_to'
             )
           "
+          [ngClass]="{
+            start_date_to: userExperienceInfo.controls['is_working'].value
+          }"
         ></ait-datepicker>
 
         <ait-datepicker
@@ -138,6 +157,7 @@
           [width]="'415px'"
           [label]="'description'"
           [isReset]="resetUserInfo.description"
+          [readonly]="resetUserInfo.description"
           [placeholder]="'description_plh'"
           (watchValue)="takeInputValue($event, 'description')"
           [defaultValue]="userExperienceInfo.controls['description'].value"
@@ -150,6 +170,7 @@
     <div class="action-row">
       <div class="block">
         <ait-button
+          *ngIf="mode !== 'VIEW'"
           [id]="'cancel'"
           [title]="'cancel'"
           [isDefault]="true"
@@ -167,6 +188,7 @@
         </ait-button>
 
         <ait-button
+          *ngIf="mode !== 'VIEW'"
           [id]="'reset'"
           [width]="'200px'"
           [title]="'reset'"

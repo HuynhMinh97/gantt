@@ -57,6 +57,7 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
   };
 
   user_key = '';
+  user_id = '';
 
   constructor(
     private router: Router,
@@ -65,8 +66,6 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
     private dialogService: NbDialogService,
-    private navigation: AitNavigationService,
-    private translatePipe: AitTranslationService,
     private userLangService: UserLanguageService,
     private translateService: AitTranslationService,
     env: AitEnvironmentService,
@@ -111,15 +110,15 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
         .findUserLanguageByKey(this.user_key)
         .then((r) => {
           if (r.status === RESULT_STATUS.OK) {
-            let isUserExist = false;
+            let isExist = false;
             const data = r.data[0];
             if (r.data.length > 0 && !data.del_flag) {
               this.userLanguageInfo.patchValue({ ...data });
-              console.log(this.userLanguageInfo.value);
               this.userLanguageInfoClone = this.userLanguageInfo.value;
-              isUserExist = true;
+              this.user_id = data.user_id;
+              isExist = true;
             }
-            !isUserExist && this.router.navigate([`/404`]);
+            !isExist && this.router.navigate([`/404`]);
           }
         });
     }
@@ -131,6 +130,13 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
         this.checkAllowSave();
       }
     });
+
+    if (this.user_id != this.authService.getUserID()) {
+      this.mode = MODE.VIEW;
+      for (const index in this.resetUserLangInfo) {
+        this.resetUserLangInfo[index] = true;
+      }
+    }
   }
 
   checkAllowSave() {
