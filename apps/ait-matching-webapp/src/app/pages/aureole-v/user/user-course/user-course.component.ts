@@ -314,10 +314,10 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
         .then((r) => {             
           if (r.status === RESULT_STATUS.OK) {
             if (r.data.length > 0) {
-              this.mode = MODE.EDIT;
               const data = r.data[0];       
               this.dataCourse = data;                                    
-              this.course.patchValue({ ...data });         
+              this.course.patchValue({ ...data });  
+              this.courseClone = this.course.value;       
               this.companyCenter = {
                 _key: data.training_center,
               };
