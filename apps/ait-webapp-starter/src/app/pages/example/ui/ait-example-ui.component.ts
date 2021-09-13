@@ -164,6 +164,7 @@ export class AitUiComponent extends AitBaseComponent {
   }
 
   getValueNumberInput = (value) => {
+    console.log(value);
     this.result.number_input = value
   }
 

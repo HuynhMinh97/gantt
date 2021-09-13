@@ -89,6 +89,7 @@
           [errorMessages]="errors"
           [isReset]="result.resetAll"
           [required]="true"
+          [readonly]="true"
         ></ait-input-text>
         <button
           nbButton
@@ -106,6 +107,7 @@
           [label]="'c_2003'"
           [placeholder]="'c_2003'"
           [max]="999999999999"
+          [min]="1"
           [guidance]="'whatever you want'"
           [guidanceIcon]="'star'"
           (watchValue)="getValueNumberInput($event)"
@@ -115,7 +117,6 @@
           [isSubmit]="result.submit_text_number"
           [errorMessages]="errors"
           [required]="true"
-          [defaultValue]="1000"
         ></ait-input-number>
 
         <button
@@ -213,8 +214,8 @@
           [allowDelete]="true"
           [sortBy]="'sort_no'"
           [maxItem]="1"
+          [defaultValue]="[{ _key: 'c_b001', value: 'OK' }]"
           [collection]="'sys_caption'"
-          [isReadOnly]="true"
         ></ait-autocomplete-master-data>
         <button
           nbButton
