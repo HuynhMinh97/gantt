@@ -11,8 +11,7 @@
           [maxItem]="1"
           [placeholder]="'Japanese N1'"
           [collection]="'m_certificate_award'"
-          [isReset]="resetCertificate.name"
-         
+          [isReset]="resetCertificate.name"        
           (watchValue)="takeInputValue($event, 'name')"
           [defaultValue]="[companyName]"
           [isSubmit]="isSubmit"
@@ -116,7 +115,7 @@
           [defaultValue]="certificate.controls['description'].value"
           [isReset]="resetCertificate.description"
           [isSubmit]="isSubmit"
-          [length]="400"
+          [length]="4000"
         ></ait-input-text>
       </div>
 

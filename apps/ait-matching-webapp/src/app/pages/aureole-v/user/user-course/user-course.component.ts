@@ -1,6 +1,6 @@
-import { RESULT_STATUS } from './../../../../../../../../libs/shared/src/lib/commons/enums';
+import { RESULT_STATUS, KEYS } from './../../../../../../../../libs/shared/src/lib/commons/enums';
 import { AitAuthService, AitConfirmDialogComponent, AitEnvironmentService, AitTranslationService, AppState, MODE, AitBaseComponent, AitAppUtils } from '@ait/ui';
-import { Component, OnInit, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, OnInit, SimpleChanges, OnChanges, ElementRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import { NbToastrService, NbLayoutScrollService, NbDialogService } from '@nebular/theme';
 import { isArrayFull, isObjectFull } from '@ait/shared';
@@ -23,15 +23,16 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
   dataCourse;
   courseStart;
   mode = MODE.NEW;
-  dateNow = Date.now();
+  dateNow = new Date().setHours(0, 0, 0, 0);
   course_key = '';
   companyCenter: any = null;
+  files = [];
+  error = [];
   isSubmit = false;  
   submitFile = false;  
-  files = [];
-  error = null;
   isChanged = false;
   isClear = false;
+  isClearErrors = false;
   resetCourse = {
     _key:false,
     course_number: false,
@@ -52,6 +53,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
 
   resetMasterUser = false;
   constructor(
+    private element: ElementRef,
     private translateService: AitTranslationService,
     private router: Router,
     private dialogService: NbDialogService,
@@ -93,33 +95,42 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
     if(this.mode == MODE.NEW){
       this.course.controls["start_date_from"].setValue(this.dateNow);
       this.courseStart = this.course.value
+    } else{
+    await this.find(this.course_key);    
     }
-   else{
-    await this.find(this.course_key, 'user_course');    
-   }
+     await this.course.valueChanges.subscribe((data) => {           
+      if (this.course.pristine) {
+        console.log(data); 
+        this.courseClone = AitAppUtils.deepCloneObject(data);       
+      } else {
+        this.checkAllowSave();
+      }
+    });
 
-   await this.course.valueChanges.subscribe((data) => {
-    if (this.course.pristine) {
-      this.courseClone = AitAppUtils.deepCloneObject(data);
-    } else {
-      this.checkAllowSave();
-    }
-  });     
+    if(this.course.value.start_date_from == null){
+      this.course.controls["start_date_from"].setValue(this.dateNow); 
+    }  
+    console.log(this.courseClone);
+      
   }
   checkAllowSave() {
-    const certificateInfo = { ...this.course.value };
-    const certificateClone = { ...this.courseClone };
+    const courseInfo = { ...this.course.value };
+    const courseClone = { ...this.courseClone };
+    console.log(courseInfo);
+    console.log(courseClone);
+    
     // this.setHours(userInfo);
     const isChangedUserInfo = AitAppUtils.isObjectEqual(
-      { ...certificateInfo },
-      { ...certificateClone }
+      { ...courseInfo },
+      { ...courseClone }
     );
     this.isChanged = !(isChangedUserInfo);
+    console.log(this.isChanged, this.mode);
   }
   ngOnChanges(changes: SimpleChanges) {    
   }
 
-  takeInputValue(val : any, form: string): void {   
+  takeInputValue(val : any, form: string): void {  
     if(val){
       if(isObjectFull(val)){
         this.course.controls[form].markAsDirty();
@@ -128,11 +139,17 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
       else {
         this.course.controls[form].markAsDirty();
         this.course.controls[form].setValue(val);
+      
       }  
     }else{
       this.course.controls[form].setValue(null);
     }      
-   
+    if(form == 'name' && val.length<=2 || form == 'description' && val.length<=4){
+      this.isClearErrors = true;
+      setTimeout(() => {
+        this.isClearErrors = false;
+      }, 100);
+    }
   }
 
   toggleCheckBox(checked: boolean) {  
@@ -190,11 +207,11 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
     }    
   }
    //end file
-  reset(){
+  async reset(){
     this.isSubmit = false;
     this.submitFile = false;
     this.isChanged = false;
-    this.error = null;
+    this.error = [];
     this.companyCenter = null;
     this.course.reset();
     for (const prop in this.resetCourse) { 
@@ -205,8 +222,8 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
     }
   }
 
-  resetForm() {
-    this.reset();
+  async resetForm() {
+    await this.reset();
     if(this.mode === MODE.NEW){
       setTimeout(() => {
         this.course.controls['start_date_from'].setValue(this.dateNow)
@@ -227,46 +244,70 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
   }
 
   async saveAndContinue(){  
-    this.isSubmit = true;    
-    if(!this.course.valid || this.error.length > 0 ){
-      return;     
+    this.isSubmit = true; 
+    setTimeout(() => {
+      this.isSubmit = false;
+    }, 100);  
+    const saveData = this.course.value;
+    saveData['user_id'] = this.authService.getUserID();
+    
+    if(this.course.value.is_online == null){
+      saveData['is_online'] = false;
+    }  
+    this.error.length
+    if(this.course.valid && this.error.length <= 0 ){
+      await this.userCartificateService
+      .saveCourse(saveData)
+      .then(async (res) =>{
+        if (res?.status === RESULT_STATUS.OK){
+          const message =
+          this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
+          this.showToastr('', message);
+          await this.reset();
+          setTimeout(() => {
+            this.course.controls["start_date_from"].setValue(this.dateNow);
+          },100);
+          
+        }else{
+          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+        }
+      }).catch(() => {
+        this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+      });      
     }else{
-      await this.userCartificateService.saveCourse(this.course.value);     
-      this.submitFile = true;
-      if(this.mode == MODE.NEW){
-        this.showToastr('', this.getMsg('I0001'));
-      }
-      else{
-        this.showToastr('', this.getMsg('I0002'));
-      }   
-      setTimeout(() =>{
-        this.reset();
-        this.course.controls['start_date_from'].setValue(this.dateNow)
-      },100)        
+      this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
     }
   }
   async saveAndClose(){
-    this.isSubmit = true;    
-    if(!this.course.valid || this.error.length > 0 ){
-      return;     
+    this.isSubmit = true; 
+    setTimeout(() => {
+      this.isSubmit = false;
+    }, 100);   
+    const saveData = this.course.value;
+    if(this.course.value.is_online == null){
+      saveData['is_online'] == false;
+    }
+    if(this.course.valid && this.error.length <= 0 ){
+      await this.userCartificateService
+      .saveCourse(saveData)
+      .then((res) =>{
+        if (res?.status === RESULT_STATUS.OK){
+          const message =
+          this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
+          this.showToastr('', message);
+          this.router.navigateByUrl('/');
+        }else{
+          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+        }
+      }).catch(() => {
+        this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+      });      
     }else{
-      console.log(this.course.value);
-      
-      await this.userCartificateService.saveCourse(this.course.value); 
-      this.submitFile = true;
-      if(this.mode == MODE.NEW){
-        this.showToastr('', this.getMsg('I0001'));
-      }
-      else{
-        this.showToastr('', this.getMsg('I0002'));
-      }   
-      setTimeout(() =>{
-        this.router.navigateByUrl('/');
-      },100)        
+      this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
     }
   }
 
-  async find(key : string, table : string){
+  async find(key : string){
     if (this.course_key) {
       await this.userCartificateService
         .findCourseByKey(key)

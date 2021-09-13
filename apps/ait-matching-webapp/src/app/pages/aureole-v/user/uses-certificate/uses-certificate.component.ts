@@ -88,10 +88,12 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
       this.certificate.controls["issue_date_from"].setValue(this.dateNow); 
     }else{
       await this.find(this.certificate_key); 
-    }     
+    }   
     await this.certificate.valueChanges.subscribe((data) => {
+      
       if (this.certificate.pristine) {
-        this.certificateClone = AitAppUtils.deepCloneObject(data);       
+        this.certificateClone = AitAppUtils.deepCloneObject(data);   
+        console.log(this.certificateClone);    
       } else {
         this.checkAllowSave();
       }

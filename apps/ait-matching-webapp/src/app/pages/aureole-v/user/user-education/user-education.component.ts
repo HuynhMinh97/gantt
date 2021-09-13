@@ -201,7 +201,6 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
-
     if (this.userEducationInfo.valid && !this.isDateCompare) {
       this.userEduService
         .save(this.saveData())
