@@ -8,16 +8,17 @@ import { rootReducers } from '../../state/rootReducers';
 import { AitCurrencySymbolService } from '../../services/ait-currency-symbol.service';
 import { AitErrorMessageModule } from '../ait-error-message/ait-error-message.module';
 import { AitLabelModule } from '../ait-label/ait-label.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [AitInputNumberComponent],
-  imports: [CommonModule, NbInputModule, AitErrorMessageModule,AitLabelModule,NbIconModule,
+  imports: [CommonModule, NbInputModule, AitErrorMessageModule, AitLabelModule, NbIconModule, FormsModule, ReactiveFormsModule,
     StoreModule.forRoot(
-    { ...rootReducers },
-    {
-      initialState: {},
-    },
-  ),
+      { ...rootReducers },
+      {
+        initialState: {},
+      },
+    ),
   ],
   exports: [AitInputNumberComponent],
   providers: [AitNumberFormatPipe, AitCurrencySymbolService],
