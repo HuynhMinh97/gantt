@@ -606,29 +606,42 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
     this.formatTransfrom = evalue.getTime();
   }
 
+  isFullSize = (text: string) => {
+    const reg = /[\uff00-\uff9f]/;
+    return reg.test(text);
+  }
+
+
   converToDateTime = (date) => (new Date(date)).getTime();
   handleInput = (event) => {
+    let text = event.target.value;
+
+    if (this.isFullSize(event.target.value)) {
+      text = event.target.value?.normalize('NFKC');
+    }
+    // this.inputCtrl.patchValue(text);
     this.nbDatepicker.hidePicker();
-    if (event.target.value && event.target.value !== '') {
+    if (text && text !== '') {
       if (this.format === 'yyyy') {
-        this.evaluteYear(event.target.value);
+        this.evaluteYear(text);
       }
       else if (this.format === 'MM') {
-        this.evaluteMonth(event.target.value);
+        this.evaluteMonth(text);
       }
       else if (this.format === 'dd') {
-        this.evaluteDay(event.target.value);
+        this.evaluteDay(text);
       }
       else if (this.format === 'yyyy/MM' || this.format === 'MM/yyyy') {
-        this.evaluteYearMonth(event.target.value, this.format === 'MM/yyyy');
+        console.log(text);
+        this.evaluteYearMonth(text, this.format === 'MM/yyyy');
       }
       else {
-        this.translateDate(event.target.value);
-        if (event.target.value?.length > 2) {
+        this.translateDate(text);
+        if (text?.length > 2) {
         }
         else {
-          if (event.target.value) {
-            this.translateDate(event.target.value);
+          if (text) {
+            this.translateDate(text);
           }
           else {
             this.formatTransfrom = null;
@@ -642,13 +655,13 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
       }
     }
     else {
-      this.formatTransfrom = null;
-      setTimeout(() => {
+      // this.formatTransfrom = null;
+      if (this.formatTransfrom === null || this.formatTransfrom === '') {
         this.watchValue.emit({ value: null });
-        if (this.required) {
-          this.componentErrors = this.getMessage();
-        }
-      }, 100)
+      }
+      if (this.required) {
+        this.componentErrors = this.getMessage();
+      }
     }
   }
 
@@ -685,8 +698,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   }
 
   checkValidDateInput = () => {
-    // console.log('out')
-    // console.log(this.formatTransfrom);
+    console.log(this.formatTransfrom);
     if (this.formatTransfrom) {
       this.date = new Date(this.formatTransfrom);
       this.dateInput = this.formatTransfrom;
@@ -695,6 +707,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
       this.formatTransfrom = null;
     }
     else {
+
       if (!this.isDateValid(this.date) || !this.inputCtrl.value) {
         this.date = null;
 
