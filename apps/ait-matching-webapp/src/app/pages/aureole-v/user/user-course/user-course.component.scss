@@ -144,3 +144,11 @@ p.label-datepiker {
 ::ng-deep.input__container{
 width: 400px;
 }
+ait-error-message {
+  width: 500px;
+  text-align: center;
+  margin-left: 20px;
+}
+::ng-deep p#training_center_information {
+  width: 500px;
+}
