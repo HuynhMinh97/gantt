@@ -384,7 +384,7 @@ export class UserExperienceComponent
 
     if (dateFrom == null || isWorking || dateTo == null) {
       this.isDateCompare = false;
-      if (dateFrom > this.defaultValueDate) {
+      if (dateFrom > this.defaultValueDate && isWorking) {
         const transferMsg = (msg || '')
           .replace('{0}', this.translateService.translate('start_date_from'))
           .replace('{1}', this.translateService.translate('now_date'));
