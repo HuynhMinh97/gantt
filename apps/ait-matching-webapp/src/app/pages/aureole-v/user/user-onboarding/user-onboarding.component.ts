@@ -112,7 +112,7 @@ export class UserOnboardingComponent
     sort_no: 0,
   };
 
-  user_id = '';
+  user_key = '';
   _key = '';
   user_id_profile = '';
 
@@ -189,8 +189,8 @@ export class UserOnboardingComponent
     });
 
     // get key form parameters
-    this.user_id = this.activeRouter.snapshot.paramMap.get('id');
-    if (this.user_id) {
+    this.user_key = this.activeRouter.snapshot.paramMap.get('id');
+    if (this.user_key) {
       this.mode = MODE.EDIT;
     }
 
@@ -207,9 +207,9 @@ export class UserOnboardingComponent
   }
   
   async ngOnInit(): Promise<void> {
-    if (this.user_id) {
+    if (this.user_key) {
       await this.userOnbService
-        .findUserOnboardingByKey(this.user_id)
+        .findUserOnboardingByKey(this.user_key)
         .then(async (r) => {
           if (r.status === RESULT_STATUS.OK) {
             let isUserExist = false;
@@ -238,7 +238,7 @@ export class UserOnboardingComponent
       }
     });
 
-    if (this.user_id_profile != this.authService.getUserID()) {
+    if (this.mode == MODE.EDIT && this.user_id_profile != this.authService.getUserID()) {
       this.mode = MODE.VIEW;
       for (const index in this.userOnbInfo) {
         this.userOnbInfo[index] = true;

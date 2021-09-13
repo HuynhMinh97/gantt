@@ -308,6 +308,8 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
           }, 100);
         }
       }
+      console.log(this.userEducationInfoClone);
+      
       this.userEducationInfo.patchValue({
         ...this.userEducationInfoClone,
       });

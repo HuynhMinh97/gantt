@@ -118,7 +118,7 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
               this.user_id = data.user_id;
               isExist = true;
             }
-            !isExist && this.router.navigate([`/404`]);
+            // !isExist && this.router.navigate([`/404`]);
           }
         });
     }

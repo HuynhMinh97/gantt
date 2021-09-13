@@ -45,7 +45,6 @@
     <div class="action-row">
       <div class="block">
         <ait-button
-          *ngIf="mode === 'EDIT'"
           [id]="'cancel'"
           [title]="'cancel'"
           (click)="back()"
@@ -70,7 +69,6 @@
           (click)="resetForm()"
           [isDefault]="true"
         ></ait-button>
-        >>>>>>> 1f578b8efd34c537cca031640a89610a97a40995
 
         <ait-button
           *ngIf="mode === 'NEW'"
