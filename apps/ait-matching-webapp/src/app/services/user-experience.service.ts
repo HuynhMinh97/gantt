@@ -6,6 +6,7 @@ export class UserExperienceService extends AitBaseService {
   collection = 'user_experience';
   returnFields = {
     _key: true,
+    user_id: true,
     title: {
       _key: true,
       value: true,

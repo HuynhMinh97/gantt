@@ -20,7 +20,6 @@ import {
   AitBaseComponent,
   AitConfirmDialogComponent,
   AitEnvironmentService,
-  AitNavigationService,
   AitTranslationService,
   AppState,
   MODE,
@@ -61,8 +60,6 @@ export class UserExperienceComponent
     start_date_from: false,
   };
 
-  dateField = ['start_date_to', 'start_date_from'];
-
   user_key = '';
 
   constructor(
@@ -94,20 +91,6 @@ export class UserExperienceComponent
       module: 'user',
       page: 'user_experience',
     });
-
-    //Create form builder group
-    this.userExpService
-      .findUserProfile(this.authService.getUserID())
-      .then((x) => {
-        this.defaultCompany = {
-          _key: x.data[0].company_working._key,
-          value: x.data[0].company_working.value,
-        };
-
-        this.userExperienceInfo.controls['company_working'].setValue({
-          ...this.defaultCompany,
-        });
-      });
 
     this.userExperienceInfo = this.formBuilder.group({
       title: new FormControl(null, [
@@ -141,6 +124,9 @@ export class UserExperienceComponent
             if (r.data.length > 0 && !data.del_flag) {
               this.userExperienceInfo.patchValue({ ...data });
               this.userExperienceInfoClone = this.userExperienceInfo.value;
+              this.user_id = data.user_id;
+              console.log(data.user_id);
+
               isUserExist = true;
             }
             !isUserExist && this.router.navigate([`/404`]);
@@ -152,35 +138,48 @@ export class UserExperienceComponent
     await this.userExperienceInfo.valueChanges.subscribe((data) => {
       if (this.userExperienceInfo.pristine) {
         this.userExperienceInfoClone = AitAppUtils.deepCloneObject(data);
+        this.checkAllowSave();
       } else {
         this.checkAllowSave();
       }
     });
+
+    // mode view
+    if (this.user_id != this.authService.getUserID()) {
+      this.mode = MODE.VIEW;
+      for (const index in this.resetUserInfo) {
+        this.resetUserInfo[index] = true;
+      }
+    } else {
+      //get default company
+      await this.userExpService
+        .findUserProfile(this.authService.getUserID())
+        .then((x) => {
+          this.defaultCompany = {
+            _key: x.data[0].company_working._key,
+            value: x.data[0].company_working.value,
+          };
+          this.userExperienceInfo.controls['company_working'].setValue({
+            ...this.defaultCompany,
+          });
+        });
+      this.userExperienceInfoClone = this.userExperienceInfo.value;
+
+      this.isChanged = !AitAppUtils.isObjectEqual(
+        { ...this.userExperienceInfo.value },
+        { ...this.userExperienceInfoClone }
+      );
+    }
   }
 
   checkAllowSave() {
     const userInfo = { ...this.userExperienceInfo.value };
     const userInfoClone = { ...this.userExperienceInfoClone };
 
-    this.setHours(userInfo);
-
     this.isChanged = !AitAppUtils.isObjectEqual(
       { ...userInfo },
       { ...userInfoClone }
     );
-  }
-
-  setHours(data: any) {
-    for (const prop in data) {
-      if (this.dateField.includes(prop)) {
-        if (data[prop]) {
-          data[prop] = new Date(data[prop]).setHours(0, 0, 0, 0);
-        }
-        if (data[prop]) {
-          data[prop] = new Date(data[prop]).setHours(0, 0, 0, 0);
-        }
-      }
-    }
   }
 
   getTitleByMode() {
@@ -190,6 +189,7 @@ export class UserExperienceComponent
   }
 
   resetModeNew() {
+    this.isChanged = false;
     for (const index in this.resetUserInfo) {
       this.resetUserInfo[index] = true;
       setTimeout(() => {
@@ -392,9 +392,9 @@ export class UserExperienceComponent
     const dateTo = this.userExperienceInfo.controls['start_date_to'].value;
     const isWorking = this.userExperienceInfo.controls['is_working'].value;
 
-    if (dateFrom == null || dateTo == null) {
+    if (dateFrom == null || isWorking || dateTo == null) {
       this.isDateCompare = false;
-      if (dateFrom > this.defaultValueDate && isWorking) {
+      if (dateFrom > this.defaultValueDate) {
         const transferMsg = (msg || '')
           .replace('{0}', this.translateService.translate('start_date_from'))
           .replace('{1}', this.translateService.translate('now_date'));
@@ -410,8 +410,6 @@ export class UserExperienceComponent
         this.isDateCompare = true;
       }
     }
-    console.log(res);
-    console.log(this.isDateCompare);
     return res;
   }
 

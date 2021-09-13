@@ -278,6 +278,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
       this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
     }
   }
+
   async saveAndClose(){
     this.isSubmit = true; 
     setTimeout(() => {
@@ -313,18 +314,14 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
         .findCourseByKey(key)
         .then((r) => {             
           if (r.status === RESULT_STATUS.OK) {
-            if (r.data.length > 0) {
-              const data = r.data[0];       
-              this.dataCourse = data;                                    
+            if (r.data.length > 0) {              
+              const data = r.data[0];                                         
               this.course.patchValue({ ...data });  
               this.courseClone = this.course.value;       
               this.companyCenter = {
                 _key: data.training_center,
               };
-              this.files = data.file;
-
-              console.log(this.files);
-                                       
+              this.files = data.file;                           
             }
             else{
               this.router.navigate([`/404`]);               

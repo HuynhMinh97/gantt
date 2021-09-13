@@ -6,6 +6,7 @@ export class UserOnboardingService extends AitBaseService {
   collection = 'user_profile';
   returnFields = {
     _key: true,
+    user_id: true,
     country: {
       _key: true,
       value: true,
@@ -53,7 +54,7 @@ export class UserOnboardingService extends AitBaseService {
 
   async findUserOnboardingByKey(_key?: string) {
     const condition: any = {
-      _key: _key,
+      user_id: _key,
     };
 
     const specialFields = ['gender', 'country', 'city', 'district', 'ward'];
@@ -99,25 +100,28 @@ export class UserOnboardingService extends AitBaseService {
   async findUserSkills(_id?: string) {
     const condition: any = {
       _from: _id,
-      skills: {
-        attribute: "skills",
-        ref_collection: "m_skill",
-        ref_attribute: '_key',
-        get_by: '_key',
-      }
     };
     const returnFields = {
-      skills: [
-        {
-          _key: true,
-          value: true,
-        },
-      ],
+      _to: true,
+      sort_no: true,
     };
     const request = {};
     request['collection'] = 'user_skill';
     request['condition'] = condition;
     return await this.query('findUserSkill', request, returnFields);
+  }
+
+  async findMSkills(_id?: string) {
+    const condition: any = {
+      _key: _id,
+    };
+    const returnFields = {
+      _key: true,
+    };
+    const request = {};
+    request['collection'] = 'm_skill';
+    request['condition'] = condition;
+    return await this.query('findSystem', request, returnFields);
   }
 
   async findSiteLanguageById(_id?: string) {
@@ -167,6 +171,16 @@ export class UserOnboardingService extends AitBaseService {
     const returnFields = { _key: true };
     return await this.mutation(
       'removeUserSkill',
+      'user_skill',
+      data,
+      returnFields
+    );
+  }
+
+  async removeSkills(data: any[]) {
+    const returnFields = { _key: true };
+    return await this.mutation(
+      'removeSkill',
       'user_skill',
       data,
       returnFields

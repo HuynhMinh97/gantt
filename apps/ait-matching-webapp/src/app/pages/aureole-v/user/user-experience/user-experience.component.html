@@ -18,6 +18,7 @@
           [collection]="'m_title'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.title"
+          [isReadOnly]="resetUserInfo.title"
           (watchValue)="takeMasterValue($event, 'title')"
           [defaultValue]="[userExperienceInfo.controls['title'].value]"
         ></ait-autocomplete-master-data>
@@ -34,6 +35,7 @@
           [placeholder]="'company_working_plh'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.company_working"
+          [isReadOnly]="resetUserInfo.company_working"
           (watchValue)="takeMasterValue($event, 'company_working')"
           [defaultValue]="[
             userExperienceInfo.controls['company_working'].value
@@ -52,6 +54,7 @@
           [collection]="'sys_master_data'"
           [placeholder]="'location_plh'"
           [isReset]="resetUserInfo.location"
+          [isReadOnly]="resetUserInfo.location"
           (watchValue)="takeMasterValue($event, 'location')"
           [defaultValue]="[userExperienceInfo.controls['location'].value]"
         ></ait-autocomplete-master-data>
@@ -68,6 +71,7 @@
           [disableOutputDefault]="true"
           [collection]="'sys_master_data'"
           [isReset]="resetUserInfo.employee_type"
+          [isReadOnly]="resetUserInfo.employee_type"
           (watchValue)="takeMasterValue($event, 'employee_type')"
           [defaultValue]="[userExperienceInfo.controls['employee_type'].value]"
         >
@@ -76,9 +80,17 @@
 
       <div class="input_area nb_checkbox">
         <nb-checkbox
+          *ngIf="mode === 'EDIT' || mode === 'NEW'"
           [checked]="userExperienceInfo.controls['is_working']?.value"
           [id]="'is_working'"
           (checkedChange)="toggleCheckBox($event)"
+        >
+        </nb-checkbox>
+        <nb-checkbox
+          *ngIf="mode === 'VIEW'"
+          [checked]="userExperienceInfo.controls['is_working']?.value"
+          [id]="'is_working'"
+          disabled
         >
         </nb-checkbox>
         <p class="pcontent" tabIndex="15">
@@ -92,7 +104,7 @@
           [id]="'start_date_from'"
           [width]="'185px'"
           [isReset]="resetUserInfo.start_date_from"
-          [dateInput]="userExperienceInfo.controls['start_date_from'].value"
+          [defaultValue]="userExperienceInfo.controls['start_date_from'].value"
           (watchValue)="
             takeDatePickerValue(
               $event?.value,
@@ -100,14 +112,18 @@
               'start_date_from'
             )
           "
+          [ngClass]="{
+            start_date_to: userExperienceInfo.controls['is_working'].value
+          }"
         ></ait-datepicker>
         <span>〜</span>
         <ait-datepicker
+          *ngIf="!userExperienceInfo.controls['is_working'].value"
           [id]="'start_date_to'"
           [width]="'185px'"
           [isReset]="resetUserInfo.start_date_to"
-          *ngIf="!userExperienceInfo.controls['is_working'].value"
-          [dateInput]="userExperienceInfo.controls['start_date_to'].value"
+          [disable]="resetUserInfo.start_date_from"
+          [defaultValue]="userExperienceInfo.controls['start_date_to'].value"
           (watchValue)="
             takeDatePickerValue(
               $event?.value,
@@ -115,28 +131,17 @@
               'start_date_to'
             )
           "
+          [ngClass]="{
+            start_date_to: userExperienceInfo.controls['is_working'].value
+          }"
         ></ait-datepicker>
 
         <ait-datepicker
-          [id]="'start_date_to'"
-          [width]="'185px'"
-          [isReset]="resetUserInfo.start_date_to"
           [disable]="true"
-          *ngIf="!!userExperienceInfo.controls['is_working'].value"
+          *ngIf="userExperienceInfo.controls['is_working'].value"
           [ngClass]="{
             start_date_to: userExperienceInfo.controls['is_working'].value
           }"
-          [ngClass]="{
-            start_date_to: userExperienceInfo.controls['is_working'].value
-          }"
-          [dateInput]="userExperienceInfo.controls['start_date_to'].value"
-          (watchValue)="
-            takeDatePickerValue(
-              $event?.value,
-              'userExperienceInfo',
-              'start_date_to'
-            )
-          "
         ></ait-datepicker>
       </div>
       <ait-error-message
@@ -152,6 +157,7 @@
           [width]="'415px'"
           [label]="'description'"
           [isReset]="resetUserInfo.description"
+          [readonly]="resetUserInfo.description"
           [placeholder]="'description_plh'"
           (watchValue)="takeInputValue($event, 'description')"
           [defaultValue]="userExperienceInfo.controls['description'].value"
@@ -164,11 +170,10 @@
     <div class="action-row">
       <div class="block">
         <ait-button
+          *ngIf="mode !== 'VIEW'"
           [id]="'cancel'"
           [title]="'cancel'"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
           (click)="back()"
         ></ait-button>
 
@@ -177,20 +182,17 @@
           [id]="'delete'"
           [width]="'200px'"
           [title]="'delete'"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
           (click)="onDelete()"
         >
         </ait-button>
 
         <ait-button
+          *ngIf="mode !== 'VIEW'"
           [id]="'reset'"
           [width]="'200px'"
           [title]="'reset'"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
           (click)="resetForm()"
         >
         </ait-button>
@@ -200,20 +202,15 @@
           [id]="'saveAndContinue'"
           [title]="'saveandcontinue'"
           (click)="saveAndContinue()"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
         ></ait-button>
-
         <ait-button
-          *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
           [id]="'saveAndClose'"
+          *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
           [width]="'200px'"
           [title]="'saveandclose'"
           (click)="saveAndClose()"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
         >
         </ait-button>
         <ait-button

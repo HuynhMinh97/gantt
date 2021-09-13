@@ -231,7 +231,7 @@
 
         <ait-autocomplete-master-data
           [styleLabel]="{ 'text-transform': 'initial' }"
-          [width]="'400px'"
+          [width]="'300px'"
           [label]="'autocomplete master data'"
           [placeholder]="'one'"
           [guidance]="'c_2003'"
@@ -239,10 +239,6 @@
           [class]="'RESIDENCE_STATUS'"
           (onError)="result.error_data2 = $event.isValid"
           (watchValue)="result.multi_data = $event"
-          [excludedValue]="[
-            { _key: 'en_US', value: 'Tiếng Anh' },
-            { _key: 'vi_VN', value: 'Tiếng Việt' }
-          ]"
           [isSubmit]="result.master2"
           [allowNew]="true"
           [errorMessages]="errors"
@@ -470,7 +466,7 @@
           [isDefault]="false"
           [file_keys]="['7bfedd70-a3db-f0c5-6340-d0e728d407ba']"
           [maxSize]="40"
-          [maxFiles]="6"
+          [maxFiles]="10"
         ></ait-input-file>
       </div>
     </ait-card-content>

@@ -3,10 +3,7 @@
     [content]="getTitleByMode()"
     id="form_edit_user_onboarding"
   ></ait-text-gradient>
-  <ait-card-content
-    style="justify-content: center"
-    class="content__card"
-  >
+  <ait-card-content style="justify-content: center" class="content__card">
     <div style="margin-top: 14px">
       <div class="input_area">
         <ait-input-text
@@ -16,6 +13,7 @@
           [required]="true"
           [isSubmit]="isSubmit"
           [isReset]="resetUserInfo.first_name"
+          [readonly]="userOnbInfo.first_name"
           [placeholder]="'first_name_plh'"
           (watchValue)="takeInputValue($event, 'first_name')"
           [defaultValue]="userOnboardingInfo.controls['first_name'].value"
@@ -29,6 +27,7 @@
           [required]="true"
           [isSubmit]="isSubmit"
           [isReset]="resetUserInfo.last_name"
+          [readonly]="userOnbInfo.last_name"
           [placeholder]="'last_name_plh'"
           (watchValue)="takeInputValue($event, 'last_name')"
           [defaultValue]="userOnboardingInfo.controls['last_name'].value"
@@ -36,13 +35,14 @@
       </div>
       <div class="input_area">
         <ait-input-text
-          *ngIf="isLangJP" 
+          *ngIf="isLangJP"
           [id]="'katakana'"
           [label]="'katakana'"
           [length]="200"
           [required]="true"
           [isSubmit]="isSubmit"
           [isReset]="resetUserInfo.katakana"
+          [readonly]="userOnbInfo.katakana"
           [placeholder]="'katakana_plh'"
           (watchValue)="takeInputValue($event, 'katakana')"
           [defaultValue]="userOnboardingInfo.controls['katakana'].value"
@@ -50,30 +50,37 @@
       </div>
       <div class="input_area">
         <ait-input-text
-          *ngIf="isLangJP" 
+          *ngIf="isLangJP"
           [id]="'romaji'"
           [label]="'romaji'"
           [length]="200"
           [required]="true"
           [isSubmit]="isSubmit"
           [isReset]="resetUserInfo.romaji"
+          [readonly]="userOnbInfo.romaji"
           [placeholder]="'romaji_plh'"
           (watchValue)="takeInputValue($event, 'romaji')"
           [defaultValue]="userOnboardingInfo.controls['romaji'].value"
         ></ait-input-text>
       </div>
       <div class="input_area">
-        <ait-label class="ait-label" [label]="'gender'" id="gender"></ait-label>
+        <ait-label
+          class="ait-label"
+          [label]="'gender'"
+          id="gender"
+          [required]="true"
+        ></ait-label>
         <div>
           <nb-radio-group>
             <nb-radio
               [tabIndex]="5"
-              *ngFor="let option of genderList; let isFirst = first"
+              *ngFor="let option of genderList; let isDefault = three"
               [value]="option"
               [checked]="
                 userOnboardingInfo.controls['gender'].value
-                  ? userOnboardingInfo.controls['gender'].value?._key == option.code
-                  : isFirst
+                  ? userOnboardingInfo.controls['gender'].value?._key ==
+                    option.code
+                  : isDefault
               "
               (valueChange)="takeGenderValue($event)"
             >
@@ -92,12 +99,8 @@
           [isReset]="resetUserInfo.bod"
           [placeholder]="'1985/01/01'"
           (watchValue)="
-            takeDatePickerValue(
-              $event?.value,
-              'userOnboardingInfo',
-              'bod'
-            )
-          " 
+            takeDatePickerValue($event?.value, 'userOnboardingInfo', 'bod')
+          "
           [dateInput]="userOnboardingInfo.controls['bod'].value"
         ></ait-datepicker>
       </div>
@@ -110,6 +113,7 @@
           [required]="true"
           [length]="15"
           [isReset]="resetUserInfo.phone_number"
+          [readonly]="userOnbInfo.phone_number"
           (watchValue)="takeInputValue($event, 'phone_number')"
           [defaultValue]="userOnboardingInfo.controls['phone_number'].value"
         >
@@ -124,6 +128,7 @@
           [placeholder]="'about_plh'"
           [width]="'410px'"
           [isReset]="resetUserInfo.about"
+          [readonly]="userOnbInfo.about"
           (watchValue)="takeInputValue($event, 'about')"
           [defaultValue]="userOnboardingInfo.controls['about'].value"
         >
@@ -141,6 +146,7 @@
           [class]="'COUNTRY'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.country"
+          [isReadOnly]="userOnbInfo.country"
           (watchValue)="takeMasterValue($event, 'country')"
           [defaultValue]="[userOnboardingInfo.controls['country'].value]"
         ></ait-autocomplete-master-data>
@@ -152,7 +158,9 @@
           [label]="'POSTCODE'"
           [required]="true"
           [length]="20"
+          [isSubmit]="isSubmit"
           [isReset]="resetUserInfo.postcode"
+          [readonly]="userOnbInfo.postcode"
           (watchValue)="takeInputValue($event, 'postcode')"
           [defaultValue]="userOnboardingInfo.controls['postcode'].value"
         >
@@ -217,6 +225,7 @@
           [label]="'address'"
           [placeholder]="'address_plh'"
           [isReset]="resetUserInfo.address"
+          [readonly]="userOnbInfo.address"
           (watchValue)="takeInputValue($event, 'address')"
           [defaultValue]="userOnboardingInfo.controls['address'].value"
         >
@@ -229,6 +238,7 @@
           [label]="'floor_building'"
           [placeholder]="'floor_building_plh'"
           [isReset]="resetUserInfo.floor_building"
+          [readonly]="userOnbInfo.floor_building"
           (watchValue)="takeInputValue($event, 'floor_building')"
           [defaultValue]="userOnboardingInfo.controls['floor_building'].value"
         >
@@ -245,8 +255,11 @@
           [collection]="'sys_company'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.company_working"
+          [isReadOnly]="userOnbInfo.company_working"
           (watchValue)="takeMasterValue($event, 'company_working')"
-          [defaultValue]="[userOnboardingInfo.controls['company_working'].value]"
+          [defaultValue]="[
+            userOnboardingInfo.controls['company_working'].value
+          ]"
         ></ait-autocomplete-master-data>
       </div>
       <div class="input_area">
@@ -260,6 +273,7 @@
           [collection]="'m_title'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.title"
+          [isReadOnly]="userOnbInfo.title"
           (watchValue)="takeMasterValue($event, 'title')"
           [defaultValue]="[userOnboardingInfo.controls['title'].value]"
         ></ait-autocomplete-master-data>
@@ -276,11 +290,12 @@
           [collection]="'m_industry'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.industry"
+          [isReadOnly]="userOnbInfo.industry"
           (watchValue)="takeMasterValue($event, 'industry')"
           [defaultValue]="[userOnboardingInfo.controls['industry'].value]"
         ></ait-autocomplete-master-data>
       </div>
-      <div class="input_area">
+      <div *ngIf="mode === 'NEW'" class="input_area">
         <ait-autocomplete-master-data
           [id]="'skills'"
           [label]="'skills'"
@@ -292,8 +307,9 @@
           [collection]="'m_skill'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.skills"
-          (watchValue)="takeMasterValues($event?.value, 'userOnboardingInfo', 'skills')"
-          [defaultValue]="userOnboardingInfo.controls['skills'].value"
+          (watchValue)="
+            takeMasterValues($event?.value, 'userOnboardingInfo', 'skills')
+          "
         ></ait-autocomplete-master-data>
       </div>
     </div>
@@ -302,11 +318,10 @@
     <div class="action-row">
       <div class="block">
         <ait-button
+          *ngIf="mode !== 'VIEW'"
           [id]="'cancel'"
           [title]="'cancel'"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
           (click)="back()"
         ></ait-button>
 
@@ -315,20 +330,17 @@
           [id]="'delete'"
           [width]="'200px'"
           [title]="'delete'"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
           (click)="onDelete()"
         >
         </ait-button>
 
         <ait-button
+          *ngIf="mode !== 'VIEW'"
           [id]="'reset'"
           [width]="'200px'"
           [title]="'reset'"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
           (click)="resetForm()"
         >
         </ait-button>
@@ -339,9 +351,7 @@
           [width]="'200px'"
           [title]="'save'"
           (click)="save()"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
         >
         </ait-button>
         <ait-button

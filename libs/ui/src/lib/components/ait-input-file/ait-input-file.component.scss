@@ -176,10 +176,10 @@
   justify-content: flex-start;
   cursor: pointer;
   &:focus {
-    border: 1px solid #10529D !important;
+    border: 1px solid #10529d !important;
   }
   &.focus {
-    border: 1px solid #10529D !important;
+    border: 1px solid #10529d !important;
   }
   &.isError {
     border: 1px solid nb-theme(color-danger-500) !important;
@@ -314,8 +314,7 @@
   min-width: 280px;
   .drag-scroll-content {
     padding: 5px;
-    overflow: hidden !important;
-
+    overflow: auto !important;
     .img {
       height: 50px;
       cursor: grab;
@@ -370,19 +369,28 @@
     }
   }
   .drag-scroll-content::-webkit-scrollbar {
-    height: 5px !important;
+    height: 8px !important;
+    cursor: pointer;
     &:hover {
       cursor: pointer;
       opacity: 0.9;
     }
   }
+  .drag-scroll-content::-webkit-scrollbar-track-piece:end {
+    margin-right: 50px !important;
+  }
+  .drag-scroll-content::-webkit-scrollbar-track-piece:start {
+    margin-left: 50px !important;
+  }
 
   .drag-scroll-content::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3) !important;
+    cursor: pointer;
+    // box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3) !important;
   }
 
   .drag-scroll-content::-webkit-scrollbar-thumb {
     background-color: #10529d !important;
+    cursor: pointer;
     &:hover {
       cursor: pointer;
       opacity: 0.9;

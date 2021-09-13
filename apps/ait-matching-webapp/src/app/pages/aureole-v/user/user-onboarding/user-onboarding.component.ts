@@ -49,20 +49,42 @@ export class UserOnboardingComponent
   defaultGender = {} as KeyValueDto;
 
   mode = MODE.NEW;
-  errorArr: any;
   skills: any;
-  countryCode: any;
+  errorArr: any;
   cityCode: any;
+  countryCode: any;
   districtCode: any;
+  sort_no: number;
+  isCity = true;
   isReset = false;
+  isCountry = true;
+  isLangJP = false;
   isSubmit = false;
   isChanged = false;
-  isLangJP = false;
-  isCountry = true;
-  isCity = true;
   isDistrict = true;
 
   resetUserInfo = {
+    first_name: false,
+    last_name: false,
+    katakana: false,
+    romaji: false,
+    bod: false,
+    phone_number: false,
+    about: false,
+    country: false,
+    postcode: false,
+    city: false,
+    district: false,
+    ward: false,
+    address: false,
+    floor_building: false,
+    company_working: false,
+    title: false,
+    industry: false,
+    skills: false,
+  };
+
+  userOnbInfo = {
     first_name: false,
     last_name: false,
     katakana: false,
@@ -90,7 +112,9 @@ export class UserOnboardingComponent
     sort_no: 0,
   };
 
-  user_key = '';
+  user_id = '';
+  _key = '';
+  user_id_profile = '';
 
   constructor(
     private router: Router,
@@ -98,7 +122,9 @@ export class UserOnboardingComponent
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
     private dialogService: NbDialogService,
+    private navigation: AitNavigationService,
     private userOnbService: UserOnboardingService,
+    private translateService: AitTranslationService,
     private masterDataService: AitMasterDataService,
     env: AitEnvironmentService,
     store: Store<AppState>,
@@ -162,26 +188,28 @@ export class UserOnboardingComponent
       skills: new FormControl(null, [Validators.required]),
     });
 
-    this.userOnbService.findSiteLanguageById(this.user_id).then((r) => {
-      if (r.status === RESULT_STATUS.OK) {
-        const language = 'ja_JP';
-        if (language === r.data[0].site_language) {
-          this.isLangJP = true;
-        }
-      }
-    });
-
     // get key form parameters
-    this.user_key = this.activeRouter.snapshot.paramMap.get('id');
-    if (this.user_key) {
+    this.user_id = this.activeRouter.snapshot.paramMap.get('id');
+    if (this.user_id) {
       this.mode = MODE.EDIT;
     }
-  }
 
+    this.userOnbService
+      .findSiteLanguageById(this.authService.getUserID())
+      .then((r) => {
+        if (r.status === RESULT_STATUS.OK) {
+          const language = 'ja_JP';
+          if (language === r.data[0].site_language) {
+            this.isLangJP = true;
+          }
+        }
+      });
+  }
+  
   async ngOnInit(): Promise<void> {
-    if (this.user_key) {
+    if (this.user_id) {
       await this.userOnbService
-        .findUserOnboardingByKey(this.user_key)
+        .findUserOnboardingByKey(this.user_id)
         .then(async (r) => {
           if (r.status === RESULT_STATUS.OK) {
             let isUserExist = false;
@@ -189,14 +217,13 @@ export class UserOnboardingComponent
             if (r.data.length > 0 && !data.del_flag) {
               this.userOnboardingInfo.patchValue({ ...data });
               this.userOnboardingInfoClone = this.userOnboardingInfo.value;
+              this.user_id_profile = data.user_id;
+              this._key = data._key;
               isUserExist = true;
             }
             !isUserExist && this.router.navigate([`/404`]);
           }
         });
-      this.isCountry = false;
-      this.isCity = false;
-      this.isDistrict = false;
     }
 
     await this.getGenderList();
@@ -206,10 +233,17 @@ export class UserOnboardingComponent
     await this.userOnboardingInfo.valueChanges.subscribe((data) => {
       if (this.userOnboardingInfo.pristine) {
         this.userOnboardingInfoClone = AitAppUtils.deepCloneObject(data);
-      } else {
+      } else if (this.mode == MODE.EDIT) {
         this.checkAllowSave();
       }
     });
+
+    if (this.user_id_profile != this.authService.getUserID()) {
+      this.mode = MODE.VIEW;
+      for (const index in this.userOnbInfo) {
+        this.userOnbInfo[index] = true;
+      }
+    }
   }
 
   checkAllowSave() {
@@ -224,8 +258,8 @@ export class UserOnboardingComponent
 
   getTitleByMode() {
     return this.mode === MODE.EDIT
-      ? 'Edit basic information'
-      : 'Add basic information';
+      ? this.translateService.translate('edit_onboarding')
+      : this.translateService.translate('add_onboarding');
   }
 
   // Get gender list from master-data, param class = GENDER
@@ -260,7 +294,7 @@ export class UserOnboardingComponent
       };
     } else {
       const genderList = [...this.genderList].map((gender, index) =>
-        Object.assign({}, gender, { checked: index === 0 ? true : false })
+        Object.assign({}, gender, { checked: index === 2 ? true : false })
       );
 
       const gender = genderList[2];
@@ -315,8 +349,8 @@ export class UserOnboardingComponent
     saveData.company_working = saveData.company_working._key;
     this.skills = saveData.skills;
     delete saveData.skills;
-    if (this.user_key) {
-      saveData['_key'] = this.user_key;
+    if (this.user_id) {
+      saveData['_key'] = this.user_id;
     } else {
       saveData['user_id'] = this.authService.getUserID();
     }
@@ -324,15 +358,17 @@ export class UserOnboardingComponent
     return saveData;
   }
 
-  saveDataUserSkill() {
+  async saveDataUserSkill() {
     this.user_skill._from = 'sys_user/' + this.authService.getUserID();
     this.user_skill.relationship = 'user_skill';
-    this.user_skill.sort_no = 1;
+    this.user_skill.sort_no = this.sort_no + 1;
 
     const skills = this.skills;
+    const _fromUserSkill = [
+      { _from: 'sys_user/' + this.authService.getUserID() },
+    ];
+    await this.userOnbService.removeSkills(_fromUserSkill);
     skills.forEach(async (skill) => {
-      const _fromUserSkill = [{ _from: skill._key }];
-      await this.userOnbService.removeUserSkills(_fromUserSkill);
       this.user_skill._to = 'm_skill/' + skill._key;
       await this.userOnbService.saveUserSkills([this.user_skill]);
     });
@@ -353,7 +389,7 @@ export class UserOnboardingComponent
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
-            history.back();
+            this.navigation.back();
           } else {
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
@@ -378,15 +414,10 @@ export class UserOnboardingComponent
       })
       .onClose.subscribe(async (event) => {
         if (event) {
-          const _key = [{ _key: this.user_key }];
-          if (this.user_key) {
+          const _key = [{ _key: this._key }];
+          if (this.user_id) {
             await this.userOnbService.remove(_key).then((res) => {
               if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
-                const skills = this.userOnboardingInfo.value.skills;
-                skills.forEach(async (skill) => {
-                  const _fromUserSkill = [{ _from: skill._key }];
-                  await this.userOnbService.removeUserSkills(_fromUserSkill);
-                });
                 this.showToastr('', this.getMsg('I0003'));
                 history.back();
               } else {
@@ -488,9 +519,6 @@ export class UserOnboardingComponent
   }
 
   takeInputValue(value: string, form: string): void {
-    if (value == null) {
-      this.isChanged = true;
-    }
     if (value) {
       this.userOnboardingInfo.controls[form].markAsDirty();
       this.userOnboardingInfo.controls[form].setValue(value);
