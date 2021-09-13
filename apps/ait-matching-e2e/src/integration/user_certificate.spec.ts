@@ -11,6 +11,7 @@ describe('Test Cypress', () => {
     // checkErrorMessage();
     // addData();
     checkSave();
+    checkReset()
   });
 });
 
@@ -35,6 +36,21 @@ function addData(){
   cy.chooseFile('file_input_file',datas.file[2]);
   cy.wait(1000);
 }
+
+function checkReset(){
+  // Check reset Form
+  cy.clickButton('reset');
+  cy.resetForm([
+    'name_input',
+    'certificate_award_number_textarea',
+    'grade_textarea',
+    'issue_by_input',
+    'issue_date_to_input',
+    'description_textarea',
+    'file_input_file',
+  ]);
+}
+
 function checkLabelAndPlaceholder(){
     cy.label('name',' NAME*');
     cy.input('name','Japanese N1');
@@ -77,7 +93,7 @@ function checkErrorMessage() {
     cy.chooseValueDate('issue_date_to', '2021', '8', '13');
     cy.errorMessage(
       'messagError',
-      'issue_date_to 以下の値でissue_date_from を入力してください。'
+      'issue date to 以下の値で issue date from を入力してください。'
     );
 }
 function checkSave() {
