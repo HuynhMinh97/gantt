@@ -321,8 +321,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
               this.companyCenter = {
                 _key: data.training_center,
               };
-              this.files = data.file;
-                            
+              this.files = data.file;                           
             }
             else{
               this.router.navigate([`/404`]);               
