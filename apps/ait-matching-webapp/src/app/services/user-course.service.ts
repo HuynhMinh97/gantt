@@ -14,8 +14,6 @@ export class UserCourseService extends AitBaseService {
     const condition = {
       _key: user_key,
       del_flag: false,
-      company:this.company,
-      user_id:this.user_id
     }
     return await this.query('findCourse', {collection: 'user_course',  condition    }, 
     {
