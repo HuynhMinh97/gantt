@@ -13,6 +13,7 @@
           [required]="true"
           [isSubmit]="isSubmit"
           [isReset]="resetUserInfo.first_name"
+          [readonly]="userOnbInfo.first_name"
           [placeholder]="'first_name_plh'"
           (watchValue)="takeInputValue($event, 'first_name')"
           [defaultValue]="userOnboardingInfo.controls['first_name'].value"
@@ -26,6 +27,7 @@
           [required]="true"
           [isSubmit]="isSubmit"
           [isReset]="resetUserInfo.last_name"
+          [readonly]="userOnbInfo.last_name"
           [placeholder]="'last_name_plh'"
           (watchValue)="takeInputValue($event, 'last_name')"
           [defaultValue]="userOnboardingInfo.controls['last_name'].value"
@@ -40,6 +42,7 @@
           [required]="true"
           [isSubmit]="isSubmit"
           [isReset]="resetUserInfo.katakana"
+          [readonly]="userOnbInfo.katakana"
           [placeholder]="'katakana_plh'"
           (watchValue)="takeInputValue($event, 'katakana')"
           [defaultValue]="userOnboardingInfo.controls['katakana'].value"
@@ -54,6 +57,7 @@
           [required]="true"
           [isSubmit]="isSubmit"
           [isReset]="resetUserInfo.romaji"
+          [readonly]="userOnbInfo.romaji"
           [placeholder]="'romaji_plh'"
           (watchValue)="takeInputValue($event, 'romaji')"
           [defaultValue]="userOnboardingInfo.controls['romaji'].value"
@@ -109,6 +113,7 @@
           [required]="true"
           [length]="15"
           [isReset]="resetUserInfo.phone_number"
+          [readonly]="userOnbInfo.phone_number"
           (watchValue)="takeInputValue($event, 'phone_number')"
           [defaultValue]="userOnboardingInfo.controls['phone_number'].value"
         >
@@ -123,6 +128,7 @@
           [placeholder]="'about_plh'"
           [width]="'410px'"
           [isReset]="resetUserInfo.about"
+          [readonly]="userOnbInfo.about"
           (watchValue)="takeInputValue($event, 'about')"
           [defaultValue]="userOnboardingInfo.controls['about'].value"
         >
@@ -140,6 +146,7 @@
           [class]="'COUNTRY'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.country"
+          [isReadOnly]="userOnbInfo.country"
           (watchValue)="takeMasterValue($event, 'country')"
           [defaultValue]="[userOnboardingInfo.controls['country'].value]"
         ></ait-autocomplete-master-data>
@@ -153,6 +160,7 @@
           [length]="20"
           [isSubmit]="isSubmit"
           [isReset]="resetUserInfo.postcode"
+          [readonly]="userOnbInfo.postcode"
           (watchValue)="takeInputValue($event, 'postcode')"
           [defaultValue]="userOnboardingInfo.controls['postcode'].value"
         >
@@ -217,6 +225,7 @@
           [label]="'address'"
           [placeholder]="'address_plh'"
           [isReset]="resetUserInfo.address"
+          [readonly]="userOnbInfo.address"
           (watchValue)="takeInputValue($event, 'address')"
           [defaultValue]="userOnboardingInfo.controls['address'].value"
         >
@@ -229,6 +238,7 @@
           [label]="'floor_building'"
           [placeholder]="'floor_building_plh'"
           [isReset]="resetUserInfo.floor_building"
+          [readonly]="userOnbInfo.floor_building"
           (watchValue)="takeInputValue($event, 'floor_building')"
           [defaultValue]="userOnboardingInfo.controls['floor_building'].value"
         >
@@ -245,6 +255,7 @@
           [collection]="'sys_company'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.company_working"
+          [isReadOnly]="userOnbInfo.company_working"
           (watchValue)="takeMasterValue($event, 'company_working')"
           [defaultValue]="[
             userOnboardingInfo.controls['company_working'].value
@@ -262,6 +273,7 @@
           [collection]="'m_title'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.title"
+          [isReadOnly]="userOnbInfo.title"
           (watchValue)="takeMasterValue($event, 'title')"
           [defaultValue]="[userOnboardingInfo.controls['title'].value]"
         ></ait-autocomplete-master-data>
@@ -278,6 +290,7 @@
           [collection]="'m_industry'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.industry"
+          [isReadOnly]="userOnbInfo.industry"
           (watchValue)="takeMasterValue($event, 'industry')"
           [defaultValue]="[userOnboardingInfo.controls['industry'].value]"
         ></ait-autocomplete-master-data>
@@ -297,7 +310,6 @@
           (watchValue)="
             takeMasterValues($event?.value, 'userOnboardingInfo', 'skills')
           "
-          [defaultValue]="userOnboardingInfo.controls['skills'].value"
         ></ait-autocomplete-master-data>
       </div>
     </div>
@@ -306,6 +318,7 @@
     <div class="action-row">
       <div class="block">
         <ait-button
+          *ngIf="mode !== 'VIEW'"
           [id]="'cancel'"
           [title]="'cancel'"
           [isDefault]="true"
@@ -323,6 +336,7 @@
         </ait-button>
 
         <ait-button
+          *ngIf="mode !== 'VIEW'"
           [id]="'reset'"
           [width]="'200px'"
           [title]="'reset'"

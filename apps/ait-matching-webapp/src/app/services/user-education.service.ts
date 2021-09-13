@@ -6,6 +6,7 @@ export class UserEducationService extends AitBaseService {
   collection = 'user_education';
   returnFields = {
     _key: true,
+    user_id: true,
     school: {
       _key: true,
       value: true,
@@ -17,7 +18,7 @@ export class UserEducationService extends AitBaseService {
     start_date_from: true,
     start_date_to: true,
     description: true,
-    del_flag: true
+    del_flag: true,
   };
 
   async findUserEducationByKey(_key?: string) {

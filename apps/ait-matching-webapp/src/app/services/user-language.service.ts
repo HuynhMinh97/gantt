@@ -6,6 +6,7 @@ export class UserLanguageService extends AitBaseService {
   collection = 'user_language';
   returnFields = {
     _key: true,
+    user_id: true,
     language: {
       _key: true,
       value: true,

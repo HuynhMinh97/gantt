@@ -3,10 +3,7 @@
     [content]="getTitleByMode()"
     id="form_edit_user_language"
   ></ait-text-gradient>
-  <ait-card-content
-    style="justify-content: center"
-    class="content__card"
-  >
+  <ait-card-content style="justify-content: center" class="content__card">
     <div style="margin-top: 14px">
       <div class="input_area">
         <ait-autocomplete-master-data
@@ -17,6 +14,7 @@
           [maxItem]="1"
           [collection]="'sys_master_data'"
           [class]="'LANGUAGE'"
+          [isReadOnly]="resetUserLangInfo.language"
           [disableOutputDefault]="true"
           [isReset]="resetUserLangInfo.language"
           (watchValue)="takeMasterValue($event, 'language')"
@@ -35,6 +33,7 @@
           [disableOutputDefault]="true"
           [maxItem]="1"
           [width]="'205px'"
+          [isReadOnly]="resetUserLangInfo.proficiency"
           [isReset]="resetUserLangInfo.proficiency"
           (watchValue)="takeMasterValue($event, 'proficiency')"
           [defaultValue]="[userLanguageInfo.controls['proficiency'].value]"
@@ -46,6 +45,7 @@
     <div class="action-row">
       <div class="block">
         <ait-button
+          *ngIf="mode === 'EDIT'"
           [id]="'cancel'"
           [title]="'cancel'"
           (click)="back()"
@@ -63,13 +63,14 @@
         </ait-button>
 
         <ait-button
+          *ngIf="mode !== 'VIEW'"
           [id]="'reset'"
           [width]="'200px'"
           [title]="'reset'"
           (click)="resetForm()"
           [isDefault]="true"
-        >
-        </ait-button>
+        ></ait-button>
+        >>>>>>> 1f578b8efd34c537cca031640a89610a97a40995
 
         <ait-button
           *ngIf="mode === 'NEW'"

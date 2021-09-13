@@ -20,7 +20,6 @@ import {
   AitBaseComponent,
   AitConfirmDialogComponent,
   AitEnvironmentService,
-  AitNavigationService,
   AitTranslationService,
   AppState,
   MODE,
@@ -115,25 +114,6 @@ export class UserExperienceComponent
   }
 
   async ngOnInit(): Promise<void> {
-    //Create form builder group
-    await this.userExpService
-      .findUserProfile(this.authService.getUserID())
-      .then((x) => {
-        this.defaultCompany = {
-          _key: x.data[0].company_working._key,
-          value: x.data[0].company_working.value,
-        };
-        this.userExperienceInfo.controls['company_working'].setValue({
-          ...this.defaultCompany,
-        });
-      });
-    this.userExperienceInfoClone = this.userExperienceInfo.value;
-
-    this.isChanged = !AitAppUtils.isObjectEqual(
-      { ...this.userExperienceInfo.value },
-      { ...this.userExperienceInfoClone }
-    );
-
     if (this.user_key) {
       await this.userExpService
         .findUserExperienceByKey(this.user_key)
@@ -144,6 +124,9 @@ export class UserExperienceComponent
             if (r.data.length > 0 && !data.del_flag) {
               this.userExperienceInfo.patchValue({ ...data });
               this.userExperienceInfoClone = this.userExperienceInfo.value;
+              this.user_id = data.user_id;
+              console.log(data.user_id);
+
               isUserExist = true;
             }
             !isUserExist && this.router.navigate([`/404`]);
@@ -160,6 +143,33 @@ export class UserExperienceComponent
         this.checkAllowSave();
       }
     });
+
+    // mode view
+    if (this.user_id != this.authService.getUserID()) {
+      this.mode = MODE.VIEW;
+      for (const index in this.resetUserInfo) {
+        this.resetUserInfo[index] = true;
+      }
+    } else {
+      //get default company
+      await this.userExpService
+        .findUserProfile(this.authService.getUserID())
+        .then((x) => {
+          this.defaultCompany = {
+            _key: x.data[0].company_working._key,
+            value: x.data[0].company_working.value,
+          };
+          this.userExperienceInfo.controls['company_working'].setValue({
+            ...this.defaultCompany,
+          });
+        });
+      this.userExperienceInfoClone = this.userExperienceInfo.value;
+
+      this.isChanged = !AitAppUtils.isObjectEqual(
+        { ...this.userExperienceInfo.value },
+        { ...this.userExperienceInfoClone }
+      );
+    }
   }
 
   checkAllowSave() {
