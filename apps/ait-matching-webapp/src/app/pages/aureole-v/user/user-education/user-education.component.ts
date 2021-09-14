@@ -160,6 +160,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
 
   saveData() {
     const saveData = this.userEducationInfo.value;
+    console.log(saveData);
 
     saveData.school = saveData.school._key;
     if (this.user_key) {
@@ -308,8 +309,6 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
           }, 100);
         }
       }
-      console.log(this.userEducationInfoClone);
-      
       this.userEducationInfo.patchValue({
         ...this.userEducationInfoClone,
       });

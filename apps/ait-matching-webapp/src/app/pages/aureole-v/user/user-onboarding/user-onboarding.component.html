@@ -106,12 +106,12 @@
       </div>
       <div class="input_area">
         <ait-input-text
-          [id]="'phone_number'"
-          [placeholder]="'phone_number_plh'"
-          [label]="'phonenumber'"
-          [isSubmit]="isSubmit"
-          [required]="true"
           [length]="15"
+          [required]="true"
+          [isSubmit]="isSubmit"
+          [id]="'phone_number'"
+          [label]="'phonenumber'"
+          [placeholder]="'phone_number_plh'"
           [isReset]="resetUserInfo.phone_number"
           [readonly]="userOnbInfo.phone_number"
           (watchValue)="takeInputValue($event, 'phone_number')"
@@ -121,12 +121,12 @@
       </div>
       <div class="input_area">
         <ait-input-text
+          [rows]="4"
           [id]="'about'"
           [length]="4000"
-          [rows]="4"
           [label]="'about'"
-          [placeholder]="'about_plh'"
           [width]="'410px'"
+          [placeholder]="'about_plh'"
           [isReset]="resetUserInfo.about"
           [readonly]="userOnbInfo.about"
           (watchValue)="takeInputValue($event, 'about')"
@@ -136,14 +136,14 @@
       </div>
       <div class="input_area">
         <ait-autocomplete-master-data
+          [maxItem]="1"
           [id]="'country'"
           [label]="'country'"
+          [class]="'COUNTRY'"
           [required]="true"
-          [maxItem]="1"
           [isSubmit]="isSubmit"
           [placeholder]="'country_plh'"
           [collection]="'sys_master_data'"
-          [class]="'COUNTRY'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.country"
           [isReadOnly]="userOnbInfo.country"
@@ -169,14 +169,14 @@
       <div class="input_area">
         <ait-autocomplete-master-data
           [id]="'city'"
-          [label]="'city'"
-          [required]="true"
           [maxItem]="1"
+          [label]="'city'"
+          [class]="'CITY'"
+          [required]="true"
           [placeholder]="'city_plh'"
           [collection]="'sys_master_data'"
-          [isReadOnly]="isCountry"
+          [isReadOnly]="userOnbInfo.city"
           [parentCode]="countryCode"
-          [class]="'CITY'"
           [isSubmit]="isSubmit"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.city"
@@ -193,7 +193,7 @@
           [placeholder]="'district_plh'"
           [collection]="'sys_master_data'"
           [class]="'DISTRICT'"
-          [isReadOnly]="isCity"
+          [isReadOnly]="userOnbInfo.district"
           [parentCode]="cityCode"
           [isSubmit]="isSubmit"
           [disableOutputDefault]="true"
@@ -211,7 +211,7 @@
           [placeholder]="'ward_plh'"
           [collection]="'sys_master_data'"
           [class]="'WARD'"
-          [isReadOnly]="isDistrict"
+          [isReadOnly]="userOnbInfo.ward"
           [parentCode]="districtCode"
           [isSubmit]="isSubmit"
           [disableOutputDefault]="true"
