@@ -70,12 +70,12 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
       page: 'user_cerfiticate',
     });
     this.course = this.formBuilder.group({
-      _key : new FormControl(null),
+      _key: new FormControl(null),
+      name: new FormControl(null, [Validators.required]),
       course_number: new FormControl(null),
       description: new FormControl(null),  
       file: new FormControl(null),
       is_online: new FormControl(null),
-      name : new FormControl(null, [Validators.required]),
       start_date_from: new FormControl(null),
       start_date_to: new FormControl(null),
       training_center: new FormControl(null),
@@ -140,7 +140,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
     }else{
       this.course.controls[form].setValue(null);
     }      
-    if(form == 'name' && val.length<=2 || form == 'description' && val.length<=4){
+    if(form == 'name' && val.length<=200 || form == 'description' && val.length<=4000){
       this.isClearErrors = true;
       setTimeout(() => {
         this.isClearErrors = false;
@@ -266,7 +266,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
         this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
       });      
     }else{
-      this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+      this.scrollIntoError();
     }
   }
 
@@ -295,7 +295,24 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
         this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
       });      
     }else{
-      this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+      this.scrollIntoError();
+    }
+  }
+
+  scrollIntoError() {
+    for (const key of Object.keys(this.course.controls)) {
+      if (this.course.controls[key].invalid) {
+        const invalidControl = this.element.nativeElement.querySelector(
+          `#${key}_input`
+        );
+        try {
+          invalidControl.scrollIntoView({
+            behavior: 'auto',
+            block: 'center',
+          });
+          break;
+        } catch {}
+      }
     }
   }
 

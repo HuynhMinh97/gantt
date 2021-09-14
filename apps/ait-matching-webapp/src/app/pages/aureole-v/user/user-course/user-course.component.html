@@ -7,12 +7,11 @@
     <div class="form__wrapper">
       <div class="input_inline">
         <ait-input-text
-          [height]="'40px'"
-          [width]="'400px'"
-          [rows]="4"
+          [id]="'name'"
           [label]="'Name'"
           [required]="true"
-          [id]="'name'"
+          [height]="'40px'"
+          [width]="'400px'"
           [placeholder]="'Ex: Project Management'"
           (watchValue)="takeInputValue($event, 'name')"
           [defaultValue]="course.controls['name'].value"
@@ -98,6 +97,7 @@
             takeDatePickerValue($event?.value, 'course', 'start_date_to')
           "
           [dateInput]="course.controls['start_date_to'].value"
+          [isSubmit]="isSubmit"
         ></ait-datepicker>
       </div>
 

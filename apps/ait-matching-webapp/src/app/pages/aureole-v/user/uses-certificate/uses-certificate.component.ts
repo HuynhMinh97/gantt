@@ -1,5 +1,5 @@
 import { AitAuthService, AitConfirmDialogComponent, AitEnvironmentService, AitTranslationService, AppState, MODE, AitBaseComponent, AitAppUtils } from '@ait/ui';
-import { Component, OnInit, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, ElementRef, OnInit} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import { NbToastrService, NbLayoutScrollService, NbDialogService } from '@nebular/theme';
 import { isArrayFull, isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
@@ -44,7 +44,9 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
     size: false
   };
   certificate_key: string;
+;
   constructor(
+    private element: ElementRef,
     private translateService: AitTranslationService,
     private router: Router,
     private dialogService: NbDialogService,
@@ -67,8 +69,8 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
 
     this.certificate = this.formBuilder.group({
       _key : new FormControl(null),
-      name:new FormControl(null,[ Validators.required ]),
-      certificate_award_number: new FormControl(null),
+      name: new FormControl(null,[Validators.required]),
+      certificate_award_number: new FormControl(null,[Validators.required]),
       grade: new FormControl(null),
       issue_by: new FormControl(null),
       issue_date_from: new FormControl(null),
@@ -99,7 +101,7 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
       }
     });
 
-    if(this.certificate.value.issue_date_from == null){
+    if(this.certificate.value.issue_date_from == null && this.mode == "NEW"){
       this.certificate.controls["issue_date_from"].setValue(this.dateNow); 
     }
   }
@@ -231,52 +233,85 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
  
   async saveAndContinue(){  
     this.isSubmit = true; 
+    setTimeout(() => {
+      this.isSubmit = false;
+    }, 100);  
     const saveData = this.certificate.value;
-    saveData['user_id'] = this.authService.getUserID();
+   
     if (this.certificate_key) {
       saveData['_key'] = this.certificate_key;
+    }else{
+      saveData['user_id'] = this.authService.getUserID();
     }
-    if(!this.certificate.valid  || this.error.length > 0){
-      return;     
-    }else{      
-      this.submitFile = true;
-      await this.cartificateService.saveUserCartificate(saveData);
-      if(this.mode == MODE.NEW){
-        this.showToastr('', this.getMsg('I0001'));
-      }
-      else{
-        this.showToastr('', this.getMsg('I0002'));
-      }   
-      await this.reset();
-      setTimeout(() =>{
-        this.certificate.controls['issue_date_from'].setValue(this.dateNow);
-      },100) 
-     
-       
+    this.error.length
+    if(this.certificate.valid && this.error.length <= 0 ){
+      await this.cartificateService
+      .saveUserCartificate(saveData)
+      .then(async (res) =>{
+        if (res?.status === RESULT_STATUS.OK){
+          const message =
+          this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
+          this.showToastr('', message);
+          await this.reset();
+          setTimeout(() => {
+            this.certificate.controls["start_date_from"].setValue(this.dateNow);
+          },100);
+          
+        }else{
+          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+        }
+      }).catch(() => {
+        this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+      });      
+    }else{
+      this.scrollIntoError();
     }
   }
   async saveAndClose(){
     this.isSubmit = true; 
+    setTimeout(() => {
+      this.isSubmit = false;
+    }, 100);  
     const saveData = this.certificate.value;
-    saveData['user_id'] = this.authService.getUserID();
     if (this.certificate_key) {
       saveData['_key'] = this.certificate_key;
+    }else{
+      saveData['user_id'] = this.authService.getUserID();
     }
-    debugger;
-    if(!this.certificate.valid || this.error.length > 0 ){
-      return;     
-    }else{      
-      this.submitFile = true;
-      await this.cartificateService.saveUserCartificate(saveData);
-      if(this.mode == MODE.NEW){
-        this.showToastr('', this.getMsg('I0001'));
+    if(this.certificate.valid && this.error.length <= 0 ){
+      await this.cartificateService
+      .saveUserCartificate(saveData)
+      .then((res) =>{
+        if (res?.status === RESULT_STATUS.OK){
+          const message =
+          this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
+          this.showToastr('', message);
+          this.router.navigateByUrl('/');
+        }else{
+          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+        }
+      }).catch(() => {
+        this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+      });      
+    }else{
+      this.scrollIntoError();
+    }
+  }
+
+  scrollIntoError() {
+    for (const key of Object.keys(this.certificate.controls)) {
+      if (this.certificate.controls[key].invalid) {
+        const invalidControl = this.element.nativeElement.querySelector(
+          `#${key}_input`
+        );
+        try {
+          invalidControl.scrollIntoView({
+            behavior: 'auto',
+            block: 'center',
+          });
+          break;
+        } catch {}
       }
-      else{
-        this.showToastr('', this.getMsg('I0002'));
-      }   
-      setTimeout(() =>{
-        this.router.navigateByUrl('/');
-      },100)        
     }
   }
 

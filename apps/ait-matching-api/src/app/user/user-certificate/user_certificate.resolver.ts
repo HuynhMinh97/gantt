@@ -5,7 +5,7 @@ import { UserCertificateResponse } from './user_certificate.response';
 
 @Resolver()
 export class UserCertificateResolver extends AitBaseService {
-  collection = 'UserCertificate';
+  collection = 'user_cerfiticat';
 
   @Query(() => UserCertificateResponse, { name: 'findUsercertificate' })
   async findUsercertificate(
