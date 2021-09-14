@@ -40,7 +40,7 @@
             <p class="label-datepiker">{{ '~' }}</p>
           </div>
           <ait-datepicker
-            [required]="true"
+            [required]="false"
             [placeholder]="''"
             [id]="'start_date_to'"
             [label]="''"
@@ -91,6 +91,8 @@
           [defaultValue]="[{ _key: userProject.value.title }]"
           [disableOutputDefault]="true"
           [isSubmit]="isSubmit"
+          [disableOutputDefault]="true"
+          [allowNew]="true"
         ></ait-autocomplete-master-data>
       </div>
 
