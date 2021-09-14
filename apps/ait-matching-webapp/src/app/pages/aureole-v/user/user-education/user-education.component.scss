@@ -250,7 +250,8 @@ label.file-max {
   font-size: 12px;
 }
 
-::ng-deep #user_education input {
+::ng-deep #user_education input,
+::ng-deep #user_education textarea#description_textarea {
   font-size: 12px !important;
 }
 

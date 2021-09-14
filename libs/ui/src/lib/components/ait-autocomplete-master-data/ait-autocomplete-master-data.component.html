@@ -142,6 +142,7 @@
             *ngFor="let option of filteredOptions$ | async"
             class="option__container"
             style="cursor: pointer"
+            [class.isSelect]="option?._key === selectOne?._key"
           >
             <div
               (click)="onSelectionChange(option)"

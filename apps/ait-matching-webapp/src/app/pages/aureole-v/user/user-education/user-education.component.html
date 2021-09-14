@@ -67,7 +67,6 @@
       <div class="start-date">
         <ait-datepicker
           [label]="'start_date_from'"
-          [placeholder]="'yyyy/MM'"
           [format]="'yyyy/MM'"
           [id]="'start_date_from'"
           [style]="{ width: '185px' }"
@@ -111,8 +110,8 @@
           [label]="'description'"
           [placeholder]="'place your text'"
           [width]="'415px'"
-          [isReset]="resetUserInfo.degree"
-          [readonly]="resetUserInfo.degree"
+          [isReset]="resetUserInfo.description"
+          [readonly]="resetUserInfo.description"
           (watchValue)="takeInputValue($event, 'description')"
           [defaultValue]="userEducationInfo.controls['description'].value"
         >

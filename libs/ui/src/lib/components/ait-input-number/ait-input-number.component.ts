@@ -65,6 +65,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   msgRequired = ''
   isFocus = false;
   @Input() tabIndex;
+  valueAppend = '';
 
 
 
@@ -89,8 +90,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   ngOnInit() {
     this.inputCtrl.valueChanges.subscribe({
       next: value => {
-        // // console.log(value)
-        // this.currentNumber = value;
+
 
       }
     })
@@ -106,7 +106,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
 
 
   replaceAll(string: string) {
-    const target = (string || '').toString();
+    const target = this.trnData((string || '')).toString();
     const split = target.split('.');
     const split2 = split.join().split(',');
     return split2.join('');
@@ -220,7 +220,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
         this.inputCtrl.patchValue(0);
       }
       else {
-      this.inputCtrl.patchValue(this.replaceAll(this.inputCtrl.value));
+        this.inputCtrl.patchValue(this.replaceAll(this.inputCtrl.value));
 
       }
     }
@@ -234,35 +234,31 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   }
 
   handleFocusOut = () => {
-    // console.log(this.inputCtrl.value)
-    this.checkReq(this.inputCtrl.value);
-    if (this.isReset) {
-      this.currentNumber = null;
-      this.exactedValue = null;
-      this.inputCtrl.patchValue(null);
-      this.isReset = false;
-      this.watchValue.emit(null);
+
+    if (this.valueAppend !== '' && this.valueAppend !== null && this.valueAppend !== undefined) {
+      this.inputCtrl.setValue(null);
+      this.inputCtrl.patchValue(this.valueAppend);
     }
 
-    if (this.inputCtrl.value === null || this.inputCtrl.value === '') {
-      this.lostFocus.emit(null);
-    } else {
-      this.lostFocus.emit(this.replaceAll(this.inputCtrl.value));
-    }
+    this.checkReq(this.inputCtrl.value);
+
+
+
 
     if (this.inputCtrl.value === '' || this.inputCtrl.value === null) {
       this.inputCtrl.patchValue(null);
-      this.watchValue.emit(null)
-
+      this.watchValue.emit(null);
       return;
     }
 
+
     if (this.isCurrency) {
-      this.inputCtrl.patchValue(this.numberPipe.transform(this.replaceAll(this.currentNumber), this.format) + this.symbol);
-      this.watchValue.emit(this.replaceAll(this.currentNumber))
+      this.inputCtrl.patchValue(this.numberPipe.transform(this.replaceAll(this.inputCtrl.value), this.format) + this.symbol);
+      this.watchValue.emit(this.replaceAll(this.inputCtrl.value))
 
     }
     else {
+
       if (this.inputCtrl.value === null || this.inputCtrl.value === undefined) {
         this.inputCtrl.setValue(null);
         this.watchValue.emit(null)
@@ -275,9 +271,7 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
       else {
 
         if (this.inputCtrl.value) {
-
-          const target = this.numberPipe.transform(this.replaceAll(this.currentNumber), this.format);
-
+          const target = this.numberPipe.transform(this.inputCtrl.value, this.format);
           this.inputCtrl.setValue(target);
           this.watchValue.emit(Number(this.replaceAll(this.inputCtrl.value)))
 
@@ -292,6 +286,12 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
       }
 
 
+    }
+
+    if (this.inputCtrl.value === null || this.inputCtrl.value === '') {
+      this.lostFocus.emit(null);
+    } else {
+      this.lostFocus.emit(this.replaceAll(this.inputCtrl.value));
     }
   }
   slugify = str => {
@@ -318,17 +318,17 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   }
 
   onInput = () => {
-    this.dataInput = [...this.dataInput, this.inputCtrl.value];
+    this.dataInput = [...this.dataInput, this.valueAppend];
 
-    const target = this.replaceAll(this.inputCtrl.value);
-    this.checkReq(target);
-    if (this.inputCtrl.value !== '') {
-      this.watchValue.emit(!isNaN(Number(target)) ? Number(target) : null);
-    }
-    else {
+    // const target = this.replaceAll(this.valueAppend);
+    // this.checkReq(target);
+    // if (this.valueAppend !== '') {
+    //   this.watchValue.emit(!isNaN(Number(target)) ? Number(target) : null);
+    // }
+    // else {
 
-      this.watchValue.emit(null);
-    }
+    //   this.watchValue.emit(null);
+    // }
 
   }
 
@@ -356,41 +356,56 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
   }
 
 
+  trnData = (text: string) => {
+    return text?.normalize('NFKC');
+  }
 
   onKeyUp = (evt) => {
     this.currentKey = evt.keyCode;
 
   }
+  isFullSize = (text: string) => {
+    const reg = /[\uff00-\uff9f]/;
+    return reg.test(text);
+  }
 
-  onInputHandle = (text) => {
-    // console.log(Number(this.replaceAll(text)))
+
+  onInputHandle = (text: string) => {
+    // const originValue = text?.normalize('NFKC');
+
+    if (this.isFullSize(text)) {
+      text = text.replace(this.valueAppend, '');
+    }
+
+    this.watchValue.emit(this.replaceAll(text));
     if (text !== '') {
       let res = null;
+
       if (!isNaN(Number(this.replaceAll(text)))) {
+
         const transform: any = Number(this.replaceAll(text)) < this.max ? Number(this.replaceAll(text)) : this.max;
 
-        res = Number(this.replaceAll(transform)) > this.min ? transform : this.min;
-        // console.log(transform, res)
-
+        res = Number(transform) > this.min ? transform : this.min;
       }
-      setTimeout(() => {
-        this.inputCtrl.patchValue(res);
-        this.exactedValue = res;
-        this.currentNumber = res;
-        this.onInput();
-        this.checkReq(text);
-      }, 50)
+
+
+
+      this.valueAppend = res;
+      this.exactedValue = res;
+      this.currentNumber = res;
+      this.onInput();
+      this.checkReq(text);
 
     }
     else {
-      this.inputCtrl.patchValue(text);
+      this.valueAppend = '';
 
-      this.exactedValue = text;
-      this.currentNumber = text;
+      this.exactedValue = this.valueAppend;
+      this.currentNumber = this.valueAppend;
       this.onInput();
-      this.checkReq(text);
+      this.checkReq(this.valueAppend);
     }
-
+    // this.watchValue.emit(this.replaceAll(text));
   }
 
 
