@@ -20,13 +20,10 @@ import { UserCourseService } from 'apps/ait-matching-webapp/src/app/services/use
 export class UserCourseComponent  extends AitBaseComponent implements OnInit, OnChanges {
   course: FormGroup;
   courseClone: any;
-  dataCourse;
-  courseStart;
   mode = MODE.NEW;
   dateNow = new Date().setHours(0, 0, 0, 0);
   course_key = '';
-  companyCenter: any = null;
-  files = [];
+  companyCenter = [];
   error = [];
   isSubmit = false;  
   submitFile = false;  
@@ -73,12 +70,12 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
       page: 'user_cerfiticate',
     });
     this.course = this.formBuilder.group({
-      _key : new FormControl(null),
+      _key: new FormControl(null),
+      name: new FormControl(null, [Validators.required]),
       course_number: new FormControl(null),
       description: new FormControl(null),  
       file: new FormControl(null),
       is_online: new FormControl(null),
-      name : new FormControl(null, [Validators.required]),
       start_date_from: new FormControl(null),
       start_date_to: new FormControl(null),
       training_center: new FormControl(null),
@@ -94,7 +91,6 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
   async ngOnInit(): Promise<any> {
     if(this.mode == MODE.NEW){
       this.course.controls["start_date_from"].setValue(this.dateNow);
-      this.courseStart = this.course.value
     } else{
     await this.find(this.course_key);    
     }
@@ -107,7 +103,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
       }
     });
 
-    if(this.course.value.start_date_from == null){
+    if(this.course.value.start_date_from == null && this.mode == 'NEW'){
       this.course.controls["start_date_from"].setValue(this.dateNow); 
     }  
     console.log(this.courseClone);
@@ -144,7 +140,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
     }else{
       this.course.controls[form].setValue(null);
     }      
-    if(form == 'name' && val.length<=2 || form == 'description' && val.length<=4){
+    if(form == 'name' && val.length<=200 || form == 'description' && val.length<=4000){
       this.isClearErrors = true;
       setTimeout(() => {
         this.isClearErrors = false;
@@ -171,13 +167,12 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
       this[group].controls[form].setValue(value);
       // set jp_dob format japan cadidates    
       form === 'dob' && this.setKanjiDate();
-      if(form == 'start_date_to'){
-        this.error = this.checkDatePicker();
-      }
+      
     } else {
       this[group].controls[form].setValue(null);
       form === 'dob' && this.course.controls['dob_jp'].setValue(null);
     }
+    this.error = this.checkDatePicker();
   }
 
   checkDatePicker(){
@@ -223,23 +218,19 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
   }
 
   async resetForm() {
-    await this.reset();
+    
     if(this.mode === MODE.NEW){
+      await this.reset();
       setTimeout(() => {
         this.course.controls['start_date_from'].setValue(this.dateNow)
       }, 100);      
     }
     else{
-      setTimeout(() => {
-        this.companyCenter = {
-          _key: this.dataCourse.training_center,
-        };
-        this.files = [
-          this.dataCourse.file
-        ];
-        this.course.patchValue({ ...this.dataCourse });
+        this.companyCenter = [];    
+        this.companyCenter.push({_key: this.courseClone.training_center});
+        this.course.patchValue({ ...this.courseClone });
+        console.log(this.courseClone.value);
         this.showToastr('', this.getMsg('E0002'));
-      }, 10);
     }
   }
 
@@ -275,7 +266,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
         this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
       });      
     }else{
-      this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+      this.scrollIntoError();
     }
   }
 
@@ -304,7 +295,24 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
         this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
       });      
     }else{
-      this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+      this.scrollIntoError();
+    }
+  }
+
+  scrollIntoError() {
+    for (const key of Object.keys(this.course.controls)) {
+      if (this.course.controls[key].invalid) {
+        const invalidControl = this.element.nativeElement.querySelector(
+          `#${key}_input`
+        );
+        try {
+          invalidControl.scrollIntoView({
+            behavior: 'auto',
+            block: 'center',
+          });
+          break;
+        } catch {}
+      }
     }
   }
 
@@ -318,10 +326,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
               const data = r.data[0];                                         
               this.course.patchValue({ ...data });  
               this.courseClone = this.course.value;       
-              this.companyCenter = {
-                _key: data.training_center,
-              };
-              this.files = data.file;                           
+              this.companyCenter.push({_key: data.training_center});                        
             }
             else{
               this.router.navigate([`/404`]);               
@@ -333,6 +338,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
   }
   //delete
   async deleteUserById() {
+    debugger;
     this.dialogService.open(AitConfirmDialogComponent, {
       closeOnBackdropClick: true,
       hasBackdrop: true,
@@ -343,7 +349,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
     })
     .onClose.subscribe(async (event) => {
       if (event) {
-        await this.userCartificateService.deleteCourseByKey(this.dataCourse._key);
+        await this.userCartificateService.deleteCourseByKey(this.courseClone._key);
         setTimeout(() => {        
           this.showToastr('', this.getMsg('I0003'));
           history.back();

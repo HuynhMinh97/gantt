@@ -10,6 +10,7 @@ export class UserCourseService extends AitBaseService {
     return await this.mutation('saveCourse', 'user_course', data, { _key: true });
   }
   
+  
   findCourseByKey = async (user_key : string) => {
     const condition = {
       _key: user_key,

@@ -26,6 +26,7 @@ export class UserCerfiticateService extends AitBaseService {
       issue_date_to: true,
       description: true,
       file: true,
+      user_id: true
     })
   }
 

@@ -7,12 +7,11 @@
     <div class="form__wrapper">
       <div class="input_inline">
         <ait-input-text
-          [height]="'40px'"
-          [width]="'400px'"
-          [rows]="4"
+          [id]="'name'"
           [label]="'Name'"
           [required]="true"
-          [id]="'name'"
+          [height]="'40px'"
+          [width]="'400px'"
           [placeholder]="'Ex: Project Management'"
           (watchValue)="takeInputValue($event, 'name')"
           [defaultValue]="course.controls['name'].value"
@@ -47,7 +46,7 @@
           [isReset]="resetCourse.training_center"
           [style]="{ width: '400px' }"
           (watchValue)="takeInputValue($event, 'training_center')"
-          [defaultValue]="[companyCenter]"
+          [defaultValue]="companyCenter"
           [disableOutputDefault]="true"
           [isSubmit]="isSubmit"
           [disableOutputDefault]="true"
@@ -98,6 +97,7 @@
             takeDatePickerValue($event?.value, 'course', 'start_date_to')
           "
           [dateInput]="course.controls['start_date_to'].value"
+          [isSubmit]="isSubmit"
         ></ait-datepicker>
       </div>
 
@@ -135,12 +135,12 @@
           [id]="'file'"
           [maxSize]="1000"
           [maxFiles]="5"
-          [required]="true"
+          [required]="false"
           [hasStatus]="false"
           [placeholder]="'Select file'"
           [isReset]="resetCourse.file"
           [isClear]="isClear"
-          [fileKeys]="files"
+          [fileKeys]="course.controls['file'].value"
           (watchValue)="getFiles($event.value)"
           [isSubmit]="isSubmit"
         ></ait-input-file>
