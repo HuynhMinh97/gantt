@@ -61,7 +61,7 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
     apollo: Apollo
   ) {
     super(store, authService, apollo, null, env, layoutScrollService, toastrService); 
-
+    this.user_id = this.authService.getUserID();
     this.setModulePage({
       module: 'user',
       page: 'user_cerfiticate',
@@ -70,7 +70,7 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
     this.certificate = this.formBuilder.group({
       _key : new FormControl(null),
       name: new FormControl(null,[Validators.required]),
-      certificate_award_number: new FormControl(null,[Validators.required]),
+      certificate_award_number: new FormControl(null),
       grade: new FormControl(null),
       issue_by: new FormControl(null),
       issue_date_from: new FormControl(null),
@@ -100,6 +100,9 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
         this.checkAllowSave();
       }
     });
+    console.log(this.mode);
+   
+    
 
     if(this.certificate.value.issue_date_from == null && this.mode == "NEW"){
       this.certificate.controls["issue_date_from"].setValue(this.dateNow); 
@@ -231,7 +234,7 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
     }
   }
  
-  async saveAndContinue(){  
+  async saveAndContinue(){ 
     this.isSubmit = true; 
     setTimeout(() => {
       this.isSubmit = false;
@@ -248,15 +251,16 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
       await this.cartificateService
       .saveUserCartificate(saveData)
       .then(async (res) =>{
+        
         if (res?.status === RESULT_STATUS.OK){
           const message =
           this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
           this.showToastr('', message);
-          await this.reset();
+          await this.reset();  
           setTimeout(() => {
             this.certificate.controls["start_date_from"].setValue(this.dateNow);
           },100);
-          
+                 
         }else{
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         }
@@ -322,6 +326,7 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
         .then((r) => {             
           if (r.status === RESULT_STATUS.OK) {
             if (r.data.length > 0) {
+             
               const data = r.data[0];                                                
               this.certificate.patchValue({ ...data });
               this.certificateClone = this.certificate.value;         
@@ -331,7 +336,15 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
               this.companyIssue = {
                 _key: data.issue_by,
               };
-              this.files = data.file;                          
+              this.files = data.file; 
+              console.log(data.user_id);
+               console.log(this.user_id);
+               
+              if(this.user_id != data.user_id){
+                this.mode = MODE.VIEW
+              } 
+              console.log( this.mode);
+                                     
             }
             else{
               this.router.navigate([`/404`]);              

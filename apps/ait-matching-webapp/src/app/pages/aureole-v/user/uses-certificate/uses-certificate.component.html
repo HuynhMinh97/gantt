@@ -153,12 +153,14 @@
     >
     <div class="button__group">
       <ait-button
+      *ngIf="mode ==='EDIT' || mode ==='NEW' "
         [title]="'cancel'"
         [id]="'cancel'"
         [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
         (click)="back()"
       ></ait-button>
       <ait-button
+      *ngIf="mode ==='EDIT' || mode ==='NEW' "
         [title]="'reset'"
         [id]="'reset'"
         [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
@@ -194,6 +196,15 @@
       [width]="'200px'"
       [title]="'save_close'"
       [style]="'disabled'"
+    ></ait-button>
+
+    <ait-button
+      *ngIf=" mode === 'VIEW'"
+      [id]="'saveClose'"
+      [width]="'200px'"
+      [title]="'close'"
+      (click)="back()"
+      [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
     ></ait-button>
     </div>
   </div>
