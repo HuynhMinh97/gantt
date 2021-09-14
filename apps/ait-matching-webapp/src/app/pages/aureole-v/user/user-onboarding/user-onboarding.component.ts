@@ -112,7 +112,7 @@ export class UserOnboardingComponent
     sort_no: 0,
   };
 
-  user_id = '';
+  user_key = '';
   _key = '';
   user_id_profile = '';
 
@@ -189,8 +189,8 @@ export class UserOnboardingComponent
     });
 
     // get key form parameters
-    this.user_id = this.activeRouter.snapshot.paramMap.get('id');
-    if (this.user_id) {
+    this.user_key = this.activeRouter.snapshot.paramMap.get('id');
+    if (this.user_key) {
       this.mode = MODE.EDIT;
     }
 
@@ -204,12 +204,16 @@ export class UserOnboardingComponent
           }
         }
       });
+
+    this.countryCode = "'aa'";
+    this.cityCode = 'aa';
+    this.districtCode = 'aa';
   }
-  
+
   async ngOnInit(): Promise<void> {
-    if (this.user_id) {
+    if (this.user_key) {
       await this.userOnbService
-        .findUserOnboardingByKey(this.user_id)
+        .findUserOnboardingByKey(this.user_key)
         .then(async (r) => {
           if (r.status === RESULT_STATUS.OK) {
             let isUserExist = false;
@@ -238,7 +242,10 @@ export class UserOnboardingComponent
       }
     });
 
-    if (this.user_id_profile != this.authService.getUserID()) {
+    if (
+      this.mode == MODE.EDIT &&
+      this.user_id_profile != this.authService.getUserID()
+    ) {
       this.mode = MODE.VIEW;
       for (const index in this.userOnbInfo) {
         this.userOnbInfo[index] = true;
@@ -338,7 +345,6 @@ export class UserOnboardingComponent
 
   saveDataUserProfile() {
     const saveData = this.userOnboardingInfo.value;
-
     saveData.ward = saveData.ward._key;
     saveData.title = saveData.title._key;
     saveData.city = saveData.city._key;
@@ -354,7 +360,6 @@ export class UserOnboardingComponent
     } else {
       saveData['user_id'] = this.authService.getUserID();
     }
-
     return saveData;
   }
 
@@ -486,7 +491,6 @@ export class UserOnboardingComponent
       this.userOnboardingInfo.controls[target].markAsDirty();
       this.userOnboardingInfo.controls[target].setValue(value?.value[0]);
       if (target === 'country') {
-        this.isCountry = false;
         this.countryCode = value?.value[0]._key;
         this.resetUserInfo['district'] = true;
         this.resetUserInfo['ward'] = true;
@@ -499,7 +503,6 @@ export class UserOnboardingComponent
         this.userOnboardingInfo.controls['ward'].reset();
       }
       if (target === 'city') {
-        this.isCity = false;
         this.cityCode = value?.value[0]._key;
         this.resetUserInfo['district'] = true;
         setTimeout(() => {
@@ -509,7 +512,6 @@ export class UserOnboardingComponent
         this.userOnboardingInfo.controls['ward'].reset();
       }
       if (target === 'district') {
-        this.isDistrict = false;
         this.districtCode = value?.value[0]._key;
         this.userOnboardingInfo.controls['ward'].reset();
       }

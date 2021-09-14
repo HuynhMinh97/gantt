@@ -163,12 +163,14 @@ export class UserExperienceComponent
             ...this.defaultCompany,
           });
         });
-      this.userExperienceInfoClone = this.userExperienceInfo.value;
+      if (this.mode === MODE.NEW) {
+        this.userExperienceInfoClone = this.userExperienceInfo.value;
 
-      this.isChanged = !AitAppUtils.isObjectEqual(
-        { ...this.userExperienceInfo.value },
-        { ...this.userExperienceInfoClone }
-      );
+        this.isChanged = !AitAppUtils.isObjectEqual(
+          { ...this.userExperienceInfo.value },
+          { ...this.userExperienceInfoClone }
+        );
+      }
     }
   }
 
@@ -220,6 +222,7 @@ export class UserExperienceComponent
           }, 100);
         }
       }
+      console.log(this.userExperienceInfoClone);
       this.userExperienceInfo.patchValue({
         ...this.userExperienceInfoClone,
       });
@@ -376,6 +379,8 @@ export class UserExperienceComponent
   takeDatePickerValue(value: number, group: string, form: string) {
     if (value == null) {
       this.isChanged = true;
+      this[group].controls[form].markAsDirty();
+      this[group].controls[form].setValue(value);
     }
     if (value) {
       const data = value as number;
@@ -394,7 +399,7 @@ export class UserExperienceComponent
 
     if (dateFrom == null || isWorking || dateTo == null) {
       this.isDateCompare = false;
-      if (dateFrom > this.defaultValueDate) {
+      if (dateFrom > this.defaultValueDate && isWorking) {
         const transferMsg = (msg || '')
           .replace('{0}', this.translateService.translate('start_date_from'))
           .replace('{1}', this.translateService.translate('now_date'));

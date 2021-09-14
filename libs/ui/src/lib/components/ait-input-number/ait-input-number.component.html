@@ -47,7 +47,6 @@
       fullWidth
       fieldSize="medium"
       [maxLength]="length"
-      [value]="inputCtrl.value"
       [placeholder]="getPlaceHolder()"
       (input)="onInputHandle($event.target.value)"
       [formControl]="inputCtrl"
@@ -82,3 +81,4 @@
   </div>
   <ait-error-message [errors]="messagesError()" [id]="id"></ait-error-message>
 </div>
+{{this.inputCtrl.value}}
