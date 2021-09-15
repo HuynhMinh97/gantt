@@ -264,7 +264,9 @@ export class UserExperienceComponent
 
     saveData.title = saveData.title._key;
     saveData.location = saveData.location._key;
-    saveData.employee_type = saveData.employee_type._key;
+    if (saveData.employee_type) {
+      saveData.employee_type = saveData.employee_type._key;
+    }
     saveData.company_working = saveData.company_working._key;
     console.log(saveData.is_working);
     if (saveData.is_working) {

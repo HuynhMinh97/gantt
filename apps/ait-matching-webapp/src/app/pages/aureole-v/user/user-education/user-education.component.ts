@@ -99,10 +99,10 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
       degree: new FormControl(null),
       grade: new FormControl(null),
       field_of_study: new FormControl(null),
-      file: new FormControl(null),
       start_date_from: new FormControl(this.defaultValueDate),
       start_date_to: new FormControl(null),
       description: new FormControl(null),
+      file: new FormControl(null),
     });
 
     // get key form parameters
@@ -160,23 +160,23 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
 
   saveData() {
     const saveData = this.userEducationInfo.value;
-    console.log(saveData);
-
     saveData.school = saveData.school._key;
     if (this.user_key) {
       saveData['_key'] = this.user_key;
     } else {
       saveData['user_id'] = this.authService.getUserID();
     }
+    console.log(saveData);
+
     return saveData;
   }
 
   saveAndContinue() {
-    this.errorArr = this.checkDatePicker();
     this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
+    this.errorArr = this.checkDatePicker();
     if (this.userEducationInfo.valid && !this.isDateCompare) {
       this.userEduService
         .save(this.saveData())
@@ -200,7 +200,6 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
 
   saveAndClose() {
     this.errorArr = this.checkDatePicker();
-
     this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;
@@ -321,11 +320,14 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     const msg = this.translateService.getMsg('E0004');
     const dateFrom = this.userEducationInfo.controls['start_date_from'].value;
     const dateTo = this.userEducationInfo.controls['start_date_to'].value;
+    this.isDateCompare = false;
 
     if (dateFrom == null || dateTo == null) {
       this.isDateCompare = false;
     } else {
       if (dateFrom > dateTo) {
+        console.log(1);
+
         const transferMsg = (msg || '')
           .replace('{0}', this.translateService.translate('start_date_from'))
           .replace('{1}', this.translateService.translate('start_date_to'));
@@ -335,7 +337,6 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     }
     return res;
   }
-  s;
 
   back() {
     if (this.isChanged) {
@@ -396,17 +397,17 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     }
   }
 
-  takeFiles(fileList: any[], group: string, form: string) {
+  takeFiles(fileList: any[]) {
     if (isArrayFull(fileList)) {
       const data = [];
       fileList.forEach((file) => {
         data.push(file._key);
       });
       this.userEducationInfo.markAsDirty();
-      this[group].controls[form].setValue(data);
+      this.userEducationInfo.controls['file'].setValue(data);
     } else {
       this.userEducationInfo.markAsDirty();
-      this[group].controls[form].setValue(null);
+      this.userEducationInfo.controls['file'].setValue(null);
     }
   }
 

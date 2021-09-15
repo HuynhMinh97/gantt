@@ -120,21 +120,18 @@
 
         <div class="input_area">
           <ait-label [label]="'files'"></ait-label>
-          <label class="file-max"
-            ><nb-icon icon="attach-outline"></nb-icon>Upload max 5 files and
-            10MB/file</label
-          >
+          <label class="file-max"  style="display: flex !important;"
+            ><nb-icon icon="attach-outline"></nb-icon>
+            <ait-label [label]="'upload'"></ait-label>
+          </label>
           <ait-input-file
             [id]="'file'"
-            [maxSize]="1000000"
+            [maxSize]="1000"
             [maxFiles]="5"
             [hasStatus]="false"
             [isReset]="isResetFile"
-            [isClear]="isClear"
-            [isDefault]="true"
             [fileKeys]="userEducationInfo.controls['file'].value"
-            (watchValue)="takeFiles($event.value, 'userEducationInfo', 'file')"
-            [isSubmit]="isSubmit"
+            (watchValue)="takeFiles($event.value)"
           ></ait-input-file>
         </div>
       </div>
@@ -147,9 +144,7 @@
           *ngIf="mode !== 'VIEW'"
           [id]="'cancel'"
           [title]="'cancel'"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="true"
           (click)="back()"
         ></ait-button>
 
@@ -164,7 +159,7 @@
         </ait-button>
 
         <ait-button
-         *ngIf="mode !== 'VIEW'"
+          *ngIf="mode !== 'VIEW'"
           [id]="'reset'"
           [width]="'200px'"
           [title]="'reset'"

@@ -102,8 +102,9 @@
         <ait-datepicker
           [label]="'start_date_from'"
           [id]="'start_date_from'"
+          [format]="'yyyy/MM'"
+          [placeholder]="'2003/09'"
           [width]="'185px'"
-          [placeholder]="'2021/01/01'"
           [isReset]="resetUserInfo.start_date_from"
           [defaultValue]="userExperienceInfo.controls['start_date_from'].value"
           (watchValue)="
@@ -121,6 +122,7 @@
         <ait-datepicker
           *ngIf="!userExperienceInfo.controls['is_working'].value"
           [id]="'start_date_to'"
+          [format]="'yyyy/MM'"
           [width]="'185px'"
           [isReset]="resetUserInfo.start_date_to"
           [defaultValue]="userExperienceInfo.controls['start_date_to'].value"
