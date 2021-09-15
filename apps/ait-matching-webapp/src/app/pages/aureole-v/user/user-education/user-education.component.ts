@@ -326,11 +326,9 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
       this.isDateCompare = false;
     } else {
       if (dateFrom > dateTo) {
-        console.log(1);
-
         const transferMsg = (msg || '')
-          .replace('{0}', this.translateService.translate('start_date_from'))
-          .replace('{1}', this.translateService.translate('start_date_to'));
+        .replace('{0}', this.translateService.translate('START DATE'))
+        .replace('{1}', this.translateService.translate('START DATE TO'));
         res.push(transferMsg);
         this.isDateCompare = true;
       }
@@ -361,8 +359,8 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
 
   getTitleByMode() {
     return this.mode === MODE.EDIT
-      ? this.translateService.translate('edit_education')
-      : this.translateService.translate('add_education');
+      ? this.translateService.translate('edit education')
+      : this.translateService.translate('add education');
   }
 
   takeMasterValue(value: any, target: string): void {

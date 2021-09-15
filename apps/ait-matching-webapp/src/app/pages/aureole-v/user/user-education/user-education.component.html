@@ -40,7 +40,7 @@
         <ait-input-text
           [length]="400"
           [id]="'field_of_study'"
-          [label]="'field_of_study'"
+          [label]="'field of study'"
           [placeholder]="'computer'"
           [isReset]="resetUserInfo.field_of_study"
           [readonly]="resetUserInfo.field_of_study"
@@ -66,7 +66,7 @@
 
       <div class="start-date">
         <ait-datepicker
-          [label]="'start_date_from'"
+          [label]="'START DATE'"
           [format]="'yyyy/MM'"
           [placeholder]="'2003/09'"
           [id]="'start_date_from'"
@@ -130,6 +130,7 @@
             [maxFiles]="5"
             [hasStatus]="false"
             [isReset]="isResetFile"
+            [placeholder]="'select file'"
             [fileKeys]="userEducationInfo.controls['file'].value"
             (watchValue)="takeFiles($event.value)"
           ></ait-input-file>

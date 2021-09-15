@@ -73,7 +73,7 @@
         <ait-button
           *ngIf="mode === 'NEW'"
           [id]="'saveAndContinue'"
-          [title]="'saveandcontinue'"
+          [title]="'save & continue'"
           (click)="saveAndContinue()"
           [isDefault]="true"
         ></ait-button>
@@ -82,7 +82,7 @@
           [id]="'saveAndClose'"
           *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
           [width]="'200px'"
-          [title]="'saveandclose'"
+          [title]="'save & close'"
           (click)="saveAndClose()"
           [isDefault]="true"
         >
@@ -91,7 +91,7 @@
           *ngIf="!isChanged && mode === 'EDIT'"
           [id]="'saveAndClose'"
           [width]="'200px'"
-          [title]="'saveandclose'"
+          [title]="'save & close'"
           [style]="'disabled'"
         ></ait-button>
       </div>
