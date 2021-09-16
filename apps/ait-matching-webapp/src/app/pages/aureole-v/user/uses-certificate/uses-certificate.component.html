@@ -55,7 +55,7 @@
       <div class="input_inline">
         <ait-autocomplete-master-data
           [id]="'issue_by'"
-          [label]="'issue_date'"
+          [label]="'issue_by'"
           [placeholder]="'school'"
           [required]="false"
           [allowNew]="true"
@@ -73,12 +73,12 @@
       <div class="input_inline">
         <ait-datepicker
           [required]="false"
-          [label]="'date'"
+          [label]="'issue_date'"
           [placeholder]="'yyyy/MM/dd'"
           [id]="'issue_date_from'"
           [style]="{ width: '170px' }"
           (watchValue)="
-            takeDatePickerValue($event?.value,'issue_date_from')
+            takeDatePickerValue($event?.value,'certificate','issue_date_from')
           "
           [dateInput]="certificate.controls['issue_date_from'].value"
           [isReset]="resetCertificate.issue_date_from"
@@ -94,7 +94,7 @@
           [style]="{ width: '170px' }"
           [isReset]="resetCertificate.issue_date_to"
           (watchValue)="
-            takeDatePickerValue($event?.value, 'issue_date_to')
+            takeDatePickerValue($event?.value,'certificate', 'issue_date_to')
           "
           [dateInput]="certificate.controls['issue_date_to'].value"
         ></ait-datepicker>
@@ -122,7 +122,7 @@
       </div>
       <div class="input_area">
         <ait-label [label]="'file'"></ait-label>
-        <label class="file-max" style="display: flex !important;">
+        <label class="file-max" style="display: flex !important;color: #8f9bb3">
           <nb-icon icon="attach-outline"></nb-icon>
           <ait-label [label]="'upload'"></ait-label>
         </label>

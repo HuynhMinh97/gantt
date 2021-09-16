@@ -27,6 +27,7 @@ export class UserCourseService extends AitBaseService {
       start_date_to: true,
       description: true,
       file: true,
+      user_id: true
     })
   }
 
