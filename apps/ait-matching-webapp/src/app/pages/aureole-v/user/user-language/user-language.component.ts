@@ -328,7 +328,7 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
 
   getTitleByMode() {
     return this.mode === MODE.EDIT
-      ? this.translateService.translate('edit_language')
-      : this.translateService.translate('add_language');
+      ? this.translateService.translate('edit language')
+      : this.translateService.translate('add language');
   }
 }

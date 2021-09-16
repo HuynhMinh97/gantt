@@ -169,7 +169,7 @@ export class UserOnboardingComponent
       bod: new FormControl(null, [Validators.required]),
       phone_number: new FormControl(null, [Validators.required]),
       about: new FormControl(null),
-      country: new FormControl(null),
+      country: new FormControl(null, [Validators.required]),
       postcode: new FormControl(null, [
         Validators.required,
         Validators.maxLength(20),
@@ -205,9 +205,9 @@ export class UserOnboardingComponent
         }
       });
 
-    this.countryCode = "'aa'";
-    this.cityCode = 'aa';
-    this.districtCode = 'aa';
+    this.countryCode = 'a';
+    this.cityCode = 'a';
+    this.districtCode = 'a';
   }
 
   async ngOnInit(): Promise<void> {
@@ -492,28 +492,25 @@ export class UserOnboardingComponent
       this.userOnboardingInfo.controls[target].setValue(value?.value[0]);
       if (target === 'country') {
         this.countryCode = value?.value[0]._key;
+        this.cityCode = 'a';
+        this.districtCode = 'a';
         this.resetUserInfo['district'] = true;
         this.resetUserInfo['ward'] = true;
         setTimeout(() => {
           this.resetUserInfo['district'] = false;
           this.resetUserInfo['ward'] = false;
         }, 100);
-        this.userOnboardingInfo.controls['city'].reset();
-        this.userOnboardingInfo.controls['district'].reset();
-        this.userOnboardingInfo.controls['ward'].reset();
       }
       if (target === 'city') {
         this.cityCode = value?.value[0]._key;
+        this.districtCode = 'a';
         this.resetUserInfo['district'] = true;
         setTimeout(() => {
           this.resetUserInfo['district'] = false;
         }, 100);
-        this.userOnboardingInfo.controls['district'].reset();
-        this.userOnboardingInfo.controls['ward'].reset();
       }
       if (target === 'district') {
         this.districtCode = value?.value[0]._key;
-        this.userOnboardingInfo.controls['ward'].reset();
       }
     } else {
       this.userOnboardingInfo.controls[target].setValue(null);
