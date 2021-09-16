@@ -1,7 +1,6 @@
 <div class="user__education__wrapper" id="user_education">
   <ait-text-gradient
     [content]="getTitleByMode()"
-    id="form_edit_user_education"
   ></ait-text-gradient>
   <ait-card-content style="justify-content: center" class="content__card">
     <div style="margin-top: 14px">
@@ -172,7 +171,7 @@
         <ait-button
           *ngIf="mode === 'NEW'"
           [id]="'saveAndContinue'"
-          [title]="'saveandcontinue'"
+          [title]="'save & continue'"
           (click)="saveAndContinue()"
           [isDefault]="true"
         ></ait-button>
@@ -181,7 +180,7 @@
           [id]="'saveAndClose'"
           *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
           [width]="'200px'"
-          [title]="'saveandclose'"
+          [title]="'save & close'"
           (click)="saveAndClose()"
           [isDefault]="true"
         >
@@ -190,7 +189,7 @@
           *ngIf="!isChanged && mode === 'EDIT'"
           [id]="'saveAndClose'"
           [width]="'200px'"
-          [title]="'saveandclose'"
+          [title]="'save & close'"
           [style]="'disabled'"
         ></ait-button>
       </div>
