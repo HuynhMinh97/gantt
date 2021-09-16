@@ -7,9 +7,9 @@
       <div class="input_inline">
         <ait-input-text
           [required]="true"
-          [label]="'NAME'"
+          [label]="'name'"
           [id]="'name'"
-          [placeholder]="'Please input project name'"
+          [placeholder]="'input_name'"
           [fullWidth]="true"
           [width]="'400px'"
           [length]="200"
@@ -25,7 +25,7 @@
             [required]="true"
             [placeholder]="''"
             [id]="'start_date_from'"
-            [label]="'START DATE'"
+            [label]="'date'"
             [style]="{ width: '170px' }"
             (watchValue)="takeDatePickerValue($event?.value, 'start_date_from')"
             [isReset]="resetUserProject.start_date_from"
@@ -41,7 +41,7 @@
           </div>
           <ait-datepicker
             [required]="false"
-            [placeholder]="''"
+            [placeholder]="'yyyy/MM/dd'"
             [id]="'start_date_to'"
             [label]="''"
             [style]="{ width: '170px' }"
@@ -63,8 +63,9 @@
 
       <div class="input_inline">
         <ait-autocomplete-master-data
+          [maxItem]="1"
           [id]="'company_working'"
-          [label]="'COMPANY'"
+          [label]="'company'"
           [placeholder]="'Aureole IT'"
           [required]="true"
           [collection]="'sys_company'"
@@ -80,9 +81,9 @@
       <div class="input_inline">
         <ait-autocomplete-master-data
           [id]="'title'"
-          [label]="'TITLE'"
+          [label]="'title'"
           [maxItem]="1"
-          [placeholder]="'Developer'"
+          [placeholder]="'developer'"
           [required]="true"
           [collection]="'m_title'"
           [isReset]="resetUserProject.title"
@@ -99,9 +100,9 @@
       <div class="input_inline">
         <ait-input-text
           [required]="true"
-          [label]="'DESCRIPTION'"
+          [label]="'description'"
           [id]="'description'"
-          [placeholder]="'Please input project name'"
+          [placeholder]="'input_name'"
           [fullWidth]="true"
           [rows]="5"
           [length]="4000"
@@ -117,8 +118,8 @@
       <div class="input_inline">
         <ait-autocomplete-master-data
           [id]="'skills'"
-          [label]="'SKILLS (MAX 10)'"
-          [placeholder]="'Fill name and enter to add your skills'"
+          [label]="'skills'"
+          [placeholder]="'skills_input'"
           [required]="true"
           [collection]="'m_skill'"
           [maxItem] = "'10'"
@@ -134,9 +135,9 @@
       <div class="input_inline">
         <ait-input-text
           [required]="true"
-          [label]="'RESPONSIBILITY'"
+          [label]="'responsibility'"
           [id]="'responsibility'"
-          [placeholder]="'Place your text'"
+          [placeholder]="'place'"
           [fullWidth]="true"
           [rows]="5"
           [length]="4000"
@@ -151,9 +152,9 @@
       <div class="input_inline">
         <ait-input-text
           [required]="true"
-          [label]="'ACHIEVEMENT'"
+          [label]="'achievement'"
           [id]="'achievement'"
-          [placeholder]="'Place your text'"
+          [placeholder]="'place'"
           [fullWidth]="true"
           [rows]="5"
           [length]="4000"
@@ -181,7 +182,7 @@
         <ait-button
           *ngIf="mode === 'NEW' || mode === 'EDIT'"
           [id]="'cancel'"
-          [title]="'CANCEL'"
+          [title]="'cancel'"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
           "
@@ -197,7 +198,7 @@
           *ngIf="mode === 'EDIT'"
           [id]="'remove'"
           [width]="'200px'"
-          [title]="'DELETE'"
+          [title]="'delete'"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
           "
@@ -208,7 +209,7 @@
         <ait-button
           [id]="'reset'"
           [width]="'200px'"
-          [title]="'RESET'"
+          [title]="'reset'"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
           "
@@ -218,20 +219,20 @@
 
         <ait-button
           *ngIf="mode === 'NEW'"
-          [id]="'saveContinue'"
+          [id]="'save_continue'"
           [width]="'200px'"
-          [title]="'SAVE & CONTINUE'"
+          [title]="'save_continue'"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
           "
-          (click)="saveContinue()"
+          (click)=" saveContinue()"
         >
         </ait-button>
         <ait-button
           *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
           [id]="'saveClose'"
           [width]="'200px'"
-          [title]="'SAVE & CLOSE'"
+          [title]="'save_close'"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
           "

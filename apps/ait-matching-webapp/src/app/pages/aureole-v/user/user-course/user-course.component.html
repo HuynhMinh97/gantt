@@ -8,12 +8,12 @@
       <div class="input_inline">
         <ait-input-text
           [id]="'name'"
-          [label]="'Name'"
+          [label]="'name'"
           [required]="true"
           [height]="'40px'"
           [width]="'400px'"
-          [placeholder]="'Ex: Project Management'"
-          (watchValue)="takeInputValue($event, 'name')"
+          [placeholder]="'ex'"
+          (watchValue)="takeInputValue($event,'name')"
           [defaultValue]="course.controls['name'].value"
           [isReset]="resetCourse.name"
           [isSubmit]="isSubmit"
@@ -30,7 +30,7 @@
             [id]="'is_online'"
             (checkedChange)="toggleCheckBox($event)"
           >
-            <p id="online">Online?</p>            
+            <p id="online">{{ 'online' | translate }}?</p>            
           </nb-checkbox>
         </div>
       </div>
@@ -38,9 +38,9 @@
       <div class="input_inline">
         <ait-autocomplete-master-data
           [id]="'training_center'"
-          [label]="'Center'"
+          [label]="'center'"
           [maxItem]="1"
-          [placeholder]="'BACH KHOA Ho Chi Minh Technology University'"
+          [placeholder]="'school'"
           [required]="false"
           [collection]="'m_training_center'"
           [isReset]="resetCourse.training_center"
@@ -60,9 +60,9 @@
           [height]="'40px'"
           [width]="'400px'"
           [rows]="1"
-          [label]="'Certificate'"
+          [label]="'certificate'"
           [required]="false"
-          [placeholder]="'EX: AIT001'"
+          [placeholder]="'ex_certificate'"
           (watchValue)="takeInputValue($event, 'course_number')"
           [defaultValue]="course.controls['course_number'].value"
           [isReset]="resetCourse.course_number"
@@ -74,7 +74,7 @@
       <div class="input_inline">
         <ait-datepicker
           [required]="false"
-          [label]="'start date'"
+          [label]="'date'"
           [placeholder]="'yyyy/MM/dd'"
           [id]="'start_date_from'"
           [style]="{ width: '170px' }"
@@ -111,10 +111,10 @@
           [height]="'108px'"
           [width]="'400px'"
           [rows]="4"
-          [label]="'DESCRIPTION'"
+          [label]="'description'"
           [required]="false"
           [id]="'description'"
-          [placeholder]="'Place your text'"
+          [placeholder]="'place'"
           (watchValue)="takeInputValue($event, 'description')"
           [defaultValue]="course.controls['description'].value"
           [isReset]="resetCourse.description"
@@ -126,18 +126,18 @@
       <div class="input_inline">   
       </div>
       <div class="input_area">
-        <ait-label [label]="'FILES'"></ait-label>
-        <label class="file-max"
-          ><nb-icon icon="attach-outline"></nb-icon>Upload max 5 files and
-          10MB/file</label
-        >
+        <ait-label [label]="'file'"></ait-label>
+        <label class="file-max" style="display: flex !important; color: #8f9bb3;margin: 0;"
+          ><nb-icon icon="attach-outline"></nb-icon>
+            <p id="max_file">{{ 'upload' | translate }}</p>
+        </label>
         <ait-input-file
           [id]="'file'"
           [maxSize]="1000"
           [maxFiles]="5"
           [required]="false"
           [hasStatus]="false"
-          [placeholder]="'Select file'"
+          [placeholder]="'select_file'"
           [isReset]="resetCourse.file"
           [isClear]="isClear"
           [fileKeys]="course.controls['file'].value"
@@ -162,22 +162,14 @@
     <div class="button__group">
       <ait-button
       *ngIf="mode === 'NEW' || mode === 'EDIT' "
-        [title]="'CANCEL'"
+        [title]="'cancel'"
         [id]="'cancel'"
         [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
         (click)="back()"
       ></ait-button>
-
       <ait-button
-        *ngIf="mode === 'VIEW'"
-        [title]="'CLOSE'"
-        [id]="'cancel'"
-        [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
-        (click)="back()"
-      ></ait-button>
-
-      <ait-button
-        [title]="'RESET'"
+      *ngIf="mode ==='EDIT' || mode ==='NEW' "
+        [title]="'reset'"
         [id]="'reset'"
         [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
         (click)="resetForm()"
@@ -185,13 +177,13 @@
       <ait-button
         *ngIf="mode === 'EDIT'"
         [id]="'delete'"
-        [title]="'DELETE'"
+        [title]="'delete'"
         [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
         (click)="deleteUserById()"
       ></ait-button>
       <ait-button
         *ngIf="mode === 'NEW'"
-        [title]="'SAVE & CONTINUE'"
+        [title]="'save_continue'"
         [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
         [id]="'saveContinue'"
         (click)="saveAndContinue()"
@@ -200,7 +192,7 @@
         [id]="'saveClose'"
         *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
         [width]="'200px'"
-        [title]="'SAVE & CLOSE'"
+        [title]="'save_close'"
         (click)="saveAndClose()"
         [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
       >
@@ -209,9 +201,17 @@
         *ngIf="!isChanged && mode === 'EDIT'"
         [id]="'saveClose'"
         [width]="'200px'"
-        [title]="'SAVE & CLOSE'"
+        [title]="'save_close'"
         [style]="'disabled'"
       ></ait-button>
+      <ait-button
+        *ngIf=" mode === 'VIEW'"
+        [id]="'saveClose'"
+        [width]="'200px'"
+        [title]="'close'"
+        (click)="back()"
+        [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
+    ></ait-button>
     </div>
   </div>
 </div>

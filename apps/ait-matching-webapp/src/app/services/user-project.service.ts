@@ -50,32 +50,95 @@ export class UserProjectService extends AitBaseService {
         );
     }
 
+    async findKeyCompany(_key?: string){
+      const condition = {
+        company: _key
+      }
+      const returnFields = {code: true};
+      const request = {};
+      request['collection'] = 'sys_company';
+      request['condition'] = condition;    
+      return await this.query('findKey', {collection: 'sys_company',  condition    }, 
+      {
+        _key : true,
+      })
+    }
+
+  // tim key title luu trong biz_project
+  async findKeyTitle(_key?: string, user_id?:string ){
+      const condition = {
+          company: _key,
+          del_flag: false,
+          user_id: user_id
+        }
+        return await this.query('findKey', {collection: 'user_profile',  condition    }, 
+        {
+          _key : true,
+          title:true,
+        })
+    }
+
+    async findKeySkills(_from?: string){
+      const condition = {
+          _from: _from,
+          del_flag: false,
+        }
+        return await this.query('findKey', {collection: 'biz_project_skill',  condition    }, 
+        {
+          _key : true,
+        })
+    }
+
     async save(data: any, table: string) {
         const returnField = { user_id: true, _key: true};
         return await this.mutation('saveUserProject',table,[data],returnField);
     }
 
-    // async saveProjectKill(data: any){
-    //     const returnField = { user_id: true, _key: true };
-    //     return await this.mutation(
-    //         'saveUserProject',
-    //         'biz_project_skill',
-    //         [data],
-    //         returnField
-    //     );
-    // }
-
-    async findByUserId(user_id: string) {
-        return await this.query('findUserProject', {
-            collection: this.collection,
-            condition: {
-                user_id
-            }
-        }, {
-            _key: true,
-            user_id: true
-        })
+    async saveSkills(data: any) {
+      console.log(data);
+      
+      const returnField = { _key: true };
+      return await this.mutation(
+        'saveSkill',
+        'biz_project_skill',
+        [data],
+        returnField
+      );
     }
+
+    async saveConnectionUserProject(data: any) {
+      console.log(data);
+      
+      const returnField = { _key: true };
+      return await this.mutation(
+        'saveConnectionUserProject',
+        'connection_user_project',
+        [data],
+        returnField
+      );
+    }
+
+    async removeSkill(data: any[]) {
+      const returnFields = { _key: true };
+      return await this.mutation(
+        'removeSkill',
+        'biz_project_skill',
+        data,
+        returnFields
+      );
+    }
+
+    // async findByUserId(user_id: string) {
+    //     return await this.query('findUserProject', {
+    //         collection: this.collection,
+    //         condition: {
+    //             user_id
+    //         }
+    //     }, {
+    //         _key: true,
+    //         user_id: true
+    //     })
+    // }
 
     async remove(_key: string) {
         const returnFields = { _key: true, user_id: true };
@@ -86,55 +149,29 @@ export class UserProjectService extends AitBaseService {
         const returnFields = { _key: true, user_id: true };
         return await this.mutation('removeUserProject', table, [{ _key: _key }], returnFields);
     }
-    async deletetable(_key:string, table: string){
-        const returnFields = { _key: true, user_id: true };
-        return await this.mutation('removeUserProject', table, [{ _key: _key }], returnFields);
-    }
-    // xoa cac truong co theo from trong biz_project_skill
-    async deleteByFrom(from:string){
-      const returnFields = { _key: true, user_id: true };
-      return await this.mutation('removeUserProject', 'biz_project_skill', [{ _from: from }], returnFields);
-  }
+  //   async deletetable(_key:string, table: string){
+  //       const returnFields = { _key: true, user_id: true };
+  //       return await this.mutation('removeUserProject', table, [{ _key: _key }], returnFields);
+  //   }
+  //   // xoa cac truong co theo from trong biz_project_skill
+  //   async deleteByFrom(from:string){
+  //     const returnFields = { _key: true, user_id: true };
+  //     return await this.mutation('removeUserProject', 'biz_project_skill', [{ _from: from }], returnFields);
+  // }
 
-    async findKeyCompany(_key?: string){
-        const condition = {
-          company: _key
-        }
-        const returnFields = {code: true};
-        const request = {};
-        request['collection'] = 'sys_company';
-        request['condition'] = condition;    
-        return await this.query('findKey', {collection: 'sys_company',  condition    }, 
-        {
-          _key : true,
-        })
-      }
 
-    // tim key title luu trong biz_project
-    async findKeyTitle(_key?: string, user_id?:string ){
-        const condition = {
-            company: _key,
-            del_flag: false,
-            user_id: user_id
-          }
-          return await this.query('findKey', {collection: 'user_profile',  condition    }, 
-          {
-            _key : true,
-            title:true,
-          })
-      }
 
       // tim code cua title
-      async findCodeTitle(_key?: string){
-        const condition = {
-          _key: _key
-        }
-        const returnFields = {code: true};
-        const request = {};
-        request['collection'] = 'm_title';
-        request['condition'] = condition;    
-        return await this.query('findSystem', request, returnFields);
-      }
+      // async findCodeTitle(_key?: string){
+      //   const condition = {
+      //     _key: _key
+      //   }
+      //   const returnFields = {code: true};
+      //   const request = {};
+      //   request['collection'] = 'm_title';
+      //   request['condition'] = condition;    
+      //   return await this.query('findSystem', request, returnFields);
+      // }
     
       //tim key cua 1 bang dua vao from va to
       async findKey(_id?: string,_to?: string, table?: string){
@@ -166,28 +203,28 @@ export class UserProjectService extends AitBaseService {
       }
 
     // tim key cua biz_project va skills trong bang biz_project
-    async findKeyProjectAndSkills(_key:string){
-        const condition = {
-            _key: _key,
-            del_flag: false,
-          }
-          return await this.query('findKey', {collection: 'biz_project',  condition    }, 
-          {
-            _key : true,
-            skills:true
-          })
-    }
+    // async findKeyProjectAndSkills(_key:string){
+    //     const condition = {
+    //         _key: _key,
+    //         del_flag: false,
+    //       }
+    //       return await this.query('findKey', {collection: 'biz_project',  condition    }, 
+    //       {
+    //         _key : true,
+    //         skills:true
+    //       })
+    // }
     // tim kiem key bang biz_project_skills
     // tim kiem key value m_skills
-    async findSkillsByKey(_key:string){
-      const condition = {
-          _key: _key,
-          del_flag: false,
-        }
-        return await this.query('findKey', {collection: 'm_skill',  condition    }, 
-        {
-          _key : true,
-          name : true,
-        })
-  }
+  //   async findSkillsByKey(_key:string){
+  //     const condition = {
+  //         _key: _key,
+  //         del_flag: false,
+  //       }
+  //       return await this.query('findKey', {collection: 'm_skill',  condition    }, 
+  //       {
+  //         _key : true,
+  //         name : true,
+  //       })
+  // }
 }
