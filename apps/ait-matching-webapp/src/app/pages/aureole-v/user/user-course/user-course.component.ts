@@ -75,7 +75,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
       name: new FormControl(null, [Validators.required]),
       course_number: new FormControl(null),
       description: new FormControl(null),  
-      file: new FormControl(null),
+      file: new FormControl(null, [Validators.maxLength(5)]),
       is_online: new FormControl(null),
       start_date_from: new FormControl(null),
       start_date_to: new FormControl(null),
@@ -302,9 +302,14 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
   scrollIntoError() {
     for (const key of Object.keys(this.course.controls)) {
       if (this.course.controls[key].invalid) {
-        const invalidControl = this.element.nativeElement.querySelector(
+        let invalidControl = this.element.nativeElement.querySelector(
           `#${key}_input`
         );
+        if(key == 'file'){
+            invalidControl = this.element.nativeElement.querySelector(
+            `#${key}_input_file`
+          );      
+        }
         try {
           invalidControl.scrollIntoView({
             behavior: 'auto',

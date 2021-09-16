@@ -21,27 +21,23 @@ import { isArrayFull, isObjectFull, KEYS, KeyValueDto, RESULT_STATUS } from '@ai
   styleUrls: ['./user-project.component.scss']
 })
 export class UserProjectComponent extends AitBaseComponent implements OnInit {
-  loading = false;
   mode = MODE.NEW;
   isChanged = false;
   isSubmit = false;
   userProject: FormGroup;
-  currentLang = '';
-  sort_no: number;
+  sort_no = 0;
   job_company: any = '';
   userProjectClone: any;
   isReset = false;
-  private userProjectSubscr: Subscription;
-  dateNow = Date.now();
+  dateNow = new Date().setHours(0, 0, 0, 0);
   defaultCompany = {} as KeyValueDto;
   keyTitle = '';
   keyCompany = '';
-  keyBizProject='';
-  error = null;
+  error = [];
   listSkills : any;
   stateProjectInfo = {} as UserProjectDto;
   stateProjectInfoDf = {} as UserProjectDto;
-  isCheckSave = false;
+  dataOld : any;
   connection_user_project = {
     _from:'',
     _to:'',
@@ -58,7 +54,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     name: false,
     start_date_from: false,
     start_date_to: false,
-    company: false,
+    company_working: false,
     title: false,
     description: false,
     skills: false,
@@ -79,7 +75,6 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     private formBuilder: FormBuilder,
     public router: Router,
     private userProjectService: UserProjectService,
-    private masterDataService: AitMasterDataService,
     public activeRouter: ActivatedRoute,
     private translateService: AitTranslationService,
     public store: Store<AppState | any>,
@@ -104,12 +99,6 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       module: 'user',
       page: 'user_project',
     });
-    store.pipe(select(getLang)).subscribe((lang) => {
-      this.currentLang = lang;
-    });
-    store.pipe(select(getCaption)).subscribe(() => {
-      this.getI18n();
-    })
     this.userProject = this.formBuilder.group({
       _key: new FormControl(null),
       name: new FormControl(null, [Validators.required, Validators.maxLength(200)]),
@@ -118,10 +107,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       company_working: new FormControl(null, [Validators.required]),
       title: new FormControl(null, [ Validators.required ]),
       description: new FormControl(null, [Validators.maxLength(4000)]),
-      skills: new FormControl(null, [
-        Validators.required,
-        Validators.maxLength(10),
-      ]),
+      skills: new FormControl(null, [Validators.required,Validators.maxLength(10)]),
       responsibility: new FormControl(null, [Validators.maxLength(4000)]),
       achievement: new FormControl(null, [Validators.maxLength(4000)]),
     });
@@ -142,16 +128,15 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       this.userProject.controls['company_working'].setValue(this.keyCompany);
     }else{
       await this.findBizProject();
-      await this.findSkills()
-      this.userProject.valueChanges.subscribe((data) => {
-        if (this.userProject.pristine) {
-          this.userProjectClone = AitAppUtils.deepCloneObject(data);
-        } else if (this.mode === MODE.EDIT) {
-          this.checkAllowSave();
-        }
-      });
-      
+      await this.findSkills()git       
     }
+    await this.userProject.valueChanges.subscribe((data) => {      
+      if (this.userProject.pristine) {
+        this.userProjectClone = AitAppUtils.deepCloneObject(data);      
+      } else {
+        this.checkAllowSave();
+      }
+    });
   }
 
   async findBizProject(){
@@ -160,18 +145,26 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     if(res.data.length > 0 ){
       this.userProject.patchValue({ ...data });
       this.userProjectClone = this.userProject.value;
-      this.listSkills = data.skills;
-      console.log(this.userProject.value);      
     }else{
-      this.showToastr('', this.getMsg('E0050'),'warning');
-      history.back();
+      this.router.navigate([`/404`]); 
     }        
    
   }
 
   async findSkills(){
     const from = 'biz_project/' + this.project_key;
-    await this.userProjectService.findKeySkills(from)
+    await this.userProjectService.findKeySkills(from).then((res) => {
+      
+      let listSkills = []
+      res.data.forEach((key) =>{
+        listSkills.push({_key:key._to.substring(8)} );
+      })
+      this.userProject.controls['skills'].setValue(listSkills);
+      this.dataOld = this.userProject.value; 
+      this.userProjectClone = this.userProject.value;
+    })
+    console.log(this.dataOld);
+    
   }
 
   async inputProject(){
@@ -188,19 +181,41 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       });
   }
 
+  takeInputValue(val: any, form: string): void {    
+    if (val) {
+      if(isObjectFull(val)){  
+        if (form == 'skills') {          
+          const data = [];       
+          val.value.forEach((item) => {
+            data.push(item);
+          });
+          this.userProject.markAsDirty();
+          this.userProject.controls['skills'].setValue(data);
+        }else{
+          this.userProject.controls[form].setValue(val?.value[0]?._key);
+        }     
+      } 
+      else {
+        this.userProject.controls[form].markAsDirty();
+        this.userProject.controls[form].setValue(val);
+      }  
+    } else {
+      this.userProject.markAsDirty();
+      this.userProject.controls[form].setValue(null);
+    }       
+  }
+
   takeDatePickerValue(value: number, form: string) {
     if (value) {
       const data = value as number;
       value = new Date(data).setHours(0, 0, 0, 0);
       this.userProject.controls[form].markAsDirty();
       this.userProject.controls[form].setValue(value);
-      if(form == 'start_date_to'){
-        this.error = this.checkDatePicker();
-      }
     } else {
+      this.userProject.controls[form].markAsDirty();
       this.userProject.controls[form].setValue(null);
-    }
-    
+    }   
+    this.error = this.checkDatePicker();
   }
 
   checkDatePicker(){
@@ -240,8 +255,6 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
   async saveSkill(bizProjectKey: string) {
     this.biz_project_skill._from = 'biz_project/' + bizProjectKey;
     this.biz_project_skill.relationship = ' biz_project skill';
-    this.biz_project_skill.sort_no = this.sort_no + 1;
-
     if(this.mode == 'EDIT'){
       const _fromSkill = [
         { _from: 'biz_project/' + this.project_key },
@@ -250,6 +263,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     }
 
     this.listSkills.forEach(async (skill) => {
+      this.biz_project_skill.sort_no = this.sort_no + 1;
       this.biz_project_skill._to = 'm_skill/' + skill._key;
       await this.userProjectService.saveSkills(this.biz_project_skill);
     });
@@ -261,24 +275,6 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     this.connection_user_project.relationship = 'user project';
     this.connection_user_project.sort_no = this.sort_no + 1;
     await this.userProjectService.saveConnectionUserProject(this.connection_user_project);
-  }
-
-  async save(){
-    
-    await this.userProjectService.save(this.dataSaveProject(),'biz_project' )
-    .then(async (res) => {  
-      if (res?.status === RESULT_STATUS.OK) {        
-        const data = res.data[0];
-        await this.saveSkill(data._key);
-        await this.saveUserProject(data._key);  
-        const message = this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
-        this.showToastr('', message);      
-      }else{
-        this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-      }      
-    }).catch(() => {
-      this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-    })
   }
 
   async saveContinue() { 
@@ -295,7 +291,8 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
           await this.saveSkill(data._key);
           await this.saveUserProject(data._key);  
           const message = this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
-          this.showToastr('', message);      
+          this.showToastr('', message); 
+          await this.reset();     
         }else{
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         }      
@@ -351,29 +348,6 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     }
   }
 
-  takeInputValue(val: any, form: string): void {     
-    if (val) {
-      if(isObjectFull(val)){  
-        if (form = 'skills') {          
-          const data = [];       
-          val.value.forEach((item) => {
-            data.push(item);
-          });
-          this.userProject.markAsDirty();
-          this.userProject.controls['skills'].setValue(data);
-        }else{
-          this.userProject.controls[form].setValue(val?.value[0]?._key);
-        }     
-      } 
-      else {
-        this.userProject.controls[form].markAsDirty();
-        this.userProject.controls[form].setValue(val);
-      }  
-    } else {
-      this.userProject.controls[form].setValue(null);
-    }      
-  }
-
   setHours(data: any) {
     for (const prop in data) {
       if (this.dateField.includes(prop)) {
@@ -398,48 +372,50 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
   }
 
   async reset(){
+    this.isSubmit = false;
+    this.isChanged = false;
+    this.error = [];
+    this.dataOld = this.userProjectClone;
     this.userProject.reset();
-      for (const prop in this.resetUserProject) {
-        this.resetUserProject[prop] = true;
-        setTimeout(() => {
-          this.resetUserProject[prop] = false;
-        }, 100);
-      }
+    for (const prop in this.resetUserProject) {
+      this.resetUserProject[prop] = true;
+      setTimeout(() => {
+        this.resetUserProject[prop] = false;
+      }, 100);
+    }
+    setTimeout(() => { 
+      this.isReset = false;
+      this.userProject.controls["start_date_from"].setValue(this.dateNow);
+      this.userProject.controls['title'].setValue( this.keyTitle);
+      this.userProject.controls['company_working'].setValue(this.keyCompany);
+    }, 100);
   }
 
   async resetForm() {
+    this.isSubmit = false;
+    this.isChanged = false;
     if (this.mode === MODE.EDIT) {
-      const dataOld = this.userProjectClone;
-      await this.reset();      
+      for (const index in this.resetUserProject) {
+        if (!this.userProject.controls[index].value ) {
+          this.resetUserProject[index] = true;
+          setTimeout(() => {
+            this.userProject[index] = false;
+          }, 100);
+        }
+      }
       setTimeout(() => {
-        this.listSkills = dataOld.skills;
-        this.userProject.patchValue({
-          ...dataOld
-        });
+        console.log( this.dataOld);
+        this.userProject.patchValue({ ...this.dataOld });;
+        console.log(this.userProject.value);
+        this.showToastr('', this.getMsg('I0007'));
       },100)
+      
+      
     }
     else {
       await this.reset();
-      setTimeout(() => { 
-        this.isReset = false;
-        this.userProject.controls["start_date_from"].setValue(this.dateNow);
-        this.userProject.controls['title'].setValue( this.keyTitle);
-        this.userProject.controls['company_working'].setValue(this.keyCompany);
-        this.showToastr('', this.getMsg('I0007'));
-      }, 100);
-      this.resetErrors();
+      this.showToastr('', this.getMsg('I0007'));
     }
-
-    this.isClearErrors = true;
-    setTimeout(() => {
-      this.isClearErrors = false;
-      this.showToastr('', this.getMsg('I0007'),'success');
-    }, 300);
-    
-  }
-  resetErrors(): void {
-    this.userProjectErros = new UserProjectErrorsMessage();
-
   }
   async Delete() {  
     this.dialogService
@@ -481,8 +457,11 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     if(this.isChanged){
       this.dialogService
       .open(AitConfirmDialogComponent, {
+        closeOnBackdropClick: true,
+        hasBackdrop: true,
+        autoFocus: false,
         context: {
-          title: this.translateService.translate('I0006'),
+          title: this.getMsg('I0006'),
         },
       })
       .onClose.subscribe(async (event) => {

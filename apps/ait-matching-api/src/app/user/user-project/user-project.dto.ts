@@ -74,7 +74,7 @@ export class SaveUserProjectDto extends BaseDto {
     @Field(() => String, { nullable: true })
     relationship?: string;
 
-    @Field(() => String, { nullable: true })
-    sort_no?: string;
+    @Field(() => Float, { nullable: true })
+    sort_no?: number;
 }
 

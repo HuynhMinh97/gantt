@@ -46,7 +46,7 @@
             [label]="''"
             [style]="{ width: '170px' }"
             (watchValue)="takeDatePickerValue($event?.value, 'start_date_to')"
-            [isReset]="resetUserProject.start_date_from"
+            [isReset]="resetUserProject.start_date_to"
             [dateInput]="
               userProject.controls['start_date_to'].value
                 ? userProject.controls['start_date_to'].value
@@ -69,7 +69,7 @@
           [placeholder]="'Aureole IT'"
           [required]="true"
           [collection]="'sys_company'"
-          [isReset]="resetUserProject.company"
+          [isReset]="resetUserProject.company_working"
           [style]="{ width: '400px' }"
           (watchValue)="takeInputValue($event, 'company_working')"
           [defaultValue]="[{ _key: userProject.value.company_working }]"
@@ -126,7 +126,7 @@
           [isReset]="resetUserProject.skills"
           [style]="{ width: '400px' }"
           (watchValue)="takeInputValue($event, 'skills')"
-          [defaultValue]="listSkills"
+          [defaultValue]="userProject.controls['skills'].value"
           [disableOutputDefault]="true"
           [isSubmit]="isSubmit"
         ></ait-autocomplete-master-data>
