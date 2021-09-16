@@ -49,8 +49,8 @@ export class UserProjectResolver extends AitBaseService {
         return this.save(request, user);
     }
 
-    @Mutation(() => UserProjectResponse, { name: 'removeUserProject' })
-    removeUserProject(
+    @Mutation(() => UserProjectResponse, { name: 'removeProject' })
+    removeProject(
         @AitCtxUser() user: SysUser,
         @Args('request', { type: () => UserProjectRequest }) request: UserProjectRequest
     ) {
@@ -71,6 +71,29 @@ export class UserProjectResolver extends AitBaseService {
         FOR data IN biz_project_skill
         FILTER data._from == item._from
         UPDATE data WITH { del_flag: true } IN biz_project_skill
+        RETURN data
+        `;
+
+        return await this.query(aqlQuery);
+        } else {
+        return new UserProjectResponse(RESULT_STATUS.ERROR, [], 'error');
+        }
+    }
+
+    @Mutation(() => UserProjectResponse, { name: 'removeUserProject' })
+    async removeUserProject(
+        @AitCtxUser() user: SysUser,
+        @Args('request', { type: () => UserProjectRequest }) request: UserProjectRequest
+    ) {
+        //return this.remove(request, user);
+        const user_id = request.user_id;
+
+        if (user_id) {
+        const aqlQuery = `
+        FOR item IN connection_user_project
+        FOR data IN connection_user_project
+        FILTER data._to == item._to
+        UPDATE data WITH { del_flag: true } IN connection_user_project
         RETURN data
         `;
 

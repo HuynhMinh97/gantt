@@ -441,83 +441,42 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     this.userProjectErros = new UserProjectErrorsMessage();
 
   }
-  remove() {
+  async Delete() {  
     this.dialogService
       .open(AitConfirmDialogComponent, {
+        closeOnBackdropClick: true,
+        hasBackdrop: true,
+        autoFocus: false,
         context: {
-          title: this.translateService.translate('Bạn có muốn xóa dữ liệu này không?'),
+          title: this.getMsg('I0004'),
         },
       })
       .onClose.subscribe(async (event) => {
-        if (event) {
-          this.onDelete();
-        }
-      });
-  }
-
-  async onDelete() {
-    let fromSkills = 'biz_project/'+ this.project_key;
-    let fromProject = 'sys_user/' + this.user_id;
-    let toProject = 'biz_project/'+ this.project_key;
-    let keyUser = '';
-    let count = 0;
-    let coutSkillsInBizProject = this.userProjectClone.skills.length;
-    let fromBizProjectSkills = 'biz_project/' + this.project_key;
-    let listKeyBizProjectSkills = [];
-
-    await this.userProjectService.findKey(fromBizProjectSkills,'','biz_project_skill')
-    .then((res) => {  
-      if (res?.status === RESULT_STATUS.OK) {
-        const data = res.data;
-        if(data.length == coutSkillsInBizProject){
-          res.data.forEach(element => {
-            this.userProjectClone.skills.forEach(item => {
-              let _toSkills = 'm_skill/' + item._key;
-              if(element._to == _toSkills){
-                count++;
+        if (event) {        
+          if (this.project_key) {
+            await this.userProjectService.remove(this.project_key).then((res) => {
+              if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
+                const _fromSkill = [
+                  { _from: 'biz_project/' + this.project_key },
+                ];
+                const _toUser = [
+                  { _to: 'biz_project/' + this.project_key },
+                ];
+                this.userProjectService.removeSkill(_fromSkill);
+                this.userProjectService.removeUserProejct(_toUser);                
+                this.showToastr('', this.getMsg('I0003'));
+                history.back();
+              } else {
+                this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
               }
             });
-            listKeyBizProjectSkills.push(element._key);
-          });  
-        }      
-      }
-    }).catch(() => {
-      return;
-    });
-
-    await this.userProjectService.findKeyConnectionUserProject(fromProject,toProject)
-    .then((r) => {
-      if (r?.status === RESULT_STATUS.OK) {
-        keyUser= r.data[0]._key;
-      }
-      
-    }).catch(() => {
-      return;
-    });
-
-    if(count == coutSkillsInBizProject && keyUser != ''){      
-      const title = this.translateService.translate('c_10020');
-      listKeyBizProjectSkills.forEach(async (element) =>{
-        await this.userProjectService.delete(element,'biz_project_skill');
-      });
-
-      await this.userProjectService.delete(keyUser,'connection_user_project');
-       
-
-      await this.userProjectService.remove(this.project_key).then(res => {
-        if (res.status === RESULT_STATUS.OK && res.data.length > 0) {    
-          this.showToastr(title, this.getMsg('I0003'));
-          history.back();
-        } else {
-          this.showToastr(title, this.getMsg('E0100'), KEYS.WARNING);
+          } else {
+            this.showToastr('', this.getMsg('E0050'), KEYS.WARNING);
+          }
         }
-      });      
-    } else{
-      this.showToastr('', this.getMsg('E0050'),'warning');
-      // const title = this.translateService.translate('c_10020');
-      // this.showToastr(title, this.getMsg('E0050'), KEYS.WARNING);
-    }  
+      });
   }
+
   cancel(){
     if(this.isChanged){
       this.dialogService

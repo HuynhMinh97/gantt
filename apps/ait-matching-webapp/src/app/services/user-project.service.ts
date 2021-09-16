@@ -128,6 +128,16 @@ export class UserProjectService extends AitBaseService {
       );
     }
 
+    async removeUserProejct(data: any[]) {
+      const returnFields = { _key: true };
+      return await this.mutation(
+        'removeUserProject',
+        'biz_project_skill',
+        data,
+        returnFields
+      );
+    }
+
     // async findByUserId(user_id: string) {
     //     return await this.query('findUserProject', {
     //         collection: this.collection,
@@ -142,7 +152,7 @@ export class UserProjectService extends AitBaseService {
 
     async remove(_key: string) {
         const returnFields = { _key: true, user_id: true };
-        return await this.mutation('removeUserProject', this.collection, [{ _key: _key }], returnFields);
+        return await this.mutation('removeProject', this.collection, [{ _key: _key }], returnFields);
     }
 
     async delete(_key:string, table: string){
