@@ -125,8 +125,6 @@ export class UserExperienceComponent
               this.userExperienceInfo.patchValue({ ...data });
               this.userExperienceInfoClone = this.userExperienceInfo.value;
               this.user_id = data.user_id;
-              console.log(data.user_id);
-
               isUserExist = true;
             }
             !isUserExist && this.router.navigate([`/404`]);
@@ -222,7 +220,6 @@ export class UserExperienceComponent
           }, 100);
         }
       }
-      console.log(this.userExperienceInfoClone);
       this.userExperienceInfo.patchValue({
         ...this.userExperienceInfoClone,
       });
@@ -268,7 +265,6 @@ export class UserExperienceComponent
       saveData.employee_type = saveData.employee_type._key;
     }
     saveData.company_working = saveData.company_working._key;
-    console.log(saveData.is_working);
     if (saveData.is_working) {
       delete saveData.start_date_to;
     }
@@ -361,7 +357,7 @@ export class UserExperienceComponent
   }
 
   takeMasterValue(value: any, target: string): void {
-    if (isObjectFull(value)) {
+    if (isObjectFull(value?.value)) {
       this.userExperienceInfo.controls[target].markAsDirty();
       this.userExperienceInfo.controls[target].setValue(value?.value[0]);
     } else {
@@ -398,6 +394,7 @@ export class UserExperienceComponent
     const dateFrom = this.userExperienceInfo.controls['start_date_from'].value;
     const dateTo = this.userExperienceInfo.controls['start_date_to'].value;
     const isWorking = this.userExperienceInfo.controls['is_working'].value;
+    this.isDateCompare = false;
 
     if (dateFrom == null || isWorking || dateTo == null) {
       this.isDateCompare = false;

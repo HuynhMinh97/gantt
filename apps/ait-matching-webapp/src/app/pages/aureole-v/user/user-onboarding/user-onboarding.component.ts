@@ -1,5 +1,6 @@
 import {
   isArrayFull,
+  isObject,
   isObjectFull,
 } from './../../../../../../../../libs/shared/src/lib/utils/checks.util';
 import { UserOnboardingService } from './../../../../services/user-onboarding.service';
@@ -31,7 +32,7 @@ import {
 } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
 import { KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
-import { KeyValueCheckedDto } from './interface';
+import { KeyValueCheckedDto, ONBOARD } from './interface';
 
 @Component({
   selector: 'ait-user-onboarding',
@@ -192,6 +193,10 @@ export class UserOnboardingComponent
     this.user_key = this.activeRouter.snapshot.paramMap.get('id');
     if (this.user_key) {
       this.mode = MODE.EDIT;
+    } else {
+      this.countryCode = ONBOARD.SPECIAL_CHAR;
+      this.cityCode = ONBOARD.SPECIAL_CHAR;
+      this.districtCode = ONBOARD.SPECIAL_CHAR;
     }
 
     this.userOnbService
@@ -204,10 +209,6 @@ export class UserOnboardingComponent
           }
         }
       });
-
-    this.countryCode = 'a';
-    this.cityCode = 'a';
-    this.districtCode = 'a';
   }
 
   async ngOnInit(): Promise<void> {
@@ -265,8 +266,8 @@ export class UserOnboardingComponent
 
   getTitleByMode() {
     return this.mode === MODE.EDIT
-      ? this.translateService.translate('edit_onboarding')
-      : this.translateService.translate('add_onboarding');
+      ? this.translateService.translate('Edit Onboarding')
+      : this.translateService.translate('Add Onboarding');
   }
 
   // Get gender list from master-data, param class = GENDER
@@ -367,6 +368,7 @@ export class UserOnboardingComponent
     this.user_skill._from = 'sys_user/' + this.authService.getUserID();
     this.user_skill.relationship = 'user_skill';
     this.user_skill.sort_no = this.sort_no + 1;
+    let number_sort_no = 1;
 
     const skills = this.skills;
     const _fromUserSkill = [
@@ -374,8 +376,10 @@ export class UserOnboardingComponent
     ];
     await this.userOnbService.removeSkills(_fromUserSkill);
     skills.forEach(async (skill) => {
+      this.user_skill.sort_no += number_sort_no;
       this.user_skill._to = 'm_skill/' + skill._key;
       await this.userOnbService.saveUserSkills([this.user_skill]);
+      number_sort_no++;
     });
   }
 
@@ -486,34 +490,42 @@ export class UserOnboardingComponent
     }
   }
 
+  checkSelectCountry(value: any, target: string) {
+    if (target === 'country') {
+      this.countryCode = value?.value[0]._key;
+      this.cityCode = ONBOARD.SPECIAL_CHAR;
+      this.districtCode = ONBOARD.SPECIAL_CHAR;
+      console.log(this.countryCode);
+    }
+    if (target === 'city') {
+      this.cityCode = value?.value[0]._key;
+      this.districtCode = ONBOARD.SPECIAL_CHAR;
+    }
+    if (target === 'district') {
+      this.districtCode = value?.value[0]._key;
+    }
+  }
+
   takeMasterValue(value: any, target: string): void {
+    if (!isObjectFull(value?.value)) {
+      this.userOnboardingInfo.controls[target].setValue(null);
+      if (target === 'country') {
+        this.countryCode = ONBOARD.SPECIAL_CHAR;
+        this.cityCode = ONBOARD.SPECIAL_CHAR;
+        this.districtCode = ONBOARD.SPECIAL_CHAR;
+      }
+      if (target === 'city') {
+        this.cityCode = ONBOARD.SPECIAL_CHAR;
+        this.districtCode = ONBOARD.SPECIAL_CHAR;
+      }
+      if (target === 'district') {
+        this.districtCode = ONBOARD.SPECIAL_CHAR;
+      }
+    }
     if (isObjectFull(value)) {
       this.userOnboardingInfo.controls[target].markAsDirty();
       this.userOnboardingInfo.controls[target].setValue(value?.value[0]);
-      if (target === 'country') {
-        this.countryCode = value?.value[0]._key;
-        this.cityCode = 'a';
-        this.districtCode = 'a';
-        this.resetUserInfo['district'] = true;
-        this.resetUserInfo['ward'] = true;
-        setTimeout(() => {
-          this.resetUserInfo['district'] = false;
-          this.resetUserInfo['ward'] = false;
-        }, 100);
-      }
-      if (target === 'city') {
-        this.cityCode = value?.value[0]._key;
-        this.districtCode = 'a';
-        this.resetUserInfo['district'] = true;
-        setTimeout(() => {
-          this.resetUserInfo['district'] = false;
-        }, 100);
-      }
-      if (target === 'district') {
-        this.districtCode = value?.value[0]._key;
-      }
-    } else {
-      this.userOnboardingInfo.controls[target].setValue(null);
+      this.checkSelectCountry(value, target);
     }
   }
 

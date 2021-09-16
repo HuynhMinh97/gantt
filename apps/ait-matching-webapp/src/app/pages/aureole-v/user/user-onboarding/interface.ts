@@ -7,3 +7,7 @@ export interface KeyValueCheckedDto {
   checked: boolean;
   name: string;
 }
+
+export enum ONBOARD {
+  SPECIAL_CHAR = '#$@'
+}
