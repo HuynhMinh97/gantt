@@ -224,6 +224,15 @@ export class UserOnboardingComponent
               this.userOnboardingInfoClone = this.userOnboardingInfo.value;
               this.user_id_profile = data.user_id;
               this._key = data._key;
+              this.countryCode = this.userOnboardingInfo.controls[
+                'country'
+              ].value._key;
+              this.cityCode = this.userOnboardingInfo.controls[
+                'city'
+              ].value._key;
+              this.districtCode = this.userOnboardingInfo.controls[
+                'district'
+              ].value._key;
               isUserExist = true;
             }
             !isUserExist && this.router.navigate([`/404`]);
@@ -340,6 +349,11 @@ export class UserOnboardingComponent
       this.userOnboardingInfo.patchValue({
         ...this.userOnboardingInfoClone,
       });
+      this.countryCode = this.userOnboardingInfo.controls['country'].value._key;
+      this.cityCode = this.userOnboardingInfo.controls['city'].value._key;
+      this.districtCode = this.userOnboardingInfo.controls[
+        'district'
+      ].value._key;
     }
     this.showToastr('', this.getMsg('I0007'));
   }
