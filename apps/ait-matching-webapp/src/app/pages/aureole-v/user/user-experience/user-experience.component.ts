@@ -186,8 +186,8 @@ export class UserExperienceComponent
 
   getTitleByMode() {
     return this.mode === MODE.EDIT
-      ? this.translateService.translate('edit_experience')
-      : this.translateService.translate('add_experience');
+      ? this.translateService.translate('edit experience')
+      : this.translateService.translate('add experience');
   }
 
   resetModeNew() {
@@ -264,7 +264,9 @@ export class UserExperienceComponent
 
     saveData.title = saveData.title._key;
     saveData.location = saveData.location._key;
-    saveData.employee_type = saveData.employee_type._key;
+    if (saveData.employee_type) {
+      saveData.employee_type = saveData.employee_type._key;
+    }
     saveData.company_working = saveData.company_working._key;
     console.log(saveData.is_working);
     if (saveData.is_working) {
@@ -401,16 +403,16 @@ export class UserExperienceComponent
       this.isDateCompare = false;
       if (dateFrom > this.defaultValueDate && isWorking) {
         const transferMsg = (msg || '')
-          .replace('{0}', this.translateService.translate('start_date_from'))
-          .replace('{1}', this.translateService.translate('now_date'));
+          .replace('{0}', this.translateService.translate('START DATE'))
+          .replace('{1}', this.translateService.translate('CURRENT DATE'));
         res.push(transferMsg);
         this.isDateCompare = true;
       }
     } else {
       if (dateFrom > dateTo && !isWorking) {
         const transferMsg = (msg || '')
-          .replace('{0}', this.translateService.translate('start_date_from'))
-          .replace('{1}', this.translateService.translate('start_date_to'));
+          .replace('{0}', this.translateService.translate('START DATE'))
+          .replace('{1}', this.translateService.translate('START DATE TO'));
         res.push(transferMsg);
         this.isDateCompare = true;
       }

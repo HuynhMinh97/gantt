@@ -260,11 +260,14 @@ label.file-max {
 ::ng-deep #user_education .header__card {
   display: none;
 }
-::ng-deep #user_education .card__content_container{
+::ng-deep #user_education .card__content_container {
   padding: 30px;
 }
-::ng-deep #user_education .content{
+::ng-deep #user_education .content {
   padding-top: 0;
+}
+::ng-deep #user_education ait-error-message div {
+  width: 410px;
 }
 ::ng-deep #user_education .sticky {
   position: -webkit-sticky;
