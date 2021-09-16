@@ -128,7 +128,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       this.userProject.controls['company_working'].setValue(this.keyCompany);
     }else{
       await this.findBizProject();
-      await this.findSkills()git       
+      await this.findSkills();      
     }
     await this.userProject.valueChanges.subscribe((data) => {      
       if (this.userProject.pristine) {
@@ -263,7 +263,8 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     }
 
     this.listSkills.forEach(async (skill) => {
-      this.biz_project_skill.sort_no = this.sort_no + 1;
+      this.sort_no += 1;
+      this.biz_project_skill.sort_no = this.sort_no;
       this.biz_project_skill._to = 'm_skill/' + skill._key;
       await this.userProjectService.saveSkills(this.biz_project_skill);
     });
