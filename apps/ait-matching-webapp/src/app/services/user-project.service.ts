@@ -85,7 +85,7 @@ export class UserProjectService extends AitBaseService {
         }
         return await this.query('findKey', {collection: 'biz_project_skill',  condition    }, 
         {
-          _key : true,
+          _to: true
         })
     }
 
