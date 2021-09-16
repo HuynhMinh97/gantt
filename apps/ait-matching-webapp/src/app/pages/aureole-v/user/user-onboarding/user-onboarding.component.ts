@@ -266,8 +266,8 @@ export class UserOnboardingComponent
 
   getTitleByMode() {
     return this.mode === MODE.EDIT
-      ? this.translateService.translate('edit onboarding')
-      : this.translateService.translate('add onboarding');
+      ? this.translateService.translate('Edit Onboarding')
+      : this.translateService.translate('Add Onboarding');
   }
 
   // Get gender list from master-data, param class = GENDER
@@ -368,6 +368,7 @@ export class UserOnboardingComponent
     this.user_skill._from = 'sys_user/' + this.authService.getUserID();
     this.user_skill.relationship = 'user_skill';
     this.user_skill.sort_no = this.sort_no + 1;
+    let number_sort_no = 1;
 
     const skills = this.skills;
     const _fromUserSkill = [
@@ -375,8 +376,10 @@ export class UserOnboardingComponent
     ];
     await this.userOnbService.removeSkills(_fromUserSkill);
     skills.forEach(async (skill) => {
+      this.user_skill.sort_no += number_sort_no;
       this.user_skill._to = 'm_skill/' + skill._key;
       await this.userOnbService.saveUserSkills([this.user_skill]);
+      number_sort_no++;
     });
   }
 
