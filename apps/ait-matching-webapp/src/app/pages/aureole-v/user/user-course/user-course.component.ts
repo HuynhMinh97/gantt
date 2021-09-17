@@ -1,6 +1,6 @@
 import { RESULT_STATUS, KEYS } from './../../../../../../../../libs/shared/src/lib/commons/enums';
 import { AitAuthService, AitConfirmDialogComponent, AitEnvironmentService, AitTranslationService, AppState, MODE, AitBaseComponent, AitAppUtils } from '@ait/ui';
-import { Component, OnInit, SimpleChanges, OnChanges, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import { NbToastrService, NbLayoutScrollService, NbDialogService } from '@nebular/theme';
 import { isArrayFull, isObjectFull } from '@ait/shared';
@@ -17,7 +17,7 @@ import { UserCourseService } from 'apps/ait-matching-webapp/src/app/services/use
   templateUrl: './user-course.component.html',
   styleUrls: ['./user-course.component.scss']
 })
-export class UserCourseComponent  extends AitBaseComponent implements OnInit, OnChanges {
+export class UserCourseComponent  extends AitBaseComponent implements OnInit {
   course: FormGroup;
   courseClone: any;
   mode = MODE.NEW;
@@ -41,14 +41,9 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
     start_date_to: false,
     training_center: false,
   };
-  isReset = {
-    occupation: false,
-    work: false,
-    business: false,
-    size: false
-  };
 
   resetMasterUser = false;
+  selectFile = '';
   constructor(
     private element: ElementRef,
     private translateService: AitTranslationService,
@@ -97,18 +92,14 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
     }
      await this.course.valueChanges.subscribe((data) => {           
       if (this.course.pristine) {
-        console.log(data); 
         this.courseClone = AitAppUtils.deepCloneObject(data);       
       } else {
         this.checkAllowSave();
       }
     });
-
     if(this.course.value.start_date_from == null && this.mode == 'NEW'){
       this.course.controls["start_date_from"].setValue(this.dateNow); 
     }  
-    console.log(this.courseClone);
-      
   }
   checkAllowSave() {
     const courseInfo = { ...this.course.value };
@@ -119,10 +110,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
     );
     this.isChanged = !(isChangedUserInfo);
   }
-  ngOnChanges(changes: SimpleChanges) {    
-  }
-
-  takeInputValue(val : any, form: string): void {  
+   takeInputValue(val : any, form: string): void {  
     if(val){
       if(isObjectFull(val)){
         this.course.controls[form].markAsDirty();
@@ -134,6 +122,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
       
       }  
     }else{
+      this.course.controls[form].markAsDirty();
       this.course.controls[form].setValue(null);
     }      
     if(form == 'name' && val.length<=200 || form == 'description' && val.length<=4000){
@@ -143,7 +132,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
       }, 100);
     }
   }
-
+  // is_online
   toggleCheckBox(checked: boolean) {  
     this.course.markAsDirty();
     this.course.controls['is_online'].setValue(checked);
@@ -166,8 +155,9 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
       form === 'dob' && this.setKanjiDate();
       
     } else {
+      this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(null);
-      form === 'dob' && this.course.controls['dob_jp'].setValue(null);
+      // form === 'dob' && this.course.controls['dob_jp'].setValue(null);
     }
     this.error = this.checkDatePicker();
   }
@@ -177,7 +167,6 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
     const msg = this.translateService.getMsg('E0004');
     const dateFrom = this.course.controls['start_date_from'].value;
     const dateTo = this.course.controls['start_date_to'].value;
-
     if(dateFrom > dateTo && dateTo != null){
       const transferMsg = (msg || '')
       .replace('{0}', this.translateService.translate('date_from'))
@@ -194,7 +183,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
         data.push(fileList._key);
       });
       this.course.markAsDirty();
-      this.course.controls['file'].setValue(data);
+      this.course.controls['file'].setValue(data);     
     } else {
       this.course.markAsDirty();
       this.course.controls['file'].setValue(null);
@@ -226,11 +215,19 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
       }, 100);      
     }
     else{
-        this.companyCenter = [];    
-        this.companyCenter.push({_key: this.courseClone.training_center});
-        this.course.patchValue({ ...this.courseClone });
-        console.log(this.courseClone.value);
-        this.showToastr('', this.getMsg('I0007'));
+      this.error = [];
+      for (const index in this.resetCourse) {
+        if (!this.course.controls[index].value) {
+          this.course[index] = true;
+          setTimeout(() => {
+            this.course[index] = false;
+          }, 100);
+        }
+      }    
+      this.companyCenter = [];    
+      this.companyCenter.push({_key: this.courseClone.training_center});
+      this.course.patchValue({ ...this.courseClone });
+      this.showToastr('', this.getMsg('I0007'));
     }
   }
 
@@ -385,5 +382,20 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit, On
     }else{
       history.back()
     }
+  }
+
+  getTitleByMode() {    
+    this.selectFile = this.translateService.translate('select');
+    let title = '';
+    if(this.mode === MODE.EDIT){
+      title = this.translateService.translate('edit course');
+    }
+    else if(this.mode === MODE.NEW){
+      title = this.translateService.translate('add course');
+    }
+    else{
+      title = this.translateService.translate('view course');
+    }
+    return title;
   }
 }

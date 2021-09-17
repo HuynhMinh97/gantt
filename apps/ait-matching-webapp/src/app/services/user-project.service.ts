@@ -75,6 +75,7 @@ export class UserProjectService extends AitBaseService {
         {
           _key : true,
           title:true,
+          company_working: true,
         })
     }
 
@@ -138,18 +139,6 @@ export class UserProjectService extends AitBaseService {
       );
     }
 
-    // async findByUserId(user_id: string) {
-    //     return await this.query('findUserProject', {
-    //         collection: this.collection,
-    //         condition: {
-    //             user_id
-    //         }
-    //     }, {
-    //         _key: true,
-    //         user_id: true
-    //     })
-    // }
-
     async remove(_key: string) {
         const returnFields = { _key: true, user_id: true };
         return await this.mutation('removeProject', this.collection, [{ _key: _key }], returnFields);
@@ -159,30 +148,6 @@ export class UserProjectService extends AitBaseService {
         const returnFields = { _key: true, user_id: true };
         return await this.mutation('removeUserProject', table, [{ _key: _key }], returnFields);
     }
-  //   async deletetable(_key:string, table: string){
-  //       const returnFields = { _key: true, user_id: true };
-  //       return await this.mutation('removeUserProject', table, [{ _key: _key }], returnFields);
-  //   }
-  //   // xoa cac truong co theo from trong biz_project_skill
-  //   async deleteByFrom(from:string){
-  //     const returnFields = { _key: true, user_id: true };
-  //     return await this.mutation('removeUserProject', 'biz_project_skill', [{ _from: from }], returnFields);
-  // }
-
-
-
-      // tim code cua title
-      // async findCodeTitle(_key?: string){
-      //   const condition = {
-      //     _key: _key
-      //   }
-      //   const returnFields = {code: true};
-      //   const request = {};
-      //   request['collection'] = 'm_title';
-      //   request['condition'] = condition;    
-      //   return await this.query('findSystem', request, returnFields);
-      // }
-    
       //tim key cua 1 bang dua vao from va to
       async findKey(_id?: string,_to?: string, table?: string){
         const condition = {
@@ -212,29 +177,4 @@ export class UserProjectService extends AitBaseService {
           })
       }
 
-    // tim key cua biz_project va skills trong bang biz_project
-    // async findKeyProjectAndSkills(_key:string){
-    //     const condition = {
-    //         _key: _key,
-    //         del_flag: false,
-    //       }
-    //       return await this.query('findKey', {collection: 'biz_project',  condition    }, 
-    //       {
-    //         _key : true,
-    //         skills:true
-    //       })
-    // }
-    // tim kiem key bang biz_project_skills
-    // tim kiem key value m_skills
-  //   async findSkillsByKey(_key:string){
-  //     const condition = {
-  //         _key: _key,
-  //         del_flag: false,
-  //       }
-  //       return await this.query('findKey', {collection: 'm_skill',  condition    }, 
-  //       {
-  //         _key : true,
-  //         name : true,
-  //       })
-  // }
 }
