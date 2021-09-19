@@ -319,7 +319,9 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
              
               const data = r.data[0];                                                
               this.certificate.patchValue({ ...data });
-              this.certificateClone = this.certificate.value;         
+              this.certificateClone = this.certificate.value;  
+              console.log(this.certificate.value);
+                     
               this.companyName = {
                 _key: data.name,
               };
