@@ -112,7 +112,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit {
   }
    takeInputValue(val : any, form: string): void {  
     if(val){
-      if(isObjectFull(val)){
+      if(isObjectFull(val) && val.length > 0){
         this.course.controls[form].markAsDirty();
         this.course.controls[form].setValue(val?.value[0]?._key);
       } 

@@ -1,0 +1,59 @@
+<div class="company__info__wrapper">
+    <ait-text-gradient 
+        [id]="'title'"
+        [content]="getTitleByMode()"
+    ></ait-text-gradient>
+    <ait-space></ait-space>
+    <div class="content__card">  
+        <div class="input_inline">
+          <ait-autocomplete-master-data
+            [id]="'skills'"
+            [allowNew]="true"
+            [disableOutputDefault]="true"
+            [collection]="'m_skill'"
+            [label]="'skills'"
+            [placeholder]="'skills input'"
+            [required]="true"
+            [maxItem] = "'50'"
+            [style]="{ width: '400px' }"
+            (watchValue)="takeMasterValue($event, 'skills')"
+            [defaultValue]="userSkills.controls['skills'].value"
+          ></ait-autocomplete-master-data>
+        </div>
+
+    </div>
+      <div class="action-row">
+        <div class="block">
+          <ait-button
+            *ngIf="mode === 'NEW' || mode === 'EDIT'"
+            [id]="'cancel'"
+            [title]="'cancel'"
+            (click)="cancel()"
+            [nbSpinner]="isLoading"
+            [isDefault]="true"
+            nbSpinnerStatus="primary"
+            [width]="'200px'"
+            [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
+          ></ait-button>
+           
+          <ait-button
+          *ngIf=" mode === 'EDIT' || mode === 'NEW'"
+            [id]="'save_continue'"
+            [width]="'200px'"
+            [title]="'save continue'"
+            [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
+            (click)=" saveSkill()"
+          ></ait-button>
+  
+          <ait-button
+            *ngIf=" mode === 'EDIT' || mode === 'NEW'"
+            [id]="'save close'"
+            [width]="'200px'"
+            [title]="'save close'"
+            [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
+            (click)="saveClose()"
+          ></ait-button>
+        </div>
+      </div>
+</div>
+  

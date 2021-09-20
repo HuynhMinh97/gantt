@@ -90,8 +90,6 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
     }else{
       await this.find(this.certificate_key); 
     } 
-    console.log(this.certificate.pristine);
-    
     await this.certificate.valueChanges.subscribe((data) => {   
       this.checkAllowSave();
     });
@@ -114,7 +112,7 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
   }
 
   takeMasterValue(value: any, form: string): void {
-    if (isObjectFull(value)) {
+    if (isObjectFull(value) && value.length > 0) {
       this.certificate.controls[form].markAsDirty();
       this.certificate.controls[form].setValue(value?.value[0]._key);
     } else {
