@@ -27,6 +27,7 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
   isSubmit = false;  
   submitFile = false;  
   isChanged = false;
+  isResetFile = false;
   error = [];
   resetCertificate = {
       name:false,
@@ -196,6 +197,10 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
   }
 
   async resetForm() {
+    this.isResetFile = true;
+    setTimeout(() => {
+      this.isResetFile = false;
+    }, 100);
     if(this.mode === MODE.NEW){
       await this.reset();
       setTimeout(() => {
@@ -212,10 +217,11 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
             this.resetCertificate[index] = false;
           }, 100);
         }
-      }    
+      }   
+     
       this.certificate.patchValue({...this.certificateClone});  
       this.companyName = {_key: this.certificateClone.name};
-      this.companyIssue = {_key: this.certificateClone.issue_by};         
+      this.companyIssue = {_key: this.certificateClone.issue_by};      
       this.showToastr('', this.getMsg('I0007'));    
     }
   }

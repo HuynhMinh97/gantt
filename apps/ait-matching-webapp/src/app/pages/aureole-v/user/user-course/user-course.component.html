@@ -136,7 +136,7 @@
           [required]="false"
           [hasStatus]="false"
           [placeholder]="selectFile"
-          [isReset]="resetCourse.file"
+          [isReset]="isResetFile"
           [isClear]="isClear"
           [fileKeys]="course.controls['file'].value"
           (watchValue)="getFiles($event.value)"

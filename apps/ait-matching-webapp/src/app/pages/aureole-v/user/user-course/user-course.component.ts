@@ -30,6 +30,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit {
   isChanged = false;
   isClear = false;
   isClearErrors = false;
+  isResetFile = false;
   resetCourse = {
     _key:false,
     course_number: false,
@@ -206,7 +207,10 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit {
   }
 
   async resetForm() {
-    
+    this.isResetFile = true;
+    setTimeout(() => {
+      this.isResetFile = false;
+    }, 100);
     if(this.mode === MODE.NEW){
       await this.reset();
       setTimeout(() => {

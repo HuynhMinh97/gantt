@@ -97,7 +97,10 @@
         ></ait-datepicker>
 
       </div>
-      <ait-error-message [errors]="error"></ait-error-message>
+      <ait-error-message 
+        [id]="'errorDate'"
+        [errors]="error"
+      ></ait-error-message>
 
       <div class="input_inline">
         <ait-input-text
@@ -130,7 +133,7 @@
           [maxFiles]="5"
           [hasStatus]="false"
           [placeholder]="selectFile"
-          [isReset]="resetCertificate.file"
+          [isReset]="isResetFile"
           [fileKeys]="certificate.controls['file'].value"
           (watchValue)="getFiles($event.value)"
           [isSubmit]="isSubmit"
