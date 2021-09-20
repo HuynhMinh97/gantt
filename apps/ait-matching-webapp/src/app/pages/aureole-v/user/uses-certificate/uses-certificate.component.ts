@@ -29,6 +29,7 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
   isChanged = false;
   isResetFile = false;
   error = [];
+  isClearError = false;
   resetCertificate = {
       name:false,
       certificate_award_number: false,
@@ -82,19 +83,19 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
     }
   }
  // get value form
-  async ngOnInit(): Promise<any> {    
+  async ngOnInit(): Promise<any> { 
     if(this.mode == MODE.NEW){
       this.certificate.controls["issue_date_from"].setValue(this.dateNow); 
+      this.certificateClone = this.certificate.value;
     }else{
       await this.find(this.certificate_key); 
     } 
-    await this.certificate.valueChanges.subscribe((data) => {      
-      if (this.certificate.pristine) {
-        this.certificateClone = AitAppUtils.deepCloneObject(data);      
-      } else {
-        this.checkAllowSave();
-      }
+    console.log(this.certificate.pristine);
+    
+    await this.certificate.valueChanges.subscribe((data) => {   
+      this.checkAllowSave();
     });
+    this.checkAllowSave();
     if(this.certificate.value.issue_date_from == null && this.mode == "NEW"){
       this.certificate.controls["issue_date_from"].setValue(this.dateNow); 
     }
@@ -112,15 +113,19 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
     this.isChanged = !(isChangedUserInfo);
   }
 
+  takeMasterValue(value: any, form: string): void {
+    if (isObjectFull(value)) {
+      this.certificate.controls[form].markAsDirty();
+      this.certificate.controls[form].setValue(value?.value[0]._key);
+    } else {
+      this.certificate.controls[form].setValue(null);
+    }
+  }
+
   takeInputValue(val : any, form: string): void {      
     if (val) {
-      if(isObjectFull(val)){ 
-        this.certificate.controls[form].markAsDirty();         
-          this.certificate.controls[form].setValue(val?.value[0]?._key);
-      }else {
-        this.certificate.controls[form].markAsDirty();
-        this.certificate.controls[form].setValue(val);
-      }  
+      this.certificate.controls[form].markAsDirty();
+      this.certificate.controls[form].setValue(val);        
     } else {
       this.certificate.controls[form].markAsDirty();
       this.certificate.controls[form].setValue(null);
@@ -159,8 +164,8 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
     const dateTo = this.certificate.controls['issue_date_to'].value;
     if(dateFrom > dateTo && dateTo != null){
       const transferMsg = (msg || '')
-        .replace('{0}', this.translateService.translate('date_from'))
-        .replace('{1}', this.translateService.translate('date_to'));
+        .replace('{0}', this.translateService.translate('issue date'))
+        .replace('{1}', this.translateService.translate('end date'));
       res.push(transferMsg);
     }
     return res;
@@ -188,6 +193,10 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
     this.companyName = null;
     this.companyIssue = null;
     this.certificate.reset();
+    this.isResetFile = true;
+    setTimeout(() => {
+      this.isResetFile = false;
+    }, 100);
     for (const prop in this.resetCertificate) { 
       this.resetCertificate[prop] = true;
       setTimeout(() => {
@@ -197,10 +206,6 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
   }
 
   async resetForm() {
-    this.isResetFile = true;
-    setTimeout(() => {
-      this.isResetFile = false;
-    }, 100);
     if(this.mode === MODE.NEW){
       await this.reset();
       setTimeout(() => {
@@ -209,16 +214,15 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
       }, 100);      
     }
     else{  
-      this.error = [];
-      for (const index in this.resetCertificate) {
-        if (!this.certificate.controls[index].value) {
-          this.resetCertificate[index] = true;
+      this.isResetFile = true;
+      setTimeout(() => {
+        this.isResetFile = false;
+      }, 100);
+      this.error = []; 
+      this.isClearError = true;
           setTimeout(() => {
-            this.resetCertificate[index] = false;
+            this.isClearError = false;
           }, 100);
-        }
-      }   
-     
       this.certificate.patchValue({...this.certificateClone});  
       this.companyName = {_key: this.certificateClone.name};
       this.companyIssue = {_key: this.certificateClone.issue_by};      

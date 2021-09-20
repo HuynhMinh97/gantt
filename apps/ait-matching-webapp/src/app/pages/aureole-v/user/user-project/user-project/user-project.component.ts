@@ -112,7 +112,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     this.userProject = this.formBuilder.group({
       _key: new FormControl(null),
       name: new FormControl(null, [Validators.required, Validators.maxLength(200)]),
-      start_date_from: new FormControl(null, [Validators.required]),
+      start_date_from: new FormControl(null),
       start_date_to: new FormControl(null),
       company_working: new FormControl(null, [Validators.required]),
       title: new FormControl(null, [ Validators.required ]),
@@ -136,16 +136,13 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       this.userProject.controls["start_date_from"].setValue(this.dateNow);
       this.userProject.controls['title'].setValue( this.keyTitle);
       this.userProject.controls['company_working'].setValue(this.keyCompany);
+      this.userProjectClone = this.userProject.value;
     }else{
       await this.findBizProject();
       await this.findSkills();      
     }
     await this.userProject.valueChanges.subscribe((data) => {      
-      if (this.userProject.pristine) {
-        this.userProjectClone = AitAppUtils.deepCloneObject(data);      
-      } else {
-        this.checkAllowSave();
-      }
+      this.checkAllowSave();
     });
   }
 
@@ -212,10 +209,10 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     } else {
       this.userProject.markAsDirty();
       this.userProject.controls[form].setValue(null);
-      this.isClearErrors[form] = true;
-      setTimeout(() => {
-        this.isClearErrors[form] = false;
-      }, 100);
+      // this.isClearErrors[form] = true;
+      // setTimeout(() => {
+      //   this.isClearErrors[form] = false;
+      // }, 100);
     }       
   }
 
@@ -240,8 +237,8 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
 
     if(dateFrom > dateTo && dateTo != null){
       const transferMsg = (msg || '')
-        .replace('{0}', this.translateService.translate('start_date_from'))
-        .replace('{1}', this.translateService.translate('start_date_to'));
+        .replace('{0}', this.translateService.translate('date from'))
+        .replace('{1}', this.translateService.translate('date to'));
         res.push(transferMsg);
     }   
     return res;
@@ -404,6 +401,10 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       this.userProject.controls['title'].setValue( this.keyTitle);
       this.userProject.controls['company_working'].setValue(this.keyCompany);
     }, 100);
+    console.log(this.userProject.value);
+    console.log(this.userProjectClone);
+    
+    
   }
 
   async resetForm() {
