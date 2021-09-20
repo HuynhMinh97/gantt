@@ -332,11 +332,15 @@ export class UserOnboardingComponent
         }, 100);
       }
       this.userOnboardingInfo.reset();
+
       setTimeout(() => {
         this.userOnboardingInfo.controls['gender'].setValue({
           ...this.defaultGender,
         });
       }, 100);
+      this.countryCode = ONBOARD.SPECIAL_CHAR;
+      this.cityCode = ONBOARD.SPECIAL_CHAR;
+      this.districtCode = ONBOARD.SPECIAL_CHAR;
     } else {
       for (const index in this.resetUserInfo) {
         if (!this.userOnboardingInfo.controls[index].value) {
@@ -349,6 +353,7 @@ export class UserOnboardingComponent
       this.userOnboardingInfo.patchValue({
         ...this.userOnboardingInfoClone,
       });
+
       this.countryCode = this.userOnboardingInfo.controls['country'].value._key;
       this.cityCode = this.userOnboardingInfo.controls['city'].value._key;
       this.districtCode = this.userOnboardingInfo.controls[
