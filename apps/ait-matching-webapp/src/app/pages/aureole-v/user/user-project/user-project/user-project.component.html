@@ -23,8 +23,8 @@
       <div class="input_inline">
           <ait-datepicker
             [id]="'start_date_from'"
-            [label]="'date'"
-            [required]="true"
+            [label]="'start date'"
+            [required]="false"
             [placeholder]="''"
             [isSubmit]="isSubmit"
             [style]="{ width: '170px' }"
@@ -43,7 +43,7 @@
           <ait-datepicker
             [id]="'start_date_to'"
             [required]="false"
-            [placeholder]="'yyyy/MM/dd'"
+            [placeholder]="'dd/MM/yyyy'"
             [label]="''"
             [style]="{ width: '170px' }"
             [isSubmit]="isSubmit"
@@ -101,7 +101,7 @@
         <ait-input-text
           [id]="'description'"
           [label]="'description'"
-          [placeholder]="'input_name'"
+          [placeholder]="'place'"
           [rows]="5"
           [required]="true"
           [fullWidth]="true"
@@ -119,6 +119,8 @@
       <div class="input_inline">
         <ait-autocomplete-master-data
           [id]="'skills'"
+          [allowNew]="true"
+          [disableOutputDefault]="true"
           [collection]="'m_skill'"
           [label]="'skills'"
           [placeholder]="'skills_input'"

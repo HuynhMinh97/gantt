@@ -1,6 +1,6 @@
 import { RESULT_STATUS, KEYS } from './../../../../../../../../libs/shared/src/lib/commons/enums';
 import { AitAuthService, AitConfirmDialogComponent, AitEnvironmentService, AitTranslationService, AppState, MODE, AitBaseComponent, AitAppUtils } from '@ait/ui';
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, EventEmitter } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import { NbToastrService, NbLayoutScrollService, NbDialogService } from '@nebular/theme';
 import { isArrayFull, isObjectFull } from '@ait/shared';
@@ -45,6 +45,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit {
 
   resetMasterUser = false;
   selectFile = '';
+  defaultValue: any;
   constructor(
     private element: ElementRef,
     private translateService: AitTranslationService,
@@ -85,19 +86,17 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit {
     }
   }
  // get value form
-  async ngOnInit(): Promise<any> {
+  async ngOnInit(): Promise<any> {  
     if(this.mode == MODE.NEW){
       this.course.controls["start_date_from"].setValue(this.dateNow);
+      this.courseClone = this.course.value;
     } else{
     await this.find(this.course_key);    
     }
-     await this.course.valueChanges.subscribe((data) => {           
-      if (this.course.pristine) {
-        this.courseClone = AitAppUtils.deepCloneObject(data);       
-      } else {
-        this.checkAllowSave();
-      }
+    await this.course.valueChanges.subscribe((data) => {           
+      this.checkAllowSave();
     });
+    
     if(this.course.value.start_date_from == null && this.mode == 'NEW'){
       this.course.controls["start_date_from"].setValue(this.dateNow); 
     }  
@@ -126,12 +125,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit {
       this.course.controls[form].markAsDirty();
       this.course.controls[form].setValue(null);
     }      
-    if(form == 'name' && val.length<=200 || form == 'description' && val.length<=4000){
-      this.isClearErrors = true;
-      setTimeout(() => {
-        this.isClearErrors = false;
-      }, 100);
-    }
+    
   }
   // is_online
   toggleCheckBox(checked: boolean) {  
@@ -198,6 +192,10 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit {
     this.error = [];
     this.companyCenter = null;
     this.course.reset();
+    this.isResetFile = true;
+    setTimeout(() => {
+      this.isResetFile = false;
+    }, 100);
     for (const prop in this.resetCourse) { 
       this.resetCourse[prop] = true;
       setTimeout(() => {
@@ -207,10 +205,6 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit {
   }
 
   async resetForm() {
-    this.isResetFile = true;
-    setTimeout(() => {
-      this.isResetFile = false;
-    }, 100);
     if(this.mode === MODE.NEW){
       await this.reset();
       setTimeout(() => {
@@ -219,15 +213,15 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit {
       }, 100);      
     }
     else{
+      this.isResetFile = true;
+      setTimeout(() => {
+        this.isResetFile = false;
+      }, 100);
       this.error = [];
-      for (const index in this.resetCourse) {
-        if (!this.course.controls[index].value) {
-          this.course[index] = true;
+      this.isClearErrors = true;
           setTimeout(() => {
-            this.course[index] = false;
+            this.isClearErrors = false;
           }, 100);
-        }
-      }    
       this.companyCenter = [];    
       this.companyCenter.push({_key: this.courseClone.training_center});
       this.course.patchValue({ ...this.courseClone });

@@ -12,10 +12,11 @@
           [placeholder]="'japanese'"
           [collection]="'m_certificate_award'"
           [isReset]="resetCertificate.name"        
-          (watchValue)="takeInputValue($event, 'name')"
+          (watchValue)="takeMasterValue($event, 'name')"
           [defaultValue]="[companyName]"
           [isSubmit]="isSubmit"
           [disableOutputDefault]="true"
+          [clearError]="isClearError"
         ></ait-autocomplete-master-data>
       </div>
 
@@ -62,7 +63,7 @@
           [collection]="'m_training_center'"
           [isReset]="resetCertificate.issue_by"
           [style]="{ width: '400px' }"
-          (watchValue)="takeInputValue($event, 'issue_by')"
+          (watchValue)="takeMasterValue($event, 'issue_by')"
           [defaultValue]="[companyIssue]"
           [disableOutputDefault]="true"
           [maxItem]="1"
@@ -73,7 +74,7 @@
       <div class="input_inline">
         <ait-datepicker
           [label]="'issue_date'"
-          [placeholder]="'2021/01/01'"
+          [placeholder]="'01/01/2021'"
           [id]="'issue_date_from'"
           [style]="{ width: '170px' }"
           [isReset]="resetCertificate.issue_date_from"
@@ -87,7 +88,7 @@
         <ait-datepicker
           [required]="false"
           [label]="''"
-          [placeholder]="'2021/01/01'"
+          [placeholder]="'01/01/2021'"
           [id]="'issue_date_to'"
           [style]="{ width: '170px' }"
           (watchValue)="takeDatePickerValue($event?.value,'certificate','issue_date_to')"
@@ -123,9 +124,9 @@
       </div>
       <div class="input_area">
         <ait-label [label]="'file'"></ait-label>
-        <label class="file-max" style="display: flex !important;color: #8f9bb3">
-          <nb-icon icon="attach-outline"></nb-icon>
-          <ait-label [label]="'upload'"></ait-label>
+        <label class="file-max" style="display: flex !important; color: #8f9bb3;margin: 0;"
+          ><nb-icon icon="attach-outline"></nb-icon>
+            <p id="max_file">{{ 'upload' | translate }}</p>
         </label>
         <ait-input-file
           [id]="'file'"

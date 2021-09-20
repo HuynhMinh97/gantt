@@ -30,7 +30,7 @@
             [id]="'is_online'"
             (checkedChange)="toggleCheckBox($event)"
           >
-            <p id="online">{{ 'online' | translate }}?</p>            
+            <p id="online">{{ 'online course' | translate }}?</p>            
           </nb-checkbox>
         </div>
       </div>
@@ -75,7 +75,7 @@
         <ait-datepicker
           [required]="false"
           [label]="'date'"
-          [placeholder]="'2021/01/01'"
+          [placeholder]="'01/01/2021'"
           [id]="'start_date_from'"
           [style]="{ width: '170px' }"
           [isReset]="resetCourse.start_date_from"
@@ -89,7 +89,7 @@
 
         <ait-datepicker
           [required]="false"
-          [placeholder]="'2021/01/01'"
+          [placeholder]="'01/01/2021'"
           [id]="'start_date_to'"
           [style]="{ width: '170px' }"
           [isReset]="resetCourse.start_date_to"
