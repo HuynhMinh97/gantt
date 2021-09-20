@@ -28,6 +28,8 @@ import { UserOnboardingComponent } from './pages/aureole-v/user/user-onboarding/
 import { UserProjectComponent } from './pages/aureole-v/user/user-project/user-project/user-project.component';
 import { UserCourseComponent } from './pages/aureole-v/user/user-course/user-course.component';
 import { UsesCertificateComponent } from './pages/aureole-v/user/uses-certificate/uses-certificate.component';
+import { UserSkillsComponent } from './pages/aureole-v/user/user-skills/user-skills.component';
+import { UserReorderSkillsComponent } from './pages/aureole-v/user/user-reorder-skills/user-reorder-skills.component';
 
 
 const AIT_UI_MODULES = [
@@ -70,7 +72,7 @@ const PAGES = [
 
 
 @NgModule({
-  declarations: [AppComponent, ...AUREOLE_V_COMPONENTS, ...PAGES],
+  declarations: [AppComponent, ...AUREOLE_V_COMPONENTS, ...PAGES, UserSkillsComponent, UserReorderSkillsComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

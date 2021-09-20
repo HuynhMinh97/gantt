@@ -9,6 +9,7 @@ import { RecommencedComponent } from './pages/aureole-v/recommenced-user/recomme
 import { UserCourseComponent } from './pages/aureole-v/user/user-course/user-course.component';
 import { UsesCertificateComponent } from './pages/aureole-v/user/uses-certificate/uses-certificate.component';
 import { UserProjectComponent } from './pages/aureole-v/user/user-project/user-project/user-project.component';
+import { UserSkillsComponent } from './pages/aureole-v/user/user-skills/user-skills.component';
 
 // Push your routes here one by one 🎉
 
@@ -87,6 +88,11 @@ export const routes: Routes = [
     path: 'user-project/:id',
     canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
     component: UserProjectComponent
+  },
+  {
+    path: 'user-skills',
+    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    component: UserSkillsComponent
   },
   {
     path: '',
