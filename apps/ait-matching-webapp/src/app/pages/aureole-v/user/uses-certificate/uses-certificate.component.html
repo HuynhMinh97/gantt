@@ -1,5 +1,5 @@
 <div class="template__popup">
-  <ait-text-gradient [content]="mode ==='NEW'? 'Add certificate & award' : 'Edit certificate & award'"></ait-text-gradient>
+  <ait-text-gradient [content]="getTitleByMode()"></ait-text-gradient>
   <div class="content__card">
     <div class="form__wrapper">
       <div class="input_inline">
@@ -72,16 +72,13 @@
 
       <div class="input_inline">
         <ait-datepicker
-          [required]="false"
           [label]="'issue_date'"
-          [placeholder]="'yyyy/MM/dd'"
+          [placeholder]="'2021/01/01'"
           [id]="'issue_date_from'"
           [style]="{ width: '170px' }"
-          (watchValue)="
-            takeDatePickerValue($event?.value,'certificate','issue_date_from')
-          "
-          [dateInput]="certificate.controls['issue_date_from'].value"
           [isReset]="resetCertificate.issue_date_from"
+          [defaultValue]="certificate.controls['issue_date_from'].value"
+          (watchValue)="takeDatePickerValue($event?.value, 'certificate', 'issue_date_from')"
           [isSubmit]="isSubmit"
         ></ait-datepicker>
 
@@ -89,17 +86,21 @@
 
         <ait-datepicker
           [required]="false"
-          [placeholder]="'yyyy/MM/dd'"
+          [label]="''"
+          [placeholder]="'2021/01/01'"
           [id]="'issue_date_to'"
           [style]="{ width: '170px' }"
+          (watchValue)="takeDatePickerValue($event?.value,'certificate','issue_date_to')"
+          [defaultValue]="certificate.controls['issue_date_to'].value"
           [isReset]="resetCertificate.issue_date_to"
-          (watchValue)="
-            takeDatePickerValue($event?.value,'certificate', 'issue_date_to')
-          "
-          [dateInput]="certificate.controls['issue_date_to'].value"
+          [isSubmit]="isSubmit"
         ></ait-datepicker>
+
       </div>
-      <ait-error-message [errors]="error"></ait-error-message>
+      <ait-error-message 
+        [id]="'errorDate'"
+        [errors]="error"
+      ></ait-error-message>
 
       <div class="input_inline">
         <ait-input-text
@@ -131,9 +132,9 @@
           [maxSize]="1000"
           [maxFiles]="5"
           [hasStatus]="false"
-          [placeholder]="'select_file'"
-          [isReset]="resetCertificate.file"
-          [fileKeys]="files"
+          [placeholder]="selectFile"
+          [isReset]="isResetFile"
+          [fileKeys]="certificate.controls['file'].value"
           (watchValue)="getFiles($event.value)"
           [isSubmit]="isSubmit"
         ></ait-input-file>

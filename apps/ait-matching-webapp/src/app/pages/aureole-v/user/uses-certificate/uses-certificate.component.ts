@@ -27,6 +27,7 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
   isSubmit = false;  
   submitFile = false;  
   isChanged = false;
+  isResetFile = false;
   error = [];
   resetCertificate = {
       name:false,
@@ -38,13 +39,8 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
       description: false,
       file: false,
   };
-  isReset = {
-    occupation: false,
-    work: false,
-    business: false,
-    size: false
-  };
   certificate_key: string;
+  selectFile = "";
 ;
   constructor(
     private element: ElementRef,
@@ -150,6 +146,8 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
       value = new Date(data).setHours(0, 0, 0, 0);
       this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(value);
+        // set jp_dob format japan cadidates    
+        form === 'dob' && this.setKanjiDate();
     }
     this.error = this.checkDatePicker();
   }
@@ -199,6 +197,10 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
   }
 
   async resetForm() {
+    this.isResetFile = true;
+    setTimeout(() => {
+      this.isResetFile = false;
+    }, 100);
     if(this.mode === MODE.NEW){
       await this.reset();
       setTimeout(() => {
@@ -207,21 +209,20 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
       }, 100);      
     }
     else{  
-      this.dataOld = this.certificateClone;
-      // await this.reset();
-      console.log(this.dataOld);
-      
-      setTimeout(() => {
-        this.certificate.patchValue({...this.dataOld});  
-        this.companyName = {
-          _key: this.dataOld.name,
-        };
-        this.companyIssue = {
-          _key: this.dataOld.issue_by,
-        };
-        // this.files = dataOld.file;  
-        this.showToastr('', this.getMsg('I0007'));
-      }, 100);
+      this.error = [];
+      for (const index in this.resetCertificate) {
+        if (!this.certificate.controls[index].value) {
+          this.resetCertificate[index] = true;
+          setTimeout(() => {
+            this.resetCertificate[index] = false;
+          }, 100);
+        }
+      }   
+     
+      this.certificate.patchValue({...this.certificateClone});  
+      this.companyName = {_key: this.certificateClone.name};
+      this.companyIssue = {_key: this.certificateClone.issue_by};      
+      this.showToastr('', this.getMsg('I0007'));    
     }
   }
  
@@ -324,7 +325,9 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
              
               const data = r.data[0];                                                
               this.certificate.patchValue({ ...data });
-              this.certificateClone = this.certificate.value;         
+              this.certificateClone = this.certificate.value;  
+              console.log(this.certificate.value);
+                     
               this.companyName = {
                 _key: data.name,
               };
@@ -392,5 +395,20 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
     }else{
       history.back()
     }
+  }
+
+  getTitleByMode() {
+    let title = '';
+    this.selectFile = this.translateService.translate('select_file');
+    if(this.mode === MODE.EDIT){
+      title = this.translateService.translate('edit certificate')
+    }
+    else if(this.mode === MODE.NEW){
+      title = this.translateService.translate('add certificate')
+    }
+    else{
+      title = this.translateService.translate('view certificate')
+    }
+    return title;
   }
 }

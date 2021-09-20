@@ -5,11 +5,11 @@ describe('Test Cypress', () => {
       cy.login('thuannv', '12345678');
       cy.wait(3000);
       cy.visit(Cypress.env('host') + Cypress.env('user_project'));
-      cy.url().should('eq', Cypress.env('host') + Cypress.env('user_project'));
-    //   checkTitleAndPlaceholder();
+      // cy.url().should('eq', Cypress.env('host') + Cypress.env('user_project'));
+      checkTitleAndPlaceholder();
       // checkValidate();
       //  checkSave();
-      addData();
+      // addData();
     });
   });
   let datas = {

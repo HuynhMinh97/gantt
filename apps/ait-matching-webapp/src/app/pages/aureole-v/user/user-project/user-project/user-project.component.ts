@@ -1,3 +1,4 @@
+import { title } from 'node:process';
 import { AitAppUtils, AitAuthService, AitBaseComponent, AitConfirmDialogComponent, AitEnvironmentService, AitMasterDataService, AitTranslationService, AitUserService, AppState, getCaption, getLang, MODE } from '@ait/ui';
 import { Component, ElementRef, OnInit } from '@angular/core';
 import {
@@ -61,6 +62,16 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     responsibility: false,
     achievement: false
   };
+  isClearErrors  = {
+    name: false,
+    company_working: false,
+    title: false,
+    description: false,
+    skills: false,
+    responsibility: false,
+    achievement: false
+  };
+
   userProjectErros = new UserProjectErrorsMessage();
 
   dateField = [
@@ -68,7 +79,6 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     'start_date_to'
   ];
   project_key = '';
-  isClearErrors = false;
   constructor(
     private element: ElementRef,
     private dialogService: NbDialogService,
@@ -145,6 +155,9 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     if(res.data.length > 0 ){
       this.userProject.patchValue({ ...data });
       this.userProjectClone = this.userProject.value;
+      if(data.user_id != this.user_id){
+        this.mode = MODE.VIEW;
+      }
     }else{
       this.router.navigate([`/404`]); 
     }        
@@ -167,21 +180,16 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     
   }
 
-  async inputProject(){
-    await this.userProjectService
-      .findKeyCompany(this.env.COMMON.COMPANY_DEFAULT)
-      .then((r) => {
-        this.keyCompany = r.data[0]._key;        
-      })
-    
+  async inputProject(){    
     await this.userProjectService
       .findKeyTitle(this.env.COMMON.COMPANY_DEFAULT, this.user_id)
-      .then((id) =>{
-        this.keyTitle = id.data[0].title;
+      .then((res) =>{
+        this.keyTitle = res.data[0].title;
+        this.keyCompany = res.data[0].company_working; 
       });
   }
 
-  takeInputValue(val: any, form: string): void {    
+  takeInputValue(val: any, form: string): void { 
     if (val) {
       if(isObjectFull(val)){  
         if (form == 'skills') {          
@@ -192,16 +200,22 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
           this.userProject.markAsDirty();
           this.userProject.controls['skills'].setValue(data);
         }else{
+          this.userProject.markAsDirty();
           this.userProject.controls[form].setValue(val?.value[0]?._key);
         }     
       } 
       else {
         this.userProject.controls[form].markAsDirty();
         this.userProject.controls[form].setValue(val);
+       
       }  
     } else {
       this.userProject.markAsDirty();
       this.userProject.controls[form].setValue(null);
+      this.isClearErrors[form] = true;
+      setTimeout(() => {
+        this.isClearErrors[form] = false;
+      }, 100);
     }       
   }
 
@@ -226,8 +240,8 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
 
     if(dateFrom > dateTo && dateTo != null){
       const transferMsg = (msg || '')
-        .replace('{0}', this.translateService.translate('date_from'))
-        .replace('{1}', this.translateService.translate('date_to'));
+        .replace('{0}', this.translateService.translate('start_date_from'))
+        .replace('{1}', this.translateService.translate('start_date_to'));
         res.push(transferMsg);
     }   
     return res;
@@ -396,6 +410,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     this.isSubmit = false;
     this.isChanged = false;
     if (this.mode === MODE.EDIT) {
+      this.error =[];
       for (const index in this.resetUserProject) {
         if (!this.userProject.controls[index].value ) {
           this.resetUserProject[index] = true;
@@ -404,14 +419,13 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
           }, 100);
         }
       }
+      this.isClearErrors.skills = true;
       setTimeout(() => {
-        console.log( this.dataOld);
+        this.isClearErrors.skills = false;
         this.userProject.patchValue({ ...this.dataOld });;
         console.log(this.userProject.value);
         this.showToastr('', this.getMsg('I0007'));
-      },100)
-      
-      
+      },100)            
     }
     else {
       await this.reset();
@@ -474,6 +488,18 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       history.back()
     }
   }
-
+  getTitleByMode() {
+    let title = '';
+    if(this.mode === MODE.EDIT){
+      title = this.translateService.translate('edit project')
+    }
+    else if(this.mode === MODE.NEW){
+      title = this.translateService.translate('add project')
+    }
+    else{
+      title = this.translateService.translate('view project')
+    }
+    return title;
+  }
 
 }

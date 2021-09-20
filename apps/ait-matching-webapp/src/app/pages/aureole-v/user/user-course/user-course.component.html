@@ -1,6 +1,6 @@
 <div class="template__popup">
   <ait-text-gradient
-    [content]="mode === 'NEW' ? 'Add Course' : 'Edit Course'"
+    [content]="getTitleByMode()"
   ></ait-text-gradient>
 
   <div class="content__card">
@@ -75,28 +75,26 @@
         <ait-datepicker
           [required]="false"
           [label]="'date'"
-          [placeholder]="'yyyy/MM/dd'"
+          [placeholder]="'2021/01/01'"
           [id]="'start_date_from'"
           [style]="{ width: '170px' }"
           [isReset]="resetCourse.start_date_from"
-          (watchValue)="
-            takeDatePickerValue($event?.value, 'course', 'start_date_from')
-          "
-          [dateInput]="course.controls['start_date_from'].value"
+          (watchValue)="takeDatePickerValue($event?.value, 'course', 'start_date_from')"
+          [defaultValue]="course.controls['start_date_from'].value"
           [isReset]="resetCourse.start_date_from"
           [isSubmit]="isSubmit"
         ></ait-datepicker>
+
         <p class="label-datepiker">{{ '~' }}</p>
+
         <ait-datepicker
           [required]="false"
-          [placeholder]="'yyyy/MM/dd'"
+          [placeholder]="'2021/01/01'"
           [id]="'start_date_to'"
           [style]="{ width: '170px' }"
           [isReset]="resetCourse.start_date_to"
-          (watchValue)="
-            takeDatePickerValue($event?.value, 'course', 'start_date_to')
-          "
-          [dateInput]="course.controls['start_date_to'].value"
+          (watchValue)="takeDatePickerValue($event?.value, 'course', 'start_date_to')"
+          [defaultValue]="course.controls['start_date_to'].value"
           [isSubmit]="isSubmit"
         ></ait-datepicker>
       </div>
@@ -137,8 +135,8 @@
           [maxFiles]="5"
           [required]="false"
           [hasStatus]="false"
-          [placeholder]="'select_file'"
-          [isReset]="resetCourse.file"
+          [placeholder]="selectFile"
+          [isReset]="isResetFile"
           [isClear]="isClear"
           [fileKeys]="course.controls['file'].value"
           (watchValue)="getFiles($event.value)"

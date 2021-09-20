@@ -5,8 +5,8 @@ describe('Test Cypress', () => {
         cy.wait(3000); 
         cy.visit(Cypress.env('host') + Cypress.env('user_course'));
         cy.url().should('eq', Cypress.env('host') + Cypress.env('user_course'));
+        checkTitleAndPlaceholder();
         checkValidate();
-        // checkTitleAndPlaceholder();
         // addData();
         // checkReset();
         // checkSave();
@@ -26,8 +26,8 @@ describe('Test Cypress', () => {
   function checkTitleAndPlaceholder() {
     // Check title and placeholder
   
-    cy.label('name', ' Name*');
-    cy.textarea('name', 'Ex: Project Management');
+    cy.label('name', ' NAME*');
+    cy.input('name', 'EX: Project Management');
 
     cy.get('#is_online').should(
         'have.text',
@@ -56,10 +56,10 @@ describe('Test Cypress', () => {
 
     cy.clickButton('saveContinue'); 
     
-    cy.errorMessage('name', 'Name を入力してください。');
+    cy.errorMessage('name', 'NAME required.');
     cy.errorMessage(
       'messagError',
-      'start_date_to以下の値でstart_date_fromを入力してください。'
+      'Enter START DATE with a value less than or equal to START DATE TO.'
     );
   
    
