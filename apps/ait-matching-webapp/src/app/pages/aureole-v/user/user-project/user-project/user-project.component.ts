@@ -186,8 +186,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       });
   }
 
-  takeInputValue(val: any, form: string): void { 
-    if (val) {
+  takeMasterValue(val: any, form: string): void { 
       if(isObjectFull(val) && val.value.length >0 ){  
         if (form == 'skills') {          
           const data = [];       
@@ -203,16 +202,17 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       } 
       else {
         this.userProject.controls[form].markAsDirty();
-        this.userProject.controls[form].setValue(val);
-       
-      }  
+        this.userProject.controls[form].setValue(null);      
+      }   
+  }
+
+  takeInputValue(val: any, form: string): void {
+    if (val) {     
+      this.userProject.controls[form].markAsDirty();
+      this.userProject.controls[form].setValue(val);      
     } else {
       this.userProject.markAsDirty();
       this.userProject.controls[form].setValue(null);
-      // this.isClearErrors[form] = true;
-      // setTimeout(() => {
-      //   this.isClearErrors[form] = false;
-      // }, 100);
     }       
   }
 
@@ -296,7 +296,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
-
+    debugger
     if(this.userProject.valid){
       await this.userProjectService.save(this.dataSaveProject(),'biz_project' )
       .then(async (res) => {  
@@ -323,7 +323,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
-
+    debugger
     if(this.userProject.valid){
       await this.userProjectService.save(this.dataSaveProject(),'biz_project' )
       .then(async (res) => {  
