@@ -57,7 +57,7 @@ function checkLabelAndPlaceholder(){
     cy.input('name','Japanese N1');
 
     cy.label('certificate_award_number',' CERTIFICATE NUMBER');
-    cy.input('certificate_award_number','EX: AIT001');
+    cy.input('certificate_award_number','Ex: AIT001');
 
     cy.label('issue_by',' ISSUE BY');
     cy.input('issue_by','BACH KHOA Ho Chi Minh Technology University');

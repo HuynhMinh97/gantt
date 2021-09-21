@@ -8,6 +8,7 @@ import { Apollo } from 'apollo-angular';
 import kanjidate from 'kanjidate';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserCerfiticateService } from 'apps/ait-matching-webapp/src/app/services/user-certificate.service';
+import { debug } from 'node:console';
 
 
 @Component({
@@ -111,11 +112,12 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
     this.isChanged = !(isChangedUserInfo);
   }
 
-  takeMasterValue(value: any, form: string): void {
-    if (isObjectFull(value) && value.length > 0) {
+  takeMasterValue(val: any, form: string): void {
+    if (isObjectFull(val) && val.value.length > 0) {
       this.certificate.controls[form].markAsDirty();
-      this.certificate.controls[form].setValue(value?.value[0]._key);
+      this.certificate.controls[form].setValue(val?.value[0]._key);
     } else {
+      this.certificate.controls[form].markAsDirty();
       this.certificate.controls[form].setValue(null);
     }
   }

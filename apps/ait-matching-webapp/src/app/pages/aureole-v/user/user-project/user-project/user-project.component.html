@@ -219,7 +219,7 @@
         *ngIf="mode === 'NEW'"
           [id]="'save_continue'"
           [width]="'200px'"
-          [title]="'save_continue'"
+          [title]="'save continue'"
           [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
           (click)=" saveContinue()"
         ></ait-button>
@@ -228,7 +228,7 @@
           *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
           [id]="'saveClose'"
           [width]="'200px'"
-          [title]="'save_close'"
+          [title]="'save close'"
           [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
           (click)="saveClose()"
         ></ait-button>
@@ -237,7 +237,7 @@
           *ngIf="!isChanged && mode === 'EDIT'"
           [id]="'disabled'"
           [width]="'200px'"
-          [title]="'save_close'"
+          [title]="'save close'"
           [style]="'disabled'"
         ></ait-button>
 

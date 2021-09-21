@@ -1,12 +1,12 @@
 import { UserSkillsService } from './../../../../services/user-skills.service';
 import { AitAuthService, AitBaseComponent, AitEnvironmentService, AppState, MODE } from '@ait/ui';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
-import { isObjectFull } from '@ait/shared';
+import { isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
 
 @Component({
   selector: 'ait-user-skills',
@@ -33,6 +33,8 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
     authService: AitAuthService,
     env: AitEnvironmentService,
     apollo: Apollo,
+    private router: Router,
+    private element: ElementRef,
   ) {
     super(store, authService, apollo, null, env, layoutScrollService, toastrService);
     this.setModulePage({
@@ -61,27 +63,95 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
     })
     
   }
-  async saveSkill() {
+
+  async saveAndContinue(){
     this.user_skills._from = 'sys_user/' + this.user_id;
     this.user_skills.relationship = 'sys_user m_skill';
-    // if(this.mode == 'EDIT'){
-    //   const _fromSkill = [
-    //     { _from: 'sys_user/' + this.user_id },
-    //   ];
-    //   this.userSkillsService.removeSkill(_fromSkill);
-    // }
+    if(this.mode == 'EDIT'){
+      const _fromSkill = [
+        { _from: 'sys_user/' + this.user_id },
+      ];
+      this.userSkillsService.removeUserSkill(_fromSkill);
+    }
     const listSkills = this.userSkills.value.skills;
-    debugger
     listSkills.forEach(async (skill) => {
       this.sort_no += 1;
       this.user_skills.sort_no = this.sort_no;
       this.user_skills._to = 'm_skill/' + skill._key;
-      await this.userSkillsService.saveSkills(this.user_skills);
+      
+      await this.userSkillsService.saveSkills(this.user_skills)
+      .then((res) => {
+        if (res?.status === RESULT_STATUS.OK){
+
+        }else{
+          
+        }
+      });
     });
   }
+
+  async saveAndClose(){
+    this.user_skills._from = 'sys_user/' + this.user_id;
+    this.user_skills.relationship = 'sys_user m_skill';
+    if(this.mode == 'EDIT'){
+      const _fromSkill = [
+        { _from: 'sys_user/' + this.user_id },
+      ];
+      this.userSkillsService.removeUserSkill(_fromSkill);
+    }
+    const listSkills = this.userSkills.value.skills;
+    listSkills.forEach(async (skill) => {
+      this.sort_no += 1;
+      this.user_skills.sort_no = this.sort_no;
+      this.user_skills._to = 'm_skill/' + skill._key;
+      
+      await this.userSkillsService.saveSkills(this.user_skills)
+      .then((res) =>{
+        if (res?.status === RESULT_STATUS.OK){
+          const message =
+          this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
+          this.showToastr('', message);
+          this.router.navigateByUrl('/');
+        }else{
+          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+        }
+      }).catch(() => {
+        this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+      }); ;
+    });
+  }
+
+  async cancel(){
+
+  }
+
+  scrollIntoError() {
+      for (const key of Object.keys(this.userSkills.controls)) {
+        if (this.userSkills.controls[key].invalid) {
+          let invalidControl = this.element.nativeElement.querySelector(
+            `#${key}_input`
+          );
+          if(key == 'file'){
+              invalidControl = this.element.nativeElement.querySelector(
+              `#${key}_input_file`
+            );      
+          }
+          try {
+            invalidControl.scrollIntoView({
+              behavior: 'auto',
+              block: 'center',
+            });
+            break;
+          } catch {}
+        }
+      }
+    }
+
   takeMasterValue(val: any, form: string): void { 
+    console.log(val);
+    
     if (val) {
-      if(isObjectFull(val)){          
+      if(isObjectFull(val)  && val.length > 0 ){          
         const data = [];       
         val.value.forEach((item) => {
           data.push(item);
