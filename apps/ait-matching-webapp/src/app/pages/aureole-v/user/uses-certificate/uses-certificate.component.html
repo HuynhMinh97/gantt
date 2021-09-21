@@ -177,7 +177,7 @@
       ></ait-button>
       <ait-button
         *ngIf="mode === 'NEW'"
-        [title]="'save_continue'"
+        [title]="'save continue'"
         [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
         [id]="'saveContinue'"
         (click)="saveAndContinue()"
@@ -187,7 +187,7 @@
       [id]="'saveClose'"
       *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
       [width]="'200px'"
-      [title]="'save_close'"
+      [title]="'save close'"
       (click)="saveAndClose()"
       [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
     >
@@ -196,7 +196,7 @@
       *ngIf="!isChanged && mode === 'EDIT'"
       [id]="'saveClose'"
       [width]="'200px'"
-      [title]="'save_close'"
+      [title]="'save close'"
       [style]="'disabled'"
     ></ait-button>
 

@@ -28,10 +28,10 @@ export class UserSkillsService extends AitBaseService{
     );
   }
 
-  async removeSkill(data: any[]) {
+  async removeUserSkill(data: any[]) {
     const returnFields = { _key: true };
     return await this.mutation(
-      'removeSkill',
+      'removeUserSkill',
       this.collection,
       data,
       returnFields
