@@ -264,7 +264,7 @@ nb-radio-group {
   position: -webkit-sticky;
   position: sticky;
   bottom: 30px;
-  z-index: 1;
+  z-index: 10;
 }
 ::ng-deep #user_experience ait-error-message div {
   width: 410px;
