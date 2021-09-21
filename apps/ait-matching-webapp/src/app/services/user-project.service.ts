@@ -79,7 +79,7 @@ export class UserProjectService extends AitBaseService {
         })
     }
 
-    async findKeySkills(_from?: string){
+    async findFromBizProjectSkill(_from?: string){
       const condition = {
           _from: _from,
           del_flag: false,
@@ -88,6 +88,14 @@ export class UserProjectService extends AitBaseService {
         {
           _to: true
         })
+    }
+
+    async findMSkillsByCode(code: string){
+      const condition = {
+        code: code,
+        del_flag: false,
+      }
+      return await this.query('findKey', {collection: 'm_skill',  condition },{_key: true})
     }
 
     async save(data: any, table: string) {
