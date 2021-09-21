@@ -78,7 +78,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
       this.sort_no += 1;
       this.user_skills.sort_no = this.sort_no;
       this.user_skills._to = 'm_skill/' + skill._key;
-      
+
       await this.userSkillsService.saveSkills(this.user_skills)
       .then((res) => {
         if (res?.status === RESULT_STATUS.OK){
@@ -148,10 +148,10 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
     }
 
   takeMasterValue(val: any, form: string): void { 
-    console.log(val);
+    console.log(val.value[0]._key);
     
     if (val) {
-      if(isObjectFull(val)  && val.length > 0 ){          
+      if(isObjectFull(val)  && val.value.length > 0 ){          
         const data = [];       
         val.value.forEach((item) => {
           data.push(item);
@@ -160,9 +160,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
       }
     }else{
       this.userSkills.controls[form].setValue(null);
-    }   
-    console.log(this.userSkills.value);
-         
+    }        
   }
 
   getTitleByMode() {   

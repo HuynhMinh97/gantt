@@ -115,11 +115,11 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       start_date_from: new FormControl(null),
       start_date_to: new FormControl(null),
       company_working: new FormControl(null, [Validators.required]),
-      title: new FormControl(null, [ Validators.required ]),
-      description: new FormControl(null, [Validators.maxLength(4000)]),
+      title: new FormControl(null, [Validators.required]),
+      description: new FormControl(null, [Validators.required, Validators.maxLength(4000)]),
       skills: new FormControl(null, [Validators.required,Validators.maxLength(10)]),
-      responsibility: new FormControl(null, [Validators.maxLength(4000)]),
-      achievement: new FormControl(null, [Validators.maxLength(4000)]),
+      responsibility: new FormControl(null, [Validators.required, Validators.maxLength(4000)]),
+      achievement: new FormControl(null, [Validators.required, Validators.maxLength(4000)]),
     });
 
     // get key form parameters
@@ -163,7 +163,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
 
   async findSkills(){
     const from = 'biz_project/' + this.project_key;
-    await this.userProjectService.findKeySkills(from).then((res) => {
+    await this.userProjectService.findFromBizProjectSkill(from).then((res) => {
       
       let listSkills = []
       res.data.forEach((key) =>{
@@ -188,7 +188,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
 
   takeInputValue(val: any, form: string): void { 
     if (val) {
-      if(isObjectFull(val)){  
+      if(isObjectFull(val) && val.value.length >0 ){  
         if (form == 'skills') {          
           const data = [];       
           val.value.forEach((item) => {
@@ -272,12 +272,14 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       ];
       this.userProjectService.removeSkill(_fromSkill);
     }
-
     this.listSkills.forEach(async (skill) => {
-      this.sort_no += 1;
-      this.biz_project_skill.sort_no = this.sort_no;
-      this.biz_project_skill._to = 'm_skill/' + skill._key;
-      await this.userProjectService.saveSkills(this.biz_project_skill);
+      await this.userProjectService.findMSkillsByCode(skill._key)
+      .then(async (res) => {
+        this.sort_no += 1;
+        this.biz_project_skill.sort_no = this.sort_no;
+        this.biz_project_skill._to = 'm_skill/' + res.data[0]._key;
+        await this.userProjectService.saveSkills(this.biz_project_skill);
+      });
     });
   }
   

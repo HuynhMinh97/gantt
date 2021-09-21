@@ -35,6 +35,9 @@ export class UserProjectDto extends BaseDto {
 
     @Field(() => String, { nullable: true })
     _to?: string;
+
+    @Field(() => String, { nullable: true })
+    code?: string;
 }
 @InputType()
 export class SaveUserProjectDto extends BaseDto {
@@ -76,5 +79,6 @@ export class SaveUserProjectDto extends BaseDto {
 
     @Field(() => Float, { nullable: true })
     sort_no?: number;
+
 }
 
