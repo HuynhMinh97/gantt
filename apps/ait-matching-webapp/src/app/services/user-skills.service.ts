@@ -16,6 +16,11 @@ export class UserSkillsService extends AitBaseService{
       _to: true
     })
   }
+  async findSkills(){
+    return await this.query('findUserSkill', {collection: 'm_skill'},{
+_key:true
+    })
+  }
 
   async saveSkills(data: any) {
     console.log(data); 

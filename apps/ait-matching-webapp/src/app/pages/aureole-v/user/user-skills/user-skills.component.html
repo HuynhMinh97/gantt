@@ -5,7 +5,7 @@
     ></ait-text-gradient>
     <ait-space></ait-space>
     <div class="content__card">  
-        <div class="input_inline">
+        <!-- <div class="input_inline">
           <ait-autocomplete-master-data
             [id]="'skills'"
             [allowNew]="true"
@@ -19,13 +19,22 @@
             (watchValue)="takeMasterValue($event, 'skills')"
             [defaultValue]="userSkills.controls['skills'].value"
           ></ait-autocomplete-master-data>
-        </div>
+        </div> -->
+
         <div class="input_inline">
           <ait-autocomplete-master
-            [id]="'skill'"
-            [label]="'skills'"
+          [id]="'skills'"
+          [label]="'skills'"
+          [required]="true"
+          [collection]="'m_skill'"
+          [maxItem] = "50"
+          [placeholder]="'skills input'"
+          [style]="{ width: '400px' }"
+          (watchValue)="takeMasterValue($event, 'skills')"
+          [defaultValue]="companySkills"
           ></ait-autocomplete-master>
         </div>
+       
         
     </div>
       <div class="action-row">
@@ -34,7 +43,7 @@
             *ngIf="mode === 'NEW' || mode === 'EDIT'"
             [id]="'cancel'"
             [title]="'cancel'"
-            (click)="cancel()"
+            (click)="back()"
             [nbSpinner]="isLoading"
             [isDefault]="true"
             nbSpinnerStatus="primary"
@@ -48,7 +57,7 @@
             [width]="'200px'"
             [title]="'save continue'"
             [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
-            (click)=" saveSkill()"
+            (click)=" saveAndContinue()"
           ></ait-button>
   
           <ait-button
@@ -57,7 +66,7 @@
             [width]="'200px'"
             [title]="'save close'"
             [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
-            (click)="saveClose()"
+            (click)="saveAndClose()"
           ></ait-button>
         </div>
       </div>

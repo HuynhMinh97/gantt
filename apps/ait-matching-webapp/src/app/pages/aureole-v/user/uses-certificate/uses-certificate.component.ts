@@ -94,7 +94,6 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
     await this.certificate.valueChanges.subscribe((data) => {   
       this.checkAllowSave();
     });
-    this.checkAllowSave();
     if(this.certificate.value.issue_date_from == null && this.mode == "NEW"){
       this.certificate.controls["issue_date_from"].setValue(this.dateNow); 
     }
@@ -325,13 +324,10 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
         .findUserByKey(key)
         .then((r) => {             
           if (r.status === RESULT_STATUS.OK) {
-            if (r.data.length > 0) {
-             
+            if (r.data.length > 0) {            
               const data = r.data[0];                                                
               this.certificate.patchValue({ ...data });
-              this.certificateClone = this.certificate.value;  
-              console.log(this.certificate.value);
-                     
+              this.certificateClone = this.certificate.value;          
               this.companyName = {
                 _key: data.name,
               };

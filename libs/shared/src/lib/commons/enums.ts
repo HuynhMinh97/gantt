@@ -208,7 +208,8 @@ export enum COLLECTIONS {
   EXAMPLE = 'example',
   COMPANY = 'sys_company',
   M_TITLE = 'm_title',
-  M_COMPANY = 'm_company'
+  M_COMPANY = 'm_company',
+  M_SKILL = 'm_skill'
 }
 
 export enum OPERATOR {

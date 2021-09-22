@@ -33,8 +33,8 @@ export class UserProjectDto extends BaseDto {
     @Field(() => String, { nullable: true })
     _from?: string;
 
-    @Field(() => String, { nullable: true })
-    _to?: string;
+    @Field(() => ConditionDto, { nullable: true })
+    _to?: ConditionDto;
 
     @Field(() => String, { nullable: true })
     code?: string;

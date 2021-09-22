@@ -84,9 +84,19 @@ export class UserProjectService extends AitBaseService {
           _from: _from,
           del_flag: false,
         }
-        return await this.query('findKey', {collection: 'biz_project_skill',  condition    }, 
+        condition['skills'] = {
+          attribute: 'skills',
+          ref_collection: 'm_skill',
+          ref_attribute: '_key',
+          get_by: '_key',
+        }
+        return await this.query('findMSkills', {collection: 'biz_project_skill',  condition    }, 
         {
-          _to: true
+          _to: true,
+          skills:{
+            _key: true,
+            value: true
+          },
         })
     }
 
@@ -98,9 +108,17 @@ export class UserProjectService extends AitBaseService {
       return await this.query('findKey', {collection: 'm_skill',  condition },{_key: true})
     }
 
-    async save(data: any, table: string) {
+    async findMSkillsByKey(_key: string){
+      const condition = {
+        _key: _key,
+        del_flag: false,
+      }
+      return await this.query('findKey', {collection: 'm_skill',  condition },{code: true, name: true})
+    }
+
+    async saveBizProject(data: any) {
         const returnField = { user_id: true, _key: true};
-        return await this.mutation('saveUserProject',table,[data],returnField);
+        return await this.mutation('saveUserProject','biz_project',[data],returnField);
     }
 
     async saveSkills(data: any) {
@@ -157,32 +175,32 @@ export class UserProjectService extends AitBaseService {
         return await this.mutation('removeUserProject', table, [{ _key: _key }], returnFields);
     }
       //tim key cua 1 bang dua vao from va to
-      async findKey(_id?: string,_to?: string, table?: string){
-        const condition = {
-            _from: _id,
-            del_flag: false,
-          }
-          return await this.query('findKey', {collection: table,  condition    }, 
-          {
-            _key : true,
-            _from: true,
-            _to: true
-          })
-      }
+      // async findKey(_id?: string,_to?: string, table?: string){
+      //   const condition = {
+      //       _from: _id,
+      //       del_flag: false,
+      //     }
+      //     return await this.query('findKey', {collection: table,  condition    }, 
+      //     {
+      //       _key : true,
+      //       _from: true,
+      //       _to: true
+      //     })
+      // }
 
       //tim key cua 1 bang dua vao from va to
-      async findKeyConnectionUserProject(from: string, to?: string){
-        const condition = {
-            _from: from,
-            _to: to,
-            del_flag: false,
-          }
-          return await this.query('findKey', {collection: 'connection_user_project',  condition    }, 
-          {
-            _key : true,
-            _from: true,
-            _to: true
-          })
-      }
+      // async findKeyConnectionUserProject(from: string, to?: string){
+      //   const condition = {
+      //       _from: from,
+      //       _to: to,
+      //       del_flag: false,
+      //     }
+      //     return await this.query('findKey', {collection: 'connection_user_project',  condition    }, 
+      //     {
+      //       _key : true,
+      //       _from: true,
+      //       _to: true
+      //     })
+      // }
 
 }

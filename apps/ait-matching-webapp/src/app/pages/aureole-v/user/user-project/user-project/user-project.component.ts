@@ -36,9 +36,9 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
   keyCompany = '';
   error = [];
   listSkills : any;
+  keySkills : any;
   stateProjectInfo = {} as UserProjectDto;
   stateProjectInfoDf = {} as UserProjectDto;
-  dataOld : any;
   connection_user_project = {
     _from:'',
     _to:'',
@@ -139,7 +139,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       this.userProjectClone = this.userProject.value;
     }else{
       await this.findBizProject();
-      await this.findSkills();      
+      await this.findSkills();   
     }
     await this.userProject.valueChanges.subscribe((data) => {      
       this.checkAllowSave();
@@ -163,18 +163,19 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
 
   async findSkills(){
     const from = 'biz_project/' + this.project_key;
-    await this.userProjectService.findFromBizProjectSkill(from).then((res) => {
-      
-      let listSkills = []
-      res.data.forEach((key) =>{
-        listSkills.push({_key:key._to.substring(8)} );
-      })
-      this.userProject.controls['skills'].setValue(listSkills);
-      this.dataOld = this.userProject.value; 
+    await this.userProjectService.findFromBizProjectSkill(from).then(async (res) => {      
+      let listSkills = [];
+      let listCodeSkills = [];
+      for(const key of  res.data){
+        let keySkills = key._to.substring(8)
+        listSkills.push({_key:keySkills} );
+        const res = await this.userProjectService.findMSkillsByKey(keySkills);
+        listCodeSkills.push({_key:res.data[0].code, value:res.data[0].name});
+      }
+      this.userProject.controls['skills'].setValue([...listCodeSkills]);
       this.userProjectClone = this.userProject.value;
-    })
-    console.log(this.dataOld);
-    
+      this.keySkills = listSkills;
+    }) 
   }
 
   async inputProject(){    
@@ -193,10 +194,10 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
           val.value.forEach((item) => {
             data.push(item);
           });
-          this.userProject.markAsDirty();
+          this.userProject.controls[form].markAsDirty();
           this.userProject.controls['skills'].setValue(data);
         }else{
-          this.userProject.markAsDirty();
+          this.userProject.controls[form].markAsDirty();
           this.userProject.controls[form].setValue(val?.value[0]?._key);
         }     
       } 
@@ -211,7 +212,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       this.userProject.controls[form].markAsDirty();
       this.userProject.controls[form].setValue(val);      
     } else {
-      this.userProject.markAsDirty();
+      this.userProject.controls[form].markAsDirty();
       this.userProject.controls[form].setValue(null);
     }       
   }
@@ -296,9 +297,8 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
-    debugger
     if(this.userProject.valid){
-      await this.userProjectService.save(this.dataSaveProject(),'biz_project' )
+      await this.userProjectService.saveBizProject(this.dataSaveProject() )
       .then(async (res) => {  
         if (res?.status === RESULT_STATUS.OK) {        
           const data = res.data[0];
@@ -325,7 +325,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     }, 100);
     debugger
     if(this.userProject.valid){
-      await this.userProjectService.save(this.dataSaveProject(),'biz_project' )
+      await this.userProjectService.saveBizProject(this.dataSaveProject())
       .then(async (res) => {  
         if (res?.status === RESULT_STATUS.OK) {        
           const data = res.data[0];
@@ -389,7 +389,6 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     this.isSubmit = false;
     this.isChanged = false;
     this.error = [];
-    this.dataOld = this.userProjectClone;
     this.userProject.reset();
     for (const prop in this.resetUserProject) {
       this.resetUserProject[prop] = true;
@@ -403,10 +402,6 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       this.userProject.controls['title'].setValue( this.keyTitle);
       this.userProject.controls['company_working'].setValue(this.keyCompany);
     }, 100);
-    console.log(this.userProject.value);
-    console.log(this.userProjectClone);
-    
-    
   }
 
   async resetForm() {
@@ -425,8 +420,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       this.isClearErrors.skills = true;
       setTimeout(() => {
         this.isClearErrors.skills = false;
-        this.userProject.patchValue({ ...this.dataOld });;
-        console.log(this.userProject.value);
+        this.userProject.patchValue({ ...this.userProjectClone});
         this.showToastr('', this.getMsg('I0007'));
       },100)            
     }

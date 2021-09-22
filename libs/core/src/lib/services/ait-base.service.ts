@@ -156,6 +156,7 @@ export class AitBaseService {
       COLLECTIONS.CAPTION,
       COLLECTIONS.M_COMPANY,
       COLLECTIONS.M_TITLE,
+      COLLECTIONS.M_SKILL
     ];
     const mapData = [];
 
