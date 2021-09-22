@@ -17,6 +17,7 @@
           [clearError]="isClearErrors.name"
           (watchValue)="takeInputValue($event, 'name')"
           [defaultValue]="userProject.controls['name'].value"
+          [clearError] = "isClear"
         >
         </ait-input-text>
       </div>
@@ -75,6 +76,7 @@
           [isReset]="resetUserProject.company_working"
           (watchValue)=" takeMasterValue($event, 'company_working')"
           [defaultValue]="[{ _key: userProject.value.company_working }]"
+          [clearError] = "isClear"
         ></ait-autocomplete-master-data>
       </div>
 
@@ -94,6 +96,7 @@
           [disableOutputDefault]="true"
           (watchValue)=" takeMasterValue($event, 'title')"
           [defaultValue]="[{ _key: userProject.value.title }]"
+          [clearError] = "isClear"
         ></ait-autocomplete-master-data>
       </div>
 
@@ -112,6 +115,7 @@
           (watchValue)="takeInputValue($event, 'description')"
           [defaultValue]="userProject.controls['description'].value"
           [clearError]="isClearErrors.description"
+          [clearError] = "isClear"
         >
         </ait-input-text>
       </div>
@@ -133,6 +137,7 @@
           [clearError]="isClearErrors.skills"
           (watchValue)=" takeMasterValue($event, 'skills')"
           [defaultValue]="userProject.controls['skills'].value"
+          [clearError] = "isClear"
         ></ait-autocomplete-master-data>
       </div>
 
@@ -151,6 +156,7 @@
           [isReset]="resetUserProject.responsibility"
           (watchValue)="takeInputValue($event, 'responsibility')"
           [defaultValue]="userProject.controls['responsibility'].value"
+          [clearError] = "isClear"
         >
         </ait-input-text>
       </div>
@@ -169,6 +175,7 @@
           [isReset]="resetUserProject.achievement"
           (watchValue)="takeInputValue($event, 'achievement')"
           [defaultValue]="userProject.controls['achievement'].value"
+          [clearError] = "isClear"
         >
         </ait-input-text>
       </div>

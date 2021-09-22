@@ -1,0 +1,192 @@
+@import '../../../../../styles/themes.scss';
+#company__info__wrapper {
+    width: 60%;
+    height: 100%;
+    // padding: 80px;
+    padding-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+}
+.content__card {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    min-height: 130px;
+    background: nb-theme(color-basic-100);
+    padding: 50px;
+    margin-top: 30px;
+    flex-direction: column;
+    box-shadow: 0 1px 6px rgb(0 0 0 / 6%), 0 1px 1px rgb(0 0 0 / 3%);
+    transition: 0.8s all ease-in-out;
+}
+:host {
+    display: flex;
+    flex: 1;
+  }
+  
+  .step-container {
+    width: 400px;
+   margin: auto;
+    overflow: auto;
+    .category-area {
+      .nb-icon {
+        vertical-align: middle;
+      }
+      .skill-block {
+        height: 55px;
+        background: nb-theme(color-basic-400);
+        padding: 15px;
+        font-weight: 600;
+        font-size: 15px;
+        line-height: 24px;
+        nb-icon {
+          color: #3366ff;
+        }
+      }
+      .skill-element {
+        &.cdk-drag-placeholder { // potential drop area
+          opacity: 0.5;
+          background-color: rgba(150, 150, 200, 0.1);
+          color: #231f20;
+          border: 1px dashed #abc;
+        }  
+        cursor: move;
+        height: 50px;
+        background: nb-theme(color-basic-200);
+        border-left: 3px solid rgba(51, 102, 255, 0.08);
+        font-weight: 600;
+        font-size: 14px;
+        .remove-btn {
+          display: none;
+        }
+        .float-right {
+          nb-icon {
+            color: #231f20;
+          }
+        }
+        span {
+          display: inline-block;
+          white-space: nowrap;
+          overflow: hidden !important;
+          text-overflow: ellipsis;
+          max-width: calc(100% - 130px);
+          position: relative;
+          top: 7px;
+        }
+      }
+      .skill-element:hover .remove-btn {
+        display: unset;
+      }
+    }
+  }
+  
+  
+  
+  :host ::ng-deep .ck-editor__editable_inline {
+  width: 100%;
+  min-height: 100px;
+  }
+  
+  :host ::ng-deep nb-card {
+    background: nb-theme(background-gradient-blue);
+    mix-blend-mode: normal;
+    border-radius: 0px;
+    // min-width: 550px;
+  }
+  
+  .action__job {
+    height: 100%;
+    width: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    .button__edit {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 25px;
+      width: 150px;
+      height: 40px;
+      left: calc(50% - 150px/2);
+      top: calc(50% - 40px/2);
+      margin: 0px 0px;
+      cursor: pointer;
+      span {
+        font-weight: bold;
+        font-size: 10px;
+      }
+    }
+    .btnedit1 {
+      background: transparent;
+      border: 1px solid nb-theme(color-basic-100);
+      color: nb-theme(color-basic-100);
+      font-family: Open Sans;
+      font-style: normal;
+      font-weight: bold;
+      text-align: center;
+      text-transform: uppercase;
+      margin-right: 20px;
+    }
+    .btnedit2 {
+      width: 170px;
+      font-family: Open Sans;
+      font-style: normal;
+      font-weight: bold;
+      text-align: center;
+      text-transform: uppercase;
+      background: nb-theme(color-basic-300);
+    }
+  }
+  
+  .title h1 {
+    text-align: center; 
+    color: nb-theme(color-basic-100);
+    margin-top: 0px;
+  }
+  
+  .cdk-drag-preview {
+        z-index: 1050 !important;
+        height: 50px;
+        background: nb-theme(color-basic-100);
+        // border-left: 3px solid rgba(51, 102, 255, 0.08);
+        border: 1px dashed #abc;
+        font-weight: 600;
+        font-size: 14px;
+        margin: auto;
+  
+        .float-right {
+          nb-icon {
+            
+            color: #231f20;
+          }
+        }
+        nb-icon {
+          color: rgb(255, 223, 0);
+        }
+  }
+  
+  .action-row {
+    .block {
+      justify-content: center;
+      align-items: center;
+      display: flex;
+    }
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 20px;
+    padding-top: 10px;
+    display: flex;
+    button {
+      width: 180px;
+    }
+  }
+  ::ng-deep .ait-user-reorder-skills {
+    display: flex !important;
+    justify-content: center !important;
+}

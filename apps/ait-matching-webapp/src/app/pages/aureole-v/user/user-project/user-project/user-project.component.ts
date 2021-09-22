@@ -39,6 +39,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
   keySkills : any;
   stateProjectInfo = {} as UserProjectDto;
   stateProjectInfoDf = {} as UserProjectDto;
+  isClear = false;
   connection_user_project = {
     _from:'',
     _to:'',
@@ -405,16 +406,21 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
   }
 
   async resetForm() {
-    this.isSubmit = false;
+    try{
+      this.isSubmit = false;
     this.isChanged = false;
     if (this.mode === MODE.EDIT) {
       this.error =[];
+      debugger
       for (const index in this.resetUserProject) {
         if (!this.userProject.controls[index].value ) {
           this.resetUserProject[index] = true;
+          this.isClear = true;
           setTimeout(() => {
             this.userProject[index] = false;
-          }, 100);
+            this.isClear = false;
+          },100);
+          
         }
       }
       this.isClearErrors.skills = true;
@@ -428,6 +434,11 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       await this.reset();
       this.showToastr('', this.getMsg('I0007'));
     }
+    }catch(e){
+      console.log(e);
+      
+    }
+    
   }
   async Delete() {  
     this.dialogService

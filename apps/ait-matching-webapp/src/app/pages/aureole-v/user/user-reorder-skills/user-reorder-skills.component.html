@@ -1,1 +1,116 @@
-<p>user-reorder-skills works!</p>
+<div id="company__info__wrapper">
+  <ait-text-gradient [content]="'Reorder skills'"></ait-text-gradient>
+  <div class="content__card">
+    <div class="step-container" cdkDropListGroup>
+      <div
+        class="category-area"
+        *ngFor="let category of skillByCategory"
+        (cdkDropListDropped)="dropEvent($event, category)"
+        cdkDropList
+        style="background: white"
+      >
+        <div class="skill-block">
+          <nb-icon nbSuffix icon="menu-2-outline" pack="eva"></nb-icon>
+          {{ category.name }}
+        </div>
+        <div
+          cdkDropList
+          [cdkDropListData]="todo"
+          class="example-list"
+          (cdkDropListDropped)="drop($event)">
+          
+      
+        <div *ngFor="let skill of category.data"  cdkDrag>
+          <div
+          
+            class="col-md-12"
+            class="skill-element"
+            cdkDrag
+            [cdkDragData]="skill"
+            *ngIf="
+              (category.name === 'TOP5' && skill.top_skill === true) ||
+              (category.name !== 'TOP5' && skill.top_skill === false)
+            "
+          >
+            <button
+              nbButton
+              ghost
+              (click)="passToChange(skill)"
+              [nbTooltip]="
+                category.name === 'TOP5'
+                  ? ('matching.reorder_skill.remove' | translate)
+                  : ('matching.reorder_skill.add' | translate)
+              "
+            >
+              <nb-icon
+                *ngIf="skill._key"
+                nbSuffix
+                icon="star"
+                pack="eva"
+                [ngStyle]="{
+                  color: category.name === 'TOP5' ? '#ffdf00' : '#dad7cd'
+                }"
+              ></nb-icon>
+            </button>
+            <span
+            nbTooltip="{{ skill.name }}"
+            >{{ skill.name }}</span>
+            <div class="float-right">
+              <button
+                nbButton
+                ghost
+                class="remove-btn"
+                (click)="removeSkill(category, skill)"
+                nbTooltip="{{ 'matching.reorder_skill.click' | translate }}"
+              >
+                <nb-icon
+                  *ngIf="skill._key"
+                  nbSuffix
+                  icon="close-outline"
+                  pack="eva"
+                  style="vertical-align: middle; color: #231f20"
+                ></nb-icon>
+              </button>
+              <button
+                nbButton
+                ghost
+                nbTooltip="{{ 'matching.reorder_skill.drag' | translate }}"
+              >
+                <nb-icon
+                  *ngIf="skill._key"
+                  nbSuffix
+                  icon="menu-outline"
+                  pack="eva"
+                  style="vertical-align: middle; color: #231f20"
+                ></nb-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>    
+  </div>
+  <ait-space></ait-space>
+  <div class="action-row">
+    <div class="block">
+      <ait-button
+        [id]="'cancel'"
+        [title]="'cancel'"
+        [isDefault]="true"
+        nbSpinnerStatus="primary"
+        [tabIndex]="40"
+        [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
+      ></ait-button>
+     
+      <ait-button
+        [id]="'saveClose'"
+        [width]="'200px'"
+        [title]="'save close'"
+        [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
+        
+      ></ait-button> 
+    </div>
+  </div>
+ 
+</div>
