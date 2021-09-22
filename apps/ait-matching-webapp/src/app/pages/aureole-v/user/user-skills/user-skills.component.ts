@@ -1,9 +1,9 @@
 import { UserSkillsService } from './../../../../services/user-skills.service';
-import { AitAuthService, AitBaseComponent, AitEnvironmentService, AppState, MODE } from '@ait/ui';
+import { AitAppUtils, AitAuthService, AitBaseComponent, AitConfirmDialogComponent, AitEnvironmentService, AppState, MODE } from '@ait/ui';
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
+import { NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
@@ -14,8 +14,12 @@ import { isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
   styleUrls: ['./user-skills.component.scss']
 })
 export class UserSkillsComponent extends AitBaseComponent implements OnInit {
+  dataSkill = [];
   mode = MODE.NEW;
   userSkills: FormGroup;
+  userSkillsClone : any;
+  companySkills = [];
+  isChanged = false;
   sort_no = 0;
   user_skills = {
     _from: '',
@@ -35,6 +39,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
     apollo: Apollo,
     private router: Router,
     private element: ElementRef,
+    private dialogService: NbDialogService,
   ) {
     super(store, authService, apollo, null, env, layoutScrollService, toastrService);
     this.setModulePage({
@@ -46,20 +51,44 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.findSkills();
+  async ngOnInit(): Promise<void> {
+    await this.findSkills();
+    debugger
+    await this.userSkills.valueChanges.subscribe((data) => {   
+      this.checkAllowSave();
+      console.log(this.isChanged);
+      
+    });
+  }
+  checkAllowSave() {
+    const certificateInfo = { ...this.userSkills.value };
+    const certificateClone = { ...this.userSkillsClone };
+    // this.setHours(userInfo);
+    
+    const isChangedUserInfo = AitAppUtils.isObjectEqual(
+      { ...certificateInfo },
+      { ...certificateClone }
+    );
+    this.isChanged = !(isChangedUserInfo);
   }
   async findSkills(){
     const from = 'sys_user/' + this.user_id;
     await this.userSkillsService.findSkill(from).then((res) => {
-      if(res.data.length > 0){
-        this.mode = MODE.EDIT;
-        let listSkills = []
-        res.data.forEach((key) =>{
-          listSkills.push({_key:key._to.substring(8)} );
-        })
-        this.userSkills.controls['skills'].setValue(listSkills);
-      } 
+      if (res.status === RESULT_STATUS.OK) {
+        if(res.data.length > 0){
+          this.mode = MODE.EDIT;
+          let listSkills = []
+          res.data.forEach((key) =>{
+            listSkills.push({_key:key._to.substring(8)} );
+          })
+          this.userSkills.controls['skills'].setValue(listSkills);
+          this.companySkills = listSkills;
+          this.userSkillsClone = this.userSkills.value;     
+        }else{
+          this.userSkillsClone = this.userSkills.value;
+        }
+      }
+      
     })
     
   }
@@ -73,6 +102,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
       ];
       this.userSkillsService.removeUserSkill(_fromSkill);
     }
+    
     const listSkills = this.userSkills.value.skills;
     listSkills.forEach(async (skill) => {
       this.sort_no += 1;
@@ -82,11 +112,16 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
       await this.userSkillsService.saveSkills(this.user_skills)
       .then((res) => {
         if (res?.status === RESULT_STATUS.OK){
-
+          const message =
+          this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
+          this.showToastr('', message);
+          this.router.navigateByUrl('/user-skills');
         }else{
-          
+          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         }
-      });
+      }).catch(() => {
+        this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+      }); 
     });
   }
 
@@ -148,7 +183,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
     }
 
   takeMasterValue(val: any, form: string): void { 
-    console.log(val.value[0]._key);
+    console.log(val.value);
     
     if (val) {
       if(isObjectFull(val)  && val.value.length > 0 ){          
@@ -156,11 +191,35 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
         val.value.forEach((item) => {
           data.push(item);
         });
+        this.userSkills.controls[form].markAsDirty();
         this.userSkills.controls[form].setValue(data);                        
       }
     }else{
+      this.userSkills.controls[form].markAsDirty();
       this.userSkills.controls[form].setValue(null);
-    }        
+    }    
+        
+  }
+
+  back(){   
+    if(this.isChanged){
+      this.dialogService
+      .open(AitConfirmDialogComponent, {
+        closeOnBackdropClick: true,
+        hasBackdrop: true,
+        autoFocus: false,
+        context: {
+          title: this.getMsg('I0006'),
+        },
+      })
+      .onClose.subscribe(async (event) => {
+        if (event) {
+          history.back()
+        }
+      });
+    }else{
+      history.back()
+    }
   }
 
   getTitleByMode() {   

@@ -25,6 +25,15 @@ export class UserProjectResolver extends AitBaseService {
         return result;
     }
 
+    @Query(() => UserProjectResponse, { name: 'findMSkills' })
+    async findMSkills(
+        @AitCtxUser() user: SysUser,
+        @Args('request', { type: () => UserProjectRequest }) request: UserProjectRequest
+    ) {  
+        const result = await this.find(request, user);
+        return result;
+    }
+
     @Mutation(() => UserProjectResponse, { name: 'saveSkill' })
     saveUserSkill(
         @AitCtxUser() user: SysUser,
@@ -79,6 +88,28 @@ export class UserProjectResolver extends AitBaseService {
         return new UserProjectResponse(RESULT_STATUS.ERROR, [], 'error');
         }
     }
+    @Query(() => UserProjectResponse, { name: 'findMSkillsss' })
+    async findMSkillsegda(
+        @AitCtxUser() user: SysUser,
+        @Args('request', { type: () => UserProjectRequest }) request: UserProjectRequest
+    ) {  
+        const user_id = request.user_id;
+
+        if (user_id) {
+        const aqlQuery = `
+        FOR item IN biz_project_skill
+        FOR data IN biz_project_skill
+        FILTER data._from == item._from
+       
+        RETURN data
+        `;
+
+        return await this.query(aqlQuery);
+        } else {
+        return new UserProjectResponse(RESULT_STATUS.ERROR, [], 'error');
+        }
+    }
+
 
     @Mutation(() => UserProjectResponse, { name: 'removeUserProject' })
     async removeUserProject(

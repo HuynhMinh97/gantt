@@ -36,5 +36,8 @@ export class UserProjectEntity extends BaseEntity {
 
     @Field(() => String, { nullable: true })
     _to?: string;
+
+    @Field(() => String, { nullable: true })
+    code?: string;
     
 }

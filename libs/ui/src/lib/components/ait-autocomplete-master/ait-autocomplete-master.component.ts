@@ -108,6 +108,11 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   includeNotDelete = true;
   @Output() onError = new EventEmitter();
   messageSearch = '';
+  @Input() disableOutputDefault = false;
+  data = [];
+  isClickOption = false;
+  isOpenAutocomplete = false;
+  selectOne: any;
 
   ID(element: string) {
     const idx = this.id && this.id !== '' ? this.id : Date.now();
@@ -189,7 +194,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   }
 
   ngOnChanges(changes: SimpleChanges) {
-
+    
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
         // const element = changes[key].currentValue;
@@ -337,6 +342,69 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
       }
     }
   }
+
+  setupDefault = () => {
+    if (this.defaultValue && this.defaultValue.length !== 0) {
+
+      if (this.maxItem !== 1) {
+        const typeDF = this.getUniqueSelection(AitAppUtils.getArrayNotFalsy(this.defaultValue));
+
+        const findByKeys = typeDF.map((m) => {
+          const result = this.dataSourceDf.find(
+            (f) => f._key === m?._key || f.code === m?._key || f?.id === m?._key
+          );
+          return result;
+        });
+        this.optionSelected = [...AitAppUtils.getArrayNotFalsy(findByKeys)].filter(
+          (f) => !!f
+        )
+
+        if (!this.disableOutputDefault) {
+
+          this.watchValue.emit({ value: this.optionSelected.map(m => ({ _key: m?.code, value: m?.value })) });
+        }
+
+
+        const _keys = this.optionSelected.map((m) => m?.code);
+
+        this.DataSource = AitAppUtils.deepCloneArray(this.dataSourceDf).map((d) => {
+          if (this.isReset) {
+            return {
+              ...d,
+              isChecked: false,
+            };
+          }
+          return {
+            ...d,
+            isChecked: _keys.includes(d.code),
+          };
+        });
+
+        this.data = this.DataSource;
+
+        if (!this.isClickOption && !this.isOpenAutocomplete) {
+          this.filteredOptions$ = of(this.DataSource)
+        }
+
+
+
+      } else {
+
+        const findByKey = this.dataSourceDf.find(
+          (f) =>
+            f._key === this.defaultValue[0]?._key ||
+            f.code === this.defaultValue[0]?._key
+        );
+        this.selectOne = { _key: findByKey?.code, value: findByKey?.value };
+        if (!this.disableOutputDefault) {
+          const res = this.selectOne?._key ? [this.selectOne] : []
+          this.watchValue.emit({ value: res });
+        }
+
+        this.inputControlMaster.setValue(this.selectOne?.value || '');
+      }
+    }
+  };
 
   getDefaultValueByLang = async (keys: string[]) => {
     const condition = {
