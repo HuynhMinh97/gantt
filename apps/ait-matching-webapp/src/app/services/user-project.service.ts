@@ -122,8 +122,6 @@ export class UserProjectService extends AitBaseService {
     }
 
     async saveSkills(data: any) {
-      console.log(data);
-      
       const returnField = { _key: true };
       return await this.mutation(
         'saveSkill',

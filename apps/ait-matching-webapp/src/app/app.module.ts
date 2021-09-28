@@ -30,6 +30,9 @@ import { UserCourseComponent } from './pages/aureole-v/user/user-course/user-cou
 import { UsesCertificateComponent } from './pages/aureole-v/user/uses-certificate/uses-certificate.component';
 import { UserSkillsComponent } from './pages/aureole-v/user/user-skills/user-skills.component';
 import { UserReorderSkillsComponent } from './pages/aureole-v/user/user-reorder-skills/user-reorder-skills.component';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import { OrderSkillComponent } from './pages/aureole-v/user/order-skill/order-skill.component';
+import { UserProfileComponent } from './pages/aureole-v/user/user-profile/user-profile.component';
 
 
 const AIT_UI_MODULES = [
@@ -67,13 +70,16 @@ const PAGES = [
   UserOnboardingComponent,
   UserProjectComponent,
   UserCourseComponent,
-  UsesCertificateComponent
+  UsesCertificateComponent,
+  UserSkillsComponent, 
+  UserReorderSkillsComponent
 ]
 
 
 @NgModule({
-  declarations: [AppComponent, ...AUREOLE_V_COMPONENTS, ...PAGES, UserSkillsComponent, UserReorderSkillsComponent],
+  declarations: [AppComponent, ...AUREOLE_V_COMPONENTS, ...PAGES, OrderSkillComponent, UserProfileComponent],
   imports: [
+    DragDropModule,
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,

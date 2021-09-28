@@ -9,6 +9,7 @@ import { UserExperienceInfoResolver } from './user/user-experience/user-experien
 import { CourseResolver } from './user/user-course/user_certificate.resolver';
 import { UserCertificateResolver } from './user/user-certificate/user_certificate.resolver';
 import { UserProjectResolver } from './user/user-project/user-project.resolver';
+import { ReorderSkillResolver } from './user/user-reorder-skills/reorder-skill.resolver';
 
 const RESOLVERS = [
   UserExperienceInfoResolver,
@@ -19,6 +20,7 @@ const RESOLVERS = [
   UserProjectResolver,
   UserCertificateResolver,
   CourseResolver,
+  ReorderSkillResolver,
   {
   provide: 'ENVIRONMENT',
   useValue: environment

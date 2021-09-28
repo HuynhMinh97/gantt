@@ -53,7 +53,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.findSkills();
-    debugger
+   
     await this.userSkills.valueChanges.subscribe((data) => {   
       this.checkAllowSave();
       console.log(this.isChanged);
