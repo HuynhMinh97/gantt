@@ -329,7 +329,7 @@ export class UserReorderSkillsComponent  extends AitBaseComponent implements OnI
     this.reoderSkillsService.updateTopSkill(data).then((res) => {
       if (res?.status === RESULT_STATUS.OK) {
         this.showToastr('',this.getMsg('I0002')); 
-        this.router.navigateByUrl('/');  
+        this.router.navigateByUrl('/user-profile');  
       }else{
         this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
       }

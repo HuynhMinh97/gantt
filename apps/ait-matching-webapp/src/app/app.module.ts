@@ -33,6 +33,9 @@ import { UserReorderSkillsComponent } from './pages/aureole-v/user/user-reorder-
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import { OrderSkillComponent } from './pages/aureole-v/user/order-skill/order-skill.component';
 import { UserProfileComponent } from './pages/aureole-v/user/user-profile/user-profile.component';
+import { CommonModule } from '@angular/common';
+import { NbEvaIconsModule } from '@nebular/eva-icons';
+import { UserJobAlertComponent } from './pages/aureole-v/user/user-job-alert/user-job-alert.component';
 
 
 const AIT_UI_MODULES = [
@@ -77,8 +80,15 @@ const PAGES = [
 
 
 @NgModule({
-  declarations: [AppComponent, ...AUREOLE_V_COMPONENTS, ...PAGES, OrderSkillComponent, UserProfileComponent],
+  declarations: [AppComponent, ...AUREOLE_V_COMPONENTS, ...PAGES, OrderSkillComponent, UserProfileComponent, UserJobAlertComponent],
   imports: [
+    // , NbIconModule, NbEvaIconsModule, NbButtonModule, NbTooltipModule
+    NbTooltipModule,
+    NbButtonModule,
+    NbEvaIconsModule,
+    NbIconModule,
+    CommonModule,
+    NbCardModule,
     DragDropModule,
     BrowserModule,
     BrowserAnimationsModule,

@@ -2,6 +2,8 @@ export * from './lib/ui.module';
 
 //component modules
 
+//dragscroll
+export * from './lib/components/dragscroll-skill/dragscroll-skill.module';
 //button
 export * from './lib/components/ait-button/ait-button.module';
 

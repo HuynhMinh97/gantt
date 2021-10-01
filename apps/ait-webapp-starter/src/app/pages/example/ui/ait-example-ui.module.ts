@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
+  DragScrollSkillModule,
   AitButtonModule,
   AitInputTextModule,
   AitSpaceModule,
@@ -38,6 +39,7 @@ import { NbButtonModule, NbInputModule } from '@nebular/theme';
 
 // There are some module from @ait/ui you need
 const AIT_UI_MODULES = [
+  DragScrollSkillModule,
   AitButtonModule,
   AitInputTextModule,
   AitSpaceModule,
@@ -66,7 +68,7 @@ const AIT_UI_MODULES = [
   AitConfirmDialogModule,
   NbButtonModule,
   NbInputModule,
-  AitTimePickerModule
+  AitTimePickerModule,
 ];
 
 // There are some service from @ait/ui you need

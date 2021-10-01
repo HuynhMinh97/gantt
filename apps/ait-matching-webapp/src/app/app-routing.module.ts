@@ -13,6 +13,7 @@ import { UserSkillsComponent } from './pages/aureole-v/user/user-skills/user-ski
 import { UserReorderSkillsComponent } from './pages/aureole-v/user/user-reorder-skills/user-reorder-skills.component';
 import { OrderSkillComponent } from './pages/aureole-v/user/order-skill/order-skill.component';
 import { UserProfileComponent } from './pages/aureole-v/user/user-profile/user-profile.component';
+import { UserJobAlertComponent } from './pages/aureole-v/user/user-job-alert/user-job-alert.component';
 
 // Push your routes here one by one 🎉
 
@@ -99,7 +100,7 @@ export const routes: Routes = [
   },
   {
     path: 'user-reorder_skills',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    // canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
     component: UserReorderSkillsComponent
   },
   {
@@ -109,8 +110,13 @@ export const routes: Routes = [
   },
   {
     path: 'user-profile',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    // canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
     component: UserProfileComponent
+  },
+  {
+    path: 'user-job-alert',
+    // canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    component: UserJobAlertComponent
   },
   {
     path: '',

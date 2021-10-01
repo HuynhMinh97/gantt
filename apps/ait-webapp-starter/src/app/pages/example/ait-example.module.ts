@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
+  DragScrollSkillModule,
   AitButtonModule,
   AitInputTextModule,
   AitSpaceModule,
@@ -42,6 +43,7 @@ import { NbInputModule } from '@nebular/theme';
 
 // Những module cần dùng cho 1 pages
 const AIT_UI_MODULES = [
+  DragScrollSkillModule,
   AitButtonModule,
   AitInputTextModule,
   AitSpaceModule,

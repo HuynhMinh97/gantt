@@ -16,18 +16,18 @@ export class UserReoderSkillsService extends AitBaseService{
       _to: true
     })
   }
-  async findReorderSkill(key: string){
-    const condition = {
-      _key: key,
-      del_flag: false,
-    }
-    return await this.query('findReorderSkill', {collection: 'm_skill',  condition }, 
-    {
-      _key: true,
-      name: true,
-      category: true
-    })
-  }
+  // async findReorderSkill(key: string){
+  //   const condition = {
+  //     _key: key,
+  //     del_flag: false,
+  //   }
+  //   return await this.query('findReorderSkill', {collection: 'm_skill',  condition }, 
+  //   {
+  //     _key: true,
+  //     name: true,
+  //     category: true
+  //   })
+  // }
   
 
   async saveUserSkillReorder(data: any) { 
