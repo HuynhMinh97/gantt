@@ -40,6 +40,12 @@ export class SystemDto extends BaseDto {
   @Field(() => String, { nullable: true })
   param?: string;
 
+  @Field(() => String, { nullable: true })
+  file_max_size?: string;
+
+  @Field(() => String, { nullable: true })
+  file_max_upload?: string;
+
   @Field(() => Boolean, { nullable: true })
   active_flag?: boolean;
 

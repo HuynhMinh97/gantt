@@ -73,6 +73,10 @@ export class AitFileUploaderService extends AitBaseService {
     });
   }
 
+  // getSystemSetting = async (company : string) => {
+  //   return await this.mutation('findSystem','user_setting',)
+  // }
+
   async getFilesByFileKeys(file_key: string | string[]) {
 
     if ((file_key || []).length !== 0) {

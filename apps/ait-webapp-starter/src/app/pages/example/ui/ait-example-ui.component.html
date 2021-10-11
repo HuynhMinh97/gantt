@@ -89,6 +89,7 @@
           [errorMessages]="errors"
           [isReset]="result.resetAll"
           [required]="true"
+          [readonly]="true"
         ></ait-input-text>
         <button
           nbButton
@@ -106,6 +107,7 @@
           [label]="'c_2003'"
           [placeholder]="'c_2003'"
           [max]="999999999999"
+          [min]="1"
           [guidance]="'whatever you want'"
           [guidanceIcon]="'star'"
           (watchValue)="getValueNumberInput($event)"
@@ -115,7 +117,6 @@
           [isSubmit]="result.submit_text_number"
           [errorMessages]="errors"
           [required]="true"
-          [defaultValue]="1000"
         ></ait-input-number>
 
         <button
@@ -141,12 +142,12 @@
           [placeholder]="null"
           [guidance]="'c_2003'"
           (watchValue)="getValueDatePicker($event)"
-
           [guidanceIcon]="'star'"
-          [defaultValue]="null"
+          [defaultValue]="date"
           [isSubmit]="result.submit_datepicker"
           [required]="true"
           [errorMessages]="errors"
+          [format]="'yyyy/MM'"
         ></ait-datepicker>
 
         <button
@@ -213,6 +214,7 @@
           [allowDelete]="true"
           [sortBy]="'sort_no'"
           [maxItem]="1"
+          [defaultValue]="[{ _key: 'c_b001', value: 'OK' }]"
           [collection]="'sys_caption'"
         ></ait-autocomplete-master-data>
         <button
@@ -230,7 +232,7 @@
 
         <ait-autocomplete-master-data
           [styleLabel]="{ 'text-transform': 'initial' }"
-          [width]="'400px'"
+          [width]="'300px'"
           [label]="'autocomplete master data'"
           [placeholder]="'one'"
           [guidance]="'c_2003'"
@@ -238,10 +240,6 @@
           [class]="'RESIDENCE_STATUS'"
           (onError)="result.error_data2 = $event.isValid"
           (watchValue)="result.multi_data = $event"
-          [excludedValue]="[
-            { _key: 'en_US', value: 'Tiếng Anh' },
-            { _key: 'vi_VN', value: 'Tiếng Việt' }
-          ]"
           [isSubmit]="result.master2"
           [allowNew]="true"
           [errorMessages]="errors"
@@ -263,7 +261,7 @@
 
         <ait-space></ait-space>
 
-        <ait-input-file
+        <!-- <ait-input-file
           [title]="'input-file'"
           [isDefault]="false"
           [fileKeys]="[
@@ -275,10 +273,9 @@
           (onError)="result.error_file = $event.isValid"
           [isSubmit]="result.file"
           [errorMessages]="errors"
-          [maxFiles]="1"
           [fileTypes]="'jpg,json,png'"
-          [maxSize]="50"
-        ></ait-input-file>
+
+        ></ait-input-file> -->
 
         <button
           nbButton
@@ -469,6 +466,8 @@
         <ait-input-file
           [isDefault]="false"
           [file_keys]="['7bfedd70-a3db-f0c5-6340-d0e728d407ba']"
+          [maxSize]="40"
+          [maxFiles]="10"
         ></ait-input-file>
       </div>
     </ait-card-content>
@@ -529,6 +528,7 @@
           (onDateChange)="getDate($event)"
           [label]="'date picker'"
           [dateInput]="date"
+          [format]="'yyyy'"
         ></ait-datepicker>
         <br />
         <code>#Result output : {{ result.date?.value }}</code>
