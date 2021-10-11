@@ -155,6 +155,7 @@ export class AitBaseService {
       COLLECTIONS.CAPTION,
     ];
     const mapData = [];
+    const joinData = [];
 
     isSystem && collection === COLLECTIONS.USER_SETTING && condition['user_id']
       ? delete condition['user_id']
@@ -184,6 +185,15 @@ export class AitBaseService {
           ) {
             mapData.push(data);
           }
+          if (
+            data.join_field &&
+            data.join_target &&
+            data.join_collection &&
+            data.join_attribute &&
+            !isSystem
+          ) {
+            joinData.push(data);
+          }
         } else {
           aqlStr += `&& data.${prop} == `;
           aqlStr +=
@@ -203,6 +213,14 @@ export class AitBaseService {
     }
 
     aqlStr += `RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name, `;
+    //join
+    joinData.forEach((data) => {
+      aqlStr += ` ${data.join_field} : ( `;
+      aqlStr += ` FOR record IN ${data.join_collection}`;
+      aqlStr += ` FILTER record.${data.join_attribute} == data.${data.join_target}`;
+      aqlStr += ` RETURN record ), `;
+    });
+    //ref
     mapData.forEach((data) => {
       const ref_condition = data.ref_condition;
 

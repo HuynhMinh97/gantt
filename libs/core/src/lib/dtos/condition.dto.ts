@@ -47,4 +47,16 @@ export class ConditionDto {
   // Định nghĩa _key ở cặp key-value trả về, mặc định là code
   @Field(() => String, { nullable: true, defaultValue: KEYS.CODE })
   get_by: string;
+  // Tên cột sau khi join bảng
+  @Field(() => String, { nullable: true })
+  join_field: string;
+  // Join bảng
+  @Field(() => String, { nullable: true })
+  join_collection: string;
+  // Giá trị so sánh khi join bảng
+  @Field(() => String, { nullable: true })
+  join_target: string;
+  // Giá trị so sánh khi join bảng
+  @Field(() => String, { nullable: true })
+  join_attribute: string;
 }
