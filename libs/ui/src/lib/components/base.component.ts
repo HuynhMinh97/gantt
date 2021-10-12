@@ -147,7 +147,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
 
 
-    // CAll get user info , such as company, username, email, _key
+    // // CAll get user info , such as company, username, email, _key
     if (localStorage.getItem('access_token')) {
       if (userId && userId !== '') {
 
@@ -170,6 +170,11 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
         });
 
+      }
+      else {
+        this.authService.removeTokens();
+
+        location.reload();
       }
     }
 
@@ -196,26 +201,40 @@ export class AitBaseComponent implements OnInit, OnDestroy {
   }
 
   public initBaseComponent = () => {
+    const userId = this.authService.getUserID();
+    console.log(userId)
+    // CAll get user info , such as company, username, email, _key
+    // if (localStorage.getItem('access_token')) {
+    //   if (userId && userId !== '') {
 
-    // register locale by language setting
-    // this.store.pipe(select(getLang)).subscribe({
-    //   next: (state) => {
-    //     console.log(state)
-    //     switch (state) {
-    //       case 'en_US':
+    //     this.getUserInfo(userId).then((res: any) => {
+    //       if (!res || !res?.email) {
+    //         this.authService.removeTokens();
 
-    //         return registerLocaleData(localeEnn);
-    //       case 'vi_VN':
+    //         location.reload();
+    //       }
+    //       else {
 
-    //         return registerLocaleData(localeVnn);
-    //       default:
 
-    //         return registerLocaleData(localeJpp);
-    //     }
-    //   },
-    // });
+    //         // Push company on store base on user-setting
+    //         this.store.dispatch(
+    //           new CHANGECOMPANY(res?.company || this.env.COMMON.COMPANY_DEFAULT)
+    //         );
+    //         localStorage.setItem('comp', res?.company || this.env.COMMON.COMPANY_DEFAULT);
+    //         this.store.dispatch(new StoreUserInfo(res));
+    //       }
 
-    // console.log(localStorage.getItem('refresh_token'))
+    //     });
+
+    //   }
+    //   else {
+    //     this.authService.removeTokens();
+
+    //     setTimeout(() => {
+    //       location.reload();
+    //     },300)
+    //   }
+    // }
 
     if (localStorage.getItem('refresh_token')) {
       this.refreshToken().then((r: any) => {
