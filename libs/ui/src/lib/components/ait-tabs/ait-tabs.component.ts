@@ -41,7 +41,12 @@ export class AitTabsCommonComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    this.tabs = this.tabs.map(tab => {
+      return {
+        ...tab,
+        title: this.translateService.translate(tab?.title)
+      }
+    })
     if (!this.tabSelected) {
       this.tabSelected = this.tabs[0]?.type
     }
