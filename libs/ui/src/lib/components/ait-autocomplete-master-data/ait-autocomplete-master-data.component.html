@@ -52,7 +52,7 @@
           nbInput
           [value]="VALUE"
           type="text"
-          autocomplete="doNotAutoComplete"
+          autocomplete="off"
           class="search"
           [ngStyle]="styleInput"
           [placeholder]="getPlaceHolder()"
@@ -71,8 +71,9 @@
           *ngIf="!isReadOnly"
           [formControl]="inputControl"
           [placeholder]="PLACEHOLDER"
-          [value]="VALUE"
+
           fullWidth
+          autocomplete="off"
           nbInput
           #input
           autocomplete="doNotAutoComplete"
@@ -143,9 +144,10 @@
             class="option__container"
             style="cursor: pointer"
             [class.isSelect]="option?._key === selectOne?._key"
+            (click)="onSelectionChange(option)"
           >
             <div
-              (click)="onSelectionChange(option)"
+
               style="
                 cursor: pointer;
                 font-weight: 600;
