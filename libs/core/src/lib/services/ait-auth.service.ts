@@ -42,7 +42,6 @@ export class AuthService {
         );
       }
     }
-    console.log(user)
 
     const passwordDecrypt = AuthHelper.getEncrypt(input.password);
 

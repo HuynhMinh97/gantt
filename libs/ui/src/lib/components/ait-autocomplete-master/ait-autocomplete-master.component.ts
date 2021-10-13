@@ -109,6 +109,12 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   @Output() onError = new EventEmitter();
   messageSearch = '';
 
+  isFocus = false;
+
+  setFocus = (value : boolean) => {
+    this.isFocus = value;
+  }
+
   ID(element: string) {
     const idx = this.id && this.id !== '' ? this.id : Date.now();
     return idx + '_' + element;

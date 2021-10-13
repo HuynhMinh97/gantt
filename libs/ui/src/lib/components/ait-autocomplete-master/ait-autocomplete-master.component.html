@@ -9,6 +9,7 @@
     class="input__container"
     style="margin-top: 8px; width: 100%"
     [ngClass]="{ isError: isError }"
+    [class.focus]="isFocus"
   >
     <div
       style="
@@ -74,6 +75,8 @@
       (focusout)="outFocus()"
       *ngIf="!disabled"
       tabindex="{{ tabIndex }}"
+      (blur)="setFocus(false)"
+      (focus)="setFocus(true)"
     />
     <input
       [formControl]="inputControlMaster"
@@ -92,6 +95,8 @@
       (keydown.enter)="enterItems(input.value); input.value = ''"
       (keydown.tab)="enterItems(input.value); input.value = ''"
       (focusout)="outFocus()"
+      (blur)="setFocus(false)"
+      (focus)="setFocus(true)"
     />
   </div>
   <!-- <p
