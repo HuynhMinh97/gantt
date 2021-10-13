@@ -1,5 +1,5 @@
 import { COLLECTIONS, KEYS, OPERATOR } from '@ait/shared';
-import { InputType, Field } from '@nestjs/graphql';
+import { InputType, Field, Float } from '@nestjs/graphql';
 
 @InputType()
 export class RefCondition {
@@ -17,6 +17,22 @@ export class RefCondition {
 
   @Field(() => Boolean, { nullable: true })
   active_flag: boolean;
+  //mannq update
+  // Các toán tử cho phép ở trong enum OPERATOR
+  @Field(() => String, { nullable: true, defaultValue: OPERATOR.IN })
+  operator: string;
+  // giá trị tìm kiếm, input mảng
+  @Field(() => [String], { nullable: true, defaultValue: [] })
+  value: string[];
+  // Trỏ đến attribute liên kết nếu thuộc tính obj không trùng với tên cột
+  @Field(() => String, { nullable: true })
+  target: string;
+  // giá trị tìm kiếm, input string
+  @Field(() => String, { nullable: true, defaultValue: '' })
+  valueAsString: string;
+  // giá trị tìm kiếm, input number
+  @Field(() => Float, { nullable: true })
+  valueAsNumber: number;
 }
 @InputType()
 export class ConditionDto {
@@ -26,6 +42,15 @@ export class ConditionDto {
   // giá trị tìm kiếm, input mảng
   @Field(() => [String], { nullable: true, defaultValue: [] })
   value: string[];
+  // Trỏ đến attribute liên kết nếu thuộc tính obj không trùng với tên cột
+  @Field(() => String, { nullable: true })
+  target: string;
+  // giá trị tìm kiếm, input string
+  @Field(() => String, { nullable: true, defaultValue: '' })
+  valueAsString: string;
+  // giá trị tìm kiếm, input number
+  @Field(() => Float, { nullable: true })
+  valueAsNumber: number;
   // Trường liên kết ở collection gốc
   @Field(() => String, { nullable: true })
   attribute: string;
