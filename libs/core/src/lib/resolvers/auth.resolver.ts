@@ -63,7 +63,6 @@ export class AuthResolver {
     input: AuthPasswordChanged
   ) {
     const result = await this.authService.handleChangePassword(input);
-    // console.log(input, result);
     return result;
   }
 
@@ -81,9 +80,7 @@ export class AuthResolver {
     @Args('request', { type: () => AitSysUserRequest })
     request: AitSysUserRequest
   ) {
-    console.log(request)
     const res = await this.graphqlService.find(request);
-    console.log(res)
     return res.data;
   }
 
