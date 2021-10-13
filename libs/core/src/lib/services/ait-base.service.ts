@@ -4,8 +4,11 @@ import {
   COLLECTIONS,
   DB_CONNECTION_TOKEN,
   hasLength,
+  isNumber,
   isObjectFull,
+  isStringFull,
   KEYS,
+  OPERATOR,
   RESULT_STATUS,
   SYSTEM_COMPANY,
 } from '@ait/shared';
@@ -26,6 +29,7 @@ export class AitBaseService {
   company = '';
   lang = '';
   username = '';
+  refList = ['operator', 'value', 'target', 'valueAsString', 'valueAsNumber'];
 
   async save(request: any, user?: SysUser) {
     this.initialize(request, user);
@@ -122,15 +126,18 @@ export class AitBaseService {
 
   async find(request: any, user?: SysUser) {
     const lang = request.lang;
-    let aqlStr = `LET current_data = ( ${this.getSearchCondition(
+    let aqlStr = `LET current_data = ( \r\n ${this.getSearchCondition(
       request,
       false
-    )} ) `;
-    aqlStr += `LET result = LENGTH(current_data) > 0 ? current_data : ( ${this.getSearchCondition(
+    )} \r\n) `;
+    aqlStr += `\r\n`;
+    aqlStr += `\r\nLET result = LENGTH(current_data) > 0 ? current_data : ( \r\n ${this.getSearchCondition(
       request,
       true
-    )} ) `;
-    aqlStr += `FOR data IN result RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name }) `;
+    )} \r\n) `;
+    aqlStr += `\r\n`;
+    aqlStr += `\r\nFOR data IN result \r\n RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name }) `;
+
     try {
       const result = await this.db.query(aqlStr);
       const rawData = [];
@@ -161,21 +168,49 @@ export class AitBaseService {
       ? delete condition['user_id']
       : '';
 
-    let aqlStr = `FOR data IN ${collection} `;
-    aqlStr += `FILTER data.company == "${company}" `;
+    let aqlStr = `FOR data IN ${collection} \r\n`;
+    aqlStr += ` FILTER data.company == "${company}" `;
     for (const prop in condition) {
-      if (prop === KEYS.NAME && collectionReq.includes(collection)) {
-        aqlStr += `&& LOWER(data.name.${lang}) `;
+      if (
+        prop === KEYS.NAME &&
+        collectionReq.includes(collection) &&
+        isStringFull(condition[prop])
+      ) {
+        aqlStr += `&& \r\n LOWER(data.name.${lang}) `;
         aqlStr += `LIKE LOWER(CONCAT("%", "${condition[prop]}", "%")) `;
       } else if (prop === KEYS.DEL_FLAG) {
-        aqlStr += `&& data.del_flag != true `;
+        aqlStr += `&& \r\n data.del_flag != true `;
       } else {
         const data = condition[prop];
         if (isObjectFull(data)) {
-          if (data.operator && hasLength(data.value)) {
-            aqlStr += ` && data.${prop} ${data.operator} ${JSON.stringify(
-              data.value
-            )} `;
+          if (this.isValidCondition(data)) {
+            if (data.target) {
+              aqlStr += ` && \r\n data.${data.target} ${data.operator} `;
+            } else {
+              aqlStr += ` && \r\n data.${prop} ${data.operator} `;
+            }
+
+            switch (data.operator) {
+              case OPERATOR.IN || OPERATOR.NOT_IN:
+                if (hasLength(data.value)) {
+                  aqlStr += `${JSON.stringify(data.value)}`;
+                }
+                break;
+              case OPERATOR.LIKE:
+                if (hasLength(data.valueAsString)) {
+                  aqlStr += `LOWER(CONCAT("%", "${data.valueAsString}", "%"))`;
+                } else if (isNumber(data.valueAsNumber)) {
+                  aqlStr += `LOWER(CONCAT("%", ${data.valueAsNumber}, "%"))`;
+                }
+                break;
+              default:
+                if (hasLength(data.valueAsString)) {
+                  aqlStr += `"${data.valueAsString}" `;
+                } else if (isNumber(data.valueAsNumber)) {
+                  aqlStr += `${data.valueAsNumber} `;
+                }
+                break;
+            }
           }
           if (
             data.attribute &&
@@ -212,26 +247,26 @@ export class AitBaseService {
       aqlStr += ` LIMIT ${options.limit} `;
     }
 
-    aqlStr += `RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name, `;
+    aqlStr += `\r\n RETURN MERGE(\r\n data, {\r\n name:  data.name.${lang} ? data.name.${lang} : data.name, `;
     //join
     joinData.forEach((data) => {
-      aqlStr += ` ${data.join_field} : ( `;
-      aqlStr += ` FOR record IN ${data.join_collection}`;
-      aqlStr += ` FILTER record.${data.join_attribute} == data.${data.join_target}`;
-      aqlStr += ` RETURN record ), `;
+      aqlStr += ` \r\n ${data.join_field} : ( `;
+      aqlStr += ` \r\n FOR record IN ${data.join_collection}`;
+      aqlStr += ` \r\n FILTER record.${data.join_attribute} == data.${data.join_target}`;
+      aqlStr += ` \r\n RETURN record ), `;
     });
     //ref
     mapData.forEach((data) => {
       const ref_condition = data.ref_condition;
 
-      aqlStr += ` ${data.attribute} : ( `;
-      aqlStr += ` IS_ARRAY(data.${data.attribute}) == true ? ( `;
-      aqlStr += ` FOR item IN TO_ARRAY(data.${data.attribute}) `;
-      aqlStr += ` FOR doc IN ${data.ref_collection} `;
-      aqlStr += ` FILTER doc.${data.ref_attribute} == item `;
+      aqlStr += ` \r\n ${data.attribute} : ( `;
+      aqlStr += ` \r\n IS_ARRAY(data.${data.attribute}) == true ? ( `;
+      aqlStr += ` \r\n FOR item IN TO_ARRAY(data.${data.attribute}) `;
+      aqlStr += ` \r\n FOR doc IN ${data.ref_collection} `;
+      aqlStr += ` \r\n FILTER doc.${data.ref_attribute} == item `;
       if (isObjectFull(ref_condition)) {
         for (const prop in ref_condition) {
-          if (ref_condition[prop]) {
+          if (ref_condition[prop] && !~this.refList.indexOf(prop)) {
             aqlStr += ` && doc.${prop} == `;
             aqlStr +=
               typeof ref_condition[prop] === 'string'
@@ -239,32 +274,96 @@ export class AitBaseService {
                 : `${ref_condition[prop]} `;
           }
         }
-      }
-      aqlStr += ` RETURN `;
-      aqlStr += data.return_field
-        ? ` doc.${data.return_field}  ) : `
-        : `{ _key: doc.${data.get_by}, value: doc.name.${lang} } ) : `;
 
-      aqlStr += ` (FOR doc IN ${data.ref_collection} `;
-      aqlStr += ` FILTER doc.${data.ref_attribute} == data.${data.attribute} `;
+        if (this.isValidCondition(ref_condition) && ref_condition.target) {
+          aqlStr += ` && \r\n doc.${ref_condition.target} ${data.operator} `;
+          switch (ref_condition.operator) {
+            case OPERATOR.IN || OPERATOR.NOT_IN:
+              if (hasLength(ref_condition.value)) {
+                aqlStr += `${JSON.stringify(ref_condition.value)}`;
+              }
+              break;
+            case OPERATOR.LIKE:
+              if (hasLength(ref_condition.valueAsString)) {
+                aqlStr += `LOWER(CONCAT("%", "${ref_condition.valueAsString}", "%"))`;
+              } else if (isNumber(ref_condition.valueAsNumber)) {
+                aqlStr += `LOWER(CONCAT("%", ${ref_condition.valueAsNumber}, "%"))`;
+              }
+              break;
+            default:
+              if (hasLength(ref_condition.valueAsString)) {
+                aqlStr += `"${ref_condition.valueAsString}" `;
+              } else if (isNumber(ref_condition.valueAsNumber)) {
+                aqlStr += `${ref_condition.valueAsNumber} `;
+              }
+              break;
+          }
+        }
+      }
+      aqlStr += `\r\n RETURN `;
+      aqlStr += data.return_field
+        ? `\r\n  doc.${data.return_field}  ) : `
+        : `\r\n { _key: doc.${data.get_by}, value: doc.name.${lang} } ) : `;
+
+      aqlStr += `\r\n  (FOR doc IN ${data.ref_collection} `;
+      aqlStr += `\r\n  FILTER doc.${data.ref_attribute} == data.${data.attribute} `;
       if (isObjectFull(ref_condition)) {
         for (const prop in ref_condition) {
-          if (ref_condition[prop]) {
-            aqlStr += ` && doc.${prop} == `;
+          if (ref_condition[prop] && !~this.refList.indexOf(prop)) {
+            aqlStr += ` &&\r\n  doc.${prop} == `;
             aqlStr +=
               typeof ref_condition[prop] === 'string'
                 ? `"${ref_condition[prop]}" `
                 : `${ref_condition[prop]} `;
           }
         }
+
+        if (this.isValidCondition(ref_condition) && ref_condition.target) {
+          aqlStr += ` && \r\n doc.${ref_condition.target} ${data.operator} `;
+          switch (ref_condition.operator) {
+            case OPERATOR.IN || OPERATOR.NOT_IN:
+              if (hasLength(ref_condition.value)) {
+                aqlStr += `${JSON.stringify(ref_condition.value)}`;
+              }
+              break;
+            case OPERATOR.LIKE:
+              if (hasLength(ref_condition.valueAsString)) {
+                aqlStr += `LOWER(CONCAT("%", "${ref_condition.valueAsString}", "%"))`;
+              } else if (isNumber(ref_condition.valueAsNumber)) {
+                aqlStr += `LOWER(CONCAT("%", ${ref_condition.valueAsNumber}, "%"))`;
+              }
+              break;
+            default:
+              if (hasLength(ref_condition.valueAsString)) {
+                aqlStr += `"${ref_condition.valueAsString}" `;
+              } else if (isNumber(ref_condition.valueAsNumber)) {
+                aqlStr += `${ref_condition.valueAsNumber} `;
+              }
+              break;
+          }
+        }
       }
-      aqlStr += ` RETURN `;
+      aqlStr += `\r\n RETURN `;
       aqlStr += data.return_field
-        ? ` doc.${data.return_field} )[0] ), `
-        : `{ _key: doc.${data.get_by}, value: doc.name.${lang} })[0] ), `;
+        ? `\r\n doc.${data.return_field} )[0] ), `
+        : `\r\n { _key: doc.${data.get_by}, value: doc.name.${lang} })[0] ), `;
     });
     aqlStr += `  }) `;
     return aqlStr;
+  }
+
+  isValidCondition(data: any): boolean {
+    return (
+      data.operator &&
+      ((hasLength(data.value) &&
+        (data.operator === OPERATOR.IN || data.operator === OPERATOR.NOT_IN)) ||
+        (hasLength(data.valueAsString) &&
+          data.operator !== OPERATOR.IN &&
+          data.operator !== OPERATOR.NOT_IN) ||
+        (isNumber(data.valueAsNumber) &&
+          data.operator !== OPERATOR.IN &&
+          data.operator !== OPERATOR.NOT_IN))
+    );
   }
 
   initialize(request: any, user?: SysUser) {
