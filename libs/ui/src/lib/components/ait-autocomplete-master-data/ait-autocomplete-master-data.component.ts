@@ -860,7 +860,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
             this.input.nativeElement.focus();
           }
 
-
         }
 
 
@@ -875,7 +874,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
           } else {
             this.openAutocomplete()
           }
-        }, 20)
+        }, 60)
 
 
       } else {
@@ -883,9 +882,9 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         this.isClickLabel = false;
         if (!this.isClickOption) {
           this.outFocusValues.emit(true);
-          this.hideAutocomplete();
-
-
+          setTimeout(() => {
+            this.hideAutocomplete();
+          }, 60)
         }
       }
     }
@@ -1084,16 +1083,17 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   };
 
   onSelectionChange($event) {
+    // console.log($event)
     this.clearErrors();
+
     this.selectOne = { _key: $event?.code, value: $event?.value };
-    this.inputControl.patchValue($event?.value || '')
+    // this.inputControl.patchValue($event?.value || '')
     this.onInput.emit({ value: $event?.value })
 
     this.watchValue.emit({
       value: [{ _key: $event?.code, value: $event?.value }],
     });
     this.getFilteredDataSource();
-
     if (this.required) {
       if (!this.selectOne?.value) {
         this.isError = true;
