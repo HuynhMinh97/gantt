@@ -34,6 +34,25 @@ export class RefCondition {
   @Field(() => Float, { nullable: true })
   valueAsNumber: number;
 }
+
+@InputType()
+export class FilterDto {
+  // Các toán tử cho phép ở trong enum OPERATOR
+  @Field(() => String, { nullable: true, defaultValue: OPERATOR.IN })
+  operator: string;
+  // Attribute trỏ tới ở cột join
+  @Field(() => String, { nullable: true })
+  attribute: string;
+  // giá trị tìm kiếm, input mảng
+  @Field(() => [String], { nullable: true, defaultValue: [] })
+  value: string[];
+  // giá trị tìm kiếm, input string
+  @Field(() => String, { nullable: true, defaultValue: '' })
+  valueAsString: string;
+  // giá trị tìm kiếm, input number
+  @Field(() => Float, { nullable: true })
+  valueAsNumber: number;
+}
 @InputType()
 export class ConditionDto {
   // Các toán tử cho phép ở trong enum OPERATOR
@@ -45,6 +64,9 @@ export class ConditionDto {
   // Trỏ đến attribute liên kết nếu thuộc tính obj không trùng với tên cột
   @Field(() => String, { nullable: true })
   target: string;
+  // Như trên nhưng trỏ đến nhiều cột, hỗ trợ biểu thức || -> hien tai chua support
+  @Field(() => [String], { nullable: true })
+  targets: string[];
   // giá trị tìm kiếm, input string
   @Field(() => String, { nullable: true, defaultValue: '' })
   valueAsString: string;
@@ -84,4 +106,7 @@ export class ConditionDto {
   // Giá trị so sánh khi join bảng
   @Field(() => String, { nullable: true })
   join_attribute: string;
+  // Filter object cuối cùng trả về
+  @Field(() => FilterDto, { nullable: true })
+  filter_custom: FilterDto;
 }
