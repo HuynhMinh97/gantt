@@ -4,6 +4,7 @@ import {
   COLLECTIONS,
   DB_CONNECTION_TOKEN,
   hasLength,
+  isNil,
   isNumber,
   isObjectFull,
   isStringFull,
@@ -278,10 +279,10 @@ export class AitBaseService {
             break;
           default:
             aqlStr += ` FILTER record.${data.filter_custom.attribute} ${data.filter_custom.operator} `;
-            if (data.filer_custom.valueAsString) {
-              aqlStr += `"${data.filer_custom.valueAsString} \r\n"`;
+            if (data.filter_custom.valueAsString) {
+              aqlStr += `"${data.filter_custom.valueAsString} \r\n"`;
             } else {
-              aqlStr += `${data.filer_custom.valueAsNumber} \r\n`;
+              aqlStr += `${data.filter_custom.valueAsNumber} \r\n`;
             }
             break;
         }
@@ -306,10 +307,10 @@ export class AitBaseService {
     //       break;
     //     default:
     //       aqlStr += ` FILTER record.${data.filter_custom.attribute} ${data.filter_custom.operator} `;
-    //       if (data.filer_custom.valueAsString) {
-    //         aqlStr += `"${data.filer_custom.valueAsString} \r\n"`;
+    //       if (data.filter_custom.valueAsString) {
+    //         aqlStr += `"${data.filter_custom.valueAsString} \r\n"`;
     //       } else {
-    //         aqlStr += `${data.filer_custom.valueAsNumber} \r\n`;
+    //         aqlStr += `${data.filter_custom.valueAsNumber} \r\n`;
     //       }
     //       break;
     //   }
@@ -470,12 +471,12 @@ export class AitBaseService {
             operator &&
             ((hasLength(value) &&
               (operator === OPERATOR.IN || operator === OPERATOR.NOT_IN)) ||
-              (hasLength(valueAsString) &&
-                operator !== OPERATOR.IN &&
-                operator !== OPERATOR.NOT_IN) ||
-              (isNumber(valueAsNumber) &&
-                operator !== OPERATOR.IN &&
-                operator !== OPERATOR.NOT_IN))
+              ((!isNil(valueAsString) && hasLength(valueAsString)) &&
+                (operator !== OPERATOR.IN &&
+                  operator !== OPERATOR.NOT_IN)) ||
+              ((!isNil(valueAsNumber) && isNumber(valueAsNumber)) &&
+               ( operator !== OPERATOR.IN &&
+                operator !== OPERATOR.NOT_IN)))
           );
         } else {
           return false;
