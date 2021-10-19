@@ -31,6 +31,7 @@ export class AitBaseService {
   lang = '';
   username = '';
   refList = ['operator', 'value', 'target', 'valueAsString', 'valueAsNumber'];
+  forAuv = [];
 
   async save(request: any, user?: SysUser) {
     this.initialize(request, user);
@@ -69,6 +70,7 @@ export class AitBaseService {
     if (dataUpdate.length > 0) {
       const aqlStr = `FOR data IN ${JSON.stringify(dataUpdate)}
       UPDATE data WITH data IN ${collection} RETURN MERGE(NEW, {name:  NEW.name.${lang} ? NEW.name.${lang} : NEW.name }) `;
+      console.log(aqlStr);
       try {
         const res = await this.db.query(aqlStr);
         for await (const data of res) {
@@ -127,6 +129,7 @@ export class AitBaseService {
 
   async find(request: any, user?: SysUser) {
     const lang = request.lang;
+    this.forAuv = [];
     let aqlStr = `LET current_data = ( \r\n ${this.getSearchCondition(
       request,
       false
@@ -137,7 +140,19 @@ export class AitBaseService {
       true
     )} \r\n) `;
     aqlStr += `\r\n`;
-    aqlStr += `\r\nFOR data IN result \r\n RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name }) `;
+    aqlStr += `\r\nFOR data IN result`;
+    if (this.forAuv.length > 0) {
+      this.forAuv.forEach((data, index) => {
+        if (index === 0) {
+          aqlStr += `\r\n FILTER`;
+        } else {
+          aqlStr += `\r\n &&`;
+        }
+        aqlStr += `\r\n LOWER(data.${data.type}) `;
+        aqlStr += `LIKE LOWER(CONCAT("%", "${data.value}", "%")) `;
+      });
+    }
+    aqlStr += `\r\n RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name }) `;
 
     // console.log(aqlStr);
     
@@ -230,6 +245,9 @@ export class AitBaseService {
                 }
                 break;
             }
+          }
+          if (data.type === 'aureole-v' && (prop === KEYS.CREATE_BY || prop === KEYS.CHANGE_BY) && this.forAuv.length < 2) {
+            this.forAuv.push({type: prop, value: data.value ?? ''});
           }
           if (
             data.attribute &&
@@ -336,13 +354,23 @@ export class AitBaseService {
     }
 
     aqlStr += `\r\n RETURN MERGE(\r\n data, {\r\n name:  data.name.${lang} ? data.name.${lang} : data.name, `;
-    //custom
+    // atribute
     if (atributes.length > 0) {
       aqlStr += `\r\n ${atributes[0]}, `;
     }
-    // customData.forEach(data => {
-      // aqlStr += `\r\n ${data.join_field}, `;
-    // });
+    //custom
+    this.forAuv.forEach(prop => {
+      aqlStr += `\r\n ${prop.type}: (`;
+      aqlStr += `\r\n data.is_matching == true ? (`;
+      aqlStr += `\r\n LET item = (`;
+      aqlStr += `\r\n FOR record IN user_profile`;
+      aqlStr += `\r\n FILTER record.user_id == data.${prop.type}`;
+      aqlStr += `\r\n RETURN record`;
+      aqlStr += `\r\n )[0]`;
+      aqlStr += `\r\n RETURN item.name`;
+      aqlStr += `\r\n )[0] : data.${prop.type}`;
+      aqlStr += `\r\n ), `;
+    });
     //join
     joinData.forEach(data => {
       if (!atributes.includes(data.join_field)) {
@@ -489,12 +517,12 @@ export class AitBaseService {
   isValidCondition(data: any): boolean {
     return (
       data.operator &&
-      ((hasLength(data.value) &&
+      ((!isNil(data.value) && hasLength(data.value) &&
         (data.operator === OPERATOR.IN || data.operator === OPERATOR.NOT_IN)) ||
-        (hasLength(data.valueAsString) &&
+        (!isNil(data.valueAsString) && hasLength(data.valueAsString) &&
           data.operator !== OPERATOR.IN &&
           data.operator !== OPERATOR.NOT_IN) ||
-        (isNumber(data.valueAsNumber) &&
+        (!isNil(data.valueAsNumber) && isNumber(data.valueAsNumber) &&
           data.operator !== OPERATOR.IN &&
           data.operator !== OPERATOR.NOT_IN))
     );
