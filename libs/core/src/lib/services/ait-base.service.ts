@@ -148,7 +148,7 @@ export class AitBaseService {
         } else {
           aqlStr += `\r\n &&`;
         }
-        aqlStr += `\r\n LOWER(data.${data.type}) `;
+        aqlStr += `\r\n TRIM(LOWER(data.${data.type})) `;
         aqlStr += `LIKE LOWER(CONCAT("%", "${data.value}", "%")) `;
       });
     }
@@ -212,13 +212,13 @@ export class AitBaseService {
           if (this.isValidCondition(data)) {
             if (data.target) {
               if (data.operator === OPERATOR.LIKE) {
-                aqlStr += `&& \r\n LOWER(data.${data.target}) ${data.operator} `;
+                aqlStr += `&& \r\n TRIM(LOWER(data.${data.target})) ${data.operator} `;
               } else {
                 aqlStr += `&& \r\n data.${data.target} ${data.operator} `;
               }
             } else {
               if (data.operator === OPERATOR.LIKE) {
-                aqlStr += `&& \r\n LOWER(data.${prop}) ${data.operator} `;
+                aqlStr += `&& \r\n TRIM(LOWER(data.${prop})) ${data.operator} `;
               } else {
                 aqlStr += `&& \r\n data.${prop} ${data.operator} `;
               }
@@ -232,9 +232,9 @@ export class AitBaseService {
                 break;
               case OPERATOR.LIKE:
                 if (hasLength(data.valueAsString)) {
-                  aqlStr += `LOWER(CONCAT("%", "${data.valueAsString}", "%")) `;
+                  aqlStr += `TRIM(LOWER(CONCAT("%", "${data.valueAsString}", "%"))) `;
                 } else if (isNumber(data.valueAsNumber)) {
-                  aqlStr += `LOWER(CONCAT("%", ${data.valueAsNumber}, "%")) `;
+                  aqlStr += `TRIM(LOWER(CONCAT("%", ${data.valueAsNumber}, "%"))) `;
                 }
                 break;
               default:
@@ -293,7 +293,7 @@ export class AitBaseService {
             TO_ARRAY(record.${data.filter_custom.attribute}))) == LENGTH(TO_ARRAY(${JSON.stringify(data.filter_custom.value)})) \r\n`;
             break;
           case OPERATOR.LIKE:
-            aqlStr += ` FILTER LOWER(record.${data.filter_custom.attribute}) LIKE LOWER (CONCAT("%","${data.filter_custom.valueAsString}","%")) \r\n`;
+            aqlStr += ` FILTER TRIM(LOWER(record.${data.filter_custom.attribute})) LIKE LOWER (CONCAT("%","${data.filter_custom.valueAsString}","%")) \r\n`;
             break;
           default:
             aqlStr += ` FILTER record.${data.filter_custom.attribute} ${data.filter_custom.operator} `;
@@ -411,9 +411,9 @@ export class AitBaseService {
               break;
             case OPERATOR.LIKE:
               if (hasLength(ref_condition.valueAsString)) {
-                aqlStr += `LOWER(CONCAT("%", "${ref_condition.valueAsString}", "%"))`;
+                aqlStr += `TRIM(LOWER(CONCAT("%", "${ref_condition.valueAsString}", "%")))`;
               } else if (isNumber(ref_condition.valueAsNumber)) {
-                aqlStr += `LOWER(CONCAT("%", ${ref_condition.valueAsNumber}, "%"))`;
+                aqlStr += `TRIM(LOWER(CONCAT("%", ${ref_condition.valueAsNumber}, "%")))`;
               }
               break;
             default:
@@ -454,9 +454,9 @@ export class AitBaseService {
               break;
             case OPERATOR.LIKE:
               if (hasLength(ref_condition.valueAsString)) {
-                aqlStr += `LOWER(CONCAT("%", "${ref_condition.valueAsString}", "%"))`;
+                aqlStr += `TRIM(LOWER(CONCAT("%", "${ref_condition.valueAsString}", "%")))`;
               } else if (isNumber(ref_condition.valueAsNumber)) {
-                aqlStr += `LOWER(CONCAT("%", ${ref_condition.valueAsNumber}, "%"))`;
+                aqlStr += `TRIM(LOWER(CONCAT("%", ${ref_condition.valueAsNumber}, "%")))`;
               }
               break;
             default:
