@@ -56,6 +56,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
   public env: any;
   public dataUserSetting = [];
   private isRefreshToken = false;
+  public currentPermission = [];
 
   constructor(
     public store: Store<AppState>,
@@ -639,6 +640,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
   // set module and page for each screen and get caption base on theme
   setModulePage = (data: BaseInitData) => {
     const { module, page } = data;
+    this.getPermission(page, module).then();
     this.store.dispatch(new SetModulePage({ page, module }));
     this.module = module;
     this.page = page;
@@ -782,6 +784,65 @@ export class AitBaseComponent implements OnInit, OnDestroy {
       position: NbGlobalLogicalPosition.BOTTOM_END,
       preventDuplicates: true,
     });
+  }
+
+  public async getKey(code: string, type: 'page' | 'module') {
+    try {
+      const result: any = await this.apollo.query({
+        query: gql`query {
+          findSystem(request : {
+            collection : "sys_${type}",
+            company: "d3415d06-601b-42c4-9ede-f5d9ff2bcac3",
+              lang: "ja_JP",
+            condition: {
+              code : {
+                value : ["${code}"]
+              }
+            }
+          }) {
+            data  {
+              _key
+            }
+          }
+        }`
+      }).toPromise();
+      return result?.data?.findSystem?.data[0]?._key
+    } catch (error) {
+      return error;
+    }
+  }
+
+  public checkPermission(permission: 'READ' | 'CREATE' | 'UPDATE' | 'DELETE') {
+    return this.currentPermission.includes(permission);
+  }
+
+  public async getPermission(page: string, module: string) {
+    try {
+      const page_key = await this.getKey(page, 'page');
+      const module_key = await this.getKey(module, 'module');
+      const result: any = await this.apollo.query({
+        query: gql`query{
+          findPermission(request : {
+            page_key : "${page_key}",
+            module_key: "${module_key}",
+            user_key: "${this.user_id}"
+          }) {
+            page
+            module
+            permission
+            user_id
+          }
+        }`
+      }).toPromise();
+
+      const p = result.data?.findPermission;
+      this.currentPermission = p?.permission;
+      return p;
+    }
+    catch (e) {
+      console.log(e)
+      return null;
+    }
   }
 
   // get message erros when form invalid
