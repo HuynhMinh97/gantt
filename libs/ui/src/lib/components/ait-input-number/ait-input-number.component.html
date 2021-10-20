@@ -24,6 +24,7 @@
       [formControl]="inputCtrl"
       [value]="inputCtrl.value"
       class="border__bottom__input"
+      autocomplete="off"
       disabled
       [nbTooltip]="inputCtrl.value"
       [nbTooltipTrigger]="!inputCtrl.value ? 'noop' : 'hover'"
@@ -49,6 +50,7 @@
       [maxLength]="length"
       [placeholder]="getPlaceHolder()"
       (input)="onInputHandle($event.target.value)"
+      autocomplete="off"
       [formControl]="inputCtrl"
       (focusout)="handleFocusOut();isFocus=false"
       (beforeinput)="onKeyDown($event)"

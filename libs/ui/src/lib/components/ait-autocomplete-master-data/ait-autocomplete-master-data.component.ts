@@ -311,7 +311,10 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         if (this.defaultValue && key === 'defaultValue') {
           this.defaultValueDf = this.defaultValue || [];
           // const typeDF: any[] = (this.defaultValue || []).filter(x => !!x);
-          this.setupDefault();
+          // this.settingData
+          setTimeout(() => {
+            this.setupDefault();
+          }, 100)
 
         }
 
@@ -357,9 +360,10 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     }
   }
 
-  modifileOption = (value: string) => {
-    if (value.length > 17) {
-      return value.substring(0, 16) + '...';
+  modifileOption = (value: string, count = 5) => {
+    const width = this.width ? this.width.replace('px', '') : 200;
+    if (value.length > (width / 8.5)) {
+      return value.substring(0, width / 8 - count) + '...';
     }
     return value;
   }
@@ -409,7 +413,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
               }
               else {
                 this.inputControl.setValue(null);
-                this.inputControl.patchValue(this.currentValue);
+                this.inputControl.patchValue(this.modifileOption(this.currentValue));
                 this.handleInput(this.currentValue);
                 const d = r?.data[0];
                 this.onSelectionChange({ code: d?.code, value: d.name });
@@ -447,6 +451,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
           );
           return result;
         });
+        console.log(typeDF, findByKeys, this.dataSourceDf)
         this.optionSelected = [...AitAppUtils.getArrayNotFalsy(findByKeys)].filter(
           (f) => !!f
         )
@@ -493,7 +498,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
           this.watchValue.emit({ value: res });
         }
 
-        this.inputControl.setValue(this.selectOne?.value || '');
+        this.inputControl.setValue(this.modifileOption(this.selectOne?.value) || '');
         this.getFilteredDataSource();
       }
     }
@@ -815,7 +820,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       }
       else {
         this.selectOne = { _key: values?.code, value: values?.value };
-        this.inputControl.patchValue(this.selectOne?.value || '');
+        this.inputControl.patchValue(this.modifileOption(this.selectOne?.value) || '');
         this.watchValue.emit({ value: [this.selectOne] })
 
 
@@ -934,7 +939,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
           this.onInput.emit({ value: '' })
         }
         else {
-          this.inputControl.patchValue(this.selectOne?.value || '')
+          this.inputControl.patchValue(this.modifileOption(this.selectOne?.value) || '')
         }
       }
       else {
@@ -1134,7 +1139,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       return this.modifileOption(statement);
     } else if ((target || []).length !== 1) {
 
-      const statement = this.getStringByLength(target);
+      const statement = this.modifileOption(target[0], 15);
       return statement + `（+${target.length - 1} ${itemsText})`;
     }
     return '';
