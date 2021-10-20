@@ -16,6 +16,7 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 import { aql, Database } from 'arangojs';
 import { DocumentCollection } from 'arangojs/collection';
+import { PermissionOutput } from '../dtos/permission.dto';
 import { SysUser } from '../entities/sys-user.entity';
 import { BaseResponse } from '../responses/base.response';
 import { AitUtils } from '../utils/ait-utils';
@@ -32,6 +33,55 @@ export class AitBaseService {
   username = '';
   refList = ['operator', 'value', 'target', 'valueAsString', 'valueAsNumber'];
   forAuv = [];
+
+  async getPermission(request: any, user?: SysUser): Promise<PermissionOutput> {
+    const { page_key, user_key, module_key } = request;
+    const page_id = 'sys_page/' + page_key;
+    const user_id = 'sys_user/' + user_key;
+
+    const aqlStr = `
+    LET role_list = (
+      FOR v, e, p IN 1..1 INBOUND "${page_id}" sys_role_page
+          FILTER e.module == "${module_key}"
+          RETURN v._id
+  )
+
+  FOR role IN role_list
+      FOR v, e, p IN 1..1 INBOUND "${user_id}" sys_role_user
+          FILTER v._id == role
+          RETURN {
+              role_id: v._key,
+              permission: e.permission
+          }`;
+
+    const resData = [];
+
+    try {
+      const res = await this.db.query(aqlStr);
+
+      for await (const data of res) {
+        resData.push(data);
+      }
+    } catch (error) {
+      return error;
+    }
+
+    // merge permissions
+    let permissions = [];
+    resData.forEach((item) => {
+      permissions = [...permissions, ...item?.permission];
+    });
+
+    // distince permisssions
+    permissions = Array.from(new Set(permissions));
+    const dto = new PermissionOutput();
+    dto.user_id = user_key;
+    dto.page = page_key;
+    dto.module = module_key;
+    dto.permission = permissions;
+
+    return dto;
+  }
 
   async save(request: any, user?: SysUser) {
     this.initialize(request, user);
@@ -155,7 +205,7 @@ export class AitBaseService {
     aqlStr += `\r\n RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name }) `;
 
     console.log(aqlStr);
-    
+
     try {
       const result = await this.db.query(aqlStr);
       const rawData = [];
@@ -246,8 +296,12 @@ export class AitBaseService {
                 break;
             }
           }
-          if (data.type === 'aureole-v' && (prop === KEYS.CREATE_BY || prop === KEYS.CHANGE_BY) && this.forAuv.length < 2) {
-            this.forAuv.push({type: prop, value: data.value ?? ''});
+          if (
+            data.type === 'aureole-v' &&
+            (prop === KEYS.CREATE_BY || prop === KEYS.CHANGE_BY) &&
+            this.forAuv.length < 2
+          ) {
+            this.forAuv.push({ type: prop, value: data.value ?? '' });
           }
           if (
             data.attribute &&
@@ -286,11 +340,17 @@ export class AitBaseService {
       aqlStr += ` FOR record IN ${joinCollection} \r\n`;
       aqlStr += ` FILTER record.${joinAttribute} == data.${joinTarget} \r\n`;
 
-      customData.forEach(data => {
+      customData.forEach((data) => {
         switch (data.filter_custom.operator) {
           case OPERATOR.IN:
-            aqlStr += ` FILTER LENGTH(INTERSECTION(TO_ARRAY(${JSON.stringify(data.filter_custom.value)}), 
-            TO_ARRAY(record.${data.filter_custom.attribute}))) == LENGTH(TO_ARRAY(${JSON.stringify(data.filter_custom.value)})) \r\n`;
+            aqlStr += ` FILTER LENGTH(INTERSECTION(TO_ARRAY(${JSON.stringify(
+              data.filter_custom.value
+            )}), 
+            TO_ARRAY(record.${
+              data.filter_custom.attribute
+            }))) == LENGTH(TO_ARRAY(${JSON.stringify(
+              data.filter_custom.value
+            )})) \r\n`;
             break;
           case OPERATOR.LIKE:
             aqlStr += ` FILTER LOWER(record.${data.filter_custom.attribute}) LIKE LOWER (CONCAT("%", TRIM("${data.filter_custom.valueAsString}"),"%")) \r\n`;
@@ -309,41 +369,9 @@ export class AitBaseService {
       aqlStr += ` RETURN record \r\n`;
       aqlStr += ` )\r\n`;
     }
-
-    // customData.forEach(data => {
-    //   aqlStr += `\r\nLET ${data.join_field} = (\r\n`;
-    //   aqlStr += ` FOR record IN ${data.join_collection} \r\n`;
-    //   aqlStr += ` FILTER record.${data.join_attribute} == data.${data.join_target} \r\n`;
-
-    //   switch (data.filter_custom.operator) {
-    //     case OPERATOR.IN:
-    //       aqlStr += ` FILTER LENGTH(INTERSECTION(TO_ARRAY(${JSON.stringify(data.filter_custom.value)}), 
-    //       TO_ARRAY(record.${data.filter_custom.attribute}))) == LENGTH(TO_ARRAY(${JSON.stringify(data.filter_custom.value)})) \r\n`;
-    //       break;
-    //     case OPERATOR.LIKE:
-    //       aqlStr += ` FILTER LOWER(record.${data.filter_custom.attribute}) LIKE LOWER (CONCAT("%","${data.filter_custom.valueAsString}","%")) \r\n`;
-    //       break;
-    //     default:
-    //       aqlStr += ` FILTER record.${data.filter_custom.attribute} ${data.filter_custom.operator} `;
-    //       if (data.filter_custom.valueAsString) {
-    //         aqlStr += `"${data.filter_custom.valueAsString} \r\n"`;
-    //       } else {
-    //         aqlStr += `${data.filter_custom.valueAsNumber} \r\n`;
-    //       }
-    //       break;
-    //   }
-      
-    //   aqlStr += ` RETURN record \r\n`;
-    //   aqlStr += ` )\r\n`;
-    // })
-
     if (atributes.length > 0) {
       aqlStr += `FILTER LENGTH(${atributes[0]}) > 0\r\n`;
     }
-
-    // customData.forEach(data => {
-    //   aqlStr += `FILTER LENGTH(${data.join_field}) > 0\r\n`;
-    // });
 
     if (isObjectFull(options?.sort_by)) {
       aqlStr += ` SORT data.${options.sort_by?.value} ${options.sort_by?.order_by} `;
@@ -359,7 +387,7 @@ export class AitBaseService {
       aqlStr += `\r\n ${atributes[0]}, `;
     }
     //custom
-    this.forAuv.forEach(prop => {
+    this.forAuv.forEach((prop) => {
       aqlStr += `\r\n ${prop.type}: (`;
       aqlStr += `\r\n data.is_matching == true ? (`;
       aqlStr += `\r\n LET item = (`;
@@ -372,7 +400,7 @@ export class AitBaseService {
       aqlStr += `\r\n ), `;
     });
     //join
-    joinData.forEach(data => {
+    joinData.forEach((data) => {
       if (!atributes.includes(data.join_field)) {
         aqlStr += ` \r\n ${data.join_field} : ( `;
         aqlStr += ` \r\n FOR record IN ${data.join_collection}`;
@@ -381,98 +409,104 @@ export class AitBaseService {
       }
     });
     //ref
-    mapData.forEach(data => {
+    mapData.forEach((data) => {
       if (!atributes.includes(data.join_field)) {
         const ref_condition = data.ref_condition;
 
-      aqlStr += ` \r\n ${data.attribute} : ( `;
-      aqlStr += ` \r\n IS_ARRAY(data.${data.attribute}) == true ? ( `;
-      aqlStr += ` \r\n FOR item IN TO_ARRAY(data.${data.attribute}) `;
-      aqlStr += ` \r\n FOR doc IN ${data.ref_collection} `;
-      aqlStr += ` \r\n FILTER doc.${data.ref_attribute} == item `;
-      if (isObjectFull(ref_condition)) {
-        for (const prop in ref_condition) {
-          if (ref_condition[prop] && !~this.refList.indexOf(prop)) {
-            aqlStr += ` && doc.${prop} == `;
-            aqlStr +=
-              typeof ref_condition[prop] === 'string'
-                ? `"${ref_condition[prop]}" `
-                : `${ref_condition[prop]} `;
+        aqlStr += ` \r\n ${data.attribute} : ( `;
+        aqlStr += ` \r\n IS_ARRAY(data.${data.attribute}) == true ? ( `;
+        aqlStr += ` \r\n FOR item IN TO_ARRAY(data.${data.attribute}) `;
+        aqlStr += ` \r\n FOR doc IN ${data.ref_collection} `;
+        aqlStr += ` \r\n FILTER doc.${data.ref_attribute} == item `;
+        if (isObjectFull(ref_condition)) {
+          for (const prop in ref_condition) {
+            if (ref_condition[prop] && !~this.refList.indexOf(prop)) {
+              aqlStr += ` && doc.${prop} == `;
+              aqlStr +=
+                typeof ref_condition[prop] === 'string'
+                  ? `"${ref_condition[prop]}" `
+                  : `${ref_condition[prop]} `;
+            }
           }
-        }
 
-        if (this.isValidCondition(ref_condition) && ref_condition.target) {
-          aqlStr += ` && \r\n doc.${ref_condition.target} ${data.operator} `;
-          switch (ref_condition.operator) {
-            case OPERATOR.IN || OPERATOR.NOT_IN:
-              if (hasLength(ref_condition.value)) {
-                aqlStr += `${JSON.stringify(ref_condition.value)}`;
-              }
-              break;
-            case OPERATOR.LIKE:
-              if (hasLength(ref_condition.valueAsString)) {
-                aqlStr += `LOWER(CONCAT("%", TRIM("${ref_condition.valueAsString}"), "%"))`;
-              } else if (isNumber(ref_condition.valueAsNumber)) {
-                aqlStr += `LOWER(CONCAT("%", ${ref_condition.valueAsNumber}, "%"))`;
-              }
-              break;
-            default:
-              if (hasLength(ref_condition.valueAsString)) {
-                aqlStr += `"${ref_condition.valueAsString}" `;
-              } else if (isNumber(ref_condition.valueAsNumber)) {
-                aqlStr += `${ref_condition.valueAsNumber} `;
-              }
-              break;
+          if (this.isValidCondition(ref_condition) && ref_condition.target) {
+            aqlStr += ` && \r\n doc.${ref_condition.target} ${data.operator} `;
+            switch (ref_condition.operator) {
+              case OPERATOR.IN || OPERATOR.NOT_IN:
+                if (hasLength(ref_condition.value)) {
+                  aqlStr += `${JSON.stringify(ref_condition.value)}`;
+                }
+                break;
+              case OPERATOR.LIKE:
+                if (hasLength(ref_condition.valueAsString)) {
+                  aqlStr += `LOWER(CONCAT("%", TRIM("${ref_condition.valueAsString}"), "%"))`;
+                } else if (isNumber(ref_condition.valueAsNumber)) {
+                  aqlStr += `LOWER(CONCAT("%", ${ref_condition.valueAsNumber}, "%"))`;
+                }
+                break;
+              default:
+                if (hasLength(ref_condition.valueAsString)) {
+                  aqlStr += `"${ref_condition.valueAsString}" `;
+                } else if (isNumber(ref_condition.valueAsNumber)) {
+                  aqlStr += `${ref_condition.valueAsNumber} `;
+                }
+                break;
+            }
           }
         }
-      }
-      aqlStr += `\r\n RETURN `;
-      aqlStr += data.return_field
-        ? `\r\n  doc.${data.return_field}  ) : `
-        : `\r\n { _key: doc.${data.get_by}, value: doc.name.${lang} } ) : `;
+        aqlStr += `\r\n RETURN `;
+        aqlStr += data.return_field
+          ? `\r\n  doc.${data.return_field}  ) : `
+          : `\r\n { _key: doc.${data.get_by}, value: doc.name.${lang} } ) : `;
 
-      aqlStr += `\r\n  (FOR doc IN ${data.ref_collection} `;
-      aqlStr += `\r\n  FILTER doc.${data.ref_attribute} == data.${data.attribute} `;
-      if (isObjectFull(ref_condition)) {
-        for (const prop in ref_condition) {
-          if (ref_condition[prop] && !~this.refList.indexOf(prop)) {
-            aqlStr += ` &&\r\n  doc.${prop} == `;
-            aqlStr +=
-              typeof ref_condition[prop] === 'string'
-                ? `"${ref_condition[prop]}" `
-                : `${ref_condition[prop]} `;
+        aqlStr += `\r\n  (FOR doc IN ${data.ref_collection} `;
+        aqlStr += `\r\n  FILTER doc.${data.ref_attribute} == data.${data.attribute} `;
+        if (isObjectFull(ref_condition)) {
+          for (const prop in ref_condition) {
+            if (ref_condition[prop] && !~this.refList.indexOf(prop)) {
+              aqlStr += ` &&\r\n  doc.${prop} == `;
+              aqlStr +=
+                typeof ref_condition[prop] === 'string'
+                  ? `"${ref_condition[prop]}" `
+                  : `${ref_condition[prop]} `;
+            }
           }
-        }
 
-        if (this.isValidCondition(ref_condition) && ref_condition.target) {
-          aqlStr += ` && \r\n doc.${ref_condition.target} ${data.operator} `;
-          switch (ref_condition.operator) {
-            case OPERATOR.IN || OPERATOR.NOT_IN:
-              if (hasLength(ref_condition.value)) {
-                aqlStr += `${JSON.stringify(ref_condition.value)}`;
-              }
-              break;
-            case OPERATOR.LIKE:
-              if (hasLength(ref_condition.valueAsString)) {
-                aqlStr += `LOWER(CONCAT("%", TRIM("${ref_condition.valueAsString}"), "%"))`;
-              } else if (isNumber(ref_condition.valueAsNumber)) {
-                aqlStr += `LOWER(CONCAT("%", ${ref_condition.valueAsNumber}, "%"))`;
-              }
-              break;
-            default:
-              if (hasLength(ref_condition.valueAsString)) {
-                aqlStr += `"${ref_condition.valueAsString}" `;
-              } else if (isNumber(ref_condition.valueAsNumber)) {
-                aqlStr += `${ref_condition.valueAsNumber} `;
-              }
-              break;
+          if (this.isValidCondition(ref_condition) && ref_condition.target) {
+            aqlStr += ` && \r\n doc.${ref_condition.target} ${data.operator} `;
+            switch (ref_condition.operator) {
+              case OPERATOR.IN || OPERATOR.NOT_IN:
+                if (hasLength(ref_condition.value)) {
+                  aqlStr += `${JSON.stringify(ref_condition.value)}`;
+                }
+                break;
+              case OPERATOR.LIKE:
+                if (hasLength(ref_condition.valueAsString)) {
+                  aqlStr += `LOWER(CONCAT("%", TRIM("${ref_condition.valueAsString}"), "%"))`;
+                } else if (isNumber(ref_condition.valueAsNumber)) {
+                  aqlStr += `LOWER(CONCAT("%", ${ref_condition.valueAsNumber}, "%"))`;
+                }
+                break;
+              default:
+                if (hasLength(ref_condition.valueAsString)) {
+                  aqlStr += `"${ref_condition.valueAsString}" `;
+                } else if (isNumber(ref_condition.valueAsNumber)) {
+                  aqlStr += `${ref_condition.valueAsNumber} `;
+                }
+                break;
+            }
           }
         }
-      }
-      aqlStr += `\r\n RETURN `;
-      aqlStr += data.return_field
-        ? `\r\n doc.${data.return_field} )[0] ), `
-        : `\r\n { _key: doc.${data.get_by}, value: doc.name.${lang} })[0] ), `;
+        aqlStr += `\r\n RETURN `;
+        if (data.return_field) {
+          aqlStr += `\r\n doc.${data.return_field}`;
+          if (data.is_multi_language) {
+            aqlStr += `.${lang}`;
+          }
+          aqlStr += ` )[0] ), `;
+        } else {
+          aqlStr += `\r\n { _key: doc.${data.get_by}, value: doc.name.${lang} })[0] ), `;
+        }
       }
     });
     aqlStr += `  }) `;
@@ -488,27 +522,35 @@ export class AitBaseService {
       if (!operator) {
         return false;
       } else if (
-        'join_field' in data && isStringFull(data['join_field']) &&
-        'join_collection' in data && isStringFull(data['join_collection']) &&
-        'join_attribute' in data && isStringFull(data['join_attribute']) &&
-        'join_target' in data && isStringFull(data['join_target']) &&
-        'attribute' in data['filter_custom'] && isStringFull(data['filter_custom']['attribute']) &&
-        'operator' in data['filter_custom'] && isStringFull(data['filter_custom']['operator'])
-        ) {
-          return (
-            operator &&
-            ((hasLength(value) &&
-              (operator === OPERATOR.IN || operator === OPERATOR.NOT_IN)) ||
-              ((!isNil(valueAsString) && hasLength(valueAsString)) &&
-                (operator !== OPERATOR.IN &&
-                  operator !== OPERATOR.NOT_IN)) ||
-              ((!isNil(valueAsNumber) && isNumber(valueAsNumber)) &&
-               ( operator !== OPERATOR.IN &&
-                operator !== OPERATOR.NOT_IN)))
-          );
-        } else {
-          return false;
-        }
+        'join_field' in data &&
+        isStringFull(data['join_field']) &&
+        'join_collection' in data &&
+        isStringFull(data['join_collection']) &&
+        'join_attribute' in data &&
+        isStringFull(data['join_attribute']) &&
+        'join_target' in data &&
+        isStringFull(data['join_target']) &&
+        'attribute' in data['filter_custom'] &&
+        isStringFull(data['filter_custom']['attribute']) &&
+        'operator' in data['filter_custom'] &&
+        isStringFull(data['filter_custom']['operator'])
+      ) {
+        return (
+          operator &&
+          ((hasLength(value) &&
+            (operator === OPERATOR.IN || operator === OPERATOR.NOT_IN)) ||
+            (!isNil(valueAsString) &&
+              hasLength(valueAsString) &&
+              operator !== OPERATOR.IN &&
+              operator !== OPERATOR.NOT_IN) ||
+            (!isNil(valueAsNumber) &&
+              isNumber(valueAsNumber) &&
+              operator !== OPERATOR.IN &&
+              operator !== OPERATOR.NOT_IN))
+        );
+      } else {
+        return false;
+      }
     } catch {
       return false;
     }
@@ -517,12 +559,15 @@ export class AitBaseService {
   isValidCondition(data: any): boolean {
     return (
       data.operator &&
-      ((!isNil(data.value) && hasLength(data.value) &&
+      ((!isNil(data.value) &&
+        hasLength(data.value) &&
         (data.operator === OPERATOR.IN || data.operator === OPERATOR.NOT_IN)) ||
-        (!isNil(data.valueAsString) && hasLength(data.valueAsString) &&
+        (!isNil(data.valueAsString) &&
+          hasLength(data.valueAsString) &&
           data.operator !== OPERATOR.IN &&
           data.operator !== OPERATOR.NOT_IN) ||
-        (!isNil(data.valueAsNumber) && isNumber(data.valueAsNumber) &&
+        (!isNil(data.valueAsNumber) &&
+          isNumber(data.valueAsNumber) &&
           data.operator !== OPERATOR.IN &&
           data.operator !== OPERATOR.NOT_IN))
     );
@@ -531,7 +576,8 @@ export class AitBaseService {
   initialize(request: any, user?: SysUser) {
     this.company = request.company;
     this.lang = request.lang;
-    this.username = user?._key || request?.user_id || KEYS.ADMIN;
+    this.username =
+      request?.user_id || user?._key || request?.user_id || KEYS.ADMIN;
   }
 
   setCommonInsert(data: any) {
