@@ -1,3 +1,4 @@
+
 <div [ngClass]="classContainer">
   <ait-label
     [label]="label"
@@ -15,7 +16,7 @@
       max-width: 100%;
     "
     class="datepicker"
-    [class.isReadOnly]="disable"
+    [class.disable]="disable"
     [class.isError]="isError"
     [class.focus]="getFocus()"
   >
@@ -34,7 +35,7 @@
       [nbDatepicker]="dateTimePicker"
       [(ngModel)]="date"
       [formControl]="inputCtrl"
-      *ngIf="!disable"
+      *ngIf="!disable && !readonly"
       [shape]="isRound ? 'semi-round' : 'rectangle'"
       [ngStyle]="styleInput"
       (focusout)="checkValidDateInput(); isFocus = false"
@@ -47,6 +48,7 @@
       [style.width]="width"
       [style.height]="height"
       tabindex="{{ tabIndex }}"
+      autocomplete="off"
     />
     <input
       [ngClass]="'border__bottom__input'"
@@ -55,9 +57,11 @@
       #inputDateTime
       disabled
       [value]="valueDf"
-      *ngIf="disable"
+      [class.disable]="disable"
+      *ngIf="disable && !readonly"
       [shape]="isRound ? 'semi-round' : 'rectangle'"
       [ngStyle]="styleInput"
+      autocomplete="off"
       style="
         padding-top: 0;
         padding-bottom: 0;
@@ -68,6 +72,32 @@
       id="{{ ID('input') }}"
       tabindex="{{ tabIndex }}"
     />
+
+    <input
+
+      nbInput
+      fullWidth
+      #inputDateTime
+      [readOnly]="readonly"
+      [value]="valueDf"
+      [class.readonly]="readonly"
+      *ngIf="!disable && readonly"
+      [shape]="isRound ? 'semi-round' : 'rectangle'"
+      [ngStyle]="styleInput"
+      autocomplete="off"
+      style="
+        padding-top: 0;
+        padding-bottom: 0;
+        font-size: 12px;
+        text-align: left;
+        padding-left: 16px;
+        border: none;
+        background: transparent;
+      "
+      id="{{ ID('input') }}"
+      tabindex="{{ tabIndex }}"
+    />
+
     <nb-datepicker
       #dateTimePicker
       [format]="format ? format : getFormat()"

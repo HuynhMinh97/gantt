@@ -34,6 +34,7 @@
       [placeholder]="getPlaceholder()"
       [rows]="rows"
       [cols]="cols"
+      [style.width]="width"
       type="text"
       (input)="onChange($event.target.value)"
       [formControl]="inputCtrl"
@@ -41,10 +42,8 @@
       style="max-width: 100% !important; resize: none"
       *ngIf="rows !== 1 && readonly"
       [maxLength]="length"
-      readonly
-      disabled
-      [disabled]="true"
-      [readOnly]="true"
+      [disabled]="readonly"
+      [readOnly]="readonly"
       id="{{ ID('textarea') }}"
       (focus)="focusInput()"
       (blur)="this.isFocus = false"
@@ -63,6 +62,7 @@
       [placeholder]="getPlaceholder()"
       [rows]="rows"
       type="text"
+      [style.width]="width"
       (input)="onChange($event.target.value)"
       [formControl]="inputCtrl"
       [class.isError]="isError"
@@ -85,15 +85,14 @@
       nbInput
       [status]="status"
       [fieldSize]="fieldSize"
-      readonly
-      disabled
-      [disabled]="true"
-      [readOnly]="true"
+      [disabled]="readonly"
+      [readOnly]="readonly"
       [shape]="shape"
       [placeholder]="getPlaceholder()"
       [maxLength]="length"
       *ngIf="rows === 1 && readonly"
       type="text"
+      [class.disable]="readonly"
       [style.width]="width"
       [style.height]="height"
       (input)="onChange($event.target.value)"
