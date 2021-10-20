@@ -29,6 +29,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   formatDateTime = '';
   // formDateControl: FormControl;
   date: Date | number = null;
+  @Input() hasborder = false;
   @Input() disable = false;
   @Input() dateInput: Date | number = null;
   @Input() defaultValue;
@@ -57,6 +58,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   @Input() isSubmit = false;
   @Input() errorMessages;
   @Input() tabIndex;
+  @Input() readonly = false;
 
   @ViewChild('inputDateTime', { static: false }) input: ElementRef;
   @ViewChild(NbDatepickerDirective, { static: false }) nbDatepicker;
@@ -764,7 +766,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
         if (AitAppUtils.isValidDate(this.dateInput) || typeof this.dateInput === 'number') {
           if (this.dateInput) {
             let dateFormat;
-            if (this.disable) {
+            if (this.disable || this.readonly) {
               dateFormat = this.dateFormatService.formatDatePicker(this.dateInput, this.formatDateTimeDisplay);
               // // console.log(dateFormat)
               this.valueDf = dateFormat
