@@ -905,8 +905,13 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
 
   blur = (value) => {
-    const values = this.dataSourceDf.find(m => m?.value === value);
-
+    const values = this.DataSource.find(m => m?.value === value);
+    if (!values) {
+      this.inputControl.reset();
+      this.watchValue.emit({
+        value: [],
+      });
+    }
     return !!values
   }
 
