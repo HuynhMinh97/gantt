@@ -7,12 +7,14 @@ import { BinaryResolver } from './resolvers/binary.resolver';
 import { SystemResolver } from './resolvers/system.resolver';
 import { UserSettingResolver } from './resolvers/user-setting.resolver';
 import { SaveTempResolver } from './resolvers/save-temp.resolver';
+import { PermissionResolver } from './resolvers/permission.resolver';
 
 const RESOLVERS = [
   SystemResolver,
   BinaryResolver,
   SaveTempResolver,
-  UserSettingResolver
+  UserSettingResolver,
+  PermissionResolver
 ]
 @Module({
   imports: [
@@ -41,7 +43,7 @@ export class AitCoreModule {
           autoSchemaFile: 'schema.gql',
           path: environment.APP.GRAPHQL_PREFIX
         }),],
-      
+
       providers: [
         {
           provide: 'ENVIRONMENT',
