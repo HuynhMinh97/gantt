@@ -43,7 +43,7 @@
             style="font-weight: bold; font-size: 12px; cursor: context-menu"
             id="{{ ID('selected_items') }}"
           >
-            {{ getSelectedItems(optionSelected) }}
+            {{ getSelectedItems(optionSelected)}}
           </p>
         </div>
 
@@ -51,7 +51,7 @@
           id="{{ ID('input') }}"
           fullWidth
           nbInput
-          [value]="VALUE"
+          [value]="modifileOption(VALUE)"
           type="text"
           autocomplete="off"
           class="search"
@@ -61,6 +61,7 @@
           [readOnly]="isReadOnly"
           *ngIf="isReadOnly"
           style="font-size: 12px"
+          autocomplete="new-password"
           #input
           (blur)="this.isFocus = false"
           (focus)="focusInput()"
@@ -72,12 +73,11 @@
           *ngIf="!isReadOnly"
           [formControl]="inputControl"
           [placeholder]="PLACEHOLDER"
-
-          fullWidth
           autocomplete="off"
+          fullWidth
+
           nbInput
           #input
-          autocomplete="doNotAutoComplete"
           (focus)="focusInput()"
           type="text"
           class="search"
@@ -121,9 +121,10 @@
               [id]="ID('checkbox_' + i)"
             >
               <span
+                class="text"
                 style="cursor: pointer; font-size: 12px"
                 id="{{ ID('selection_value') }}"
-                >{{ modifileOption(option?.value) }}</span
+                >{{ option?.value}}</span
               >
             </nb-checkbox>
             <nb-icon
@@ -146,6 +147,9 @@
             style="cursor: pointer"
             [class.isSelect]="option?._key === selectOne?._key"
             (click)="onSelectionChange(option)"
+
+            nbTooltipPlacement="right"
+            [nbTooltip]="option?.value"
           >
             <div
 
@@ -157,9 +161,10 @@
                 padding-left: 15px;
                 width: 100%;
               "
+              class="text"
               id="{{ ID('selection_value') }}"
             >
-              {{ modifileOption(option?.value) }}
+              {{ option?.value}}
             </div>
             <nb-icon
               icon="close-outline"
