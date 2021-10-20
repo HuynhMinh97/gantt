@@ -1,0 +1,8 @@
+.text_control {
+    span {
+        margin: 0;
+    }
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+}
