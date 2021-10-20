@@ -91,6 +91,9 @@ export class ConditionDto {
   // Giá trị trả về
   @Field(() => String, { nullable: true })
   return_field: string;
+  // return_field trả về có phải là đa ngôn ngữ hay k
+  @Field(() => Boolean, { nullable: true })
+  is_multi_language: boolean;
   // Định nghĩa _key ở cặp key-value trả về, mặc định là code
   @Field(() => String, { nullable: true, defaultValue: KEYS.CODE })
   get_by: string;
