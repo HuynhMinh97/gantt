@@ -16,6 +16,7 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 import { aql, Database } from 'arangojs';
 import { DocumentCollection } from 'arangojs/collection';
+import { PermissionOutput } from '../dtos/permission.dto';
 import { SysUser } from '../entities/sys-user.entity';
 import { BaseResponse } from '../responses/base.response';
 import { AitUtils } from '../utils/ait-utils';
@@ -25,13 +26,63 @@ export class AitBaseService {
   constructor(
     @Inject(DB_CONNECTION_TOKEN) private readonly db: Database,
     @Inject('ENVIRONMENT') private env: any
-  ) {}
+  ) { }
 
   company = '';
   lang = '';
   username = '';
   refList = ['operator', 'value', 'target', 'valueAsString', 'valueAsNumber'];
   forAuv = [];
+
+  async getPermission(request: any, user?: SysUser): Promise<PermissionOutput> {
+    const { page_key, user_key, module_key } = request;
+    const page_id = 'sys_page/' + page_key;
+    const user_id = 'sys_user/' + user_key;
+
+    const aqlStr = `
+    LET role_list = (
+      FOR v, e, p IN 1..1 INBOUND "${page_id}" sys_role_page
+          FILTER e.module == "${module_key}"
+          RETURN v._id
+  )
+
+  FOR role IN role_list
+      FOR v, e, p IN 1..1 INBOUND "${user_id}" sys_role_user
+          FILTER v._id == role
+          RETURN {
+              role_id: v._key,
+              permission: e.permission
+          }`;
+
+    const resData = [];
+
+    try {
+      const res = await this.db.query(aqlStr);
+
+      for await (const data of res) {
+
+        resData.push(data);
+      }
+    } catch (error) {
+      return error
+    }
+
+    // merge permissions
+    let permissions = [];
+    resData.forEach((item) => {
+      permissions = [...permissions, ...item?.permission]
+    })
+
+    // distince permisssions
+    permissions = Array.from(new Set(permissions));
+    const dto = new PermissionOutput();
+    dto.user_id = user_key;
+    dto.page = page_key;
+    dto.module = module_key;
+    dto.permission = permissions;
+
+    return dto;
+  }
 
   async save(request: any, user?: SysUser) {
     this.initialize(request, user);
@@ -531,7 +582,7 @@ export class AitBaseService {
   initialize(request: any, user?: SysUser) {
     this.company = request.company;
     this.lang = request.lang;
-    this.username = user?._key || request?.user_id || KEYS.ADMIN;
+    this.username = request?.user_id || user?._key || request?.user_id || KEYS.ADMIN;
   }
 
   setCommonInsert(data: any) {
