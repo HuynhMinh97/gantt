@@ -163,7 +163,9 @@ export class AitInputNumberComponent implements OnChanges, OnInit {
             this.errorMessages = [];
             this.currentNumber = null;
             this.exactedValue = null;
+            this.valueAppend = '';
             this.inputCtrl.patchValue(null);
+            this.inputCtrl.reset();
             this.watchValue.emit(null);
             this.onError.emit({ isValid: null });
 
