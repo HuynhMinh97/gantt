@@ -2,6 +2,11 @@
     span {
         margin: 0;
     }
+    .link {
+        cursor: pointer;
+        color:blue;
+        text-decoration: underline;
+    }
     white-space: nowrap;
     overflow: hidden !important;
     text-overflow: ellipsis;

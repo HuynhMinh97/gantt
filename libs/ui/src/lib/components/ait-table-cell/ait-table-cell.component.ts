@@ -1,6 +1,7 @@
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ViewCell } from 'ng2-smart-table';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { AppState, getCaption, getUserSetting } from '../../state/selectors';
 import { isArrayFull, isNil, isObjectFull, KeyValueDto } from '@ait/shared';
@@ -16,8 +17,14 @@ import dayjs from 'dayjs';
 export class AitTableCellComponent implements OnInit, ViewCell {
   @Input() public value: any;
   @Input() rowData: any;
+  @Output() navigate: EventEmitter<any> = new EventEmitter();
+
   setting: any;
+  style: any;
   comma = '';
+  text = '';
+  companyName = '';
+  isLink = false;
   constructor(
     public store: Store<AppState>,
     private numberFormatService: AitNumberFormatPipe,
@@ -36,8 +43,7 @@ export class AitTableCellComponent implements OnInit, ViewCell {
       }
     });
   }
-  style: any;
-  text = '';
+  
 
   ngOnInit(): void {
     this.setupData();
@@ -65,6 +71,12 @@ export class AitTableCellComponent implements OnInit, ViewCell {
         dateFormat.toUpperCase() + ' HH:mm'
       );
       this.text = result;
+    } else if (this.value.type === 'link' && this.value.text && this.value.name) {
+      this.text = (this.value.text.length || '0');
+      if (+this.text > 0) {
+        this.isLink = true;
+        this.companyName = (this.value.name || '');
+      }
     } else {
       this.text = this.value.text;
     }
@@ -72,5 +84,9 @@ export class AitTableCellComponent implements OnInit, ViewCell {
     if (!isNil(this.style?.width)) {
       this.style.width = +this.style.width - 21 + 'px';
     }
+  }
+
+  navigateToJobList() {
+    this.navigate.emit(this.companyName);
   }
 }
