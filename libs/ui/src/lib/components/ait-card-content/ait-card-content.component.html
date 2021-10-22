@@ -11,11 +11,12 @@
     <div
       class="header__card"
       *ngIf="!disableHeader"
+      (click)="toggleExpan()"
       style="outline-color: #10529d"
     >
       <div
         style="flex-grow: 1"
-        (click)="toggleExpan()"
+
         style="outline-color: #10529d"
       >
         <div
@@ -35,7 +36,6 @@
 
       <div
         style="display: flex; position: relative"
-        (click)="toggleExpan(true)"
       >
         <div
           class="button_header_card"
@@ -64,14 +64,12 @@
           style="cursor: pointer"
           *ngIf="!isOpen"
           icon="arrow-ios-downward-outline"
-          (click)="toggleExpan()"
         ></nb-icon>
         <nb-icon
           class="icon_expan"
           style="cursor: pointer"
           *ngIf="isOpen"
           icon="arrow-ios-upward-outline"
-          (click)="toggleExpan()"
         ></nb-icon>
       </div>
     </div>

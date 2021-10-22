@@ -1,8 +1,9 @@
 import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { NbDialogService, NbIconLibraries, NbToastrService } from '@nebular/theme';
+import { NbDialogService, NbIconLibraries, NbMenuService, NbToastrService } from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
+import { filter, map } from 'rxjs/operators';
 import { AitAuthService, AitEnvironmentService, AitTranslationService, AitUserService } from '../../services';
 import { AitLayoutService } from '../../services/common/ait-layout.service';
 import { AppState, getCaption, getEmail, getLang, getUFullName, getUserInfo, getUserProfile } from '../../state/selectors';
@@ -23,6 +24,8 @@ export class AitMenuUserComponent extends AitBaseComponent implements OnInit {
   avatarURL = 'https://ui-avatars.com/api/?name=';
   currentLang = 'ja_JP';
   userInfo: any = {};
+  openSubMenu = false;
+  tabSelect = '';
   constructor(
     private eRef: ElementRef,
     authService: AitAuthService,
@@ -35,7 +38,8 @@ export class AitMenuUserComponent extends AitBaseComponent implements OnInit {
     private layoutSerive: AitLayoutService,
     envService: AitEnvironmentService,
     apollo: Apollo,
-    private iconLibraries: NbIconLibraries
+    private iconLibraries: NbIconLibraries,
+    private nbMenuService: NbMenuService
   ) {
     super(store, authService, apollo, userService, envService, null, toatsrService);
     this.iconLibraries.registerFontPack('font-awesome', { packClass: 'far', iconClassPrefix: 'fa' });
@@ -71,8 +75,31 @@ export class AitMenuUserComponent extends AitBaseComponent implements OnInit {
     return this.translateService.translate(string);
   }
 
+  hover(tab : any) {
+    console.log('in')
+    this.tabSelect = tab?.title;
+  }
+
+  @HostListener('document:mouseout', ['$event'])
+    mouseover(event) {
+        if(event.target.matches('.sub_menu')) {
+          // alert('out')
+          this.tabSelect = '';
+        }
+
+
+    }
+
   ngOnInit() {
-    this.setupMenu()
+    this.setupMenu();
+    this.nbMenuService.onItemClick()
+      .pipe(
+        // filter(({ tag }) => tag === 'person'),
+        map(({ item }) => item),
+      )
+      .subscribe((item: any) => {
+        this.router.navigateByUrl(item.url_sub);
+      });
 
   }
   navigate = (link) => {
