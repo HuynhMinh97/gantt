@@ -33,6 +33,7 @@ export class AitBaseService {
   username = '';
   refList = ['operator', 'value', 'target', 'valueAsString', 'valueAsNumber'];
   forAuv = [];
+  filterAfter = [];
 
   async getPermission(request: any, user?: SysUser): Promise<PermissionOutput> {
     const { page_key, user_key, module_key } = request;
@@ -120,7 +121,6 @@ export class AitBaseService {
     if (dataUpdate.length > 0) {
       const aqlStr = `FOR data IN ${JSON.stringify(dataUpdate)}
       UPDATE data WITH data IN ${collection} RETURN MERGE(NEW, {name:  NEW.name.${lang} ? NEW.name.${lang} : NEW.name }) `;
-      console.log(aqlStr);
       try {
         const res = await this.db.query(aqlStr);
         for await (const data of res) {
@@ -180,6 +180,7 @@ export class AitBaseService {
   async find(request: any, user?: SysUser) {
     const lang = request.lang;
     this.forAuv = [];
+    this.filterAfter = [];
     let aqlStr = `LET current_data = ( \r\n ${this.getSearchCondition(
       request,
       false
@@ -192,6 +193,7 @@ export class AitBaseService {
     aqlStr += `\r\n`;
     aqlStr += `\r\nFOR data IN result`;
     if (this.forAuv.length > 0) {
+      this.forAuv.length = Math.ceil(this.forAuv.length / 2);
       this.forAuv.forEach((data, index) => {
         if (index === 0) {
           aqlStr += `\r\n FILTER`;
@@ -202,9 +204,20 @@ export class AitBaseService {
         aqlStr += `LIKE LOWER(CONCAT("%", TRIM("${data.value}"), "%")) `;
       });
     }
+
+    if (this.filterAfter.length > 0) {
+      this.filterAfter.length = Math.ceil(this.filterAfter.length / 2);
+      this.filterAfter.forEach(data => {
+        if (data.operator === OPERATOR.LIKE) {
+          aqlStr += `\r\n &&`;
+          aqlStr += `\r\n LOWER(data.${data.attribute}) `;
+          aqlStr += `LIKE LOWER(CONCAT("%", TRIM("${data.valueAsString}"), "%")) `;
+        }
+      })
+    }
     aqlStr += `\r\n RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name }) `;
 
-    console.log(aqlStr);
+    // console.log(aqlStr);
 
     try {
       const result = await this.db.query(aqlStr);
@@ -298,8 +311,7 @@ export class AitBaseService {
           }
           if (
             data.type === 'aureole-v' &&
-            (prop === KEYS.CREATE_BY || prop === KEYS.CHANGE_BY) &&
-            this.forAuv.length < 2
+            (prop === KEYS.CREATE_BY || prop === KEYS.CHANGE_BY)
           ) {
             this.forAuv.push({ type: prop, value: data.value ?? '' });
           }
@@ -319,6 +331,9 @@ export class AitBaseService {
             !isSystem
           ) {
             joinData.push(data);
+          }
+          if (data.filter_after) {
+            this.filterAfter.push(data.filter_after);
           }
         } else {
           aqlStr += `&& data.${prop} == `;
