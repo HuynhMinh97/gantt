@@ -362,7 +362,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   modifileOption = (value: string, count = 5) => {
     const width = this.width ? this.width.replace('px', '') : 200;
-    if (value.length > (width / 8.5)) {
+    if (value?.length > (width / 8.5)) {
       return value.substring(0, width / 8 - count) + '...';
     }
     return value;

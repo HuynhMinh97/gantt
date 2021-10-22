@@ -19,6 +19,14 @@
     margin: 0;
   }
 }
+
+::ng-deep .nb-theme-default nb-tooltip .content {
+  white-space: pre-line;
+  span {
+  white-space: pre-line;
+
+  }
+}
 .hint {
   margin-top: 15px;
   width: 100%;
