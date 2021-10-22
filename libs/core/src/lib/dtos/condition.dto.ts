@@ -112,4 +112,7 @@ export class ConditionDto {
   // Filter object cuối cùng trả về
   @Field(() => FilterDto, { nullable: true })
   filter_custom: FilterDto;
+  // Filter sau khi search co du lieu
+  @Field(() => FilterDto, { nullable: true })
+  filter_after: FilterDto;
 }

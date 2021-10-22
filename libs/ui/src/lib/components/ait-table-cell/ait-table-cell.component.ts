@@ -65,12 +65,17 @@ export class AitTableCellComponent implements OnInit, ViewCell {
     } else if (this.value.type === 'money' && this.value.text) {
       const result = this.numberFormatService.transform(this.value.text);
       this.text = result + '円';
-    } else if (this.value.type === 'date' && this.value.text) {
-      const dateFormat = this.setting['date_format_display'];
-      const result = dayjs(this.value.text).format(
-        dateFormat.toUpperCase() + ' HH:mm'
-      );
-      this.text = result;
+    } else if (this.value.type === 'array' && this.value.text) {
+      const data = this.value.text;
+      if (isArrayFull(data)) {
+        const result = [];
+        data.forEach((item: string) => {
+          result.push(item);
+        });
+        this.text = result.join((this.comma || ',') + ' ');
+      } else {
+        this.text = '';
+      }
     } else if (this.value.type === 'link' && this.value.text && this.value.name) {
       this.text = (this.value.text.length || '0');
       if (+this.text > 0) {

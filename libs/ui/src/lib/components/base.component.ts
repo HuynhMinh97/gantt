@@ -400,12 +400,40 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     const result = rest_user?.data?.findSystem;
 
     if (result) {
-      user_setting = result.data
+      user_setting = result.data;
     }
 
     return user_setting;
   }
 
+  async findUserSettingCode() {
+    let user_setting = [];
+    const rest: any = await this.apollo.query({
+      query: gql`
+      query {
+        findUserSetting(request: {
+          company: "${this.company}"
+          lang: "${this.lang}"
+          user_id: "${this.user_id}"
+          collection: "user_setting"
+          condition: {
+            user_id: "${this.user_id}"
+          }
+    
+        }) {
+          data {
+            date_format_display
+          }
+        }
+      }
+    `
+    }).toPromise();
+    const result = rest?.data.findUserSetting;
+    if (result) {
+      user_setting = result.data;
+    }
+    return user_setting[0];
+  }
 
   private replaceValueInMess = (message: string, params: any[]) => {
     const result = message;
