@@ -1,4 +1,4 @@
-<div [ngClass]="classContainer" style="max-width: 400px">
+<div [ngClass]="classContainer" style="max-width: 400px" >
   <ait-label
     [label]="label"
     [required]="required"
@@ -34,28 +34,26 @@
     >
       <div *ngIf="!disabled">
         <ait-chip
-        [nbTooltip]="getDataTooltip(o?._key)"
-        [nbTooltipTrigger]="isShowTooltip ? 'hover' : 'noop'"
-        [title]="o?.value"
-        *ngFor="let o of selectItems"
-        (action)="removeItems(chip)"
-        [icon]="'close-outline'"
-        [id]="ID('chip_input')"
-
-      ></ait-chip>
+          [nbTooltip]="getDataTooltip(o?._key)"
+          [nbTooltipTrigger]="isShowTooltip ? 'hover' : 'noop'"
+          [title]="o?.value"
+          *ngFor="let o of selectItems"
+          (action)="removeItems(chip)"
+          [icon]="'close-outline'"
+          [id]="ID('chip_input')"
+        ></ait-chip>
       </div>
       <div *ngIf="disabled">
         <ait-chip
-        [nbTooltip]="getDataTooltip(o?._key)"
-        [nbTooltipTrigger]="isShowTooltip ? 'hover' : 'noop'"
-        [title]="o?.value"
-        *ngFor="let o of selectItems"
-        (action)="removeItems(chip)"
-        [icon]="'close-outline'"
-        [id]="ID('chip_input')"
-        tabindex="{{ tabIndex }}"
-
-      ></ait-chip>
+          [nbTooltip]="getDataTooltip(o?._key)"
+          [nbTooltipTrigger]="isShowTooltip ? 'hover' : 'noop'"
+          [title]="o?.value"
+          *ngFor="let o of selectItems"
+          (action)="removeItems(chip)"
+          [icon]="'close-outline'"
+          [id]="ID('chip_input')"
+          tabindex="{{ tabIndex }}"
+        ></ait-chip>
       </div>
     </div>
     <input
@@ -149,6 +147,8 @@
     }}</span> -->
     <div class="suggestion__data" [ngStyle]="{ width: '100%' }">
       <ait-chip
+        [nbTooltip]="getDataTooltip(chip?._key)"
+        [nbTooltipTrigger]="isShowTooltip ? 'hover' : 'noop'"
         [title]="chip?.value"
         *ngFor="let chip of filteredData"
         (onClickChip)="addItems(chip); inputControlMaster.setValue('')"
