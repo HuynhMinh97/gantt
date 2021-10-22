@@ -108,10 +108,11 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   includeNotDelete = true;
   @Output() onError = new EventEmitter();
   messageSearch = '';
+  @Input() inputDefault = '';
 
   isFocus = false;
 
-  setFocus = (value : boolean) => {
+  setFocus = (value: boolean) => {
     this.isFocus = value;
   }
 
@@ -144,20 +145,22 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
 
   getDataTooltip = (_key: string) => {
     const company: CompanyInfoDto = this.dataTooltip.find(f => f._key === _key);
-    const result = [
+    let result = [
       { field: 'address', value: company?.address },
       { field: 'occupation', ...company?.occupation },
       { field: 'work', ...company?.work },
     ]
 
-    if (result.map(m => this.getContent(m)).filter(f => !!f).length > 0) {
+    result = result.filter(f => !!f?.value)
+
+    if (result.length > 0) {
       this.isShowTooltip = true;
-    }
-    else {
+    } else {
       this.isShowTooltip = false;
+
     }
-    const comma = this.translateService.translate('s_0001');
-    return result.map(m => this.getContent(m)).filter(f => !!f).join(comma || '、')
+    // Phải tạo ra space giữa các dòng dữ liệu để effect new line in nb-tooltip
+    return result.map(m => this.getContent(m) + '\n').filter(f => !!f).join(' ')
   }
 
   getContent = (data) => {
@@ -208,6 +211,10 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
             }
             this.isSubmit = false;
           }
+        }
+        if (key === 'inputDefault') {
+          this.inputControlMaster.setValue(this.inputDefault);
+          this.searchByTerm(this.inputControlMaster.value);
         }
         if (key === 'required') {
           // console.log(this.required)
@@ -366,6 +373,33 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   }
 
 
+  searchByTerm = (text: string) => {
+    const condition = {
+      name: text
+    }
+    const returnFields = {
+      _key: true,
+      name: true,
+    }
+    this.masterDataService.find(condition, returnFields, this.collection, this.includeNotDelete, this.includeNotActive).then(r => {
+      if (r.status === RESULT_STATUS.OK) {
+        this.DataSource = (r.data || []).map(m => ({ _key: m._key, value: m?.name }));
+        const _keys = this.excludedValue.map(e => e?._key);
+        if (_keys.length !== 0) {
+          this.filteredData = AitAppUtils.deepCloneArray(this.DataSource).filter(f => !_keys.includes(f._key));
+          this.messageSearch = this.getEmptyMessage(this.filteredData);
+        }
+        else {
+          this.filteredData = AitAppUtils.deepCloneArray(this.DataSource);
+          this.messageSearch = this.getEmptyMessage(this.filteredData);
+
+        }
+        this.isOpenSuggest = true;
+      }
+    })
+  }
+
+
   settingData2 = () => {
     //call api # master data
     this.inputControlMaster.valueChanges.pipe(
@@ -374,29 +408,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
     ).subscribe(text => {
       // console.log(text)
       if (text) {
-        const condition = {
-          name: text
-        }
-        const returnFields = {
-          _key: true,
-          name: true
-        }
-        this.masterDataService.find(condition, returnFields, this.collection, this.includeNotDelete, this.includeNotActive).then(r => {
-          if (r.status === RESULT_STATUS.OK) {
-            this.DataSource = (r.data || []).map(m => ({ _key: m._key, value: m?.name }));
-            const _keys = this.excludedValue.map(e => e?._key);
-            if (_keys.length !== 0) {
-              this.filteredData = AitAppUtils.deepCloneArray(this.DataSource).filter(f => !_keys.includes(f._key));
-              this.messageSearch = this.getEmptyMessage(this.filteredData);
-            }
-            else {
-              this.filteredData = AitAppUtils.deepCloneArray(this.DataSource);
-              this.messageSearch = this.getEmptyMessage(this.filteredData);
-
-            }
-            this.isOpenSuggest = true;
-          }
-        })
+        this.searchByTerm(text);
       }
       else {
         this.DataSource = [];
@@ -433,6 +445,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
     // this.checkIsNewData().then(() => {
 
     // })
+    this.getDataTooltip('e058ccaa-252b-4ee2-9e36-5a515b498cac');
 
     this.getDefaultValue.emit({ value: (this.defaultValue || []).map(m => ({ _key: m?._key, value: m?.value })) })
     this.settingData2();

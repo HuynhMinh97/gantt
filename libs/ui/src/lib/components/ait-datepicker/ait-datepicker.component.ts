@@ -136,9 +136,12 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
         if (key === 'isReset') {
           if (this.isReset) {
             this.date = null;
+            this.dateInput = null;
+            this.defaultValue = null;
             this.errorMessages = [];
             this.componentErrors = [];
             this.isError = false;
+            this.formatTransfrom = null;
             this.onError.emit({ isValid: null });
 
             this.isReset = false;
@@ -657,7 +660,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
       }
     }
     else {
-      // this.formatTransfrom = null;
+      this.formatTransfrom = null;
       if (this.formatTransfrom === null || this.formatTransfrom === '') {
         this.watchValue.emit({ value: null });
       }
@@ -700,7 +703,6 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   }
 
   checkValidDateInput = () => {
-    console.log(this.formatTransfrom);
     if (this.formatTransfrom) {
       this.date = new Date(this.formatTransfrom);
       this.dateInput = this.formatTransfrom;
@@ -787,6 +789,14 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
 
 
   ngOnInit() {
+    // this.inputCtrl.valueChanges.subscribe(text => {
+    //   if (text === '' || !text) {
+    //     this.formatTransfrom = null;
+    //     this.date = null;
+    //     this.dateInput = null;
+    //     this.inputCtrl.reset();
+    //   }
+    // })
     if (this.defaultValue && this.defaultValue !== '') {
       this.setupDate();
       const target = this.defaultValue || this.dateInput
