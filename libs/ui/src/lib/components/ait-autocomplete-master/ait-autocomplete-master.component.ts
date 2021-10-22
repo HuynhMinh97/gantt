@@ -159,6 +159,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
       this.isShowTooltip = false;
 
     }
+    // Phải tạo ra space giữa các dòng dữ liệu để effect new line in nb-tooltip
     return result.map(m => this.getContent(m) + '\n').filter(f => !!f).join(' ')
   }
 
