@@ -55,8 +55,8 @@ export class AitLayoutService {
         header_title: this.translateService.translate(item.header_title),
         tabs: item.tabs.map(tab => ({
           ...tab,
-          title: this.translateService.translate(tab.title),
-          sub_menus : (tab.sub_menus || []).map(tabsub => ({...tabsub, title : this.translateService.translate(tabsub?.title)}))
+          // title: this.translateService.translate(tab.title),
+          // sub_menus : (tab.sub_menus || []).map(tabsub => ({...tabsub, title : this.translateService.translate(tabsub?.title)}))
         }))
       }
     })

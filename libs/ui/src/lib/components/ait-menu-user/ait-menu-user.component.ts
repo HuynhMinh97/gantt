@@ -34,12 +34,11 @@ export class AitMenuUserComponent extends AitBaseComponent implements OnInit {
     public dialogService: NbDialogService,
     store: Store<AppState>,
     userService: AitUserService,
-    private toatsrService: NbToastrService,
+    toatsrService: NbToastrService,
     private layoutSerive: AitLayoutService,
     envService: AitEnvironmentService,
     apollo: Apollo,
     private iconLibraries: NbIconLibraries,
-    private nbMenuService: NbMenuService
   ) {
     super(store, authService, apollo, userService, envService, null, toatsrService);
     this.iconLibraries.registerFontPack('font-awesome', { packClass: 'far', iconClassPrefix: 'fa' });
@@ -75,31 +74,31 @@ export class AitMenuUserComponent extends AitBaseComponent implements OnInit {
     return this.translateService.translate(string);
   }
 
-  hover(tab : any) {
+  hover(tab: any) {
     console.log('in')
     this.tabSelect = tab?.title;
   }
 
   @HostListener('document:mouseout', ['$event'])
-    mouseover(event) {
-        if(event.target.matches('.sub_menu')) {
-          // alert('out')
-          this.tabSelect = '';
-        }
-
-
+  mouseover(event) {
+    if (event.target.matches('.sub_menu')) {
+      // alert('out')
+      this.tabSelect = '';
     }
+
+
+  }
 
   ngOnInit() {
     this.setupMenu();
-    this.nbMenuService.onItemClick()
-      .pipe(
-        // filter(({ tag }) => tag === 'person'),
-        map(({ item }) => item),
-      )
-      .subscribe((item: any) => {
-        this.router.navigateByUrl(item.url_sub);
-      });
+    // this.nbMenuService.onItemClick()
+    //   .pipe(
+    //     // filter(({ tag }) => tag === 'person'),
+    //     map(({ item }) => item),
+    //   )
+    //   .subscribe((item: any) => {
+    //     this.router.navigateByUrl(item.url_sub);
+    //   });
 
   }
   navigate = (link) => {
