@@ -26,7 +26,6 @@ export class AitTocMenuComponent implements AfterViewInit {
           title: m.innerHTML
         }
       });
-      console.log(this.items);
       const ids = Array.from(new Set(this.items.map(x => x?.title)));
       this.items = ids.map(x => {
         const it = this.items.find(d => d.title === x);
@@ -39,8 +38,7 @@ export class AitTocMenuComponent implements AfterViewInit {
   }
 
   goToElemet = (id: string) => {
-
-    const element = document.getElementById('menu_toc_item_' + id.trim());
+    const element = document.getElementById(this.id + '_menu_toc_item_' + id.trim());
     element.scrollIntoView({ behavior: 'smooth', inline: 'start' });
   }
 
