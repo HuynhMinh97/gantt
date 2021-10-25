@@ -44,6 +44,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
     userService: AitUserService, _env: AitEnvironmentService,
     private translateService: AitTranslationService) {
     super(store, authService, apollo, userService, _env);
+    this.selectItems = [];
     store.pipe(select(getLang)).subscribe(
       lang => {
         if (lang !== this.currentLang) {
@@ -109,6 +110,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   @Output() onError = new EventEmitter();
   messageSearch = '';
   @Input() inputDefault = '';
+  @Input() isClear;
 
   isFocus = false;
 
@@ -209,6 +211,11 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
               const err = this.translateService.getMsg('E0001').replace('{0}', this.getFieldName());
               this.errors = [err]
             }
+            if (this.inputControlMaster.value === null) {
+              this.isError = true;
+              const err = this.translateService.getMsg('E0001').replace('{0}', this.getFieldName());
+              this.errors = [err]
+            }
             this.isSubmit = false;
           }
         }
@@ -226,20 +233,19 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
             this.isError = false;
             this.onError.emit({ isValid: null });
             this.messageSearch = '';
+            this.inputControlMaster.reset();
             setTimeout(() => {
               this.isReset = false;
             }, 200)
           }
         }
         if (!this.compareDeep(this.defaultValue, this.currentDataDef)) {
-          // console.log(this.defaultValue)
           this.currentDataDef = this.defaultValue;
           const checkNull = this.checkDefaultValue(this.defaultValue);
           this.selectItems = checkNull ? [] : this.defaultValue;
           const getObjecKeyEqualNull = this.selectItems.filter(s => !s?._key);
           this.storeDataDraft = getObjecKeyEqualNull;
           const _keys = this.selectItems.map(m => m?._key);
-          console.log(_keys);
           if (_keys.length !== 0) {
             this.getDefaultValueByLang(_keys).then(
             );
@@ -352,6 +358,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   }
 
   getDefaultValueByLang = async (keys: string[]) => {
+    console.log(keys)
     const condition = {
       _key: keys[0]
     }
@@ -374,6 +381,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
 
 
   searchByTerm = (text: string) => {
+    console.log(text)
     const condition = {
       name: text
     }
@@ -441,11 +449,6 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   }
 
   ngOnInit() {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    // this.checkIsNewData().then(() => {
-
-    // })
-    this.getDataTooltip('e058ccaa-252b-4ee2-9e36-5a515b498cac');
 
     this.getDefaultValue.emit({ value: (this.defaultValue || []).map(m => ({ _key: m?._key, value: m?.value })) })
     this.settingData2();
@@ -479,7 +482,6 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   }
 
   addItems = (info) => {
-
     const itemFind = this.filteredData.find(f => f._key === info?._key);
     if (this.maxItem === 1) {
       this.selectItems = [itemFind];
