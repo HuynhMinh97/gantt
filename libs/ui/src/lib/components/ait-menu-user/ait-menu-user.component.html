@@ -33,14 +33,6 @@
             <div
               class="tab"
               [class.selected]="tab?.title === this.tabSelect"
-              [nbContextMenu]="tab.sub_menus"
-              [nbContextMenuTag]="tab.tag"
-              [nbContextMenuTrigger]="
-                tab?.sub_menus?.length === 0 || !tab?.sub_menus
-                  ? 'noop'
-                  : 'noop'
-              "
-              nbContextMenuPlacement="'left'"
               (mouseenter)="hover(tab)"
             >
               <div
@@ -94,7 +86,7 @@
                     "
                   ></nb-icon>
 
-                  <p class="tab__titlex">{{ it.title }}</p>
+                  <p class="tab__titlex">{{ getTitle(it.title) }}</p>
                 </div>
               </div>
               <i
@@ -139,7 +131,7 @@
                 "
               ></nb-icon>
 
-              <p class="tab__title">{{ tab.title }}</p>
+              <p class="tab__title">{{ getTitle(tab.title) }}</p>
             </div>
             <div class="divider"></div>
           </div>
