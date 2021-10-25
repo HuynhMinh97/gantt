@@ -43,7 +43,7 @@
                 <div
                   class="sub_item"
                   *ngFor="let it of tab?.sub_menus"
-                  (click)="navigate(it.url_sub)"
+                  (click)="navigate(it.url_sub);hideMenu()"
                 >
                   <i
                     class="{{ it?.iconName }}"

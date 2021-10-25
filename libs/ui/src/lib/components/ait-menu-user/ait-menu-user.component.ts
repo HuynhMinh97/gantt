@@ -144,7 +144,13 @@ export class AitMenuUserComponent extends AitBaseComponent implements OnInit {
         this.avatarURL + this.userInfo?.username : this.avatarURL + this.userInfo?.email;
   }
 
-  hideMenu = () => this.isOpenMenu = false;
+  hideMenu = () => {
+
+    this.isOpenMenu = false;
+
+    this.tabSelect = '';
+
+  }
 
   navigateCompanyCreate = () => {
     this.router.navigateByUrl('/');
