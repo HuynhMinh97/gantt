@@ -282,6 +282,9 @@ export class AitBaseService {
             } else {
               if (data.operator === OPERATOR.LIKE) {
                 aqlStr += `&& \r\n LOWER(data.${prop}) ${data.operator} `;
+              } else if (Array.isArray(data.value)) {
+                aqlStr += ` FILTER LENGTH(INTERSECTION(TO_ARRAY(${JSON.stringify(data.value)}), 
+                  TO_ARRAY(data.${prop}))) == LENGTH(TO_ARRAY(${JSON.stringify(data.value)})) \r\n`;
               } else {
                 aqlStr += `&& \r\n data.${prop} ${data.operator} `;
               }
@@ -289,7 +292,7 @@ export class AitBaseService {
 
             switch (data.operator) {
               case OPERATOR.IN || OPERATOR.NOT_IN:
-                if (hasLength(data.value)) {
+                if (hasLength(data.value) && !Array.isArray(data.value)) {
                   aqlStr += `${JSON.stringify(data.value)} `;
                 }
                 break;
