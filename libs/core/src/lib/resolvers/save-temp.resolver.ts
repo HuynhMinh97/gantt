@@ -9,7 +9,6 @@ import { SaveTempRequest } from '../requests/save-temp.request';
 import { SaveTempResponse } from '../responses/save-temp.response';
 import { AitBaseService } from '../services/ait-base.service';
 
-@UseGuards(GqlAuthGuard)
 @Resolver()
 export class SaveTempResolver extends AitBaseService {
   collection = 'sys_save_temp';
