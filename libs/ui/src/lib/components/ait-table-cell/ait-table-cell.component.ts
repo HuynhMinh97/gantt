@@ -56,7 +56,7 @@ export class AitTableCellComponent implements OnInit, ViewCell {
         data.forEach((element: KeyValueDto) => {
           result.push(element?.value ?? '');
         });
-        this.text = result.join((this.comma || ',') + ' ');
+        this.text = result.join(this.comma || '、');
       } else if (isObjectFull(data)) {
         this.text = data?.value ?? '';
       } else {
@@ -72,7 +72,7 @@ export class AitTableCellComponent implements OnInit, ViewCell {
         data.forEach((item: string) => {
           result.push(item);
         });
-        this.text = result.join((this.comma || ',') + ' ');
+        this.text = result.join(this.comma || '、');
       } else {
         this.text = '';
       }
