@@ -451,7 +451,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
           );
           return result;
         });
-        console.log(typeDF, findByKeys, this.dataSourceDf)
+        // console.log(typeDF, findByKeys, this.dataSourceDf)
         this.optionSelected = [...AitAppUtils.getArrayNotFalsy(findByKeys)].filter(
           (f) => !!f
         )
