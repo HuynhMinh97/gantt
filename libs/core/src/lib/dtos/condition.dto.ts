@@ -94,6 +94,9 @@ export class ConditionDto {
   // return_field trả về có phải là đa ngôn ngữ hay k
   @Field(() => Boolean, { nullable: true })
   is_multi_language: boolean;
+  // so sánh array đầu vào = toàn bộ array trong db
+  @Field(() => Boolean, { nullable: true })
+  is_match_full: boolean;
   // Định nghĩa _key ở cặp key-value trả về, mặc định là code
   @Field(() => String, { nullable: true, defaultValue: KEYS.CODE })
   get_by: string;

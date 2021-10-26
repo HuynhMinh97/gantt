@@ -385,7 +385,7 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
   getFileMaxUpload = () => {
     const maxfile = this.settings.find(f => f.code === 'FILE_MAX_UPLOAD');
-    return this.maxFiles ? this.maxFiles : maxfile ? maxfile?.value : null;
+    return this.maxFiles ? this.maxFiles : maxfile ? maxfile?.value : 99;
   }
 
   getFileTypeSup = () => {
