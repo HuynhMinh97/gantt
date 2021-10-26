@@ -113,7 +113,11 @@ export class AitInputFileComponent implements OnInit, OnChanges {
   getFocus() {
     return this.isError ? false : this.isFocus;
   }
-  messagesError = () => Array.from(new Set([...this.componentErrors, ...(this.errorMessages || [])]))
+  
+  messagesError = () => {
+    const errors = new Set([...this.componentErrors, ...(this.errorMessages || [])]);
+    return Array.from(errors).filter((error: string) => error.indexOf('undefined') === -1);
+  };
 
   getDataFiles = () => {
     return [...this.fileDatas, ...this.displayedFiles].length !== 0;

@@ -423,6 +423,7 @@ export class AitBaseService {
         aqlStr += ` \r\n ${data.join_field} : ( `;
         aqlStr += ` \r\n FOR record IN ${data.join_collection}`;
         aqlStr += ` \r\n FILTER record.${data.join_attribute} == data.${data.join_target}`;
+        aqlStr += ` \r\n && record.del_flag == false `;
         aqlStr += ` \r\n RETURN record ), `;
       }
     });
