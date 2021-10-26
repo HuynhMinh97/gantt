@@ -208,7 +208,10 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   compareDeep = (agr1: any, agr2: any) => JSON.stringify(agr1) === JSON.stringify(agr2);
 
-  messagesError = () => Array.from(new Set([...this.componentErrors, ...(this.errorMessages || [])]));
+  messagesError = () => {
+    const errors = new Set([...this.componentErrors, ...(this.errorMessages || [])]);
+    return Array.from(errors).filter((error: string) => error.indexOf('undefined') === -1);
+  };
 
   handleRemove = (option: any) => {
     // console.log(option);
