@@ -101,9 +101,10 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
 
   getCaption = () => this.translateService.translate(this.guidance);
 
-  messagesError = () => Array.from(new Set([...this.componentErrors, ...(this.errorMessages || [])]))
-
-
+  messagesError = () => {
+    const errors = new Set([...this.componentErrors, ...(this.errorMessages || [])]);
+    return Array.from(errors).filter((error: string) => error.indexOf('undefined') === -1);
+  };
 
   ngOnChanges(changes: SimpleChanges) {
     for (const key in changes) {
