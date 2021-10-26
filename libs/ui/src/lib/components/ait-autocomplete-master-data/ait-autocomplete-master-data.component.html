@@ -1,3 +1,4 @@
+
 <div [ngClass]="classContainer">
   <ait-label
     [label]="label"
@@ -42,7 +43,7 @@
             style="font-weight: bold; font-size: 12px; cursor: context-menu"
             id="{{ ID('selected_items') }}"
           >
-            {{ getSelectedItems(optionSelected) }}
+            {{ getSelectedItems(optionSelected)}}
           </p>
         </div>
 
@@ -50,9 +51,9 @@
           id="{{ ID('input') }}"
           fullWidth
           nbInput
-          [value]="VALUE"
+          [value]="modifileOption(VALUE)"
           type="text"
-          autocomplete="doNotAutoComplete"
+          autocomplete="off"
           class="search"
           [ngStyle]="styleInput"
           [placeholder]="getPlaceHolder()"
@@ -60,6 +61,7 @@
           [readOnly]="isReadOnly"
           *ngIf="isReadOnly"
           style="font-size: 12px"
+          autocomplete="new-password"
           #input
           (blur)="this.isFocus = false"
           (focus)="focusInput()"
@@ -71,11 +73,11 @@
           *ngIf="!isReadOnly"
           [formControl]="inputControl"
           [placeholder]="PLACEHOLDER"
-          [value]="VALUE"
+          autocomplete="off"
           fullWidth
+
           nbInput
           #input
-          autocomplete="doNotAutoComplete"
           (focus)="focusInput()"
           type="text"
           class="search"
@@ -119,9 +121,10 @@
               [id]="ID('checkbox_' + i)"
             >
               <span
+                class="textx"
                 style="cursor: pointer; font-size: 12px"
                 id="{{ ID('selection_value') }}"
-                >{{ modifileOption(option?.value) }}</span
+                >{{ option?.value}}</span
               >
             </nb-checkbox>
             <nb-icon
@@ -143,9 +146,13 @@
             class="option__container"
             style="cursor: pointer"
             [class.isSelect]="option?._key === selectOne?._key"
+            (click)="onSelectionChange(option)"
+
+            nbTooltipPlacement="right"
+            [nbTooltip]="option?.value"
           >
             <div
-              (click)="onSelectionChange(option)"
+
               style="
                 cursor: pointer;
                 font-weight: 600;
@@ -153,10 +160,12 @@
                 margin: 5px;
                 padding-left: 15px;
                 width: 100%;
+                padding-top: 0 !important;
               "
+              class="textx"
               id="{{ ID('selection_value') }}"
             >
-              {{ modifileOption(option?.value) }}
+              {{ option?.value}}
             </div>
             <nb-icon
               icon="close-outline"

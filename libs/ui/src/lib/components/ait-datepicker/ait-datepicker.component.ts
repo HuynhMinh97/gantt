@@ -29,6 +29,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   formatDateTime = '';
   // formDateControl: FormControl;
   date: Date | number = null;
+  @Input() hasborder = false;
   @Input() disable = false;
   @Input() dateInput: Date | number = null;
   @Input() defaultValue;
@@ -57,6 +58,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   @Input() isSubmit = false;
   @Input() errorMessages;
   @Input() tabIndex;
+  @Input() readonly = false;
 
   @ViewChild('inputDateTime', { static: false }) input: ElementRef;
   @ViewChild(NbDatepickerDirective, { static: false }) nbDatepicker;
@@ -134,9 +136,12 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
         if (key === 'isReset') {
           if (this.isReset) {
             this.date = null;
+            this.dateInput = null;
+            this.defaultValue = null;
             this.errorMessages = [];
             this.componentErrors = [];
             this.isError = false;
+            this.formatTransfrom = null;
             this.onError.emit({ isValid: null });
 
             this.isReset = false;
@@ -655,7 +660,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
       }
     }
     else {
-      // this.formatTransfrom = null;
+      this.formatTransfrom = null;
       if (this.formatTransfrom === null || this.formatTransfrom === '') {
         this.watchValue.emit({ value: null });
       }
@@ -698,7 +703,6 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
   }
 
   checkValidDateInput = () => {
-    console.log(this.formatTransfrom);
     if (this.formatTransfrom) {
       this.date = new Date(this.formatTransfrom);
       this.dateInput = this.formatTransfrom;
@@ -764,7 +768,7 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
         if (AitAppUtils.isValidDate(this.dateInput) || typeof this.dateInput === 'number') {
           if (this.dateInput) {
             let dateFormat;
-            if (this.disable) {
+            if (this.disable || this.readonly) {
               dateFormat = this.dateFormatService.formatDatePicker(this.dateInput, this.formatDateTimeDisplay);
               // // console.log(dateFormat)
               this.valueDf = dateFormat
@@ -785,6 +789,14 @@ export class AitDatePickerComponent implements OnInit, OnChanges {
 
 
   ngOnInit() {
+    // this.inputCtrl.valueChanges.subscribe(text => {
+    //   if (text === '' || !text) {
+    //     this.formatTransfrom = null;
+    //     this.date = null;
+    //     this.dateInput = null;
+    //     this.inputCtrl.reset();
+    //   }
+    // })
     if (this.defaultValue && this.defaultValue !== '') {
       this.setupDate();
       const target = this.defaultValue || this.dateInput

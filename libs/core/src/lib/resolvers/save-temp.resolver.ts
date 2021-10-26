@@ -1,15 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { UseGuards } from '@nestjs/common';
 import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
 import { AitCtxUser } from '../decorators/ait-ctx-user.decorator';
 import { SaveTempDto } from '../dtos/save-temp.dto';
 import { SysUser } from '../entities/sys-user.entity';
-import { GqlAuthGuard } from '../guards/gql-auth.guard';
 import { SaveTempRequest } from '../requests/save-temp.request';
 import { SaveTempResponse } from '../responses/save-temp.response';
 import { AitBaseService } from '../services/ait-base.service';
 
-@UseGuards(GqlAuthGuard)
 @Resolver()
 export class SaveTempResolver extends AitBaseService {
   collection = 'sys_save_temp';
