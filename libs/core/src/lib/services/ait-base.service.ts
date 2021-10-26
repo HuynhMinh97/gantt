@@ -282,7 +282,7 @@ export class AitBaseService {
             } else {
               if (data.operator === OPERATOR.LIKE) {
                 aqlStr += `&& \r\n LOWER(data.${prop}) ${data.operator} `;
-              } else if (Array.isArray(data.value)) {
+              } else if (Array.isArray(data.value) && data.is_match_full) {
                 aqlStr += ` FILTER LENGTH(INTERSECTION(TO_ARRAY(${JSON.stringify(data.value)}), 
                   TO_ARRAY(data.${prop}))) == LENGTH(TO_ARRAY(${JSON.stringify(data.value)})) \r\n`;
               } else {
@@ -292,7 +292,7 @@ export class AitBaseService {
 
             switch (data.operator) {
               case OPERATOR.IN || OPERATOR.NOT_IN:
-                if (hasLength(data.value) && !Array.isArray(data.value)) {
+                if (hasLength(data.value) && !(Array.isArray(data.value) && data.is_match_full)) {
                   aqlStr += `${JSON.stringify(data.value)} `;
                 }
                 break;
