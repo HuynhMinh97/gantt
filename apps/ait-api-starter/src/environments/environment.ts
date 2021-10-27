@@ -22,11 +22,7 @@ export const environment = {
   },
   DATABASE: {
     HOST: 'http://192.168.136.17:8529/',
-<<<<<<< HEAD
     NAME: 'aureole_v_dev_matching',
-=======
-    NAME: 'aureole_v_dev',
->>>>>>> upstream/master
     USER: 'aureole_v_dev',
     PASS: 'aureole_v_dev',
   },
