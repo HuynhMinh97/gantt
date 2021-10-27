@@ -71,7 +71,8 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     this.user_id = AitAppUtils.getUserId();
     const userId = this.authService.getUserID();
     this.env = _env;
-    this.company = this.env.COMMON.COMPANY_DEFAULT;
+    this.company = this.env?.COMMON?.COMPANY_DEFAULT;
+    localStorage.setItem('comp', this.env?.COMMON?.COMPANY_DEFAULT);
     // call api get all message follow by type as I : Information , W : Warning, E: Error
     this.getAllMessages().then();
 
@@ -419,7 +420,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
           condition: {
             user_id: "${this.user_id}"
           }
-    
+
         }) {
           data {
             date_format_display
