@@ -9,8 +9,10 @@
     class="button__wrapper__disabled"
     [style.height]="height"
     [style.width]="width"
+    [style.min-width]="minwidth"
     [style.border]="border"
     [style.background]="background"
+    [style.margin-left]="marginleft"
     [nbTooltip]="toolTip"
     disabled
     ng-class="{ 'diabled-class': !isDisabled }"
@@ -55,8 +57,10 @@
     nbButton
     [style.height]="height"
     [style.width]="width"
+    [style.min-width]="minwidth"
     [style.border]="border"
     [style.background]="background"
+    [style.margin-left]="marginleft"
     [ngClass]="classBtn"
     [ngStyle]="styleBtn"
     [class.isDefault]="isDefault"
@@ -98,8 +102,10 @@
     nbButton
     [style.height]="height"
     [style.width]="width"
+    [style.min-width]="minwidth"
     [style.border]="border"
     [style.background]="background"
+    [style.margin-left]="marginleft"
     [ngClass]="classBtn"
     [ngStyle]="styleBtn"
     [class.isDefault]="isDefault"

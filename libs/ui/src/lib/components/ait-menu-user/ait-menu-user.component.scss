@@ -3,6 +3,11 @@
 @import "../../@theme/styles/themes.scss";
 @import "../../@theme/styles/colorStyles.scss";
 
+::ng-deep .nb-theme-default nb-context-menu {
+  margin-right: -10px;
+  margin-bottom: -50px;
+}
+
 @include nb-install-component() {
   display: flex;
   justify-content: space-between;
@@ -48,6 +53,50 @@
         padding-top: 15px;
         padding-bottom: 15px;
         cursor: pointer;
+        position: relative;
+        &.selected {
+          background-color: nb-theme(color-basic-transparent-100);
+
+        }
+        .sub_menu {
+          position: absolute;
+          width: 246px;
+          min-height: 45px;
+          display: none;
+          z-index: 999;
+          flex-direction: column;
+          border: 1px solid #e4e9f2;
+          background-color: #fff;
+          transition: 0.8px all ease-in-out;
+          right: 245px;
+          top: 0;
+          // margin-top: 50px;
+          .sub_item {
+            height: 49px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            // padding-top: 15px;
+            // padding-bottom: 15px;
+            cursor: pointer;
+            border-bottom: 1px solid nb-theme(color-basic-300);
+            &:hover {
+              background-color: nb-theme(color-basic-transparent-100);
+            }
+            .tab__titlex {
+              margin: 0;
+              font-weight: 600;
+              font-size: 13px;
+              color: nb-theme(color-basic-800);
+            }
+            &:hover .tab__titlex {
+              color: nb-theme(color-primary-500);
+            }
+          }
+          &.show {
+            display: flex;
+          }
+        }
         // border-bottom: 1px solid $color-basic-300;
         &:hover {
           background-color: nb-theme(color-basic-transparent-100);
@@ -456,8 +505,6 @@ nb-user {
     width: 90px;
   }
 }
-
-
 
 .link1 {
   margin-left: 50px;

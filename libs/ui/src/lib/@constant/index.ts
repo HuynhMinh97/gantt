@@ -10,7 +10,7 @@ export enum PERMISSIONS {
 
 export const ACTION_HEADER = [
   {
-    icon: 'home',
+    icon: 'home-outline',
     title: 'c_1001',
     action: () => { },
     isI18n: true,
@@ -70,19 +70,23 @@ export enum JOB_STATUS {
 export const jwtConstants = {
   secret: 'aureole-v',
 };
-
 export interface MenuUser {
   header_title?: string;
   tabs?: MenuItem[]
+
 }
+
 
 export interface MenuItem {
   iconName?: string;
   title?: string;
   action?: any;
   url?: string;
+  pack?: string;
+  tag?: string;
+  url_sub?: string;
+  sub_menus?: MenuItem[]
 }
-
 export interface MenuHeader {
   title?: string;
   iconName?: string;
@@ -147,6 +151,7 @@ export const DarkScreen = [
   'user-setting',
   'new',
   'job',
+  'company-basic-info',
   'change-password'
 ];
 
@@ -195,7 +200,7 @@ export const LayoutHome = []
 
 export const APP_LOGO = '../assets/images/logo4.svg';
 
-export const APP_TITLE = 'c_1000'
+export const APP_TITLE = 'matching system'
 
 
 export const AppLayout = [

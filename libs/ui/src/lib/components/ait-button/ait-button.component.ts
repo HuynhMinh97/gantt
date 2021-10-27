@@ -17,9 +17,11 @@ export class AitButtonComponent implements OnChanges {
   @Input() background = '';
   @Input() color = '';
   @Input() width = 'auto';
+  @Input() minwidth = '';
   @Input() border: string = null;
   @Input() height: string = null;
   @Input() margin: string = null;
+  @Input() marginleft: string = null;
   @Input() fontsize: string = null;
   @Input() uppercaseContent = false;
   @Input() isDisabled = false;
