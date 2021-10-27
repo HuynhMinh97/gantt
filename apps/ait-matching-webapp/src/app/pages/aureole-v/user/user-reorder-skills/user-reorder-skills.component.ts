@@ -52,7 +52,7 @@ export class UserReorderSkillsComponent  extends AitBaseComponent implements OnI
   }
 
   async ngOnInit(): Promise<void> {
-    
+    debugger
     await this.findTopSkills();
     await this.findSkills();
     await this.groupSkill();
@@ -96,6 +96,7 @@ export class UserReorderSkillsComponent  extends AitBaseComponent implements OnI
     })
   }
   async findSkills(){
+    debugger
     const from = 'sys_user/' + this.user_id;
     await this.reoderSkillsService.findReorder(from).then(async (res) => {
       if (res.status === RESULT_STATUS.OK) {

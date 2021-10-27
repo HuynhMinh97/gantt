@@ -15,6 +15,13 @@ export class UserOnboardingInfoResolver extends AitBaseService {
     return this.find(request, user);
   }
 
+  @Query(() => UserOnboardingInfoResponse, { name: 'findSkillOnboarding' })
+  findSkillOnboarding(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => UserOnboardingInfoRequest }) request: UserOnboardingInfoRequest) {
+    return this.find(request, user);
+  }
+
   @Mutation(() => UserOnboardingInfoResponse, { name: 'saveUserOnboardingInfo' })
   saveUserOnboardingInfo(
     @AitCtxUser() user: SysUser,

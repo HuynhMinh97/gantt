@@ -186,4 +186,17 @@ export class UserOnboardingService extends AitBaseService {
       returnFields
     );
   }
+
+  async findSkillsByCode(code: string) {
+    const condition: any = {
+      code: code,
+    };
+    const returnFields = {
+      _key: true,
+    };
+    const request = {};
+    request['collection'] = 'm_skill';
+    request['condition'] = condition;
+    return await this.query('findSkillOnboarding', request, returnFields);
+  }
 }
