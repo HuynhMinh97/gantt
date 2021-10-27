@@ -56,6 +56,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
   public env: any;
   public dataUserSetting = [];
   private isRefreshToken = false;
+  public currentPermission = [];
 
   constructor(
     public store: Store<AppState>,
@@ -147,7 +148,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
 
 
-    // CAll get user info , such as company, username, email, _key
+    // // CAll get user info , such as company, username, email, _key
     if (localStorage.getItem('access_token')) {
       if (userId && userId !== '') {
 
@@ -170,6 +171,11 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
         });
 
+      }
+      else {
+        this.authService.removeTokens();
+
+        location.reload();
       }
     }
 
@@ -196,26 +202,40 @@ export class AitBaseComponent implements OnInit, OnDestroy {
   }
 
   public initBaseComponent = () => {
+    const userId = this.authService.getUserID();
+    console.log(userId)
+    // CAll get user info , such as company, username, email, _key
+    // if (localStorage.getItem('access_token')) {
+    //   if (userId && userId !== '') {
 
-    // register locale by language setting
-    // this.store.pipe(select(getLang)).subscribe({
-    //   next: (state) => {
-    //     console.log(state)
-    //     switch (state) {
-    //       case 'en_US':
+    //     this.getUserInfo(userId).then((res: any) => {
+    //       if (!res || !res?.email) {
+    //         this.authService.removeTokens();
 
-    //         return registerLocaleData(localeEnn);
-    //       case 'vi_VN':
+    //         location.reload();
+    //       }
+    //       else {
 
-    //         return registerLocaleData(localeVnn);
-    //       default:
 
-    //         return registerLocaleData(localeJpp);
-    //     }
-    //   },
-    // });
+    //         // Push company on store base on user-setting
+    //         this.store.dispatch(
+    //           new CHANGECOMPANY(res?.company || this.env.COMMON.COMPANY_DEFAULT)
+    //         );
+    //         localStorage.setItem('comp', res?.company || this.env.COMMON.COMPANY_DEFAULT);
+    //         this.store.dispatch(new StoreUserInfo(res));
+    //       }
 
-    // console.log(localStorage.getItem('refresh_token'))
+    //     });
+
+    //   }
+    //   else {
+    //     this.authService.removeTokens();
+
+    //     setTimeout(() => {
+    //       location.reload();
+    //     },300)
+    //   }
+    // }
 
     if (localStorage.getItem('refresh_token')) {
       this.refreshToken().then((r: any) => {
@@ -380,12 +400,40 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     const result = rest_user?.data?.findSystem;
 
     if (result) {
-      user_setting = result.data
+      user_setting = result.data;
     }
 
     return user_setting;
   }
 
+  async findUserSettingCode() {
+    let user_setting = [];
+    const rest: any = await this.apollo.query({
+      query: gql`
+      query {
+        findUserSetting(request: {
+          company: "${this.company}"
+          lang: "${this.lang}"
+          user_id: "${this.user_id}"
+          collection: "user_setting"
+          condition: {
+            user_id: "${this.user_id}"
+          }
+    
+        }) {
+          data {
+            date_format_display
+          }
+        }
+      }
+    `
+    }).toPromise();
+    const result = rest?.data.findUserSetting;
+    if (result) {
+      user_setting = result.data;
+    }
+    return user_setting[0];
+  }
 
   private replaceValueInMess = (message: string, params: any[]) => {
     const result = message;
@@ -620,6 +668,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
   // set module and page for each screen and get caption base on theme
   setModulePage = (data: BaseInitData) => {
     const { module, page } = data;
+    this.getPermission(page, module).then();
     this.store.dispatch(new SetModulePage({ page, module }));
     this.module = module;
     this.page = page;
@@ -763,6 +812,65 @@ export class AitBaseComponent implements OnInit, OnDestroy {
       position: NbGlobalLogicalPosition.BOTTOM_END,
       preventDuplicates: true,
     });
+  }
+
+  public async getKey(code: string, type: 'page' | 'module') {
+    try {
+      const result: any = await this.apollo.query({
+        query: gql`query {
+          findSystem(request : {
+            collection : "sys_${type}",
+            company: "d3415d06-601b-42c4-9ede-f5d9ff2bcac3",
+              lang: "ja_JP",
+            condition: {
+              code : {
+                value : ["${code}"]
+              }
+            }
+          }) {
+            data  {
+              _key
+            }
+          }
+        }`
+      }).toPromise();
+      return result?.data?.findSystem?.data[0]?._key
+    } catch (error) {
+      return error;
+    }
+  }
+
+  public checkPermission(permission: 'READ' | 'CREATE' | 'UPDATE' | 'DELETE') {
+    return this.currentPermission.includes(permission);
+  }
+
+  public async getPermission(page: string, module: string) {
+    try {
+      const page_key = await this.getKey(page, 'page');
+      const module_key = await this.getKey(module, 'module');
+      const result: any = await this.apollo.query({
+        query: gql`query{
+          findPermission(request : {
+            page_key : "${page_key}",
+            module_key: "${module_key}",
+            user_key: "${this.user_id}"
+          }) {
+            page
+            module
+            permission
+            user_id
+          }
+        }`
+      }).toPromise();
+
+      const p = result.data?.findPermission;
+      this.currentPermission = p?.permission;
+      return p;
+    }
+    catch (e) {
+      console.log(e)
+      return null;
+    }
   }
 
   // get message erros when form invalid

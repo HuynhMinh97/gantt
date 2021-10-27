@@ -129,3 +129,9 @@ export * from './lib/state/rootReducers';
 //pipe
 export * from './lib/@theme/pipes/ait-translate.pipe';
 export * from './lib/@theme/pipes/ait-number-format.pipe';
+
+//ait table cell
+export * from './lib/components/ait-table-cell/ait-table-cell.module';
+
+//ait table cell
+export * from './lib/components/ait-table-cell/ait-table-cell.component';

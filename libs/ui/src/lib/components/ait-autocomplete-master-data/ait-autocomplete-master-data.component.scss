@@ -48,16 +48,26 @@
   display: none;
 }
 
+.textx {
+  display: inline-block;
+  width: 180px;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+  padding-top: 8px;
+}
+
 .autocompleteeeee {
   background: #fff;
   position: absolute;
   width: 100%;
+  overflow-x: hidden !important;
   /* bottom: 0; */
   top: 45px;
   border-radius: 5px;
   max-height: 270px;
   overflow: auto;
-  z-index: 999999999;
+  z-index: 999;
   border-color: #e4e9f2;
   border-style: solid;
   border-width: 0.0625rem;

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ACTION_HEADER, APP_LOGO, APP_TITLE, MENU_HEADER, MENU_USER } from '../../@constant';
+import { ACTION_HEADER, APP_LOGO, APP_TITLE, MenuUser, MENU_HEADER, MENU_USER } from '../../@constant';
 import { Title } from '@angular/platform-browser';
 import { AitTranslationService } from './ait-translate.service';
 import { select, Store } from '@ngrx/store';
@@ -48,14 +48,15 @@ export class AitLayoutService {
 
   // MENU USER
   get MENU_USER(): any[] {
-    const target = this.menuUserInput.length !== 0 ? this.menuUserInput : MENU_USER
+    const target : MenuUser[] = this.menuUserInput.length !== 0 ? this.menuUserInput : MENU_USER
 
     const menu = target.map(item => {
       return {
         header_title: this.translateService.translate(item.header_title),
         tabs: item.tabs.map(tab => ({
           ...tab,
-          title: this.translateService.translate(tab.title),
+          // title: this.translateService.translate(tab.title),
+          // sub_menus : (tab.sub_menus || []).map(tabsub => ({...tabsub, title : this.translateService.translate(tabsub?.title)}))
         }))
       }
     })

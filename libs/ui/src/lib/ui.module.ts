@@ -65,6 +65,7 @@ import localeVnn from '@angular/common/locales/vi';
 import localeJpp from '@angular/common/locales/ja';
 import { LocaleProvider } from './@theme/locale/locale.provider';
 import { DragScrollSkillModule } from './components/dragscroll-skill/dragscroll-skill.module';
+import { AitTableCellModule } from './components/ait-table-cell/ait-table-cell.module';
 registerLocaleData(localeEnn);
 registerLocaleData(localeVnn);
 registerLocaleData(localeJpp);
@@ -131,7 +132,8 @@ const NB_MODULES = [
       ...inItialState
     }),
     ...NB_MODULES,
-    AitTocMenuModule
+    AitTocMenuModule,
+    AitTableCellModule
   ],
   exports: [
     DragScrollSkillModule,

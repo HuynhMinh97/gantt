@@ -165,7 +165,7 @@ export enum DATA_TYPE {
 }
 
 export enum PERMISSIONS {
-  CREATE_NEW = 'CREATE_NEW',
+  CREATE = 'CREATE',
   UPDATE = 'UPDATE',
   DELETE = 'DELETE',
   READ = 'READ'

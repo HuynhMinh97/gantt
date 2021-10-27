@@ -44,6 +44,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
     userService: AitUserService, _env: AitEnvironmentService,
     private translateService: AitTranslationService) {
     super(store, authService, apollo, userService, _env);
+    this.selectItems = [];
     store.pipe(select(getLang)).subscribe(
       lang => {
         if (lang !== this.currentLang) {
@@ -108,6 +109,14 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   includeNotDelete = true;
   @Output() onError = new EventEmitter();
   messageSearch = '';
+  @Input() inputDefault = '';
+  @Input() isClear;
+
+  isFocus = false;
+
+  setFocus = (value: boolean) => {
+    this.isFocus = value;
+  }
 
   ID(element: string) {
     const idx = this.id && this.id !== '' ? this.id : Date.now();
@@ -138,20 +147,22 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
 
   getDataTooltip = (_key: string) => {
     const company: CompanyInfoDto = this.dataTooltip.find(f => f._key === _key);
-    const result = [
+    let result = [
       { field: 'address', value: company?.address },
       { field: 'occupation', ...company?.occupation },
       { field: 'work', ...company?.work },
     ]
 
-    if (result.map(m => this.getContent(m)).filter(f => !!f).length > 0) {
+    result = result.filter(f => !!f?.value)
+
+    if (result.length > 0) {
       this.isShowTooltip = true;
-    }
-    else {
+    } else {
       this.isShowTooltip = false;
+
     }
-    const comma = this.translateService.translate('s_0001');
-    return result.map(m => this.getContent(m)).filter(f => !!f).join(comma || '、')
+    // Phải tạo ra space giữa các dòng dữ liệu để effect new line in nb-tooltip
+    return result.map(m => this.getContent(m) + '\n').filter(f => !!f).join(' ')
   }
 
   getContent = (data) => {
@@ -200,8 +211,17 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
               const err = this.translateService.getMsg('E0001').replace('{0}', this.getFieldName());
               this.errors = [err]
             }
+            if (this.inputControlMaster.value === null) {
+              this.isError = true;
+              const err = this.translateService.getMsg('E0001').replace('{0}', this.getFieldName());
+              this.errors = [err]
+            }
             this.isSubmit = false;
           }
+        }
+        if (key === 'inputDefault') {
+          this.inputControlMaster.setValue(this.inputDefault);
+          this.searchByTerm(this.inputControlMaster.value);
         }
         if (key === 'required') {
           // console.log(this.required)
@@ -213,20 +233,19 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
             this.isError = false;
             this.onError.emit({ isValid: null });
             this.messageSearch = '';
+            this.inputControlMaster.reset();
             setTimeout(() => {
               this.isReset = false;
             }, 200)
           }
         }
         if (!this.compareDeep(this.defaultValue, this.currentDataDef)) {
-          // console.log(this.defaultValue)
           this.currentDataDef = this.defaultValue;
           const checkNull = this.checkDefaultValue(this.defaultValue);
           this.selectItems = checkNull ? [] : this.defaultValue;
           const getObjecKeyEqualNull = this.selectItems.filter(s => !s?._key);
           this.storeDataDraft = getObjecKeyEqualNull;
           const _keys = this.selectItems.map(m => m?._key);
-          console.log(_keys);
           if (_keys.length !== 0) {
             this.getDefaultValueByLang(_keys).then(
             );
@@ -339,6 +358,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   }
 
   getDefaultValueByLang = async (keys: string[]) => {
+    console.log(keys)
     const condition = {
       _key: keys[0]
     }
@@ -360,6 +380,34 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   }
 
 
+  searchByTerm = (text: string) => {
+    console.log(text)
+    const condition = {
+      name: text
+    }
+    const returnFields = {
+      _key: true,
+      name: true,
+    }
+    this.masterDataService.find(condition, returnFields, this.collection, this.includeNotDelete, this.includeNotActive).then(r => {
+      if (r.status === RESULT_STATUS.OK) {
+        this.DataSource = (r.data || []).map(m => ({ _key: m._key, value: m?.name }));
+        const _keys = this.excludedValue.map(e => e?._key);
+        if (_keys.length !== 0) {
+          this.filteredData = AitAppUtils.deepCloneArray(this.DataSource).filter(f => !_keys.includes(f._key));
+          this.messageSearch = this.getEmptyMessage(this.filteredData);
+        }
+        else {
+          this.filteredData = AitAppUtils.deepCloneArray(this.DataSource);
+          this.messageSearch = this.getEmptyMessage(this.filteredData);
+
+        }
+        this.isOpenSuggest = true;
+      }
+    })
+  }
+
+
   settingData2 = () => {
     //call api # master data
     this.inputControlMaster.valueChanges.pipe(
@@ -368,29 +416,7 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
     ).subscribe(text => {
       // console.log(text)
       if (text) {
-        const condition = {
-          name: text
-        }
-        const returnFields = {
-          _key: true,
-          name: true
-        }
-        this.masterDataService.find(condition, returnFields, this.collection, this.includeNotDelete, this.includeNotActive).then(r => {
-          if (r.status === RESULT_STATUS.OK) {
-            this.DataSource = (r.data || []).map(m => ({ _key: m._key, value: m?.name }));
-            const _keys = this.excludedValue.map(e => e?._key);
-            if (_keys.length !== 0) {
-              this.filteredData = AitAppUtils.deepCloneArray(this.DataSource).filter(f => !_keys.includes(f._key));
-              this.messageSearch = this.getEmptyMessage(this.filteredData);
-            }
-            else {
-              this.filteredData = AitAppUtils.deepCloneArray(this.DataSource);
-              this.messageSearch = this.getEmptyMessage(this.filteredData);
-
-            }
-            this.isOpenSuggest = true;
-          }
-        })
+        this.searchByTerm(text);
       }
       else {
         this.DataSource = [];
@@ -423,10 +449,6 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   }
 
   ngOnInit() {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    // this.checkIsNewData().then(() => {
-
-    // })
 
     this.getDefaultValue.emit({ value: (this.defaultValue || []).map(m => ({ _key: m?._key, value: m?.value })) })
     this.settingData2();
@@ -460,7 +482,6 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
   }
 
   addItems = (info) => {
-
     const itemFind = this.filteredData.find(f => f._key === info?._key);
     if (this.maxItem === 1) {
       this.selectItems = [itemFind];
