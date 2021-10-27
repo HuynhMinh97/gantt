@@ -99,8 +99,8 @@ export const routes: Routes = [
     component: UserSkillsComponent
   },
   {
-    path: 'user-reorder_skills',
-    // canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    path: 'user-reorder-skills',
+    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
     component: UserReorderSkillsComponent
   },
   {
@@ -110,12 +110,12 @@ export const routes: Routes = [
   },
   {
     path: 'user-profile',
-    // canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
     component: UserProfileComponent
   },
   {
     path: 'user-job-alert',
-    // canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
     component: UserJobAlertComponent
   },
   {
