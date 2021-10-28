@@ -1162,7 +1162,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       return this.modifileOption(statement);
     } else if ((target || []).length !== 1) {
 
-      const statement = this.modifileOption(target[0], 15);
+      const statement = this.modifileOption(this.getStringByLength(target), 15);
       return statement + `（+${target.length - 1} ${itemsText})`;
     }
     return '';
