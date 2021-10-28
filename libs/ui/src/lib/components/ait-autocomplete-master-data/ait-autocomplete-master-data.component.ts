@@ -154,7 +154,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   }
 
   getCancelStatus = () => {
-    if (this.inputControl?.value) {
+    if (this.inputControl?.value || this.optionSelected.length !== 0) {
       return true;
     }
     return false;
@@ -163,8 +163,10 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   cancelResult() {
     this.selectOne = {};
     this.optionSelected = [];
+    this.DataSource = this.dataSourceDf;
+    this.filteredOptions$ = of(this.dataSourceDf);
     this.watchValue.emit({
-      value : []
+      value: []
     })
     this.inputControl.reset();
   }
@@ -945,7 +947,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     this.isHideLabel = false;
     setTimeout(() => {
       if (this.maxItem === 1) {
-        console.log(this.inputControl.value,this.selectOne,this.dataSourceDf)
+        console.log(this.inputControl.value, this.selectOne, this.dataSourceDf)
         const values = this.dataSourceDf.find(m => m?.value === this.selectOne?.value);
 
         if (!values) {
