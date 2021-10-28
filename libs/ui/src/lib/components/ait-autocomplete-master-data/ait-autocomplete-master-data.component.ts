@@ -161,10 +161,12 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   }
 
   cancelResult() {
-    this.selectOne = {};
-    this.optionSelected = [];
-    this.DataSource = this.dataSourceDf;
-    this.filteredOptions$ = of(this.dataSourceDf);
+    setTimeout(() => {
+      this.selectOne = {};
+      this.optionSelected = [];
+      this.DataSource = AitAppUtils.deepCloneArray(this.dataSourceDf)
+      this.filteredOptions$ = of(AitAppUtils.deepCloneArray(this.dataSourceDf));
+    }, 100)
     this.watchValue.emit({
       value: []
     })
@@ -1162,7 +1164,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       return this.modifileOption(statement);
     } else if ((target || []).length !== 1) {
 
-      const statement = this.modifileOption(target[0], 15);
+      const statement = this.modifileOption(this.getStringByLength(target), 15);
       return statement + `（+${target.length - 1} ${itemsText})`;
     }
     return '';
