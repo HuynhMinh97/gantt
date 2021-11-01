@@ -4,7 +4,7 @@ import { ViewCell } from 'ng2-smart-table';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { AppState, getCaption, getUserSetting } from '../../state/selectors';
-import { isArrayFull, isNil, isObjectFull, KeyValueDto } from '@ait/shared';
+import { isArrayFull, isNil, isObjectFull, KEYS, KeyValueDto } from '@ait/shared';
 import { AitNumberFormatPipe } from '../../@theme/pipes/ait-number-format.pipe';
 import { AitTranslationService } from '../../services/common/ait-translate.service';
 import dayjs from 'dayjs';
@@ -78,9 +78,11 @@ export class AitTableCellComponent implements OnInit, ViewCell {
       }
     } else if (this.value.type === 'link' && this.value.text && this.value.name) {
       this.text = (this.value.text.length || '0');
+      this.isLink = true;
       if (+this.text > 0) {
-        this.isLink = true;
         this.companyName = (this.value.name || '');
+      } else {
+        this.companyName = KEYS.CUSTOM;
       }
     } else {
       this.text = this.value.text;
