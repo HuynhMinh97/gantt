@@ -78,17 +78,11 @@ export class AitTableCellComponent implements OnInit, ViewCell {
       }
     } else if (this.value.type === 'link' && this.value.text && this.value.name) {
       this.text = (this.value.text.length || '0');
-<<<<<<< HEAD
-      if (+this.text > 0) {
-        this.isLink = true;
-        this.companyName = (this.value.name || '');
-=======
       this.isLink = true;
       if (+this.text > 0) {
         this.companyName = (this.value.name || '');
       } else {
         this.companyName = KEYS.CUSTOM;
->>>>>>> upstream/master
       }
     } else {
       this.text = this.value.text;
