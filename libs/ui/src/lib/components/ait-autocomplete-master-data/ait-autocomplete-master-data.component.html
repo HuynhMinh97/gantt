@@ -124,7 +124,7 @@
                 class="textx"
                 style="cursor: pointer; font-size: 12px"
                 id="{{ ID('selection_value') }}"
-                >{{ option?.value}}</span
+                >{{ option?.value }}</span
               >
             </nb-checkbox>
             <nb-icon
@@ -147,12 +147,10 @@
             style="cursor: pointer"
             [class.isSelect]="option?._key === selectOne?._key"
             (click)="onSelectionChange(option)"
-
             nbTooltipPlacement="right"
             [nbTooltip]="option?.value"
           >
             <div
-
               style="
                 cursor: pointer;
                 font-weight: 600;
@@ -165,7 +163,7 @@
               class="textx"
               id="{{ ID('selection_value') }}"
             >
-              {{ option?.value}}
+              {{ option?.value }}
             </div>
             <nb-icon
               icon="close-outline"
@@ -176,6 +174,15 @@
               style="position: absolute; z-index: 99991; right: 0"
             ></nb-icon>
           </div>
+        </div>
+        <div class="cancle" [class.isCancel]="getCancelStatus()">
+          <nb-icon
+            style="color: gray; margin: 8px; cursor: pointer"
+            [icon]="'close-outline'"
+            pack="eva"
+            (click)="cancelResult()"
+            [nbTooltip]="'クリアー'"
+          ></nb-icon>
         </div>
         <div class="icon" (click)="handleClickIcon()">
           <div *ngIf="!isOpenAutocomplete">
