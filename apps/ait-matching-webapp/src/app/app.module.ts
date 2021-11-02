@@ -29,13 +29,12 @@ import { UserProjectComponent } from './pages/aureole-v/user/user-project/user-p
 import { UserCourseComponent } from './pages/aureole-v/user/user-course/user-course.component';
 import { UsesCertificateComponent } from './pages/aureole-v/user/uses-certificate/uses-certificate.component';
 import { UserSkillsComponent } from './pages/aureole-v/user/user-skills/user-skills.component';
-import { UserReorderSkillsComponent } from './pages/aureole-v/user/user-reorder-skills/user-reorder-skills.component';
-import {DragDropModule} from '@angular/cdk/drag-drop';
-import { OrderSkillComponent } from './pages/aureole-v/user/order-skill/order-skill.component';
+import { DragDropModule} from '@angular/cdk/drag-drop';
 import { UserProfileComponent } from './pages/aureole-v/user/user-profile/user-profile.component';
 import { CommonModule } from '@angular/common';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { UserJobAlertComponent } from './pages/aureole-v/user/user-job-alert/user-job-alert.component';
+import { UserReorderSkillsComponent } from './pages/aureole-v/user/user-reorder-skills/user-reorder-skills.component';
 
 
 const AIT_UI_MODULES = [
@@ -75,12 +74,13 @@ const PAGES = [
   UserCourseComponent,
   UsesCertificateComponent,
   UserSkillsComponent, 
-  UserReorderSkillsComponent
+  UserReorderSkillsComponent,
+  UserProfileComponent,
 ]
 
 
 @NgModule({
-  declarations: [AppComponent, ...AUREOLE_V_COMPONENTS, ...PAGES, OrderSkillComponent, UserProfileComponent, UserJobAlertComponent],
+  declarations: [AppComponent, ...AUREOLE_V_COMPONENTS, ...PAGES,  UserJobAlertComponent],
   imports: [
     // , NbIconModule, NbEvaIconsModule, NbButtonModule, NbTooltipModule
     NbTooltipModule,
