@@ -19,15 +19,16 @@ export class UserProfileService extends AitBaseService {
     }
     return await this.query('findProfile', {collection: 'user_profile',  condition    }, 
     {
+      user_id: true,
       avatar_url:true,
       background_url: true,
       last_name: true,
       first_name: true,
       title: true,
       company_working: true,
-      province_city: true,
+      city: true,
       country: true,
-      introduce: true,
+      about: true,
       top_skills:{
         _key: true,
         value: true
@@ -61,9 +62,9 @@ export class UserProfileService extends AitBaseService {
     return null;
   }
 
-  async findSkillByUserId(from: string){
+  async findSkillByUserId(user_id: string){
     const condition = {
-      _from: from,
+      user_id: user_id,
       del_flag: false,
     }
     return await this.query('findReorderSkill', {collection: 'user_skill', condition}, 

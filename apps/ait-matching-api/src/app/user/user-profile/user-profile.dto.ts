@@ -38,6 +38,9 @@ export class UserProfileDto extends BaseDto {
 
   @Field(() => String, { nullable: true })
   name?: string;
+  
+  @Field(() => String, { nullable: true })
+  about?: string;
 }
 
 

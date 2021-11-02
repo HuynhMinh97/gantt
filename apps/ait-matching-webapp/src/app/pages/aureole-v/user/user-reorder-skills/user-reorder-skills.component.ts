@@ -1,8 +1,6 @@
-import { filter } from 'rxjs/operators';
-import { debug } from 'node:console';
 import { Component, ElementRef, OnInit } from '@angular/core';
-import {CdkDrag, CdkDragDrop, copyArrayItem, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
-import { ButtonActionDto, OrderSkill, SkillsDto, UserSkill, } from './user-reorder-skills';
+import { CdkDrag, CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
+import { OrderSkill, SkillsDto, UserSkill, } from './user-reorder-skills';
 import { KEYS, RESULT_STATUS } from '@ait/shared';
 import { AitAppUtils, AitAuthService, AitBaseComponent, AitConfirmDialogComponent, AitEnvironmentService, AppState } from '@ait/ui';
 import { UserReoderSkillsService } from 'apps/ait-matching-webapp/src/app/services/user-reoder-skills.service';
@@ -52,16 +50,17 @@ export class UserReorderSkillsComponent  extends AitBaseComponent implements OnI
   }
 
   async ngOnInit(): Promise<void> {
-    debugger
+    this.callLoadingApp();
     await this.findTopSkills();
     await this.findSkills();
     await this.groupSkill();
     this.reorderSkills.forEach((element) => {
       this.connecteDto.push(element.name);
-    })
-    console.log(this.connecteDto);
-    
+    })    
   }
+  // ngAfterViewInit() {
+  //   this.cancelLoadingApp();
+  // }
   checkAllowSave() {
     const userInfo = { ...this.reorderSkills };
     const userInfoClone = { ...this.reorderSkillsClone };
@@ -84,19 +83,25 @@ export class UserReorderSkillsComponent  extends AitBaseComponent implements OnI
   async findTopSkills(){
     await this.reoderSkillsService.findTopSkills(this.user_id)
     .then((res) =>{
-      const data = res.data[0].top_skills;
-      data.forEach(element => {
-        const topSkills = {} as SkillsDto;
-        topSkills.category ="TOP5";   
-        topSkills.name =element.value; 
-        topSkills._key = element._key;
-        this.listTopSkills.push(topSkills);       
-      });
-       
+      if (res.status === RESULT_STATUS.OK) {
+        const data = res.data[0].top_skills;
+        if(data){
+          data.forEach(element => {
+            const topSkills = {} as SkillsDto;
+            topSkills.category ="TOP5";   
+            topSkills.name =element.value; 
+            topSkills._key = element._key;
+            this.listTopSkills.push(topSkills);       
+          });
+        }else{
+          const topSkills = {} as SkillsDto;
+          topSkills.category ="TOP5"; 
+          this.listTopSkills.push(topSkills);     
+        }  
+      }
     })
   }
   async findSkills(){
-    debugger
     const from = 'sys_user/' + this.user_id;
     await this.reoderSkillsService.findReorder(from).then(async (res) => {
       if (res.status === RESULT_STATUS.OK) {
@@ -187,6 +192,7 @@ export class UserReorderSkillsComponent  extends AitBaseComponent implements OnI
       }          
       
     }
+    this.cancelLoadingApp();
     this.reorderSkillsClone = JSON.parse(JSON.stringify(this.reorderSkills));        
   }
 
@@ -301,6 +307,7 @@ export class UserReorderSkillsComponent  extends AitBaseComponent implements OnI
   }
 
   async save(){
+    this.callLoadingApp();
     let listTop = [];
     this.user_skills._from = 'sys_user/' + this.user_id;
     this.user_skills.relationship = 'sys_user m_skill';
@@ -329,6 +336,7 @@ export class UserReorderSkillsComponent  extends AitBaseComponent implements OnI
     let data =[{top_skills:listTop}]  
     this.reoderSkillsService.updateTopSkill(data).then((res) => {
       if (res?.status === RESULT_STATUS.OK) {
+        this.cancelLoadingApp();
         this.showToastr('',this.getMsg('I0002')); 
         this.router.navigateByUrl('/user-profile');  
       }else{

@@ -29,21 +29,19 @@
           </div>
           <div class="user-breakinfo">
             <p class="fullname-profile">
-              {{ 'NGUYEN VAN THUAN' }}
+              {{profile.first_name + profile.last_name }}
             </p>
             <p style="padding-top: 30px">
-              <span> Senior Developer at Aureole Information Technology </span>
+              <span> {{profile.title }} at {{profile.company_working}} </span>
             </p>
             <p style="margin-top: -10px">
-              <span>Hue, thanh pho hue</span>
+              <span>{{profile.city}}, {{profile.country}}</span>
             </p>
           </div>
         </div>
         <div class="col-md-5 col-lg-4 col-xxxl-4" id="col2">
           <p>
-            This is headline, introduce yourself. This is headline, introduce
-            yourself. This is headline, introduce yourself. This is headline,
-            introduce yourself. This is headline, introduce yourself.
+            {{profile.about}}
           </p>
         </div>
         <div class="col-md-3 col-lg-3 col-xxxl-3" id="col3">
@@ -91,6 +89,7 @@
             >
             <div class="view_contact">
               <ait-button
+                [id]="'add friend'"
                 [styleText]="{ 'font-size': '10px' }"
                 [height]="'24px'"
                 [title]="'ADD FRIEND'"
@@ -117,7 +116,7 @@
           <div id="skills-lefthead">
             {{ 'SKILL' | translate }}
             <div class="skill-remain">
-              <span>You has 30 skills. Each person has max 50 skills</span>
+              <span>You has {{quantitySkill}} skills. Each person has max 50 skills</span>
             </div>
           </div>
 
@@ -131,7 +130,7 @@
                 [width]="'150px'"
                 [height]="'24px'"
                 [title]="'REORDER SKILLS'"
-                [id]="''"
+                [id]="'reorder skills'"
                 [background]="
                   'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
                 "
@@ -147,7 +146,7 @@
                 [width]="'150px'"
                 [height]="'24px'"
                 [title]="'ADD SKILL'"
-                [id]="''"
+                [id]="'add skill'"
                 [background]="
                   'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
                 "
@@ -158,7 +157,7 @@
       </nb-card-header>
       <nb-card-body style="padding-top: 0px" *ngIf="true">
         <div class="container-user-skill" [class.show]="showSkill">
-          <div *ngFor="let category of skillByCategoryTest; let last = last">
+          <div *ngFor="let category of skillByCategory; let last = last">
             <p class="title-skill">{{ category.name }}</p>
             <ait-dragscroll-skill
               [skillList]="category.data"
@@ -176,6 +175,7 @@
           *ngIf="userprojectFilterByCmp?.length > 0"
         >
           <ait-button
+            [id]="'show skill'"
             (click)="showSkill = !showSkill"
             [iconName]="
               showSkill
@@ -205,15 +205,16 @@
             {{ 'PROJECT' | translate }}
             <div class="skill-remain">
               <span></span>
-              <span *ngIf="true">{{
-                'You have spent 1500 hours working on the projects' | translate
-              }}</span>
+              <span *ngIf="true">
+                You have spent {{(timeProject - timeProject%3600000)/3600000 }} hours working on the projects 
+              </span>
             </div>
           </div>
           <div class="skill-righthead">
             <div class="float-right" *ngIf="true">
               <ait-button
-                (click)="openProject('add', '')"
+                [id]="'add project'"
+                (click)="openProject('user-project')"
                 [iconName]="'plus-outline'"
                 [color]="'#fff'"
                 [title]="'add project' | translate"
@@ -233,7 +234,7 @@
         <div class="container-user-project" [class.show]="showProject">
           <ul
             *ngFor="
-              let company_project of userprojectFilterByCmp;
+              let company_project of userProject;
               let last = last;
               let firstcomp = first
             "
@@ -268,10 +269,7 @@
                           !company_project?.street
                         "
                       >
-                        {{
-                          'matching.user.my-profile.company-missing-info'
-                            | translate
-                        }}
+                        {{company_project.floor_building}}
                       </p>
                       <p>{{ company_project?.working_time }}</p>
                     </div>
@@ -283,7 +281,7 @@
             <li
               class="timeline-event"
               *ngFor="
-                let project of company_project.data_project;
+                let project of company_project.data;
                 let last = last;
                 let firstproj = first
               "
@@ -310,23 +308,22 @@
                     <p id="title-timeline">{{ project.name }}</p>
                     <div class="desc-info">
                       <p>{{ project.title }}</p>
-                      <p *ngIf="project?.is_working">Full-time</p>
-                      <p *ngIf="!project?.is_working">
-                        {{ project?.start_date_from | aitDate }}
+                      <p>
+                        {{ project?.start_date_from }} - {{ project?.start_date_to}}: {{project?.time}}
                       </p>
                     </div>
                   </div>
                 </div>
-                <div id="ic-edit" *ngIf="project?.isEdited">
-                  <a (click)="openProject('edit', project._key)">
+                <div id="ic-edit" >
+                  <a (click)="openProject('user-project', project._key)">
                     <nb-icon
-                      *ngIf="!isMyUserProfile"
+                      *ngIf="isMyUserProfile"
                       nbSuffix
                       icon="edit-2-outline"
                       pack="eva"
                     ></nb-icon>
                     <nb-icon
-                      *ngIf="isMyUserProfile"
+                      *ngIf="!isMyUserProfile"
                       nbSuffix
                       icon="eye-outline"
                       pack="eva"
@@ -341,9 +338,10 @@
         </div>
         <div
           class="d-flex justify-content-center"
-          *ngIf="userprojectFilterByCmp?.length > 0"
+          *ngIf="userProject?.length > 0"
         >
           <ait-button
+            [id]="'show project'"
             (click)="showProject = !showProject"
             [iconName]="
               showProject
@@ -383,6 +381,7 @@
           <div class="skill-righthead">
             <div class="float-right" *ngIf="true">
               <ait-button
+                [id]="'add experience'"
                 (click)="openProject('add', '')"
                 [iconName]="'plus-outline'"
                 [color]="'#fff'"
@@ -482,7 +481,7 @@
                       <p>{{ project.title }}</p>
                       <p *ngIf="project?.is_working">Full-time</p>
                       <p *ngIf="!project?.is_working">
-                        {{ project?.start_date_from | aitDate }}
+                        {{ project?.start_date_from}}
                       </p>
                     </div>
                   </div>
@@ -514,6 +513,7 @@
           *ngIf="userprojectFilterByCmp?.length > 0"
         >
           <ait-button
+            [id]="'show Experience'"
             (click)="showExperience = !showExperience"
             [iconName]="
               showExperience
@@ -554,6 +554,7 @@
           <div class="skill-righthead">
             <div class="float-right" *ngIf="true">
               <ait-button
+                [id]="'add project'"
                 (click)="openProject('add', '')"
                 [iconName]="'plus-outline'"
                 [color]="'#fff'"
@@ -645,6 +646,7 @@
           *ngIf="userprojectFilterByCmp?.length > 0"
         >
           <ait-button
+            [id]="'show Certificate'"
             (click)="showCertificate = !showCertificate"
             [iconName]="
               showCertificate
@@ -684,6 +686,7 @@
           <div class="skill-righthead">
             <div class="float-right" *ngIf="true">
               <ait-button
+                [id]="'add course'"
                 (click)="openProject('add', '')"
                 [iconName]="'plus-outline'"
                 [color]="'#fff'"
@@ -775,6 +778,7 @@
           *ngIf="userprojectFilterByCmp?.length > 0"
         >
           <ait-button
+            [id]="'show sourse'"
             (click)="showCourse = !showCourse"
             [iconName]="
               showCourse
@@ -812,6 +816,7 @@
           <div class="skill-righthead">
             <div class="float-right" *ngIf="true">
               <ait-button
+                [id]="'add education'"
                 (click)="openProject('add', '')"
                 [iconName]="'plus-outline'"
                 [color]="'#fff'"
@@ -903,6 +908,7 @@
           *ngIf="userprojectFilterByCmp?.length > 0"
         >
           <ait-button
+            [id]="'show education'"
             (click)="showEducation = !showEducation"
             [iconName]="
               showEducation
@@ -942,6 +948,7 @@
           <div class="skill-righthead">
             <div class="float-right" *ngIf="true">
               <ait-button
+                [id]="'add languager'"
                 (click)="openProject('add', '')"
                 [iconName]="'plus-outline'"
                 [color]="'#fff'"
@@ -1034,6 +1041,7 @@
           *ngIf="userprojectFilterByCmp?.length > 0"
         >
           <ait-button
+            [id]="'show languagers'"
             (click)="showLanguages = !showLanguages"
             [iconName]="
               showLanguages
@@ -1059,4 +1067,6 @@
     </nb-card>
   </div>
   <div class="col-md-1 col-lg-1 col-xxxl-1"></div>
+  <p>Or if you prefer, {{today | date:'Year'}}</p>
+  <p>The time is {{today | date:'h:mm a z'}}</p>
 </div>

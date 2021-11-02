@@ -24,7 +24,7 @@ export class UserProfileEntity extends BaseEntity {
   company_working?: string;
 
   @Field(() => String, { nullable: true })
-  province_city?: string;
+  city?: string;
 
   @Field(() => String, { nullable: true })
   country?: string;
@@ -40,4 +40,7 @@ export class UserProfileEntity extends BaseEntity {
 
   @Field(() => String, { nullable: true })
   name?: string;
+
+  @Field(() => String, { nullable: true })
+  about?: string;
 }

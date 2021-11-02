@@ -1,25 +1,57 @@
 export interface OrderSkill {
     name: string;
-    data: SkillsDto[];
+    data: string[];
 }
 export class SkillsDto {
     _key: string;
     value: string;
-    category: string;
-}
-export class TopSkill{
-    _key: string;
-    value: string;
 }
 export interface ProfileDto {
+    user_id: string,
     avatar_url:string,
     background_url: string,
     last_name: string,
     first_name: string,
     title: string,
     company_working: string,
-    province_city: string,
+    city: string,
     country: string,
-    introduce: string,
+    about: string,
     top_skills: SkillsDto[];
+}
+//project
+export interface GroupProjectDto {
+    company_name: string,
+    floor_building:"Ho Chi Minh City, Vietnam",
+    street:string,
+    working_time:string,
+    date: number,
+    data: ProjectDto[],
+}
+export interface ProjectDto {
+    is_working: boolean,
+    name:string,
+    start_date_from:string,
+    start_date_to:string,
+    isEdited:boolean,
+    title:string,
+    time: string,
+    _key:string,
+}
+export interface GroupExperienceDto {
+    company_working: string,
+    floor_building:"Ho Chi Minh City, Vietnam",
+    working_time:string,
+    date: number,
+    data: ExperienDto[],
+}
+export interface ExperienDto {
+    title:string,
+    employee_type:string,
+    is_working: boolean,
+    start_date_from:string,
+    start_date_to:string,
+    isEdited:boolean,
+    time: string,
+    _key:string,
 }
