@@ -74,6 +74,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   defaultValueDf: any;
   data = [];
   currentValue = '';
+  isCancle = false;
   @Input() tabIndex;
 
   @Input() hideLabel = false;
@@ -152,6 +153,26 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   }
 
+  getCancelStatus = () => {
+    if (this.inputControl?.value || this.optionSelected.length !== 0) {
+      return true;
+    }
+    return false;
+  }
+
+  cancelResult() {
+    setTimeout(() => {
+      this.selectOne = {};
+      this.optionSelected = [];
+      this.DataSource = AitAppUtils.deepCloneArray(this.dataSourceDf)
+      this.filteredOptions$ = of(AitAppUtils.deepCloneArray(this.dataSourceDf));
+    }, 100)
+    this.watchValue.emit({
+      value: []
+    })
+    this.inputControl.reset();
+  }
+
   ID(element: string) {
     const idx = this.id && this.id !== '' ? this.id : Date.now();
     return idx + '_' + element;
@@ -208,7 +229,10 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   compareDeep = (agr1: any, agr2: any) => JSON.stringify(agr1) === JSON.stringify(agr2);
 
-  messagesError = () => Array.from(new Set([...this.componentErrors, ...(this.errorMessages || [])]));
+  messagesError = () => {
+    const errors = new Set([...this.componentErrors, ...(this.errorMessages || [])]);
+    return Array.from(errors).filter((error: string) => error.indexOf('undefined') === -1);
+  };
 
   handleRemove = (option: any) => {
     // console.log(option);
@@ -910,7 +934,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
 
   blur = (value) => {
-    const values = this.DataSource.find(m => m?.value === value);
+    const values = this.dataSourceDf.find(m => m?.value === this.inputControl.value);
     if (!values) {
       this.inputControl.reset();
       this.watchValue.emit({
@@ -925,6 +949,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     this.isHideLabel = false;
     setTimeout(() => {
       if (this.maxItem === 1) {
+        console.log(this.inputControl.value, this.selectOne, this.dataSourceDf)
         const values = this.dataSourceDf.find(m => m?.value === this.selectOne?.value);
 
         if (!values) {
@@ -1139,7 +1164,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       return this.modifileOption(statement);
     } else if ((target || []).length !== 1) {
 
-      const statement = this.modifileOption(target[0], 15);
+      const statement = this.modifileOption(this.getStringByLength(target), 15);
       return statement + `（+${target.length - 1} ${itemsText})`;
     }
     return '';
@@ -1147,7 +1172,10 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   private _filter(value: string): string[] {
     const filterValue = value?.toString().toLowerCase();
-    const result = this.DataSource.filter((f) => {
+    const d = JSON.stringify(this.dataSourceDf);
+    const m = JSON.parse(d);
+
+    const result = m.filter((f) => {
 
       const target = f?.value;
 

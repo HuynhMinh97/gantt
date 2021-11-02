@@ -72,6 +72,7 @@ export class AitBaseService {
     resData.forEach((item) => {
       permissions = [...permissions, ...item?.permission];
     });
+    const roles = resData.map(c => c?.role_id);
 
     // distince permisssions
     permissions = Array.from(new Set(permissions));
@@ -80,6 +81,7 @@ export class AitBaseService {
     dto.page = page_key;
     dto.module = module_key;
     dto.permission = permissions;
+    dto.role_id = roles.join(', ');
 
     return dto;
   }
@@ -207,13 +209,13 @@ export class AitBaseService {
 
     if (this.filterAfter.length > 0) {
       this.filterAfter.length = Math.ceil(this.filterAfter.length / 2);
-      this.filterAfter.forEach(data => {
+      this.filterAfter.forEach((data) => {
         if (data.operator === OPERATOR.LIKE) {
           aqlStr += `\r\n &&`;
           aqlStr += `\r\n LOWER(data.${data.attribute}) `;
           aqlStr += `LIKE LOWER(CONCAT("%", TRIM("${data.valueAsString}"), "%")) `;
         }
-      })
+      });
     }
     aqlStr += `\r\n RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name }) `;
 
@@ -241,9 +243,6 @@ export class AitBaseService {
       COLLECTIONS.MASTER_DATA,
       COLLECTIONS.COMPANY,
       COLLECTIONS.CAPTION,
-      COLLECTIONS.M_COMPANY,
-      COLLECTIONS.M_TITLE,
-      COLLECTIONS.M_SKILL
     ];
     const mapData = [];
     const joinData = [];
@@ -286,8 +285,12 @@ export class AitBaseService {
               if (data.operator === OPERATOR.LIKE) {
                 aqlStr += `&& \r\n LOWER(data.${prop}) ${data.operator} `;
               } else if (Array.isArray(data.value) && data.is_match_full) {
-                aqlStr += ` FILTER LENGTH(INTERSECTION(TO_ARRAY(${JSON.stringify(data.value)}), 
-                  TO_ARRAY(data.${prop}))) == LENGTH(TO_ARRAY(${JSON.stringify(data.value)})) \r\n`;
+                aqlStr += ` FILTER LENGTH(INTERSECTION(TO_ARRAY(${JSON.stringify(
+                  data.value
+                )}), 
+                  TO_ARRAY(data.${prop}))) == LENGTH(TO_ARRAY(${JSON.stringify(
+                  data.value
+                )})) \r\n`;
               } else {
                 aqlStr += `&& \r\n data.${prop} ${data.operator} `;
               }
@@ -295,7 +298,10 @@ export class AitBaseService {
 
             switch (data.operator) {
               case OPERATOR.IN || OPERATOR.NOT_IN:
-                if (hasLength(data.value) && !(Array.isArray(data.value) && data.is_match_full)) {
+                if (
+                  hasLength(data.value) &&
+                  !(Array.isArray(data.value) && data.is_match_full)
+                ) {
                   aqlStr += `${JSON.stringify(data.value)} `;
                 }
                 break;
@@ -366,12 +372,11 @@ export class AitBaseService {
           case OPERATOR.IN:
             aqlStr += ` FILTER LENGTH(INTERSECTION(TO_ARRAY(${JSON.stringify(
               data.filter_custom.value
-            )}), 
-            TO_ARRAY(record.${
-              data.filter_custom.attribute
-            }))) == LENGTH(TO_ARRAY(${JSON.stringify(
-              data.filter_custom.value
-            )})) \r\n`;
+            )}),
+            TO_ARRAY(record.${data.filter_custom.attribute
+              }))) == LENGTH(TO_ARRAY(${JSON.stringify(
+                data.filter_custom.value
+              )})) \r\n`;
             break;
           case OPERATOR.LIKE:
             aqlStr += ` FILTER LOWER(record.${data.filter_custom.attribute}) LIKE LOWER (CONCAT("%", TRIM("${data.filter_custom.valueAsString}"),"%")) \r\n`;
@@ -426,6 +431,7 @@ export class AitBaseService {
         aqlStr += ` \r\n ${data.join_field} : ( `;
         aqlStr += ` \r\n FOR record IN ${data.join_collection}`;
         aqlStr += ` \r\n FILTER record.${data.join_attribute} == data.${data.join_target}`;
+        aqlStr += ` \r\n && record.del_flag == false `;
         aqlStr += ` \r\n RETURN record ), `;
       }
     });
@@ -436,9 +442,12 @@ export class AitBaseService {
 
         aqlStr += ` \r\n ${data.attribute} : ( `;
         aqlStr += ` \r\n IS_ARRAY(data.${data.attribute}) == true ? ( `;
-        aqlStr += ` \r\n FOR item IN TO_ARRAY(data.${data.attribute}) `;
+        //mannq change
+        // aqlStr += ` \r\n FOR item IN TO_ARRAY(data.${data.attribute}) `;
         aqlStr += ` \r\n FOR doc IN ${data.ref_collection} `;
-        aqlStr += ` \r\n FILTER doc.${data.ref_attribute} == item `;
+        //mannq change
+        // aqlStr += ` \r\n FILTER doc.${data.ref_attribute} == item `;
+        aqlStr += ` \r\n FILTER doc.${data.ref_attribute} IN TO_ARRAY(data.${data.attribute}) `;
         if (isObjectFull(ref_condition)) {
           for (const prop in ref_condition) {
             if (ref_condition[prop] && !~this.refList.indexOf(prop)) {
