@@ -81,4 +81,34 @@ export class UserEducationService extends AitBaseService {
       returnFields
     );
   }
+
+  // profile
+  async findUserEducationByUserId(user_id: string) {
+    const condition: any = {
+      user_id: user_id,
+    };
+
+    condition['school'] = {
+      attribute: 'school',
+      ref_collection: 'm_school',
+      ref_attribute: 'code',
+    };
+
+    const returnFields = this.returnFields;
+    const request = {};
+    request['collection'] = this.collection;
+    request['condition'] = condition;
+    return await this.query('findUserEducationInfo', request, 
+    {
+      _key: true,
+      user_id: true,
+      school: {
+        _key: true,
+        value: true,
+      },    
+      field_of_study: true,    
+      start_date_from: true,
+      start_date_to: true,
+    });
+  }
 }

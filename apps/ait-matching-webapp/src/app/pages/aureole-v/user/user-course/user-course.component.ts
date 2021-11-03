@@ -223,10 +223,11 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit {
             this.isClearErrors = false;
           }, 100);
       this.companyCenter = [];    
-      this.companyCenter.push({_key: this.courseClone.training_center});
+      // this.companyCenter.push({_key: this.courseClone.training_center?._key, value: this.courseClone.training_center?.value});
       this.course.patchValue({ ...this.courseClone });
       this.showToastr('', this.getMsg('I0007'));
     }
+    
   }
 
   async saveAndContinue(){  
@@ -318,6 +319,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit {
 
   async find(key : string){
     if (this.course_key) {
+      debugger
       await this.userCartificateService
         .findCourseByKey(key)
         .then((r) => {             
@@ -326,7 +328,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit {
               const data = r.data[0];                                         
               this.course.patchValue({ ...data });  
               this.courseClone = this.course.value;       
-              this.companyCenter.push({_key: data.training_center}); 
+              this.companyCenter.push({_key: data.training_center?._key}); 
               if(this.user_id != data.user_id){
                 this.mode = MODE.VIEW
               }                            

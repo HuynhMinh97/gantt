@@ -70,4 +70,27 @@ export class UserLanguageService extends AitBaseService {
       returnFields
     );
   }
+
+  // profile
+  async findUserLanguageByUserId(user_id?: string) {
+    const condition: any = {
+      user_id: user_id,
+    };
+
+    const specialFields = ['language', 'proficiency'];
+
+    specialFields.forEach((item) => {
+      condition[item] = {
+        attribute: item,
+        ref_collection: 'sys_master_data',
+        ref_attribute: 'code',
+      };
+    });
+
+    const returnFields = this.returnFields;
+    const request = {};
+    request['collection'] = this.collection;
+    request['condition'] = condition;
+    return await this.query('findUserLanguageInfo', request, returnFields);
+  }
 }

@@ -113,7 +113,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     this.userProject = this.formBuilder.group({
       _key: new FormControl(null),
       name: new FormControl(null, [Validators.required, Validators.maxLength(200)]),
-      start_date_from: new FormControl(null),
+      start_date_from: new FormControl(null,[Validators.required]),
       start_date_to: new FormControl(null),
       company_working: new FormControl(null, [Validators.required]),
       title: new FormControl(null, [Validators.required]),
