@@ -6,6 +6,7 @@ describe('Navigate user onboarding', () => {
     cy.visit(Cypress.env('host') + Cypress.env('user_onboarding'));
     cy.url().should('eq', Cypress.env('host') + Cypress.env('user_onboarding'));
     checkUIUserOnboarding();
+    // checkDataComboboxOnboarding();
     resetFormUserOnboarding();
     // checkValidateUserOnboarding();
     checkSaveDataOnboarding();
@@ -13,32 +14,32 @@ describe('Navigate user onboarding', () => {
 });
 
 function checkUIUserOnboarding() {
-  cy.label('first_name', ' first name*');
+  cy.label('first_name', ' FIRST NAME*');
   cy.input('first_name', 'PHUC');
-  cy.label('last_name', ' last name*');
+  cy.label('last_name', ' LAST NAME*');
   cy.input('last_name', 'LAM QUANG');
   // cy.label('katakana', ' KATAKANA*');
   // cy.input('katakana', 'Please input your fullname (katakana)');
   // cy.label('romaji', ' ROMAJI*');
   // cy.input('romaji', 'Please input your fullname (romaji)');
-  cy.label('gender', ' gender');
+  cy.label('gender', ' GENDER');
   cy.label('bod', ' BORN ON DATE*');
   cy.input('bod', '1985/01/01');
-  cy.label('phone_number', ' Phone number*');
+  cy.label('phone_number', ' PHONE NUMBER*');
   cy.input('phone_number', '0912345678');
-  cy.label('about', ' About');
+  cy.label('about', ' ABOUT');
   cy.textarea('about', 'Place your text');
-  cy.label('country', ' country*');
+  cy.label('country', ' COUNTRY/REGION*');
   cy.input('country', 'Vietnam');
-  cy.label('postcode', ' Postcode*');
+  cy.label('postcode', ' POSTCODE*');
   cy.input('postcode', '700000');
   cy.label('city', ' PROVINE/CITY*');
   cy.input('city', 'Ho Chi Minh City');
-  cy.label('district', ' District*');
+  cy.label('district', ' DISTRICT*');
   cy.input('district', 'District 1');
-  cy.label('ward', ' ward*');
+  cy.label('ward', ' WARD*');
   cy.input('ward', 'Dakao');
-  cy.label('address', ' address*');
+  cy.label('address', ' ADDRESS*');
   cy.input('address', '9 Dinh Tien Hoang Street');
   cy.label('floor_building', ' FLOOR/BUILDING');
   cy.input('floor_building', 'Floor 9, SFC Building');
@@ -54,6 +55,15 @@ function checkUIUserOnboarding() {
   cy.styleButton('cancel', ' CANCEL ');
   cy.styleButton('reset', ' RESET ');
   cy.styleButton('save', ' SAVE ');
+}
+function checkDataComboboxOnboarding() {
+  cy.dataCombobox('COUNTRY', 'country');
+  cy.get('#first_name_input');
+  cy.dataCombobox('CITY', 'city');
+  cy.get('#first_name_input');
+  cy.dataCombobox('DISTRICT', 'district');
+  cy.get('#first_name_input');
+  cy.dataCombobox('WARD', 'ward');
 }
 
 

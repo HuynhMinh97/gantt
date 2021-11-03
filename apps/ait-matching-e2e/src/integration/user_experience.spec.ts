@@ -5,7 +5,8 @@ describe('Navigate user experience', () => {
     cy.wait(2000);
     cy.visit(Cypress.env('host') + Cypress.env('user_experience'));
     cy.url().should('eq', Cypress.env('host') + Cypress.env('user_experience'));
-    // checkUIUserExp();
+    checkUIUserExp();
+    // checkDataComboboxExp();
     // resetFormUserExp();
     // checkValidateUserExp();
     checkSaveExper();
@@ -54,24 +55,29 @@ function checkUIUserExp() {
 
   }).then((response) => {
     const data = response.body.data.findKey.data[0];
-    cy.getValueMaster('company_working', data.company_working);
+    cy.input('company_working', data.company_working);
 
   })
-  cy.label('title', ' title*');
+  cy.label('title', ' TITLE*');
   cy.input('title', 'Developer');
-  cy.label('company_working', ' company*');
-  cy.label('location', ' location*');
+  cy.label('company_working', ' COMPANY*');
+  cy.label('location', ' LOCATION*');
   cy.input('location', 'Ho Chi Minh City');
-  cy.label('employee_type', ' employee type');
+  cy.label('employee_type', ' EMPLOYEE TYPE');
   cy.input('employee_type', 'Select');
   cy.get('#is_working').should('have.attr', 'ng-reflect-checked', 'false');
   cy.get('.pcontent').should('have.text', ' I am currently working in this role ');
   cy.label('start_date_from', ' START DATE');
   cy.getValueDate('start_date_from', new Date().getTime());
-  cy.label('description', ' description');
+  cy.label('description', ' DESCRIPTION');
   cy.textarea('description', 'Place your text');
 }
+function checkDataComboboxExp() {
+  cy.dataCombobox('CITY', 'location');
+  cy.get('#description_textarea');
+  cy.dataCombobox('EMPLOYEE_TYPE', 'employee_type');
 
+}
 // Check validate when click save
 function checkValidateUserExp() {
   cy.clickButton('saveAndContinue');

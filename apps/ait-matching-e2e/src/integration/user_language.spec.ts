@@ -16,10 +16,10 @@ describe('Navigate user language', () => {
 // Check title and placeholder
 function checkUILanguage() {
   // cy.get('#form_edit_user_language_text__gradient').should('have.text', 'Add language');
-  cy.label('language', ' language*');
-  // cy.input('language', 'Japanese');
-  cy.label('proficiency', ' proficiency');
-  // cy.input('proficiency', 'Select');
+  cy.label('language', ' LANGUAGE*');
+  cy.input('language', 'Japanese');
+  cy.label('proficiency', ' PROFICIENCY');
+  cy.input('proficiency', 'Select');
   cy.checkButton();
 }
 function checkDataCombobox() {

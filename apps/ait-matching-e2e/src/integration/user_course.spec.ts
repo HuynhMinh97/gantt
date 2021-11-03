@@ -16,22 +16,21 @@ describe('Navigate user course', () => {
 
 function checkUICourse() {
   // Check title and placeholder
-  cy.label('name', ' name*');
+  cy.label('name', ' NAME*');
   cy.input('name', 'EX: Project Management');
   cy.get('#is_online').should(
     'have.text',
     'Online?'
   );
 
-  cy.label('training_center', ' center');
+  cy.label('training_center', ' CENTER');
   cy.input('training_center', 'BACH KHOA Ho Chi Minh Technology University');
-  cy.label('course_number', ' certificate');
+  cy.label('course_number', ' CERTIFICATE');
   cy.textarea('course_number', 'EX: AIT001');
-  cy.label('start_date_from', ' start date');
+  cy.label('start_date_from', ' START DATE');
   cy.getValueDate('start_date_from', new Date().getTime());
-  cy.label('description', ' description');
+  cy.label('description', ' DESCRIPTION');
   cy.textarea('description', 'Place your text');
-
 }
 
 function checkValidateCourse() {

@@ -84,6 +84,7 @@ function checkSaveProject() {
                 ref_collection: "m_title",
                 ref_attribute: code
               },
+              del_flag: false,
             }
             company: "${Cypress.env('company')}"
             lang: "${Cypress.env('lang')}"
@@ -185,24 +186,24 @@ function checkUIProject() {
 
   }).then((response) => {
     const data = response.body.data.findKey.data[0];
-    cy.getValueMaster('company_working', data.company_working);
-    cy.getValueMaster('title', data.title);
+    cy.input('company_working', data.company_working);
+    cy.input('title', data.title);
 
   })
 
-  cy.label('name', ' name*');
+  cy.label('name', ' NAME*');
   cy.input('name', 'Please input project name');
   cy.label('start_date_from', ' START DATE');
   cy.getValueDate('start_date_from', new Date().getTime());
-  cy.label('company_working', ' company*');
-  cy.label('title', ' title*');
-  cy.label('description', ' description*');
+  cy.label('company_working', ' COMPANY*');
+  cy.label('title', ' TITLE*');
+  cy.label('description', ' DESCRIPTION*');
   cy.textarea('description', 'Place your text');
-  cy.label('skills', '  skills(max 10)*');
+  cy.label('skills', '  SKILLS(MAX 10)*');
   cy.input('skills', 'Fill name and enter to add your skills');
-  cy.label('responsibility', ' responsibility*');
+  cy.label('responsibility', ' RESPONSIBILITY*');
   cy.textarea('responsibility', 'Place your text');
-  cy.label('achievement', ' achievement*');
+  cy.label('achievement', ' ACHIEVEMENT*');
   cy.textarea('achievement', 'Place your text');
   cy.checkButton();
 

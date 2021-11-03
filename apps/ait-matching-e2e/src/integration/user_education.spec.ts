@@ -16,25 +16,16 @@ describe('Navigate user experience', () => {
 function checkUIUserEdu() {
   cy.label('school', ' SCHOOL*');
   cy.input('school', 'BACH KHOA Ho Chi Minh Technology University');
-  cy.label('degree', ' degree');
+  cy.label('degree', ' DEGREE');
   cy.input('degree', "Ex: Engineer's");
-  cy.label('field_of_study', ' field of study');
+  cy.label('field_of_study', ' FIELD OF STUDY');
   cy.input('field_of_study', 'Ex: Computer');
-  cy.label('grade', ' grade');
+  cy.label('grade', ' GRADE');
   cy.input('grade', 'Good');
   cy.label('start_date_from', ' START DATE');
-  cy.label('description', ' description');
+  cy.label('description', ' DESCRIPTION');
   cy.textarea('description', 'Place your text');
 
-}
-
-// check button
-function checkButtonUserEdu() {
-  cy.get('cancel_text_button').should('exist');
-  // cy.get('delete_text_button').should('exist');
-  cy.get('reset_text_button').should('exist');
-  cy.get('saveAndContinue_text_button').should('exist');
-  cy.get('saveAndClose_text_button').should('exist');
 }
 
 // Check reset Form

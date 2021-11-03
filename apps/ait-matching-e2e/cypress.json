@@ -20,6 +20,7 @@
     "user_onboarding": "#/user-onboarding/",
     "user_course": "#/user-course/",
     "user_project": "#/user-project/",
+    "user_job_alert": "#/user_job_alert/",
     "user_certificate": "#/user-certificate/",
     "api_url": "api/v1",
     "company": "a8cd83a1-5a4d-4500-8751-a790d649c398",
