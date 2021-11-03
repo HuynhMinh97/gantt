@@ -11,6 +11,8 @@ import { UsesCertificateComponent } from './pages/aureole-v/user/uses-certificat
 import { UserProjectComponent } from './pages/aureole-v/user/user-project/user-project/user-project.component';
 import { UserSkillsComponent } from './pages/aureole-v/user/user-skills/user-skills.component';
 import { UserReorderSkillsComponent } from './pages/aureole-v/user/user-reorder-skills/user-reorder-skills.component';
+import { UserProfileComponent } from './pages/aureole-v/user/user-profile/user-profile.component';
+import { UserJobAlertComponent } from './pages/aureole-v/user/user-job-alert/user-job-alert.component';
 
 // Push your routes here one by one 🎉
 
@@ -96,9 +98,19 @@ export const routes: Routes = [
     component: UserSkillsComponent
   },
   {
-    path: 'user-reorder_skills',
+    path: 'user-reorder-skills',
     canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
     component: UserReorderSkillsComponent
+  },
+  {
+    path: 'user-profile',
+    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    component: UserProfileComponent
+  },
+  {
+    path: 'user-job-alert',
+    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    component: UserJobAlertComponent
   },
   {
     path: '',

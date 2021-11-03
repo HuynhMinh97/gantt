@@ -16,12 +16,20 @@ export class UserCourseService extends AitBaseService {
       _key: user_key,
       del_flag: false,
     }
+    condition['training_center'] = {
+      attribute: 'training_center',
+      ref_collection: 'm_training_center',
+      ref_attribute: 'code'
+    };
     return await this.query('findCourse', {collection: 'user_course',  condition    }, 
     {
       _key : true,
       name:true,
       is_online: true,
-      training_center: true,
+      training_center:{
+        _key: true,
+        value: true,
+      },
       course_number: true,
       start_date_from: true,
       start_date_to: true,
@@ -35,5 +43,30 @@ export class UserCourseService extends AitBaseService {
     const returnFields = {_key: true };
     const data = { _key };
     return await this.mutation('removeCourse', 'user_course', [data], returnFields);
+  }
+
+  //profile
+  findCourseByUserId = async (user_id : string) => {
+    const condition = {
+      user_id: user_id,
+      del_flag: false,
+    }
+    condition['training_center'] = {
+      attribute: 'training_center',
+      ref_collection: 'm_training_center',
+      ref_attribute: 'code'
+    };
+    return await this.query('findCourse', {collection: 'user_course',  condition    }, 
+    {
+      _key : true,
+      name:true,    
+      training_center:{
+        _key: true,
+        value: true,
+      },     
+      start_date_from: true,
+      start_date_to: true,
+      user_id: true
+    })
   }
 }

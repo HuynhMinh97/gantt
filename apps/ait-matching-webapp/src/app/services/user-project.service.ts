@@ -122,8 +122,6 @@ export class UserProjectService extends AitBaseService {
     }
 
     async saveSkills(data: any) {
-      console.log(data);
-      
       const returnField = { _key: true };
       return await this.mutation(
         'saveSkill',
@@ -174,33 +172,29 @@ export class UserProjectService extends AitBaseService {
         const returnFields = { _key: true, user_id: true };
         return await this.mutation('removeUserProject', table, [{ _key: _key }], returnFields);
     }
-      //tim key cua 1 bang dua vao from va to
-      // async findKey(_id?: string,_to?: string, table?: string){
-      //   const condition = {
-      //       _from: _id,
-      //       del_flag: false,
-      //     }
-      //     return await this.query('findKey', {collection: table,  condition    }, 
-      //     {
-      //       _key : true,
-      //       _from: true,
-      //       _to: true
-      //     })
-      // }
 
-      //tim key cua 1 bang dua vao from va to
-      // async findKeyConnectionUserProject(from: string, to?: string){
-      //   const condition = {
-      //       _from: from,
-      //       _to: to,
-      //       del_flag: false,
-      //     }
-      //     return await this.query('findKey', {collection: 'connection_user_project',  condition    }, 
-      //     {
-      //       _key : true,
-      //       _from: true,
-      //       _to: true
-      //     })
-      // }
-
+    // user-profile
+    async getProjectByUserId(user_id: string){
+      const condition = {
+        user_id: user_id,
+        del_flag: false
+      }
+        return await this.query(
+            'findUserProject',
+            {
+              collection: 'biz_project',
+              condition,
+              options: { sort_by: { value: 'change_at', order_by:'DESC'  } }               
+            },
+            {
+              _key: true,
+              user_id: true,
+              name: true,
+              start_date_from: true,
+              start_date_to: true,
+              company_working: true,
+              title: true,                             
+            }
+        );
+    }
 }

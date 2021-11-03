@@ -35,4 +35,46 @@ export class UserCerfiticateService extends AitBaseService {
     const data = { _key };
     return await this.mutation('removeUsercertificate', 'user_certificate_award', [data], returnFields);
   }
+
+  // user-profile
+  findUserCetificateByKey = async (_key : string) => {
+    const condition = {
+      user_id: _key,
+      del_flag: false
+    }
+    const keyMasterArray = [
+      {
+        att: 'name',
+        col: 'm_certificate_award',
+      },
+      {
+        att: 'issue_by',
+        col: 'm_training_center',
+      },
+    ];
+  
+    keyMasterArray.forEach((item) => {
+      condition[item.att] = {
+        attribute: item.att,
+        ref_collection: item.col,
+        ref_attribute: 'code'
+      };
+    });
+    return await this.query('findUsercertificate', {collection: 'user_certificate_award',  condition    }, 
+    {
+      _key : true,
+      name:{
+        _key: true,
+        value: true,
+      },
+      issue_by:{
+        _key: true,
+        value: true,
+      },
+      issue_date_from: true,
+      issue_date_to: true, 
+      user_id: true
+    })
+  }
+
 }

@@ -1,0 +1,227 @@
+<div class="template__popup" id="user_experience">
+  <ait-text-gradient
+    [content]="'What kind of work you’re open to'"
+    id="form_edit_user_experience"
+  ></ait-text-gradient>
+
+  <div class="content__card">
+    <div class="form__wrapper">
+      <div class="input_inline">
+        <ait-autocomplete-master
+          [id]="'skills'"
+          [label]="'INDUSTRY'"
+          [required]="false"
+          [collection]="'m_skill'"
+          [maxItem]="50"
+          [placeholder]="'Computer Software'"
+          [style]="{ width: '400px' }"
+          (watchValue)="takeMasterValue($event, 'skills')"
+          [defaultValue]=""
+        ></ait-autocomplete-master>
+      </div>
+      <div class="input_inline">
+        <ait-autocomplete-master-data
+          [id]="'title'"
+          [label]="'EXPERIENCE LEVEL'"
+          [required]="false"
+          [allowNew]="false"
+          [maxItem]="1"
+          [isSubmit]="isSubmit"
+          [placeholder]="'Select'"
+          [collection]="'m_title'"
+          [disableOutputDefault]="true"
+          [isReset]="resetuserjobAlert"
+          [isReadOnly]="resetuserjobAlert"
+          (watchValue)="('')"
+          [defaultValue]="''"
+          [style]="{ width: '400px' }"
+        ></ait-autocomplete-master-data>
+      </div>
+      <div class="input_inline">
+        <ait-autocomplete-master-data
+          [id]="'title'"
+          [label]="'Employment type'"
+          [required]="false"
+          [allowNew]="false"
+          [maxItem]="1"
+          [isSubmit]="isSubmit"
+          [placeholder]="'Select'"
+          [collection]="'m_title'"
+          [disableOutputDefault]="true"
+          [isReset]="resetuserjobAlert"
+          [isReadOnly]="resetuserjobAlert"
+          (watchValue)="('')"
+          [defaultValue]="''"
+          [style]="{ width: '200px' }"
+        ></ait-autocomplete-master-data>
+      </div>
+
+      <div class="input_inline">
+        <ait-autocomplete-master
+          [id]="'skills'"
+          [label]="'LOCATION'"
+          [required]="false"
+          [collection]="'m_skill'"
+          [maxItem]="50"
+          [placeholder]="'Computer Software'"
+          [style]="{ width: '400px' }"
+          (watchValue)="takeMasterValue($event, 'skills')"
+          [defaultValue]=""
+        ></ait-autocomplete-master>
+      </div>
+     
+      <ait-error-message
+        [id]="'errorDate'"
+        [errors]="errorArr"
+      ></ait-error-message>
+      <div class="input_inline">
+        <ait-datepicker
+          [label]="'issue_date'"
+          [placeholder]="'01/01/2021'"
+          [id]="'issue_date_from'"
+          [style]="{ width: '170px' }"
+          [isReset]="''"
+          [defaultValue]=""
+          (watchValue)="
+            takeDatePickerValue($event?.value, 'certificate', 'issue_date_from')
+          "
+          [isSubmit]="isSubmit"
+        ></ait-datepicker>
+
+        <p class="label-datepiker">{{ '~' }}</p>
+
+        <ait-datepicker
+          [required]="false"
+          [label]="''"
+          [placeholder]="''"
+          [id]="'issue_date_to'"
+          [style]="{ width: '170px' }"
+          (watchValue)="
+            takeDatePickerValue($event?.value, 'certificate', 'issue_date_to')
+          "
+          [defaultValue]=""
+          [isReset]=""
+          [isSubmit]="isSubmit"
+        ></ait-datepicker>
+      </div>
+      <div class="input_inline">
+        <ait-input-text
+        [id]="'certificate_award_number'"
+        [label]="'SALARY'"
+        [height]="'40px'"
+        [width]="'170px'"
+        [required]="false"
+        [placeholder]="'1,000'"
+        (watchValue)="takeInputValue($event, '')"
+        [defaultValue]=""
+        [isReset]=""
+        [isSubmit]="isSubmit"
+        [length]="400"
+      ></ait-input-text>
+
+        <p class="label-datepiker">{{ '~' }}</p>
+
+        <ait-input-text
+        [id]="'certificate_award_number'"
+        [height]="'40px'"
+        [label]="' '"
+        [width]="'170px'"
+        [required]="false"
+        [placeholder]="'5,000'"
+        (watchValue)="takeInputValue($event, '')"
+        [defaultValue]=""
+        [isReset]=""
+        [isSubmit]="isSubmit"
+        [length]="400"
+      ></ait-input-text>
+      </div>
+      <ait-error-message
+        [id]="'errorDate'"
+        [errors]="errorArr"
+      ></ait-error-message>
+    </div>
+    </div>
+    <ait-space></ait-space>
+    <div
+      class="sticky"
+      style="
+        min-width: 370px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      "
+    >
+      <div class="button__group">
+        <ait-button
+          *ngIf="mode === 'EDIT' || mode === 'NEW'"
+          [title]="'cancel'"
+          [id]="'cancel'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+          [width]="'200px'"
+          (click)="back()"
+        ></ait-button>
+        <ait-button
+          *ngIf="mode === 'EDIT' || mode === 'NEW'"
+          [title]="'reset'"
+          [id]="'reset'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+          [width]="'200px'"
+          (click)="resetForm()"
+        ></ait-button>
+        <ait-button
+          *ngIf="mode === 'EDIT'"
+          [id]="'delete'"
+          [title]="'delete'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+          [width]="'200px'"
+          (click)="deleteUserById()"
+        ></ait-button>
+        <ait-button
+          *ngIf="mode === 'NEW'"
+          [title]="'save continue'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+          [id]="'saveContinue'"
+          [width]="'200px'"
+          (click)="saveAndContinue()"
+        ></ait-button>
+
+        <ait-button
+          [id]="'saveClose'"
+          *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
+          [width]="'200px'"
+          [title]="'save close'"
+          (click)="saveAndClose()"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+        >
+        </ait-button>
+        <ait-button
+          *ngIf="!isChanged && mode === 'EDIT'"
+          [id]="'saveClose'"
+          [width]="'200px'"
+          [title]="'save close'"
+          [style]="'disabled'"
+        ></ait-button>
+
+        <ait-button
+          *ngIf="mode === 'VIEW'"
+          [id]="'saveClose'"
+          [width]="'200px'"
+          [title]="'close'"
+          (click)="back()"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+        ></ait-button>
+      </div>
+    </div>
+</div>

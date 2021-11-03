@@ -121,4 +121,44 @@ export class UserExperienceService extends AitBaseService {
       returnFields
     );
   }
+//thuan
+async findUserExperienceByUserId(user_id?: string) {
+  const condition: any = {
+    user_id: user_id,
+  };
+  const specialFields = ['location', 'employee_type'];
+
+  specialFields.forEach((item) => {
+    condition[item] = {
+      attribute: item,
+      ref_collection: 'sys_master_data',
+      ref_attribute: 'code',
+    };
+  });
+
+  const keyMasterArray = [
+    {
+      att: 'title',
+      col: 'm_title',
+    },
+    {
+      att: 'company_working',
+      col: 'sys_company',
+    },
+  ];
+
+  keyMasterArray.forEach((item) => {
+    condition[item.att] = {
+      attribute: item.att,
+      ref_collection: item.col,
+      ref_attribute: 'code'
+    };
+  });
+
+  const returnFields = this.returnFields;
+  const request = {};
+  request['collection'] = this.collection;
+  request['condition'] = condition;
+  return await this.query('findUserExperienceInfo', request, returnFields);
+}
 }

@@ -187,6 +187,7 @@ export class UserOnboardingComponent
       title: new FormControl(null),
       industry: new FormControl(null, [Validators.required]),
       skills: new FormControl(null, [Validators.required]),
+      _key: new FormControl(null),
     });
 
     // get key form parameters
@@ -365,21 +366,23 @@ export class UserOnboardingComponent
 
   saveDataUserProfile() {
     const saveData = this.userOnboardingInfo.value;
-    saveData.ward = saveData.ward._key;
-    saveData.title = saveData.title._key;
-    saveData.city = saveData.city._key;
+    saveData.ward = saveData.ward?._key;
+    saveData.title = saveData.title?saveData.title?._key: null;
+    saveData.city = saveData.city?._key;
     saveData.gender = saveData.gender._key;
     saveData.country = saveData.country._key;
     saveData.district = saveData.district._key;
-    saveData.industry = saveData.industry._key;
-    saveData.company_working = saveData.company_working._key;
+    saveData.industry = saveData.industry?._key;
+    saveData.company_working = saveData.company_working?saveData.company_working?._key : null;
     this.skills = saveData.skills;
     delete saveData.skills;
-    if (this.user_id) {
-      saveData['_key'] = this.user_id;
+    if(this.mode = MODE.NEW) {
+      saveData['user_id'] = this.user_id;
+
     } else {
       saveData['user_id'] = this.authService.getUserID();
     }
+
     return saveData;
   }
 
@@ -389,14 +392,22 @@ export class UserOnboardingComponent
     this.user_skill.sort_no = this.sort_no + 1;
     let number_sort_no = 1;
 
-    const skills = this.skills;
+    const skills = [];
+    debugger
+    for(let item of this.skills){
+       await this.userOnbService.findSkillsByCode(item._key).then((res) => {
+        console.log(res);
+        
+        skills.push( res.data[0]._key);
+      });
+    }
     const _fromUserSkill = [
       { _from: 'sys_user/' + this.authService.getUserID() },
     ];
     await this.userOnbService.removeSkills(_fromUserSkill);
     skills.forEach(async (skill) => {
       this.user_skill.sort_no += number_sort_no;
-      this.user_skill._to = 'm_skill/' + skill._key;
+      this.user_skill._to = 'm_skill/' + skill;
       await this.userOnbService.saveUserSkills([this.user_skill]);
       number_sort_no++;
     });
@@ -407,8 +418,7 @@ export class UserOnboardingComponent
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
-
-    if (this.userOnboardingInfo.valid) {
+    if (!this.userOnboardingInfo.valid) {
       this.userOnbService
         .save(this.saveDataUserProfile())
         .then((res) => {

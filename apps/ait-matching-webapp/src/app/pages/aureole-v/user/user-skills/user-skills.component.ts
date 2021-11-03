@@ -53,7 +53,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.findSkills();
-    debugger
+   
     await this.userSkills.valueChanges.subscribe((data) => {   
       this.checkAllowSave();
       console.log(this.isChanged);
@@ -182,9 +182,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
       }
     }
 
-  takeMasterValue(val: any, form: string): void { 
-    console.log(val.value);
-    
+  takeMasterValue(val: any, form: string): void {   
     if (val) {
       if(isObjectFull(val)  && val.value.length > 0 ){          
         const data = [];       

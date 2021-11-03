@@ -1,0 +1,1000 @@
+<div class="steppers-container row" id="user_profile">
+  <div class="col-md-2 col-lg-2 col-xxxl-2"></div>
+  <div class="col-md-8 col-lg-8 col-xxxl-8">
+    <!-- profile -->
+    <nb-card>
+      <div
+        class="user-background"
+        aitUploadDirective
+        [title]="'Upload image'"
+      ></div>
+      <div id="parent">
+        <div class="col-md-5 col-lg-5 col-xxxl-5" id="col1">
+          <div
+            class="avatar"
+            aitUploadDirective
+            (watchValues)="('')"
+          >
+            <img
+              src="https://anhdep123.com/wp-content/uploads/2021/05/avatar-trang-dep.jpg"
+              alt="user-avatar"
+              style="
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                position: absolute;
+                z-index: 101;
+              "
+            />
+          </div>
+          <div class="user-breakinfo">
+            <p class="fullname-profile">
+              {{profile.first_name + profile.last_name }}
+            </p>
+            <p style="padding-top: 30px">
+              <span> {{profile.title }} at {{profile.company_working}} </span>
+            </p>
+            <p style="margin-top: -10px">
+              <span>{{profile.city}}, {{profile.country}}</span>
+            </p>
+          </div>
+        </div>
+        <div class="col-md-5 col-lg-4 col-xxxl-4" id="col2">
+          <p>
+            {{profile.about}}
+          </p>
+        </div>
+        <div class="col-md-3 col-lg-3 col-xxxl-3" id="col3">
+          <div
+            class="justify-content-center"
+            style="
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+              text-align: center;
+              align-content: space-around;
+            "
+          >
+            <div
+              id="folow"
+              style="
+                background-image: linear-gradient(
+                  89.75deg,
+                  #002b6e 0.23%,
+                  #2288cc 99.81%
+                ) !important;
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin: 0;
+                font-weight: bold;
+                font-size: 36px;
+                padding-top: 20px;
+                padding-bottom: 10px;
+              "
+            >
+              123
+            </div>
+            <span
+              style="
+                color: #8f9bb3;
+                font-family: Open Sans;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 15px;
+                margin-bottom: 5px;
+              "
+              >{{ 'connections' | translate }}</span
+            >
+            <div class="view_contact">
+              <ait-button
+                [id]="'add friend'"
+                [styleText]="{ 'font-size': '10px' }"
+                [height]="'24px'"
+                [title]="'ADD FRIEND'"
+                [isDefault]="true"
+              ></ait-button>
+            </div>
+            <div class="view_contact">
+              <ait-button
+                [styleText]="{ 'font-size': '10px' }"
+                [height]="'24px'"
+                [title]="'VIEW CONTACT'"
+                [id]="'view_contact'"
+                [isDefault]="true"
+              ></ait-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nb-card>
+    <!-- skills -->
+    <nb-card>
+      <nb-card-header>
+        <div id="skills-headparent">
+          <div id="skills-lefthead">
+            {{ 'SKILL' | translate }}
+            <div class="skill-remain">
+              <span>You has {{quantitySkill}} skills. Each person has max 50 skills</span>
+            </div>
+          </div>
+
+          <div class="skill-righthead">
+            <div class="float-right">
+              <ait-button
+                (click)="open('user-reorder-skills')"
+                [iconName]="'menu-outline'"
+                [color]="'#fff'"
+                [styleText]="{ 'font-size': '10px' }"
+                [width]="'150px'"
+                [height]="'24px'"
+                [title]="'REORDER SKILLS'"
+                [id]="'reorder skills'"
+                [background]="
+                  'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+                "
+              ></ait-button>
+            </div>
+
+            <div class="float-right">
+              <ait-button
+                (click)="open('user-skills')"
+                [iconName]="'plus-outline'"
+                [color]="'#fff'"
+                [styleText]="{ 'font-size': '10px' }"
+                [width]="'150px'"
+                [height]="'24px'"
+                [title]="'ADD SKILL'"
+                [id]="'add skill'"
+                [background]="
+                  'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+                "
+              ></ait-button>
+            </div>
+          </div>
+        </div>
+      </nb-card-header>
+      <nb-card-body style="padding-top: 0px" *ngIf="true">
+        <div class="container-user-skill" [class.show]="showSkill">
+          <div *ngFor="let category of skillByCategory; let last = last">
+            <p class="title-skill">{{ category.name }}</p>
+            <ait-dragscroll-skill
+              [skillList]="category.data"
+              [showField]=""
+              [width]="'1500px'"
+              [maxWidth]="'1500px'"
+              [minWidth]="'1500px'"
+              [isNormal]="true"
+            ></ait-dragscroll-skill>
+            <hr *ngIf="!last" />
+          </div>
+        </div>
+        <div
+          class="d-flex justify-content-center"
+          *ngIf="userprojectFilterByCmp?.length > 0"
+        >
+          <ait-button
+            [id]="'show skill'"
+            (click)="showSkill = !showSkill"
+            [iconName]="
+              showSkill
+                ? 'arrow-ios-upward-outline'
+                : 'arrow-ios-downward-outline'
+            "
+            [color]="'#fff'"
+            [title]="
+              showSkill ? ('view-less' | translate) : ('view-more' | translate)
+            "
+            [width]="'120px'"
+            [height]="'24px'"
+            [styleText]="{ 'font-size': '10px' }"
+            [background]="
+              'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
+            "
+          >
+          </ait-button>
+        </div>
+      </nb-card-body>
+    </nb-card>
+    <!-- project -->
+    <nb-card>
+      <nb-card-header>
+        <div id="skills-headparent">
+          <div id="skills-lefthead">
+            {{ 'PROJECT' | translate }}
+            <div class="skill-remain">
+              <span></span>
+              <span *ngIf="true">
+                You have spent {{(timeProject - timeProject%3600000)/3600000 }} hours working on the projects 
+              </span>
+            </div>
+          </div>
+          <div class="skill-righthead">
+            <div class="float-right" *ngIf="true">
+              <ait-button
+                [id]="'add project'"
+                (click)="open('user-project')"
+                [iconName]="'plus-outline'"
+                [color]="'#fff'"
+                [title]="'add project' | translate"
+                [width]="'150px'"
+                [height]="'24px'"
+                [styleText]="{ 'font-size': '10px' }"
+                [background]="
+                  'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
+                "
+              >
+              </ait-button>
+            </div>
+          </div>
+        </div>
+      </nb-card-header>
+      <nb-card-body *ngIf="true">
+        <div class="container-user-project" [class.show]="showProject">
+          <ul
+            *ngFor="
+              let company_project of userProject;
+              let last = last;
+              let firstcomp = first
+            "
+          >
+            <li class="timeline-event">
+              <div class="timeline-block">
+                <div class="img-timeline-cmp">
+                  <img
+                    src="../../../../../assets/images/image.png"
+                    alt="project"
+                  />
+                </div>
+                <div class="timeline-info">
+                  <div>
+                    <p id="title-timeline">
+                      {{ company_project?.company_name }}
+                    </p>
+                    <div class="desc-info">
+                      <p
+                        *ngIf="
+                          company_project?.floor_building &&
+                          company_project?.street
+                        "
+                      >
+                        {{ company_project?.floor_building }}
+                        <span *ngIf="company_project?.street"> , </span>
+                        {{ company_project?.street }}
+                      </p>
+                      <p
+                        *ngIf="
+                          !company_project?.floor_building &&
+                          !company_project?.street
+                        "
+                      >
+                        {{company_project.floor_building}}
+                      </p>
+                      <p>{{ company_project?.working_time }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="devline"></div>
+            </li>
+            <li
+              class="timeline-event"
+              *ngFor="
+                let project of company_project.data;
+                let last = last;
+                let firstproj = first
+              "
+            >
+              <div
+                class="timeline-block"
+                (mouseenter)="editProject(project)"
+                (mouseleave)="nonEditProject(project)"
+              >
+                <div class="img-timeline">
+                  <img
+                    src="../../../../../assets/images/Icon.svg"
+                    alt="project"
+                    *ngIf="!project?.is_working"
+                  />
+                  <img
+                    src="../../../../../assets/images/IconEdit.svg"
+                    alt="projectcurrent"
+                    *ngIf="project?.is_working"
+                  />
+                </div>
+                <div class="timeline-info">
+                  <div>
+                    <p id="title-timeline">{{ project.name }}</p>
+                    <div class="desc-info">
+                      <p>{{ project.title }}</p>
+                      <p>
+                        {{ project?.start_date_from }} - {{ project?.start_date_to}}: {{project?.time}}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div id="ic-edit" >
+                  <a (click)="openProject('user-project', project._key)">
+                    <nb-icon
+                      *ngIf="isMyUserProfile"
+                      nbSuffix
+                      icon="edit-2-outline"
+                      pack="eva"
+                    ></nb-icon>
+                    <nb-icon
+                      *ngIf="!isMyUserProfile"
+                      nbSuffix
+                      icon="eye-outline"
+                      pack="eva"
+                    ></nb-icon>
+                  </a>
+                </div>
+              </div>
+              <div class="devline" *ngIf="!last"></div>
+            </li>
+            <hr *ngIf="!last" />
+          </ul>
+        </div>
+        <div
+          class="d-flex justify-content-center"
+          *ngIf="userProject?.length > 0"
+        >
+          <ait-button
+            [id]="'show project'"
+            (click)="showProject = !showProject"
+            [iconName]="
+              showProject
+                ? 'arrow-ios-upward-outline'
+                : 'arrow-ios-downward-outline'
+            "
+            [color]="'#fff'"
+            [title]="
+              showProject
+                ? ('view-less' | translate)
+                : ('view-more' | translate)
+            "
+            [width]="'120px'"
+            [height]="'24px'"
+            [styleText]="{ 'font-size': '10px' }"
+            [background]="
+              'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
+            "
+          >
+          </ait-button>
+        </div>
+      </nb-card-body>
+    </nb-card>
+    <!-- EXPERIENCE -->
+    <nb-card>
+      <nb-card-header>
+        <div id="skills-headparent">
+          <div id="skills-lefthead">
+            {{ 'EXPERIENCE' | translate }}
+            <div class="skill-remain">
+              <span></span>
+              <span *ngIf="true">
+                'You have {{(timeExperience - timeExperience%3600000)/3600000 }} experience working' 
+              </span>
+            </div>
+          </div>
+          <div class="skill-righthead">
+            <div class="float-right" *ngIf="true">
+              <ait-button
+                [id]="'add experience'"
+                (click)="open('user-experience')"
+                [iconName]="'plus-outline'"
+                [color]="'#fff'"
+                [title]="'add experience' | translate"
+                [width]="'150px'"
+                [height]="'24px'"
+                [styleText]="{ 'font-size': '10px' }"
+                [background]="
+                  'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
+                "
+              >
+              </ait-button>
+            </div>
+          </div>
+        </div>
+      </nb-card-header>
+      <nb-card-body *ngIf="true">
+        <div class="container-user-project" [class.show]="showExperience">
+          <ul
+            *ngFor="
+              let company_experience of userExperience;
+              let last = last;
+              let firstcomp = first
+            "
+          >
+            <li class="timeline-event">
+              <div class="timeline-block">
+                <div class="img-timeline-cmp">
+                  <img
+                    src="../../../../../assets/images/image.png"
+                    alt="project"
+                  />
+                </div>
+                <div class="timeline-info">
+                  <div>
+                    <p id="title-timeline">
+                      {{ company_experience?.company_working }}
+                    </p>
+                    <div class="desc-info">
+                      <p
+                        *ngIf="
+                        company_experience?.floor_building &&
+                        company_experience?.street
+                        "
+                      >
+                        {{ company_experience?.floor_building }}
+                        <span *ngIf="company_project?.street"> , </span>
+                        {{ company_experience?.street }}
+                      </p>
+                      <p
+                        *ngIf="
+                          !company_experience?.floor_building &&
+                          !company_experience?.street
+                        "
+                      >
+                        {{
+                          'matching.user.my-profile.company-missing-info'
+                            | translate
+                        }}
+                      </p>
+                      <p>{{ company_experience?.working_time }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="devline"></div>
+            </li>
+            <li
+              class="timeline-event"
+              *ngFor="
+                let experience of company_experience.data;
+                let last = last;
+                let firstproj = first
+              "
+            >
+              <div
+                class="timeline-block"
+                (mouseenter)="editProject(project)"
+                (mouseleave)="nonEditProject(project)"
+              >
+                <div class="img-timeline">
+                  <img
+                    src="../../../../../assets/images/Icon.svg"
+                    alt="project"
+                    *ngIf="!experience?.is_working"
+                  />
+                  <img
+                    src="../../../../../assets/images/IconEdit.svg"
+                    alt="projectcurrent"
+                    *ngIf="experience?.is_working"
+                  />
+                </div>
+                <div class="timeline-info">
+                  <div>
+                    <p id="title-timeline">{{experience.title }}</p>
+                    <div class="desc-info">
+                      <p>{{experience.employee_type}}</p>
+                      <p>
+                        {{ experience?.start_date_from }} - {{ experience?.start_date_to}}: {{experience?.time}}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div id="ic-edit" *ngIf="project?.isEdited">
+                  <a (click)="openProject('edit', project._key)">
+                    <nb-icon
+                      *ngIf="isMyUserProfile"
+                      nbSuffix
+                      icon="edit-2-outline"
+                      pack="eva"
+                    ></nb-icon>
+                    <nb-icon
+                      *ngIf="!isMyUserProfile"
+                      nbSuffix
+                      icon="eye-outline"
+                      pack="eva"
+                    ></nb-icon>
+                  </a>
+                </div>
+              </div>
+              <div class="devline" *ngIf="!last"></div>
+            </li>
+            <hr *ngIf="!last" />
+          </ul>
+        </div>
+        <div
+          class="d-flex justify-content-center"
+          *ngIf="userprojectFilterByCmp?.length > 0"
+        >
+          <ait-button
+            [id]="'show Experience'"
+            (click)="showExperience = !showExperience"
+            [iconName]="
+              showExperience
+                ? 'arrow-ios-upward-outline'
+                : 'arrow-ios-downward-outline'
+            "
+            [color]="'#fff'"
+            [title]="
+              showExperience
+                ? ('view-less' | translate)
+                : ('view-more' | translate)
+            "
+            [width]="'120px'"
+            [height]="'24px'"
+            [styleText]="{ 'font-size': '10px' }"
+            [background]="
+              'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
+            "
+          >
+          </ait-button>
+        </div>
+      </nb-card-body>
+    </nb-card>
+
+    <!-- CERTIFICATES -->
+    <nb-card>
+      <nb-card-header>
+        <div id="skills-headparent">
+          <div id="skills-lefthead">
+            {{ 'CERTIFICATES' | translate }}
+            <div class="skill-remain">
+              <span></span>
+              <span *ngIf="true">{{
+                'You have spent 1500 hours working on the projects' | translate
+              }}</span>
+            </div>
+          </div>
+          <div class="skill-righthead">
+            <div class="float-right" *ngIf="true">
+              <ait-button
+                [id]="'add project'"
+                (click)="open('user-certificate')"
+                [iconName]="'plus-outline'"
+                [color]="'#fff'"
+                [title]="'add certificate' | translate"
+                [width]="'150px'"
+                [height]="'24px'"
+                [styleText]="{ 'font-size': '10px' }"
+                [background]="
+                  'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
+                "
+              >
+              </ait-button>
+            </div>
+          </div>
+        </div>
+      </nb-card-header>
+      <nb-card-body *ngIf="true">
+        <div class="container-user-project" [class.show]="showCertificate">
+          <ul
+            *ngFor="
+              let company_centificate of userCentificate;
+              let last = last;
+              let firstcomp = first
+            "
+          >
+            <li class="timeline-event">
+              <div class="timeline-block">
+                <div class="img-timeline-cmp">
+                  <img
+                    src="../../../../../assets/images/image.png"
+                    alt="project"
+                  />
+                </div>
+                <div class="timeline-info">
+                  <div>
+                    <p id="title-timeline">
+                      {{ company_centificate?.name }}
+                    </p>
+                    <div class="desc-info">                    
+                      <p>
+                        {{
+                          company_centificate?.issue_by
+                        }}
+                      </p>
+                      <p>{{ company_centificate?.issue_date_from }} - {{ company_centificate?.issue_date_to }}</p>
+                    </div>
+                  </div>
+                </div>
+                <div id="ic-edit">
+                  <a (click)="openProject('user-certificate', company_centificate._key)">
+                    <nb-icon
+                      *ngIf="isMyUserProfile"
+                      nbSuffix
+                      icon="edit-2-outline"
+                      pack="eva"
+                    ></nb-icon>
+                    <nb-icon
+                      *ngIf="!isMyUserProfile"
+                      nbSuffix
+                      icon="eye-outline"
+                      pack="eva"
+                    ></nb-icon>
+                  </a>
+                </div>
+              </div>
+            </li>
+
+            <hr *ngIf="!last" />
+          </ul>
+        </div>
+        <div
+          class="d-flex justify-content-center"
+          *ngIf="userprojectFilterByCmp?.length > 0"
+        >
+          <ait-button
+            [id]="'show Certificate'"
+            (click)="showCertificate = !showCertificate"
+            [iconName]="
+              showCertificate
+                ? 'arrow-ios-upward-outline'
+                : 'arrow-ios-downward-outline'
+            "
+            [color]="'#fff'"
+            [title]="
+              showCertificate
+                ? ('view-less' | translate)
+                : ('view-more' | translate)
+            "
+            [width]="'120px'"
+            [height]="'24px'"
+            [styleText]="{ 'font-size': '10px' }"
+            [background]="
+              'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
+            "
+          >
+          </ait-button>
+        </div>
+      </nb-card-body>
+    </nb-card>
+    <!-- course -->
+    <nb-card>
+      <nb-card-header>
+        <div id="skills-headparent">
+          <div id="skills-lefthead">
+            {{ 'COURSE' | translate }}
+            <div class="skill-remain">
+              <span></span>
+              <span *ngIf="true">{{
+                'You have spent 1500 hours working on the projects' | translate
+              }}</span>
+            </div>
+          </div>
+          <div class="skill-righthead">
+            <div class="float-right" *ngIf="true">
+              <ait-button
+                [id]="'add course'"
+                (click)="open('user-course', '')"
+                [iconName]="'plus-outline'"
+                [color]="'#fff'"
+                [title]="'add course' | translate"
+                [width]="'150px'"
+                [height]="'24px'"
+                [styleText]="{ 'font-size': '10px' }"
+                [background]="
+                  'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
+                "
+              >
+              </ait-button>
+            </div>
+          </div>
+        </div>
+      </nb-card-header>
+      <nb-card-body *ngIf="true">
+        <div class="container-user-project" [class.show]="showCourse">
+          <ul
+            *ngFor="
+              let course of userCourse;
+              let last = last;
+              let firstcomp = first
+            "
+          >
+            <li class="timeline-event">
+              <div class="timeline-block">
+                <div class="img-timeline-cmp">
+                  <img
+                    src="../../../../../assets/images/image.png"
+                    alt="project"
+                  />
+                </div>
+                <div class="timeline-info">
+                  <div>
+                    <p id="title-timeline">
+                      {{ course?.name }}
+                    </p>
+                    <div class="desc-info">
+                      <p>
+                        {{
+                          course?.training_center
+                        }}
+                      </p>
+                      <p>{{ course?.start_date_from }} - {{course?.start_date_to}}</p>
+                    </div>
+                  </div>
+                </div>
+                <div id="ic-edit">
+                  <a (click)="openProject('user-course', course._key)">
+                    <nb-icon
+                      *ngIf="isMyUserProfile"
+                      nbSuffix
+                      icon="edit-2-outline"
+                      pack="eva"
+                    ></nb-icon>
+                    <nb-icon
+                      *ngIf="!isMyUserProfile"
+                      nbSuffix
+                      icon="eye-outline"
+                      pack="eva"
+                    ></nb-icon>
+                  </a>
+                </div>
+              </div>
+            </li>
+
+            <hr *ngIf="!last" />
+          </ul>
+        </div>
+        <div
+          class="d-flex justify-content-center"
+          *ngIf="userprojectFilterByCmp?.length > 0"
+        >
+          <ait-button
+            [id]="'show sourse'"
+            (click)="showCourse = !showCourse"
+            [iconName]="
+              showCourse
+                ? 'arrow-ios-upward-outline'
+                : 'arrow-ios-downward-outline'
+            "
+            [color]="'#fff'"
+            [title]="
+              showCourse ? ('view-less' | translate) : ('view-more' | translate)
+            "
+            [width]="'120px'"
+            [height]="'24px'"
+            [styleText]="{ 'font-size': '10px' }"
+            [background]="
+              'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
+            "
+          >
+          </ait-button>
+        </div>
+      </nb-card-body>
+    </nb-card>
+    <!-- education -->
+    <nb-card>
+      <nb-card-header>
+        <div id="skills-headparent">
+          <div id="skills-lefthead">
+            {{ 'EDUCATION' | translate }}
+            <div class="skill-remain">
+              <span></span>
+              <span *ngIf="true">{{
+                'You have spent 1500 hours working on the projects' | translate
+              }}</span>
+            </div>
+          </div>
+          <div class="skill-righthead">
+            <div class="float-right" *ngIf="true">
+              <ait-button
+                [id]="'add education'"
+                (click)="open('user-education')"
+                [iconName]="'plus-outline'"
+                [color]="'#fff'"
+                [title]="'add education' | translate"
+                [width]="'150px'"
+                [height]="'24px'"
+                [styleText]="{ 'font-size': '10px' }"
+                [background]="
+                  'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
+                "
+              >
+              </ait-button>
+            </div>
+          </div>
+        </div>
+      </nb-card-header>
+      <nb-card-body *ngIf="true">
+        <div class="container-user-project" [class.show]="showEducation">
+          <ul
+            *ngFor="
+              let education of userEducation;
+              let last = last;
+              let firstcomp = first
+            "
+          >
+            <li class="timeline-event">
+              <div class="timeline-block">
+                <div class="img-timeline-cmp">
+                  <img
+                    src="../../../../../assets/images/image.png"
+                    alt="project"
+                  />
+                </div>
+                <div class="timeline-info">
+                  <div>
+                    <p id="title-timeline">
+                      {{ education?.school }}
+                    </p>
+                    <div class="desc-info">
+                      <p>
+                        {{
+                          education?.field_of_study
+                        }}
+                      </p>
+                      <p>{{ education?.start_date_from }} - {{education?.start_date_to}}</p>
+                    </div>
+                  </div>
+                </div>
+                <div id="ic-edit">
+                  <a (click)="openProject('user-education', education._key)">
+                    <nb-icon
+                      *ngIf="isMyUserProfile"
+                      nbSuffix
+                      icon="edit-2-outline"
+                      pack="eva"
+                    ></nb-icon>
+                    <nb-icon
+                      *ngIf="!isMyUserProfile"
+                      nbSuffix
+                      icon="eye-outline"
+                      pack="eva"
+                    ></nb-icon>
+                  </a>
+                </div>
+              </div>
+            </li>
+
+            <hr *ngIf="!last" />
+          </ul>
+        </div>
+        <div
+          class="d-flex justify-content-center"
+          *ngIf="userprojectFilterByCmp?.length > 0"
+        >
+          <ait-button
+            [id]="'show education'"
+            (click)="showEducation = !showEducation"
+            [iconName]="
+              showEducation
+                ? 'arrow-ios-upward-outline'
+                : 'arrow-ios-downward-outline'
+            "
+            [color]="'#fff'"
+            [title]="
+              showEducation
+                ? ('view-less' | translate)
+                : ('view-more' | translate)
+            "
+            [width]="'120px'"
+            [height]="'24px'"
+            [styleText]="{ 'font-size': '10px' }"
+            [background]="
+              'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
+            "
+          >
+          </ait-button>
+        </div>
+      </nb-card-body>
+    </nb-card>
+    <!-- LANGUAGES -->
+    <nb-card>
+      <nb-card-header>
+        <div id="skills-headparent">
+          <div id="skills-lefthead">
+            {{ 'LANGUAGES' | translate }}
+            <div class="skill-remain">
+              <span></span>
+              <span *ngIf="true">{{
+                'You have spent 1500 hours working on the projects' | translate
+              }}</span>
+            </div>
+          </div>
+          <div class="skill-righthead">
+            <div class="float-right" *ngIf="true">
+              <ait-button
+                [id]="'add languager'"
+                (click)="open('user-language')"
+                [iconName]="'plus-outline'"
+                [color]="'#fff'"
+                [title]="'add languager' | translate"
+                [width]="'150px'"
+                [height]="'24px'"
+                [styleText]="{ 'font-size': '10px' }"
+                [background]="
+                  'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
+                "
+              >
+              </ait-button>
+            </div>
+          </div>
+        </div>
+      </nb-card-header>
+      <nb-card-body *ngIf="true">
+        <div class="container-user-project" [class.show]="showLanguages">
+          <ul
+            *ngFor="
+              let language of userLanguage;
+              let last = last;
+              let firstcomp = first
+            "
+          >
+            <li class="timeline-event">
+              <div class="timeline-block">
+                <div class="img-timeline-cmp">
+                  <img
+                    class="languagea-img"
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAMAAABThUXgAAAAOVBMVEXIEC7///8BIWnz9fiRn76AkLTv8fYYNXcTMXTVR17wv8fyx87XUGb99/jpn6vOKUTlj52FlbfnmKWRIUdAAAAEMElEQVR4nO3d3XbaMBAEYLX0B0LTlLz/w5YWUpIi29rd2Rlxzs5Frhp79EWmATtSOzx9Ws/uy/fPWbmdpa3m9u/Squy/fns7x/PPl16Jw9PfLzKuabBGqK4lZVyTYI1R/Ssp4poCa5TqXUkJ1wRY41QfSgq45FgWqv9K0rnEWDaqu5JkLimWlapT8nAkcgmx3lO99qnuJAY8E7lkWPZZtViSxiXC8lGdS45OwRQuCZbnAryWtNmCuQRY3ll1wXJ80xvXaf9oWPvTzk11wQpwBWcXGSsyq25YKi4qVpTqXDIyLS9cgYuRiBW7AC8jbXHvwOyiYWFG2VAHmhkLNcKGPNicWLjRNfQBZ8NCjqxlHHQeLOyoWtaBZ8BCj6hlHlyLhR9Nyz6BCitjJI1xEj5WzijusKhcSVhZI+hgEblSsPLad7FoXAlYmc0XsEhccKzc1otYFC4wVnbjFSwCFxQr/4e7ipVeAIjFeNnYwEouAcPi/Ie0iZVaBITF+lVnACuxDASL90v0EFZaIQAW8+3ZIFZSqTAW943/MFZKsSAW+yMlA1ZCuRAW/8NKExa8YABL8TG4EQtc0o2lucFixoIWdWKpbt05sIBlXVi6m8IuLFhhB5bycQMnFojLjqV8MsOPBeGyYwmpQlhQLhuW6OG7EBaQy4Ilewo2iAXjGscSPjDceTmQxDKzZJmmR2GNp7AMKSxDCsuQwjKksAwpLEMKy5DHwKpUKpVKpVKpVCqVSqVSqVQqlUqlUqlUKpVKpVKpVCrqx3iueYyS6gLXFJYhhWVIYRlSWIYUliGFZUhhGVJYhjwGFvDPfhdy/NEb/8uv5w89olibZ0H82e8UVJCZlc+FWqogRgW6DLO5MItgRKlgr1m5XIjlVfzF7ViIs7KXV4FQRRfuoXNFl4SKFXZgAc/OwAKWdWHpuCLL2MWLOrFUXP4FEhEl3VgaLu/Sm5iCASwFl29RV1S5EBafy7NcMK5YEIvNZV+IGlkqjMXlsi5xji0EwGJy2RbPR5eBYPG4LNsy4IuAsFhc4xt+ZJSAYXG4RreSySkAxGJwjW1SlPWzgmLlNx7Z/iqLKnf7q4TW2xur5VFlb6wGb761ZV8mVf6WfeD265tB5lIxNoOEjmBtm9FsKs42o8BRLG9gm0/F2sAWNpKlrZEZVLytkUGj6W+6zaFibroNGVFvO3cWFXc7d8CompCKgIUdWRNSUbCQo2vKm5YcLNwIm/J2OAsLxdV24YOc9s4RELHOXKf4SDee5kl+4omIhZhdq1jpz9JRseJcK1ipF6AEK3oxLmIxHmjlY8Vm1wLW8dD9hlcolQRriGth9F0syqz6EwmWf3Z1sGhUMiw3l5BKiOXkElJJsVxcQioxloNLSCXHMnMJqSbAMnIJqabAMnEJqSbBMnAJqabBGuYivbHpZxqssTdBvwG8MNt/pFCMYQAAAABJRU5ErkJggg=="
+                    alt="project"
+                  />
+                </div>
+                <div class="timeline-info">
+                  <div>
+                    <p id="title-timeline">
+                      {{ language?.language }}
+                    </p>
+                    <div class="desc-info">
+                      <p>{{ language?.proficiency }}</p>
+                    </div>
+                  </div>
+                </div>
+                <div id="ic-edit">
+                  <a (click)="openProject('user-language', language._key)">
+                    <nb-icon
+                      *ngIf="isMyUserProfile"
+                      nbSuffix
+                      icon="edit-2-outline"
+                      pack="eva"
+                    ></nb-icon>
+                    <nb-icon
+                      *ngIf="!isMyUserProfile"
+                      nbSuffix
+                      icon="eye-outline"
+                      pack="eva"
+                    ></nb-icon>
+                  </a>
+                </div>
+              </div>
+            </li>
+
+            <hr *ngIf="!last" />
+          </ul>
+        </div>
+        <div
+          class="d-flex justify-content-center"
+          *ngIf="userprojectFilterByCmp?.length > 0"
+        >
+          <ait-button
+            [id]="'show languagers'"
+            (click)="showLanguages = !showLanguages"
+            [iconName]="
+              showLanguages
+                ? 'arrow-ios-upward-outline'
+                : 'arrow-ios-downward-outline'
+            "
+            [color]="'#fff'"
+            [title]="
+              showLanguages
+                ? ('view-less' | translate)
+                : ('view-more' | translate)
+            "
+            [width]="'120px'"
+            [height]="'24px'"
+            [styleText]="{ 'font-size': '10px' }"
+            [background]="
+              'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
+            "
+          >
+          </ait-button>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  </div>
+  <div class="col-md-1 col-lg-1 col-xxxl-1"></div>
+</div>

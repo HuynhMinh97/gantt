@@ -9,8 +9,8 @@ export class CourseEntity extends BaseEntity {
   @Field(() => Boolean, { nullable: true })
   is_online?: boolean;
 
-  @Field(() => String, { nullable: true })
-  training_center?: string;
+  @Field(() => KeyValueEntity, { nullable: true })
+  training_center?: KeyValueEntity;
 
   @Field(() => String, { nullable: true })
   course_number?: string;
