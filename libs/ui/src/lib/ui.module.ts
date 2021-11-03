@@ -169,6 +169,7 @@ const NB_MODULES = [
     AitUiComponent,
     AitBaseComponent,
     AitTocMenuModule,
+    AitTableCellModule
   ],
   providers: [
     AitBaseService,

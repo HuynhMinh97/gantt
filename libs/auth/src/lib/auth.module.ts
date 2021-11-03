@@ -14,7 +14,7 @@ import {
   AitThemeModule,
   AitTranslationService,
   AitUiModule,
-  AitUpButtonModule,
+  AitUpButtonModule
 } from '@ait/ui';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
