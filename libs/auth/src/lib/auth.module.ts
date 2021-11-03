@@ -15,7 +15,6 @@ import {
   AitTranslationService,
   AitUiModule,
   AitUpButtonModule,
-  DragScrollSkillModule
 } from '@ait/ui';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
@@ -32,7 +31,6 @@ import { Ait503Component } from './pages/auth/ait-503/ait-503.component';
 
 
 const AIT_MODULES = [
-  DragScrollSkillModule,
   AitCommonLayoutModule,
   AitUpButtonModule,
   AitBackButtonModule,

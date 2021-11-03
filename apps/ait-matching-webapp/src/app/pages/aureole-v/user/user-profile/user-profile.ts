@@ -55,3 +55,30 @@ export interface ExperienDto {
     time: string,
     _key:string,
 }
+export interface CertificateDto {
+    name: string,
+    issue_by: string,
+    issue_date_from:string,
+    issue_date_to: string,
+    _key: string,
+}
+
+export interface CourseDto {
+    name: string,
+    training_center: string,
+    start_date_from:string,
+    start_date_to: string,
+    _key: string,
+}
+export interface EducationDto {
+    school: string,
+    field_of_study: string,
+    start_date_from:string,
+    start_date_to: string,
+    _key: string,
+}
+export interface LanguageDto {
+    language: string,
+    proficiency: string,
+    _key: string,
+}

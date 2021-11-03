@@ -214,7 +214,7 @@
             <div class="float-right" *ngIf="true">
               <ait-button
                 [id]="'add project'"
-                (click)="openProject('user-project')"
+                (click)="open('user-project')"
                 [iconName]="'plus-outline'"
                 [color]="'#fff'"
                 [title]="'add project' | translate"
@@ -373,16 +373,16 @@
             {{ 'EXPERIENCE' | translate }}
             <div class="skill-remain">
               <span></span>
-              <span *ngIf="true">{{
-                'You have spent 1500 hours working on the projects' | translate
-              }}</span>
+              <span *ngIf="true">
+                'You have {{(timeExperience - timeExperience%3600000)/3600000 }} experience working' 
+              </span>
             </div>
           </div>
           <div class="skill-righthead">
             <div class="float-right" *ngIf="true">
               <ait-button
                 [id]="'add experience'"
-                (click)="openProject('add', '')"
+                (click)="open('user-experience')"
                 [iconName]="'plus-outline'"
                 [color]="'#fff'"
                 [title]="'add experience' | translate"
@@ -402,7 +402,7 @@
         <div class="container-user-project" [class.show]="showExperience">
           <ul
             *ngFor="
-              let company_project of userprojectFilterByCmp;
+              let company_experience of userExperience;
               let last = last;
               let firstcomp = first
             "
@@ -418,23 +418,23 @@
                 <div class="timeline-info">
                   <div>
                     <p id="title-timeline">
-                      {{ company_project?.company_name }}
+                      {{ company_experience?.company_working }}
                     </p>
                     <div class="desc-info">
                       <p
                         *ngIf="
-                          company_project?.floor_building &&
-                          company_project?.street
+                        company_experience?.floor_building &&
+                        company_experience?.street
                         "
                       >
-                        {{ company_project?.floor_building }}
+                        {{ company_experience?.floor_building }}
                         <span *ngIf="company_project?.street"> , </span>
-                        {{ company_project?.street }}
+                        {{ company_experience?.street }}
                       </p>
                       <p
                         *ngIf="
-                          !company_project?.floor_building &&
-                          !company_project?.street
+                          !company_experience?.floor_building &&
+                          !company_experience?.street
                         "
                       >
                         {{
@@ -442,7 +442,7 @@
                             | translate
                         }}
                       </p>
-                      <p>{{ company_project?.working_time }}</p>
+                      <p>{{ company_experience?.working_time }}</p>
                     </div>
                   </div>
                 </div>
@@ -452,7 +452,7 @@
             <li
               class="timeline-event"
               *ngFor="
-                let project of company_project.data_project;
+                let experience of company_experience.data;
                 let last = last;
                 let firstproj = first
               "
@@ -466,22 +466,21 @@
                   <img
                     src="../../../../../assets/images/Icon.svg"
                     alt="project"
-                    *ngIf="!project?.is_working"
+                    *ngIf="!experience?.is_working"
                   />
                   <img
                     src="../../../../../assets/images/IconEdit.svg"
                     alt="projectcurrent"
-                    *ngIf="project?.is_working"
+                    *ngIf="experience?.is_working"
                   />
                 </div>
                 <div class="timeline-info">
                   <div>
-                    <p id="title-timeline">{{ project.name }}</p>
+                    <p id="title-timeline">{{experience.title }}</p>
                     <div class="desc-info">
-                      <p>{{ project.title }}</p>
-                      <p *ngIf="project?.is_working">Full-time</p>
-                      <p *ngIf="!project?.is_working">
-                        {{ project?.start_date_from}}
+                      <p>{{experience.employee_type}}</p>
+                      <p>
+                        {{ experience?.start_date_from }} - {{ experience?.start_date_to}}: {{experience?.time}}
                       </p>
                     </div>
                   </div>
@@ -538,7 +537,7 @@
       </nb-card-body>
     </nb-card>
 
-    <!-- showExperience -->
+    <!-- CERTIFICATES -->
     <nb-card>
       <nb-card-header>
         <div id="skills-headparent">
@@ -555,7 +554,7 @@
             <div class="float-right" *ngIf="true">
               <ait-button
                 [id]="'add project'"
-                (click)="openProject('add', '')"
+                (click)="open('user-certificate')"
                 [iconName]="'plus-outline'"
                 [color]="'#fff'"
                 [title]="'add certificate' | translate"
@@ -575,7 +574,7 @@
         <div class="container-user-project" [class.show]="showCertificate">
           <ul
             *ngFor="
-              let company_project of userprojectFilterByCmp;
+              let company_centificate of userCentificate;
               let last = last;
               let firstcomp = first
             "
@@ -591,36 +590,20 @@
                 <div class="timeline-info">
                   <div>
                     <p id="title-timeline">
-                      {{ company_project?.company_name }}
+                      {{ company_centificate?.name }}
                     </p>
-                    <div class="desc-info">
-                      <p
-                        *ngIf="
-                          company_project?.floor_building &&
-                          company_project?.street
-                        "
-                      >
-                        {{ company_project?.floor_building }}
-                        <span *ngIf="company_project?.street"> , </span>
-                        {{ company_project?.street }}
-                      </p>
-                      <p
-                        *ngIf="
-                          !company_project?.floor_building &&
-                          !company_project?.street
-                        "
-                      >
+                    <div class="desc-info">                    
+                      <p>
                         {{
-                          'matching.user.my-profile.company-missing-info'
-                            | translate
+                          company_centificate?.issue_by
                         }}
                       </p>
-                      <p>{{ company_project?.working_time }}</p>
+                      <p>{{ company_centificate?.issue_date_from }} - {{ company_centificate?.issue_date_to }}</p>
                     </div>
                   </div>
                 </div>
                 <div id="ic-edit">
-                  <a (click)="openProject('edit', project._key)">
+                  <a (click)="openProject('user-certificate', company_centificate._key)">
                     <nb-icon
                       *ngIf="isMyUserProfile"
                       nbSuffix
@@ -687,7 +670,7 @@
             <div class="float-right" *ngIf="true">
               <ait-button
                 [id]="'add course'"
-                (click)="openProject('add', '')"
+                (click)="open('user-course', '')"
                 [iconName]="'plus-outline'"
                 [color]="'#fff'"
                 [title]="'add course' | translate"
@@ -707,7 +690,7 @@
         <div class="container-user-project" [class.show]="showCourse">
           <ul
             *ngFor="
-              let company_project of userprojectFilterByCmp;
+              let course of userCourse;
               let last = last;
               let firstcomp = first
             "
@@ -723,36 +706,20 @@
                 <div class="timeline-info">
                   <div>
                     <p id="title-timeline">
-                      {{ company_project?.company_name }}
+                      {{ course?.name }}
                     </p>
                     <div class="desc-info">
-                      <p
-                        *ngIf="
-                          company_project?.floor_building &&
-                          company_project?.street
-                        "
-                      >
-                        {{ company_project?.floor_building }}
-                        <span *ngIf="company_project?.street"> , </span>
-                        {{ company_project?.street }}
-                      </p>
-                      <p
-                        *ngIf="
-                          !company_project?.floor_building &&
-                          !company_project?.street
-                        "
-                      >
+                      <p>
                         {{
-                          'matching.user.my-profile.company-missing-info'
-                            | translate
+                          course?.training_center
                         }}
                       </p>
-                      <p>{{ company_project?.working_time }}</p>
+                      <p>{{ course?.start_date_from }} - {{course?.start_date_to}}</p>
                     </div>
                   </div>
                 </div>
                 <div id="ic-edit">
-                  <a (click)="openProject('edit', project._key)">
+                  <a (click)="openProject('user-course', course._key)">
                     <nb-icon
                       *ngIf="isMyUserProfile"
                       nbSuffix
@@ -817,7 +784,7 @@
             <div class="float-right" *ngIf="true">
               <ait-button
                 [id]="'add education'"
-                (click)="openProject('add', '')"
+                (click)="open('user-education')"
                 [iconName]="'plus-outline'"
                 [color]="'#fff'"
                 [title]="'add education' | translate"
@@ -837,7 +804,7 @@
         <div class="container-user-project" [class.show]="showEducation">
           <ul
             *ngFor="
-              let company_project of userprojectFilterByCmp;
+              let education of userEducation;
               let last = last;
               let firstcomp = first
             "
@@ -853,36 +820,20 @@
                 <div class="timeline-info">
                   <div>
                     <p id="title-timeline">
-                      {{ company_project?.company_name }}
+                      {{ education?.school }}
                     </p>
                     <div class="desc-info">
-                      <p
-                        *ngIf="
-                          company_project?.floor_building &&
-                          company_project?.street
-                        "
-                      >
-                        {{ company_project?.floor_building }}
-                        <span *ngIf="company_project?.street"> , </span>
-                        {{ company_project?.street }}
-                      </p>
-                      <p
-                        *ngIf="
-                          !company_project?.floor_building &&
-                          !company_project?.street
-                        "
-                      >
+                      <p>
                         {{
-                          'matching.user.my-profile.company-missing-info'
-                            | translate
+                          education?.field_of_study
                         }}
                       </p>
-                      <p>{{ company_project?.working_time }}</p>
+                      <p>{{ education?.start_date_from }} - {{education?.start_date_to}}</p>
                     </div>
                   </div>
                 </div>
                 <div id="ic-edit">
-                  <a (click)="openProject('edit', project._key)">
+                  <a (click)="openProject('user-education', education._key)">
                     <nb-icon
                       *ngIf="isMyUserProfile"
                       nbSuffix
@@ -949,7 +900,7 @@
             <div class="float-right" *ngIf="true">
               <ait-button
                 [id]="'add languager'"
-                (click)="openProject('add', '')"
+                (click)="open('user-language')"
                 [iconName]="'plus-outline'"
                 [color]="'#fff'"
                 [title]="'add languager' | translate"
@@ -969,7 +920,7 @@
         <div class="container-user-project" [class.show]="showLanguages">
           <ul
             *ngFor="
-              let company_project of userprojectFilterByCmp;
+              let language of userLanguage;
               let last = last;
               let firstcomp = first
             "
@@ -986,36 +937,15 @@
                 <div class="timeline-info">
                   <div>
                     <p id="title-timeline">
-                      {{ company_project?.company_name }}
+                      {{ language?.language }}
                     </p>
                     <div class="desc-info">
-                      <p
-                        *ngIf="
-                          company_project?.floor_building &&
-                          company_project?.street
-                        "
-                      >
-                        {{ company_project?.floor_building }}
-                        <span *ngIf="company_project?.street"> , </span>
-                        {{ company_project?.street }}
-                      </p>
-                      <p
-                        *ngIf="
-                          !company_project?.floor_building &&
-                          !company_project?.street
-                        "
-                      >
-                        {{
-                          'matching.user.my-profile.company-missing-info'
-                            | translate
-                        }}
-                      </p>
-                      <p>{{ company_project?.working_time }}</p>
+                      <p>{{ language?.proficiency }}</p>
                     </div>
                   </div>
                 </div>
                 <div id="ic-edit">
-                  <a (click)="openProject('edit', project._key)">
+                  <a (click)="openProject('user-language', language._key)">
                     <nb-icon
                       *ngIf="isMyUserProfile"
                       nbSuffix
@@ -1067,6 +997,4 @@
     </nb-card>
   </div>
   <div class="col-md-1 col-lg-1 col-xxxl-1"></div>
-  <p>Or if you prefer, {{today | date:'Year'}}</p>
-  <p>The time is {{today | date:'h:mm a z'}}</p>
 </div>

@@ -11,8 +11,12 @@ import { UserProfileService } from 'apps/ait-matching-webapp/src/app/services/us
 import { UserProjectService } from 'apps/ait-matching-webapp/src/app/services/user-project.service';
 import { UserReoderSkillsService } from 'apps/ait-matching-webapp/src/app/services/user-reoder-skills.service';
 import dayjs from 'dayjs';
-import { GroupProjectDto, OrderSkill, ProfileDto, ProjectDto, SkillsDto } from './user-profile';
+import { CertificateDto, CourseDto, EducationDto, ExperienDto, GroupExperienceDto, GroupProjectDto, LanguageDto, OrderSkill, ProfileDto, ProjectDto, SkillsDto } from './user-profile';
 import { UserExperienceService } from 'apps/ait-matching-webapp/src/app/services/user-experience.service';
+import { UserCerfiticateService } from 'apps/ait-matching-webapp/src/app/services/user-certificate.service';
+import { UserCourseService } from 'apps/ait-matching-webapp/src/app/services/user-course.service';
+import { UserEducationService } from 'apps/ait-matching-webapp/src/app/services/user-education.service';
+import { UserLanguageService } from 'apps/ait-matching-webapp/src/app/services/user-language.service';
 
 @Component({
   selector: 'ait-user-profile',
@@ -22,6 +26,10 @@ import { UserExperienceService } from 'apps/ait-matching-webapp/src/app/services
 export class UserProfileComponent  extends AitBaseComponent implements OnInit {
 
   constructor(
+    private userLanguageService: UserLanguageService,
+    private userEducationService: UserEducationService,
+    private userCourseService: UserCourseService,
+    private userCetificateService: UserCerfiticateService,
     private userExperienceService: UserExperienceService,
     private userProjectService: UserProjectService,
     private reoderSkillsService : UserReoderSkillsService,
@@ -103,9 +111,15 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   avata: any;
   skillByCategory: OrderSkill[] = [];
   userProject: GroupProjectDto[] = [];
+  userExperience: GroupExperienceDto[] = [];
+  userCentificate: CertificateDto[] = [];
+  userCourse: CourseDto[] = [];
+  userEducation: EducationDto[] = [];
+  userLanguage: LanguageDto[] = [];
   profile: ProfileDto;
   quantitySkill = 0;
   timeProject = 0;
+  timeExperience = 0;
   dateFormat = "dd/MM/yyyy";
   today = Date.now();
   isMyUserProfile = false;
@@ -115,7 +129,11 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
     await this.findUserProfileByUserId();
     await this.getSkillByUserId();
     await this.getProjectByUserId();
-    this.getExperiencByUserId();
+    this.getExperiencByUserId()
+    this.getCentificateByUserId();
+    this.getCourseByUserId();
+    this.getEducationByUserId();
+    this.getLanguageByUserId();
     await this.getImg();
   }
   async getMasterData() {
@@ -233,6 +251,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
           project.start_date_to = data[item].start_date_to ? this.getDateFormat(data[item].start_date_to): "Present";      
           groupProject.data = [];
           groupProject.data.push(project);
+          groupProject.working_time = project.time;
           groupProject.date = (dateTo - data[item].start_date_from);
           this.userProject.push(groupProject);
           this.timeProject += (dateTo - data[item].start_date_from);
@@ -247,10 +266,164 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
 
   getExperiencByUserId(){
     this.userExperienceService.findUserExperienceByUserId(this.user_id)
-    .then((res) => {
-      console.log(res.data);
+    .then(async (res) => {     
+      const data = res.data;
+      for(let item in data){
+        let isExperience = false;
+        for(let index in this.userExperience){        
+          if(this.userExperience[index].company_working == data[item].company_working?.value){
+            isExperience = true;
+            let experience = {} as ExperienDto;
+            let dateTo = data[item].start_date_to;
+            experience.is_working = false;
+            if(!dateTo){
+              dateTo = Date.now();
+              experience.is_working = true;
+            }
+            experience.title = data[item].title?.value;
+            experience.employee_type = data[item].employee_type?.value;
+            experience._key = data[item]._key;
+            experience.time = await this.fomatDate(dateTo - data[item].start_date_from );
+            experience.start_date_from = this.getDateFormat(data[item].start_date_from);
+            experience.start_date_to = data[item].start_date_to ? this.getDateFormat(data[item].start_date_to): "Present";          
+            this.userExperience[index].data.push(experience);
+            this.userExperience[index].date = (this.userProject[index].date + (dateTo - data[item].start_date_from));
+            this.userExperience[index].working_time = this.fomatDate(this.userProject[index].date);
+            this.timeExperience += (dateTo - data[item].start_date_from);
+          }
+        }
+        if(!isExperience){   
+          let groupExperience = {} as GroupExperienceDto;       
+          groupExperience.company_working = data[item].company_working?.value;
+          let experience = {} as ExperienDto;
+          let dateTo = data[item].start_date_to;
+          experience.is_working = false;
+          if(!dateTo){
+            dateTo = Date.now();
+            experience.is_working = true;
+          }
+          experience.title = data[item].title?.value;
+          experience.employee_type = data[item].employee_type?.value;
+          experience._key = data[item]._key;
+          experience.time = await this.fomatDate(dateTo - data[item].start_date_from );
+          experience.start_date_from = this.getDateFormat(data[item].start_date_from);
+          experience.start_date_to = data[item].start_date_to ? this.getDateFormat(data[item].start_date_to): "Present";     
+          groupExperience.data = [];
+          groupExperience.data.push(experience);
+          groupExperience.working_time = experience.time;
+          groupExperience.date = (dateTo - data[item].start_date_from);
+          this.userExperience.push(groupExperience);
+          this.timeExperience += (dateTo - data[item].start_date_from);
+        }
+      };
       
     })
+    console.log(this.userExperience);
+    
+  }
+
+  getCentificateByUserId(){
+    this.userCetificateService.findUserCetificateByKey(this.user_id)
+    .then((res) => {
+      const data = res.data;    
+      for(let element of data){
+        let centificate = {} as CertificateDto;
+        let datefrom = element.issue_date_from;
+        let dateTo = element.issue_date_to;
+        if(!datefrom){
+          datefrom = Date.now();
+        }
+        if(!dateTo){
+          dateTo = Date.now();
+        }
+        centificate._key = element._key;
+        centificate.issue_by = element.issue_by?.value;
+        centificate.issue_date_from = this.getDateFormat(element.issue_date_from);
+        centificate.issue_date_to = this.getDateFormat(element.issue_date_from);
+        centificate.name = element.name?.value ? element.name?.value : "Project Manager";
+        this.userCentificate.push(centificate);
+      }
+      
+    })
+    console.log(this.userCentificate);
+    
+  }
+  getCourseByUserId(){
+    this.userCourseService.findCourseByUserId(this.user_id)
+    .then((res) => {          
+      const data = res.data;
+      for(let element of data){
+        let course = {} as CourseDto;
+        let datefrom = element.start_date_from;
+        let dateTo = element.start_date_to;
+        if(!datefrom){
+          datefrom = Date.now();
+        }
+        if(!dateTo){
+          dateTo = Date.now();
+        }
+        course._key = element._key;
+        course.name = element.name;
+        course.start_date_from = this.getDateFormat(element.start_date_from);
+        course.start_date_to = this.getDateFormat(element.start_date_to);
+        course.training_center = element.training_center?.value;
+        this.userCourse.push(course);
+      }
+      
+    })
+    console.log(this.userCourse);
+    
+  }
+  getEducationByUserId(){
+    this.userEducationService.findUserEducationByUserId(this.user_id)
+    .then((res) => {          
+      const data = res.data;
+      for(let element of data){
+        let education = {} as EducationDto;
+        let datefrom = element.start_date_from;
+        let dateTo = element.start_date_to;
+        if(!datefrom){
+          datefrom = Date.now();
+        }
+        if(!dateTo){
+          dateTo = Date.now();
+        }
+        education._key = element._key;
+        education.school = element.school?.value;
+        education.start_date_from = this.getDateFormat(element.start_date_from);
+        education.start_date_to = this.getDateFormat(element.start_date_to);
+        education.field_of_study = element.field_of_study;
+        this.userEducation.push(education);
+      }
+      
+    })
+    console.log(this.userEducation);
+    
+  }
+  getLanguageByUserId(){
+    this.userLanguageService.findUserLanguageByUserId(this.user_id)
+    .then((res) => {          
+      const data = res.data;
+      for(let element of data){
+        let language = {} as LanguageDto;
+        let datefrom = element.start_date_from;
+        let dateTo = element.start_date_to;
+        if(!datefrom){
+          datefrom = Date.now();
+        }
+        if(!dateTo){
+          dateTo = Date.now();
+        }
+        language._key = element._key;
+        language.language = element.language?.value;
+        language.proficiency = element.proficiency?.value;
+      
+        this.userLanguage.push(language);
+      }
+      
+    })
+    console.log(this.userLanguage);
+    
   }
 
   async subtractionDate(from: number, to: number){
@@ -273,14 +446,14 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   fomatDate(time: number){
     const day = time/1000/60/60/24;// milliseconds -> day
     if(day <= 31 ){
-      return "1 Month";
+      return "1 Months";
     }else{
       let month = (day - day%30)/30 ;
       if(month < 12 ){
-        return month.toString() + " Month";
+        return month.toString() + " Months";
       }else{
         let year = (month - month%12)/12;
-        return (year.toString() + " Year " +  (month%12).toString() + " Month ");
+        return (year.toString() + " Year " +  (month%12).toString() + " Months ");
       }
     }
   }
@@ -301,7 +474,6 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
     })
   }
   getImage = (file: any, isError = false) => {
-    debugger
     if (!isError) {
       return this.safelyURL(file.data_base64, file.file_type)
     }
