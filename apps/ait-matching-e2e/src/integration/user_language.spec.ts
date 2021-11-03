@@ -1,61 +1,66 @@
-describe('Test Cypress', () => {
+describe('Navigate user language', () => {
   it('Check Mode New', function () {
-    cy.login('diennv', '12345678');
-    cy.wait(2000);
+    cy.login('lacnt', '12345678');
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(3000);
     cy.visit(Cypress.env('host') + Cypress.env('user_language'));
-
     cy.url().should('eq', Cypress.env('host') + Cypress.env('user_language'));
-    // checkInitUserLanguage();
-    // resetFormUserLang();
-    // checkValidateUserLanguage();
-    // resetFormUserLang();
-    insertDataUserLanguage();
+    checkUILanguage();
+    resetFormLanguage();
+    checkDataCombobox();
+    checkValidateLanguage();
+    saveDataLanguage();
   });
 });
 
-  // Check title and placeholder
-  function checkInitUserLanguage() {
-    cy.label('language', ' 言語*');
-    cy.input('language', '日本');
+// Check title and placeholder
+function checkUILanguage() {
+  // cy.get('#form_edit_user_language_text__gradient').should('have.text', 'Add language');
+  cy.label('language', ' language*');
+  // cy.input('language', 'Japanese');
+  cy.label('proficiency', ' proficiency');
+  // cy.input('proficiency', 'Select');
+  cy.checkButton();
+}
+function checkDataCombobox() {
+  cy.dataCombobox('LANGUAGE', 'language');
+  cy.clickButton('save & continue');
+  cy.dataCombobox('LANGUAGE_PROFICIENCY', 'proficiency');
 
-    cy.label('proficiency', ' 習熟度');
-    cy.input('proficiency', '選択する');
+}
+// check validate
+function checkValidateLanguage() {
+  cy.clickButton('saveAndContinue');
+  cy.errorMessage('language', '言語 を入力してください。');
+}
 
-    cy.styleButton('cancel', ' キャンセル ');
-    cy.styleButton('reset', ' リセット ');
-    cy.styleButton('saveAndContinue', ' 保存して続行 ');
-    cy.styleButton('saveAndClose', ' 保存して閉じます ');
-  }
+//check reset
+function resetFormLanguage() {
+  inputDataLanguage();
+  cy.clickButton('reset');
+  cy.resetForm(['language_input', 'proficiency_input']);
+}
 
-  // check validate
-  function checkValidateUserLanguage() {
-    cy.clickButton('saveAndContinue');
-    cy.errorMessage('language', '言語 を入力してください。');
-  }
+function inputDataLanguage() {
+  cy.chooseMasterData('language', 'English');
+  cy.chooseMasterData('proficiency', 'N1');
+}
 
-  //check reset
-  function resetFormUserLang() {
-    cy.clickButton('reset');
-    cy.resetForm(['language_input', 'proficiency_input']);
-  }
-
-  // Check save and delete
-  function insertDataUserLanguage() {
-    cy.chooseMasterData('language', '日');
-    cy.chooseMasterData('proficiency', 'N2');
-    cy.intercept({
-      method: 'POST',
-      url: Cypress.env('host') + Cypress.env('api_url'),
-    }).as('dataSaved');
-    cy.clickButton('saveAndClose');
-    cy.wait('@dataSaved').then((req) => {
-      //console.log(req);
-      cy.status(req.response.statusCode);
-      const _key = req.response.body.data.saveUserLanguageInfo.data[0]._key;
-
-      cy.wait(1000);
-      cy.visit(Cypress.env('host') + Cypress.env('user_language') + `${_key}`);
-      let query = `
+// Check save and delete
+function saveDataLanguage() {
+  inputDataLanguage();
+  cy.intercept({
+    method: 'POST',
+    url: Cypress.env('host') + Cypress.env('api_url'),
+  }).as('dataSaved');
+  cy.clickButton('saveAndClose');
+  cy.wait('@dataSaved').then((req) => {
+    cy.status(req.response.statusCode);
+    const _key = req.response.body.data.saveUserLanguageInfo.data[0]._key;
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(1000);
+    cy.visit(Cypress.env('host') + Cypress.env('user_language') + `${_key}`);
+    const query = `
       query {
         findUserLanguageInfo(
           request: {
@@ -96,31 +101,16 @@ describe('Test Cypress', () => {
       }
       `;
 
-      cy.request({
-        method: 'POST',
-        url: Cypress.env('host') + Cypress.env('api_url'),
-        body: { query },
-        failOnStatusCode: false,
-      }).then((response) => {
-        const data = response.body.data.findUserLanguageInfo.data[0];
+    cy.request({
+      method: 'POST',
+      url: Cypress.env('host') + Cypress.env('api_url'),
+      body: { query },
+      failOnStatusCode: false,
+    }).then((response) => {
+      const data = response.body.data.findUserLanguageInfo.data[0];
+      cy.getValueMaster('language', data.language);
+      cy.getValueMaster('proficiency', data.proficiency);
 
-        cy.inputValue('language', data.language.value);
-        cy.inputValue('proficiency', data.proficiency.value);
-
-        checkDeleteUserLang();
-      });
     });
-  }
-
-// check delete in user_experience
-function checkDeleteUserLang() {
-  cy.intercept({
-    method: 'POST',
-    url: Cypress.env('host') + Cypress.env('api_url'),
-  }).as('Deleted');
-  cy.clickButton('delete');
-  cy.clickButton(new Date().getTime() + '_dialog_title_right');
-  cy.wait('@Deleted').then((req) => {
-    cy.status(req.response.statusCode);
   });
 }
