@@ -8,32 +8,28 @@
 // commands please read more here:
 // https://on.cypress.io/custom-commands
 // ***********************************************
-
 // eslint-disable-next-line @typescript-eslint/no-namespace
 declare namespace Cypress {
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface Chainable<Subject> {
     login(email: string, password: string): void;
     masterData(classes: string, parent_code?: string);
     search(url: string, keyword?: string, name?: string);
-    map(array);
     label(id, value);
     input(id, value);
     typeText(idText, valueText);
     inputText();
     chooseDate(id);
     chooseMasterData(id, value);
-    inputTextUserProfile();
     inputValue(id, value);
     chooseFile(id, file);
     resetForm(ids);
     errorMessage(id, value);
     textarea(id, value);
-    inputTextEditJob();
     checkTextbox(id);
     styleButton(id, value);
     caption(id, note?, max_file?, caption_type?, caption?)
-    inputTextCompanyInfo();
     clickButton(id);
     settingUser();
     inputClear(id, value);
@@ -61,10 +57,139 @@ declare namespace Cypress {
     scrollTo();
     clearText(id);
     chooseMasterNotData(id, value, classMaster, parent_code?);
+    uploadFiles(selector, fileUrlOrUrls);
+    dataCombobox(classMaster, id);
+    btnRowActions(row, btnName);
+    btnRowNew(btnName);
+    btnRowUpdate();
+    insertRowTable(tableRow, placeholder, data);
+    updateRowTable(row);
+    searchDataTable(data, placeholder);
+    loadDataTable(data, indexStart, indexEnd, colums);
+    checkDataRowTable(tableRow, index, data);
+    checkDataRowTableTd(tableRow, index, data);
+    clearDataRowTable(tableRow, placeholder, data);
     chooseValueDate(id, year, month, day);
+    checkButton();
   }
 
 };
+
+//Insert row table
+Cypress.Commands.add('insertRowTable', (tableRow, placeholder, data) => {
+  cy.wrap(tableRow).find(`[placeholder="${placeholder}"]`).type(data);
+});
+//Verify Data after insert data
+Cypress.Commands.add('checkDataRowTable', (tableRow, index, data) => {
+  cy.wrap(tableRow).eq(index).should("contain", data);
+});
+Cypress.Commands.add('checkDataRowTableTd', (tableRow, index, data) => {
+  cy.wrap(tableRow).find("td").eq(index).should("contain", data);
+});
+// clear data row after type
+Cypress.Commands.add('clearDataRowTable', (tableRow, placeholder, data) => {
+  cy.wrap(tableRow).find(`[placeholder="${placeholder}"]`).clear().type(data);
+});
+//Button action row table (delete,cancel)
+Cypress.Commands.add('btnRowActions', (row, btnName) => {
+  cy.get("tbody>tr>td").find("a").eq(row).contains(btnName).click();
+})
+//Button new row
+Cypress.Commands.add('btnRowNew', (btnName) => {
+  cy.get("thead").find("a").contains(btnName).click();
+  // cy.get('thead').find('.nb-plus').click();
+})
+//Button edit row
+Cypress.Commands.add('btnRowUpdate', () => {
+  cy.get("tbody>tr>td").find("a").contains("Update").click();
+})
+//Load data table
+//{Lưu ý: data trả về theo thứ tự là những cột muốn hiển thị lên table + cột checkbox}
+// const data = [{
+//   id: "1",
+//   full_name: "Leanne Graham",
+//   user_name: "Bret",
+//   email: "Sincere@april.biz",
+//   business: ['abc','bcd'],
+//   country: {'_key':'VN','value':'VN'}
+// },
+// {
+//   id: "2",
+//   full_name: "Ervin Howell",
+//   user_name: "Antonette",
+//   email: "Shanna@melissa.tv",
+//   business: ['abc','bcd'],
+//   country: {'_key':'VN','value':'VN'}
+// }
+// ]
+Cypress.Commands.add('loadDataTable', (data, indexStart, indexEnd, colums) => {
+  cy.get("table>tbody>tr").each((row, index) => {
+    const dataPage = [...data].slice(indexStart, indexEnd);
+    cy.wrap(row).within(() => {
+      let count = 2
+      for (const prop in dataPage[index]) {
+        let result;
+        if (typeof dataPage[index][prop] === "object") {
+          if (Array.isArray(dataPage[index][prop]) && dataPage[index][prop].length > 0) {
+            const temp = [];
+            dataPage[index][prop].forEach(e => {
+              if (typeof e === "object") {
+                temp.push(e.value);
+              } else {
+                temp.push(e);
+              }
+            }
+            );
+            if (temp.length > 1) {
+              result = temp.join('、');
+            } else {
+              result = temp.toString();
+            }
+          } else
+            if (dataPage[index][prop] === null || dataPage[index][prop] === undefined || dataPage[index][prop] === '') {
+              result = ''
+            } else {
+              result = dataPage[index][prop].value;
+            }
+        } else if (typeof dataPage[index][prop] === "string" && dataPage[index][prop].length > 0) {
+          result = dataPage[index][prop];
+        } else if (typeof dataPage[index][prop] === "number") {
+          result = new Intl.NumberFormat().format(dataPage[index][prop]) + '円';
+        } else {
+          result = ''
+        }
+        cy.get("td").eq(count).should("have.text", result);
+
+        if (count === colums) {
+          count = 2;
+        } else {
+          count++;
+        }
+      }
+    })
+  })
+});
+//check data ở combobox đúng với class và input
+Cypress.Commands.add('dataCombobox', (classMaster, id) => {
+  cy.masterData(classMaster).then((res) => {
+    cy.get('#' + id + '_input')
+      .click()
+      .get('.option__container').then((e) => {
+        if (res.length !== e.length) {
+          expect(res.length).to.equal(e.length);
+        } else {
+          expect(res.length).to.equal(e.length);
+          for (let i = 0; i < e.length; i++) {
+            if (!e[i].innerText === res[i].name) {
+              expect(e[i].innerText).to.equal(res[i].name);
+            } else {
+              expect(e[i].innerText).to.equal(res[i].name);
+            }
+          }
+        }
+      })
+  })
+})
 //xóa text
 Cypress.Commands.add('clearText', (id) => {
   cy.get('#' + id + '_input').clear()
@@ -76,7 +201,7 @@ Cypress.Commands.add('chooseMasterNotData', (id, value, classMaster, parent_code
   cy.masterData(classMaster, parent_code).then((m) => {
     const data = m;
     cy.typeText(id, value).then((e) => {
-      dataInput = e.val();
+      dataInput = e.val().toLowerCase();
       dataMaster = data.find(master => master.name === dataInput);
       if (dataMaster === undefined) {
         cy.clearText(id);
@@ -102,7 +227,7 @@ Cypress.Commands.add('login', (email, password) => {
   cy.visit(Cypress.env('host') + Cypress.env('sign_in'));
   cy.get('#email').type(email);
   cy.get('#password').type(password);
-  // // .type('{enter}');
+  // .type('{enter}');
   cy.get('.button__submit').click();
   // cy.url().should('eq', Cypress.env('host') + Cypress.env('recommenced_url'));
 
@@ -124,6 +249,7 @@ Cypress.Commands.add('inputClearMutil', (id, value) => {
 Cypress.Commands.add('inputClear', (id, value) => {
   cy.get('#' + id + '_input').clear().type(value).then(() => {
     cy.get('div.option__container').click();
+
   });
 });
 // Cài đặt ngôn ngữ là tiếng nhật
@@ -165,6 +291,7 @@ Cypress.Commands.add('masterData', (classMaster, parent_code?) => {
      query {
     findSystem (request: 
       {
+        options: { sort_by: { value: "sort_no" } }
         collection: "sys_master_data", 
         condition: { `
   query += `del_flag: false,
@@ -178,6 +305,8 @@ Cypress.Commands.add('masterData', (classMaster, parent_code?) => {
          {
       data {
         name
+        code
+        sort_no
       }
       message
       errors
@@ -264,7 +393,7 @@ Cypress.Commands.add('getValueNumber円', (id, value) => {
 Cypress.Commands.add('getCountFile', (id, value) => {
   const token = window.localStorage.access_token;
   if ((value || []).length > 0) {
-    let query = `
+    const query = `
     query {  findBinaryData(request: {collection: "sys_binary_data",
         condition: {_key: {value: ${JSON.stringify(value)}}, del_flag: false}, 
         company: "${Cypress.env('company')}", 
@@ -290,7 +419,6 @@ Cypress.Commands.add('getCountFile', (id, value) => {
       failOnStatusCode: false
     }).then(response => {
       const data = response.body.data.findBinaryData.data;
-      console.log(data)
       return cy.get('#' + id + '_input_file').should('have.text', 'ファイル数： ' + data.length)
     })
   } else {
@@ -340,8 +468,8 @@ Cypress.Commands.add('chooseRadio', (value) => {
   })
 });
 // Chọn file
-Cypress.Commands.add('chooseFile', (id, file) => {
-  cy.get('#' + id).attachFile(file);
+Cypress.Commands.add('chooseFile', (id, fileList) => {
+  cy.get('#' + id).attachFile(fileList);
 });
 // Reset form
 Cypress.Commands.add('resetForm', (ids) => {
@@ -431,7 +559,17 @@ Cypress.Commands.add('chooseValueDate', (id, year, month, day) => {
       .get('nb-calendar-picker').contains(year).click()
       .get('nb-calendar-picker').contains(month + '月').click()
       .get('nb-calendar-day-cell:not(.bounding-month)').contains(day).click() //.invoke('text')
-      // bounding-month
+    // bounding-month
+  });
 });
-});
+
+Cypress.Commands.add('checkButton', () => {
+  cy.styleButton('cancel', ' cancel ');
+  cy.styleButton('reset', ' reset ');
+  cy.styleButton('saveContinue', ' save & continue ');
+  cy.styleButton('saveClose', ' save & close ');
+})
+
+
+
 
