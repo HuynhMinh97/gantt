@@ -564,10 +564,10 @@ Cypress.Commands.add('chooseValueDate', (id, year, month, day) => {
 });
 
 Cypress.Commands.add('checkButton', () => {
-  cy.styleButton('cancel', ' cancel ');
-  cy.styleButton('reset', ' reset ');
-  cy.styleButton('saveContinue', ' save & continue ');
-  cy.styleButton('saveClose', ' save & close ');
+  cy.styleButton('cancel', ' CANCEL ');
+  cy.styleButton('reset', ' RESET ');
+  cy.styleButton('saveContinue', ' SAVE & CONTINUE ');
+  cy.styleButton('saveClose', ' SAVE & CLOSE ');
 })
 
 

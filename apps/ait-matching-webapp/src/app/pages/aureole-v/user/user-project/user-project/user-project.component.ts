@@ -35,14 +35,14 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
   keyTitle = '';
   keyCompany = '';
   error = [];
-  listSkills : any;
-  keySkills : any;
+  listSkills: any;
+  keySkills: any;
   stateProjectInfo = {} as UserProjectDto;
   stateProjectInfoDf = {} as UserProjectDto;
   isClear = false;
   connection_user_project = {
-    _from:'',
-    _to:'',
+    _from: '',
+    _to: '',
     relationship: '',
     sort_no: 0,
   }
@@ -63,7 +63,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     responsibility: false,
     achievement: false
   };
-  isClearErrors  = {
+  isClearErrors = {
     name: false,
     company_working: false,
     title: false,
@@ -113,12 +113,12 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     this.userProject = this.formBuilder.group({
       _key: new FormControl(null),
       name: new FormControl(null, [Validators.required, Validators.maxLength(200)]),
-      start_date_from: new FormControl(null,[Validators.required]),
+      start_date_from: new FormControl(null, [Validators.required]),
       start_date_to: new FormControl(null),
       company_working: new FormControl(null, [Validators.required]),
       title: new FormControl(null, [Validators.required]),
       description: new FormControl(null, [Validators.required, Validators.maxLength(4000)]),
-      skills: new FormControl(null, [Validators.required,Validators.maxLength(10)]),
+      skills: new FormControl(null, [Validators.required, Validators.maxLength(10)]),
       responsibility: new FormControl(null, [Validators.required, Validators.maxLength(4000)]),
       achievement: new FormControl(null, [Validators.required, Validators.maxLength(4000)]),
     });
@@ -129,93 +129,93 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       this.mode = MODE.EDIT;
     }
   }
-  
 
-  async ngOnInit() {  
-    if(this.mode === "NEW"){
-      await this.inputProject(); 
+
+  async ngOnInit() {
+    if (this.mode === "NEW") {
+      await this.inputProject();
       this.userProject.controls["start_date_from"].setValue(this.dateNow);
-      this.userProject.controls['title'].setValue( this.keyTitle);
+      this.userProject.controls['title'].setValue(this.keyTitle);
       this.userProject.controls['company_working'].setValue(this.keyCompany);
       this.userProjectClone = this.userProject.value;
-    }else{
+    } else {
       await this.findBizProject();
-      await this.findSkills();   
+      await this.findSkills();
     }
-    await this.userProject.valueChanges.subscribe((data) => {      
+    await this.userProject.valueChanges.subscribe((data) => {
       this.checkAllowSave();
     });
   }
 
-  async findBizProject(){
+  async findBizProject() {
     const res = await this.userProjectService.find(this.project_key);
-    const data = res.data[0];  
-    if(res.data.length > 0 ){
+    const data = res.data[0];
+    if (res.data.length > 0) {
       this.userProject.patchValue({ ...data });
       this.userProjectClone = this.userProject.value;
-      if(data.user_id != this.user_id){
+      if (data.user_id != this.user_id) {
         this.mode = MODE.VIEW;
       }
-    }else{
-      this.router.navigate([`/404`]); 
-    }        
-   
+    } else {
+      this.router.navigate([`/404`]);
+    }
+
   }
 
-  async findSkills(){
+  async findSkills() {
     const from = 'biz_project/' + this.project_key;
-    await this.userProjectService.findFromBizProjectSkill(from).then(async (res) => {      
+    await this.userProjectService.findFromBizProjectSkill(from).then(async (res) => {
       let listSkills = [];
       let listCodeSkills = [];
-      for(const key of  res.data){
+      for (const key of res.data) {
         let keySkills = key._to.substring(8)
-        listSkills.push({_key:keySkills} );
+        listSkills.push({ _key: keySkills });
         const res = await this.userProjectService.findMSkillsByKey(keySkills);
-        listCodeSkills.push({_key:res.data[0].code, value:res.data[0].name});
+        listCodeSkills.push({ _key: res.data[0].code, value: res.data[0].name });
       }
       this.userProject.controls['skills'].setValue([...listCodeSkills]);
       this.userProjectClone = this.userProject.value;
       this.keySkills = listSkills;
-    }) 
+    })
   }
 
-  async inputProject(){    
+  async inputProject() {
     await this.userProjectService
       .findKeyTitle(this.env.COMMON.COMPANY_DEFAULT, this.user_id)
-      .then((res) =>{
+      .then((res) => {
         this.keyTitle = res.data[0].title;
-        this.keyCompany = res.data[0].company_working; 
+        this.keyCompany = res.data[0].company_working;
       });
   }
 
-  takeMasterValue(val: any, form: string): void { 
-      if(isObjectFull(val) && val.value.length >0 ){  
-        if (form == 'skills') {          
-          const data = [];       
-          val.value.forEach((item) => {
-            data.push(item);
-          });
-          this.userProject.controls[form].markAsDirty();
-          this.userProject.controls['skills'].setValue(data);
-        }else{
-          this.userProject.controls[form].markAsDirty();
-          this.userProject.controls[form].setValue(val?.value[0]?._key);
-        }     
-      } 
-      else {
+  takeMasterValue(val: any, form: string): void {
+    if (isObjectFull(val) && val.value.length > 0) {
+      if (form == 'skills') {
+        const data = [];
+        val.value.forEach((item) => {
+          data.push(item);
+        });
         this.userProject.controls[form].markAsDirty();
-        this.userProject.controls[form].setValue(null);      
-      }   
+        this.userProject.controls['skills'].setValue(data);
+      } else {
+        this.userProject.controls[form].markAsDirty();
+        this.userProject.controls[form].setValue(val?.value[0]?._key);
+      }
+    }
+    else {
+      this.userProject.controls[form].markAsDirty();
+      this.userProject.controls[form].setValue(null);
+    }
   }
 
   takeInputValue(val: any, form: string): void {
-    if (val) {     
+    if (val) {
       this.userProject.controls[form].markAsDirty();
-      this.userProject.controls[form].setValue(val);      
+      this.userProject.controls[form].setValue(val);
     } else {
       this.userProject.controls[form].markAsDirty();
       this.userProject.controls[form].setValue(null);
-    }       
+    }
   }
 
   takeDatePickerValue(value: number, form: string) {
@@ -227,22 +227,22 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     } else {
       this.userProject.controls[form].markAsDirty();
       this.userProject.controls[form].setValue(null);
-    }   
+    }
     this.error = this.checkDatePicker();
   }
 
-  checkDatePicker(){
+  checkDatePicker() {
     const res = [];
     const msg = this.translateService.getMsg('E0004');
     const dateFrom = this.userProject.controls['start_date_from'].value;
     const dateTo = this.userProject.controls['start_date_to'].value;
 
-    if(dateFrom > dateTo && dateTo != null){
+    if (dateFrom > dateTo && dateTo != null) {
       const transferMsg = (msg || '')
         .replace('{0}', this.translateService.translate('date from'))
         .replace('{1}', this.translateService.translate('date to'));
-        res.push(transferMsg);
-    }   
+      res.push(transferMsg);
+    }
     return res;
   }
 
@@ -256,19 +256,19 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     }
     return Array.from(new Set(data.map(d => d?._key).filter(x => !!x)));
   }
-// chuan hoa data de save
-  dataSaveProject(){
+  // chuan hoa data de save
+  dataSaveProject() {
     const saveData = this.userProject.value;
     saveData['user_id'] = this.authService.getUserID();
     this.listSkills = saveData.skills;
-    delete saveData.skills;  
+    delete saveData.skills;
     return saveData;
   }
 
   async saveSkill(bizProjectKey: string) {
     this.biz_project_skill._from = 'biz_project/' + bizProjectKey;
     this.biz_project_skill.relationship = ' biz_project skill';
-    if(this.mode == 'EDIT'){
+    if (this.mode == 'EDIT') {
       const _fromSkill = [
         { _from: 'biz_project/' + this.project_key },
       ];
@@ -276,16 +276,16 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     }
     this.listSkills.forEach(async (skill) => {
       await this.userProjectService.findMSkillsByCode(skill._key)
-      .then(async (res) => {
-        this.sort_no += 1;
-        this.biz_project_skill.sort_no = this.sort_no;
-        this.biz_project_skill._to = 'm_skill/' + res.data[0]._key;
-        await this.userProjectService.saveSkills(this.biz_project_skill);
-      });
+        .then(async (res) => {
+          this.sort_no += 1;
+          this.biz_project_skill.sort_no = this.sort_no;
+          this.biz_project_skill._to = 'm_skill/' + res.data[0]._key;
+          await this.userProjectService.saveSkills(this.biz_project_skill);
+        });
     });
   }
-  
-  async saveUserProject(bizProjectKey: string){
+
+  async saveUserProject(bizProjectKey: string) {
     this.connection_user_project._from = 'sys_user/' + this.user_id;
     this.connection_user_project._to = 'biz_project/' + bizProjectKey;
     this.connection_user_project.relationship = 'user project';
@@ -293,57 +293,57 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     await this.userProjectService.saveConnectionUserProject(this.connection_user_project);
   }
 
-  async saveContinue() { 
+  async saveContinue() {
     this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
-    if(this.userProject.valid){
-      await this.userProjectService.saveBizProject(this.dataSaveProject() )
-      .then(async (res) => {  
-        if (res?.status === RESULT_STATUS.OK) {        
-          const data = res.data[0];
-          await this.saveSkill(data._key);
-          await this.saveUserProject(data._key);  
-          const message = this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
-          this.showToastr('', message); 
-          await this.reset();     
-        }else{
+    if (this.userProject.valid) {
+      await this.userProjectService.saveBizProject(this.dataSaveProject())
+        .then(async (res) => {
+          if (res?.status === RESULT_STATUS.OK) {
+            const data = res.data[0];
+            await this.saveSkill(data._key);
+            await this.saveUserProject(data._key);
+            const message = this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
+            this.showToastr('', message);
+            await this.reset();
+          } else {
+            this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+          }
+        }).catch(() => {
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-        }      
-      }).catch(() => {
-        this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-      })
-    }else{
+        })
+    } else {
       this.scrollIntoError();
-    }   
+    }
   }
 
-  async saveClose(){
+  async saveClose() {
     this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
     debugger
-    if(this.userProject.valid){
+    if (this.userProject.valid) {
       await this.userProjectService.saveBizProject(this.dataSaveProject())
-      .then(async (res) => {  
-        if (res?.status === RESULT_STATUS.OK) {        
-          const data = res.data[0];
-          await this.saveSkill(data._key);
-          await this.saveUserProject(data._key);  
-          const message = this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
-          this.showToastr('', message);  
-          this.router.navigateByUrl('/');    
-        }else{
+        .then(async (res) => {
+          if (res?.status === RESULT_STATUS.OK) {
+            const data = res.data[0];
+            await this.saveSkill(data._key);
+            await this.saveUserProject(data._key);
+            const message = this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
+            this.showToastr('', message);
+            this.router.navigateByUrl('/');
+          } else {
+            this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+          }
+        }).catch(() => {
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-        }      
-      }).catch(() => {
-        this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-      })
-    }else{
+        })
+    } else {
       this.scrollIntoError();
-    }   
+    }
   }
 
   scrollIntoError() {
@@ -358,7 +358,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
             block: 'center',
           });
           break;
-        } catch {}
+        } catch { }
       }
     }
   }
@@ -386,7 +386,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     this.isChanged = !(isChangedUserInfo);
   }
 
-  async reset(){
+  async reset() {
     this.isSubmit = false;
     this.isChanged = false;
     this.error = [];
@@ -397,50 +397,50 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
         this.resetUserProject[prop] = false;
       }, 100);
     }
-    setTimeout(() => { 
+    setTimeout(() => {
       this.isReset = false;
       this.userProject.controls["start_date_from"].setValue(this.dateNow);
-      this.userProject.controls['title'].setValue( this.keyTitle);
+      this.userProject.controls['title'].setValue(this.keyTitle);
       this.userProject.controls['company_working'].setValue(this.keyCompany);
     }, 100);
   }
 
   async resetForm() {
-    try{
+    try {
       this.isSubmit = false;
-    this.isChanged = false;
-    if (this.mode === MODE.EDIT) {
-      this.error =[];
-      debugger
-      for (const index in this.resetUserProject) {
-        if (!this.userProject.controls[index].value ) {
-          this.resetUserProject[index] = true;
-          this.isClear = true;
-          setTimeout(() => {
-            this.userProject[index] = false;
-            this.isClear = false;
-          },100);
-          
+      this.isChanged = false;
+      if (this.mode === MODE.EDIT) {
+        this.error = [];
+        debugger
+        for (const index in this.resetUserProject) {
+          if (!this.userProject.controls[index].value) {
+            this.resetUserProject[index] = true;
+            this.isClear = true;
+            setTimeout(() => {
+              this.userProject[index] = false;
+              this.isClear = false;
+            }, 100);
+
+          }
         }
+        this.isClearErrors.skills = true;
+        setTimeout(() => {
+          this.isClearErrors.skills = false;
+          this.userProject.patchValue({ ...this.userProjectClone });
+          this.showToastr('', this.getMsg('I0007'));
+        }, 100)
       }
-      this.isClearErrors.skills = true;
-      setTimeout(() => {
-        this.isClearErrors.skills = false;
-        this.userProject.patchValue({ ...this.userProjectClone});
+      else {
+        await this.reset();
         this.showToastr('', this.getMsg('I0007'));
-      },100)            
-    }
-    else {
-      await this.reset();
-      this.showToastr('', this.getMsg('I0007'));
-    }
-    }catch(e){
+      }
+    } catch (e) {
       console.log(e);
-      
+
     }
-    
+
   }
-  async Delete() {  
+  async Delete() {
     this.dialogService
       .open(AitConfirmDialogComponent, {
         closeOnBackdropClick: true,
@@ -451,7 +451,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
         },
       })
       .onClose.subscribe(async (event) => {
-        if (event) {        
+        if (event) {
           if (this.project_key) {
             await this.userProjectService.remove(this.project_key).then((res) => {
               if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
@@ -462,7 +462,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
                   { _to: 'biz_project/' + this.project_key },
                 ];
                 this.userProjectService.removeSkill(_fromSkill);
-                this.userProjectService.removeUserProejct(_toUser);                
+                this.userProjectService.removeUserProejct(_toUser);
                 this.showToastr('', this.getMsg('I0003'));
                 history.back();
               } else {
@@ -476,36 +476,36 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       });
   }
 
-  cancel(){
-    if(this.isChanged){
+  cancel() {
+    if (this.isChanged) {
       this.dialogService
-      .open(AitConfirmDialogComponent, {
-        closeOnBackdropClick: true,
-        hasBackdrop: true,
-        autoFocus: false,
-        context: {
-          title: this.getMsg('I0006'),
-        },
-      })
-      .onClose.subscribe(async (event) => {
-        if (event) {
-          history.back()
-        }
-      });
-    }else{
+        .open(AitConfirmDialogComponent, {
+          closeOnBackdropClick: true,
+          hasBackdrop: true,
+          autoFocus: false,
+          context: {
+            title: this.getMsg('I0006'),
+          },
+        })
+        .onClose.subscribe(async (event) => {
+          if (event) {
+            history.back()
+          }
+        });
+    } else {
       history.back()
     }
   }
   getTitleByMode() {
     let title = '';
-    if(this.mode === MODE.EDIT){
-      title = this.translateService.translate('edit project')
+    if (this.mode === MODE.EDIT) {
+      title = this.translateService.translate('Edit project')
     }
-    else if(this.mode === MODE.NEW){
-      title = this.translateService.translate('add project')
+    else if (this.mode === MODE.NEW) {
+      title = this.translateService.translate('Add project')
     }
-    else{
-      title = this.translateService.translate('view project')
+    else {
+      title = this.translateService.translate('View project')
     }
     return title;
   }

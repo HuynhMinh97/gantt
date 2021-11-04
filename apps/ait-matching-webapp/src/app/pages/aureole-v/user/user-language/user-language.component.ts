@@ -236,7 +236,7 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
             block: 'center',
           });
           break;
-        } catch {}
+        } catch { }
       }
     }
   }
@@ -328,7 +328,7 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
 
   getTitleByMode() {
     return this.mode === MODE.EDIT
-      ? this.translateService.translate('edit language')
-      : this.translateService.translate('add language');
+      ? this.translateService.translate('Edit language')
+      : this.translateService.translate('Add language');
   }
 }

@@ -8,9 +8,9 @@
       <div class="input_area">
         <ait-autocomplete-master-data
           [id]="'language'"
-          [label]="'language'"
+          [label]="'LANGUAGE'"
           [required]="true"
-          [placeholder]="'japanese'"
+          [placeholder]="'Japanese'"
           [maxItem]="1"
           [collection]="'sys_master_data'"
           [class]="'LANGUAGE'"
@@ -26,7 +26,7 @@
       <div class="input_area">
         <ait-autocomplete-master-data
           [id]="'proficiency'"
-          [label]="'proficiency'"
+          [label]="'PROFICIENCY'"
           [placeholder]="'select'"
           [collection]="'sys_master_data'"
           [class]="'LANGUAGE_PROFICIENCY'"
@@ -46,7 +46,7 @@
       <div class="block">
         <ait-button
           [id]="'cancel'"
-          [title]="'cancel'"
+          [title]="'CANCEL'"
           (click)="back()"
           [isDefault]="true"
         ></ait-button>
@@ -55,7 +55,7 @@
           *ngIf="mode === 'EDIT'"
           [id]="'delete'"
           [width]="'200px'"
-          [title]="'delete'"
+          [title]="'DELETE'"
           (click)="onDelete()"
           [isDefault]="true"
         >
@@ -65,7 +65,7 @@
           *ngIf="mode !== 'VIEW'"
           [id]="'reset'"
           [width]="'200px'"
-          [title]="'reset'"
+          [title]="'RESET'"
           (click)="resetForm()"
           [isDefault]="true"
         ></ait-button>
@@ -73,7 +73,7 @@
         <ait-button
           *ngIf="mode === 'NEW'"
           [id]="'saveAndContinue'"
-          [title]="'save continue'"
+          [title]="'SAVE & CONTINUE'"
           (click)="saveAndContinue()"
           [isDefault]="true"
         ></ait-button>
@@ -82,7 +82,7 @@
           [id]="'saveAndClose'"
           *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
           [width]="'200px'"
-          [title]="'save close'"
+          [title]="'SAVE & CLOSE'"
           (click)="saveAndClose()"
           [isDefault]="true"
         >
@@ -91,7 +91,7 @@
           *ngIf="!isChanged && mode === 'EDIT'"
           [id]="'saveAndClose'"
           [width]="'200px'"
-          [title]="'save close'"
+          [title]="'SAVE & CLOSE'"
           [style]="'disabled'"
         ></ait-button>
       </div>
