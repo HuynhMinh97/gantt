@@ -77,7 +77,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit {
       start_date_from: new FormControl(null),
       start_date_to: new FormControl(null),
       training_center: new FormControl(null),
-      
+      user_id: new FormControl(null),
     });
     // get key form parameters
     this.course_key = this.activeRouter.snapshot.paramMap.get('id');
@@ -223,7 +223,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit {
             this.isClearErrors = false;
           }, 100);
       this.companyCenter = [];    
-      // this.companyCenter.push({_key: this.courseClone.training_center?._key, value: this.courseClone.training_center?.value});
+      this.companyCenter.push({_key: this.courseClone.training_center?._key, value: this.courseClone.training_center?.value});
       this.course.patchValue({ ...this.courseClone });
       this.showToastr('', this.getMsg('I0007'));
     }
@@ -236,8 +236,8 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit {
       this.isSubmit = false;
     }, 100);  
     const saveData = this.course.value;
-    saveData['user_id'] = this.authService.getUserID();
-    
+    saveData['training_center'] = this.course.value.training_center;
+    saveData['user_id'] = this.authService.getUserID();    
     if(this.course.value.is_online == null){
       saveData['is_online'] = false;
     }  
@@ -267,11 +267,13 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit {
   }
 
   async saveAndClose(){
+    debugger
     this.isSubmit = true; 
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);   
     const saveData = this.course.value;
+    saveData['training_center'] = this.course.value.training_center;
     if(this.course.value.is_online == null){
       saveData['is_online'] == false;
     }
@@ -328,7 +330,7 @@ export class UserCourseComponent  extends AitBaseComponent implements OnInit {
               const data = r.data[0];                                         
               this.course.patchValue({ ...data });  
               this.courseClone = this.course.value;       
-              this.companyCenter.push({_key: data.training_center?._key}); 
+              this.companyCenter = [{_key: data.training_center?._key}, {value: data.training_center?.value}]; 
               if(this.user_id != data.user_id){
                 this.mode = MODE.VIEW
               }                            

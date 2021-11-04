@@ -15,13 +15,38 @@ export class UserCerfiticateService extends AitBaseService {
       _key: user_key,
       del_flag: false
     }
+    const keyMasterArray = [
+      {
+        att: 'name',
+        col: 'm_certificate_award',
+      },
+      {
+        att: 'issue_by',
+        col: 'm_training_center',
+      },
+    ];
+  
+    keyMasterArray.forEach((item) => {
+      condition[item.att] = {
+        attribute: item.att,
+        ref_collection: item.col,
+        ref_attribute: 'code'
+      };
+    });
     return await this.query('findUsercertificate', {collection: 'user_certificate_award',  condition    }, 
     {
       _key : true,
-      name:true,
+      name:{
+        _key: true,
+        value: true,
+      },
+     
       certificate_award_number: true,
       grade: true,
-      issue_by: true,
+      issue_by:{
+        _key: true,
+        value: true,
+      },
       issue_date_from: true,
       issue_date_to: true,
       description: true,

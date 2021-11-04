@@ -17,6 +17,25 @@ export class UserProfileService extends AitBaseService {
       ref_attribute: '_key',
       get_by: '_key',
     }
+    const specialFields = ['country', 'city'];
+
+    specialFields.forEach((item) => {
+      condition[item] = {
+        attribute: item,
+        ref_collection: 'sys_master_data',
+        ref_attribute: 'code',
+      };
+    });
+    condition['title'] = {
+      attribute: 'title',
+      ref_collection: 'm_title',
+      ref_attribute: 'code',
+    };
+    condition['company_working'] = {
+      attribute: 'company_working',
+      ref_collection: 'm_company',
+      ref_attribute: 'code',
+    };
     return await this.query('findProfile', {collection: 'user_profile',  condition    }, 
     {
       user_id: true,
@@ -24,14 +43,26 @@ export class UserProfileService extends AitBaseService {
       background_url: true,
       last_name: true,
       first_name: true,
-      title: true,
-      company_working: true,
-      city: true,
-      country: true,
+      title:{
+        _key: true,
+        value: true,
+      },
+      company_working:{
+        _key: true,
+        value: true,
+      },
+      city:{
+        _key: true,
+        value: true,
+      },
+      country:{
+        _key: true,
+        value: true,
+      },
       about: true,
       top_skills:{
         _key: true,
-        value: true
+        value: true,
       },
     })
   }

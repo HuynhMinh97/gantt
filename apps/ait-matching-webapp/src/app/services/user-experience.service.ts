@@ -51,7 +51,7 @@ export class UserExperienceService extends AitBaseService {
       },
       {
         att: 'company_working',
-        col: 'sys_company',
+        col: 'm_company',
       },
     ];
 
@@ -76,7 +76,7 @@ export class UserExperienceService extends AitBaseService {
     };
     const returnFields = { code: true };
     const request = {};
-    request['collection'] = 'sys_company';
+    request['collection'] = 'm_company';
     request['condition'] = condition;
     return await this.query('findSystem', request, returnFields);
   }
@@ -86,7 +86,7 @@ export class UserExperienceService extends AitBaseService {
       user_id: _key,
       company_working: {
         attribute: "company_working",
-        ref_collection: "sys_company",
+        ref_collection: "m_company",
         ref_attribute: "code",
       }
     };
@@ -143,7 +143,7 @@ async findUserExperienceByUserId(user_id?: string) {
     },
     {
       att: 'company_working',
-      col: 'sys_company',
+      col: 'm_company',
     },
   ];
 

@@ -375,6 +375,7 @@ export class UserOnboardingComponent
     saveData.industry = saveData.industry?._key;
     saveData.company_working = saveData.company_working?saveData.company_working?._key : null;
     this.skills = saveData.skills;
+    saveData['top_skills'] = [];
     delete saveData.skills;
     if(this.mode = MODE.NEW) {
       saveData['user_id'] = this.user_id;

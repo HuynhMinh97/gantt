@@ -116,19 +116,26 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   userCourse: CourseDto[] = [];
   userEducation: EducationDto[] = [];
   userLanguage: LanguageDto[] = [];
-  profile: ProfileDto;
+  userProfile: ProfileDto;
   quantitySkill = 0;
   timeProject = 0;
   timeExperience = 0;
   dateFormat = "dd/MM/yyyy";
   today = Date.now();
   isMyUserProfile = false;
+  countSkill="";
+  actionBtn = [
+    {
+      title: '追加',
+      icon: 'plus'
+    }
+  ];
   
   async ngOnInit(): Promise<void> {
     await this.getMasterData();
-    await this.findUserProfileByUserId();
-    await this.getSkillByUserId();
-    await this.getProjectByUserId();
+    this.findUserProfileByUserId();
+    this.getSkillByUserId();
+    this.getProjectByUserId();
     this.getExperiencByUserId()
     this.getCentificateByUserId();
     this.getCourseByUserId();
@@ -162,27 +169,48 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   async findUserProfileByUserId(){
     await this.userProfileService.findProfile(this.user_id)
     .then((res) => {
-      if( res.data[0].user_id == this.user_id){
-        this.isMyUserProfile = true;
-      }
-     this.profile = res.data[0];
-     let topSkill = {} as OrderSkill;
-     topSkill.name = "TOP 5";
-     topSkill.data = [];
-     this.profile.top_skills.forEach((skill) => {
-      topSkill.data.push(skill.value);
-     })  
-     this.skillByCategory.push(topSkill);
+      if (res.status === RESULT_STATUS.OK) {
+        if (res.data.length > 0) { 
+          if( res.data[0].user_id == this.user_id){
+            this.isMyUserProfile = true;
+          }
+          const data = res.data[0];
+          let profile = {} as ProfileDto;
+          profile.city = data.city?.value;
+          profile.user_id = data.user_id;
+          profile.last_name = data.last_name;
+          profile.first_name = data.first_name;
+          profile.title = data.title?.value;
+          profile.company_working = data.company_working?.value;
+          profile.country = data.country?.value;
+          profile.about = data.about;
+          profile.top_skills = data.top_skills.length > 0 ? data.top_skills : [];
+          this.userProfile = profile;
+      
+          let topSkill = {} as OrderSkill;
+          topSkill.name = "TOP 5";
+          topSkill.data = [];
+         if(this.userProfile.top_skills.length > 0){
+          this.userProfile.top_skills.forEach((skill) => {
+            topSkill.data.push(skill.value);
+           })  
+           this.skillByCategory.push(topSkill);
+         }
+        }else{
+          this.router.navigate([`/404`]);    
+        }
+      }   
     })
-    console.log(this.skillByCategory);
+    console.log(this.userProfile);
   }
 
   async getSkillByUserId(){
-      const from = 'sys_user/' + this.user_id;
+    const from = 'sys_user/' + this.user_id;
     await this.reoderSkillsService.findReorder(from).then(async (res) => {
       if (res.status === RESULT_STATUS.OK) {
         if(res.data.length > 0){
           const data = res.data;
+          this.countSkill = 'You has '+ data.length + ' skills. Each person has max 50 skills';
           this.quantitySkill = data.length;
           data.forEach((item) => {
             let isCategory = false;
@@ -260,7 +288,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
       
       
     })
-    console.log(this.userProject);
+    console.log(this.timeProject/1000/60/60);
     
   }
 
@@ -480,4 +508,13 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
     return 'https://d30y9cdsu7xlg0.cloudfront.net/png/47682-200.png';
   }
   safelyURL = (data, type) => this.santilizer.bypassSecurityTrustUrl(`data:${type};base64, ${data}`);
+  isOpen = {
+    userInfo: true,
+    userTraining: true,
+    userJobQuery: true,
+    userCertificate: true,
+  };
+  toggleContent(group: string, status: boolean) {
+    this.isOpen[group] = status;
+  }
 }

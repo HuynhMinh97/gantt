@@ -22,8 +22,8 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
   dataOld: any;
   mode = MODE.NEW;
   dateNow = new Date().setHours(0, 0, 0, 0);
-  companyName: any = null;
-  companyIssue: any = null;
+  companyName = [];
+  companyIssue = [];
   files = [];
   isSubmit = false;  
   submitFile = false;  
@@ -76,6 +76,7 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
       issue_date_to : new FormControl(null),
       description: new FormControl(null),
       file: new FormControl(null,[Validators.maxLength(5)]),  
+      user_id: new FormControl(null),
     });
     // get key form parameters
     this.certificate_key = this.activeRouter.snapshot.paramMap.get('id');
@@ -114,7 +115,7 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
   takeMasterValue(val: any, form: string): void {
     if (isObjectFull(val) && val.value.length > 0) {
       this.certificate.controls[form].markAsDirty();
-      this.certificate.controls[form].setValue(val?.value[0]._key);
+      this.certificate.controls[form].setValue(val?.value[0]);
     } else {
       this.certificate.controls[form].markAsDirty();
       this.certificate.controls[form].setValue(null);
@@ -223,8 +224,8 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
             this.isClearError = false;
           }, 100);
       this.certificate.patchValue({...this.certificateClone});  
-      this.companyName = {_key: this.certificateClone.name};
-      this.companyIssue = {_key: this.certificateClone.issue_by};      
+      this.companyName = [{_key: this.certificateClone.name?._key}];
+      this.companyIssue = [{_key: this.certificateClone.issue_by?._key}];      
       this.showToastr('', this.getMsg('I0007'));    
     }
   }
@@ -234,7 +235,10 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);  
+    debugger
     const saveData = this.certificate.value;   
+    saveData['name'] = this.certificate.value.name?._key;
+    saveData['issue_by'] = this.certificate.value.issue_by?._key;
     if (this.certificate_key) {
       saveData['_key'] = this.certificate_key;
     }else{
@@ -271,6 +275,8 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
       this.isSubmit = false;
     }, 100);  
     const saveData = this.certificate.value;
+    saveData['name'] = this.certificate.value.name?._key;
+    saveData['issue_by'] = this.certificate.value.issue_by?._key;
     if (this.certificate_key) {
       saveData['_key'] = this.certificate_key;
     }else{
@@ -284,7 +290,7 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
           const message =
           this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
           this.showToastr('', message);
-          this.router.navigateByUrl('/');
+          history.back();
         }else{
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         }
@@ -328,12 +334,8 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
               const data = r.data[0];                                                
               this.certificate.patchValue({ ...data });
               this.certificateClone = this.certificate.value;          
-              this.companyName = {
-                _key: data.name,
-              };
-              this.companyIssue = {
-                _key: data.issue_by,
-              };
+              this.companyName = [{_key: data.name?._key},{value: data.name?.value}];
+              this.companyIssue = [{_key: data.issue_by?._key}, {value: data.issue_by?.value}];
               this.files = data.file;                
               if(this.user_id != data.user_id){
                 this.mode = MODE.VIEW
