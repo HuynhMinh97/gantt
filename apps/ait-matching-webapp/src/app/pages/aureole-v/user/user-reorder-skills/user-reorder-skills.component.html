@@ -1,6 +1,6 @@
 <div id="company__info__wrapper">
   <ait-text-gradient 
-    [content]="'reorder' | translate"
+    [content]="'Reorder skills' | translate"
     [id]="'title'"
     ></ait-text-gradient>
   <div class="content__card" >
@@ -87,7 +87,7 @@
     <div class="block">
       <ait-button
         [id]="'cancel'"
-        [title]="'cancel'"
+        [title]="'CANCEL'"
         [isDefault]="true"
         nbSpinnerStatus="primary"
         [tabIndex]="40"
@@ -101,7 +101,7 @@
       *ngIf="isChanged"
         [id]="'saveClose'"
         [width]="'200px'"
-        [title]="'save close'"
+        [title]="'SAVE & CLOSE'"
         (click)="save()"
         [background]="
           'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
@@ -112,7 +112,7 @@
         *ngIf="!isChanged"
         [id]="'disabled'"
         [width]="'200px'"
-        [title]="'save close'"
+        [title]="'SAVE & CLOSE'"
         [style]="'disabled'"
       ></ait-button>
     </div>

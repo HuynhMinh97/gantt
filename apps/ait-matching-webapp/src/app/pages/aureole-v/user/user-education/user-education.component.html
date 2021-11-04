@@ -11,7 +11,7 @@
           [required]="true"
           [allowNew]="true"
           [maxItem]="1"
-          [placeholder]="'bachkhoahcm'"
+          [placeholder]="'BACH KHOA Ho Chi Minh Technology University'"
           [collection]="'m_school'"
           [disableOutputDefault]="true"
           [isReset]="resetUserInfo.school"
@@ -25,7 +25,7 @@
         <ait-input-text
           [length]="400"
           [id]="'degree'"
-          [label]="'degree'"
+          [label]="'DEGREE'"
           [placeholder]="'engineer'"
           [isReset]="resetUserInfo.degree"
           [readonly]="resetUserInfo.degree"
@@ -39,8 +39,8 @@
         <ait-input-text
           [length]="400"
           [id]="'field_of_study'"
-          [label]="'field of study'"
-          [placeholder]="'computer'"
+          [label]="'FIELD Of STUDY'"
+          [placeholder]="'Ex: Computer'"
           [isReset]="resetUserInfo.field_of_study"
           [readonly]="resetUserInfo.field_of_study"
           (watchValue)="takeInputValue($event, 'field_of_study')"
@@ -53,7 +53,7 @@
         <ait-input-text
           [length]="400"
           [id]="'grade'"
-          [label]="'grade'"
+          [label]="'GRADE'"
           [placeholder]="'Good'"
           [isReset]="resetUserInfo.grade"
           [readonly]="resetUserInfo.grade"
@@ -67,7 +67,7 @@
         <ait-datepicker
           [label]="'START DATE'"
           [format]="'yyyy/MM'"
-          [placeholder]="'2003/09'"
+          [placeholder]="'2021/01'"
           [id]="'start_date_from'"
           [style]="{ width: '185px' }"
           [isReset]="resetUserInfo.start_date_from"
@@ -82,7 +82,7 @@
         ></ait-datepicker>
         <span>〜</span>
         <ait-datepicker
-          [placeholder]="'2008/03'"
+          [placeholder]="'2021/01'"
           [format]="'yyyy/MM'"
           [id]="'start_date_to'"
           [style]="{ width: '185px' }"
@@ -107,8 +107,8 @@
           [id]="'description'"
           [length]="4000"
           [rows]="4"
-          [label]="'description'"
-          [placeholder]="'place your text'"
+          [label]="'DESCRIPTION'"
+          [placeholder]="'Place your text'"
           [width]="'415px'"
           [isReset]="resetUserInfo.description"
           [readonly]="resetUserInfo.description"
@@ -118,10 +118,10 @@
         </ait-input-text>
 
         <div class="input_area">
-          <ait-label [label]="'files'"></ait-label>
+          <ait-label [label]="'FILES'"></ait-label>
           <label class="file-max"  style="display: flex !important;"
             ><nb-icon icon="attach-outline"></nb-icon>
-            <ait-label [label]="'upload'"></ait-label>
+            <ait-label [label]="'Upload max 5 files and 10MB/file.'"></ait-label>
           </label>
           <ait-input-file
             [id]="'file'"
@@ -129,7 +129,7 @@
             [maxFiles]="5"
             [hasStatus]="false"
             [isReset]="isResetFile"
-            [placeholder]="'select file'"
+            [placeholder]="'Select file'"
             [fileKeys]="userEducationInfo.controls['file'].value"
             (watchValue)="takeFiles($event.value)"
           ></ait-input-file>
@@ -143,7 +143,7 @@
         <ait-button
           *ngIf="mode !== 'VIEW'"
           [id]="'cancel'"
-          [title]="'cancel'"
+          [title]="'CANCEL'"
           [isDefault]="true"
           (click)="back()"
         ></ait-button>
@@ -152,7 +152,7 @@
           *ngIf="mode === 'EDIT'"
           [id]="'delete'"
           [width]="'200px'"
-          [title]="'delete'"
+          [title]="'DELETE'"
           (click)="onDelete()"
           [isDefault]="true"
         >
@@ -162,7 +162,7 @@
           *ngIf="mode !== 'VIEW'"
           [id]="'reset'"
           [width]="'200px'"
-          [title]="'reset'"
+          [title]="'RESET'"
           (click)="resetForm()"
           [isDefault]="true"
         >
@@ -171,7 +171,7 @@
         <ait-button
           *ngIf="mode === 'NEW'"
           [id]="'saveAndContinue'"
-          [title]="'save continue'"
+          [title]="'SAVE & CONTINUE'"
           (click)="saveAndContinue()"
           [isDefault]="true"
         ></ait-button>
@@ -180,7 +180,7 @@
           [id]="'saveAndClose'"
           *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
           [width]="'200px'"
-          [title]="'save close'"
+          [title]="'SAVE & CLOSE'"
           (click)="saveAndClose()"
           [isDefault]="true"
         >
@@ -189,7 +189,7 @@
           *ngIf="!isChanged && mode === 'EDIT'"
           [id]="'saveAndClose'"
           [width]="'200px'"
-          [title]="'save close'"
+          [title]="'SAVE & CLOSE'"
           [style]="'disabled'"
         ></ait-button>
       </div>

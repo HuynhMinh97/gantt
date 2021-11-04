@@ -237,7 +237,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
             block: 'center',
           });
           break;
-        } catch {}
+        } catch { }
       }
     }
   }
@@ -327,8 +327,8 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     } else {
       if (dateFrom > dateTo) {
         const transferMsg = (msg || '')
-        .replace('{0}', this.translateService.translate('START DATE'))
-        .replace('{1}', this.translateService.translate('START DATE TO'));
+          .replace('{0}', this.translateService.translate('START DATE'))
+          .replace('{1}', this.translateService.translate('START DATE TO'));
         res.push(transferMsg);
         this.isDateCompare = true;
       }
@@ -359,8 +359,8 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
 
   getTitleByMode() {
     return this.mode === MODE.EDIT
-      ? this.translateService.translate('edit education')
-      : this.translateService.translate('add education');
+      ? this.translateService.translate('Edit education')
+      : this.translateService.translate('Add education');
   }
 
   takeMasterValue(value: any, target: string): void {
@@ -409,5 +409,5 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     }
   }
 
-  ngOnDestroy() {}
+
 }

@@ -6,12 +6,12 @@
       <div class="input_inline">
         <ait-input-text
           [id]="'name'"
-          [label]="'name'"
+          [label]="'NAME'"
           [length]="200"
           [required]="true"
           [fullWidth]="true"
           [width]="'400px'"
-          [placeholder]="'input_name'"
+          [placeholder]="'Please input project name'"
           [isSubmit]="isSubmit"
           [isReset]="resetUserProject.name"
           [clearError]="isClearErrors.name"
@@ -24,7 +24,7 @@
       <div class="input_inline">
           <ait-datepicker
             [id]="'start_date_from'"
-            [label]="'start date'"
+            [label]="'START DATE'"
             [required]="true"
             [placeholder]="''"
             [isSubmit]="isSubmit"
@@ -66,7 +66,7 @@
         <ait-autocomplete-master-data
           [maxItem]="1"
           [id]="'company_working'"
-          [label]="'company'"
+          [label]="'COMPANY'"
           [placeholder]="'Aureole IT'"
           [required]="true"
           [collection]="'sys_company'"
@@ -85,8 +85,8 @@
           [id]="'title'"
           [maxItem]="1"
           [allowNew]="true"
-          [label]="'title'"
-          [placeholder]="'developer'"
+          [label]="'TITLE'"
+          [placeholder]="'Developer'"
           [required]="true"
           [collection]="'m_title'"
           [isReset]="resetUserProject.title"
@@ -103,8 +103,8 @@
       <div class="input_inline">
         <ait-input-text
           [id]="'description'"
-          [label]="'description'"
-          [placeholder]="'place'"
+          [label]="'DESCRIPTION'"
+          [placeholder]="'Place your text'"
           [rows]="5"
           [required]="true"
           [fullWidth]="true"
@@ -126,8 +126,8 @@
           [allowNew]="true"
           [disableOutputDefault]="true"
           [collection]="'m_skill'"
-          [label]="'skills'"
-          [placeholder]="'skills_input'"
+          [label]="'SKILLS (MAX 10)'"
+          [placeholder]="'Fill name and enter to add your skills'"
           [required]="true"
           [maxItem] = "'10'"
           [isReset]="resetUserProject.skills"
@@ -144,9 +144,9 @@
       <div class="input_inline">
         <ait-input-text
           [required]="true"
-          [label]="'responsibility'"
+          [label]="'RESPONSIBILITY'"
           [id]="'responsibility'"
-          [placeholder]="'place'"
+          [placeholder]="'Place your text'"
           [fullWidth]="true"
           [rows]="5"
           [length]="4000"
@@ -163,9 +163,9 @@
       <div class="input_inline">
         <ait-input-text
           [id]="'achievement'"
-          [label]="'achievement'"
+          [label]="'ACHIEVEMENT'"
           [required]="true"
-          [placeholder]="'place'"
+          [placeholder]="'Place your text'"
           [fullWidth]="true"
           [rows]="5"
           [length]="4000"
@@ -195,7 +195,7 @@
         <ait-button
           *ngIf="mode === 'NEW' || mode === 'EDIT'"
           [id]="'cancel'"
-          [title]="'cancel'"
+          [title]="'CANCEL'"
           (click)="cancel()"
           [nbSpinner]="isLoading"
           [isDefault]="true"
@@ -208,7 +208,7 @@
         *ngIf=" mode === 'NEW' || mode === 'EDIT'"
           [id]="'reset'"
           [width]="'200px'"
-          [title]="'reset'"
+          [title]="'RESET'"
           (click)="resetForm()"
           [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
         ></ait-button>
@@ -217,7 +217,7 @@
           *ngIf="mode === 'EDIT'"
           [id]="'remove'"
           [width]="'200px'"
-          [title]="'delete'"
+          [title]="'DELETE'"
           (click)="Delete()"
           [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
         ></ait-button>
@@ -226,7 +226,7 @@
         *ngIf="mode === 'NEW'"
           [id]="'save_continue'"
           [width]="'200px'"
-          [title]="'save continue'"
+          [title]="'SAVE & CONTINUE'"
           [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
           (click)=" saveContinue()"
         ></ait-button>
@@ -235,7 +235,7 @@
           *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
           [id]="'saveClose'"
           [width]="'200px'"
-          [title]="'save close'"
+          [title]="'SAVE & CLOSE'"
           [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
           (click)="saveClose()"
         ></ait-button>
@@ -244,7 +244,7 @@
           *ngIf="!isChanged && mode === 'EDIT'"
           [id]="'disabled'"
           [width]="'200px'"
-          [title]="'save close'"
+          [title]="'SAVE & CLOSE'"
           [style]="'disabled'"
         ></ait-button>
 
@@ -252,7 +252,7 @@
           *ngIf=" mode === 'VIEW'"
           [id]="'saveClose'"
           [width]="'200px'"
-          [title]="'close'"
+          [title]="'CLOSE'"
           (click)="cancel()"
           [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
       ></ait-button>

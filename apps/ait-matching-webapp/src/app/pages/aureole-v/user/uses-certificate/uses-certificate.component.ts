@@ -1,6 +1,6 @@
 import { AitAuthService, AitConfirmDialogComponent, AitEnvironmentService, AitTranslationService, AppState, MODE, AitBaseComponent, AitAppUtils } from '@ait/ui';
-import { Component, ElementRef, OnInit} from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import { Component, ElementRef, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NbToastrService, NbLayoutScrollService, NbDialogService } from '@nebular/theme';
 import { isArrayFull, isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
 import { Store } from '@ngrx/store';
@@ -16,7 +16,7 @@ import { debug } from 'node:console';
   templateUrl: './uses-certificate.component.html',
   styleUrls: ['./uses-certificate.component.scss']
 })
-export class UsesCertificateComponent  extends AitBaseComponent implements OnInit {
+export class UsesCertificateComponent extends AitBaseComponent implements OnInit {
   certificate: FormGroup;
   certificateClone: any;
   dataOld: any;
@@ -25,31 +25,31 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
   companyName = [];
   companyIssue = [];
   files = [];
-  isSubmit = false;  
-  submitFile = false;  
+  isSubmit = false;
+  submitFile = false;
   isChanged = false;
   isResetFile = false;
   error = [];
   isClearError = false;
   resetCertificate = {
-      name:false,
-      certificate_award_number: false,
-      grade: false,
-      issue_by: false,
-      issue_date_from: false,
-      issue_date_to: false,
-      description: false,
-      file: false,
+    name: false,
+    certificate_award_number: false,
+    grade: false,
+    issue_by: false,
+    issue_date_from: false,
+    issue_date_to: false,
+    description: false,
+    file: false,
   };
   certificate_key: string;
   selectFile = "";
-;
+  ;
   constructor(
     private element: ElementRef,
     private translateService: AitTranslationService,
     private router: Router,
     private dialogService: NbDialogService,
-    public cartificateService : UserCerfiticateService,
+    public cartificateService: UserCerfiticateService,
     private formBuilder: FormBuilder,
     layoutScrollService: NbLayoutScrollService,
     public activeRouter: ActivatedRoute,
@@ -59,7 +59,7 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
     env: AitEnvironmentService,
     apollo: Apollo
   ) {
-    super(store, authService, apollo, null, env, layoutScrollService, toastrService); 
+    super(store, authService, apollo, null, env, layoutScrollService, toastrService);
     this.user_id = this.authService.getUserID();
     this.setModulePage({
       module: 'user',
@@ -67,36 +67,36 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
     });
 
     this.certificate = this.formBuilder.group({
-      _key : new FormControl(null),
-      name: new FormControl(null,[Validators.required, Validators.maxLength(200)]),
+      _key: new FormControl(null),
+      name: new FormControl(null, [Validators.required, Validators.maxLength(200)]),
       certificate_award_number: new FormControl(null),
       grade: new FormControl(null),
       issue_by: new FormControl(null),
       issue_date_from: new FormControl(null),
-      issue_date_to : new FormControl(null),
+      issue_date_to: new FormControl(null),
       description: new FormControl(null),
       file: new FormControl(null,[Validators.maxLength(5)]),  
       user_id: new FormControl(null),
     });
     // get key form parameters
     this.certificate_key = this.activeRouter.snapshot.paramMap.get('id');
-    if(this.certificate_key){
+    if (this.certificate_key) {
       this.mode = MODE.EDIT;
     }
   }
- // get value form
-  async ngOnInit(): Promise<any> { 
-    if(this.mode == MODE.NEW){
-      this.certificate.controls["issue_date_from"].setValue(this.dateNow); 
+  // get value form
+  async ngOnInit(): Promise<any> {
+    if (this.mode == MODE.NEW) {
+      this.certificate.controls["issue_date_from"].setValue(this.dateNow);
       this.certificateClone = this.certificate.value;
-    }else{
-      await this.find(this.certificate_key); 
-    } 
-    await this.certificate.valueChanges.subscribe((data) => {   
+    } else {
+      await this.find(this.certificate_key);
+    }
+    await this.certificate.valueChanges.subscribe((data) => {
       this.checkAllowSave();
     });
-    if(this.certificate.value.issue_date_from == null && this.mode == "NEW"){
-      this.certificate.controls["issue_date_from"].setValue(this.dateNow); 
+    if (this.certificate.value.issue_date_from == null && this.mode == "NEW") {
+      this.certificate.controls["issue_date_from"].setValue(this.dateNow);
     }
   }
 
@@ -104,7 +104,7 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
     const certificateInfo = { ...this.certificate.value };
     const certificateClone = { ...this.certificateClone };
     // this.setHours(userInfo);
-    
+
     const isChangedUserInfo = AitAppUtils.isObjectEqual(
       { ...certificateInfo },
       { ...certificateClone }
@@ -122,14 +122,14 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
     }
   }
 
-  takeInputValue(val : any, form: string): void {      
+  takeInputValue(val: any, form: string): void {
     if (val) {
       this.certificate.controls[form].markAsDirty();
-      this.certificate.controls[form].setValue(val);        
+      this.certificate.controls[form].setValue(val);
     } else {
       this.certificate.controls[form].markAsDirty();
       this.certificate.controls[form].setValue(null);
-    }   
+    }
   }
 
   //date
@@ -141,7 +141,7 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
     this.certificate.controls['dob_jp'].setValue(dob_jp);
   }
 
-  takeDatePickerValue(value: number, group: string, form: string) {  
+  takeDatePickerValue(value: number, group: string, form: string) {
     if (value == null) {
       this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(null);
@@ -151,18 +151,18 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
       value = new Date(data).setHours(0, 0, 0, 0);
       this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(value);
-        // set jp_dob format japan cadidates    
-        form === 'dob' && this.setKanjiDate();
+      // set jp_dob format japan cadidates    
+      form === 'dob' && this.setKanjiDate();
     }
     this.error = this.checkDatePicker();
   }
 
-  checkDatePicker(){
+  checkDatePicker() {
     const res = [];
     const msg = this.translateService.getMsg('E0004');
     const dateFrom = this.certificate.controls['issue_date_from'].value;
     const dateTo = this.certificate.controls['issue_date_to'].value;
-    if(dateFrom > dateTo && dateTo != null){
+    if (dateFrom > dateTo && dateTo != null) {
       const transferMsg = (msg || '')
         .replace('{0}', this.translateService.translate('issue date'))
         .replace('{1}', this.translateService.translate('end date'));
@@ -182,10 +182,10 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
     } else {
       this.certificate.markAsDirty();
       this.certificate.controls['file'].setValue(null);
-    } 
+    }
   }
-   //end file
-  async reset(){
+  //end file
+  async reset() {
     this.isSubmit = false;
     this.submitFile = false;
     this.isChanged = false;
@@ -197,7 +197,7 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
     setTimeout(() => {
       this.isResetFile = false;
     }, 100);
-    for (const prop in this.resetCertificate) { 
+    for (const prop in this.resetCertificate) {
       this.resetCertificate[prop] = true;
       setTimeout(() => {
         this.resetCertificate[prop] = false;
@@ -206,19 +206,19 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
   }
 
   async resetForm() {
-    if(this.mode === MODE.NEW){
+    if (this.mode === MODE.NEW) {
       await this.reset();
       setTimeout(() => {
         this.certificate.controls['issue_date_from'].setValue(this.dateNow)
         this.showToastr('', this.getMsg('I0007'));
-      }, 100);      
+      }, 100);
     }
-    else{  
+    else {
       this.isResetFile = true;
       setTimeout(() => {
         this.isResetFile = false;
       }, 100);
-      this.error = []; 
+      this.error = [];
       this.isClearError = true;
           setTimeout(() => {
             this.isClearError = false;
@@ -229,9 +229,9 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
       this.showToastr('', this.getMsg('I0007'));    
     }
   }
- 
-  async saveAndContinue(){ 
-    this.isSubmit = true; 
+
+  async saveAndContinue() {
+    this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);  
@@ -241,48 +241,48 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
     saveData['issue_by'] = this.certificate.value.issue_by?._key;
     if (this.certificate_key) {
       saveData['_key'] = this.certificate_key;
-    }else{
+    } else {
       saveData['user_id'] = this.authService.getUserID();
     }
     this.error.length
-    if(this.certificate.valid && this.error.length <= 0 ){
+    if (this.certificate.valid && this.error.length <= 0) {
       await this.cartificateService
-      .saveUserCartificate(saveData)
-      .then(async (res) =>{
-        
-        if (res?.status === RESULT_STATUS.OK){
-          const message =
-          this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
-          this.showToastr('', message);
-          await this.reset();
-          setTimeout(() => {
-            this.certificate.controls['issue_date_from'].setValue(this.dateNow)
-          }, 100); 
-                 
-        }else{
+        .saveUserCartificate(saveData)
+        .then(async (res) => {
+
+          if (res?.status === RESULT_STATUS.OK) {
+            const message =
+              this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
+            this.showToastr('', message);
+            await this.reset();
+            setTimeout(() => {
+              this.certificate.controls['issue_date_from'].setValue(this.dateNow)
+            }, 100);
+
+          } else {
+            this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+          }
+        }).catch(() => {
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-        }
-      }).catch(() => {
-        this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-      });      
-    }else{
+        });
+    } else {
       this.scrollIntoError();
     }
   }
-  async saveAndClose(){
-    this.isSubmit = true; 
+  async saveAndClose() {
+    this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;
-    }, 100);  
+    }, 100);
     const saveData = this.certificate.value;
     saveData['name'] = this.certificate.value.name?._key;
     saveData['issue_by'] = this.certificate.value.issue_by?._key;
     if (this.certificate_key) {
       saveData['_key'] = this.certificate_key;
-    }else{
+    } else {
       saveData['user_id'] = this.authService.getUserID();
     }
-    if(this.certificate.valid && this.error.length <= 0 ){
+    if (this.certificate.valid && this.error.length <= 0) {
       await this.cartificateService
       .saveUserCartificate(saveData)
       .then((res) =>{
@@ -294,10 +294,8 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
         }else{
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         }
-      }).catch(() => {
-        this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-      });      
-    }else{
+      }); 
+    } else {
       this.scrollIntoError();
     }
   }
@@ -308,10 +306,10 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
         let invalidControl = this.element.nativeElement.querySelector(
           `#${key}_input`
         );
-        if(key == 'file'){
-            invalidControl = this.element.nativeElement.querySelector(
+        if (key == 'file') {
+          invalidControl = this.element.nativeElement.querySelector(
             `#${key}_input_file`
-          );      
+          );
         }
         try {
           invalidControl.scrollIntoView({
@@ -319,19 +317,19 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
             block: 'center',
           });
           break;
-        } catch {}
+        } catch { }
       }
     }
   }
 
-  async find(key : string){
+  async find(key: string) {
     if (this.certificate_key) {
       await this.cartificateService
         .findUserByKey(key)
-        .then((r) => {             
+        .then((r) => {
           if (r.status === RESULT_STATUS.OK) {
-            if (r.data.length > 0) {            
-              const data = r.data[0];                                                
+            if (r.data.length > 0) {
+              const data = r.data[0];
               this.certificate.patchValue({ ...data });
               this.certificateClone = this.certificate.value;          
               this.companyName = [{_key: data.name?._key},{value: data.name?.value}];
@@ -339,17 +337,17 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
               this.files = data.file;                
               if(this.user_id != data.user_id){
                 this.mode = MODE.VIEW
-              }                         
+              }
             }
-            else{
-              this.router.navigate([`/404`]);              
+            else {
+              this.router.navigate([`/404`]);
             }
-           }
+          }
         });
-    }   
-    return;   
+    }
+    return;
   }
-  
+
   //delete
   async deleteUserById() {
     this.dialogService.open(AitConfirmDialogComponent, {
@@ -360,41 +358,41 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
         title: this.getMsg('I0004'),
       },
     })
-    .onClose.subscribe(async (event) => {
-      if (event) {
-        if (this.certificate_key) {
-          await this.cartificateService.remove(this.certificate_key).then((res) => {
-            if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
-              this.showToastr('', this.getMsg('I0003'));
-              history.back();
-            } else {
-              this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-            }
-          });
-        } else {
-          this.showToastr('', this.getMsg('E0050'), KEYS.WARNING);
-        }
-      }
-    });
-  }
-  //end delete
-  back(){   
-    if(this.isChanged){
-      this.dialogService
-      .open(AitConfirmDialogComponent, {
-        closeOnBackdropClick: true,
-        hasBackdrop: true,
-        autoFocus: false,
-        context: {
-          title: this.getMsg('I0006'),
-        },
-      })
       .onClose.subscribe(async (event) => {
         if (event) {
-          history.back()
+          if (this.certificate_key) {
+            await this.cartificateService.remove(this.certificate_key).then((res) => {
+              if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
+                this.showToastr('', this.getMsg('I0003'));
+                history.back();
+              } else {
+                this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+              }
+            });
+          } else {
+            this.showToastr('', this.getMsg('E0050'), KEYS.WARNING);
+          }
         }
       });
-    }else{
+  }
+  //end delete
+  back() {
+    if (this.isChanged) {
+      this.dialogService
+        .open(AitConfirmDialogComponent, {
+          closeOnBackdropClick: true,
+          hasBackdrop: true,
+          autoFocus: false,
+          context: {
+            title: this.getMsg('I0006'),
+          },
+        })
+        .onClose.subscribe(async (event) => {
+          if (event) {
+            history.back()
+          }
+        });
+    } else {
       history.back()
     }
   }
@@ -402,14 +400,14 @@ export class UsesCertificateComponent  extends AitBaseComponent implements OnIni
   getTitleByMode() {
     let title = '';
     this.selectFile = this.translateService.translate('select_file');
-    if(this.mode === MODE.EDIT){
-      title = this.translateService.translate('edit certificate')
+    if (this.mode === MODE.EDIT) {
+      title = this.translateService.translate('Edit certificate')
     }
-    else if(this.mode === MODE.NEW){
-      title = this.translateService.translate('add certificate')
+    else if (this.mode === MODE.NEW) {
+      title = this.translateService.translate('Add certificate')
     }
-    else{
-      title = this.translateService.translate('view certificate')
+    else {
+      title = this.translateService.translate('View certificate')
     }
     return title;
   }

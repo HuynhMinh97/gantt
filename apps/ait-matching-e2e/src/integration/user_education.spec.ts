@@ -1,69 +1,44 @@
-describe('Test Cypress', () => {
+describe('Navigate user experience', () => {
   it('Check Mode New', function () {
-    cy.login('diennv', '12345678');
+    cy.login('lacnt', '12345678');
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(2000);
     cy.visit(Cypress.env('host') + Cypress.env('user_education'));
-
     cy.url().should('eq', Cypress.env('host') + Cypress.env('user_education'));
-    // checkUIUserEdu();
-    // resetFormUserEdu()
+    checkUIUserEdu();
+    resetFormUserEdu();
     // checkValidUserEdu();
-
-    dataProcessingUserEdu();
+    checkSaveDataEdu();
   });
 });
 
 // Check title and placeholder
 function checkUIUserEdu() {
-  cy.label('school', ' 学校*');
-  cy.input('school', 'BACK KHOA HCM テクノロジー大学');
+  cy.label('school', ' SCHOOL*');
+  cy.input('school', 'BACH KHOA Ho Chi Minh Technology University');
+  cy.label('degree', ' DEGREE');
+  cy.input('degree', "Ex: Engineer's");
+  cy.label('field_of_study', ' FIELD OF STUDY');
+  cy.input('field_of_study', 'Ex: Computer');
+  cy.label('grade', ' GRADE');
+  cy.input('grade', 'Good');
+  cy.label('start_date_from', ' START DATE');
+  cy.label('description', ' DESCRIPTION');
+  cy.textarea('description', 'Place your text');
 
-  cy.label('degree', ' 程度');
-  cy.input('degree', '例：エンジニア');
-
-  cy.label('field_of_study', ' 研究分野');
-  cy.input('field_of_study', '例：コンピューター');
-
-  cy.label('grade', ' 学年');
-  cy.input('grade', '良い');
-
-  cy.label('start_date_from', ' 開始日');
-  const date = new Date()
-    .toLocaleDateString('ja-JP')
-    .split('/')
-    .map((e) => (e.length === 1 ? '0' + e : e))
-    .join('/')
-    .substring(0, 7);
-  cy.get('#start_date_from_input').should('have.value', date);
-  cy.input('start_date_to', 'yyyy/MM');
-
-  cy.label('description', ' 説明');
-  cy.textarea('description', 'テキストを配置します');
-
-  cy.get('#file_input_file').should('have.value', '');
-}
-
-// check button
-function checkButtonUserEdu() {
-  cy.get('cancel_text_button').should('exist');
-  // cy.get('delete_text_button').should('exist');
-  cy.get('reset_text_button').should('exist');
-  cy.get('saveAndContinue_text_button').should('exist');
-  cy.get('saveAndClose_text_button').should('exist');
 }
 
 // Check reset Form
 function resetFormUserEdu() {
+  inputDataEdu();
   cy.clickButton('reset');
   cy.resetForm([
     'school_input',
     'degree_input',
     'field_of_study_input',
     'grade_input',
-    'file_input_file',
     'start_date_to_input',
-    'description_textarea',
-    'file_input_file',
+    'description_textarea'
   ]);
 }
 
@@ -79,34 +54,22 @@ function checkValidUserEdu() {
 }
 
 // Check save and delete in user_education
-function dataProcessingUserEdu() {
-  cy.chooseMasterData('school', 'Đại học khoa học Huế');
-  cy.typeText('field_of_study', 'IT');
-  cy.typeText('grade', 'Credit');
-  cy.typeText('degree', 'Bachelor');
-  cy.chooseValueDate('start_date_to', '2021', '9', '12');
-  cy.typeTextarea('description', 'bin test cypress');
-  cy.chooseFile('file_input_file', 'anh.jpg');
-  cy.wait(500);
-  cy.chooseFile('file_input_file', 'test.docx');
-  cy.wait(500);
-  cy.chooseFile('file_input_file', 'AIT-Starter-Component.xlsx');
-  cy.wait(500);
-
+function checkSaveDataEdu() {
+  inputDataEdu();
   cy.intercept({
     method: 'POST',
     url: Cypress.env('host') + Cypress.env('api_url'),
   }).as('dataSaved');
-  cy.clickButton('saveAndClose');
+  cy.clickButton('saveAndContinue');
   cy.wait('@dataSaved').then((req) => {
     cy.status(req.response.statusCode);
     const _key = req.response.body.data.saveUserEducationInfo.data[0]._key;
-
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(1000);
     cy.visit(
       Cypress.env('host') + Cypress.env('user_education') + `${_key}`
     );
-    let query = `
+    const query = `
     query {
       findUserEducationInfo(
         request: {
@@ -127,6 +90,7 @@ function dataProcessingUserEdu() {
         data {
           _key
           school{
+            _key
             value
           }
           degree
@@ -153,44 +117,21 @@ function dataProcessingUserEdu() {
       failOnStatusCode: false,
     }).then((response) => {
       const data = response.body.data.findUserEducationInfo.data[0];
-
-      cy.inputValue('school', data.school.value);
-      cy.inputValue('degree', data.degree);
-      cy.inputValue('field_of_study', data.field_of_study);
-      cy.inputValue('grade', data.grade);
-      const dateFrom = new Date(data.start_date_from)
-        .toLocaleDateString('ja-JP')
-        .split('/')
-        .map((e) => (e.length === 1 ? '0' + e : e))
-        .join('/')
-        .substring(0, 7);
-      const dateTo = new Date(data.start_date_to)
-        .toLocaleDateString('ja-JP')
-        .split('/')
-        .map((e) => (e.length === 1 ? '0' + e : e))
-        .join('/')
-        .substring(0, 7);
-      cy.get('#start_date_from_input').should('have.value', dateFrom);
-      cy.get('#start_date_to_input').should('have.value', dateTo);
+      cy.getValueMaster('school', data.school);
+      cy.getValueInput('degree', data.degree);
+      cy.getValueInput('field_of_study', data.field_of_study);
+      cy.getValueInput('grade', data.grade);
       cy.textareaValue('description', data.description);
-      cy.get('button.button__wrapper__disabled').should('be.disabled');
-      cy.typeTextarea('description', 'a');
-      cy.get('button.button__wrapper').should('not.be.disabled');
-
-      checkDeleteUserEdu();
     });
   });
 }
 
-// check delete in user_education
-function checkDeleteUserEdu() {
-  cy.intercept({
-    method: 'POST',
-    url: Cypress.env('host') + Cypress.env('api_url'),
-  }).as('Deleted');
-  cy.clickButton('delete');
-  cy.clickButton('ok');
-  cy.wait('@Deleted').then((req) => {
-    cy.status(req.response.statusCode);
-  });
+function inputDataEdu() {
+  cy.chooseMasterData('school', 'Bach Khoa');
+  cy.typeText('field_of_study', 'IT');
+  cy.typeText('grade', 'Good');
+  cy.typeText('degree', 'Bachelor');
+  cy.chooseDate('start_date_to');
+  cy.typeTextarea('description', 'test cypress');
+  cy.chooseFile('file_input_file', 'anh.jpg');
 }
