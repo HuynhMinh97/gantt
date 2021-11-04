@@ -24,11 +24,11 @@
         <div class="input_inline">
           <ait-autocomplete-master
           [id]="'skills'"
-          [label]="'skills'"
+          [label]="'Add skill'"
           [required]="true"
           [collection]="'m_skill'"
           [maxItem] = "50"
-          [placeholder]="'skills input'"
+          [placeholder]="'Fill name and enter to add your skills'"
           [style]="{ width: '400px' }"
           (watchValue)="takeMasterValue($event, 'skills')"
           [defaultValue]="companySkills"
@@ -42,7 +42,7 @@
           <ait-button
             *ngIf="mode === 'NEW' || mode === 'EDIT'"
             [id]="'cancel'"
-            [title]="'cancel'"
+            [title]="'CANCEL'"
             (click)="back()"
             [nbSpinner]="isLoading"
             [isDefault]="true"
@@ -55,7 +55,7 @@
           *ngIf=" mode === 'EDIT' || mode === 'NEW'"
             [id]="'save_continue'"
             [width]="'200px'"
-            [title]="'save continue'"
+            [title]="'SAVE & CONTINUE'"
             [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
             (click)=" saveAndContinue()"
           ></ait-button>
@@ -64,7 +64,7 @@
             *ngIf=" mode === 'EDIT' || mode === 'NEW'"
             [id]="'save close'"
             [width]="'200px'"
-            [title]="'save close'"
+            [title]="'SAVE & CLOSE'"
             [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
             (click)="saveAndClose()"
           ></ait-button>

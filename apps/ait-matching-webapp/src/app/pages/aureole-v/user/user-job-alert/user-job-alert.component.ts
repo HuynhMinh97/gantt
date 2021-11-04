@@ -17,27 +17,27 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
   isChanged = false;
   errorArr = [];
   resetuserjobAlert = {
-    industry:false,
-    experience_level:false,
-    employee_type:false,
+    industry: false,
+    experience_level: false,
+    employee_type: false,
     location: false,
     start_date_from: false,
     start_date_to: false,
-    salary_from: false, 
+    salary_from: false,
     salary_to: false,
   }
-  constructor( store: Store<AppState>,
+  constructor(store: Store<AppState>,
     authService: AitAuthService,
     apollo: Apollo,
     env: AitEnvironmentService,
     layoutScrollService: NbLayoutScrollService,
     toastrService: NbToastrService,
     private formBuilder: FormBuilder,
-  ) {   
-    super(store, authService, apollo, null, env, layoutScrollService,toastrService);
+  ) {
+    super(store, authService, apollo, null, env, layoutScrollService, toastrService);
     this.setModulePage({
       module: 'user',
-      page: 'user_experience',
+      page: 'user_job_alert',
     });
     this.userjobAlert = this.formBuilder.group({
       industry: new FormControl(null),
@@ -50,11 +50,11 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
       salary_to: new FormControl(null),
     })
   }
-  
+
   ngOnInit(): void {
   }
   takeMasterValue(value: any, target: string): void {
-   
+
   }
   takeDatePickerValue(value: number, group: string, form: string) {
     if (value == null) {

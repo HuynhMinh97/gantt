@@ -9,7 +9,7 @@
       <div class="input_area">
         <ait-autocomplete-master-data
           [id]="'title'"
-          [label]="'title'"
+          [label]="'TITLE'"
           [required]="true"
           [allowNew]="true"
           [maxItem]="1"
@@ -26,7 +26,7 @@
       <div class="input_area">
         <ait-autocomplete-master-data
           [required]="true"
-          [label]="'company'"
+          [label]="'COMPANY'"
           [isSubmit]="isSubmit"
           [maxItem]="1"
           [allowNew]="true"
@@ -46,7 +46,7 @@
         <ait-autocomplete-master-data
           [id]="'location'"
           [required]="true"
-          [label]="'location'"
+          [label]="'LOCATION'"
           [class]="'CITY'"
           [maxItem]="1"
           [isSubmit]="isSubmit"
@@ -66,8 +66,8 @@
           [id]="'employee_type'"
           [maxItem]="1"
           [width]="'205px'"
-          [placeholder]="'select'"
-          [label]="'employee type'"
+          [placeholder]="'Select'"
+          [label]="'EMPLOYEE TYPE'"
           [disableOutputDefault]="true"
           [collection]="'sys_master_data'"
           [isReset]="resetUserInfo.employee_type"
@@ -103,7 +103,7 @@
           [label]="'START DATE'"
           [id]="'start_date_from'"
           [format]="'yyyy/MM'"
-          [placeholder]="'2003/09'"
+          [placeholder]="'2021/01'"
           [width]="'185px'"
           [isReset]="resetUserInfo.start_date_from"
           [defaultValue]="userExperienceInfo.controls['start_date_from'].value"
@@ -157,7 +157,7 @@
           [length]="4000"
           [rows]="4"
           [width]="'420px'"
-          [label]="'description'"
+          [label]="'DESCRIPTION'"
           [isReset]="resetUserInfo.description"
           [readonly]="resetUserInfo.description"
           [placeholder]="'Place your text'"
@@ -174,7 +174,7 @@
         <ait-button
           *ngIf="mode !== 'VIEW'"
           [id]="'cancel'"
-          [title]="'cancel'"
+          [title]="'CANCEL'"
           [isDefault]="true"
           (click)="back()"
         ></ait-button>
@@ -183,7 +183,7 @@
           *ngIf="mode === 'EDIT'"
           [id]="'delete'"
           [width]="'200px'"
-          [title]="'delete'"
+          [title]="'DELETE'"
           [isDefault]="true"
           (click)="onDelete()"
         >
@@ -193,7 +193,7 @@
           *ngIf="mode !== 'VIEW'"
           [id]="'reset'"
           [width]="'200px'"
-          [title]="'reset'"
+          [title]="'RESET'"
           [isDefault]="true"
           (click)="resetForm()"
         >
@@ -202,7 +202,7 @@
         <ait-button
           *ngIf="mode === 'NEW'"
           [id]="'saveAndContinue'"
-          [title]="'save continue'"
+          [title]="'SAVE & CONTINUE'"
           (click)="saveAndContinue()"
           [isDefault]="true"
         ></ait-button>
@@ -210,7 +210,7 @@
           [id]="'saveAndClose'"
           *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
           [width]="'200px'"
-          [title]="'save close'"
+          [title]="'SAVE & CLOSE'"
           (click)="saveAndClose()"
           [isDefault]="true"
         >
@@ -219,7 +219,7 @@
           *ngIf="!isChanged && mode === 'EDIT'"
           [id]="'saveAndClose'"
           [width]="'200px'"
-          [title]="'save close'"
+          [title]="'SAVE & CLOSE'"
           [style]="'disabled'"
         ></ait-button>
       </div>

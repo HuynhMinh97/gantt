@@ -184,8 +184,8 @@ export class UserExperienceComponent
 
   getTitleByMode() {
     return this.mode === MODE.EDIT
-      ? this.translateService.translate('edit experience')
-      : this.translateService.translate('add experience');
+      ? this.translateService.translate('Edit experience')
+      : this.translateService.translate('Add experience');
   }
 
   resetModeNew() {
@@ -346,7 +346,7 @@ export class UserExperienceComponent
             block: 'center',
           });
           break;
-        } catch {}
+        } catch { }
       }
     }
   }
@@ -438,5 +438,4 @@ export class UserExperienceComponent
     }
   }
 
-  ngOnDestroy() {}
 }
