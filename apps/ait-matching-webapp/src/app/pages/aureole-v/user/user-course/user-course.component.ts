@@ -274,6 +274,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
     }, 100);
     const saveData = this.course.value;
     saveData['training_center'] = this.course.value.training_center;
+    saveData['user_id'] = this.authService.getUserID(); 
     if(this.course.value.is_online == null){
       saveData['is_online'] == false;
     }

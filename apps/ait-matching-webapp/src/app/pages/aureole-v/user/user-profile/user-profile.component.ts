@@ -1,6 +1,6 @@
 import { debug } from 'node:console';
 import { isArrayFull, isObjectFull, RESULT_STATUS } from '@ait/shared';
-import { AitAuthService, AitBaseComponent, AitEnvironmentService, AppState, getUserSetting } from '@ait/ui';
+import { AitAuthService, AitBaseComponent, AitEnvironmentService, AppState, getUserSetting, MODE } from '@ait/ui';
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -24,81 +24,8 @@ import { UserLanguageService } from 'apps/ait-matching-webapp/src/app/services/u
   styleUrls: ['./user-profile.component.scss']
 })
 export class UserProfileComponent  extends AitBaseComponent implements OnInit {
-
-  constructor(
-    private userLanguageService: UserLanguageService,
-    private userEducationService: UserEducationService,
-    private userCourseService: UserCourseService,
-    private userCetificateService: UserCerfiticateService,
-    private userExperienceService: UserExperienceService,
-    private userProjectService: UserProjectService,
-    private reoderSkillsService : UserReoderSkillsService,
-    private userProfileService: UserProfileService,
-    private dialogService: NbDialogService,
-    public activeRouter: ActivatedRoute,
-    private router: Router,
-    private santilizer: DomSanitizer,
-    store: Store<AppState>,
-    authService: AitAuthService,
-    apollo: Apollo,
-    env: AitEnvironmentService,
-    layoutScrollService: NbLayoutScrollService,
-    toastrService: NbToastrService,
-  ) {   
-    super(store, authService, apollo, null, env, layoutScrollService,toastrService);
-    store.pipe(select(getUserSetting)).subscribe((setting) => {
-      if (isObjectFull(setting) && setting['date_format_display']) {
-        this.dateFormat = setting['date_format_display'];
-      }
-    });
-  }
-
-  userprojectFilterByCmp =[
-    {
-      company_name:"Aureole 1 Information Technology Inc.",
-      floor_building:"Ho Chi Minh City, Vietnam",
-      street:"8 years 6 months",
-      working_time:"8 years 6 months",
-      data_project:[
-        {
-          is_working: true,
-          name:'Technical 1 Manager 1',
-          start_date_from:'09/2021',
-          isEdited:'true',
-          title:'FOR data IN sys_message FILTER'
-        },
-        {
-          is_working: true ,
-          name:'Technical 2 Manager 2',
-          start_date_from:'09/2021',
-          isEdited:'true',
-          title:'FOR data IN sys_message FILTER'
-        },
-        {
-          is_working: false,
-          name:'Technical 3 Manager 3',
-          start_date_from:'09/2021',
-          isEdited:'true',
-          title:'FOR data IN sys_message FILTER'
-        }
-      ]
-    },
-    {
-      company_name:"Aureole 2 Information 2",
-      floor_building:"Ho Chi Minh City, Vietnam",
-      street:"8 years 6 months",
-      working_time:"8 years 6 months",
-      data_project:[
-        {
-          is_working:'false',
-          name:'Technical Manager',
-          start_date_from:'09/2021',
-          isEdited:'true',
-          title:'FOR data IN sys_message FILTER'
-        }
-      ]
-    }
-  ]
+  mode='';
+  profileId = '';
   showProject = false;
   showSkill = false;
   showExperience = false;
@@ -130,6 +57,41 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
       icon: 'plus'
     }
   ];
+  constructor(
+    private userLanguageService: UserLanguageService,
+    private userEducationService: UserEducationService,
+    private userCourseService: UserCourseService,
+    private userCetificateService: UserCerfiticateService,
+    private userExperienceService: UserExperienceService,
+    private userProjectService: UserProjectService,
+    private reoderSkillsService : UserReoderSkillsService,
+    private userProfileService: UserProfileService,
+    private dialogService: NbDialogService,
+    public activeRouter: ActivatedRoute,
+    private router: Router,
+    private santilizer: DomSanitizer,
+    store: Store<AppState>,
+    authService: AitAuthService,
+    apollo: Apollo,
+    env: AitEnvironmentService,
+    layoutScrollService: NbLayoutScrollService,
+    toastrService: NbToastrService,
+  ) {   
+    super(store, authService, apollo, null, env, layoutScrollService,toastrService);
+    store.pipe(select(getUserSetting)).subscribe((setting) => {
+      if (isObjectFull(setting) && setting['date_format_display']) {
+        this.dateFormat = setting['date_format_display'];
+      }
+    });
+    this.profileId = this.activeRouter.snapshot.paramMap.get('id');
+    if (this.profileId) {
+      this.mode = MODE.VIEW;
+    }else{
+      this.profileId = this.user_id;
+      this.mode = MODE.EDIT;
+      this.isMyUserProfile = true;
+    }
+  }
   
   async ngOnInit(): Promise<void> {
     await this.getMasterData();
@@ -167,13 +129,10 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
     }
   }
   async findUserProfileByUserId(){
-    await this.userProfileService.findProfile(this.user_id)
+    await this.userProfileService.findProfile(this.profileId)
     .then((res) => {
       if (res.status === RESULT_STATUS.OK) {
         if (res.data.length > 0) { 
-          if( res.data[0].user_id == this.user_id){
-            this.isMyUserProfile = true;
-          }
           const data = res.data[0];
           let profile = {} as ProfileDto;
           profile.city = data.city?.value;
@@ -184,7 +143,10 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
           profile.company_working = data.company_working?.value;
           profile.country = data.country?.value;
           profile.about = data.about;
-          profile.top_skills = data.top_skills.length > 0 ? data.top_skills : [];
+          setTimeout(()=>{
+            profile.top_skills = data.top_skills.length > 0 ? data.top_skills : [];
+
+          },100)
           this.userProfile = profile;
       
           let topSkill = {} as OrderSkill;
@@ -205,7 +167,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   }
 
   async getSkillByUserId(){
-    const from = 'sys_user/' + this.user_id;
+    const from = 'sys_user/' + this.profileId;
     await this.reoderSkillsService.findReorder(from).then(async (res) => {
       if (res.status === RESULT_STATUS.OK) {
         if(res.data.length > 0){
@@ -234,7 +196,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   }
 
   async getProjectByUserId(){
-    await this.userProjectService.getProjectByUserId(this.user_id)
+    await this.userProjectService.getProjectByUserId(this.profileId)
     .then(async (res) => {
       const data = res.data;
       for(let item in data){
@@ -293,7 +255,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   }
 
   getExperiencByUserId(){
-    this.userExperienceService.findUserExperienceByUserId(this.user_id)
+    this.userExperienceService.findUserExperienceByUserId(this.profileId)
     .then(async (res) => {     
       const data = res.data;
       for(let item in data){
@@ -351,7 +313,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   }
 
   getCentificateByUserId(){
-    this.userCetificateService.findUserCetificateByKey(this.user_id)
+    this.userCetificateService.findUserCetificateByKey(this.profileId)
     .then((res) => {
       const data = res.data;    
       for(let element of data){
@@ -368,7 +330,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
         centificate.issue_by = element.issue_by?.value;
         centificate.issue_date_from = this.getDateFormat(element.issue_date_from);
         centificate.issue_date_to = this.getDateFormat(element.issue_date_from);
-        centificate.name = element.name?.value ? element.name?.value : "Project Manager";
+        centificate.name = element.name?.value ? element.name?.value : "Đang đợi logic data";
         this.userCentificate.push(centificate);
       }
       
@@ -377,7 +339,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
     
   }
   getCourseByUserId(){
-    this.userCourseService.findCourseByUserId(this.user_id)
+    this.userCourseService.findCourseByUserId(this.profileId)
     .then((res) => {          
       const data = res.data;
       for(let element of data){
@@ -403,7 +365,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
     
   }
   getEducationByUserId(){
-    this.userEducationService.findUserEducationByUserId(this.user_id)
+    this.userEducationService.findUserEducationByUserId(this.profileId)
     .then((res) => {          
       const data = res.data;
       for(let element of data){
@@ -429,7 +391,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
     
   }
   getLanguageByUserId(){
-    this.userLanguageService.findUserLanguageByUserId(this.user_id)
+    this.userLanguageService.findUserLanguageByUserId(this.profileId)
     .then((res) => {          
       const data = res.data;
       for(let element of data){

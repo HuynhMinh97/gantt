@@ -1,7 +1,7 @@
 <div class="user_profile_wrapper" id="user_profile">
   <div class="content__card">
     <!-- profile -->
-    <nb-card>
+    <div style="background-color: #ffffff">
       <div
         class="user-background"
         aitUploadDirective
@@ -109,7 +109,7 @@
           </div>
         </div>
       </div>
-    </nb-card>
+    </div>
     <!-- skills -->
     <div class="reorder_skills" style="z-index: 100;">
       <ait-button
@@ -258,6 +258,7 @@
       [padding]="'10px'"
     >
       <div class="container-user-project" [class.show]="showProject">
+        <hr>
         <ul
           *ngFor="
             let company_project of userProject;
@@ -382,6 +383,7 @@
       [padding]="'10px'"
     >
     <div class="container-user-project" [class.show]="showExperience">
+      <hr>
       <ul
         *ngFor="
           let company_experience of userExperience;
@@ -494,6 +496,7 @@
       [padding]="'10px'"
     >
     <div class="container-user-project" [class.show]="showCertificate">
+      <hr>
       <ul
         *ngFor="
           let company_centificate of userCentificate;
@@ -566,6 +569,7 @@
       [padding]="'10px'"
     >
     <div class="container-user-project" [class.show]="showCourse">
+      <hr>
       <ul
         *ngFor="
           let course of userCourse;
@@ -638,6 +642,7 @@
     [padding]="'10px'"
   >
   <div class="container-user-project" [class.show]="showEducation">
+    <hr>
     <ul
       *ngFor="
         let education of userEducation;
@@ -711,6 +716,7 @@
     >
     
         <div class="container-user-project" [class.show]="showLanguages">
+          <hr>
           <ul
             *ngFor="
               let language of userLanguage;
