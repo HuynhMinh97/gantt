@@ -8,23 +8,22 @@ describe('Navigate user language', () => {
     checkUILanguage();
     resetFormLanguage();
     checkDataCombobox();
-    checkValidateLanguage();
+    // checkValidateLanguage();
     saveDataLanguage();
   });
 });
 
 // Check title and placeholder
 function checkUILanguage() {
-  // cy.get('#form_edit_user_language_text__gradient').should('have.text', 'Add language');
+  cy.get('#form_edit_user_language_text__gradient').should('have.text', ' Add language\n');
   cy.label('language', ' LANGUAGE*');
   cy.input('language', 'Japanese');
   cy.label('proficiency', ' PROFICIENCY');
   cy.input('proficiency', 'Select');
-  cy.checkButton();
 }
 function checkDataCombobox() {
   cy.dataCombobox('LANGUAGE', 'language');
-  cy.clickButton('save & continue');
+  cy.clickButton('saveAndContinue');
   cy.dataCombobox('LANGUAGE_PROFICIENCY', 'proficiency');
 
 }
@@ -43,7 +42,7 @@ function resetFormLanguage() {
 
 function inputDataLanguage() {
   cy.chooseMasterData('language', 'English');
-  cy.chooseMasterData('proficiency', 'N1');
+  cy.chooseMasterData('proficiency', 'Full professional proficiency US');
 }
 
 // Check save and delete
@@ -77,6 +76,7 @@ function saveDataLanguage() {
                 ref_collection: "sys_master_data"
                 ref_attribute: "code"
               }
+              del_flag: false
             }
             company: "${Cypress.env('company')}"
             lang: "${Cypress.env('lang')}"

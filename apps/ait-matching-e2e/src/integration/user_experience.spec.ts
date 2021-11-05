@@ -23,7 +23,7 @@ function checkUIUserExp() {
           company_working: {
           attribute: "company_working",
           ref_collection: "sys_company",
-          ref_attribute: code
+          ref_attribute: "code"
         },
           user_id: "${Cypress.env('user_id')}"
         },
@@ -146,7 +146,7 @@ function checkSaveExper() {
             }
             company_working: {
               attribute: "company_working"
-              ref_collection: "sys_company"
+              ref_collection: "m_company"
               ref_attribute: "code"
             }
           }
