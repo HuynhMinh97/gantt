@@ -39,10 +39,10 @@
           </div>
         </div>
         <div class="col-md-5 col-lg-4 col-xxxl-4" id="col2">
-          <textarea  style="width:100%; margin:0 ; height: 100px;  border: none;
-          outline: none; font-size: 13px;overflow: hidden;resize: none;">
+          <p  style="width:100%; margin:0 ; height: 100px;  border: none;
+          outline: none; font-size: 13px;overflow: hidden;resize: none;white-space: break-spaces">
             {{userProfile?.about}}
-          </textarea>
+          </p>
         </div>
         <div class="col-md-3 col-lg-3 col-xxxl-3" id="col3">
           <div
@@ -74,7 +74,7 @@
                 padding-bottom: 10px;
               "
             >
-              123
+              0
             </div>
             <span
               style="
@@ -111,54 +111,59 @@
       </div>
     </div>
     <!-- skills -->
-    <div class="reorder_skills" style="z-index: 100;" *ngIf="isMyUserProfile">
-      <ait-button
-        (click)="open('user-reorder-skills')"
-        [iconName]="'menu-outline'"
-        [color]="'#fff'"
-        [styleText]="{ 'font-size': '10px' }"
-        [width]="'150px'"
-        [height]="'25px'"
-        [title]="'REORDER SKILLS'"
-        [id]="'reorder skills'"
-        [background]="
-          'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-        "
-      ></ait-button>
-    </div>
-    <card-content
-       tabindex="2"
-      [id]="'company_detail'"
-      style="outline-color: #10529d"
-      class="content_card"
-      style="display: flex; justify-content: center"
-      [label]="'SKILLS'"
-      [styleLabel]="{'font-size':'22px'}"
-      (onClickButtonHeader)="open('user-skills')"
-      [actionBtn]="actionBtn"
-      [buttonTitle]="'ADD SKILL'"
-      [disableHeader]="false"
-      [widthBtn]="'150px'"
-      [content]="countSkill"
-      [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
-      [padding]="'10px'"
-    >
-    <div class="container-user-project">
-      <hr class="hr_header">
-      <div *ngFor="let category of skillByCategory; let last = last">
-        <p class="title-skill">{{ category.name }}</p>
-        <ait-dragscroll-skill
-          [skillList]="category.data"
-          [showField]=""
-          [width]="'1500px'"
-          [maxWidth]="'1500px'"
-          [minWidth]="'1500px'"
-          [isNormal]="true"
-        ></ait-dragscroll-skill>
-        <hr *ngIf="!last" />
+    <div style="position: relative;">
+      <div class="reorder_skills" style="z-index: 100;" *ngIf="isMyUserProfile">
+        <ait-button
+          (click)="open('user-reorder-skills')"
+          [iconName]="'menu-outline'"
+          [color]="'#fff'"
+          [styleText]="{ 'font-size': '10px' }"
+          [width]="'150px'"
+          [height]="'25px'"
+          [title]="'REORDER SKILLS'"
+          [id]="'reorder skills'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+        ></ait-button>
       </div>
+      <card-content
+        tabindex="2"
+        [id]="'company_detail'"
+        style="outline-color: #10529d"
+        class="content_card"
+        style="display: flex; justify-content: center"
+        [label]="'SKILLS'"
+        [styleLabel]="{'font-size':'22px'}"
+        (onClickButtonHeader)="open('user-skills')"
+        [actionBtn]="actionBtn"
+        [buttonTitle]="'ADD SKILL'"
+        [disableHeader]="false"
+        [widthBtn]="'150px'"
+        [content]="countSkill"
+        [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
+        [padding]="'20px'"
+        [isOpen]="showSkill"
+        [tooltip]="isMyUserProfile? '' : 'Ban khong duoc phep them'"
+      >
+      <div class="container-user-project">
+        <hr class="hr_header">
+        <div *ngFor="let category of skillByCategory; let last = last">
+          <p class="title-skill">{{ category.name }}</p>
+          <ait-dragscroll-skill
+            [skillList]="category.data"
+            [showField]=""
+            [width]="'1500px'"
+            [maxWidth]="'1500px'"
+            [minWidth]="'1500px'"
+            [isNormal]="true"
+          ></ait-dragscroll-skill>
+          <hr *ngIf="!last" />
+        </div>
+      </div>
+      </card-content>
     </div>
-    </card-content>
+    
     <!-- <nb-card>
       <nb-card-header>
         <div id="skills-headparent" (click)="showSkill = !showSkill">
@@ -255,7 +260,8 @@
       [widthBtn]="'150px'"
       [content]="sumHoursProject"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
-      [padding]="'10px'"
+      [padding]="'20px'"
+      [tooltip]="isMyUserProfile? '' : 'Ban khong duoc phep them'"
     >
       <div class="container-user-project" *ngIf="userProject.length > 0">
         <hr class="hr_header">
@@ -379,6 +385,7 @@
       [content]="timeExperienceStr"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'10px'"
+      [tooltip]="isMyUserProfile? '' : 'Ban khong duoc phep them'"
     >
     <div class="container-user-project" *ngIf="userExperience.length > 0">
       <hr class="hr_header">
@@ -489,7 +496,8 @@
       [widthBtn]="'150px'"
       [content]="countCentificate"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
-      [padding]="'10px'"
+      [padding]="'20px'"
+      [tooltip]="isMyUserProfile? '' : 'Ban khong duoc phep them'"
     >
     <div class="container-user-project" *ngIf="userCentificate.length > 0">
       <hr class="hr_header">
@@ -562,7 +570,8 @@
       [widthBtn]="'150px'"
       [content]="countCourse"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
-      [padding]="'10px'"
+      [padding]="'20px'"
+      [tooltip]="isMyUserProfile? '' : 'Ban khong duoc phep them'"
     >
     <div class="container-user-project" *ngIf="userCourse.length > 0">
       <hr class="hr_header">
@@ -634,8 +643,9 @@
     [disableHeader]="false"
     [widthBtn]="'150px'"
     [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
-    [padding]="'10px'"
+    [padding]="'20px'"
     [content]="''"
+    [tooltip]="isMyUserProfile? '' : 'Ban khong duoc phep them'"
   >
   <div class="container-user-project" *ngIf="userEducation.length > 0">
     <hr class="hr_header">
@@ -708,7 +718,8 @@
       [widthBtn]="'150px'"
       [content]="''"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
-      [padding]="'10px'"
+      [padding]="'20px'"
+      [tooltip]="isMyUserProfile? '' : 'Ban khong duoc phep them'"
     >
     
         <div class="container-user-project" *ngIf="userEducation.length > 0">
