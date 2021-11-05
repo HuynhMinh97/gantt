@@ -111,7 +111,7 @@
       </div>
     </div>
     <!-- skills -->
-    <div class="reorder_skills" style="z-index: 100;">
+    <div class="reorder_skills" style="z-index: 100;" *ngIf="isMyUserProfile">
       <ait-button
         (click)="open('user-reorder-skills')"
         [iconName]="'menu-outline'"

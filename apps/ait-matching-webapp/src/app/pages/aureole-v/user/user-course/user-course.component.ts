@@ -267,7 +267,6 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
   }
 
   async saveAndClose(){
-    debugger
     this.isSubmit = true; 
     setTimeout(() => {
       this.isSubmit = false;
@@ -322,7 +321,6 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
 
   async find(key: string) {
     if (this.course_key) {
-      debugger
       await this.userCartificateService
         .findCourseByKey(key)
         .then((r) => {

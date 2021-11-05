@@ -235,7 +235,6 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);  
-    debugger
     const saveData = this.certificate.value;   
     saveData['name'] = this.certificate.value.name?._key;
     saveData['issue_by'] = this.certificate.value.issue_by?._key;

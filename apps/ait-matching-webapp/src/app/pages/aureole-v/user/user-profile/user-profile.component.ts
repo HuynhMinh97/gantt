@@ -365,10 +365,9 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
         course.start_date_to = element.start_date_to ? this.getDateFormat(element.start_date_to) : 'Present';
         course.training_center = element.training_center?.value;
         this.userCourse.push(course);
-      }
-      
+      }      
+      this.countCourse = 'You have finished ' + this.userCourse.length + ' courses';
     })
-    this.countCourse = 'You have finished ' + this.userCourse.length + ' courses';
   }
   getEducationByUserId(){
     this.userEducationService.findUserEducationByUserId(this.profileId)
@@ -423,14 +422,11 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
           language.image = "../../../../../assets/images/japan.png"
         }
         setTimeout(() => {
-
           this.userLanguage.push(language);
         },100)
       }
       
-    })
-    console.log(this.userLanguage);
-    
+    })   
   }
 
   async subtractionDate(from: number, to: number){

@@ -324,7 +324,6 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
-    debugger
     if (this.userProject.valid) {
       await this.userProjectService.saveBizProject(this.dataSaveProject())
         .then(async (res) => {
@@ -411,7 +410,6 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       this.isChanged = false;
       if (this.mode === MODE.EDIT) {
         this.error = [];
-        debugger
         for (const index in this.resetUserProject) {
           if (!this.userProject.controls[index].value) {
             this.resetUserProject[index] = true;
