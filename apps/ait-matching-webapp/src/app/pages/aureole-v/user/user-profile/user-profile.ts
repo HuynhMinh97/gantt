@@ -81,4 +81,5 @@ export interface LanguageDto {
     language: string,
     proficiency: string,
     _key: string,
+    image: string
 }
