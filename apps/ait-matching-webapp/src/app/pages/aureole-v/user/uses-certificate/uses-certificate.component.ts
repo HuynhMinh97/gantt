@@ -22,8 +22,8 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
   dataOld: any;
   mode = MODE.NEW;
   dateNow = new Date().setHours(0, 0, 0, 0);
-  companyName: any = null;
-  companyIssue: any = null;
+  companyName = [];
+  companyIssue = [];
   files = [];
   isSubmit = false;
   submitFile = false;
@@ -75,7 +75,8 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
       issue_date_from: new FormControl(null),
       issue_date_to: new FormControl(null),
       description: new FormControl(null),
-      file: new FormControl(null, [Validators.maxLength(5)]),
+      file: new FormControl(null,[Validators.maxLength(5)]),  
+      user_id: new FormControl(null),
     });
     // get key form parameters
     this.certificate_key = this.activeRouter.snapshot.paramMap.get('id');
@@ -114,7 +115,7 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
   takeMasterValue(val: any, form: string): void {
     if (isObjectFull(val) && val.value.length > 0) {
       this.certificate.controls[form].markAsDirty();
-      this.certificate.controls[form].setValue(val?.value[0]._key);
+      this.certificate.controls[form].setValue(val?.value[0]);
     } else {
       this.certificate.controls[form].markAsDirty();
       this.certificate.controls[form].setValue(null);
@@ -219,13 +220,13 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
       }, 100);
       this.error = [];
       this.isClearError = true;
-      setTimeout(() => {
-        this.isClearError = false;
-      }, 100);
-      this.certificate.patchValue({ ...this.certificateClone });
-      this.companyName = { _key: this.certificateClone.name };
-      this.companyIssue = { _key: this.certificateClone.issue_by };
-      this.showToastr('', this.getMsg('I0007'));
+          setTimeout(() => {
+            this.isClearError = false;
+          }, 100);
+      this.certificate.patchValue({...this.certificateClone});  
+      this.companyName = [{_key: this.certificateClone.name?._key}];
+      this.companyIssue = [{_key: this.certificateClone.issue_by?._key}];      
+      this.showToastr('', this.getMsg('I0007'));    
     }
   }
 
@@ -233,8 +234,11 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
     this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;
-    }, 100);
-    const saveData = this.certificate.value;
+    }, 100);  
+    debugger
+    const saveData = this.certificate.value;   
+    saveData['name'] = this.certificate.value.name?._key;
+    saveData['issue_by'] = this.certificate.value.issue_by?._key;
     if (this.certificate_key) {
       saveData['_key'] = this.certificate_key;
     } else {
@@ -271,6 +275,8 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
       this.isSubmit = false;
     }, 100);
     const saveData = this.certificate.value;
+    saveData['name'] = this.certificate.value.name?._key;
+    saveData['issue_by'] = this.certificate.value.issue_by?._key;
     if (this.certificate_key) {
       saveData['_key'] = this.certificate_key;
     } else {
@@ -278,19 +284,17 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
     }
     if (this.certificate.valid && this.error.length <= 0) {
       await this.cartificateService
-        .saveUserCartificate(saveData)
-        .then((res) => {
-          if (res?.status === RESULT_STATUS.OK) {
-            const message =
-              this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
-            this.showToastr('', message);
-            this.router.navigateByUrl('/');
-          } else {
-            this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-          }
-        }).catch(() => {
+      .saveUserCartificate(saveData)
+      .then((res) =>{
+        if (res?.status === RESULT_STATUS.OK){
+          const message =
+          this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
+          this.showToastr('', message);
+          history.back();
+        }else{
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-        });
+        }
+      }); 
     } else {
       this.scrollIntoError();
     }
@@ -327,15 +331,11 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
             if (r.data.length > 0) {
               const data = r.data[0];
               this.certificate.patchValue({ ...data });
-              this.certificateClone = this.certificate.value;
-              this.companyName = {
-                _key: data.name,
-              };
-              this.companyIssue = {
-                _key: data.issue_by,
-              };
-              this.files = data.file;
-              if (this.user_id != data.user_id) {
+              this.certificateClone = this.certificate.value;          
+              this.companyName = [{_key: data.name?._key},{value: data.name?.value}];
+              this.companyIssue = [{_key: data.issue_by?._key}, {value: data.issue_by?.value}];
+              this.files = data.file;                
+              if(this.user_id != data.user_id){
                 this.mode = MODE.VIEW
               }
             }

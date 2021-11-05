@@ -1,8 +1,7 @@
-<div class="steppers-container row" id="user_profile">
-  <div class="col-md-2 col-lg-2 col-xxxl-2"></div>
-  <div class="col-md-8 col-lg-8 col-xxxl-8">
+<div class="user_profile_wrapper" id="user_profile">
+  <div class="content__card">
     <!-- profile -->
-    <nb-card>
+    <div style="background-color: #ffffff">
       <div
         class="user-background"
         aitUploadDirective
@@ -29,20 +28,21 @@
           </div>
           <div class="user-breakinfo">
             <p class="fullname-profile">
-              {{profile.first_name + profile.last_name }}
+              {{userProfile?.first_name +" "+ userProfile?.last_name }}
             </p>
             <p style="padding-top: 30px">
-              <span> {{profile.title }} at {{profile.company_working}} </span>
+              <span> {{userProfile?.title }} at {{userProfile?.company_working}} </span>
             </p>
             <p style="margin-top: -10px">
-              <span>{{profile.city}}, {{profile.country}}</span>
+              <span>{{userProfile?.city}}, {{userProfile?.country}}</span>
             </p>
           </div>
         </div>
         <div class="col-md-5 col-lg-4 col-xxxl-4" id="col2">
-          <p>
-            {{profile.about}}
-          </p>
+          <textarea  style="width:100%; margin:0 ; height: 100px;  border: none;
+          outline: none; font-size: 13px;overflow: hidden;resize: none;">
+            {{userProfile?.about}}
+          </textarea>
         </div>
         <div class="col-md-3 col-lg-3 col-xxxl-3" id="col3">
           <div
@@ -87,7 +87,7 @@
               "
               >{{ 'connections' | translate }}</span
             >
-            <div class="view_contact">
+            <div class="view_contact" *ngIf="!isMyUserProfile">
               <ait-button
                 [id]="'add friend'"
                 [styleText]="{ 'font-size': '10px' }"
@@ -98,6 +98,7 @@
             </div>
             <div class="view_contact">
               <ait-button
+                (click)="openProject('user-onboarding', userProfile.user_id)"
                 [styleText]="{ 'font-size': '10px' }"
                 [height]="'24px'"
                 [title]="'VIEW CONTACT'"
@@ -108,11 +109,59 @@
           </div>
         </div>
       </div>
-    </nb-card>
+    </div>
     <!-- skills -->
-    <nb-card>
+    <div class="reorder_skills" style="z-index: 100;">
+      <ait-button
+        (click)="open('user-reorder-skills')"
+        [iconName]="'menu-outline'"
+        [color]="'#fff'"
+        [styleText]="{ 'font-size': '10px' }"
+        [width]="'150px'"
+        [height]="'25px'"
+        [title]="'REORDER SKILLS'"
+        [id]="'reorder skills'"
+        [background]="
+          'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+        "
+      ></ait-button>
+    </div>
+    <card-content
+       tabindex="2"
+      [id]="'company_detail'"
+      style="outline-color: #10529d"
+      class="content_card"
+      style="display: flex; justify-content: center"
+      [label]="'SKILLS'"
+      [styleLabel]="{'font-size':'22px'}"
+      (onClickButtonHeader)="open('user-skills')"
+      [actionBtn]="actionBtn"
+      [buttonTitle]="'ADD SKILL'"
+      [disableHeader]="false"
+      [widthBtn]="'150px'"
+      [content]="countSkill"
+      [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
+      [padding]="'10px'"
+    >
+    <div class="container-user-skill" [class.show]="showSkill">
+      <hr>
+      <div *ngFor="let category of skillByCategory; let last = last">
+        <p class="title-skill">{{ category.name }}</p>
+        <ait-dragscroll-skill
+          [skillList]="category.data"
+          [showField]=""
+          [width]="'1500px'"
+          [maxWidth]="'1500px'"
+          [minWidth]="'1500px'"
+          [isNormal]="true"
+        ></ait-dragscroll-skill>
+        <hr *ngIf="!last" />
+      </div>
+    </div>
+    </card-content>
+    <!-- <nb-card>
       <nb-card-header>
-        <div id="skills-headparent">
+        <div id="skills-headparent" (click)="showSkill = !showSkill">
           <div id="skills-lefthead">
             {{ 'SKILL' | translate }}
             <div class="skill-remain">
@@ -152,6 +201,24 @@
                 "
               ></ait-button>
             </div>
+
+             <div
+                class="d-flex justify-content-center"
+                *ngIf="userprojectFilterByCmp?.length > 0"
+              >
+              <nb-icon
+                class="icon_expan"
+                style="cursor: pointer"
+                *ngIf="!showSkill"
+                icon="arrow-ios-downward-outline"
+              ></nb-icon>
+              <nb-icon
+                class="icon_expan"
+                style="cursor: pointer"
+                *ngIf="showSkill"
+                icon="arrow-ios-upward-outline"
+              ></nb-icon>
+              </div>
           </div>
         </div>
       </nb-card-header>
@@ -170,754 +237,486 @@
             <hr *ngIf="!last" />
           </div>
         </div>
-        <div
-          class="d-flex justify-content-center"
-          *ngIf="userprojectFilterByCmp?.length > 0"
-        >
-          <ait-button
-            [id]="'show skill'"
-            (click)="showSkill = !showSkill"
-            [iconName]="
-              showSkill
-                ? 'arrow-ios-upward-outline'
-                : 'arrow-ios-downward-outline'
-            "
-            [color]="'#fff'"
-            [title]="
-              showSkill ? ('view-less' | translate) : ('view-more' | translate)
-            "
-            [width]="'120px'"
-            [height]="'24px'"
-            [styleText]="{ 'font-size': '10px' }"
-            [background]="
-              'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
-            "
-          >
-          </ait-button>
-        </div>
       </nb-card-body>
-    </nb-card>
+    </nb-card> -->
     <!-- project -->
-    <nb-card>
-      <nb-card-header>
-        <div id="skills-headparent">
-          <div id="skills-lefthead">
-            {{ 'PROJECT' | translate }}
-            <div class="skill-remain">
-              <span></span>
-              <span *ngIf="true">
-                You have spent {{(timeProject - timeProject%3600000)/3600000 }} hours working on the projects 
-              </span>
-            </div>
-          </div>
-          <div class="skill-righthead">
-            <div class="float-right" *ngIf="true">
-              <ait-button
-                [id]="'add project'"
-                (click)="open('user-project')"
-                [iconName]="'plus-outline'"
-                [color]="'#fff'"
-                [title]="'add project' | translate"
-                [width]="'150px'"
-                [height]="'24px'"
-                [styleText]="{ 'font-size': '10px' }"
-                [background]="
-                  'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
-                "
-              >
-              </ait-button>
-            </div>
-          </div>
-        </div>
-      </nb-card-header>
-      <nb-card-body *ngIf="true">
-        <div class="container-user-project" [class.show]="showProject">
-          <ul
-            *ngFor="
-              let company_project of userProject;
-              let last = last;
-              let firstcomp = first
-            "
-          >
-            <li class="timeline-event">
-              <div class="timeline-block">
-                <div class="img-timeline-cmp">
-                  <img
-                    src="../../../../../assets/images/image.png"
-                    alt="project"
-                  />
-                </div>
-                <div class="timeline-info">
-                  <div>
-                    <p id="title-timeline">
-                      {{ company_project?.company_name }}
-                    </p>
-                    <div class="desc-info">
-                      <p
-                        *ngIf="
-                          company_project?.floor_building &&
-                          company_project?.street
-                        "
-                      >
-                        {{ company_project?.floor_building }}
-                        <span *ngIf="company_project?.street"> , </span>
-                        {{ company_project?.street }}
-                      </p>
-                      <p
-                        *ngIf="
-                          !company_project?.floor_building &&
-                          !company_project?.street
-                        "
-                      >
-                        {{company_project.floor_building}}
-                      </p>
-                      <p>{{ company_project?.working_time }}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="devline"></div>
-            </li>
-            <li
-              class="timeline-event"
-              *ngFor="
-                let project of company_project.data;
-                let last = last;
-                let firstproj = first
-              "
-            >
-              <div
-                class="timeline-block"
-                (mouseenter)="editProject(project)"
-                (mouseleave)="nonEditProject(project)"
-              >
-                <div class="img-timeline">
-                  <img
-                    src="../../../../../assets/images/Icon.svg"
-                    alt="project"
-                    *ngIf="!project?.is_working"
-                  />
-                  <img
-                    src="../../../../../assets/images/IconEdit.svg"
-                    alt="projectcurrent"
-                    *ngIf="project?.is_working"
-                  />
-                </div>
-                <div class="timeline-info">
-                  <div>
-                    <p id="title-timeline">{{ project.name }}</p>
-                    <div class="desc-info">
-                      <p>{{ project.title }}</p>
-                      <p>
-                        {{ project?.start_date_from }} - {{ project?.start_date_to}}: {{project?.time}}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div id="ic-edit" >
-                  <a (click)="openProject('user-project', project._key)">
-                    <nb-icon
-                      *ngIf="isMyUserProfile"
-                      nbSuffix
-                      icon="edit-2-outline"
-                      pack="eva"
-                    ></nb-icon>
-                    <nb-icon
-                      *ngIf="!isMyUserProfile"
-                      nbSuffix
-                      icon="eye-outline"
-                      pack="eva"
-                    ></nb-icon>
-                  </a>
-                </div>
-              </div>
-              <div class="devline" *ngIf="!last"></div>
-            </li>
-            <hr *ngIf="!last" />
-          </ul>
-        </div>
-        <div
-          class="d-flex justify-content-center"
-          *ngIf="userProject?.length > 0"
+    <card-content
+       tabindex="2"
+      [id]="'company_detail'"
+      style="outline-color: #10529d"
+      class="content_card"
+      style="display: flex; justify-content: center"
+      [label]="'PROJECTS'"
+      [styleLabel]="{'font-size':'22px'}"
+      (onClickButtonHeader)="open('user-project')"
+      [actionBtn]="actionBtn"
+      [buttonTitle]="'ADD PROJECT'"
+      [disableHeader]="false"
+      [widthBtn]="'150px'"
+      [content]="'You have spent 1500 hours working on the projects'"
+      [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
+      [padding]="'10px'"
+    >
+      <div class="container-user-project" [class.show]="showProject">
+        <hr>
+        <ul
+          *ngFor="
+            let company_project of userProject;
+            let last = last;
+            let firstcomp = first
+          "
         >
-          <ait-button
-            [id]="'show project'"
-            (click)="showProject = !showProject"
-            [iconName]="
-              showProject
-                ? 'arrow-ios-upward-outline'
-                : 'arrow-ios-downward-outline'
-            "
-            [color]="'#fff'"
-            [title]="
-              showProject
-                ? ('view-less' | translate)
-                : ('view-more' | translate)
-            "
-            [width]="'120px'"
-            [height]="'24px'"
-            [styleText]="{ 'font-size': '10px' }"
-            [background]="
-              'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
+          <li class="timeline-event">
+            <div class="timeline-block">
+              <div class="img-timeline-cmp">
+                <img
+                  src="../../../../../assets/images/image.png"
+                  alt="project"
+                />
+              </div>
+              <div class="timeline-info">
+                <div>
+                  <p id="title-timeline">
+                    {{ company_project?.company_name }}
+                  </p>
+                  <div class="desc-info">
+                    <p
+                      *ngIf="
+                        company_project?.floor_building &&
+                        company_project?.street
+                      "
+                    >
+                      {{ company_project?.floor_building }}
+                      <span *ngIf="company_project?.street"> , </span>
+                      {{ company_project?.street }}
+                    </p>
+                    <p
+                      *ngIf="
+                        !company_project?.floor_building &&
+                        !company_project?.street
+                      "
+                    >
+                      {{company_project.floor_building}}
+                    </p>
+                    <p>{{ company_project?.working_time }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="devline"></div>
+          </li>
+          <li
+            class="timeline-event"
+            *ngFor="
+              let project of company_project.data;
+              let last = last;
+              let firstproj = first
             "
           >
-          </ait-button>
-        </div>
-      </nb-card-body>
-    </nb-card>
+            <div
+              class="timeline-block"
+              (mouseenter)="editProject(project)"
+              (mouseleave)="nonEditProject(project)"
+            >
+              <div class="img-timeline">
+                <img
+                  src="../../../../../assets/images/Icon.svg"
+                  alt="project"
+                  *ngIf="!project?.is_working"
+                />
+                <img
+                  src="../../../../../assets/images/IconEdit.svg"
+                  alt="projectcurrent"
+                  *ngIf="project?.is_working"
+                />
+              </div>
+              <div class="timeline-info">
+                <div>
+                  <p id="title-timeline">{{ project.name }}</p>
+                  <div class="desc-info">
+                    <p>{{ project.title }}</p>
+                    <p>
+                      {{ project?.start_date_from }} - {{ project?.start_date_to}}: {{project?.time}}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div id="ic-edit" >
+                <a (click)="openProject('user-project', project._key)">
+                  <nb-icon
+                    *ngIf="isMyUserProfile"
+                    nbSuffix
+                    icon="edit-2-outline"
+                    pack="eva"
+                  ></nb-icon>
+                  <nb-icon
+                    *ngIf="!isMyUserProfile"
+                    nbSuffix
+                    icon="eye-outline"
+                    pack="eva"
+                  ></nb-icon>
+                </a>
+              </div>
+            </div>
+            <div class="devline" *ngIf="!last"></div>
+          </li>
+          <hr *ngIf="!last" />
+        </ul>
+      </div>
+    </card-content>
     <!-- EXPERIENCE -->
-    <nb-card>
-      <nb-card-header>
-        <div id="skills-headparent">
-          <div id="skills-lefthead">
-            {{ 'EXPERIENCE' | translate }}
-            <div class="skill-remain">
-              <span></span>
-              <span *ngIf="true">
-                'You have {{(timeExperience - timeExperience%3600000)/3600000 }} experience working' 
-              </span>
+    <card-content
+      tabindex="2"
+      [id]="'company_detail'"
+      style="outline-color: #10529d"
+      class="content_card"
+      style="display: flex; justify-content: center"
+      [label]="'EXPERIENCES'"
+      [styleLabel]="{'font-size':'22px'}"
+      (onClickButtonHeader)="open('user-experience')"
+      [actionBtn]="actionBtn"
+      [buttonTitle]="'ADD EXPERIENCE'"
+      [disableHeader]="false"
+      [widthBtn]="'150px'"
+      [content]="'You have spent 1500 hours working on the projects'"
+      [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
+      [padding]="'10px'"
+    >
+    <div class="container-user-project" [class.show]="showExperience">
+      <hr>
+      <ul
+        *ngFor="
+          let company_experience of userExperience;
+          let last = last;
+          let firstcomp = first
+        "
+      >
+        <li class="timeline-event">
+          <div class="timeline-block">
+            <div class="img-timeline-cmp">
+              <img
+                src="../../../../../assets/images/image.png"
+                alt="project"
+              />
             </div>
-          </div>
-          <div class="skill-righthead">
-            <div class="float-right" *ngIf="true">
-              <ait-button
-                [id]="'add experience'"
-                (click)="open('user-experience')"
-                [iconName]="'plus-outline'"
-                [color]="'#fff'"
-                [title]="'add experience' | translate"
-                [width]="'150px'"
-                [height]="'24px'"
-                [styleText]="{ 'font-size': '10px' }"
-                [background]="
-                  'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
-                "
-              >
-              </ait-button>
-            </div>
-          </div>
-        </div>
-      </nb-card-header>
-      <nb-card-body *ngIf="true">
-        <div class="container-user-project" [class.show]="showExperience">
-          <ul
-            *ngFor="
-              let company_experience of userExperience;
-              let last = last;
-              let firstcomp = first
-            "
-          >
-            <li class="timeline-event">
-              <div class="timeline-block">
-                <div class="img-timeline-cmp">
-                  <img
-                    src="../../../../../assets/images/image.png"
-                    alt="project"
-                  />
-                </div>
-                <div class="timeline-info">
-                  <div>
-                    <p id="title-timeline">
-                      {{ company_experience?.company_working }}
-                    </p>
-                    <div class="desc-info">
-                      <p
-                        *ngIf="
-                        company_experience?.floor_building &&
-                        company_experience?.street
-                        "
-                      >
-                        {{ company_experience?.floor_building }}
-                        <span *ngIf="company_project?.street"> , </span>
-                        {{ company_experience?.street }}
-                      </p>
-                      <p
-                        *ngIf="
-                          !company_experience?.floor_building &&
-                          !company_experience?.street
-                        "
-                      >
-                        {{
-                          'matching.user.my-profile.company-missing-info'
-                            | translate
-                        }}
-                      </p>
-                      <p>{{ company_experience?.working_time }}</p>
-                    </div>
-                  </div>
+            <div class="timeline-info">
+              <div>
+                <p id="title-timeline">
+                  {{ company_experience?.company_working }}
+                </p>
+                <div class="desc-info">
+                  <p>
+                    {{
+                      ''
+                        | translate
+                    }}
+                  </p>
+                  <p>{{ company_experience?.working_time }}</p>
                 </div>
               </div>
-              <div class="devline"></div>
-            </li>
-            <li
-              class="timeline-event"
-              *ngFor="
-                let experience of company_experience.data;
-                let last = last;
-                let firstproj = first
-              "
-            >
-              <div
-                class="timeline-block"
-                (mouseenter)="editProject(project)"
-                (mouseleave)="nonEditProject(project)"
-              >
-                <div class="img-timeline">
-                  <img
-                    src="../../../../../assets/images/Icon.svg"
-                    alt="project"
-                    *ngIf="!experience?.is_working"
-                  />
-                  <img
-                    src="../../../../../assets/images/IconEdit.svg"
-                    alt="projectcurrent"
-                    *ngIf="experience?.is_working"
-                  />
-                </div>
-                <div class="timeline-info">
-                  <div>
-                    <p id="title-timeline">{{experience.title }}</p>
-                    <div class="desc-info">
-                      <p>{{experience.employee_type}}</p>
-                      <p>
-                        {{ experience?.start_date_from }} - {{ experience?.start_date_to}}: {{experience?.time}}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div id="ic-edit" *ngIf="project?.isEdited">
-                  <a (click)="openProject('edit', project._key)">
-                    <nb-icon
-                      *ngIf="isMyUserProfile"
-                      nbSuffix
-                      icon="edit-2-outline"
-                      pack="eva"
-                    ></nb-icon>
-                    <nb-icon
-                      *ngIf="!isMyUserProfile"
-                      nbSuffix
-                      icon="eye-outline"
-                      pack="eva"
-                    ></nb-icon>
-                  </a>
-                </div>
-              </div>
-              <div class="devline" *ngIf="!last"></div>
-            </li>
-            <hr *ngIf="!last" />
-          </ul>
-        </div>
-        <div
-          class="d-flex justify-content-center"
-          *ngIf="userprojectFilterByCmp?.length > 0"
+            </div>
+          </div>
+          <div class="devline"></div>
+        </li>
+        <li
+          class="timeline-event"
+          *ngFor="
+            let experience of company_experience.data;
+            let last = last;
+            let firstproj = first
+          "
         >
-          <ait-button
-            [id]="'show Experience'"
-            (click)="showExperience = !showExperience"
-            [iconName]="
-              showExperience
-                ? 'arrow-ios-upward-outline'
-                : 'arrow-ios-downward-outline'
-            "
-            [color]="'#fff'"
-            [title]="
-              showExperience
-                ? ('view-less' | translate)
-                : ('view-more' | translate)
-            "
-            [width]="'120px'"
-            [height]="'24px'"
-            [styleText]="{ 'font-size': '10px' }"
-            [background]="
-              'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
-            "
+          <div
+            class="timeline-block"
+            (mouseenter)="editProject(project)"
+            (mouseleave)="nonEditProject(project)"
           >
-          </ait-button>
-        </div>
-      </nb-card-body>
-    </nb-card>
-
+            <div class="img-timeline">
+              <img
+                src="../../../../../assets/images/Icon.svg"
+                alt="project"
+                *ngIf="!experience?.is_working"
+              />
+              <img
+                src="../../../../../assets/images/IconEdit.svg"
+                alt="projectcurrent"
+                *ngIf="experience?.is_working"
+              />
+            </div>
+            <div class="timeline-info">
+              <div>
+                <p id="title-timeline">{{experience.title }}</p>
+                <div class="desc-info">
+                  <p>{{experience.employee_type}}</p>
+                  <p>
+                    {{ experience?.start_date_from }} - {{ experience?.start_date_to}}: {{experience?.time}}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div id="ic-edit">
+              <a (click)="openProject('user-experience', experience?._key)">
+                <nb-icon
+                  *ngIf="isMyUserProfile"
+                  nbSuffix
+                  icon="edit-2-outline"
+                  pack="eva"
+                ></nb-icon>
+                <nb-icon
+                  *ngIf="!isMyUserProfile"
+                  nbSuffix
+                  icon="eye-outline"
+                  pack="eva"
+                ></nb-icon>
+              </a>
+            </div>
+          </div>
+          <div class="devline" *ngIf="!last"></div>
+        </li>
+        <hr *ngIf="!last" />
+      </ul>
+    </div>
+    </card-content>
     <!-- CERTIFICATES -->
-    <nb-card>
-      <nb-card-header>
-        <div id="skills-headparent">
-          <div id="skills-lefthead">
-            {{ 'CERTIFICATES' | translate }}
-            <div class="skill-remain">
-              <span></span>
-              <span *ngIf="true">{{
-                'You have spent 1500 hours working on the projects' | translate
-              }}</span>
+    <card-content
+      tabindex="2"
+      [id]="'company_detail'"
+      style="outline-color: #10529d"
+      class="content_card"
+      style="display: flex; justify-content: center"
+      [label]="'CERTIFICATES'"
+      [styleLabel]="{'font-size':'22px'}"
+      (onClickButtonHeader)="open('user-certificate')"
+      [actionBtn]="actionBtn"
+      [buttonTitle]="'ADD EXPERIENCE'"
+      [disableHeader]="false"
+      [widthBtn]="'150px'"
+      [content]="'You have spent 1500 hours working on the projects'"
+      [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
+      [padding]="'10px'"
+    >
+    <div class="container-user-project" [class.show]="showCertificate">
+      <hr>
+      <ul
+        *ngFor="
+          let company_centificate of userCentificate;
+          let last = last;
+          let firstcomp = first
+        "
+      >
+        <li class="timeline-event">
+          <div class="timeline-block">
+            <div class="img-timeline-cmp">
+              <img
+                src="../../../../../assets/images/image.png"
+                alt="project"
+              />
             </div>
-          </div>
-          <div class="skill-righthead">
-            <div class="float-right" *ngIf="true">
-              <ait-button
-                [id]="'add project'"
-                (click)="open('user-certificate')"
-                [iconName]="'plus-outline'"
-                [color]="'#fff'"
-                [title]="'add certificate' | translate"
-                [width]="'150px'"
-                [height]="'24px'"
-                [styleText]="{ 'font-size': '10px' }"
-                [background]="
-                  'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
-                "
-              >
-              </ait-button>
-            </div>
-          </div>
-        </div>
-      </nb-card-header>
-      <nb-card-body *ngIf="true">
-        <div class="container-user-project" [class.show]="showCertificate">
-          <ul
-            *ngFor="
-              let company_centificate of userCentificate;
-              let last = last;
-              let firstcomp = first
-            "
-          >
-            <li class="timeline-event">
-              <div class="timeline-block">
-                <div class="img-timeline-cmp">
-                  <img
-                    src="../../../../../assets/images/image.png"
-                    alt="project"
-                  />
-                </div>
-                <div class="timeline-info">
-                  <div>
-                    <p id="title-timeline">
-                      {{ company_centificate?.name }}
-                    </p>
-                    <div class="desc-info">                    
-                      <p>
-                        {{
-                          company_centificate?.issue_by
-                        }}
-                      </p>
-                      <p>{{ company_centificate?.issue_date_from }} - {{ company_centificate?.issue_date_to }}</p>
-                    </div>
-                  </div>
-                </div>
-                <div id="ic-edit">
-                  <a (click)="openProject('user-certificate', company_centificate._key)">
-                    <nb-icon
-                      *ngIf="isMyUserProfile"
-                      nbSuffix
-                      icon="edit-2-outline"
-                      pack="eva"
-                    ></nb-icon>
-                    <nb-icon
-                      *ngIf="!isMyUserProfile"
-                      nbSuffix
-                      icon="eye-outline"
-                      pack="eva"
-                    ></nb-icon>
-                  </a>
+            <div class="timeline-info">
+              <div>
+                <p id="title-timeline">
+                  {{ company_centificate?.name }}
+                </p>
+                <div class="desc-info">                    
+                  <p>
+                    {{
+                      company_centificate?.issue_by
+                    }}
+                  </p>
+                  <p>{{ company_centificate?.issue_date_from }} - {{ company_centificate?.issue_date_to }}</p>
                 </div>
               </div>
-            </li>
+            </div>
+            <div id="ic-edit">
+              <a (click)="openProject('user-certificate', company_centificate._key)">
+                <nb-icon
+                  *ngIf="isMyUserProfile"
+                  nbSuffix
+                  icon="edit-2-outline"
+                  pack="eva"
+                ></nb-icon>
+                <nb-icon
+                  *ngIf="!isMyUserProfile"
+                  nbSuffix
+                  icon="eye-outline"
+                  pack="eva"
+                ></nb-icon>
+              </a>
+            </div>
+          </div>
+        </li>
 
-            <hr *ngIf="!last" />
-          </ul>
-        </div>
-        <div
-          class="d-flex justify-content-center"
-          *ngIf="userprojectFilterByCmp?.length > 0"
-        >
-          <ait-button
-            [id]="'show Certificate'"
-            (click)="showCertificate = !showCertificate"
-            [iconName]="
-              showCertificate
-                ? 'arrow-ios-upward-outline'
-                : 'arrow-ios-downward-outline'
-            "
-            [color]="'#fff'"
-            [title]="
-              showCertificate
-                ? ('view-less' | translate)
-                : ('view-more' | translate)
-            "
-            [width]="'120px'"
-            [height]="'24px'"
-            [styleText]="{ 'font-size': '10px' }"
-            [background]="
-              'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
-            "
-          >
-          </ait-button>
-        </div>
-      </nb-card-body>
-    </nb-card>
+        <hr *ngIf="!last" />
+      </ul>
+    </div>
+    </card-content>
     <!-- course -->
-    <nb-card>
-      <nb-card-header>
-        <div id="skills-headparent">
-          <div id="skills-lefthead">
-            {{ 'COURSE' | translate }}
-            <div class="skill-remain">
-              <span></span>
-              <span *ngIf="true">{{
-                'You have spent 1500 hours working on the projects' | translate
-              }}</span>
+    <card-content
+      tabindex="2"
+      [id]="'company_detail'"
+      style="outline-color: #10529d"
+      class="content_card"
+      style="display: flex; justify-content: center"
+      [label]="'COURSES'"
+      [styleLabel]="{'font-size':'22px'}"
+      (onClickButtonHeader)="open('user-course')"
+      [actionBtn]="actionBtn"
+      [buttonTitle]="'ADD COURSE'"
+      [disableHeader]="false"
+      [widthBtn]="'150px'"
+      [content]="'You have spent 1500 hours working on the projects'"
+      [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
+      [padding]="'10px'"
+    >
+    <div class="container-user-project" [class.show]="showCourse">
+      <hr>
+      <ul
+        *ngFor="
+          let course of userCourse;
+          let last = last;
+          let firstcomp = first
+        "
+      >
+        <li class="timeline-event">
+          <div class="timeline-block">
+            <div class="img-timeline-cmp">
+              <img
+                src="../../../../../assets/images/image.png"
+                alt="project"
+              />
             </div>
-          </div>
-          <div class="skill-righthead">
-            <div class="float-right" *ngIf="true">
-              <ait-button
-                [id]="'add course'"
-                (click)="open('user-course', '')"
-                [iconName]="'plus-outline'"
-                [color]="'#fff'"
-                [title]="'add course' | translate"
-                [width]="'150px'"
-                [height]="'24px'"
-                [styleText]="{ 'font-size': '10px' }"
-                [background]="
-                  'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
-                "
-              >
-              </ait-button>
-            </div>
-          </div>
-        </div>
-      </nb-card-header>
-      <nb-card-body *ngIf="true">
-        <div class="container-user-project" [class.show]="showCourse">
-          <ul
-            *ngFor="
-              let course of userCourse;
-              let last = last;
-              let firstcomp = first
-            "
-          >
-            <li class="timeline-event">
-              <div class="timeline-block">
-                <div class="img-timeline-cmp">
-                  <img
-                    src="../../../../../assets/images/image.png"
-                    alt="project"
-                  />
-                </div>
-                <div class="timeline-info">
-                  <div>
-                    <p id="title-timeline">
-                      {{ course?.name }}
-                    </p>
-                    <div class="desc-info">
-                      <p>
-                        {{
-                          course?.training_center
-                        }}
-                      </p>
-                      <p>{{ course?.start_date_from }} - {{course?.start_date_to}}</p>
-                    </div>
-                  </div>
-                </div>
-                <div id="ic-edit">
-                  <a (click)="openProject('user-course', course._key)">
-                    <nb-icon
-                      *ngIf="isMyUserProfile"
-                      nbSuffix
-                      icon="edit-2-outline"
-                      pack="eva"
-                    ></nb-icon>
-                    <nb-icon
-                      *ngIf="!isMyUserProfile"
-                      nbSuffix
-                      icon="eye-outline"
-                      pack="eva"
-                    ></nb-icon>
-                  </a>
+            <div class="timeline-info">
+              <div>
+                <p id="title-timeline">
+                  {{ course?.name }}
+                </p>
+                <div class="desc-info">
+                  <p>
+                    {{
+                      course?.training_center
+                    }}
+                  </p>
+                  <p>{{ course?.start_date_from }} - {{course?.start_date_to}}</p>
                 </div>
               </div>
-            </li>
+            </div>
+            <div id="ic-edit">
+              <a (click)="openProject('user-course', course._key)">
+                <nb-icon
+                  *ngIf="isMyUserProfile"
+                  nbSuffix
+                  icon="edit-2-outline"
+                  pack="eva"
+                ></nb-icon>
+                <nb-icon
+                  *ngIf="!isMyUserProfile"
+                  nbSuffix
+                  icon="eye-outline"
+                  pack="eva"
+                ></nb-icon>
+              </a>
+            </div>
+          </div>
+        </li>
 
-            <hr *ngIf="!last" />
-          </ul>
-        </div>
-        <div
-          class="d-flex justify-content-center"
-          *ngIf="userprojectFilterByCmp?.length > 0"
-        >
-          <ait-button
-            [id]="'show sourse'"
-            (click)="showCourse = !showCourse"
-            [iconName]="
-              showCourse
-                ? 'arrow-ios-upward-outline'
-                : 'arrow-ios-downward-outline'
-            "
-            [color]="'#fff'"
-            [title]="
-              showCourse ? ('view-less' | translate) : ('view-more' | translate)
-            "
-            [width]="'120px'"
-            [height]="'24px'"
-            [styleText]="{ 'font-size': '10px' }"
-            [background]="
-              'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
-            "
-          >
-          </ait-button>
-        </div>
-      </nb-card-body>
-    </nb-card>
+        <hr *ngIf="!last" />
+      </ul>
+    </div>
+    </card-content>
     <!-- education -->
-    <nb-card>
-      <nb-card-header>
-        <div id="skills-headparent">
-          <div id="skills-lefthead">
-            {{ 'EDUCATION' | translate }}
-            <div class="skill-remain">
-              <span></span>
-              <span *ngIf="true">{{
-                'You have spent 1500 hours working on the projects' | translate
-              }}</span>
-            </div>
+    <card-content
+    tabindex="2"
+    [id]="'company_detail'"
+    style="outline-color: #10529d"
+    class="content_card"
+    style="display: flex; justify-content: center"
+    [label]="'EDUCATIONS'"
+    [styleLabel]="{'font-size':'22px'}"
+    (onClickButtonHeader)="open('user-education')"
+    [actionBtn]="actionBtn"
+    [buttonTitle]="'ADD EDUCATION'"
+    [disableHeader]="false"
+    [widthBtn]="'150px'"
+    [content]="'You have spent 1500 hours working on the projects'"
+    [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
+    [padding]="'10px'"
+  >
+  <div class="container-user-project" [class.show]="showEducation">
+    <hr>
+    <ul
+      *ngFor="
+        let education of userEducation;
+        let last = last;
+        let firstcomp = first
+      "
+    >
+      <li class="timeline-event">
+        <div class="timeline-block">
+          <div class="img-timeline-cmp">
+            <img
+              src="../../../../../assets/images/image.png"
+              alt="project"
+            />
           </div>
-          <div class="skill-righthead">
-            <div class="float-right" *ngIf="true">
-              <ait-button
-                [id]="'add education'"
-                (click)="open('user-education')"
-                [iconName]="'plus-outline'"
-                [color]="'#fff'"
-                [title]="'add education' | translate"
-                [width]="'150px'"
-                [height]="'24px'"
-                [styleText]="{ 'font-size': '10px' }"
-                [background]="
-                  'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
-                "
-              >
-              </ait-button>
-            </div>
-          </div>
-        </div>
-      </nb-card-header>
-      <nb-card-body *ngIf="true">
-        <div class="container-user-project" [class.show]="showEducation">
-          <ul
-            *ngFor="
-              let education of userEducation;
-              let last = last;
-              let firstcomp = first
-            "
-          >
-            <li class="timeline-event">
-              <div class="timeline-block">
-                <div class="img-timeline-cmp">
-                  <img
-                    src="../../../../../assets/images/image.png"
-                    alt="project"
-                  />
-                </div>
-                <div class="timeline-info">
-                  <div>
-                    <p id="title-timeline">
-                      {{ education?.school }}
-                    </p>
-                    <div class="desc-info">
-                      <p>
-                        {{
-                          education?.field_of_study
-                        }}
-                      </p>
-                      <p>{{ education?.start_date_from }} - {{education?.start_date_to}}</p>
-                    </div>
-                  </div>
-                </div>
-                <div id="ic-edit">
-                  <a (click)="openProject('user-education', education._key)">
-                    <nb-icon
-                      *ngIf="isMyUserProfile"
-                      nbSuffix
-                      icon="edit-2-outline"
-                      pack="eva"
-                    ></nb-icon>
-                    <nb-icon
-                      *ngIf="!isMyUserProfile"
-                      nbSuffix
-                      icon="eye-outline"
-                      pack="eva"
-                    ></nb-icon>
-                  </a>
-                </div>
+          <div class="timeline-info">
+            <div>
+              <p id="title-timeline">
+                {{ education?.school }}
+              </p>
+              <div class="desc-info">
+                <p>
+                  {{
+                    education?.field_of_study
+                  }}
+                </p>
+                <p>{{ education?.start_date_from }} - {{education?.start_date_to}}</p>
               </div>
-            </li>
+            </div>
+          </div>
+          <div id="ic-edit">
+            <a (click)="openProject('user-education', education._key)">
+              <nb-icon
+                *ngIf="isMyUserProfile"
+                nbSuffix
+                icon="edit-2-outline"
+                pack="eva"
+              ></nb-icon>
+              <nb-icon
+                *ngIf="!isMyUserProfile"
+                nbSuffix
+                icon="eye-outline"
+                pack="eva"
+              ></nb-icon>
+            </a>
+          </div>
+        </div>
+      </li>
 
-            <hr *ngIf="!last" />
-          </ul>
-        </div>
-        <div
-          class="d-flex justify-content-center"
-          *ngIf="userprojectFilterByCmp?.length > 0"
-        >
-          <ait-button
-            [id]="'show education'"
-            (click)="showEducation = !showEducation"
-            [iconName]="
-              showEducation
-                ? 'arrow-ios-upward-outline'
-                : 'arrow-ios-downward-outline'
-            "
-            [color]="'#fff'"
-            [title]="
-              showEducation
-                ? ('view-less' | translate)
-                : ('view-more' | translate)
-            "
-            [width]="'120px'"
-            [height]="'24px'"
-            [styleText]="{ 'font-size': '10px' }"
-            [background]="
-              'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
-            "
-          >
-          </ait-button>
-        </div>
-      </nb-card-body>
-    </nb-card>
+      <hr *ngIf="!last" />
+    </ul>
+  </div>
+  </card-content>
     <!-- LANGUAGES -->
-    <nb-card>
-      <nb-card-header>
-        <div id="skills-headparent">
-          <div id="skills-lefthead">
-            {{ 'LANGUAGES' | translate }}
-            <div class="skill-remain">
-              <span></span>
-              <span *ngIf="true">{{
-                'You have spent 1500 hours working on the projects' | translate
-              }}</span>
-            </div>
-          </div>
-          <div class="skill-righthead">
-            <div class="float-right" *ngIf="true">
-              <ait-button
-                [id]="'add languager'"
-                (click)="open('user-language')"
-                [iconName]="'plus-outline'"
-                [color]="'#fff'"
-                [title]="'add languager' | translate"
-                [width]="'150px'"
-                [height]="'24px'"
-                [styleText]="{ 'font-size': '10px' }"
-                [background]="
-                  'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
-                "
-              >
-              </ait-button>
-            </div>
-          </div>
-        </div>
-      </nb-card-header>
-      <nb-card-body *ngIf="true">
+    <card-content
+       tabindex="2"
+      [id]="'company_detail'"
+      style="outline-color: #10529d"
+      class="content_card"
+      style="display: flex; justify-content: center"
+      [label]="'LANGUAGES'"
+      [styleLabel]="{'font-size':'22px'}"
+      (onClickButtonHeader)="open('user-language')"
+      [actionBtn]="actionBtn"
+      [buttonTitle]="'add languager'"
+      [disableHeader]="false"
+      [widthBtn]="'150px'"
+      [content]="'You have spent 1500 hours working on the projects'"
+      [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
+      [padding]="'10px'"
+    >
+    
         <div class="container-user-project" [class.show]="showLanguages">
+          <hr>
           <ul
             *ngFor="
               let language of userLanguage;
@@ -966,35 +765,6 @@
             <hr *ngIf="!last" />
           </ul>
         </div>
-        <div
-          class="d-flex justify-content-center"
-          *ngIf="userprojectFilterByCmp?.length > 0"
-        >
-          <ait-button
-            [id]="'show languagers'"
-            (click)="showLanguages = !showLanguages"
-            [iconName]="
-              showLanguages
-                ? 'arrow-ios-upward-outline'
-                : 'arrow-ios-downward-outline'
-            "
-            [color]="'#fff'"
-            [title]="
-              showLanguages
-                ? ('view-less' | translate)
-                : ('view-more' | translate)
-            "
-            [width]="'120px'"
-            [height]="'24px'"
-            [styleText]="{ 'font-size': '10px' }"
-            [background]="
-              'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
-            "
-          >
-          </ait-button>
-        </div>
-      </nb-card-body>
-    </nb-card>
+    </card-content>
   </div>
-  <div class="col-md-1 col-lg-1 col-xxxl-1"></div>
 </div>

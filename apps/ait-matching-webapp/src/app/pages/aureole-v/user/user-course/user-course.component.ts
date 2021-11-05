@@ -77,7 +77,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
       start_date_from: new FormControl(null),
       start_date_to: new FormControl(null),
       training_center: new FormControl(null),
-
+      user_id: new FormControl(null),
     });
     // get key form parameters
     this.course_key = this.activeRouter.snapshot.paramMap.get('id');
@@ -219,11 +219,11 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
       }, 100);
       this.error = [];
       this.isClearErrors = true;
-      setTimeout(() => {
-        this.isClearErrors = false;
-      }, 100);
-      this.companyCenter = [];
-      // this.companyCenter.push({_key: this.courseClone.training_center?._key, value: this.courseClone.training_center?.value});
+          setTimeout(() => {
+            this.isClearErrors = false;
+          }, 100);
+      this.companyCenter = [];    
+      this.companyCenter.push({_key: this.courseClone.training_center?._key, value: this.courseClone.training_center?.value});
       this.course.patchValue({ ...this.courseClone });
       this.showToastr('', this.getMsg('I0007'));
     }
@@ -236,9 +236,9 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
       this.isSubmit = false;
     }, 100);
     const saveData = this.course.value;
-    saveData['user_id'] = this.authService.getUserID();
-
-    if (this.course.value.is_online == null) {
+    saveData['training_center'] = this.course.value.training_center;
+    saveData['user_id'] = this.authService.getUserID();    
+    if(this.course.value.is_online == null){
       saveData['is_online'] = false;
     }
     this.error.length
@@ -266,13 +266,16 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
     }
   }
 
-  async saveAndClose() {
-    this.isSubmit = true;
+  async saveAndClose(){
+    debugger
+    this.isSubmit = true; 
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
     const saveData = this.course.value;
-    if (this.course.value.is_online == null) {
+    saveData['training_center'] = this.course.value.training_center;
+    saveData['user_id'] = this.authService.getUserID(); 
+    if(this.course.value.is_online == null){
       saveData['is_online'] == false;
     }
     if (this.course.valid && this.error.length <= 0) {
@@ -324,12 +327,12 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
         .findCourseByKey(key)
         .then((r) => {
           if (r.status === RESULT_STATUS.OK) {
-            if (r.data.length > 0) {
-              const data = r.data[0];
-              this.course.patchValue({ ...data });
-              this.courseClone = this.course.value;
-              this.companyCenter.push({ _key: data.training_center?._key });
-              if (this.user_id != data.user_id) {
+            if (r.data.length > 0) {              
+              const data = r.data[0];                                         
+              this.course.patchValue({ ...data });  
+              this.courseClone = this.course.value;       
+              this.companyCenter = [{_key: data.training_center?._key}, {value: data.training_center?.value}]; 
+              if(this.user_id != data.user_id){
                 this.mode = MODE.VIEW
               }
             }

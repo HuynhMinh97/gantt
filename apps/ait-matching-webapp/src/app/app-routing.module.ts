@@ -108,6 +108,11 @@ export const routes: Routes = [
     component: UserProfileComponent
   },
   {
+    path: 'user-profile/:id',
+    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    component: UserProfileComponent
+  },
+  {
     path: 'user-job-alert',
     canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
     component: UserJobAlertComponent

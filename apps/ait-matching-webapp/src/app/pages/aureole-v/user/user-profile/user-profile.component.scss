@@ -1,13 +1,25 @@
 @import '../../../../../styles/themes.scss';
-
-.steppers-container .user-background {
+.user_profile_wrapper{
+  min-width: 1280px;
+  .content__card{
+    position: relative;
+    margin: auto;
+    width: 1080px;
+    .reorder_skills{
+      position: absolute;
+      top: 406px;
+      right: 200px;
+    }
+  }
+}
+.user_profile_wrapper .user-background {
   margin: 0px;
   height: 200px;
   background-image: url(https://msmobile.com.vn/upload_images/images/hinh-nen-dep-cho-may-tinh-full-hd-2.jpg);
   background-size: cover;
 }
 
-.steppers-container .avatar {
+.user_profile_wrapper .avatar {
   vertical-align: middle;
   height: 100px;
   width: 100px;
@@ -219,13 +231,14 @@
 }
 
 .container-user-skill {
-  height: 100px;
+  position: relative;
+  width: 100%;
   overflow: hidden;
+  z-index: 999;
 }
 
 .container-user-project {
-  height: 195px;
-  overflow: hidden !important;
+  width: 100%;
 }
 
 .container-user-certificate {
@@ -451,4 +464,12 @@ ul .timeline {
   .button__wrapper.button__wrapper__primary.isDefault.appearance-filled.size-medium.shape-round.status-basic.nb-transition {
     min-width: 120px !important;
   }
+}
+.icon_expan {
+  &:hover {
+    transform: scale(1.5);
+  }
+}
+@media only screen and (max-width: 1280px) {
+
 }

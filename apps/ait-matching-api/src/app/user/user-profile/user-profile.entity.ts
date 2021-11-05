@@ -17,17 +17,17 @@ export class UserProfileEntity extends BaseEntity {
   @Field(() => String, { nullable: true })
   first_name?: string;
 
-  @Field(() => String, { nullable: true })
-  title?: string;
+  @Field(() => KeyValueEntity, { nullable: true })
+  title?: KeyValueEntity;
   
-  @Field(() => String, { nullable: true })
-  company_working?: string;
+  @Field(() => KeyValueEntity, { nullable: true })
+  company_working?: KeyValueEntity;
 
-  @Field(() => String, { nullable: true })
-  city?: string;
+  @Field(() => KeyValueEntity, { nullable: true })
+  city?: KeyValueEntity;
 
-  @Field(() => String, { nullable: true })
-  country?: string;
+  @Field(() => KeyValueEntity, { nullable: true })
+  country?: KeyValueEntity;
 
   @Field(() => String, { nullable: true })
   introduce?: string;

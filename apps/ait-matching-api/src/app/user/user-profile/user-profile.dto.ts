@@ -15,17 +15,17 @@ export class UserProfileDto extends BaseDto {
   @Field(() => String, { nullable: true })
   first_name?: string;
 
-  @Field(() => String, { nullable: true })
-  title?: string;
+  @Field(() => ConditionDto, { nullable: true })
+  title?: ConditionDto;
   
-  @Field(() => String, { nullable: true })
-  company_working?: string;
+  @Field(() => ConditionDto, { nullable: true })
+  company_working?: ConditionDto;
 
-  @Field(() => String, { nullable: true })
-  province_city?: string;
+  @Field(() => ConditionDto, { nullable: true })
+  city?: ConditionDto;
 
-  @Field(() => String, { nullable: true })
-  country?: string;
+  @Field(() => ConditionDto, { nullable: true })
+  country?: ConditionDto;
 
   @Field(() => String, { nullable: true })
   introduce?: string;
@@ -65,7 +65,7 @@ export class SaveUserProfileDto extends BaseDto {
   company_working?: string;
 
   @Field(() => String, { nullable: true })
-  province_city?: string;
+  city?: string;
 
   @Field(() => String, { nullable: true })
   country?: string;

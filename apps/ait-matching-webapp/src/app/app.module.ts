@@ -36,6 +36,7 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { UserJobAlertComponent } from './pages/aureole-v/user/user-job-alert/user-job-alert.component';
 import { UserReorderSkillsComponent } from './pages/aureole-v/user/user-reorder-skills/user-reorder-skills.component';
 import { DragScrollSkillModule } from './pages/aureole-v/user/user-profile/dragscroll-skill/dragscroll-skill.module';
+import { CardContentProfileComponent } from './pages/aureole-v/user/user-profile/card-content/card-content.component';
 
 
 const AIT_UI_MODULES = [
@@ -77,11 +78,13 @@ const PAGES = [
   UserSkillsComponent, 
   UserReorderSkillsComponent,
   UserProfileComponent,
+  UserJobAlertComponent,
+  CardContentProfileComponent
 ]
 
 
 @NgModule({
-  declarations: [AppComponent, ...AUREOLE_V_COMPONENTS, ...PAGES,  UserJobAlertComponent],
+  declarations: [AppComponent, ...AUREOLE_V_COMPONENTS, ...PAGES],
   imports: [
     // , NbIconModule, NbEvaIconsModule, NbButtonModule, NbTooltipModule
     DragScrollSkillModule,
