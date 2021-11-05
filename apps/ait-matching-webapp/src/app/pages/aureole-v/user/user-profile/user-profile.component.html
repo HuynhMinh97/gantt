@@ -28,7 +28,7 @@
           </div>
           <div class="user-breakinfo">
             <p class="fullname-profile">
-              {{userProfile?.first_name +" "+ userProfile?.last_name }}
+              {{userProfile?.last_name +" "+ userProfile?.first_name }}
             </p>
             <p style="padding-top: 30px">
               <span> {{userProfile?.title }} at {{userProfile?.company_working}} </span>
@@ -143,8 +143,8 @@
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'10px'"
     >
-    <div class="container-user-skill" [class.show]="showSkill">
-      <hr>
+    <div class="container-user-project">
+      <hr class="hr_header">
       <div *ngFor="let category of skillByCategory; let last = last">
         <p class="title-skill">{{ category.name }}</p>
         <ait-dragscroll-skill
@@ -253,12 +253,12 @@
       [buttonTitle]="'ADD PROJECT'"
       [disableHeader]="false"
       [widthBtn]="'150px'"
-      [content]="'You have spent 1500 hours working on the projects'"
+      [content]="sumHoursProject"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'10px'"
     >
-      <div class="container-user-project" [class.show]="showProject">
-        <hr>
+      <div class="container-user-project" *ngIf="userProject.length > 0">
+        <hr class="hr_header">
         <ul
           *ngFor="
             let company_project of userProject;
@@ -315,8 +315,6 @@
           >
             <div
               class="timeline-block"
-              (mouseenter)="editProject(project)"
-              (mouseleave)="nonEditProject(project)"
             >
               <div class="img-timeline">
                 <img
@@ -378,12 +376,12 @@
       [buttonTitle]="'ADD EXPERIENCE'"
       [disableHeader]="false"
       [widthBtn]="'150px'"
-      [content]="'You have spent 1500 hours working on the projects'"
+      [content]="timeExperienceStr"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'10px'"
     >
-    <div class="container-user-project" [class.show]="showExperience">
-      <hr>
+    <div class="container-user-project" *ngIf="userExperience.length > 0">
+      <hr class="hr_header">
       <ul
         *ngFor="
           let company_experience of userExperience;
@@ -428,8 +426,6 @@
         >
           <div
             class="timeline-block"
-            (mouseenter)="editProject(project)"
-            (mouseleave)="nonEditProject(project)"
           >
             <div class="img-timeline">
               <img
@@ -491,12 +487,12 @@
       [buttonTitle]="'ADD EXPERIENCE'"
       [disableHeader]="false"
       [widthBtn]="'150px'"
-      [content]="'You have spent 1500 hours working on the projects'"
+      [content]="countCentificate"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'10px'"
     >
-    <div class="container-user-project" [class.show]="showCertificate">
-      <hr>
+    <div class="container-user-project" *ngIf="userCentificate.length > 0">
+      <hr class="hr_header">
       <ul
         *ngFor="
           let company_centificate of userCentificate;
@@ -564,12 +560,12 @@
       [buttonTitle]="'ADD COURSE'"
       [disableHeader]="false"
       [widthBtn]="'150px'"
-      [content]="'You have spent 1500 hours working on the projects'"
+      [content]="countCourse"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'10px'"
     >
-    <div class="container-user-project" [class.show]="showCourse">
-      <hr>
+    <div class="container-user-project" *ngIf="userCourse.length > 0">
+      <hr class="hr_header">
       <ul
         *ngFor="
           let course of userCourse;
@@ -637,12 +633,12 @@
     [buttonTitle]="'ADD EDUCATION'"
     [disableHeader]="false"
     [widthBtn]="'150px'"
-    [content]="'You have spent 1500 hours working on the projects'"
     [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
     [padding]="'10px'"
+    [content]="''"
   >
-  <div class="container-user-project" [class.show]="showEducation">
-    <hr>
+  <div class="container-user-project" *ngIf="userEducation.length > 0">
+    <hr class="hr_header">
     <ul
       *ngFor="
         let education of userEducation;
@@ -710,13 +706,13 @@
       [buttonTitle]="'add languager'"
       [disableHeader]="false"
       [widthBtn]="'150px'"
-      [content]="'You have spent 1500 hours working on the projects'"
+      [content]="''"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'10px'"
     >
     
-        <div class="container-user-project" [class.show]="showLanguages">
-          <hr>
+        <div class="container-user-project" *ngIf="userEducation.length > 0">
+          <hr class="hr_header">
           <ul
             *ngFor="
               let language of userLanguage;
@@ -729,7 +725,7 @@
                 <div class="img-timeline-cmp">
                   <img
                     class="languagea-img"
-                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAMAAABThUXgAAAAOVBMVEXIEC7///8BIWnz9fiRn76AkLTv8fYYNXcTMXTVR17wv8fyx87XUGb99/jpn6vOKUTlj52FlbfnmKWRIUdAAAAEMElEQVR4nO3d3XbaMBAEYLX0B0LTlLz/w5YWUpIi29rd2Rlxzs5Frhp79EWmATtSOzx9Ws/uy/fPWbmdpa3m9u/Squy/fns7x/PPl16Jw9PfLzKuabBGqK4lZVyTYI1R/Ssp4poCa5TqXUkJ1wRY41QfSgq45FgWqv9K0rnEWDaqu5JkLimWlapT8nAkcgmx3lO99qnuJAY8E7lkWPZZtViSxiXC8lGdS45OwRQuCZbnAryWtNmCuQRY3ll1wXJ80xvXaf9oWPvTzk11wQpwBWcXGSsyq25YKi4qVpTqXDIyLS9cgYuRiBW7AC8jbXHvwOyiYWFG2VAHmhkLNcKGPNicWLjRNfQBZ8NCjqxlHHQeLOyoWtaBZ8BCj6hlHlyLhR9Nyz6BCitjJI1xEj5WzijusKhcSVhZI+hgEblSsPLad7FoXAlYmc0XsEhccKzc1otYFC4wVnbjFSwCFxQr/4e7ipVeAIjFeNnYwEouAcPi/Ie0iZVaBITF+lVnACuxDASL90v0EFZaIQAW8+3ZIFZSqTAW943/MFZKsSAW+yMlA1ZCuRAW/8NKExa8YABL8TG4EQtc0o2lucFixoIWdWKpbt05sIBlXVi6m8IuLFhhB5bycQMnFojLjqV8MsOPBeGyYwmpQlhQLhuW6OG7EBaQy4Ilewo2iAXjGscSPjDceTmQxDKzZJmmR2GNp7AMKSxDCsuQwjKksAwpLEMKy5DHwKpUKpVKpVKpVCqVSqVSqVQqlUqlUqlUKpVKpVKpVCrqx3iueYyS6gLXFJYhhWVIYRlSWIYUliGFZUhhGVJYhjwGFvDPfhdy/NEb/8uv5w89olibZ0H82e8UVJCZlc+FWqogRgW6DLO5MItgRKlgr1m5XIjlVfzF7ViIs7KXV4FQRRfuoXNFl4SKFXZgAc/OwAKWdWHpuCLL2MWLOrFUXP4FEhEl3VgaLu/Sm5iCASwFl29RV1S5EBafy7NcMK5YEIvNZV+IGlkqjMXlsi5xji0EwGJy2RbPR5eBYPG4LNsy4IuAsFhc4xt+ZJSAYXG4RreSySkAxGJwjW1SlPWzgmLlNx7Z/iqLKnf7q4TW2xur5VFlb6wGb761ZV8mVf6WfeD265tB5lIxNoOEjmBtm9FsKs42o8BRLG9gm0/F2sAWNpKlrZEZVLytkUGj6W+6zaFibroNGVFvO3cWFXc7d8CompCKgIUdWRNSUbCQo2vKm5YcLNwIm/J2OAsLxdV24YOc9s4RELHOXKf4SDee5kl+4omIhZhdq1jpz9JRseJcK1ipF6AEK3oxLmIxHmjlY8Vm1wLW8dD9hlcolQRriGth9F0syqz6EwmWf3Z1sGhUMiw3l5BKiOXkElJJsVxcQioxloNLSCXHMnMJqSbAMnIJqabAMnEJqSbBMnAJqabBGuYivbHpZxqssTdBvwG8MNt/pFCMYQAAAABJRU5ErkJggg=="
+                    [src]="language.image"
                     alt="project"
                   />
                 </div>

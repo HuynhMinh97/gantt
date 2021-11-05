@@ -45,7 +45,7 @@ export class UserEducationService extends AitBaseService {
     };
     const returnFields = { code: true };
     const request = {};
-    request['collection'] = 'sys_company';
+    request['collection'] = 'm_company';
     request['condition'] = condition;
     return await this.query('findSystem', request, returnFields);
   }

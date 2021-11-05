@@ -286,7 +286,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
-            this.router.navigateByUrl('/');
+            history.back();
           } else {
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }

@@ -117,6 +117,9 @@ export class SaveUserOnboardingInfoDto extends BaseDto {
 
     @Field(() => String, { nullable: true })
     industry?: string;
+
+    @Field(() => [String], { nullable: true })
+    top_skills?: string[];
     
 
 }

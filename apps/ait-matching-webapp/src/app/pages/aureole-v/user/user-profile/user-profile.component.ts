@@ -46,7 +46,11 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   userProfile: ProfileDto;
   quantitySkill = 0;
   timeProject = 0;
+  sumHoursProject="";
   timeExperience = 0;
+  timeExperienceStr = "Ban chua co nam kn nào";
+  countCentificate = '';
+  countCourse = "You have finished 0 courses"
   dateFormat = "dd/MM/yyyy";
   today = Date.now();
   isMyUserProfile = false;
@@ -143,10 +147,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
           profile.company_working = data.company_working?.value;
           profile.country = data.country?.value;
           profile.about = data.about;
-          setTimeout(()=>{
-            profile.top_skills = data.top_skills.length > 0 ? data.top_skills : [];
-
-          },100)
+          profile.top_skills = data.top_skills.length > 0 ? data.top_skills : [];
           this.userProfile = profile;
       
           let topSkill = {} as OrderSkill;
@@ -247,17 +248,20 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
           this.timeProject += (dateTo - data[item].start_date_from);
         }
       };
-      
-      
+      this.timeProject = this.getHours(this.timeProject);
+      this.sumHoursProject = this.timeProject >0 ? "You have spent " + this.timeProject + " hours working on the projects" : "Bạn chưa tham gia dự án nào vui lòng thêm."
+      console.log(this.timeProject);      
     })
-    console.log(this.timeProject/1000/60/60);
     
   }
-
+  getHours(time: number){
+    return Math.trunc(time/1000/60/60/3)
+  }
   getExperiencByUserId(){
     this.userExperienceService.findUserExperienceByUserId(this.profileId)
-    .then(async (res) => {     
-      const data = res.data;
+    .then(async (res) => { 
+      if (res?.status === RESULT_STATUS.OK && res.data.length > 0) {
+        const data = res.data;
       for(let item in data){
         let isExperience = false;
         for(let index in this.userExperience){        
@@ -306,9 +310,10 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
           this.timeExperience += (dateTo - data[item].start_date_from);
         }
       };
-      
+      let sumDate = await this.fomatDate( this.timeExperience);
+      this.timeExperienceStr = 'You have ' + sumDate + ' experience working'     
+      }   
     })
-    console.log(this.userExperience);
     
   }
 
@@ -329,14 +334,16 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
         centificate._key = element._key;
         centificate.issue_by = element.issue_by?.value;
         centificate.issue_date_from = this.getDateFormat(element.issue_date_from);
-        centificate.issue_date_to = this.getDateFormat(element.issue_date_from);
+        centificate.issue_date_to =element.issue_date_from ? this.getDateFormat(element.issue_date_from): 'Present';
         centificate.name = element.name?.value ? element.name?.value : "Đang đợi logic data";
         this.userCentificate.push(centificate);
       }
+      setTimeout(() => {
+        this.countCentificate = 'You have '+ this.userCentificate.length + ' certificates';
+
+      },100)
       
     })
-    console.log(this.userCentificate);
-    
   }
   getCourseByUserId(){
     this.userCourseService.findCourseByUserId(this.profileId)
@@ -355,14 +362,13 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
         course._key = element._key;
         course.name = element.name;
         course.start_date_from = this.getDateFormat(element.start_date_from);
-        course.start_date_to = this.getDateFormat(element.start_date_to);
+        course.start_date_to = element.start_date_to ? this.getDateFormat(element.start_date_to) : 'Present';
         course.training_center = element.training_center?.value;
         this.userCourse.push(course);
       }
       
     })
-    console.log(this.userCourse);
-    
+    this.countCourse = 'You have finished ' + this.userCourse.length + ' courses';
   }
   getEducationByUserId(){
     this.userEducationService.findUserEducationByUserId(this.profileId)
@@ -381,7 +387,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
         education._key = element._key;
         education.school = element.school?.value;
         education.start_date_from = this.getDateFormat(element.start_date_from);
-        education.start_date_to = this.getDateFormat(element.start_date_to);
+        education.start_date_to = element.start_date_to ? this.getDateFormat(element.start_date_to) : 'Present';
         education.field_of_study = element.field_of_study;
         this.userEducation.push(education);
       }
@@ -407,8 +413,19 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
         language._key = element._key;
         language.language = element.language?.value;
         language.proficiency = element.proficiency?.value;
-      
-        this.userLanguage.push(language);
+        if(element.language?._key == "en_US"){
+          language.image = "../../../../../assets/images/english.png"
+        }
+        if(element.language?._key == "vi_VN"){
+          language.image = "../../../../../assets/images/vietnam.png"
+        }
+        if(element.language?._key == "ja_JP"){
+          language.image = "../../../../../assets/images/japan.png"
+        }
+        setTimeout(() => {
+
+          this.userLanguage.push(language);
+        },100)
       }
       
     })
@@ -448,7 +465,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
     }
   }
 
-  open(link: string){
+  open(link?: string){
     this.router.navigateByUrl('/' + link);
   }
 
@@ -459,8 +476,6 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   async getImg(){
     await this.userProfileService.getFilesByFileKeys(this.url_avatar)
     .then((res) =>{
-      console.log(res.data);
-      this.avata = res.data[0];
     })
   }
   getImage = (file: any, isError = false) => {
