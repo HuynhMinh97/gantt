@@ -22,11 +22,10 @@ function checkUIUserExp() {
         condition: {
           company_working: {
           attribute: "company_working",
-          ref_collection: "sys_company",
-          ref_attribute: code
+          ref_collection: "m_company",
+          ref_attribute: "code"
         },
-          user_id: "${Cypress.env('user_id')}"
-        },
+        user_id: "${Cypress.env('user_id')}"
         del_flag: false,
       },
         company: "${Cypress.env('company')}"
@@ -54,8 +53,8 @@ function checkUIUserExp() {
     failOnStatusCode: false,
 
   }).then((response) => {
-    const data = response.body.data.findKey.data[0];
-    cy.input('company_working', data.company_working);
+    const data = response.body.data.findUserOnboardingInfo.data[0];
+    cy.getValueMaster('company_working', data.company_working);
 
   })
   cy.label('title', ' TITLE*');
@@ -68,7 +67,6 @@ function checkUIUserExp() {
   cy.get('#is_working').should('have.attr', 'ng-reflect-checked', 'false');
   cy.get('.pcontent').should('have.text', ' I am currently working in this role ');
   cy.label('start_date_from', ' START DATE');
-  cy.getValueDate('start_date_from', new Date().getTime());
   cy.label('description', ' DESCRIPTION');
   cy.textarea('description', 'Place your text');
 }
@@ -146,7 +144,7 @@ function checkSaveExper() {
             }
             company_working: {
               attribute: "company_working"
-              ref_collection: "sys_company"
+              ref_collection: "m_company"
               ref_attribute: "code"
             }
           }
@@ -204,7 +202,6 @@ function checkSaveExper() {
         '' + data.is_working
       );
       // cy.getValueDate('start_date_from', data.start_date_from);
-      cy.textareaValue('description', data.description);
       cy.textareaValue('description', data.description);
 
     });

@@ -43,7 +43,6 @@ function checkResetProject() {
   ]);
 }
 
-
 function checkSaveProject() {
   inputDataProject();
   cy.intercept({
@@ -150,12 +149,12 @@ function checkUIProject() {
               condition: {
                 company_working: {
                 attribute: "company_working",
-                ref_collection: "sys_company",
-                ref_attribute: code},
+                ref_collection: "m_company",
+                ref_attribute: "code"
+              }
                 user_id: "${Cypress.env('user_id')}"
-              },
-              del_flag: false,
-            },
+                del_flag: false
+              }
               company: "${Cypress.env('company')}"
               lang: "${Cypress.env('lang')}"
               user_id: "${Cypress.env('user_id')}"
@@ -186,15 +185,14 @@ function checkUIProject() {
 
   }).then((response) => {
     const data = response.body.data.findKey.data[0];
-    cy.input('company_working', data.company_working);
-    cy.input('title', data.title);
+    cy.getValueMaster('company_working', data.company_working);
+    cy.getValueMaster('title', data.title);
 
   })
 
   cy.label('name', ' NAME*');
   cy.input('name', 'Please input project name');
   cy.label('start_date_from', ' START DATE');
-  cy.getValueDate('start_date_from', new Date().getTime());
   cy.label('company_working', ' COMPANY*');
   cy.label('title', ' TITLE*');
   cy.label('description', ' DESCRIPTION*');
