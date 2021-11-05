@@ -4,17 +4,15 @@
   .content__card{
     position: relative;
     margin: auto;
-    width: 1080px;
+    width: 80%;
     .reorder_skills{
       position: absolute;
-      top: 406px;
-      right: 200px;
+      top: 64px;
+      right: 222px;
     }
   }
-  hr.hr_header{
+  hr{
     margin: 0;
-    width: 104%;
-    margin-left: -21px;
     height: 0px;
   }
 }

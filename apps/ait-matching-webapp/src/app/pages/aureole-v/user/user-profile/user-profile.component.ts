@@ -54,7 +54,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   dateFormat = "dd/MM/yyyy";
   today = Date.now();
   isMyUserProfile = false;
-  countSkill="";
+  countSkill="You has 0 skills. Each person has max 50 skills";
   actionBtn = [
     {
       title: '追加',
@@ -135,44 +135,48 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   async findUserProfileByUserId(){
     await this.userProfileService.findProfile(this.profileId)
     .then((res) => {
-      if (res.status === RESULT_STATUS.OK) {
-        if (res.data.length > 0) { 
+      if (res.status === RESULT_STATUS.OK) {       
           const data = res.data[0];
           let profile = {} as ProfileDto;
           profile.city = data.city?.value;
           profile.user_id = data.user_id;
-          profile.last_name = data.last_name;
-          profile.first_name = data.first_name;
+          profile.last_name = data.last_name ? data.last_name : '';
+          profile.first_name = data.first_name ? data.first_name : '';
           profile.title = data.title?.value;
           profile.company_working = data.company_working?.value;
           profile.country = data.country?.value;
           profile.about = data.about;
           profile.top_skills = data.top_skills.length > 0 ? data.top_skills : [];
-          this.userProfile = profile;
-      
-          let topSkill = {} as OrderSkill;
-          topSkill.name = "TOP 5";
-          topSkill.data = [];
-         if(this.userProfile.top_skills.length > 0){
-          this.userProfile.top_skills.forEach((skill) => {
-            topSkill.data.push(skill.value);
-           })  
-           this.skillByCategory.push(topSkill);
-         }
+          setTimeout(() =>{
+            this.userProfile = profile;  
+            let topSkill = {} as OrderSkill;
+            topSkill.name = "TOP 5";
+            topSkill.data = [];
+           if(this.userProfile.top_skills.length > 0){
+            this.userProfile.top_skills.forEach((skill) => {
+              topSkill.data.push(skill.value);
+             })  
+             this.skillByCategory.push(topSkill);
+           }   
+           console.log(this.userProfile);        
+          },200)
+
         }else{
           this.router.navigate([`/404`]);    
         }
-      }   
+         
     })
-    console.log(this.userProfile);
+   
   }
 
   async getSkillByUserId(){
     const from = 'sys_user/' + this.profileId;
     await this.reoderSkillsService.findReorder(from).then(async (res) => {
-      if (res.status === RESULT_STATUS.OK) {
-        if(res.data.length > 0){
+      if (res.status === RESULT_STATUS.OK) {       
           const data = res.data;
+          if(data.length > 0 ){
+            this.showSkill = true;
+          }
           this.countSkill = 'You has '+ data.length + ' skills. Each person has max 50 skills';
           this.quantitySkill = data.length;
           data.forEach((item) => {
@@ -190,8 +194,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
               skillsGroup.data.push(item.name);
               this.skillByCategory.push(skillsGroup);
             }
-          });
-        }
+          });       
       }
     }) 
   }

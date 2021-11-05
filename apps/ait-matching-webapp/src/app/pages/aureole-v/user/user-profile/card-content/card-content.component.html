@@ -42,6 +42,7 @@
           [nbTooltip]="tooltip"
           [nbTooltipTrigger]="tooltip ? 'hover' : 'noop'"
           [style.width]="widthBtn"
+          [style]="''"
         >
           <span style="display: flex">
             <nb-icon style="color: #fff" [icon]="actionBtn[0].icon"></nb-icon>
@@ -76,8 +77,7 @@
       class="content"
       [ngStyle]="{
         'flex-direction': isColumn ? 'column' : 'row',
-        'align-items': isColumn || isStart ? 'flex-start' : 'center',
-        padding: padding ? padding : ''
+        'align-items': isColumn || isStart ? 'flex-start' : 'center'
       }"
       [ngClass]="isOpen ? null : 'isClose'"
     >
