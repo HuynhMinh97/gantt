@@ -74,7 +74,7 @@ export class UserOnboardingService extends AitBaseService {
       },
       {
         att: 'company_working',
-        col: 'sys_company',
+        col: 'm_company',
       },
       {
         att: 'industry',

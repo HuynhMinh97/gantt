@@ -267,7 +267,6 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
   }
 
   async saveAndClose(){
-    debugger
     this.isSubmit = true; 
     setTimeout(() => {
       this.isSubmit = false;
@@ -286,7 +285,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
-            this.router.navigateByUrl('/');
+            history.back();
           } else {
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
@@ -322,7 +321,6 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
 
   async find(key: string) {
     if (this.course_key) {
-      debugger
       await this.userCartificateService
         .findCourseByKey(key)
         .then((r) => {

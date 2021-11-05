@@ -394,7 +394,6 @@ export class UserOnboardingComponent
     let number_sort_no = 1;
 
     const skills = [];
-    debugger
     for (let item of this.skills) {
       await this.userOnbService.findSkillsByCode(item._key).then((res) => {
         console.log(res);
