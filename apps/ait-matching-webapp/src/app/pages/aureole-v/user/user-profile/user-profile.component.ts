@@ -209,10 +209,12 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
           if(this.userProject[index].company_name == data[item].company_working){
             isProject = true;
             let project = {} as ProjectDto;
+            let dayNow = Date.now();
             let dateTo = data[item].start_date_to;
             project.is_working = false;
-            if(!dateTo){
-              dateTo = Date.now();
+            debugger
+            if(!dateTo || dateTo > dayNow ){
+              dateTo = dayNow;
               project.is_working = true;
             }
             project.name = data[item].name;
@@ -231,12 +233,13 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
           let groupProject = {} as GroupProjectDto;       
           groupProject.company_name = data[item].company_working;
           let project = {} as ProjectDto;
+          let dayNow = Date.now();
           let dateTo = data[item].start_date_to;
           project.is_working = false;
           project.name = data[item].name;
           project.title = data[item].title;     
-          if(!dateTo){
-            dateTo = Date.now();
+          if(!dateTo || dateTo > dayNow){
+            dateTo = dayNow;
             project.is_working = true;
           }
           project._key = data[item]._key;
@@ -271,10 +274,11 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
           if(this.userExperience[index].company_working == data[item].company_working?.value){
             isExperience = true;
             let experience = {} as ExperienDto;
+            let dayNow = Date.now();
             let dateTo = data[item].start_date_to;
             experience.is_working = false;
-            if(!dateTo){
-              dateTo = Date.now();
+            if(!dateTo || dateTo > dayNow){
+              dateTo = dayNow;
               experience.is_working = true;
             }
             experience.title = data[item].title?.value;
@@ -293,9 +297,10 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
           let groupExperience = {} as GroupExperienceDto;       
           groupExperience.company_working = data[item].company_working?.value;
           let experience = {} as ExperienDto;
+          let dayNow = Date.now();
           let dateTo = data[item].start_date_to;
           experience.is_working = false;
-          if(!dateTo){
+          if(!dateTo || dateTo > dayNow){
             dateTo = Date.now();
             experience.is_working = true;
           }
