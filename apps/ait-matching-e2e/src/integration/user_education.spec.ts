@@ -5,8 +5,8 @@ describe('Navigate user experience', () => {
     cy.wait(2000);
     cy.visit(Cypress.env('host') + Cypress.env('user_education'));
     cy.url().should('eq', Cypress.env('host') + Cypress.env('user_education'));
-    checkUIUserEdu();
     resetFormUserEdu();
+    checkUIUserEdu();
     // checkValidUserEdu();
     checkSaveDataEdu();
   });
@@ -81,6 +81,7 @@ function checkSaveDataEdu() {
               ref_collection: "m_school"
               ref_attribute: "code"
             }
+            del_flag: false
           }
           company: "${Cypress.env('company')}"
           lang: "${Cypress.env('lang')}"
@@ -127,7 +128,7 @@ function checkSaveDataEdu() {
 }
 
 function inputDataEdu() {
-  cy.chooseMasterData('school', 'Bach Khoa');
+  cy.chooseMasterData('school', 'Bach Khoa US');
   cy.typeText('field_of_study', 'IT');
   cy.typeText('grade', 'Good');
   cy.typeText('degree', 'Bachelor');

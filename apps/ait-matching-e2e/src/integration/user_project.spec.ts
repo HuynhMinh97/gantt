@@ -150,12 +150,12 @@ function checkUIProject() {
               condition: {
                 company_working: {
                 attribute: "company_working",
-                ref_collection: "sys_company",
-                ref_attribute: code},
+                ref_collection: "m_company",
+                ref_attribute: "code"
+              }
                 user_id: "${Cypress.env('user_id')}"
-              },
-              del_flag: false,
-            },
+                del_flag: false
+              }
               company: "${Cypress.env('company')}"
               lang: "${Cypress.env('lang')}"
               user_id: "${Cypress.env('user_id')}"
