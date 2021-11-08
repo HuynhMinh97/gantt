@@ -6,7 +6,7 @@ import { AitCoreModule, AitAuthModule } from '@ait/core';
 import { HttpModule, Module } from '@nestjs/common';
 import { environment } from '../environments/environment';
 import { UserExperienceInfoResolver } from './user/user-experience/user-experience.resolver';
-import { CourseResolver } from './user/user-course/user_certificate.resolver';
+import { CourseResolver } from './user/user-course/user_course.resolver';
 import { UserCertificateResolver } from './user/user-certificate/user_certificate.resolver';
 import { UserProjectResolver } from './user/user-project/user-project.resolver';
 import { ReorderSkillResolver } from './user/user-reorder-skills/reorder-skill.resolver';

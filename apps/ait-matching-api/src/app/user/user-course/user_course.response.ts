@@ -1,6 +1,6 @@
 import { RESULT_STATUS, Utils } from '@ait/shared';
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { CourseEntity } from './user_certificate.entity';
+import { CourseEntity } from './user_course.entity';
 
 
 @ObjectType()
