@@ -32,8 +32,9 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
   isReset = false;
   dateNow = new Date().setHours(0, 0, 0, 0);
   defaultCompany = {} as KeyValueDto;
-  keyTitle = '';
-  keyCompany = '';
+  companyName = null;
+  titleName = null;
+
   error = [];
   listSkills: any;
   keySkills: any;
@@ -132,11 +133,11 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
 
 
   async ngOnInit() {
-    if (this.mode === "NEW") {
+    if (this.mode === 'NEW') {
       await this.inputProject();
-      this.userProject.controls["start_date_from"].setValue(this.dateNow);
-      this.userProject.controls['title'].setValue(this.keyTitle);
-      this.userProject.controls['company_working'].setValue(this.keyCompany);
+      this.userProject.controls['start_date_from'].setValue(this.dateNow);
+      this.userProject.controls['title'].setValue(this.titleName);
+      this.userProject.controls['company_working'].setValue(this.companyName);
       this.userProjectClone = this.userProject.value;
     } else {
       await this.findBizProject();
@@ -181,15 +182,15 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
 
   async inputProject() {
     await this.userProjectService
-      .findKeyTitle(this.env.COMMON.COMPANY_DEFAULT, this.user_id)
+      .findKeyDefault(this.user_id)
       .then((res) => {
-        this.keyTitle = res.data[0].title;
-        this.keyCompany = res.data[0].company_working;
+        this.titleName = res.data[0].title;
+        this.companyName = res.data[0].company_working;
       });
   }
 
   takeMasterValue(val: any, form: string): void {
-    if (isObjectFull(val) && val.value.length > 0) {
+    if (isArrayFull(val)) {
       if (form == 'skills') {
         const data = [];
         val.value.forEach((item) => {
@@ -199,7 +200,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
         this.userProject.controls['skills'].setValue(data);
       } else {
         this.userProject.controls[form].markAsDirty();
-        this.userProject.controls[form].setValue(val?.value[0]?._key);
+        this.userProject.controls[form].setValue(val?.value[0]);
       }
     }
     else {
@@ -398,9 +399,9 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     }
     setTimeout(() => {
       this.isReset = false;
-      this.userProject.controls["start_date_from"].setValue(this.dateNow);
-      this.userProject.controls['title'].setValue(this.keyTitle);
-      this.userProject.controls['company_working'].setValue(this.keyCompany);
+      this.userProject.controls['start_date_from'].setValue(this.dateNow);
+      this.userProject.controls['title'].setValue(this.titleName);
+      this.userProject.controls['company_working'].setValue(this.companyName);
     }, 100);
   }
 

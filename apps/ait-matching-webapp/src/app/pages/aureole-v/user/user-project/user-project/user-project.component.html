@@ -74,8 +74,8 @@
           [disableOutputDefault]="true"
           [isSubmit]="isSubmit"
           [isReset]="resetUserProject.company_working"
-          (watchValue)=" takeMasterValue($event, 'company_working')"
-          [defaultValue]="[{ _key: userProject.value.company_working }]"
+          (watchValue)=" takeMasterValue($event?.value, 'company_working')"
+          [defaultValue]="[companyName]"
           [clearError] = "isClear"
         ></ait-autocomplete-master-data>
       </div>
@@ -94,8 +94,8 @@
           [disableOutputDefault]="true"
           [isSubmit]="isSubmit"
           [disableOutputDefault]="true"
-          (watchValue)=" takeMasterValue($event, 'title')"
-          [defaultValue]="[{ _key: userProject.value.title }]"
+          (watchValue)=" takeMasterValue($event?.value, 'title')"
+          [defaultValue]="[titleName]"
           [clearError] = "isClear"
         ></ait-autocomplete-master-data>
       </div>
