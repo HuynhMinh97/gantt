@@ -1,21 +1,37 @@
-import { debug } from 'node:console';
 import { isArrayFull, isObjectFull, RESULT_STATUS } from '@ait/shared';
-import { AitAuthService, AitBaseComponent, AitEnvironmentService, AppState, getUserSetting, MODE } from '@ait/ui';
+import { 
+  AitAuthService, 
+  AitBaseComponent, 
+  AitEnvironmentService, 
+  AppState, 
+  getUserSetting, 
+  MODE
+ } from '@ait/ui';
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
-import { UserProfileService } from 'apps/ait-matching-webapp/src/app/services/user-profile.service';
-import { UserProjectService } from 'apps/ait-matching-webapp/src/app/services/user-project.service';
-import { UserReoderSkillsService } from 'apps/ait-matching-webapp/src/app/services/user-reoder-skills.service';
 import dayjs from 'dayjs';
-import { CertificateDto, CourseDto, EducationDto, ExperienDto, GroupExperienceDto, GroupProjectDto, LanguageDto, OrderSkill, ProfileDto, ProjectDto, SkillsDto } from './user-profile';
-import { UserExperienceService } from 'apps/ait-matching-webapp/src/app/services/user-experience.service';
-import { UserCerfiticateService } from 'apps/ait-matching-webapp/src/app/services/user-certificate.service';
-import { UserCourseService } from 'apps/ait-matching-webapp/src/app/services/user-course.service';
-import { UserEducationService } from 'apps/ait-matching-webapp/src/app/services/user-education.service';
+import { 
+  CertificateDto, 
+  CourseDto, 
+  EducationDto, 
+  ExperienDto, 
+  GroupExperienceDto, 
+  GroupProjectDto, 
+  LanguageDto, 
+  OrderSkill, 
+  ProfileDto, 
+  ProjectDto,} from './user-profile';
+import { UserProfileService } from '../../../../services/user-profile.service';
+import { UserProjectService } from '../../../../services/user-project.service';
+import { UserReoderSkillsService } from '../../../../services/user-reoder-skills.service';
+import { UserExperienceService } from '../../../../services/user-experience.service';
+import { UserCerfiticateService } from '../../../../services/user-certificate.service';
+import { UserCourseService } from '../../../../services/user-course.service';
+import { UserEducationService } from '../../../../services/user-education.service';
 import { UserLanguageService } from 'apps/ait-matching-webapp/src/app/services/user-language.service';
 
 @Component({
@@ -212,7 +228,6 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
             let dayNow = Date.now();
             let dateTo = data[item].start_date_to;
             project.is_working = false;
-            debugger
             if(!dateTo || dateTo > dayNow ){
               dateTo = dayNow;
               project.is_working = true;

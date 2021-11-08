@@ -144,7 +144,6 @@
         [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
         [padding]="'20px'"
         [isOpen]="showSkill"
-        [tooltip]="isMyUserProfile? '' : 'Ban khong duoc phep them'"
       >
       <div class="container-user-project">
         <hr class="hr_header">
@@ -261,7 +260,6 @@
       [content]="sumHoursProject"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'20px'"
-      [tooltip]="isMyUserProfile? '' : 'Ban khong duoc phep them'"
     >
       <div class="container-user-project" *ngIf="userProject.length > 0">
         <hr class="hr_header">
@@ -385,7 +383,6 @@
       [content]="timeExperienceStr"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'10px'"
-      [tooltip]="isMyUserProfile? '' : 'Ban khong duoc phep them'"
     >
     <div class="container-user-project" *ngIf="userExperience.length > 0">
       <hr class="hr_header">
@@ -497,7 +494,6 @@
       [content]="countCentificate"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'20px'"
-      [tooltip]="isMyUserProfile? '' : 'Ban khong duoc phep them'"
     >
     <div class="container-user-project" *ngIf="userCentificate.length > 0">
       <hr class="hr_header">
@@ -571,7 +567,6 @@
       [content]="countCourse"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'20px'"
-      [tooltip]="isMyUserProfile? '' : 'Ban khong duoc phep them'"
     >
     <div class="container-user-project" *ngIf="userCourse.length > 0">
       <hr class="hr_header">
@@ -645,7 +640,6 @@
     [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
     [padding]="'20px'"
     [content]="''"
-    [tooltip]="isMyUserProfile? '' : 'Ban khong duoc phep them'"
   >
   <div class="container-user-project" *ngIf="userEducation.length > 0">
     <hr class="hr_header">
@@ -719,7 +713,6 @@
       [content]="''"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'20px'"
-      [tooltip]="isMyUserProfile? '' : 'Ban khong duoc phep them'"
     >
     
         <div class="container-user-project" *ngIf="userEducation.length > 0">
