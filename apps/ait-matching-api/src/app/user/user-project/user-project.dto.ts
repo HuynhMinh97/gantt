@@ -5,7 +5,7 @@ import { InputType, Int, Field, Float } from '@nestjs/graphql';
 export class UserProjectDto extends BaseDto {
     @Field(() => ConditionDto, { nullable: true })
     skills?: ConditionDto;
-    
+
     @Field(() => String, { nullable: true })
     name?: string;
 
@@ -15,11 +15,11 @@ export class UserProjectDto extends BaseDto {
     @Field(() => Float, { nullable: true })
     start_date_to?: number;
 
-    @Field(() => String, { nullable: true })
-    company_working?: string;
+    @Field(() => ConditionDto, { nullable: true })
+    company_working?: ConditionDto;
 
-    @Field(() => String, { nullable: true })
-    title?: string;
+    @Field(() => ConditionDto, { nullable: true })
+    title?: ConditionDto;
 
     @Field(() => String, { nullable: true })
     description?: string;
@@ -43,7 +43,7 @@ export class UserProjectDto extends BaseDto {
 export class SaveUserProjectDto extends BaseDto {
     @Field(() => [String], { nullable: true })
     skills?: string[];
-    
+
     @Field(() => String, { nullable: true })
     name?: string;
 

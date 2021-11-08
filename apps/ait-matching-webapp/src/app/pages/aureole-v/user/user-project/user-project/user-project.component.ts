@@ -22,7 +22,7 @@ import { Store} from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { UserProjectService } from './../../../../../services/user-project.service';
 import { UserProjectDto, UserProjectErrorsMessage } from './interface';
-import { isObjectFull, KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
+import { isArrayFull, isObjectFull, KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
 
 @Component({
   selector: 'ait-user-project',
@@ -40,8 +40,9 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
   isReset = false;
   dateNow = new Date().setHours(0, 0, 0, 0);
   defaultCompany = {} as KeyValueDto;
-  keyTitle = '';
-  keyCompany = '';
+  companyName = null;
+  titleName = null;
+
   error = [];
   listSkills: any;
   keySkills: any;
@@ -121,21 +122,17 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     });
     this.userProject = this.formBuilder.group({
       _key: new FormControl(null),
-      name: new FormControl(null, [Validators.required, Validators.maxLength(200)]),
-      start_date_from: new FormControl(null, [Validators.required]),
       start_date_to: new FormControl(null),
-      company_working: new FormControl(null, [Validators.required]),
       title: new FormControl(null, [Validators.required]),
-      description: new FormControl(null, [Validators.required, Validators.maxLength(4000)]),
+      start_date_from: new FormControl(null, [Validators.required]),
+      company_working: new FormControl(null, [Validators.required]),
+      name: new FormControl(null, [Validators.required, Validators.maxLength(200)]),
       skills: new FormControl(null, [Validators.required, Validators.maxLength(10)]),
-      responsibility: new FormControl(null, [Validators.required, Validators.maxLength(4000)]),
       achievement: new FormControl(null, [Validators.required, Validators.maxLength(4000)]),
+      description: new FormControl(null, [Validators.required, Validators.maxLength(4000)]),
+      responsibility: new FormControl(null, [Validators.required, Validators.maxLength(4000)]),
     });
-
-    // get key form parameters
-    // this.project_key = this.activeRouter.snapshot.paramMap.get('id');
   }
-
 
   async ngOnInit() {
     if (this.project_key) {
@@ -143,9 +140,9 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     }
     if (this.mode === "NEW") {
       await this.inputProject();
-      this.userProject.controls["start_date_from"].setValue(this.dateNow);
-      this.userProject.controls['title'].setValue(this.keyTitle);
-      this.userProject.controls['company_working'].setValue(this.keyCompany);
+      this.userProject.controls['start_date_from'].setValue(this.dateNow);
+      this.userProject.controls['title'].setValue(this.titleName);
+      this.userProject.controls['company_working'].setValue(this.companyName);
       this.userProjectClone = this.userProject.value;
     } else {
       await this.findBizProject();
@@ -153,9 +150,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     }
     await this.userProject.valueChanges.subscribe((data) => {
       this.checkAllowSave();
-    });
-    console.log(this.project_key);
-    
+    });  
   }
 
   async findBizProject() {
@@ -164,6 +159,8 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     if (res.data.length > 0) {
       this.userProject.patchValue({ ...data });
       this.userProjectClone = this.userProject.value;
+      this.companyName = this.userProject.value.company_working;
+      this.titleName = this.userProject.value.title;
       if (data.user_id != this.user_id) {
         this.mode = MODE.VIEW;
       }
@@ -174,6 +171,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
   }
 
   async findSkills() {
+    debugger
     const from = 'biz_project/' + this.project_key;
     await this.userProjectService.findFromBizProjectSkill(from).then(async (res) => {
       let listSkills = [];
@@ -192,30 +190,30 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
 
   async inputProject() {
     await this.userProjectService
-      .findKeyTitle(this.env.COMMON.COMPANY_DEFAULT, this.user_id)
+      .findKeyDefault(this.user_id)
       .then((res) => {
-        this.keyTitle = res.data[0].title;
-        this.keyCompany = res.data[0].company_working;
+        this.titleName = res.data[0].title;
+        this.companyName = res.data[0].company_working;
       });
   }
-
-  takeMasterValue(val: any, form: string): void {
-    if (isObjectFull(val) && val.value.length > 0) {
-      if (form == 'skills') {
-        const data = [];
-        val.value.forEach((item) => {
-          data.push(item);
-        });
-        this.userProject.controls[form].markAsDirty();
-        this.userProject.controls['skills'].setValue(data);
-      } else {
-        this.userProject.controls[form].markAsDirty();
-        this.userProject.controls[form].setValue(val?.value[0]?._key);
-      }
+  takeMasterValues(value: KeyValueDto[], group: string, form: string): void {
+    if (isArrayFull(value)) {
+      const data = [];
+      value.forEach((file) => {
+        data.push(file);
+      });
+      this.userProject.markAsDirty();
+      this[group].controls[form].setValue(data);
+    } else {
+      this[group].controls[form].setValue(null);
     }
-    else {
-      this.userProject.controls[form].markAsDirty();
-      this.userProject.controls[form].setValue(null);
+  }
+  takeMasterValue(value: any, target: string): void {
+    if (isObjectFull(value)) {
+      this.userProject.controls[target].markAsDirty();
+      this.userProject.controls[target].setValue(value?.value[0]);
+    } else {
+      this.userProject.controls[target].setValue(null);
     }
   }
 
@@ -271,21 +269,24 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
   dataSaveProject() {
     const saveData = this.userProject.value;
     saveData['user_id'] = this.authService.getUserID();
+    saveData['company_working'] = this.userProject.value?.company_working._key;
+    saveData['title'] = this.userProject.value?.title._key;
     this.listSkills = saveData.skills;
     delete saveData.skills;
     return saveData;
   }
 
   async saveSkill(bizProjectKey: string) {
+    debugger
     this.biz_project_skill._from = 'biz_project/' + bizProjectKey;
-    this.biz_project_skill.relationship = ' biz_project skill';
+    this.biz_project_skill.relationship = ' biz_project_skill';
     if (this.mode == 'EDIT') {
       const _fromSkill = [
         { _from: 'biz_project/' + this.project_key },
       ];
       this.userProjectService.removeSkill(_fromSkill);
     }
-    this.listSkills.forEach(async (skill) => {
+    for(let skill of this.listSkills){
       await this.userProjectService.findMSkillsByCode(skill._key)
         .then(async (res) => {
           this.sort_no += 1;
@@ -293,7 +294,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
           this.biz_project_skill._to = 'm_skill/' + res.data[0]._key;
           await this.userProjectService.saveSkills(this.biz_project_skill);
         });
-    });
+    }
   }
 
   async saveUserProject(bizProjectKey: string) {
@@ -409,9 +410,9 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     }
     setTimeout(() => {
       this.isReset = false;
-      this.userProject.controls["start_date_from"].setValue(this.dateNow);
-      this.userProject.controls['title'].setValue(this.keyTitle);
-      this.userProject.controls['company_working'].setValue(this.keyCompany);
+      this.userProject.controls['start_date_from'].setValue(this.dateNow);
+      this.userProject.controls['title'].setValue(this.titleName);
+      this.userProject.controls['company_working'].setValue(this.companyName);
     }, 100);
   }
 

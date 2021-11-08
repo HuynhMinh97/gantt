@@ -226,7 +226,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
       for(let item in data){
         let isProject = false;
         for(let index in this.userProject){        
-          if(this.userProject[index].company_name == data[item].company_working){
+          if(this.userProject[index].company_name == data[item].company_working?.value){
             isProject = true;
             let project = {} as ProjectDto;
             let dayNow = Date.now();
@@ -237,7 +237,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
               project.is_working = true;
             }
             project.name = data[item].name;
-            project.title = data[item].title;
+            project.title = data[item].title?.value;
             project._key = data[item]._key;
             project.time = await this.fomatDate(dateTo - data[item].start_date_from );
             project.start_date_from = this.getDateFormat(data[item].start_date_from);
@@ -250,13 +250,13 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
         }
         if(!isProject){   
           let groupProject = {} as GroupProjectDto;       
-          groupProject.company_name = data[item].company_working;
+          groupProject.company_name = data[item].company_working?.value;
           let project = {} as ProjectDto;
           let dayNow = Date.now();
           let dateTo = data[item].start_date_to;
           project.is_working = false;
           project.name = data[item].name;
-          project.title = data[item].title;     
+          project.title = data[item].title?.value;     
           if(!dateTo || dateTo > dayNow){
             dateTo = dayNow;
             project.is_working = true;
@@ -488,11 +488,8 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
     }
   }
 
-  openProjects(key?:string){
+  openProjects(key?:string){ 
     this.dialogService.open(UserProjectComponent, {
-      closeOnBackdropClick: true,
-      hasBackdrop: true,
-      autoFocus: false,
       context: {
         project_key: key,
       },

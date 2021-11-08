@@ -1,5 +1,5 @@
 <ait-template-popup
-  [width]="1080"
+  [width]="1000"
   [isLoading]="true"
   [isPage]="false"
 >
@@ -80,7 +80,7 @@
           [isSubmit]="isSubmit"
           [isReset]="resetUserProject.company_working"
           (watchValue)=" takeMasterValue($event, 'company_working')"
-          [defaultValue]="[{ _key: userProject.value.company_working }]"
+          [defaultValue]="[companyName]"
           [clearError] = "isClear"
         ></ait-autocomplete-master-data>
       </div>
@@ -100,7 +100,7 @@
           [isSubmit]="isSubmit"
           [disableOutputDefault]="true"
           (watchValue)=" takeMasterValue($event, 'title')"
-          [defaultValue]="[{ _key: userProject.value.title }]"
+          [defaultValue]="[titleName]"
           [clearError] = "isClear"
         ></ait-autocomplete-master-data>
       </div>
@@ -140,7 +140,7 @@
           [disableOutputDefault]="true"
           [isSubmit]="isSubmit"
           [clearError]="isClearErrors.skills"
-          (watchValue)=" takeMasterValue($event, 'skills')"
+          (watchValue)=" takeMasterValues($event?.value, 'userProject', 'skills')"
           [defaultValue]="userProject.controls['skills'].value"
           [clearError] = "isClear"
         ></ait-autocomplete-master-data>

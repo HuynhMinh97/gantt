@@ -94,14 +94,11 @@ export class UserProjectResolver extends AitBaseService {
         @Args('request', { type: () => UserProjectRequest }) request: UserProjectRequest
     ) {  
         const user_id = request.user_id;
-
         if (user_id) {
         const aqlQuery = `
-        FOR item IN biz_project_skill
-        FOR data IN biz_project_skill
-        FILTER data._from == item._from
-       
-        RETURN data
+        FOR v,e, p IN 1..1 OUTBOUND "biz_project/a5643f68-9c7b-d157-02ca-61a9b2b4b207" biz_project_skill
+        FILTER  v.del_flag != true
+        RETURN {_key: v.code, value:  v.name.ja_JP ? v.name.ja_JP : v.name,}
         `;
 
         return await this.query(aqlQuery);
