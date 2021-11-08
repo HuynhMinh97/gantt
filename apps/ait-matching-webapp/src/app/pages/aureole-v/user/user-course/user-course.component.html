@@ -46,7 +46,7 @@
           [isReset]="resetCourse.training_center"
           [style]="{ width: '400px' }"
           (watchValue)="takeInputValue($event, 'training_center')"
-          [defaultValue]="companyCenter"
+          [defaultValue]="[course.controls['training_center'].value]?[course.controls['training_center'].value]:null"
           [disableOutputDefault]="true"
           [isSubmit]="isSubmit"
           [disableOutputDefault]="true"
