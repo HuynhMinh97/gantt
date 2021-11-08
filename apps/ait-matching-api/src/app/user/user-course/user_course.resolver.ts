@@ -1,7 +1,7 @@
 import { AitBaseService, AitCtxUser, KeyValueDto, SysUser } from '@ait/core';
 import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
-import { CourseRequest } from './user_certificate.request';
-import { CourseResponse } from './user_certificate.response';
+import { CourseRequest } from './user_course.request';
+import { CourseResponse } from './user_course.response';
 
 
 @Resolver()

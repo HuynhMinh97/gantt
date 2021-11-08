@@ -1,6 +1,5 @@
 import { BaseDto, ConditionDto, KeyValueEntity } from '@ait/core';
 import { InputType, Int, Field, Float } from '@nestjs/graphql';
-import { bold } from 'chalk';
 
 @InputType()
 export class SaveCourseDto extends BaseDto {
@@ -19,7 +18,7 @@ export class SaveCourseDto extends BaseDto {
   @Field(() => Float, { nullable: true })
   start_date_from?: number;
 
-  @Field(() =>Float, { nullable: true })
+  @Field(() => Float, { nullable: true })
   start_date_to?: number;
 
   @Field(() => String, { nullable: true })
@@ -45,7 +44,7 @@ export class CourseDto extends BaseDto {
   @Field(() => Float, { nullable: true })
   start_date_from?: number;
 
-  @Field(() =>Float, { nullable: true })
+  @Field(() => Float, { nullable: true })
   start_date_to?: number;
 
   @Field(() => String, { nullable: true })
