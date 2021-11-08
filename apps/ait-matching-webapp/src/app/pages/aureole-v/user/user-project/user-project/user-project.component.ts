@@ -1,5 +1,14 @@
-import { title } from 'node:process';
-import { AitAppUtils, AitAuthService, AitBaseComponent, AitConfirmDialogComponent, AitEnvironmentService, AitMasterDataService, AitTranslationService, AitUserService, AppState, getCaption, getLang, MODE } from '@ait/ui';
+import { 
+  AitAppUtils, 
+  AitAuthService, 
+  AitBaseComponent, 
+  AitConfirmDialogComponent,
+  AitEnvironmentService, 
+  AitTranslationService, 
+  AitUserService, 
+  AppState, 
+  MODE 
+} from '@ait/ui';
 import { Component, ElementRef, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -8,13 +17,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NbToastrService, NbLayoutScrollService, NbDialogService, NB_THEME_OPTIONS } from '@nebular/theme';
-import { Store, select } from '@ngrx/store';
+import { NbToastrService, NbLayoutScrollService, NbDialogService, NbDialogRef } from '@nebular/theme';
+import { Store} from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { UserProjectService } from './../../../../../services/user-project.service';
-import { Subscription } from 'rxjs';
 import { UserProjectDto, UserProjectErrorsMessage } from './interface';
-import { isArrayFull, isObjectFull, KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
+import { isObjectFull, KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
 
 @Component({
   selector: 'ait-user-project',
@@ -81,6 +89,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
   ];
   project_key = '';
   constructor(
+    private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
     private element: ElementRef,
     private dialogService: NbDialogService,
     private formBuilder: FormBuilder,
@@ -124,14 +133,14 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     });
 
     // get key form parameters
-    this.project_key = this.activeRouter.snapshot.paramMap.get('id');
-    if (this.project_key) {
-      this.mode = MODE.EDIT;
-    }
+    // this.project_key = this.activeRouter.snapshot.paramMap.get('id');
   }
 
 
   async ngOnInit() {
+    if (this.project_key) {
+      this.mode = MODE.EDIT;
+    }
     if (this.mode === "NEW") {
       await this.inputProject();
       this.userProject.controls["start_date_from"].setValue(this.dateNow);
@@ -145,6 +154,8 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     await this.userProject.valueChanges.subscribe((data) => {
       this.checkAllowSave();
     });
+    console.log(this.project_key);
+    
   }
 
   async findBizProject() {
@@ -333,7 +344,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
             await this.saveUserProject(data._key);
             const message = this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
-            history.back();
+            this.closeDialog(false);
           } else {
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
@@ -462,7 +473,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
                 this.userProjectService.removeSkill(_fromSkill);
                 this.userProjectService.removeUserProejct(_toUser);
                 this.showToastr('', this.getMsg('I0003'));
-                history.back();
+                this.closeDialog(false);
               } else {
                 this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
               }
@@ -487,11 +498,11 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
         })
         .onClose.subscribe(async (event) => {
           if (event) {
-            history.back()
+            this.closeDialog(false);
           }
         });
     } else {
-      history.back()
+      this.closeDialog(false);
     }
   }
   getTitleByMode() {
@@ -506,6 +517,9 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       title = this.translateService.translate('View project')
     }
     return title;
+  }
+  closeDialog(event: boolean) {
+    this.nbDialogRef.close(event);
   }
 
 }

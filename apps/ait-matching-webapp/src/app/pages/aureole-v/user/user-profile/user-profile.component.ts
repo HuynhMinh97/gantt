@@ -2,6 +2,7 @@ import { isArrayFull, isObjectFull, RESULT_STATUS } from '@ait/shared';
 import { 
   AitAuthService, 
   AitBaseComponent, 
+  AitConfirmDialogComponent, 
   AitEnvironmentService, 
   AppState, 
   getUserSetting, 
@@ -33,6 +34,8 @@ import { UserCerfiticateService } from '../../../../services/user-certificate.se
 import { UserCourseService } from '../../../../services/user-course.service';
 import { UserEducationService } from '../../../../services/user-education.service';
 import { UserLanguageService } from 'apps/ait-matching-webapp/src/app/services/user-language.service';
+import { UserCourseComponent } from '../user-course/user-course.component';
+import { UserProjectComponent } from '../user-project/user-project/user-project.component';
 
 @Component({
   selector: 'ait-user-profile',
@@ -115,8 +118,8 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   
   async ngOnInit(): Promise<void> {
     await this.getMasterData();
-    this.findUserProfileByUserId();
-    this.getSkillByUserId();
+    await this.findUserProfileByUserId();
+    await this.getSkillByUserId();
     this.getProjectByUserId();
     this.getExperiencByUserId()
     this.getCentificateByUserId();
@@ -151,7 +154,8 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   async findUserProfileByUserId(){
     await this.userProfileService.findProfile(this.profileId)
     .then((res) => {
-      if (res.status === RESULT_STATUS.OK) {       
+      if (res.status === RESULT_STATUS.OK) {   
+        if(res.data.length > 0 ){   
           const data = res.data[0];
           let profile = {} as ProfileDto;
           profile.city = data.city?.value;
@@ -175,12 +179,12 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
              this.skillByCategory.push(topSkill);
            }   
            console.log(this.userProfile);        
-          },200)
+          },300)
 
         }else{
           this.router.navigate([`/404`]);    
         }
-         
+      }   
     })
    
   }
@@ -484,8 +488,33 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
     }
   }
 
+  openProjects(key?:string){
+    this.dialogService.open(UserProjectComponent, {
+      closeOnBackdropClick: true,
+      hasBackdrop: true,
+      autoFocus: false,
+      context: {
+        project_key: key,
+      },
+    }).onClose.subscribe(async (event) => {
+      if (event) {
+        history.back()
+        console.log(this.userProfile);
+        
+      }
+    });
+  }
   open(link?: string){
-    this.router.navigateByUrl('/' + link);
+    // this.dialogService.open(link, {
+    //   closeOnBackdropClick: true,
+    //   hasBackdrop: true,
+    //   autoFocus: false,
+    // }).onClose.subscribe(async (event) => {
+    //   if (event) {
+    //     history.back()
+    //   }
+    // });
+    // this.router.navigateByUrl('/' + link);
   }
 
   openProject(table: string, id?: string){

@@ -252,7 +252,7 @@
       style="display: flex; justify-content: center"
       [label]="'PROJECTS'"
       [styleLabel]="{'font-size':'22px'}"
-      (onClickButtonHeader)="open('user-project')"
+      (onClickButtonHeader)="openProjects()"
       [actionBtn]="isMyUserProfile ? actionBtn : ''"
       [buttonTitle]="'ADD PROJECT'"
       [disableHeader]="false"
@@ -344,7 +344,7 @@
                 </div>
               </div>
               <div id="ic-edit" >
-                <a (click)="openProject('user-project', project._key)">
+                <a (click)="openProjects(project._key)">
                   <nb-icon
                     *ngIf="isMyUserProfile"
                     nbSuffix
@@ -766,5 +766,6 @@
           </ul>
         </div>
     </card-content>
+    <ait-template-popup></ait-template-popup>
   </div>
 </div>

@@ -1,215 +1,220 @@
-<div class="template__popup">
-  <ait-text-gradient
-    [content]="getTitleByMode()"
-  ></ait-text-gradient>
-
-  <div class="content__card">
-    <div class="form__wrapper">
-      <div class="input_inline">
-        <ait-input-text
-          [id]="'name'"
-          [label]="'NAME'"
-          [required]="true"
-          [height]="'40px'"
-          [width]="'400px'"
-          [placeholder]="'Ex: Project Management'"
-          (watchValue)="takeInputValue($event,'name')"
-          [defaultValue]="course.controls['name'].value"
-          [isReset]="resetCourse.name"
-          [isSubmit]="isSubmit"
-          [length]="200"
-          [clearError]="isClearErrors"
-        ></ait-input-text>
-      </div>
-
-      <div class="input_inline">
-        <div class="input_area">
-          <nb-checkbox
-            class="gray-text"
-            [checked]="course.controls['is_online'].value"
-            [id]="'is_online'"
-            (checkedChange)="toggleCheckBox($event)"
-          >
-            <p id="online">{{ 'ONLINE' | translate }}?</p>            
-          </nb-checkbox>
+<ait-template-popup
+  [width]="1080"
+>
+  <div class="template__popup">
+    <ait-text-gradient
+      [content]="getTitleByMode()"
+    ></ait-text-gradient>
+  
+    <div class="content__card">
+      <div class="form__wrapper">
+        <div class="input_inline">
+          <ait-input-text
+            [id]="'name'"
+            [label]="'NAME'"
+            [required]="true"
+            [height]="'40px'"
+            [width]="'400px'"
+            [placeholder]="'Ex: Project Management'"
+            (watchValue)="takeInputValue($event,'name')"
+            [defaultValue]="course.controls['name'].value"
+            [isReset]="resetCourse.name"
+            [isSubmit]="isSubmit"
+            [length]="200"
+            [clearError]="isClearErrors"
+          ></ait-input-text>
         </div>
+  
+        <div class="input_inline">
+          <div class="input_area">
+            <nb-checkbox
+              class="gray-text"
+              [checked]="course.controls['is_online'].value"
+              [id]="'is_online'"
+              (checkedChange)="toggleCheckBox($event)"
+            >
+              <p id="online">{{ 'ONLINE' | translate }}?</p>            
+            </nb-checkbox>
+          </div>
+        </div>
+  
+        <div class="input_inline">
+          <ait-autocomplete-master-data
+            [id]="'training_center'"
+            [label]="'CENTER'"
+            [maxItem]="1"
+            [placeholder]="'BACH KHOA Ho Chi Minh Technology University'"
+            [required]="false"
+            [collection]="'m_training_center'"
+            [isReset]="resetCourse.training_center"
+            [style]="{ width: '400px' }"
+            (watchValue)="takeInputValue($event, 'training_center')"
+            [defaultValue]="companyCenter"
+            [disableOutputDefault]="true"
+            [isSubmit]="isSubmit"
+            [disableOutputDefault]="true"
+            [allowNew]="true"
+          ></ait-autocomplete-master-data>
+        </div>
+  
+        <div class="input_inline">
+          <ait-input-text
+            [id]="'course_number'"
+            [height]="'40px'"
+            [width]="'400px'"
+            [rows]="1"
+            [label]="'CERTIFICATE'"
+            [required]="false"
+            [placeholder]="'Ex: AIT001'"
+            (watchValue)="takeInputValue($event, 'course_number')"
+            [defaultValue]="course.controls['course_number'].value"
+            [isReset]="resetCourse.course_number"
+            [isSubmit]="isSubmit"
+            [length]="4000"
+          ></ait-input-text>
+        </div>
+  
+        <div class="input_inline">
+          <ait-datepicker
+            [required]="false"
+            [label]="'START DATE'"
+            [placeholder]="'01/01/2021'"
+            [id]="'start_date_from'"
+            [style]="{ width: '170px' }"
+            [isReset]="resetCourse.start_date_from"
+            (watchValue)="takeDatePickerValue($event?.value, 'course', 'start_date_from')"
+            [defaultValue]="course.controls['start_date_from'].value"
+            [isReset]="resetCourse.start_date_from"
+            [isSubmit]="isSubmit"
+          ></ait-datepicker>
+  
+          <p class="label-datepiker">{{ '~' }}</p>
+  
+          <ait-datepicker
+            [required]="false"
+            [placeholder]="'01/01/2021'"
+            [id]="'start_date_to'"
+            [style]="{ width: '170px' }"
+            [isReset]="resetCourse.start_date_to"
+            (watchValue)="takeDatePickerValue($event?.value, 'course', 'start_date_to')"
+            [defaultValue]="course.controls['start_date_to'].value"
+            [isSubmit]="isSubmit"
+          ></ait-datepicker>
+        </div>
+  
+        <ait-error-message
+          [errors]="error"
+          [id]="'messagError'"
+        ></ait-error-message>
+  
+        <div class="input_inline">
+          <ait-input-text
+            [height]="'108px'"
+            [width]="'400px'"
+            [rows]="4"
+            [label]="'DESCRIPTION'"
+            [required]="false"
+            [id]="'description'"
+            [placeholder]="'Place your text'"
+            (watchValue)="takeInputValue($event, 'description')"
+            [defaultValue]="course.controls['description'].value"
+            [isReset]="resetCourse.description"
+            [isSubmit]="isSubmit"
+            [length]="4000"
+            [clearError]="isClearErrors"
+          ></ait-input-text>
+        </div>
+        <div class="input_inline">   
+        </div>
+        <div class="input_area">
+          <ait-label [label]="'FILES'"></ait-label>
+          <label class="file-max" style="display: flex !important; color: #8f9bb3;margin: 0;"
+            ><nb-icon icon="attach-outline"></nb-icon>
+              <p id="max_file">{{ 'Upload max 5 files and 10MB/file.' | translate }}</p>
+          </label>
+          <ait-input-file
+            [id]="'file'"
+            [maxSize]="1000"
+            [maxFiles]="5"
+            [required]="false"
+            [hasStatus]="false"
+            [placeholder]="selectFile"
+            [isReset]="isResetFile"
+            [isClear]="isClear"
+            [fileKeys]="course.controls['file'].value"
+            (watchValue)="getFiles($event.value)"
+            [isSubmit]="isSubmit"
+          ></ait-input-file>
+        </div>
+  
       </div>
-
-      <div class="input_inline">
-        <ait-autocomplete-master-data
-          [id]="'training_center'"
-          [label]="'CENTER'"
-          [maxItem]="1"
-          [placeholder]="'BACH KHOA Ho Chi Minh Technology University'"
-          [required]="false"
-          [collection]="'m_training_center'"
-          [isReset]="resetCourse.training_center"
-          [style]="{ width: '400px' }"
-          (watchValue)="takeInputValue($event, 'training_center')"
-          [defaultValue]="companyCenter"
-          [disableOutputDefault]="true"
-          [isSubmit]="isSubmit"
-          [disableOutputDefault]="true"
-          [allowNew]="true"
-        ></ait-autocomplete-master-data>
+    </div>
+    <ait-space></ait-space>
+  
+    <div
+      class="sticky"
+      style="
+        min-width: 370px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      "
+    >
+      <div class="button__group">
+        <ait-button
+        *ngIf="mode === 'NEW' || mode === 'EDIT' "
+          [title]="'CANCEL'"
+          [id]="'cancel'"
+          [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
+          (click)="back()"
+        ></ait-button>
+        <ait-button
+        *ngIf="mode ==='EDIT' || mode ==='NEW' "
+          [title]="'RESET'"
+          [id]="'reset'"
+          [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
+          (click)="resetForm()"
+        ></ait-button>
+        <ait-button
+          *ngIf="mode === 'EDIT'"
+          [id]="'delete'"
+          [title]="'DELETE'"
+          [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
+          (click)="deleteUserById()"
+        ></ait-button>
+        <ait-button
+          *ngIf="mode === 'NEW'"
+          [title]="'SAVE & CONTINUE'"
+          [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
+          [id]="'saveContinue'"
+          (click)="saveAndContinue()"
+        ></ait-button>
+        <ait-button
+          [id]="'saveClose'"
+          *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
+          [width]="'200px'"
+          [title]="'SAVE & CLOSE'"
+          (click)="saveAndClose()"
+          [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
+        >
+        </ait-button>
+        <ait-button
+          *ngIf="!isChanged && mode === 'EDIT'"
+          [id]="'save close'"
+          [width]="'200px'"
+          [title]="'SAVE & CLOSE'"
+          [style]="'disabled'"
+        ></ait-button>
+        <ait-button
+          *ngIf=" mode === 'VIEW'"
+          [id]="'save close'"
+          [width]="'200px'"
+          [title]="'SAVE & CLOSE'"
+          (click)="back()"
+          [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
+      ></ait-button>
       </div>
-
-      <div class="input_inline">
-        <ait-input-text
-          [id]="'course_number'"
-          [height]="'40px'"
-          [width]="'400px'"
-          [rows]="1"
-          [label]="'CERTIFICATE'"
-          [required]="false"
-          [placeholder]="'Ex: AIT001'"
-          (watchValue)="takeInputValue($event, 'course_number')"
-          [defaultValue]="course.controls['course_number'].value"
-          [isReset]="resetCourse.course_number"
-          [isSubmit]="isSubmit"
-          [length]="4000"
-        ></ait-input-text>
-      </div>
-
-      <div class="input_inline">
-        <ait-datepicker
-          [required]="false"
-          [label]="'START DATE'"
-          [placeholder]="'01/01/2021'"
-          [id]="'start_date_from'"
-          [style]="{ width: '170px' }"
-          [isReset]="resetCourse.start_date_from"
-          (watchValue)="takeDatePickerValue($event?.value, 'course', 'start_date_from')"
-          [defaultValue]="course.controls['start_date_from'].value"
-          [isReset]="resetCourse.start_date_from"
-          [isSubmit]="isSubmit"
-        ></ait-datepicker>
-
-        <p class="label-datepiker">{{ '~' }}</p>
-
-        <ait-datepicker
-          [required]="false"
-          [placeholder]="'01/01/2021'"
-          [id]="'start_date_to'"
-          [style]="{ width: '170px' }"
-          [isReset]="resetCourse.start_date_to"
-          (watchValue)="takeDatePickerValue($event?.value, 'course', 'start_date_to')"
-          [defaultValue]="course.controls['start_date_to'].value"
-          [isSubmit]="isSubmit"
-        ></ait-datepicker>
-      </div>
-
-      <ait-error-message
-        [errors]="error"
-        [id]="'messagError'"
-      ></ait-error-message>
-
-      <div class="input_inline">
-        <ait-input-text
-          [height]="'108px'"
-          [width]="'400px'"
-          [rows]="4"
-          [label]="'DESCRIPTION'"
-          [required]="false"
-          [id]="'description'"
-          [placeholder]="'Place your text'"
-          (watchValue)="takeInputValue($event, 'description')"
-          [defaultValue]="course.controls['description'].value"
-          [isReset]="resetCourse.description"
-          [isSubmit]="isSubmit"
-          [length]="4000"
-          [clearError]="isClearErrors"
-        ></ait-input-text>
-      </div>
-      <div class="input_inline">   
-      </div>
-      <div class="input_area">
-        <ait-label [label]="'FILES'"></ait-label>
-        <label class="file-max" style="display: flex !important; color: #8f9bb3;margin: 0;"
-          ><nb-icon icon="attach-outline"></nb-icon>
-            <p id="max_file">{{ 'Upload max 5 files and 10MB/file.' | translate }}</p>
-        </label>
-        <ait-input-file
-          [id]="'file'"
-          [maxSize]="1000"
-          [maxFiles]="5"
-          [required]="false"
-          [hasStatus]="false"
-          [placeholder]="selectFile"
-          [isReset]="isResetFile"
-          [isClear]="isClear"
-          [fileKeys]="course.controls['file'].value"
-          (watchValue)="getFiles($event.value)"
-          [isSubmit]="isSubmit"
-        ></ait-input-file>
-      </div>
-
     </div>
   </div>
-  <ait-space></ait-space>
+</ait-template-popup>
 
-  <div
-    class="sticky"
-    style="
-      min-width: 370px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    "
-  >
-    <div class="button__group">
-      <ait-button
-      *ngIf="mode === 'NEW' || mode === 'EDIT' "
-        [title]="'CANCEL'"
-        [id]="'cancel'"
-        [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
-        (click)="back()"
-      ></ait-button>
-      <ait-button
-      *ngIf="mode ==='EDIT' || mode ==='NEW' "
-        [title]="'RESET'"
-        [id]="'reset'"
-        [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
-        (click)="resetForm()"
-      ></ait-button>
-      <ait-button
-        *ngIf="mode === 'EDIT'"
-        [id]="'delete'"
-        [title]="'DELETE'"
-        [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
-        (click)="deleteUserById()"
-      ></ait-button>
-      <ait-button
-        *ngIf="mode === 'NEW'"
-        [title]="'SAVE & CONTINUE'"
-        [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
-        [id]="'saveContinue'"
-        (click)="saveAndContinue()"
-      ></ait-button>
-      <ait-button
-        [id]="'saveClose'"
-        *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
-        [width]="'200px'"
-        [title]="'SAVE & CLOSE'"
-        (click)="saveAndClose()"
-        [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
-      >
-      </ait-button>
-      <ait-button
-        *ngIf="!isChanged && mode === 'EDIT'"
-        [id]="'save close'"
-        [width]="'200px'"
-        [title]="'SAVE & CLOSE'"
-        [style]="'disabled'"
-      ></ait-button>
-      <ait-button
-        *ngIf=" mode === 'VIEW'"
-        [id]="'save close'"
-        [width]="'200px'"
-        [title]="'SAVE & CLOSE'"
-        (click)="back()"
-        [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
-    ></ait-button>
-    </div>
-  </div>
-</div>
