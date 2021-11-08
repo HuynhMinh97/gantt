@@ -136,7 +136,7 @@
         [label]="'SKILLS'"
         [styleLabel]="{'font-size':'22px'}"
         (onClickButtonHeader)="open('user-skills')"
-        [actionBtn]="actionBtn"
+        [actionBtn]="isMyUserProfile ? actionBtn : ''"
         [buttonTitle]="'ADD SKILL'"
         [disableHeader]="false"
         [widthBtn]="'150px'"
@@ -144,7 +144,6 @@
         [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
         [padding]="'20px'"
         [isOpen]="showSkill"
-        [tooltip]="isMyUserProfile? '' : 'Ban khong duoc phep them'"
       >
       <div class="container-user-project">
         <hr class="hr_header">
@@ -254,14 +253,13 @@
       [label]="'PROJECTS'"
       [styleLabel]="{'font-size':'22px'}"
       (onClickButtonHeader)="open('user-project')"
-      [actionBtn]="actionBtn"
+      [actionBtn]="isMyUserProfile ? actionBtn : ''"
       [buttonTitle]="'ADD PROJECT'"
       [disableHeader]="false"
       [widthBtn]="'150px'"
       [content]="sumHoursProject"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'20px'"
-      [tooltip]="isMyUserProfile? '' : 'Ban khong duoc phep them'"
     >
       <div class="container-user-project" *ngIf="userProject.length > 0">
         <hr class="hr_header">
@@ -378,14 +376,13 @@
       [label]="'EXPERIENCES'"
       [styleLabel]="{'font-size':'22px'}"
       (onClickButtonHeader)="open('user-experience')"
-      [actionBtn]="actionBtn"
+      [actionBtn]="isMyUserProfile ? actionBtn : ''"
       [buttonTitle]="'ADD EXPERIENCE'"
       [disableHeader]="false"
       [widthBtn]="'150px'"
       [content]="timeExperienceStr"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'10px'"
-      [tooltip]="isMyUserProfile? '' : 'Ban khong duoc phep them'"
     >
     <div class="container-user-project" *ngIf="userExperience.length > 0">
       <hr class="hr_header">
@@ -490,14 +487,13 @@
       [label]="'CERTIFICATES'"
       [styleLabel]="{'font-size':'22px'}"
       (onClickButtonHeader)="open('user-certificate')"
-      [actionBtn]="actionBtn"
+      [actionBtn]="isMyUserProfile ? actionBtn : ''"
       [buttonTitle]="'ADD EXPERIENCE'"
       [disableHeader]="false"
       [widthBtn]="'150px'"
       [content]="countCentificate"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'20px'"
-      [tooltip]="isMyUserProfile? '' : 'Ban khong duoc phep them'"
     >
     <div class="container-user-project" *ngIf="userCentificate.length > 0">
       <hr class="hr_header">
@@ -564,14 +560,13 @@
       [label]="'COURSES'"
       [styleLabel]="{'font-size':'22px'}"
       (onClickButtonHeader)="open('user-course')"
-      [actionBtn]="actionBtn"
+      [actionBtn]="isMyUserProfile ? actionBtn : ''"
       [buttonTitle]="'ADD COURSE'"
       [disableHeader]="false"
       [widthBtn]="'150px'"
       [content]="countCourse"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'20px'"
-      [tooltip]="isMyUserProfile? '' : 'Ban khong duoc phep them'"
     >
     <div class="container-user-project" *ngIf="userCourse.length > 0">
       <hr class="hr_header">
@@ -638,14 +633,13 @@
     [label]="'EDUCATIONS'"
     [styleLabel]="{'font-size':'22px'}"
     (onClickButtonHeader)="open('user-education')"
-    [actionBtn]="actionBtn"
+    [actionBtn]="isMyUserProfile ? actionBtn : ''"
     [buttonTitle]="'ADD EDUCATION'"
     [disableHeader]="false"
     [widthBtn]="'150px'"
     [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
     [padding]="'20px'"
     [content]="''"
-    [tooltip]="isMyUserProfile? '' : 'Ban khong duoc phep them'"
   >
   <div class="container-user-project" *ngIf="userEducation.length > 0">
     <hr class="hr_header">
@@ -712,14 +706,13 @@
       [label]="'LANGUAGES'"
       [styleLabel]="{'font-size':'22px'}"
       (onClickButtonHeader)="open('user-language')"
-      [actionBtn]="actionBtn"
+      [actionBtn]="isMyUserProfile ? actionBtn : ''"
       [buttonTitle]="'add languager'"
       [disableHeader]="false"
       [widthBtn]="'150px'"
       [content]="''"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'20px'"
-      [tooltip]="isMyUserProfile? '' : 'Ban khong duoc phep them'"
     >
     
         <div class="container-user-project" *ngIf="userEducation.length > 0">
