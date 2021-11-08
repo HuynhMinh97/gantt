@@ -5,7 +5,7 @@ import { ObjectType, Int, Field, Float } from '@nestjs/graphql';
 export class UserProjectEntity extends BaseEntity {
     @Field(() => [KeyValueEntity], { nullable: true })
     skills?: KeyValueEntity[];
-    
+
     @Field(() => String, { nullable: true })
     name?: string;
 
@@ -15,11 +15,11 @@ export class UserProjectEntity extends BaseEntity {
     @Field(() => Float, { nullable: true })
     start_date_to?: number;
 
-    @Field(() => String, { nullable: true })
-    company_working?: string;
+    @Field(() => KeyValueEntity, { nullable: true })
+    company_working?: KeyValueEntity;
 
-    @Field(() => String, { nullable: true })
-    title?: string;
+    @Field(() => KeyValueEntity, { nullable: true })
+    title?: KeyValueEntity;
 
     @Field(() => String, { nullable: true })
     description?: string;
@@ -39,5 +39,5 @@ export class UserProjectEntity extends BaseEntity {
 
     @Field(() => String, { nullable: true })
     code?: string;
-    
+
 }
