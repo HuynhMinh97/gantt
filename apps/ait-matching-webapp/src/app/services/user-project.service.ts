@@ -37,8 +37,14 @@ export class UserProjectService extends AitBaseService {
         name: true,
         start_date_from: true,
         start_date_to: true,
-        company_working: true,
-        title: true,
+        company_working: {
+          _key: true,
+          value: true
+        },
+        title: {
+          _key: true,
+          value: true
+        },
         description: true,
         responsibility: true,
         achievement: true,
