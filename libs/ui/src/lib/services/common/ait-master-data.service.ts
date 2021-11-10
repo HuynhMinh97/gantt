@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { GRAPHQL, isObjectFull, KeyValueDto } from '@ait/shared';
+import { COLLECTIONS, GRAPHQL, isObjectFull } from '@ait/shared';
 import { AitBaseService } from './ait-base.service';
 
 
@@ -111,7 +111,15 @@ export class AitMasterDataService extends AitBaseService {
     return await this.mutation('saveSystem', collection, data, this.returnFields);
   }
 
-
+  async getAllMasterData(condition?: any, rf?: any) {
+    const returnFields = rf ? rf : this.returnFields;
+    const request = {};
+    request['collection'] = COLLECTIONS.MASTER_DATA;
+    if (isObjectFull(condition)) {
+      request['condition'] = condition;
+    }
+    return await this.query(GRAPHQL.FIND_SYSTEM, request, returnFields);
+  }
 
 
   async find(

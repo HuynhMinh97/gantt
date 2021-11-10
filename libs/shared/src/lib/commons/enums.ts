@@ -208,8 +208,6 @@ export enum COLLECTIONS {
   USER_PROFILE = 'user_profile',
   EXAMPLE = 'example',
   COMPANY = 'sys_company',
-  M_TITLE = 'm_title',
-  M_COMPANY = 'm_company',
   M_SKILL = 'm_skill'
 }
 

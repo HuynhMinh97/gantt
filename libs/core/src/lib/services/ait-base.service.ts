@@ -243,6 +243,7 @@ export class AitBaseService {
       COLLECTIONS.MASTER_DATA,
       COLLECTIONS.COMPANY,
       COLLECTIONS.CAPTION,
+      COLLECTIONS.M_SKILL
     ];
     const mapData = [];
     const joinData = [];
