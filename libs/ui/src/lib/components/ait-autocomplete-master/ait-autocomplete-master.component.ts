@@ -359,9 +359,10 @@ export class AitAutoCompleteMasterComponent extends AitBaseComponent implements 
 
   getDefaultValueByLang = async (keys: string[]) => {
     console.log(keys)
-    const condition = {
+    const condition = keys.length > 1 ? { code: { value: keys } } : {
       _key: keys[0]
     }
+    
     const returnFields = {
       _key: true,
       name: true
