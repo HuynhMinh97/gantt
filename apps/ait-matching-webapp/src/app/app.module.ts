@@ -3,7 +3,14 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { Router } from '@angular/router';
-import { AitAuthGuardService, AitAuthScreenService, AitChipModule, AitTabsModule, AitUiModule, rootReducers } from '@ait/ui';
+import {
+  AitAuthGuardService,
+  AitAuthScreenService,
+  AitChipModule,
+  AitTabsModule,
+  AitUiModule,
+  rootReducers,
+} from '@ait/ui';
 import { AitAuthModule } from '@ait/auth';
 import { environment } from '../environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -12,7 +19,17 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
 import { aureoleRootReducers } from './state/rootReducers';
 import { AureoleRoutingModule } from './app-routing.module';
-import { NbButtonModule, NbIconModule, NbSpinnerModule, NbTooltipModule, NbCheckboxModule, NbCardModule, NbInputModule, NbFormFieldModule, NbRadioModule } from '@nebular/theme';
+import {
+  NbButtonModule,
+  NbIconModule,
+  NbSpinnerModule,
+  NbTooltipModule,
+  NbCheckboxModule,
+  NbCardModule,
+  NbInputModule,
+  NbFormFieldModule,
+  NbRadioModule,
+} from '@nebular/theme';
 import { AureoleVCardComponent } from './pages/aureole-v/recommenced-user/components/card/card.component';
 import { ContentRowComponent } from './pages/aureole-v/recommenced-user/components/content/content.component';
 import { CardSkeletonComponent } from './pages/aureole-v/recommenced-user/components/card-skeleton/card-skeleton.component';
@@ -29,7 +46,7 @@ import { UserProjectComponent } from './pages/aureole-v/user/user-project/user-p
 import { UserCourseComponent } from './pages/aureole-v/user/user-course/user-course.component';
 import { UsesCertificateComponent } from './pages/aureole-v/user/uses-certificate/uses-certificate.component';
 import { UserSkillsComponent } from './pages/aureole-v/user/user-skills/user-skills.component';
-import { DragDropModule} from '@angular/cdk/drag-drop';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { UserProfileComponent } from './pages/aureole-v/user/user-profile/user-profile.component';
 import { CommonModule } from '@angular/common';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
@@ -37,17 +54,11 @@ import { UserJobAlertComponent } from './pages/aureole-v/user/user-job-alert/use
 import { UserReorderSkillsComponent } from './pages/aureole-v/user/user-reorder-skills/user-reorder-skills.component';
 import { DragScrollSkillModule } from './pages/aureole-v/user/user-profile/dragscroll-skill/dragscroll-skill.module';
 import { CardContentProfileComponent } from './pages/aureole-v/user/user-profile/card-content/card-content.component';
+import { CountryComponent } from './components/country/country.component';
 
+const AIT_UI_MODULES = [AitChipModule, AitTabsModule];
 
-const AIT_UI_MODULES = [
-  AitChipModule,
-  AitTabsModule
-]
-
-const AIT_UI_SERVICES = [
-  AitAuthGuardService,
-  AitAuthScreenService
-]
+const AIT_UI_SERVICES = [AitAuthGuardService, AitAuthScreenService];
 
 const NB_UI_MODULES = [
   NbIconModule,
@@ -57,14 +68,14 @@ const NB_UI_MODULES = [
   NbCheckboxModule,
   NbInputModule,
   NbFormFieldModule,
-  NbRadioModule
-]
+  NbRadioModule,
+];
 
 const AUREOLE_V_COMPONENTS = [
   AureoleVCardComponent,
   ContentRowComponent,
-  CardSkeletonComponent
-]
+  CardSkeletonComponent,
+];
 
 const PAGES = [
   RecommencedComponent,
@@ -75,16 +86,20 @@ const PAGES = [
   UserProjectComponent,
   UserCourseComponent,
   UsesCertificateComponent,
-  UserSkillsComponent, 
+  UserSkillsComponent,
   UserReorderSkillsComponent,
   UserProfileComponent,
   UserJobAlertComponent,
-  CardContentProfileComponent
-]
-
+  CardContentProfileComponent,
+];
 
 @NgModule({
-  declarations: [AppComponent, ...AUREOLE_V_COMPONENTS, ...PAGES],
+  declarations: [
+    AppComponent,
+    ...AUREOLE_V_COMPONENTS,
+    ...PAGES,
+    CountryComponent,
+  ],
   imports: [
     // , NbIconModule, NbEvaIconsModule, NbButtonModule, NbTooltipModule
     DragScrollSkillModule,
@@ -110,13 +125,19 @@ const PAGES = [
       }
     ),
     ...AIT_UI_MODULES,
-    ...NB_UI_MODULES
+    ...NB_UI_MODULES,
   ],
-  providers: [...AIT_UI_SERVICES, ReactionService, SyncApiConfigService, SyncPEService, RecommencedUserService],
+  providers: [
+    ...AIT_UI_SERVICES,
+    ReactionService,
+    SyncApiConfigService,
+    SyncPEService,
+    RecommencedUserService,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {
   constructor(router: Router) {
-    console.log(router)
+    console.log(router);
   }
 }
