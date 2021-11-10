@@ -3,8 +3,8 @@ import { ObjectType, Int, Field, Float } from '@nestjs/graphql';
 
 @ObjectType()
 export class UserProjectEntity extends BaseEntity {
-    @Field(() => [KeyValueEntity], { nullable: true })
-    skills?: KeyValueEntity[];
+    @Field(() => KeyValueEntity, { nullable: true })
+    skills?: KeyValueEntity;
 
     @Field(() => String, { nullable: true })
     name?: string;
@@ -23,7 +23,6 @@ export class UserProjectEntity extends BaseEntity {
 
     @Field(() => String, { nullable: true })
     description?: string;
-
 
     @Field(() => String, { nullable: true })
     responsibility?: string;

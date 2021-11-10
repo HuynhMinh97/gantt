@@ -5,7 +5,7 @@ import { KEYS, RESULT_STATUS } from '@ait/shared';
 import { AitAppUtils, AitAuthService, AitBaseComponent, AitConfirmDialogComponent, AitEnvironmentService, AppState } from '@ait/ui';
 import { UserReoderSkillsService } from 'apps/ait-matching-webapp/src/app/services/user-reoder-skills.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
+import { NbDialogRef, NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { Apollo } from 'apollo-angular';
 import { Store } from '@ngrx/store';
 
@@ -30,6 +30,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
   };
 
   constructor(
+    private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
     private reoderSkillsService: UserReoderSkillsService,
     public activeRouter: ActivatedRoute,
     toastrService: NbToastrService,
@@ -338,7 +339,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
       if (res?.status === RESULT_STATUS.OK) {
         this.cancelLoadingApp();
         this.showToastr('', this.getMsg('I0002'));
-        this.router.navigateByUrl('/user-profile');
+        this.closeDialog(false);
       } else {
         this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
       }
@@ -358,11 +359,14 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
         })
         .onClose.subscribe(async (event) => {
           if (event) {
-            history.back()
+            this.closeDialog(false);
           }
         });
     } else {
-      history.back()
+      this.closeDialog(false);
     }
+  }
+  closeDialog(event: boolean) {
+    this.nbDialogRef.close(event);
   }
 }

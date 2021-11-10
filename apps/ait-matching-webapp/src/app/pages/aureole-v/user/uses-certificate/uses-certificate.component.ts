@@ -1,7 +1,7 @@
 import { AitAuthService, AitConfirmDialogComponent, AitEnvironmentService, AitTranslationService, AppState, MODE, AitBaseComponent, AitAppUtils } from '@ait/ui';
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { NbToastrService, NbLayoutScrollService, NbDialogService } from '@nebular/theme';
+import { NbToastrService, NbLayoutScrollService, NbDialogService, NbDialogRef } from '@nebular/theme';
 import { isArrayFull, isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
@@ -41,10 +41,11 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
     description: false,
     file: false,
   };
-  certificate_key: string;
+  certificate_key= '';
   selectFile = "";
   ;
   constructor(
+    private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
     private element: ElementRef,
     private translateService: AitTranslationService,
     private router: Router,
@@ -79,13 +80,14 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
       user_id: new FormControl(null),
     });
     // get key form parameters
-    this.certificate_key = this.activeRouter.snapshot.paramMap.get('id');
-    if (this.certificate_key) {
-      this.mode = MODE.EDIT;
-    }
+    // this.certificate_key = this.activeRouter.snapshot.paramMap.get('id');
+    
   }
   // get value form
   async ngOnInit(): Promise<any> {
+    if (this.certificate_key) {
+      this.mode = MODE.EDIT;
+    }
     if (this.mode == MODE.NEW) {
       this.certificate.controls["issue_date_from"].setValue(this.dateNow);
       this.certificateClone = this.certificate.value;
@@ -289,7 +291,7 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
-            history.back();
+            this.closeDialog(false);
           } else {
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
@@ -365,7 +367,7 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
             await this.cartificateService.remove(this.certificate_key).then((res) => {
               if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
                 this.showToastr('', this.getMsg('I0003'));
-                history.back();
+                this.closeDialog(false);
               } else {
                 this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
               }
@@ -390,11 +392,11 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
         })
         .onClose.subscribe(async (event) => {
           if (event) {
-            history.back()
+            this.closeDialog(false);
           }
         });
     } else {
-      history.back()
+      this.closeDialog(false);
     }
   }
 
@@ -411,5 +413,8 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
       title = this.translateService.translate('View certificate')
     }
     return title;
+  }
+  closeDialog(event: boolean) {
+    this.nbDialogRef.close(event);
   }
 }

@@ -28,20 +28,20 @@
           </div>
           <div class="user-breakinfo">
             <p class="fullname-profile">
-              {{userProfile?.last_name +" "+ userProfile?.first_name }}
+              {{DataUserProfile?.last_name}} {{DataUserProfile?.first_name }}
             </p>
             <p style="padding-top: 30px">
-              <span> {{userProfile?.title }} at {{userProfile?.company_working}} </span>
+              <span> {{DataUserProfile?.title.value }} at {{DataUserProfile?.company_working.value}} </span>
             </p>
             <p style="margin-top: -10px">
-              <span>{{userProfile?.city}}, {{userProfile?.country}}</span>
+              <span>{{DataUserProfile?.city.value}}, {{DataUserProfile?.country.value}}</span>
             </p>
           </div>
         </div>
         <div class="col-md-5 col-lg-4 col-xxxl-4" id="col2">
           <p  style="width:100%; margin:0 ; height: 100px;  border: none;
           outline: none; font-size: 13px;overflow: hidden;resize: none;white-space: break-spaces">
-            {{userProfile?.about}}
+            {{DataUserProfile?.about}}
           </p>
         </div>
         <div class="col-md-3 col-lg-3 col-xxxl-3" id="col3">
@@ -114,7 +114,7 @@
     <div style="position: relative;">
       <div class="reorder_skills" style="z-index: 100;" *ngIf="isMyUserProfile">
         <ait-button
-          (click)="open('user-reorder-skills')"
+          (click)="openReorderSkill()"
           [iconName]="'menu-outline'"
           [color]="'#fff'"
           [styleText]="{ 'font-size': '10px' }"
@@ -135,7 +135,7 @@
         style="display: flex; justify-content: center"
         [label]="'SKILLS'"
         [styleLabel]="{'font-size':'22px'}"
-        (onClickButtonHeader)="open('user-skills')"
+        (onClickButtonHeader)="openSkill()"
         [actionBtn]="isMyUserProfile ? actionBtn : ''"
         [buttonTitle]="'ADD SKILL'"
         [disableHeader]="false"
@@ -260,6 +260,7 @@
       [content]="sumHoursProject"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'20px'"
+      [isOpen]="showProject"
     >
       <div class="container-user-project" *ngIf="userProject.length > 0">
         <hr class="hr_header">
@@ -375,7 +376,7 @@
       style="display: flex; justify-content: center"
       [label]="'EXPERIENCES'"
       [styleLabel]="{'font-size':'22px'}"
-      (onClickButtonHeader)="open('user-experience')"
+      (onClickButtonHeader)="openExperience()"
       [actionBtn]="isMyUserProfile ? actionBtn : ''"
       [buttonTitle]="'ADD EXPERIENCE'"
       [disableHeader]="false"
@@ -455,7 +456,7 @@
               </div>
             </div>
             <div id="ic-edit">
-              <a (click)="openProject('user-experience', experience?._key)">
+              <a (click)="openExperience(experience?._key)">
                 <nb-icon
                   *ngIf="isMyUserProfile"
                   nbSuffix
@@ -486,7 +487,7 @@
       style="display: flex; justify-content: center"
       [label]="'CERTIFICATES'"
       [styleLabel]="{'font-size':'22px'}"
-      (onClickButtonHeader)="open('user-certificate')"
+      (onClickButtonHeader)="openCertificate()"
       [actionBtn]="isMyUserProfile ? actionBtn : ''"
       [buttonTitle]="'ADD EXPERIENCE'"
       [disableHeader]="false"
@@ -528,7 +529,7 @@
               </div>
             </div>
             <div id="ic-edit">
-              <a (click)="openProject('user-certificate', company_centificate._key)">
+              <a (click)="openCertificate(company_centificate?._key)">
                 <nb-icon
                   *ngIf="isMyUserProfile"
                   nbSuffix
@@ -559,7 +560,7 @@
       style="display: flex; justify-content: center"
       [label]="'COURSES'"
       [styleLabel]="{'font-size':'22px'}"
-      (onClickButtonHeader)="open('user-course')"
+      (onClickButtonHeader)="openCourse()"
       [actionBtn]="isMyUserProfile ? actionBtn : ''"
       [buttonTitle]="'ADD COURSE'"
       [disableHeader]="false"
@@ -601,7 +602,7 @@
               </div>
             </div>
             <div id="ic-edit">
-              <a (click)="openProject('user-course', course._key)">
+              <a (click)="openCourse(course?._key)">
                 <nb-icon
                   *ngIf="isMyUserProfile"
                   nbSuffix
@@ -632,7 +633,7 @@
     style="display: flex; justify-content: center"
     [label]="'EDUCATIONS'"
     [styleLabel]="{'font-size':'22px'}"
-    (onClickButtonHeader)="open('user-education')"
+    (onClickButtonHeader)="openEducation()"
     [actionBtn]="isMyUserProfile ? actionBtn : ''"
     [buttonTitle]="'ADD EDUCATION'"
     [disableHeader]="false"
@@ -674,7 +675,7 @@
             </div>
           </div>
           <div id="ic-edit">
-            <a (click)="openProject('user-education', education._key)">
+            <a (click)="openEducation(education?._key)">
               <nb-icon
                 *ngIf="isMyUserProfile"
                 nbSuffix
@@ -705,7 +706,7 @@
       style="display: flex; justify-content: center"
       [label]="'LANGUAGES'"
       [styleLabel]="{'font-size':'22px'}"
-      (onClickButtonHeader)="open('user-language')"
+      (onClickButtonHeader)="openLanguage()"
       [actionBtn]="isMyUserProfile ? actionBtn : ''"
       [buttonTitle]="'add languager'"
       [disableHeader]="false"
@@ -744,7 +745,7 @@
                   </div>
                 </div>
                 <div id="ic-edit">
-                  <a (click)="openProject('user-language', language._key)">
+                  <a (click)="openLanguage( language?._key)">
                     <nb-icon
                       *ngIf="isMyUserProfile"
                       nbSuffix

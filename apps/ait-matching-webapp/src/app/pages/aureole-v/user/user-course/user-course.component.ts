@@ -80,14 +80,13 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
       training_center: new FormControl(null),
       user_id: new FormControl(null),
     });
-    // get key form parameters
-    this.course_key = this.activeRouter.snapshot.paramMap.get('id');
-    if (this.course_key) {
-      this.mode = MODE.EDIT;
-    }
+   
   }
   // get value form
   async ngOnInit(): Promise<any> {
+    if (this.course_key) {
+      this.mode = MODE.EDIT;
+    }
     if (this.mode == MODE.NEW) {
       this.course.controls["start_date_from"].setValue(this.dateNow);
       this.courseClone = this.course.value;
@@ -351,7 +350,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
           await this.userCourseService.deleteCourseByKey(this.courseClone._key);
           setTimeout(() => {
             this.showToastr('', this.getMsg('I0003'));
-            history.back();
+            this.closeDialog(false);
           }, 100);
         }
       });

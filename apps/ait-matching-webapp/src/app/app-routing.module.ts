@@ -118,6 +118,11 @@ export const routes: Routes = [
     component: UserJobAlertComponent
   },
   {
+    path: 'user-job-alert/:id',
+    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    component: UserJobAlertComponent
+  },
+  {
     path: '',
     pathMatch: 'full',
     redirectTo: localStorage.getItem('access_token') ? 'recommenced-user' : 'sign-in'

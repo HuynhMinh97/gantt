@@ -110,6 +110,19 @@ export class UserProjectService extends AitBaseService {
         },
       })
   }
+  async findSkillsByFrom(_from?: string) {
+    const condition = {
+      _from: _from,
+      del_flag: false,
+    }
+    return await this.query('findMSkillByFrom', { collection: 'biz_project_skill', condition },
+      {
+        skills: {
+          _key: true,
+          value: true
+        },
+      })
+  }
 
   async findMSkillsByCode(code: string) {
     const condition = {

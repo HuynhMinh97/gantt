@@ -23,6 +23,7 @@ import { Apollo } from 'apollo-angular';
 import { UserProjectService } from './../../../../../services/user-project.service';
 import { UserProjectDto, UserProjectErrorsMessage } from './interface';
 import { isArrayFull, isObjectFull, KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
+import { UserProfileService } from './../../../../../services/user-profile.service';
 
 @Component({
   selector: 'ait-user-project',
@@ -42,7 +43,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
   defaultCompany = {} as KeyValueDto;
   companyName = null;
   titleName = null;
-
+  projectDataInput: any;
   error = [];
   listSkills: any;
   keySkills: any;
@@ -90,6 +91,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
   ];
   project_key = '';
   constructor(
+    private userProfileService: UserProfileService,
     private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
     private element: ElementRef,
     private dialogService: NbDialogService,
@@ -147,15 +149,26 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     } else {
       await this.findBizProject();
       await this.findSkills();
+      
     }
     await this.userProject.valueChanges.subscribe((data) => {
       this.checkAllowSave();
     });  
   }
 
+  checkAllowSave() {
+    const userInfoClone = { ...this.userProjectClone };
+    const userInfo = { ...this.userProject.value };
+    const isChangedUserInfo = AitAppUtils.isObjectEqual(
+      { ...userInfo },
+      { ...userInfoClone }
+    );
+    this.isChanged = !(isChangedUserInfo);
+  }
+
   async findBizProject() {
     const res = await this.userProjectService.find(this.project_key);
-    const data = res.data[0];
+    const data = res.data[0];    
     if (res.data.length > 0) {
       this.userProject.patchValue({ ...data });
       this.userProjectClone = this.userProject.value;
@@ -167,25 +180,20 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     } else {
       this.router.navigate([`/404`]);
     }
-
   }
 
   async findSkills() {
-    debugger
     const from = 'biz_project/' + this.project_key;
-    await this.userProjectService.findFromBizProjectSkill(from).then(async (res) => {
+    await this.userProjectService.findSkillsByFrom(from)
+    .then(async(res) => {
       let listSkills = [];
-      let listCodeSkills = [];
-      for (const key of res.data) {
-        let keySkills = key._to.substring(8)
-        listSkills.push({ _key: keySkills });
-        const res = await this.userProjectService.findMSkillsByKey(keySkills);
-        listCodeSkills.push({ _key: res.data[0].code, value: res.data[0].name });
-      }
-      this.userProject.controls['skills'].setValue([...listCodeSkills]);
-      this.userProjectClone = this.userProject.value;
-      this.keySkills = listSkills;
-    })
+      for (const skill of res.data) {
+        listSkills.push(skill?.skills);
+      }    
+        this.userProject.controls['skills'].setValue([...listSkills]);
+        this.userProjectClone = this.userProject.value;    
+        console.log(this.userProjectClone);
+    });    
   }
 
   async inputProject() {
@@ -386,16 +394,6 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       }
     }
   }
-  checkAllowSave() {
-    const userInfo = { ...this.userProject.value };
-    const userInfoClone = { ...this.userProjectClone };
-    // this.setHours(userInfo);
-    const isChangedUserInfo = AitAppUtils.isObjectEqual(
-      { ...userInfo },
-      { ...userInfoClone }
-    );
-    this.isChanged = !(isChangedUserInfo);
-  }
 
   async reset() {
     this.isSubmit = false;
@@ -473,6 +471,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
                 ];
                 this.userProjectService.removeSkill(_fromSkill);
                 this.userProjectService.removeUserProejct(_toUser);
+                this.userProfileService.onLoad.next(this.projectDataInput);
                 this.showToastr('', this.getMsg('I0003'));
                 this.closeDialog(false);
               } else {

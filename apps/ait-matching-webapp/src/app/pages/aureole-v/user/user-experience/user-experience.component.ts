@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
+  NbDialogRef,
   NbDialogService,
   NbLayoutScrollService,
   NbToastrService,
@@ -70,6 +71,7 @@ export class UserExperienceComponent
     private dialogService: NbDialogService,
     private userExpService: UserExperienceService,
     private translateService: AitTranslationService,
+    private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
     env: AitEnvironmentService,
     store: Store<AppState>,
     apollo: Apollo,
@@ -107,13 +109,13 @@ export class UserExperienceComponent
     });
 
     // get key form parameters
-    this.user_key = this.activeRouter.snapshot.paramMap.get('id');
-    if (this.user_key) {
-      this.mode = MODE.EDIT;
-    }
+    // this.user_key = this.activeRouter.snapshot.paramMap.get('id');
   }
 
   async ngOnInit(): Promise<void> {
+    if (this.user_key) {
+      this.mode = MODE.EDIT;
+    }
     if (this.user_key) {
       await this.userExpService
         .findUserExperienceByKey(this.user_key)
@@ -244,7 +246,7 @@ export class UserExperienceComponent
             await this.userExpService.remove(_key).then((res) => {
               if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
                 this.showToastr('', this.getMsg('I0003'));
-                history.back();
+                this.closeDialog(false);
               } else {
                 this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
               }
@@ -321,7 +323,7 @@ export class UserExperienceComponent
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
-            history.back();
+            this.closeDialog(false);
           } else {
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
@@ -430,12 +432,15 @@ export class UserExperienceComponent
         })
         .onClose.subscribe(async (event) => {
           if (event) {
-            history.back();
+            this.closeDialog(false);
           }
         });
     } else {
-      history.back();
+      this.closeDialog(false);
     }
+  }
+  closeDialog(event: boolean) {
+    this.nbDialogRef.close(event);
   }
 
 }

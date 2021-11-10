@@ -12,6 +12,7 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
+  NbDialogRef,
   NbDialogService,
   NbLayoutScrollService,
   NbToastrService,
@@ -72,6 +73,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     private dialogService: NbDialogService,
     private userEduService: UserEducationService,
     private translateService: AitTranslationService,
+    private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
     env: AitEnvironmentService,
     store: Store<AppState>,
     apollo: Apollo,
@@ -106,13 +108,14 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     });
 
     // get key form parameters
-    this.user_key = this.activeRouter.snapshot.paramMap.get('id');
-    if (this.user_key) {
-      this.mode = MODE.EDIT;
-    }
+    // this.user_key = this.activeRouter.snapshot.paramMap.get('id');
+    
   }
 
   async ngOnInit(): Promise<void> {
+    if (this.user_key) {
+      this.mode = MODE.EDIT;
+    }
     if (this.user_key) {
       await this.userEduService
         .findUserEducationByKey(this.user_key)
@@ -408,6 +411,8 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
       this.userEducationInfo.controls['file'].setValue(null);
     }
   }
-
+  closeDialog(event: boolean) {
+    this.nbDialogRef.close(event);
+  }
 
 }
