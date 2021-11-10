@@ -7,7 +7,7 @@
   <div class="content__card">
     <div class="form__wrapper">
       <div class="input_inline">
-        <ait-autocomplete-master
+        <ait-autocomplete-master-data
           [id]="'industry'"
           [label]="'INDUSTRY'"
           [required]="false"
@@ -15,62 +15,61 @@
           [maxItem]="50"
           [placeholder]="'Select'"
           [style]="{ width: '400px' }"
-          (watchValue)="takeMasterValue($event, 'skills')"
-          [defaultValue]=""
-        ></ait-autocomplete-master>
+          (watchValue)="takeMasterValues($event, 'industry')"
+          [defaultValue]="industrys"
+          [isReset]="resetUserjobAlert.industry"
+        ></ait-autocomplete-master-data>
       </div>
       <div class="input_inline">
         <ait-autocomplete-master-data
         [class]="'EXPERIENCE_LEVEL'"
           [id]="'experience_level'"
+          [class]="'EXPERIENCE_LEVEL'"
           [label]="'EXPERIENCE LEVEL'"
           [required]="false"
           [allowNew]="false"
-          [maxItem]="1"
+          [maxItem]="999"
           [isSubmit]="isSubmit"
           [placeholder]="'Select'"
-          [collection]="'sys_master_data'"
           [disableOutputDefault]="true"
-          [isReset]="resetuserjobAlert"
-          [isReadOnly]="resetuserjobAlert"
-          (watchValue)="('')"
-          [defaultValue]="''"
+          [isReset]="resetUserjobAlert.experience_level"
+          (watchValue)="takeMasterValues($event, 'experience_level')"
+          [defaultValue]="experienceLevels"
           [style]="{ width: '400px' }"
         ></ait-autocomplete-master-data>
       </div>
       <div class="input_inline">
         <ait-autocomplete-master-data
           [class]="'EMPLOYEE_TYPE'"
-          [id]="'employement_type'"
+          [id]="'employee_type'"
           [label]="'EMPLOYEMENT TYPE'"
           [required]="false"
           [allowNew]="false"
-          [maxItem]="1"
+          [maxItem]="999"
           [isSubmit]="isSubmit"
           [placeholder]="'Select'"
           [collection]="'sys_master_data'"
           [disableOutputDefault]="true"
-          [isReset]="resetuserjobAlert"
-          [isReadOnly]="resetuserjobAlert"
-          (watchValue)="('')"
-          [defaultValue]="''"
+          [isReset]="resetUserjobAlert.employee_type"
+          (watchValue)="takeMasterValues($event, 'employee_type')"
+          [defaultValue]="employeeTypes"
           [style]="{ width: '200px' }"
         ></ait-autocomplete-master-data>
       </div>
 
       <div class="input_inline">
-        <ait-autocomplete-master
+        <ait-autocomplete-master-data
           [class]="'ADDRESS'"
           [id]="'location'"
           [label]="'LOCATION'"
           [required]="false"
-          [collection]="'sys_master_data'"
           [maxItem]="50"
           [placeholder]="'Select'"
           [style]="{ width: '400px' }"
-          (watchValue)="takeMasterValue($event, 'skills')"
-          [defaultValue]=""
-        ></ait-autocomplete-master>
+          (watchValue)="takeMasterValues($event, 'location')"
+          [defaultValue]="locations"
+          [isReset]="resetUserjobAlert.location"
+        ></ait-autocomplete-master-data>
       </div>
      
       <ait-error-message
@@ -83,10 +82,10 @@
           [placeholder]="'01/01/2021'"
           [id]="'start_date_from'"
           [style]="{ width: '170px' }"
-          [isReset]="''"
-          [defaultValue]=""
+          [isReset]="resetUserjobAlert.start_date_from"
+          [defaultValue]="userjobAlert.controls['start_date_from'].value"
           (watchValue)="
-            takeDatePickerValue($event?.value, 'certificate', 'issue_date_from')
+            takeDatePickerValue($event?.value, 'userjobAlert', 'start_date_from')
           "
           [isSubmit]="isSubmit"
         ></ait-datepicker>
@@ -100,43 +99,47 @@
           [id]="'start_date_to'"
           [style]="{ width: '170px' }"
           (watchValue)="
-            takeDatePickerValue($event?.value, 'certificate', 'issue_date_to')
+            takeDatePickerValue($event?.value, 'userjobAlert', 'start_date_to')
           "
-          [defaultValue]=""
-          [isReset]=""
+          [defaultValue]="userjobAlert.controls['start_date_to'].value"
+          [isReset]="resetUserjobAlert.start_date_to"
           [isSubmit]="isSubmit"
         ></ait-datepicker>
       </div>
       <div class="input_inline">
-        <ait-input-text
+        <ait-input-number
         [id]="'salary_from'"
         [label]="'SALARY'"
         [height]="'40px'"
-        [width]="'170px'"
+        [widthInput]="'170px'"
         [required]="false"
         [placeholder]="'1,000'"
-        (watchValue)="takeInputValue($event, '')"
-        [defaultValue]=""
-        [isReset]=""
+        (watchValue)="takeInputNumberValue($event,'userjobAlert', 'salary_from')"
+        [defaultValue]="userjobAlert.controls['salary_from'].value"
+        [isReset]="resetUserjobAlert.salary_from"
         [isSubmit]="isSubmit"
         [length]="400"
-      ></ait-input-text>
+        [min]="0"
+        [max]="999999999999"
+      ></ait-input-number>
 
         <p class="label-datepiker">{{ '~' }}</p>
 
-        <ait-input-text
+        <ait-input-number
         [id]="'salary_to'"
         [height]="'40px'"
         [label]="' '"
-        [width]="'170px'"
+        [widthInput]="'170px'"
         [required]="false"
         [placeholder]="'5,000'"
-        (watchValue)="takeInputValue($event, '')"
-        [defaultValue]=""
-        [isReset]=""
+        (watchValue)="takeInputNumberValue($event,'userjobAlert', 'salary_to')"
+        [defaultValue]="userjobAlert.controls['salary_to'].value"
+        [isReset]="resetUserjobAlert.salary_to"
         [isSubmit]="isSubmit"
         [length]="400"
-      ></ait-input-text>
+        [min]="0"
+        [max]="999999999999"
+      ></ait-input-number>
       </div>
       <ait-error-message
         [id]="'errorDate'"
@@ -173,7 +176,7 @@
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
           "
           [width]="'200px'"
-          (click)="resetForm()"
+          (click)="reset()"
         ></ait-button>
         <ait-button
           *ngIf="mode === 'EDIT'"
@@ -193,7 +196,7 @@
           "
           [id]="'saveContinue'"
           [width]="'200px'"
-          (click)="saveAndContinue()"
+          (click)="save()()"
         ></ait-button>
 
         <ait-button

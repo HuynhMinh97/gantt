@@ -11,6 +11,7 @@ import { UserCertificateResolver } from './user/user-certificate/user_certificat
 import { UserProjectResolver } from './user/user-project/user-project.resolver';
 import { ReorderSkillResolver } from './user/user-reorder-skills/reorder-skill.resolver';
 import { UserProfileResolver } from './user/user-profile/user-profile.resolver';
+import { UserJobAlertResolver } from './user/user-job-alert/user_job_alert.resolver';
 
 const RESOLVERS = [
   UserExperienceInfoResolver,
@@ -23,6 +24,7 @@ const RESOLVERS = [
   CourseResolver,
   ReorderSkillResolver,
   UserProfileResolver,
+  UserJobAlertResolver,
   {
   provide: 'ENVIRONMENT',
   useValue: environment

@@ -21,7 +21,7 @@ export class UserProjectResolver extends AitBaseService {
         @AitCtxUser() user: SysUser,
         @Args('request', { type: () => UserProjectRequest }) request: UserProjectRequest
     ) { 
-        const result = await this.find(request, user);
+        const result = await this.find(request, user);    
         return result;
     }
 
@@ -31,6 +31,8 @@ export class UserProjectResolver extends AitBaseService {
         @Args('request', { type: () => UserProjectRequest }) request: UserProjectRequest
     ) {  
         const result = await this.find(request, user);
+        console.log(result);
+        
         return result;
     }
 
@@ -88,22 +90,24 @@ export class UserProjectResolver extends AitBaseService {
         return new UserProjectResponse(RESULT_STATUS.ERROR, [], 'error');
         }
     }
-    @Query(() => UserProjectResponse, { name: 'findMSkillsss' })
-    async findMSkillsegda(
+    @Query(() => UserProjectResponse, { name: 'findMSkillByFrom' })
+    async findMSkillByFrom(
         @AitCtxUser() user: SysUser,
         @Args('request', { type: () => UserProjectRequest }) request: UserProjectRequest
     ) {  
         const user_id = request.user_id;
-
+        const lang = request.lang;
+        const from = request.condition._from as string;
+        const collection = request.collection;
         if (user_id) {
         const aqlQuery = `
-        FOR item IN biz_project_skill
-        FOR data IN biz_project_skill
-        FILTER data._from == item._from
-       
-        RETURN data
+            FOR v,e, p IN 1..1 OUTBOUND "${from}" ${collection}
+            FILTER  v.del_flag != true
+            let a= {_key: v.code, value:  v.name.${lang} ? v.name.${lang} : v.name,}
+            RETURN {skills: a}
         `;
-
+        const result = await this.query(aqlQuery);
+        console.log(result);
         return await this.query(aqlQuery);
         } else {
         return new UserProjectResponse(RESULT_STATUS.ERROR, [], 'error');

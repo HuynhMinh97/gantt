@@ -1,9 +1,13 @@
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { AitAuthService, AitBaseComponent, AitEnvironmentService, AppState } from '@ait/ui';
+import { AitAppUtils, AitAuthService, AitBaseComponent, AitEnvironmentService, AppState, getUserSetting, MODE } from '@ait/ui';
 import { Component, OnInit } from '@angular/core';
 import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
+import { isArrayFull, isObjectFull, RESULT_STATUS } from '@ait/shared';
+import dayjs from 'dayjs';
+import { UserJobAlertService } from 'apps/ait-matching-webapp/src/app/services/user-job-alert.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'ait-user-job-alert',
@@ -12,11 +16,19 @@ import { Apollo } from 'apollo-angular';
 })
 export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
   userjobAlert: FormGroup;
+  userjobAlertClone:any;
   isSubmit = false;
   mode = "NEW";
   isChanged = false;
   errorArr = [];
-  resetuserjobAlert = {
+  dayNow ='';
+  dateFormat = "dd/MM/yyyy";
+  userId = "";
+  industrys = [];
+  experienceLevels = [];
+  employeeTypes = [];
+  locations = [];
+  resetUserjobAlert = {
     industry: false,
     experience_level: false,
     employee_type: false,
@@ -27,14 +39,24 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
     salary_to: false,
   }
   constructor(store: Store<AppState>,
+    private userJobAlertService : UserJobAlertService,
+    private router: Router,
     authService: AitAuthService,
     apollo: Apollo,
     env: AitEnvironmentService,
     layoutScrollService: NbLayoutScrollService,
     toastrService: NbToastrService,
     private formBuilder: FormBuilder,
+    public activeRouter: ActivatedRoute,
   ) {
     super(store, authService, apollo, null, env, layoutScrollService, toastrService);
+
+    store.pipe(select(getUserSetting)).subscribe((setting) => {
+      if (isObjectFull(setting) && setting['date_format_display']) {
+        this.dateFormat = setting['date_format_display'];
+      }
+    });
+
     this.setModulePage({
       module: 'user',
       page: 'user_job_alert',
@@ -48,34 +70,152 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
       start_date_to: new FormControl(null),
       salary_from: new FormControl(null),
       salary_to: new FormControl(null),
+      _key: new FormControl(null),
+      user_id: new FormControl(null),
+
     })
+    this.userId = this.activeRouter.snapshot.paramMap.get('id');
+    if (this.userId) {
+      this.mode = MODE.EDIT;
+    }
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    await this.getMasterData();
+    this.dayNow = this.getDateFormat(Date.now());
+    this.userjobAlert.controls["start_date_from"].setValue(Date.now());
+    this.getUserJobAlert();
+    await this.userjobAlert.valueChanges.subscribe((data) => {
+      this.checkAllowSave();
+    });
+    
+  }
+
+  checkAllowSave() {
+    const userjobAlert = { ...this.userjobAlert.value };
+    const userjobAlertClone = { ...this.userjobAlertClone };
+    const isChangedUserInfo = AitAppUtils.isObjectEqual(
+      { ...userjobAlert },
+      { ...userjobAlertClone }
+    );
+    this.isChanged = !(isChangedUserInfo);
+  }
+  async getMasterData() {
+    try {
+      if (!this.dateFormat) {
+        const masterValue = await this.getUserSettingData('USER_SETTING');
+        const setting = await this.findUserSettingCode();
+        if (isObjectFull(setting) && isArrayFull(masterValue)) {
+          const format = setting['date_format_display'];
+          const data = masterValue.find(item => item.code === format);
+          if (data) {
+            this.dateFormat = data['name'];
+          }
+        }
+      }
+    } catch (e) {
+    }
+  } 
+
+  getDateFormat(time: number) {
+    if (!time) {
+      return '';
+    } else {
+      return dayjs(time).format(this.dateFormat.toUpperCase());
+    }
   }
   takeMasterValue(value: any, target: string): void {
 
   }
+
   takeDatePickerValue(value: number, group: string, form: string) {
-    if (value == null) {
-      this.isChanged = true;
-      this[group].controls[form].markAsDirty();
-      this[group].controls[form].setValue(value);
-    }
     if (value) {
       const data = value as number;
       value = new Date(data).setHours(0, 0, 0, 0);
       this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(value);
+    }else{
+      this[group].controls[form].markAsDirty();
+      this[group].controls[form].setValue(null);
     }
   }
-  takeInputValue(value: string, form: string): void {
-    if (value) {
-      this.userjobAlert.controls[form].markAsDirty();
-      this.userjobAlert.controls[form].setValue(value);
+
+  takeInputNumberValue(value: any, group: string, form: string) {  
+    if (value !== '' && value !== null && !isNaN(value)) {
+      this[group].controls[form].markAsDirty();
+      this[group].controls[form].setValue(Number(value));
     } else {
-      this.userjobAlert.controls[form].setValue(null);
+      this[group].controls[form].setValue(null);
     }
+  }
+  takeMasterValues(val: any, form: string): void {   
+    if (val) {
+      if(isObjectFull(val)  && val.value.length > 0 ){          
+        const data = [];       
+        val.value.forEach((item) => {
+          data.push(item._key);
+        });
+        this.userjobAlert.controls[form].markAsDirty();
+        this.userjobAlert.controls[form].setValue(data);                        
+      }
+    }else{
+      this.userjobAlert.controls[form].markAsDirty();
+      this.userjobAlert.controls[form].setValue(null);
+    }    
+        
+  }
+
+  getUserJobAlert(){
+    this.userJobAlertService.findUserJobAlert(this.userId)
+    .then((res) => {
+      if (res.status === RESULT_STATUS.OK) {
+        if (res.data.length > 0) {
+          const data = res.data[0];
+          this.userjobAlert.patchValue({ ...data });
+          this.userjobAlertClone = this.userjobAlert.value;
+          this.industrys = data.industry;
+          this.experienceLevels = data.experience_level;
+          this.employeeTypes = data.employee_type;
+          this.locations = data.location;
+          console.log(this.userjobAlert.value);
+          
+        }
+        else {
+          this.router.navigate([`/404`]);
+        }
+      }
+    })
+  }
+  save(){
+    const dataSave = this.userjobAlert.value;
+    if(this.mode == "NEW"){
+      dataSave['user_id'] = this.authService.getUserID();
+    }
+    this.userJobAlertService.saveUserJobAlert(this.userjobAlert.value)
+    .then((res) => {
+      if (res?.status === RESULT_STATUS.OK) {
+        const message =
+        this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
+        this.showToastr('', message);
+      }
+    })    
+  }
+
+  async reset() {
+    this.isSubmit = false;
+    this.isChanged = false;
+    this.userjobAlert.reset();
+    for (const prop in this.resetUserjobAlert) {
+      this.resetUserjobAlert[prop] = true;
+      setTimeout(() => {
+        this.resetUserjobAlert[prop] = false;
+      }, 10);
+    }
+    setTimeout(() => {
+      this.userjobAlert.controls["start_date_from"].setValue(Date.now());
+    }, 100);  
+    console.log(this.userjobAlertClone);
+     
   }
 
 }

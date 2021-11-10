@@ -12,6 +12,7 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
+  NbDialogRef,
   NbDialogService,
   NbLayoutScrollService,
   NbToastrService,
@@ -68,6 +69,7 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
     private dialogService: NbDialogService,
     private userLangService: UserLanguageService,
     private translateService: AitTranslationService,
+    private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
     env: AitEnvironmentService,
     store: Store<AppState>,
     apollo: Apollo,
@@ -99,12 +101,13 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
     });
 
     // get key form parameters
-    this.user_key = this.activeRouter.snapshot.paramMap.get('id');
+    // this.user_key = this.activeRouter.snapshot.paramMap.get('id');
+    
+  }
+  async ngOnInit(): Promise<void> {
     if (this.user_key) {
       this.mode = MODE.EDIT;
     }
-  }
-  async ngOnInit(): Promise<void> {
     if (this.user_key) {
       await this.userLangService
         .findUserLanguageByKey(this.user_key)
@@ -211,7 +214,7 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
-            history.back();
+            this.closeDialog(false);
           } else {
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
@@ -284,7 +287,7 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
             await this.userLangService.remove(_key).then((res) => {
               if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
                 this.showToastr('', this.getMsg('I0003'));
-                history.back();
+                this.closeDialog(false);
               } else {
                 this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
               }
@@ -309,11 +312,11 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
         })
         .onClose.subscribe(async (event) => {
           if (event) {
-            history.back();
+            this.closeDialog(false);
           }
         });
     } else {
-      history.back();
+      this.closeDialog(false);
     }
   }
 
@@ -330,5 +333,8 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
     return this.mode === MODE.EDIT
       ? this.translateService.translate('Edit language')
       : this.translateService.translate('Add language');
+  }
+  closeDialog(event: boolean) {
+    this.nbDialogRef.close(event);
   }
 }

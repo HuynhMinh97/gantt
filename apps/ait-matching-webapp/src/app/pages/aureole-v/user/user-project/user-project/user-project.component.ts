@@ -1,5 +1,14 @@
-import { title } from 'node:process';
-import { AitAppUtils, AitAuthService, AitBaseComponent, AitConfirmDialogComponent, AitEnvironmentService, AitMasterDataService, AitTranslationService, AitUserService, AppState, getCaption, getLang, MODE } from '@ait/ui';
+import { 
+  AitAppUtils, 
+  AitAuthService, 
+  AitBaseComponent, 
+  AitConfirmDialogComponent,
+  AitEnvironmentService, 
+  AitTranslationService, 
+  AitUserService, 
+  AppState, 
+  MODE 
+} from '@ait/ui';
 import { Component, ElementRef, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -8,13 +17,13 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NbToastrService, NbLayoutScrollService, NbDialogService, NB_THEME_OPTIONS } from '@nebular/theme';
-import { Store, select } from '@ngrx/store';
+import { NbToastrService, NbLayoutScrollService, NbDialogService, NbDialogRef } from '@nebular/theme';
+import { Store} from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { UserProjectService } from './../../../../../services/user-project.service';
-import { Subscription } from 'rxjs';
 import { UserProjectDto, UserProjectErrorsMessage } from './interface';
 import { isArrayFull, isObjectFull, KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
+import { UserProfileService } from './../../../../../services/user-profile.service';
 
 @Component({
   selector: 'ait-user-project',
@@ -34,7 +43,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
   defaultCompany = {} as KeyValueDto;
   companyName = null;
   titleName = null;
-
+  projectDataInput: any;
   error = [];
   listSkills: any;
   keySkills: any;
@@ -82,6 +91,8 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
   ];
   project_key = '';
   constructor(
+    private userProfileService: UserProfileService,
+    private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
     private element: ElementRef,
     private dialogService: NbDialogService,
     private formBuilder: FormBuilder,
@@ -113,27 +124,23 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     });
     this.userProject = this.formBuilder.group({
       _key: new FormControl(null),
-      name: new FormControl(null, [Validators.required, Validators.maxLength(200)]),
-      start_date_from: new FormControl(null, [Validators.required]),
       start_date_to: new FormControl(null),
-      company_working: new FormControl(null, [Validators.required]),
       title: new FormControl(null, [Validators.required]),
-      description: new FormControl(null, [Validators.required, Validators.maxLength(4000)]),
+      start_date_from: new FormControl(null, [Validators.required]),
+      company_working: new FormControl(null, [Validators.required]),
+      name: new FormControl(null, [Validators.required, Validators.maxLength(200)]),
       skills: new FormControl(null, [Validators.required, Validators.maxLength(10)]),
-      responsibility: new FormControl(null, [Validators.required, Validators.maxLength(4000)]),
       achievement: new FormControl(null, [Validators.required, Validators.maxLength(4000)]),
+      description: new FormControl(null, [Validators.required, Validators.maxLength(4000)]),
+      responsibility: new FormControl(null, [Validators.required, Validators.maxLength(4000)]),
     });
+  }
 
-    // get key form parameters
-    this.project_key = this.activeRouter.snapshot.paramMap.get('id');
+  async ngOnInit() {
     if (this.project_key) {
       this.mode = MODE.EDIT;
     }
-  }
-
-
-  async ngOnInit() {
-    if (this.mode === 'NEW') {
+    if (this.mode === "NEW") {
       await this.inputProject();
       this.userProject.controls['start_date_from'].setValue(this.dateNow);
       this.userProject.controls['title'].setValue(this.titleName);
@@ -142,42 +149,51 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     } else {
       await this.findBizProject();
       await this.findSkills();
+      
     }
     await this.userProject.valueChanges.subscribe((data) => {
       this.checkAllowSave();
-    });
+    });  
+  }
+
+  checkAllowSave() {
+    const userInfoClone = { ...this.userProjectClone };
+    const userInfo = { ...this.userProject.value };
+    const isChangedUserInfo = AitAppUtils.isObjectEqual(
+      { ...userInfo },
+      { ...userInfoClone }
+    );
+    this.isChanged = !(isChangedUserInfo);
   }
 
   async findBizProject() {
     const res = await this.userProjectService.find(this.project_key);
-    const data = res.data[0];
+    const data = res.data[0];    
     if (res.data.length > 0) {
       this.userProject.patchValue({ ...data });
       this.userProjectClone = this.userProject.value;
+      this.companyName = this.userProject.value.company_working;
+      this.titleName = this.userProject.value.title;
       if (data.user_id != this.user_id) {
         this.mode = MODE.VIEW;
       }
     } else {
       this.router.navigate([`/404`]);
     }
-
   }
 
   async findSkills() {
     const from = 'biz_project/' + this.project_key;
-    await this.userProjectService.findFromBizProjectSkill(from).then(async (res) => {
+    await this.userProjectService.findSkillsByFrom(from)
+    .then(async(res) => {
       let listSkills = [];
-      let listCodeSkills = [];
-      for (const key of res.data) {
-        let keySkills = key._to.substring(8)
-        listSkills.push({ _key: keySkills });
-        const res = await this.userProjectService.findMSkillsByKey(keySkills);
-        listCodeSkills.push({ _key: res.data[0].code, value: res.data[0].name });
-      }
-      this.userProject.controls['skills'].setValue([...listCodeSkills]);
-      this.userProjectClone = this.userProject.value;
-      this.keySkills = listSkills;
-    })
+      for (const skill of res.data) {
+        listSkills.push(skill?.skills);
+      }    
+        this.userProject.controls['skills'].setValue([...listSkills]);
+        this.userProjectClone = this.userProject.value;    
+        console.log(this.userProjectClone);
+    });    
   }
 
   async inputProject() {
@@ -188,24 +204,24 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
         this.companyName = res.data[0].company_working;
       });
   }
-
-  takeMasterValue(val: any, form: string): void {
-    if (isArrayFull(val)) {
-      if (form == 'skills') {
-        const data = [];
-        val.value.forEach((item) => {
-          data.push(item);
-        });
-        this.userProject.controls[form].markAsDirty();
-        this.userProject.controls['skills'].setValue(data);
-      } else {
-        this.userProject.controls[form].markAsDirty();
-        this.userProject.controls[form].setValue(val?.value[0]);
-      }
+  takeMasterValues(value: KeyValueDto[], group: string, form: string): void {
+    if (isArrayFull(value)) {
+      const data = [];
+      value.forEach((file) => {
+        data.push(file);
+      });
+      this.userProject.markAsDirty();
+      this[group].controls[form].setValue(data);
+    } else {
+      this[group].controls[form].setValue(null);
     }
-    else {
-      this.userProject.controls[form].markAsDirty();
-      this.userProject.controls[form].setValue(null);
+  }
+  takeMasterValue(value: any, target: string): void {
+    if (isObjectFull(value)) {
+      this.userProject.controls[target].markAsDirty();
+      this.userProject.controls[target].setValue(value?.value[0]);
+    } else {
+      this.userProject.controls[target].setValue(null);
     }
   }
 
@@ -261,21 +277,24 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
   dataSaveProject() {
     const saveData = this.userProject.value;
     saveData['user_id'] = this.authService.getUserID();
+    saveData['company_working'] = this.userProject.value?.company_working._key;
+    saveData['title'] = this.userProject.value?.title._key;
     this.listSkills = saveData.skills;
     delete saveData.skills;
     return saveData;
   }
 
   async saveSkill(bizProjectKey: string) {
+    debugger
     this.biz_project_skill._from = 'biz_project/' + bizProjectKey;
-    this.biz_project_skill.relationship = ' biz_project skill';
+    this.biz_project_skill.relationship = ' biz_project_skill';
     if (this.mode == 'EDIT') {
       const _fromSkill = [
         { _from: 'biz_project/' + this.project_key },
       ];
       this.userProjectService.removeSkill(_fromSkill);
     }
-    this.listSkills.forEach(async (skill) => {
+    for(let skill of this.listSkills){
       await this.userProjectService.findMSkillsByCode(skill._key)
         .then(async (res) => {
           this.sort_no += 1;
@@ -283,7 +302,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
           this.biz_project_skill._to = 'm_skill/' + res.data[0]._key;
           await this.userProjectService.saveSkills(this.biz_project_skill);
         });
-    });
+    }
   }
 
   async saveUserProject(bizProjectKey: string) {
@@ -334,7 +353,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
             await this.saveUserProject(data._key);
             const message = this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
-            history.back();
+            this.closeDialog(false);
           } else {
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
@@ -374,16 +393,6 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
         }
       }
     }
-  }
-  checkAllowSave() {
-    const userInfo = { ...this.userProject.value };
-    const userInfoClone = { ...this.userProjectClone };
-    // this.setHours(userInfo);
-    const isChangedUserInfo = AitAppUtils.isObjectEqual(
-      { ...userInfo },
-      { ...userInfoClone }
-    );
-    this.isChanged = !(isChangedUserInfo);
   }
 
   async reset() {
@@ -462,8 +471,9 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
                 ];
                 this.userProjectService.removeSkill(_fromSkill);
                 this.userProjectService.removeUserProejct(_toUser);
+                this.userProfileService.onLoad.next(this.projectDataInput);
                 this.showToastr('', this.getMsg('I0003'));
-                history.back();
+                this.closeDialog(false);
               } else {
                 this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
               }
@@ -488,11 +498,11 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
         })
         .onClose.subscribe(async (event) => {
           if (event) {
-            history.back()
+            this.closeDialog(false);
           }
         });
     } else {
-      history.back()
+      this.closeDialog(false);
     }
   }
   getTitleByMode() {
@@ -507,6 +517,9 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       title = this.translateService.translate('View project')
     }
     return title;
+  }
+  closeDialog(event: boolean) {
+    this.nbDialogRef.close(event);
   }
 
 }

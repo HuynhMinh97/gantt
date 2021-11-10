@@ -2,6 +2,7 @@ import { isArrayFull, isObjectFull, RESULT_STATUS } from '@ait/shared';
 import { 
   AitAuthService, 
   AitBaseComponent, 
+  AitConfirmDialogComponent, 
   AitEnvironmentService, 
   AppState, 
   getUserSetting, 
@@ -33,6 +34,14 @@ import { UserCerfiticateService } from '../../../../services/user-certificate.se
 import { UserCourseService } from '../../../../services/user-course.service';
 import { UserEducationService } from '../../../../services/user-education.service';
 import { UserLanguageService } from 'apps/ait-matching-webapp/src/app/services/user-language.service';
+import { UserCourseComponent } from '../user-course/user-course.component';
+import { UserProjectComponent } from '../user-project/user-project/user-project.component';
+import { UserSkillsComponent } from '../user-skills/user-skills.component';
+import { UserReorderSkillsComponent } from '../user-reorder-skills/user-reorder-skills.component';
+import { UserExperienceComponent } from '../user-experience/user-experience.component';
+import { UsesCertificateComponent } from '../uses-certificate/uses-certificate.component';
+import { UserEducationComponent } from '../user-education/user-education.component';
+import { UserLanguageComponent } from '../user-language/user-language.component';
 
 @Component({
   selector: 'ait-user-profile',
@@ -59,7 +68,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   userCourse: CourseDto[] = [];
   userEducation: EducationDto[] = [];
   userLanguage: LanguageDto[] = [];
-  userProfile: ProfileDto;
+  DataUserProfile: ProfileDto;
   quantitySkill = 0;
   timeProject = 0;
   sumHoursProject="";
@@ -115,8 +124,8 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   
   async ngOnInit(): Promise<void> {
     await this.getMasterData();
-    this.findUserProfileByUserId();
-    this.getSkillByUserId();
+    await this.getUserProfileByUserId();
+    await this.getSkillByUserId();
     this.getProjectByUserId();
     this.getExperiencByUserId()
     this.getCentificateByUserId();
@@ -148,39 +157,25 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
       return dayjs(time).format(this.dateFormat.toUpperCase());
     }
   }
-  async findUserProfileByUserId(){
+  async getUserProfileByUserId(){
     await this.userProfileService.findProfile(this.profileId)
     .then((res) => {
-      if (res.status === RESULT_STATUS.OK) {       
-          const data = res.data[0];
-          let profile = {} as ProfileDto;
-          profile.city = data.city?.value;
-          profile.user_id = data.user_id;
-          profile.last_name = data.last_name ? data.last_name : '';
-          profile.first_name = data.first_name ? data.first_name : '';
-          profile.title = data.title?.value;
-          profile.company_working = data.company_working?.value;
-          profile.country = data.country?.value;
-          profile.about = data.about;
-          profile.top_skills = data.top_skills.length > 0 ? data.top_skills : [];
-          setTimeout(() =>{
-            this.userProfile = profile;  
-            let topSkill = {} as OrderSkill;
-            topSkill.name = "TOP 5";
-            topSkill.data = [];
-           if(this.userProfile.top_skills.length > 0){
-            this.userProfile.top_skills.forEach((skill) => {
-              topSkill.data.push(skill.value);
-             })  
-             this.skillByCategory.push(topSkill);
-           }   
-           console.log(this.userProfile);        
-          },200)
-
-        }else{
-          this.router.navigate([`/404`]);    
-        }
-         
+      if (res.status === RESULT_STATUS.OK) {   
+        if(res.data.length > 0 ){   
+          this.DataUserProfile = res.data[0];
+          let topSkill = {} as OrderSkill;
+          topSkill.name = "TOP 5";
+          topSkill.data = [];
+          if(this.DataUserProfile.top_skills.length > 0){
+          this.DataUserProfile.top_skills.forEach((skill) => {
+            topSkill.data.push(skill.value);
+            })  
+            this.skillByCategory.push(topSkill);
+          }else{
+            this.router.navigate([`/404`]);    
+          }
+        } 
+      }  
     })
    
   }
@@ -222,7 +217,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
       for(let item in data){
         let isProject = false;
         for(let index in this.userProject){        
-          if(this.userProject[index].company_name == data[item].company_working){
+          if(this.userProject[index].company_name == data[item].company_working?.value){
             isProject = true;
             let project = {} as ProjectDto;
             let dayNow = Date.now();
@@ -233,7 +228,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
               project.is_working = true;
             }
             project.name = data[item].name;
-            project.title = data[item].title;
+            project.title = data[item].title?.value;
             project._key = data[item]._key;
             project.time = await this.fomatDate(dateTo - data[item].start_date_from );
             project.start_date_from = this.getDateFormat(data[item].start_date_from);
@@ -246,13 +241,13 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
         }
         if(!isProject){   
           let groupProject = {} as GroupProjectDto;       
-          groupProject.company_name = data[item].company_working;
+          groupProject.company_name = data[item].company_working?.value;
           let project = {} as ProjectDto;
           let dayNow = Date.now();
           let dateTo = data[item].start_date_to;
           project.is_working = false;
           project.name = data[item].name;
-          project.title = data[item].title;     
+          project.title = data[item].title?.value;     
           if(!dateTo || dateTo > dayNow){
             dateTo = dayNow;
             project.is_working = true;
@@ -268,10 +263,10 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
           this.userProject.push(groupProject);
           this.timeProject += (dateTo - data[item].start_date_from);
         }
+        this.showProject = true;
       };
       this.timeProject = this.getHours(this.timeProject);
-      this.sumHoursProject = this.timeProject >0 ? "You have spent " + this.timeProject + " hours working on the projects" : "Bạn chưa tham gia dự án nào vui lòng thêm."
-      console.log(this.timeProject);      
+      this.sumHoursProject = this.timeProject >0 ? "You have spent " + this.timeProject + " hours working on the projects" : "Bạn chưa tham gia dự án nào vui lòng thêm."    
     })
     
   }
@@ -484,8 +479,98 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
     }
   }
 
-  open(link?: string){
-    this.router.navigateByUrl('/' + link);
+  openProjects(key?:string){ 
+    this.dialogService.open(UserProjectComponent, {
+      context: {
+        project_key: key,
+      },
+    }).onClose.subscribe(async (event) => {
+      if (!event) {
+        this.userProject = [];
+        this.timeProject = 0;
+        await this.getProjectByUserId();    
+      }
+    });
+  }
+  openSkill(){ 
+    this.dialogService.open(UserSkillsComponent, {
+      context: {
+      },
+    }).onClose.subscribe(async (event) => {
+      if (!event) {
+        this. skillByCategory = [];
+        this.getSkillByUserId();
+      }
+    });
+  }
+  openReorderSkill(){ 
+    this.dialogService.open(UserReorderSkillsComponent, {
+      context: {
+      },
+    }).onClose.subscribe(async (event) => {
+      if (!event) {
+      }
+    });
+  }
+  openExperience(key?:string){ 
+    this.dialogService.open(UserExperienceComponent, {
+      context: {
+        user_key: key,
+      },
+    }).onClose.subscribe(async (event) => {
+      if (!event) {
+        this.userExperience = [];
+        this.getExperiencByUserId();
+      }
+    });
+  }
+  openCertificate(key?:string){ 
+    this.dialogService.open(UsesCertificateComponent, {
+      context: {
+        certificate_key: key,
+      },
+    }).onClose.subscribe(async (event) => {
+      if (!event) {
+        this.userCentificate = [];
+        this.getCentificateByUserId();
+      }
+    });
+  }
+  openCourse(key?:string){ 
+    this.dialogService.open(UserCourseComponent, {
+      context: {
+        course_key: key,
+      },
+    }).onClose.subscribe(async (event) => {
+      if (!event) {
+        this.userCourse = [];
+        this.getCourseByUserId();
+      }
+    });
+  }
+  openEducation(key?:string){ 
+    this.dialogService.open(UserEducationComponent, {
+      context: {
+        user_key: key,
+      },
+    }).onClose.subscribe(async (event) => {
+      if (!event) {
+        this.userEducation = [];
+        this.getEducationByUserId();
+      }
+    });
+  }
+  openLanguage(key?:string){ 
+    this.dialogService.open(UserLanguageComponent, {
+      context: {
+        user_key: key,
+      },
+    }).onClose.subscribe(async (event) => {
+      if (!event) {
+        this.userLanguage = [];
+        this.getLanguageByUserId();
+      }
+    });
   }
 
   openProject(table: string, id?: string){

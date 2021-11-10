@@ -13,11 +13,15 @@ export class UserProjectService extends AitBaseService {
       _key: _key,
       del_flag: false
     }
-    condition['skills'] = {
-      attribute: 'skills',
-      ref_collection: 'm_skill',
-      ref_attribute: '_key',
-      get_by: '_key',
+    condition['company_working'] = {
+      attribute: 'company_working',
+      ref_collection: 'm_company',
+      ref_attribute: 'code',
+    }
+    condition['title'] = {
+      attribute: 'title',
+      ref_collection: 'm_title',
+      ref_attribute: 'code',
     }
 
     return await this.query(
@@ -48,10 +52,6 @@ export class UserProjectService extends AitBaseService {
         description: true,
         responsibility: true,
         achievement: true,
-        skills: {
-          _key: true,
-          value: true
-        },
       }
     );
   }
@@ -104,6 +104,19 @@ export class UserProjectService extends AitBaseService {
     return await this.query('findMSkills', { collection: 'biz_project_skill', condition },
       {
         _to: true,
+        skills: {
+          _key: true,
+          value: true
+        },
+      })
+  }
+  async findSkillsByFrom(_from?: string) {
+    const condition = {
+      _from: _from,
+      del_flag: false,
+    }
+    return await this.query('findMSkillByFrom', { collection: 'biz_project_skill', condition },
+      {
         skills: {
           _key: true,
           value: true
@@ -190,12 +203,22 @@ export class UserProjectService extends AitBaseService {
       user_id: user_id,
       del_flag: false
     }
+    condition['company_working'] = {
+      attribute: 'company_working',
+      ref_collection: 'm_company',
+      ref_attribute: 'code',
+    }
+    condition['title'] = {
+      attribute: 'title',
+      ref_collection: 'm_title',
+      ref_attribute: 'code',
+    }
     return await this.query(
       'findUserProject',
       {
         collection: 'biz_project',
         condition,
-        options: { sort_by: { value: 'change_at', order_by: 'DESC' } }
+        options: { sort_by: { value: 'start_date_to', order_by: 'DESC' } }
       },
       {
         _key: true,
@@ -203,8 +226,14 @@ export class UserProjectService extends AitBaseService {
         name: true,
         start_date_from: true,
         start_date_to: true,
-        company_working: true,
-        title: true,
+        company_working:{
+          _key: true,
+          value: true,
+        },
+        title:{
+          _key: true,
+          value: true,
+        },
       }
     );
   }

@@ -1,11 +1,12 @@
 import { AitBaseService } from '@ait/ui';
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserProfileService extends AitBaseService { 
-  
+  public onLoad = new BehaviorSubject(null);
   async findProfile(user_id: string){
     const condition = {
       user_id: user_id,

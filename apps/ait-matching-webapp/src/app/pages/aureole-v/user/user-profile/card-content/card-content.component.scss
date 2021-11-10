@@ -74,16 +74,15 @@
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  justify-content: space-between;
+  justify-content: center;
   width: 100%;
-  padding-top: 16px;
+  padding-top: 5px;
   height: auto;
-  transition: 0.5s all ease-in-out;
+  transition: 0.8s all ease-in-out;
   &.isClose {
     height: 0;
     overflow: hidden;
-    transition: 0.5s all ease-in-out;
-    padding: 0 !important;
+    transition: 0.8s all ease-in-out;
   }
 
   * ::-webkit-scrollbar {

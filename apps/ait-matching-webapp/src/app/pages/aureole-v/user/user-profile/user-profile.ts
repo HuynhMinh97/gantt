@@ -2,7 +2,7 @@ export interface OrderSkill {
     name: string;
     data: string[];
 }
-export class SkillsDto {
+export class KeyValueDto {
     _key: string;
     value: string;
 }
@@ -12,12 +12,12 @@ export interface ProfileDto {
     background_url: string,
     last_name: string,
     first_name: string,
-    title: string,
-    company_working: string,
-    city: string,
-    country: string,
+    title: KeyValueDto,
+    company_working: KeyValueDto,
+    city: KeyValueDto,
+    country: KeyValueDto,
     about: string,
-    top_skills: SkillsDto[];
+    top_skills: KeyValueDto[];
 }
 //project
 export interface GroupProjectDto {

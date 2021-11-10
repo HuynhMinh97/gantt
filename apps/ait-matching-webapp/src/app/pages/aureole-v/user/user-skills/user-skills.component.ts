@@ -3,7 +3,7 @@ import { AitAppUtils, AitAuthService, AitBaseComponent, AitConfirmDialogComponen
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
+import { NbDialogRef, NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
@@ -28,6 +28,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
     sort_no: 0,
   };
   constructor(
+    private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
     private userSkillsService : UserSkillsService,
     private formBuilder: FormBuilder,
     layoutScrollService: NbLayoutScrollService,
@@ -146,7 +147,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
           const message =
           this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
           this.showToastr('', message);
-          this.router.navigateByUrl('/');
+          this.closeDialog(false);
         }else{
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         }
@@ -212,11 +213,11 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
       })
       .onClose.subscribe(async (event) => {
         if (event) {
-          history.back()
+          this.closeDialog(false);
         }
       });
     }else{
-      history.back()
+      this.closeDialog(false);
     }
   }
 
@@ -229,6 +230,9 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
       title = "Edit skills";
     }
     return title;
+  }
+  closeDialog(event: boolean) {
+    this.nbDialogRef.close(event);
   }
 
 }
