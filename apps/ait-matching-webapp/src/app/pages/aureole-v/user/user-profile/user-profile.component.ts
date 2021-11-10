@@ -531,8 +531,8 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
       },
     }).onClose.subscribe(async (event) => {
       if (!event) {
-        this.userExperience = [];
-        this.getExperiencByUserId();
+        this.userCentificate = [];
+        this.getCentificateByUserId();
       }
     });
   }
@@ -543,8 +543,8 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
       },
     }).onClose.subscribe(async (event) => {
       if (!event) {
-        this.userExperience = [];
-        this.getExperiencByUserId();
+        this.userCourse = [];
+        this.getCourseByUserId();
       }
     });
   }
@@ -555,8 +555,8 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
       },
     }).onClose.subscribe(async (event) => {
       if (!event) {
-        this.userExperience = [];
-        this.getExperiencByUserId();
+        this.userEducation = [];
+        this.getEducationByUserId();
       }
     });
   }
@@ -567,22 +567,10 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
       },
     }).onClose.subscribe(async (event) => {
       if (!event) {
-        this.userExperience = [];
-        this.getExperiencByUserId();
+        this.userLanguage = [];
+        this.getLanguageByUserId();
       }
     });
-  }
-  open(link?: string){
-    // this.dialogService.open(link, {
-    //   closeOnBackdropClick: true,
-    //   hasBackdrop: true,
-    //   autoFocus: false,
-    // }).onClose.subscribe(async (event) => {
-    //   if (event) {
-    //     history.back()
-    //   }
-    // });
-    // this.router.navigateByUrl('/' + link);
   }
 
   openProject(table: string, id?: string){
