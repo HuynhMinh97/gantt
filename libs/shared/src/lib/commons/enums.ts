@@ -207,7 +207,8 @@ export enum COLLECTIONS {
   SYS_BINARY_DATA = 'sys_binary_data',
   USER_PROFILE = 'user_profile',
   EXAMPLE = 'example',
-  COMPANY = 'sys_company'
+  COMPANY = 'sys_company',
+  M_SKILL = 'm_skill'
 }
 
 export enum OPERATOR {
