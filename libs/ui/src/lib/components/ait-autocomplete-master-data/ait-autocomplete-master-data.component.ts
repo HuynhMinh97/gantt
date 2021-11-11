@@ -235,7 +235,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   };
 
   handleRemove = (option: any) => {
-    // console.log(option);
     if (option?.is_matching) {
       this.masterDataService.deleteDataEachItem({ _key: option?.id }).then(res => {
         if (res) {
@@ -287,17 +286,8 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.parentCode) {
-      this.selectOne = {};
-      this.settingData();
-    }
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
-
-        if (key === 'allowNew') {
-          // console.log(this.allowNew)
-        }
-
         if (key === 'errorMessages') {
           if (this.messagesError().length !== 0) {
             this.isError = true;
@@ -378,7 +368,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   enter = (event) => {
     event.preventDefault();
-    // console.log(this.dataFilter.length === 0, this.allowNew)
     if (this.dataFilter.length === 0 && this.allowNew) {
       this.checkAllowNew(this.currentValue);
     }
@@ -410,7 +399,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       if (this.class && this.collection === 'sys_master_data') {
         dataReq.class = this.class || '';
       }
-      // console.log(dataReq);
       if (!find) {
         this.masterDataService.saveData([dataReq], this.collection).then(r => {
           if (r?.status === RESULT_STATUS.OK) {
@@ -475,7 +463,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
           );
           return result;
         });
-        // console.log(typeDF, findByKeys, this.dataSourceDf)
         this.optionSelected = [...AitAppUtils.getArrayNotFalsy(findByKeys)].filter(
           (f) => !!f
         )
@@ -738,7 +725,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         }
       }, 10)
     } else {
-      // console.log(itemFind);
       if (itemFind.isChecked) {
         itemFind.isChecked = !itemFind.isChecked;
         this.optionSelected = this.getSelectedOptions();
@@ -949,7 +935,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     this.isHideLabel = false;
     setTimeout(() => {
       if (this.maxItem === 1) {
-        console.log(this.inputControl.value, this.selectOne, this.dataSourceDf)
         const values = this.dataSourceDf.find(m => m?.value === this.selectOne?.value);
 
         if (!values) {
@@ -1118,7 +1103,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   };
 
   onSelectionChange($event) {
-    // console.log($event)
     this.clearErrors();
 
     this.selectOne = { _key: $event?.code, value: $event?.value };

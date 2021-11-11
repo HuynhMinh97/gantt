@@ -7,11 +7,11 @@ export class UserOnboardingService extends AitBaseService {
   returnFields = {
     _key: true,
     user_id: true,
-    country: {
+    country_region: {
       _key: true,
       value: true,
     },
-    city: {
+    province_city: {
       _key: true,
       value: true,
     },
@@ -57,7 +57,7 @@ export class UserOnboardingService extends AitBaseService {
       user_id: _key,
     };
 
-    const specialFields = ['gender', 'country', 'city', 'district', 'ward'];
+    const specialFields = ['gender', 'country_region', 'province_city', 'district', 'ward'];
 
     specialFields.forEach((item) => {
       condition[item] = {
