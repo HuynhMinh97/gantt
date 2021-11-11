@@ -39,7 +39,6 @@
           [id]="'katakana'"
           [label]="'KATAKANA'"
           [length]="200"
-          [required]="true"
           [isSubmit]="isSubmit"
           [isReset]="resetUserInfo.katakana"
           [readonly]="userOnbInfo.katakana"
@@ -54,7 +53,6 @@
           [id]="'romaji'"
           [label]="'ROMAJI'"
           [length]="200"
-          [required]="true"
           [isSubmit]="isSubmit"
           [isReset]="resetUserInfo.romaji"
           [readonly]="userOnbInfo.romaji"
@@ -243,6 +241,7 @@
           *ngIf="mode !== 'VIEW'"
           [id]="'cancel'"
           [title]="'CANCEL'"
+          [width]="'200px'"
           [isDefault]="true"
           (click)="back()"
         ></ait-button>
