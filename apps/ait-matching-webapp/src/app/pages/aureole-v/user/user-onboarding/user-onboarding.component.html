@@ -134,92 +134,10 @@
         >
         </ait-input-text>
       </div>
-      <div class="input_area">
-        <ait-autocomplete-master-data
-          [maxItem]="1"
-          [id]="'country'"
-          [label]="'COUNTRY/REGION'"
-          [class]="'COUNTRY'"
-          [required]="true"
-          [isSubmit]="isSubmit"
-          [placeholder]="'Viet Nam'"
-          [collection]="'sys_master_data'"
-          [disableOutputDefault]="true"
-          [isReset]="resetUserInfo.country"
-          [isReadOnly]="userOnbInfo.country"
-          (watchValue)="takeMasterValue($event, 'country')"
-          [defaultValue]="[userOnboardingInfo.controls['country'].value]"
-        ></ait-autocomplete-master-data>
-      </div>
-      <div class="input_area">
-        <ait-input-text
-          [id]="'postcode'"
-          [placeholder]="'70000'"
-          [label]="'POSTCODE'"
-          [required]="true"
-          [length]="20"
-          [isSubmit]="isSubmit"
-          [isReset]="resetUserInfo.postcode"
-          [readonly]="userOnbInfo.postcode"
-          (watchValue)="takeInputValue($event, 'postcode')"
-          [defaultValue]="userOnboardingInfo.controls['postcode'].value"
-        >
-        </ait-input-text>
-      </div>
-      <div class="input_area">
-        <ait-autocomplete-master-data
-          [id]="'city'"
-          [maxItem]="1"
-          [label]="'PROVINCE/CITY'"
-          [class]="'CITY'"
-          [required]="false"
-          [placeholder]="'Ho Chi Minh City'"
-          [collection]="'sys_master_data'"
-          [isReadOnly]="userOnbInfo.city"
-          [parentCode]="countryCode"
-          [isSubmit]="isSubmit"
-          [disableOutputDefault]="true"
-          [isReset]="resetUserInfo.city"
-          (watchValue)="takeMasterValue($event, 'city')"
-          [defaultValue]="[userOnboardingInfo.controls['city'].value]"
-        ></ait-autocomplete-master-data>
-      </div>
-      <div class="input_area">
-        <ait-autocomplete-master-data
-          [maxItem]="1"
-          [id]="'district'"
-          [label]="'DISTRICT'"
-          [required]="false"
-          [class]="'DISTRICT'"
-          [isSubmit]="isSubmit"
-          [parentCode]="cityCode"
-          [disableOutputDefault]="true"
-          [placeholder]="'District 1'"
-          [collection]="'sys_master_data'"
-          [isReadOnly]="userOnbInfo.district"
-          [isReset]="resetUserInfo.district"
-          (watchValue)="takeMasterValue($event, 'district')"
-          [defaultValue]="[userOnboardingInfo.controls['district'].value]"
-        ></ait-autocomplete-master-data>
-      </div>
-      <div class="input_area">
-        <ait-autocomplete-master-data
-          [id]="'ward'"
-          [label]="'WARD'"
-          [required]="false"
-          [maxItem]="1"
-          [placeholder]="'Dakao'"
-          [collection]="'sys_master_data'"
-          [class]="'WARD'"
-          [isReadOnly]="userOnbInfo.ward"
-          [parentCode]="districtCode"
-          [isSubmit]="isSubmit"
-          [disableOutputDefault]="true"
-          [isReset]="resetUserInfo.ward"
-          (watchValue)="takeMasterValue($event, 'ward')"
-          [defaultValue]="[userOnboardingInfo.controls['ward'].value]"
-        ></ait-autocomplete-master-data>
-      </div>
+      <div style="display: grid; justify-content: center">
+        <ait-country (watchValue)="takeValueCountry($event)" [isReset]="isResetCountry" [defaultValue]="dataCountry" [isSubmit]="isSubmit"></ait-country>
+    </div>
+    
       <div class="input_area">
         <ait-input-text
           [id]="'address'"

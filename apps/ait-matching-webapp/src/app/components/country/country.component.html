@@ -8,12 +8,13 @@
       [required]="true"
       [placeholder]="'Viet Nam'"
       [disableOutputDefault]="true"
+      [isSubmit]="isSubmit"
       [style]="masterStyle"
-      [isReset]="isReset.country"
-      (watchValue)="takeMasterValue($event?.value, 'country')"
+      [isReset]="isReset.country_region"
+      (watchValue)="takeMasterValue($event?.value, 'country_region')"
       [defaultValue]="
-        dataForm.controls['country'].value
-          ? [dataForm.controls['country'].value]
+        dataForm.controls['country_region'].value
+          ? [dataForm.controls['country_region'].value]
           : null
       "
     >
@@ -31,6 +32,7 @@
       [placeholder]="'70000'"
       [width]="inputWidth"
       [fullWidth]="true"
+      [isSubmit]="isSubmit"
       [isReset]="isReset.postcode"
       (watchValue)="takeInputValue($event)"
       [defaultValue]="dataForm.controls['postcode'].value"
@@ -43,19 +45,20 @@
   <div [ngStyle]="elementStyle">
     <ait-autocomplete-master-data
       [class]="'CITY'"
-      [parentCode]="getParentCode('country')"
+      [parentCode]="getParentCode('country_region')"
       [label]="'PROVINCE/CITY'"
       [id]="'city'"
       [required]="true"
       [maxItem]="1"
       [placeholder]="'Ho Chi Minh City'"
       [disableOutputDefault]="true"
-      [style]="{ width: '250px' }"
-      [isReset]="isReset.province"
-      (watchValue)="takeMasterValue($event?.value, 'province')"
+      [isSubmit]="isSubmit"
+      [style]="masterStyle"
+      [isReset]="isReset.province_city"
+      (watchValue)="takeMasterValue($event?.value, 'province_city')"
       [defaultValue]="
-        dataForm.controls['province'].value
-          ? [dataForm.controls['province'].value]
+        dataForm.controls['province_city'].value
+          ? [dataForm.controls['province_city'].value]
           : null
       "
     ></ait-autocomplete-master-data>
@@ -66,14 +69,15 @@
   <div [ngStyle]="elementStyle">
     <ait-autocomplete-master-data
       [class]="'DISTRICT'"
-      [parentCode]="getParentCode('province')"
+      [parentCode]="getParentCode('province_city')"
       [label]="'DISTRICT'"
       [id]="'district'"
       [maxItem]="1"
       [required]="true"
       [placeholder]="'District 1'"
       [disableOutputDefault]="true"
-      [style]="{ width: '250px' }"
+      [isSubmit]="isSubmit"
+      [style]="masterStyle"
       [isReset]="isReset.district"
       (watchValue)="takeMasterValue($event?.value, 'district')"
       [defaultValue]="
@@ -96,7 +100,8 @@
       [required]="true"
       [placeholder]="'Dakao'"
       [disableOutputDefault]="true"
-      [style]="{ width: '250px' }"
+      [isSubmit]="isSubmit"
+      [style]="masterStyle"
       [isReset]="isReset.ward"
       (watchValue)="takeMasterValue($event?.value, 'ward')"
       [defaultValue]="
