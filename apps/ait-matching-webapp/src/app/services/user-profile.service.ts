@@ -12,7 +12,7 @@ export class UserProfileService extends AitBaseService {
       user_id: user_id,
       del_flag: false,
     }
-    const specialFields = ['country', 'city'];
+    const specialFields = ['country_region', 'province_city'];
 
     specialFields.forEach((item) => {
       condition[item] = {
@@ -46,11 +46,11 @@ export class UserProfileService extends AitBaseService {
         _key: true,
         value: true,
       },
-      city:{
+      province_city:{
         _key: true,
         value: true,
       },
-      country:{
+      country_region:{
         _key: true,
         value: true,
       },

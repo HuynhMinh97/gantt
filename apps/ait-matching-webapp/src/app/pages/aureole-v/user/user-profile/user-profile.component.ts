@@ -284,9 +284,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
     })
     
   }
-  getHours(time: number){
-    return Math.trunc(time/1000/60/60/3)
-  }
+
   getExperiencByUserId(){
     this.userExperienceService.findUserExperienceByUserId(this.profileId)
     .then(async (res) => { 
@@ -312,8 +310,8 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
             experience.start_date_from = this.getDateFormat(data[item].start_date_from);
             experience.start_date_to = data[item].start_date_to ? this.getDateFormat(data[item].start_date_to): "Present";          
             this.userExperience[index].data.push(experience);
-            this.userExperience[index].date = (this.userProject[index].date + (dateTo - data[item].start_date_from));
-            this.userExperience[index].working_time = this.fomatDate(this.userProject[index].date);
+            this.userExperience[index].date = (this.userExperience[index].date + (dateTo - data[item].start_date_from));
+            this.userExperience[index].working_time = this.fomatDate(this.userExperience[index].date);
             this.timeExperience += (dateTo - data[item].start_date_from);
           }
         }
@@ -367,7 +365,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
         centificate.issue_by = element.issue_by?.value;
         centificate.issue_date_from = this.getDateFormat(element.issue_date_from);
         centificate.issue_date_to =element.issue_date_from ? this.getDateFormat(element.issue_date_from): 'Present';
-        centificate.name = element.name?.value ? element.name?.value : "Đang đợi logic data";
+        centificate.name = element.name?.value ;
         this.userCentificate.push(centificate);
       }
       setTimeout(() => {
@@ -631,6 +629,11 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
     userJobQuery: true,
     userCertificate: true,
   };
+
+  getHours(time: number){
+    return Math.trunc(time/1000/60/60/3)
+  }
+
   toggleContent(group: string, status: boolean) {
     this.isOpen[group] = status;
   }

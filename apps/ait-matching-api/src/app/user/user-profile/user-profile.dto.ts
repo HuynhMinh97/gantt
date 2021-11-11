@@ -22,10 +22,10 @@ export class UserProfileDto extends BaseDto {
   company_working?: ConditionDto;
 
   @Field(() => ConditionDto, { nullable: true })
-  city?: ConditionDto;
+  province_city?: ConditionDto;
 
   @Field(() => ConditionDto, { nullable: true })
-  country?: ConditionDto;
+  country_region?: ConditionDto;
 
   @Field(() => String, { nullable: true })
   introduce?: string;
@@ -65,10 +65,10 @@ export class SaveUserProfileDto extends BaseDto {
   company_working?: string;
 
   @Field(() => String, { nullable: true })
-  city?: string;
+  province_city?: string;
 
   @Field(() => String, { nullable: true })
-  country?: string;
+  country_region?: string;
 
   @Field(() => String, { nullable: true })
   introduce?: string;
