@@ -59,19 +59,17 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
       this.connecteDto.push(element.name);
     })
   }
-  // ngAfterViewInit() {
-  //   this.cancelLoadingApp();
-  // }
+
   checkAllowSave() {
     const userInfo = { ...this.reorderSkills };
     const userInfoClone = { ...this.reorderSkillsClone };
-    // this.setHours(userInfo);
     const isChangedUserInfo = AitAppUtils.isObjectEqual(
       { ...userInfo },
       { ...userInfoClone }
     );
     this.isChanged = !(isChangedUserInfo);
   }
+  
   evenPredicate(item: CdkDrag<string>) {
     if (item.data != "TOP5") {
       return true;
