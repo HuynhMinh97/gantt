@@ -242,7 +242,6 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
   }
   
   resetForm(){
-    debugger
     if(this.mode == MODE.NEW){
       this.reset();
     }
