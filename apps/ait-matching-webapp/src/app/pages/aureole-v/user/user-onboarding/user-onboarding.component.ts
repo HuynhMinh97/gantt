@@ -164,12 +164,10 @@ export class UserOnboardingComponent
         Validators.maxLength(200),
       ]),
       katakana: new FormControl(null, [
-        Validators.required,
-        Validators.maxLength(200),
+        Validators.maxLength(200)
       ]),
       romaji: new FormControl(null, [
-        Validators.required,
-        Validators.maxLength(200),
+        Validators.maxLength(200)
       ]),
       gender: new FormControl(null, [Validators.required]),
       bod: new FormControl(null, [Validators.required]),
@@ -368,11 +366,15 @@ export class UserOnboardingComponent
     saveData['top_skills'] = [];
     delete saveData.skills;
     if (this.mode === MODE.NEW) {
+      console.log(123);
+
       saveData['user_id'] = this.user_id;
     } else {
       console.log(123);
       saveData['user_id'] = this.authService.getUserID();
     }
+    console.log(saveData);
+
     return saveData;
   }
 
@@ -405,6 +407,17 @@ export class UserOnboardingComponent
       this.isSubmit = false;
     }, 100);
     this.userOnboardingInfo.get('skills').setErrors(null);
+    const invalid = [];
+    const controls = this.userOnboardingInfo.controls;
+    for (const name in controls) {
+      if (controls[name].invalid) {
+        invalid.push(name);
+      }
+    }
+    console.log(invalid);
+
+    console.log(this.userOnboardingInfo.valid);
+
     if (this.userOnboardingInfo.valid) {
       this.userOnbService
         .save(this.saveDataUserProfile())
