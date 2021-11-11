@@ -113,7 +113,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
   async saveAndContinue(){
     this.callLoadingApp();
     this.user_skills._from = 'sys_user/' + this.user_id;
-    this.user_skills.relationship = 'item';
+    this.user_skills.relationship = 'user_skill';
     if(this.mode == 'EDIT'){
       const _fromSkill = [
         { _from: 'sys_user/' + this.user_id },
@@ -163,18 +163,18 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
       .then((res) =>{
         if (res?.status === RESULT_STATUS.OK){
           const message = this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
-          this.showToastr('', message);
-          this.callLoadingApp();
+          this.showToastr('', message);          
           this.closeDialog(true);
         }else{
-          this.callLoadingApp();
+          this.cancelLoadingApp();
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         }
       }).catch(() => {
-        this.callLoadingApp();
+        this.cancelLoadingApp()
         this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
       }); ;
     });
+    this.cancelLoadingApp();
   }
 
   takeMasterValue(val: any, form: string): void {   

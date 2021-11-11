@@ -71,11 +71,7 @@
           [isReset]="resetUserjobAlert.location"
         ></ait-autocomplete-master-data>
       </div>
-     
-      <ait-error-message
-        [id]="'errorDate'"
-        [errors]="errorArr"
-      ></ait-error-message>
+    
       <div class="input_inline">
         <ait-datepicker
           [label]="'AVAILABLE TIME'"
@@ -106,6 +102,12 @@
           [isSubmit]="isSubmit"
         ></ait-datepicker>
       </div>
+
+      <ait-error-message
+        [errors]="errorDate"
+        [id]="'messagErrorDate'"
+      ></ait-error-message>
+
       <div class="input_inline">
         <ait-input-number
         [id]="'salary_from'"
@@ -141,10 +143,12 @@
         [max]="999999999999"
       ></ait-input-number>
       </div>
+
       <ait-error-message
-        [id]="'errorDate'"
-        [errors]="errorArr"
+        [id]="'errorSalary'"
+        [errors]="errorSalary"
       ></ait-error-message>
+
     </div>
     </div>
     <ait-space></ait-space>
@@ -177,7 +181,7 @@
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
           "
           [width]="'200px'"
-          (click)="''"
+          (click)="skip()"
         ></ait-button>
 
         <ait-button
