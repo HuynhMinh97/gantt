@@ -84,6 +84,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
   }
   // get value form
   async ngOnInit(): Promise<any> {
+    this.callLoadingApp();
     if (this.course_key) {
       this.mode = MODE.EDIT;
     }
@@ -100,6 +101,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
     if (this.course.value.start_date_from == null && this.mode == 'NEW') {
       this.course.controls["start_date_from"].setValue(this.dateNow);
     }
+    this.cancelLoadingApp();
   }
   checkAllowSave() {
     const courseInfo = { ...this.course.value };
@@ -110,16 +112,24 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
     );
     this.isChanged = !(isChangedUserInfo);
   }
-  takeInputValue(val: any, form: string): void {
+  takeMasterValue(val: any, form: string): void {
     if (isObjectFull(val) && val.value.length > 0) {
       this.course.controls[form].markAsDirty();
       this.course.controls[form].setValue(val?.value[0]);
     }
     else {
+      this.course.controls[form].markAsDirty();
       this.course.controls[form].setValue(null);
     }
-
-
+  }
+  takeInputValue(val: any, form: string): void {
+    if (val) {
+      this.course.controls[form].markAsDirty();
+      this.course.controls[form].setValue(val);
+    } else {
+      this.course.controls[form].markAsDirty();
+      this.course.controls[form].setValue(null);
+    }
   }
   // is_online
   toggleCheckBox(checked: boolean) {
@@ -225,6 +235,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
   }
 
   async saveAndContinue() {
+    this.callLoadingApp();
     this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;
@@ -248,18 +259,23 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
             setTimeout(() => {
               this.course.controls['start_date_from'].setValue(this.dateNow);
             }, 100);
+            this.cancelLoadingApp();
           } else {
+            this.cancelLoadingApp();
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
         }).catch(() => {
+          this.cancelLoadingApp();
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         });
     } else {
+      this.cancelLoadingApp();
       this.scrollIntoError();
     }
   }
 
   async saveAndClose() {
+    this.callLoadingApp();
     this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;
@@ -278,14 +294,18 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
-            this.closeDialog(false);
+            this.closeDialog(true);
+            this.cancelLoadingApp();
           } else {
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+            this.cancelLoadingApp();
           }
         }).catch(() => {
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+          this.cancelLoadingApp();
         });
     } else {
+      this.cancelLoadingApp();
       this.scrollIntoError();
     }
   }
@@ -325,11 +345,12 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
               this.companyCenter = [{ _key: data.training_center?._key }, { value: data.training_center?.value }];
               if (this.user_id != data.user_id) {
                 this.mode = MODE.VIEW
-              }
+              }              
             }
             else {
               this.router.navigate([`/404`]);
             }
+            console.log(this.course.value);
           }
         });
     }
@@ -350,7 +371,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
           await this.userCourseService.deleteCourseByKey(this.courseClone._key);
           setTimeout(() => {
             this.showToastr('', this.getMsg('I0003'));
-            this.closeDialog(false);
+            this.closeDialog(true);
           }, 100);
         }
       });

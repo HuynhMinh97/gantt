@@ -6,6 +6,31 @@ import { UserSkillResponse } from './user-skill.response';
 
 @Resolver()
 export class UserSkillResolver extends AitBaseService {
+
+  @Query(() => UserSkillResponse, { name: 'findMSkillByFrom' })
+  async findMSkillByFrom(
+      @AitCtxUser() user: SysUser,
+      @Args('request', { type: () => UserSkillRequest }) request: UserSkillRequest
+  ) {  
+      const user_id = request.user_id;
+      const lang = request.lang;
+      const from = request.condition._from as string;
+      const collection = request.collection;
+      if (user_id) {
+      const aqlQuery = `
+          FOR v,e, p IN 1..1 OUTBOUND "${from}" ${collection}
+          FILTER  e.del_flag != true
+          let skill = {_key: v.code, value:  v.name.${lang} ? v.name.${lang} : v.name}
+          RETURN {_key: v._key, skills:skill} 
+      `;
+      const result = await this.query(aqlQuery);
+      console.log(aqlQuery);
+      return await this.query(aqlQuery);
+      } else {
+      return new UserSkillResponse(RESULT_STATUS.ERROR, [], 'error');
+      }
+  }
+
   @Query(() => UserSkillResponse, { name: 'findUserSkill' })
   findUserSkill(
     @AitCtxUser() user: SysUser,

@@ -24,10 +24,10 @@ export class UserProfileEntity extends BaseEntity {
   company_working?: KeyValueEntity;
 
   @Field(() => KeyValueEntity, { nullable: true })
-  city?: KeyValueEntity;
+  province_city?: KeyValueEntity;
 
   @Field(() => KeyValueEntity, { nullable: true })
-  country?: KeyValueEntity;
+  country_region?: KeyValueEntity;
 
   @Field(() => String, { nullable: true })
   introduce?: string;
