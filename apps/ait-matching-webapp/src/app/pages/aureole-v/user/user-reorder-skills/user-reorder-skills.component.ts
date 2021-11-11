@@ -339,7 +339,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
       if (res?.status === RESULT_STATUS.OK) {
         this.cancelLoadingApp();
         this.showToastr('', this.getMsg('I0002'));
-        this.closeDialog(false);
+        this.closeDialog(true);
       } else {
         this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
       }

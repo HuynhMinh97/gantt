@@ -69,6 +69,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   userEducation: EducationDto[] = [];
   userLanguage: LanguageDto[] = [];
   DataUserProfile: ProfileDto;
+  topSkills = [];
   quantitySkill = 0;
   timeProject = 0;
   sumHoursProject="";
@@ -157,30 +158,29 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
       return dayjs(time).format(this.dateFormat.toUpperCase());
     }
   }
+
   async getUserProfileByUserId(){
     await this.userProfileService.findProfile(this.profileId)
     .then((res) => {
       if (res.status === RESULT_STATUS.OK) {   
-        if(res.data.length > 0 ){   
-          this.DataUserProfile = res.data[0];
-          let topSkill = {} as OrderSkill;
-          topSkill.name = "TOP 5";
-          topSkill.data = [];
-          if(this.DataUserProfile.top_skills.length > 0){
-          this.DataUserProfile.top_skills.forEach((skill) => {
-            topSkill.data.push(skill.value);
-            })  
-            this.skillByCategory.push(topSkill);
-          }else{
-            this.router.navigate([`/404`]);    
-          }
-        } 
+        if(res.data.length > 0 ){  
+          const data = res.data[0]
+          this.DataUserProfile = data;
+        } else{
+          this.router.navigate([`/404`]);    
+        }
       }  
     })
    
   }
 
   async getSkillByUserId(){
+    await this.userProfileService.findTopSkill(this.profileId)
+    .then((res) => {
+      const data = res.data[0];
+      this.topSkills = [];
+      this.topSkills = data.top_skills ? data.top_skills : [];
+    })
     const from = 'sys_user/' + this.profileId;
     await this.reoderSkillsService.findReorder(from).then(async (res) => {
       if (res.status === RESULT_STATUS.OK) {       
@@ -190,6 +190,20 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
           }
           this.countSkill = 'You has '+ data.length + ' skills. Each person has max 50 skills';
           this.quantitySkill = data.length;
+          let top5 = {} as OrderSkill;
+          top5.name = "TOP 5";
+          top5.data = [];
+          if(this.topSkills.length > 0){
+            for(let item of data){
+              for(let topskill of this.topSkills){
+                if(topskill._key == item._key){
+                  top5.data.push(item.name);
+                  break
+                }
+              }
+            }
+          }
+          this.skillByCategory.push(top5);
           data.forEach((item) => {
             let isCategory = false;
             this.skillByCategory.forEach((element, index) =>{
@@ -480,12 +494,15 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   }
 
   openProjects(key?:string){ 
-    this.dialogService.open(UserProjectComponent, {
+    this.dialogService.open(UserProjectComponent,{
+      closeOnBackdropClick: false,
+      hasBackdrop: true,
+      autoFocus: false,
       context: {
         project_key: key,
       },
     }).onClose.subscribe(async (event) => {
-      if (!event) {
+      if (event) {
         this.userProject = [];
         this.timeProject = 0;
         await this.getProjectByUserId();    
@@ -494,10 +511,13 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   }
   openSkill(){ 
     this.dialogService.open(UserSkillsComponent, {
+      closeOnBackdropClick: false,
+      hasBackdrop: true,
+      autoFocus: false,
       context: {
       },
     }).onClose.subscribe(async (event) => {
-      if (!event) {
+      if (event) {
         this. skillByCategory = [];
         this.getSkillByUserId();
       }
@@ -505,20 +525,28 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   }
   openReorderSkill(){ 
     this.dialogService.open(UserReorderSkillsComponent, {
+      closeOnBackdropClick: false,
+      hasBackdrop: true,
+      autoFocus: false,
       context: {
       },
     }).onClose.subscribe(async (event) => {
-      if (!event) {
+      if (event) {
+        this. skillByCategory = [];
+        this.getSkillByUserId();
       }
     });
   }
   openExperience(key?:string){ 
     this.dialogService.open(UserExperienceComponent, {
+      closeOnBackdropClick: false,
+      hasBackdrop: true,
+      autoFocus: false,
       context: {
         user_key: key,
       },
     }).onClose.subscribe(async (event) => {
-      if (!event) {
+      if (event) {
         this.userExperience = [];
         this.getExperiencByUserId();
       }
@@ -526,11 +554,14 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   }
   openCertificate(key?:string){ 
     this.dialogService.open(UsesCertificateComponent, {
+      closeOnBackdropClick: false,
+      hasBackdrop: true,
+      autoFocus: false,
       context: {
         certificate_key: key,
       },
     }).onClose.subscribe(async (event) => {
-      if (!event) {
+      if (event) {
         this.userCentificate = [];
         this.getCentificateByUserId();
       }
@@ -538,11 +569,14 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   }
   openCourse(key?:string){ 
     this.dialogService.open(UserCourseComponent, {
+      closeOnBackdropClick: false,
+      hasBackdrop: true,
+      autoFocus: false,
       context: {
         course_key: key,
       },
     }).onClose.subscribe(async (event) => {
-      if (!event) {
+      if (event) {
         this.userCourse = [];
         this.getCourseByUserId();
       }
@@ -550,11 +584,14 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   }
   openEducation(key?:string){ 
     this.dialogService.open(UserEducationComponent, {
+      closeOnBackdropClick: false,
+      hasBackdrop: true,
+      autoFocus: false,
       context: {
         user_key: key,
       },
     }).onClose.subscribe(async (event) => {
-      if (!event) {
+      if (event) {
         this.userEducation = [];
         this.getEducationByUserId();
       }
@@ -562,19 +599,18 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   }
   openLanguage(key?:string){ 
     this.dialogService.open(UserLanguageComponent, {
+      closeOnBackdropClick: false,
+      hasBackdrop: true,
+      autoFocus: false,
       context: {
         user_key: key,
       },
     }).onClose.subscribe(async (event) => {
-      if (!event) {
+      if (event) {
         this.userLanguage = [];
         this.getLanguageByUserId();
       }
     });
-  }
-
-  openProject(table: string, id?: string){
-    this.router.navigateByUrl('/' + table + "/" + id);
   }
 
   async getImg(){

@@ -17,6 +17,6 @@ export class UserSkillEntity extends BaseEntity {
   @Field(() => Float, { nullable: true })
   sort_no?: number;
   
-  @Field(() => [KeyValueEntity], { nullable: true })
-  skills?: [KeyValueEntity];
+  @Field(() => KeyValueEntity, { nullable: true })
+  skills?: KeyValueEntity;
 }

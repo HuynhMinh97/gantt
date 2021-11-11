@@ -1,12 +1,20 @@
-import { UserSkillsService } from './../../../../services/user-skills.service';
-import { AitAppUtils, AitAuthService, AitBaseComponent, AitConfirmDialogComponent, AitEnvironmentService, AppState, MODE } from '@ait/ui';
-import { Component, ElementRef, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { NbDialogRef, NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
+import { 
+  MODE ,
+  AppState, 
+  AitAppUtils, 
+  AitAuthService, 
+  AitBaseComponent, 
+  AitEnvironmentService, 
+  AitConfirmDialogComponent, 
+} from '@ait/ui';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import { isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
+import { UserSkillsService } from './../../../../services/user-skills.service';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { NbDialogRef, NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 
 @Component({
   selector: 'ait-user-skills',
@@ -14,11 +22,12 @@ import { isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
   styleUrls: ['./user-skills.component.scss']
 })
 export class UserSkillsComponent extends AitBaseComponent implements OnInit {
-  dataSkill = [];
-  mode = MODE.NEW;
   userSkills: FormGroup;
-  userSkillsClone : any;
+  mode = MODE.NEW;
+  dataSkill = [];
   companySkills = [];
+  userSkillsClone : any;
+  isSave = false;
   isChanged = false;
   sort_no = 0;
   user_skills = {
@@ -28,50 +37,58 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
     sort_no: 0,
   };
   constructor(
-    private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
-    private userSkillsService : UserSkillsService,
+    private element: ElementRef,
     private formBuilder: FormBuilder,
-    layoutScrollService: NbLayoutScrollService,
     public activeRouter: ActivatedRoute,
+    private dialogService: NbDialogService,
+    private userSkillsService : UserSkillsService,
+    private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
+    layoutScrollService: NbLayoutScrollService,
     toastrService: NbToastrService,
-    store: Store<AppState>,
     authService: AitAuthService,
     env: AitEnvironmentService,
+    store: Store<AppState>,
     apollo: Apollo,
-    private router: Router,
-    private element: ElementRef,
-    private dialogService: NbDialogService,
   ) {
-    super(store, authService, apollo, null, env, layoutScrollService, toastrService);
+    super(
+      store, 
+      authService, 
+      apollo, 
+      null, 
+      env, 
+      layoutScrollService, 
+      toastrService
+    );
+
     this.setModulePage({
       module: 'user',
       page: 'user_skills',
     });
+
     this.userSkills = this.formBuilder.group({
-      skills: new FormControl(null, [Validators.required, Validators.maxLength(10)]),
+      skills: new FormControl(null, [Validators.required, Validators.maxLength(50)]),
     });
   }
 
   async ngOnInit(): Promise<void> {
-    await this.findSkills();
-   
-    await this.userSkills.valueChanges.subscribe((data) => {   
+    this.callLoadingApp();
+    await this.findSkills();  
+    await this.userSkills.valueChanges.subscribe((data) => {
       this.checkAllowSave();
-      console.log(this.isChanged);
-      
     });
+    this.cancelLoadingApp();
   }
+
   checkAllowSave() {
-    const certificateInfo = { ...this.userSkills.value };
-    const certificateClone = { ...this.userSkillsClone };
-    // this.setHours(userInfo);
-    
+    const userSkill = { ...this.userSkills.value };
+    const userSkillClone = { ...this.userSkillsClone };
     const isChangedUserInfo = AitAppUtils.isObjectEqual(
-      { ...certificateInfo },
-      { ...certificateClone }
+      { ...userSkill },
+      { ...userSkillClone }
     );
     this.isChanged = !(isChangedUserInfo);
   }
+
   async findSkills(){
     const from = 'sys_user/' + this.user_id;
     await this.userSkillsService.findSkill(from).then((res) => {
@@ -79,56 +96,58 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
         if(res.data.length > 0){
           this.mode = MODE.EDIT;
           let listSkills = []
-          res.data.forEach((key) =>{
-            listSkills.push({_key:key._to.substring(8)} );
-          })
+          for(let item of res.data){
+            listSkills.push(item.skills)
+          }
           this.userSkills.controls['skills'].setValue(listSkills);
-          this.companySkills = listSkills;
-          this.userSkillsClone = this.userSkills.value;     
+          this.companySkills = listSkills
+          this.userSkillsClone = this.userSkills.value;  
+          this.cancelLoadingApp();           
         }else{
           this.userSkillsClone = this.userSkills.value;
         }
-      }
-      
-    })
-    
+      }      
+    })    
   }
 
   async saveAndContinue(){
+    this.callLoadingApp();
     this.user_skills._from = 'sys_user/' + this.user_id;
-    this.user_skills.relationship = 'sys_user m_skill';
+    this.user_skills.relationship = 'item';
     if(this.mode == 'EDIT'){
       const _fromSkill = [
         { _from: 'sys_user/' + this.user_id },
       ];
       this.userSkillsService.removeUserSkill(_fromSkill);
-    }
-    
+    }    
     const listSkills = this.userSkills.value.skills;
     listSkills.forEach(async (skill) => {
       this.sort_no += 1;
       this.user_skills.sort_no = this.sort_no;
       this.user_skills._to = 'm_skill/' + skill._key;
-
       await this.userSkillsService.saveSkills(this.user_skills)
       .then((res) => {
         if (res?.status === RESULT_STATUS.OK){
-          const message =
-          this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
+          this.isSave = true;
+          const message = this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
           this.showToastr('', message);
-          this.router.navigateByUrl('/user-skills');
+          this.isChanged = false;
+          this.cancelLoadingApp();
         }else{
+          this.cancelLoadingApp();
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         }
       }).catch(() => {
+        this.cancelLoadingApp();
         this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
       }); 
     });
   }
 
   async saveAndClose(){
+    this.callLoadingApp();
     this.user_skills._from = 'sys_user/' + this.user_id;
-    this.user_skills.relationship = 'sys_user m_skill';
+    this.user_skills.relationship = 'user_skill';
     if(this.mode == 'EDIT'){
       const _fromSkill = [
         { _from: 'sys_user/' + this.user_id },
@@ -139,49 +158,24 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
     listSkills.forEach(async (skill) => {
       this.sort_no += 1;
       this.user_skills.sort_no = this.sort_no;
-      this.user_skills._to = 'm_skill/' + skill._key;
-      
+      this.user_skills._to = 'm_skill/' + skill._key;      
       await this.userSkillsService.saveSkills(this.user_skills)
       .then((res) =>{
         if (res?.status === RESULT_STATUS.OK){
-          const message =
-          this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
+          const message = this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
           this.showToastr('', message);
-          this.closeDialog(false);
+          this.callLoadingApp();
+          this.closeDialog(true);
         }else{
+          this.callLoadingApp();
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         }
       }).catch(() => {
+        this.callLoadingApp();
         this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
       }); ;
     });
   }
-
-  async cancel(){
-
-  }
-
-  scrollIntoError() {
-      for (const key of Object.keys(this.userSkills.controls)) {
-        if (this.userSkills.controls[key].invalid) {
-          let invalidControl = this.element.nativeElement.querySelector(
-            `#${key}_input`
-          );
-          if(key == 'file'){
-              invalidControl = this.element.nativeElement.querySelector(
-              `#${key}_input_file`
-            );      
-          }
-          try {
-            invalidControl.scrollIntoView({
-              behavior: 'auto',
-              block: 'center',
-            });
-            break;
-          } catch {}
-        }
-      }
-    }
 
   takeMasterValue(val: any, form: string): void {   
     if (val) {
@@ -191,7 +185,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
           data.push(item);
         });
         this.userSkills.controls[form].markAsDirty();
-        this.userSkills.controls[form].setValue(data);                        
+        this.userSkills.controls[form].setValue(data);                                
       }
     }else{
       this.userSkills.controls[form].markAsDirty();
@@ -217,7 +211,12 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
         }
       });
     }else{
-      this.closeDialog(false);
+      if(this.isSave){
+        this.closeDialog(true);
+      }else{
+        this.closeDialog(false);
+      }
+
     }
   }
 
@@ -231,6 +230,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
     }
     return title;
   }
+  
   closeDialog(event: boolean) {
     this.nbDialogRef.close(event);
   }

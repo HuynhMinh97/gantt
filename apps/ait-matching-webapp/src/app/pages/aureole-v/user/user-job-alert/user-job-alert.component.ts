@@ -1,10 +1,10 @@
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { AitAppUtils, AitAuthService, AitBaseComponent, AitEnvironmentService, AppState, getUserSetting, MODE } from '@ait/ui';
+import { AitAppUtils, AitAuthService, AitBaseComponent, AitConfirmDialogComponent, AitEnvironmentService, AppState, getUserSetting, MODE } from '@ait/ui';
 import { Component, OnInit } from '@angular/core';
-import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
+import { NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
-import { isArrayFull, isObjectFull, RESULT_STATUS } from '@ait/shared';
+import { isArrayFull, isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
 import dayjs from 'dayjs';
 import { UserJobAlertService } from 'apps/ait-matching-webapp/src/app/services/user-job-alert.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -48,6 +48,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
     toastrService: NbToastrService,
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
+    private dialogService: NbDialogService,
   ) {
     super(store, authService, apollo, null, env, layoutScrollService, toastrService);
 
@@ -145,6 +146,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
       this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(Number(value));
     } else {
+      this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(null);
     }
   }
@@ -186,7 +188,8 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
       }
     })
   }
-  save(){
+
+  saveAndContinue(){
     const dataSave = this.userjobAlert.value;
     if(this.mode == "NEW"){
       dataSave['user_id'] = this.authService.getUserID();
@@ -197,6 +200,27 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
         const message =
         this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
         this.showToastr('', message);
+        this.reset();
+      }else{
+        this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+      }
+    })    
+  }
+
+  saveAndClose(){
+    const dataSave = this.userjobAlert.value;
+    if(this.mode == "NEW"){
+      dataSave['user_id'] = this.authService.getUserID();
+    }
+    this.userJobAlertService.saveUserJobAlert(this.userjobAlert.value)
+    .then((res) => {
+      if (res?.status === RESULT_STATUS.OK) {
+        const message =
+        this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
+        this.showToastr('', message);
+        history.back();
+      }else{
+        this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
       }
     })    
   }
@@ -214,8 +238,55 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
     setTimeout(() => {
       this.userjobAlert.controls["start_date_from"].setValue(Date.now());
     }, 100);  
-    console.log(this.userjobAlertClone);
+    console.log(this.userjobAlertClone);     
+  }
+  
+  resetForm(){
+    debugger
+    if(this.mode == MODE.NEW){
+      this.reset();
+    }
+    if(this.mode == MODE.EDIT){
+      this.industrys = [];
+      this.experienceLevels = [];
+      this.employeeTypes =[];
+      this.locations = [];
+      setTimeout(() => {
+        this.industrys = this.userjobAlertClone.industry;
+        this.experienceLevels = this.userjobAlertClone.experience_level;
+        this.employeeTypes = this.userjobAlertClone.employee_type;
+        this.locations = this.userjobAlertClone.location;
+        this.userjobAlert.patchValue({ ...this.userjobAlertClone });
+        this.showToastr('', this.getMsg('I0007'));
+      },100)
      
+    }
+  }
+
+  back() {
+    if (this.isChanged) {
+      this.dialogService
+        .open(AitConfirmDialogComponent, {
+          closeOnBackdropClick: true,
+          hasBackdrop: true,
+          autoFocus: false,
+          context: {
+            title: this.getMsg('I0006'),
+          },
+        })
+        .onClose.subscribe(async (event) => {
+          if (event) {
+            history.back();
+            // this.closeDialog(false);
+          }
+        });
+    } else {
+      history.back();
+      // this.closeDialog(false);
+    }
+  }
+  skip(){
+    this.router.navigate([``]);
   }
 
 }

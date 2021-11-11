@@ -215,7 +215,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
-            this.closeDialog(false);
+            this.closeDialog(true);
           } else {
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
@@ -262,7 +262,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
             await this.userEduService.remove(_key).then((res) => {
               if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
                 this.showToastr('', this.getMsg('I0003'));
-                this.closeDialog(false);
+                this.closeDialog(true);
               } else {
                 this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
               }

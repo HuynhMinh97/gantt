@@ -105,6 +105,7 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
     
   }
   async ngOnInit(): Promise<void> {
+    this.callLoadingApp()
     if (this.user_key) {
       this.mode = MODE.EDIT;
     }
@@ -140,6 +141,7 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
         this.resetUserLangInfo[index] = true;
       }
     }
+    this.cancelLoadingApp();
   }
 
   checkAllowSave() {
@@ -214,7 +216,7 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
-            this.closeDialog(false);
+            this.closeDialog(true);
           } else {
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
@@ -281,18 +283,22 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
         },
       })
       .onClose.subscribe(async (event) => {
+        this.callLoadingApp();
         if (event) {
           const _key = [{ _key: this.user_key }];
           if (this.user_key) {
             await this.userLangService.remove(_key).then((res) => {
               if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
                 this.showToastr('', this.getMsg('I0003'));
-                this.closeDialog(false);
+                this.cancelLoadingApp();
+                this.closeDialog(true);
               } else {
+                this.cancelLoadingApp();
                 this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
               }
             });
           } else {
+            this.cancelLoadingApp();
             this.showToastr('', this.getMsg('E0050'), KEYS.WARNING);
           }
         }
