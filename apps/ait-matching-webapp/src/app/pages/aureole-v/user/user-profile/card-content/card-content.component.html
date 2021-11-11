@@ -35,6 +35,7 @@
 
       <div style="display: flex; position: relative">
         <div
+          [id]="idBtn"
           class="button_header_card"
           *ngIf="actionBtn.length !== 0"
           [ngClass]="tooltip ? 'button_header_card disable' : ''"

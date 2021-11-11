@@ -98,11 +98,11 @@
             </div>
             <div class="view_contact">
               <ait-button
-                (click)="''"
+                (click)="openOnboarding()"
                 [styleText]="{ 'font-size': '10px' }"
                 [height]="'24px'"
                 [title]="'VIEW CONTACT'"
-                [id]="'view_contact'"
+                [id]="'openOnboarding'"
                 [isDefault]="true"
               ></ait-button>
             </div>
@@ -121,7 +121,7 @@
           [width]="'150px'"
           [height]="'25px'"
           [title]="'REORDER SKILLS'"
-          [id]="'reorder skills'"
+          [id]="'openReorderSkill'"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
           "
@@ -135,7 +135,7 @@
         style="display: flex; justify-content: center"
         [label]="'SKILLS'"
         [styleLabel]="{'font-size':'22px'}"
-        (onClickButtonHeader)="openSkill()"
+        (onClickButtonHeader)="openAddSkill()"
         [actionBtn]="isMyUserProfile ? actionBtn : ''"
         [buttonTitle]="'ADD SKILL'"
         [disableHeader]="false"
@@ -144,6 +144,7 @@
         [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
         [padding]="'20px'"
         [isOpen]="showSkill"
+        [idBtn]="'openAddSkill'"
       >
       <div class="container-user-project">
         <hr class="hr_header">
@@ -261,6 +262,7 @@
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'20px'"
       [isOpen]="showProject"
+      [idBtn]="'openProjects'"
     >
       <div class="container-user-project" *ngIf="userProject.length > 0">
         <hr class="hr_header">
@@ -345,7 +347,10 @@
                 </div>
               </div>
               <div id="ic-edit" >
-                <a (click)="openProjects(project._key)">
+                <a 
+                  (click)="openProjects(project._key)"
+                  [id]="'project-' + project._key"
+                >
                   <nb-icon
                     *ngIf="isMyUserProfile"
                     nbSuffix
@@ -384,6 +389,7 @@
       [content]="timeExperienceStr"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'20px'"
+      [idBtn]="'openExperience'"
     >
     <div class="container-user-project" *ngIf="userExperience.length > 0">
       <hr class="hr_header">
@@ -456,7 +462,10 @@
               </div>
             </div>
             <div id="ic-edit">
-              <a (click)="openExperience(experience?._key)">
+              <a 
+                (click)="openExperience(experience?._key)"
+                [id]="'experience-' + experience?._key"
+                >
                 <nb-icon
                   *ngIf="isMyUserProfile"
                   nbSuffix
@@ -495,12 +504,13 @@
       [content]="countCentificate"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'20px'"
+      [idBtn]="'openCertificate'"
     >
     <div class="container-user-project" *ngIf="userCentificate.length > 0">
       <hr class="hr_header">
       <ul
         *ngFor="
-          let company_centificate of userCentificate;
+          let centificate of userCentificate;
           let last = last;
           let firstcomp = first
         "
@@ -516,20 +526,23 @@
             <div class="timeline-info">
               <div>
                 <p id="title-timeline">
-                  {{ company_centificate?.name }}
+                  {{ centificate?.name }}
                 </p>
                 <div class="desc-info">                    
                   <p>
                     {{
-                      company_centificate?.issue_by
+                      centificate?.issue_by
                     }}
                   </p>
-                  <p>{{ company_centificate?.issue_date_from }} - {{ company_centificate?.issue_date_to }}</p>
+                  <p>{{ centificate?.issue_date_from }} - {{ centificate?.issue_date_to }}</p>
                 </div>
               </div>
             </div>
             <div id="ic-edit">
-              <a (click)="openCertificate(company_centificate?._key)">
+              <a 
+                (click)="openCertificate(centificate?._key)"
+                [id]="'centificate-' + centificate?._key"
+                >
                 <nb-icon
                   *ngIf="isMyUserProfile"
                   nbSuffix
@@ -568,6 +581,7 @@
       [content]="countCourse"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'20px'"
+      [idBtn]="'openCourse'"
     >
     <div class="container-user-project" *ngIf="userCourse.length > 0">
       <hr class="hr_header">
@@ -602,7 +616,10 @@
               </div>
             </div>
             <div id="ic-edit">
-              <a (click)="openCourse(course?._key)">
+              <a 
+                (click)="openCourse(course?._key)"
+                [id]="'course-' + course?._key"
+                >
                 <nb-icon
                   *ngIf="isMyUserProfile"
                   nbSuffix
@@ -641,6 +658,7 @@
     [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
     [padding]="'20px'"
     [content]="''"
+    [idBtn]="'openEducation'"
   >
   <div class="container-user-project" *ngIf="userEducation.length > 0">
     <hr class="hr_header">
@@ -675,7 +693,7 @@
             </div>
           </div>
           <div id="ic-edit">
-            <a (click)="openEducation(education?._key)">
+            <a (click)="openEducation(education?._key)" [id]="'education-' + education?._key">
               <nb-icon
                 *ngIf="isMyUserProfile"
                 nbSuffix
@@ -714,6 +732,7 @@
       [content]="''"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'20px'"
+      [idBtn]="'openLanguage'"
     >
     
         <div class="container-user-project" *ngIf="userEducation.length > 0">
@@ -745,7 +764,7 @@
                   </div>
                 </div>
                 <div id="ic-edit">
-                  <a (click)="openLanguage( language?._key)">
+                  <a (click)="openLanguage( language?._key)" [id]="'language-' + language?._key ">
                     <nb-icon
                       *ngIf="isMyUserProfile"
                       nbSuffix
