@@ -247,6 +247,8 @@ export class AitBaseService {
     const customData = [];
     const atributes = [];
 
+    let hasName = false;
+
     isSystem && collection === COLLECTIONS.USER_SETTING && condition['user_id']
       ? delete condition['user_id']
       : '';
@@ -254,6 +256,9 @@ export class AitBaseService {
     let aqlStr = `FOR data IN ${collection} \r\n`;
     aqlStr += ` FILTER data.company == "${company}" `;
     for (const prop in condition) {
+      if (prop === KEYS.NAME) {
+        hasName = true;
+      }
       if (
         prop === KEYS.NAME &&
         collectionReq.includes(collection) &&
@@ -406,7 +411,12 @@ export class AitBaseService {
       aqlStr += ` LIMIT ${options.limit} `;
     }
 
-    aqlStr += `\r\n RETURN MERGE(\r\n data, {\r\n name:  data.name.${lang} ? data.name.${lang} : data.name, `;
+    aqlStr += `\r\n RETURN MERGE(\r\n data, {\r\n `;
+
+    if (!hasName) {
+      aqlStr += ` name:  data.name.${lang} ? data.name.${lang} : data.name, \r\n`;
+    }
+    
     // atribute
     if (atributes.length > 0) {
       aqlStr += `\r\n ${atributes[0]}, `;
