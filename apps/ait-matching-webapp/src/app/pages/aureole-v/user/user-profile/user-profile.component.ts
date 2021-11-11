@@ -42,6 +42,7 @@ import { UserExperienceComponent } from '../user-experience/user-experience.comp
 import { UsesCertificateComponent } from '../uses-certificate/uses-certificate.component';
 import { UserEducationComponent } from '../user-education/user-education.component';
 import { UserLanguageComponent } from '../user-language/user-language.component';
+import { UserOnboardingComponent } from '../user-onboarding/user-onboarding.component';
 
 @Component({
   selector: 'ait-user-profile',
@@ -491,6 +492,22 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
     }
   }
 
+  openOnboarding(key?:string){ 
+    this.dialogService.open(UserOnboardingComponent,{
+      closeOnBackdropClick: false,
+      hasBackdrop: true,
+      autoFocus: false,
+      context: {
+      },
+    }).onClose.subscribe(async (event) => {
+      if (event) {
+        this.userProject = [];
+        this.timeProject = 0;
+        await this.getProjectByUserId();    
+      }
+    });
+  }
+
   openProjects(key?:string){ 
     this.dialogService.open(UserProjectComponent,{
       closeOnBackdropClick: false,
@@ -507,7 +524,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
       }
     });
   }
-  openSkill(){ 
+  openAddSkill(){ 
     this.dialogService.open(UserSkillsComponent, {
       closeOnBackdropClick: false,
       hasBackdrop: true,
