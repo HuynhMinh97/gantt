@@ -133,7 +133,7 @@
         </ait-input-text>
       </div>
       <div style="display: grid; justify-content: center">
-        <ait-country (watchValue)="takeValueCountry($event)" [isReset]="isResetCountry" [defaultValue]="dataCountry" [isSubmit]="isSubmit"></ait-country>
+        <ait-country (watchValue)="takeValueCountry($event)" [isReset]="isResetCountry" [defaultValue]="userOnboardingInfo.value" [isClear]="isClear" [isSubmit]="isSubmit"></ait-country>
     </div>
     
       <div class="input_area">
