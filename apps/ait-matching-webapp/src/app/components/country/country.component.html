@@ -11,6 +11,7 @@
       [isSubmit]="isSubmit"
       [style]="masterStyle"
       [isReset]="isReset.country_region"
+      [clearError]="isClear"
       (watchValue)="takeMasterValue($event?.value, 'country_region')"
       [defaultValue]="
         dataForm.controls['country_region'].value
@@ -55,6 +56,7 @@
       [isSubmit]="isSubmit"
       [style]="masterStyle"
       [isReset]="isReset.province_city"
+      [clearError]="isClear"
       (watchValue)="takeMasterValue($event?.value, 'province_city')"
       [defaultValue]="
         dataForm.controls['province_city'].value
@@ -79,6 +81,7 @@
       [isSubmit]="isSubmit"
       [style]="masterStyle"
       [isReset]="isReset.district"
+      [clearError]="isClear"
       (watchValue)="takeMasterValue($event?.value, 'district')"
       [defaultValue]="
         dataForm.controls['district'].value
@@ -103,6 +106,7 @@
       [isSubmit]="isSubmit"
       [style]="masterStyle"
       [isReset]="isReset.ward"
+      [clearError]="isClear"
       (watchValue)="takeMasterValue($event?.value, 'ward')"
       [defaultValue]="
         dataForm.controls['ward'].value

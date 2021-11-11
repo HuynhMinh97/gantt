@@ -1,8 +1,3 @@
-import {
-  isArrayFull,
-  isObject,
-  isObjectFull,
-} from './../../../../../../../../libs/shared/src/lib/utils/checks.util';
 import { UserOnboardingService } from './../../../../services/user-onboarding.service';
 import { Component, ElementRef, OnInit } from '@angular/core';
 import {
@@ -31,8 +26,8 @@ import {
   MODE,
 } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
-import { KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
-import { KeyValueCheckedDto, ONBOARD } from './interface';
+import { isArrayFull, isObjectFull, KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
+import { KeyValueCheckedDto } from './interface';
 
 @Component({
   selector: 'ait-user-onboarding',
@@ -59,6 +54,7 @@ export class UserOnboardingComponent
   isReset = false;
   isLangJP = false;
   isSubmit = false;
+  isClear = false;
   isChanged = false;
 
   resetUserInfo = {
@@ -335,7 +331,7 @@ export class UserOnboardingComponent
         this.isResetCountry[index] = true;
         setTimeout(() => {
           this.isResetCountry[index] = false;
-        }, 100);
+        }, 50);
       }
     } else {
       for (const index in this.resetUserInfo) {
@@ -346,6 +342,10 @@ export class UserOnboardingComponent
           }, 100);
         }
       }
+      this.isClear = true;
+      setTimeout(() => {
+        this.isClear = false;
+      }, 50);
       this.userOnboardingInfo.patchValue({
         ...this.userOnboardingInfoClone,
       });

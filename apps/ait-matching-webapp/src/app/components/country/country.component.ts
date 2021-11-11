@@ -25,6 +25,7 @@ export class CountryComponent implements OnChanges {
   };
   @Input() defaultValue: any;
   @Input() isSubmit = false;
+  @Input() isClear = false;
   constructor(private formBuilder: FormBuilder) {
     this.dataForm = this.formBuilder.group({
       country_region: new FormControl(null, [Validators.required]),
