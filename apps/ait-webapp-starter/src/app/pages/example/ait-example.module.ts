@@ -77,7 +77,8 @@ const AIT_UI_SERVICES = [
 ];
 
 @NgModule({
-  declarations: [],
+  declarations: [
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
