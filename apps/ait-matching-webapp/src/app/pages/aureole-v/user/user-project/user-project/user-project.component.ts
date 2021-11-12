@@ -37,6 +37,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
   projectDataInput: any;
   userProject: FormGroup;
   dateNow = new Date().setHours(0, 0, 0, 0);
+  userProjectErros = new UserProjectErrorsMessage();
   isSave = false;
   isReset = false;
   isClear = false;
@@ -46,6 +47,28 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
   companyName = null;
   sort_no = 0;
   error = [];
+ 
+  resetUserProject = {
+    name: false,
+    title: false,
+    skills: false,
+    achievement: false,
+    description: false,
+    start_date_to: false,
+    company_working: false,
+    responsibility: false,
+    start_date_from: false,
+  };
+  isClearErrors = {
+    name: false,
+    title: false,
+    skills: false,
+    achievement: false,
+    description: false,
+    responsibility: false,
+    company_working: false,
+  };
+
   connection_user_project = {
     _from: '',
     _to: '',
@@ -58,27 +81,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     relationship: '',
     sort_no: 0,
   };
-  resetUserProject = {
-    name: false,
-    start_date_from: false,
-    start_date_to: false,
-    company_working: false,
-    title: false,
-    description: false,
-    skills: false,
-    responsibility: false,
-    achievement: false
-  };
-  isClearErrors = {
-    name: false,
-    company_working: false,
-    title: false,
-    description: false,
-    skills: false,
-    responsibility: false,
-    achievement: false
-  };
-  userProjectErros = new UserProjectErrorsMessage();
+ 
   dateField = [
     'start_date_from',
     'start_date_to'
@@ -138,8 +141,8 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     }
     if (this.mode === "NEW") {
       await this.inputProject();
-      this.userProject.controls['start_date_from'].setValue(this.dateNow);
       this.userProject.controls['title'].setValue(this.titleName);
+      this.userProject.controls['start_date_from'].setValue(this.dateNow);
       this.userProject.controls['company_working'].setValue(this.companyName);
       this.userProjectClone = this.userProject.value;
       this.cancelLoadingApp();
