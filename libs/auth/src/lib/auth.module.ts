@@ -23,7 +23,7 @@ import { AitUserSettingComponent } from './pages/user-setting/ait-user-setting.c
 import { AitAuthRoutingModule } from './auth-routing.module';
 import { Ait403Component } from './pages/auth/ait-403/ait-403.component';
 import { Ait404Component } from './pages/auth/ait-404/ait-404.component';
-import { AitEnvironmentService, Params } from './services/environment.service';
+import { AitEnvironmentService } from './services/environment.service';
 import { Ait500Component } from './pages/auth/ait-500/ait-500.component';
 import { Ait503Component } from './pages/auth/ait-503/ait-503.component';
 
@@ -79,8 +79,7 @@ const AIT_MODULES = [
   ]
 })
 export class AitAuthModule {
-
-
+  
   static forRoot(config): ModuleWithProviders<AitAuthModule> {
     return {
       ngModule: AitAuthModule,
