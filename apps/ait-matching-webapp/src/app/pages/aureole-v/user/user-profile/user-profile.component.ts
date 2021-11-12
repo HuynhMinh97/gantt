@@ -498,12 +498,16 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
       hasBackdrop: true,
       autoFocus: false,
       context: {
+        user_key: key,
       },
     }).onClose.subscribe(async (event) => {
       if (event) {
-        this.userProject = [];
-        this.timeProject = 0;
-        await this.getProjectByUserId();    
+        this.callLoadingApp();
+        this.DataUserProfile = null;
+        await this.getUserProfileByUserId();   
+        setTimeout(() => {
+          this.cancelLoadingApp();
+        },300) 
       }
     });
   }
@@ -518,9 +522,13 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
       },
     }).onClose.subscribe(async (event) => {
       if (event) {
+        this.callLoadingApp();
         this.userProject = [];
         this.timeProject = 0;
-        await this.getProjectByUserId();    
+        await this.getProjectByUserId();  
+        setTimeout(() => {
+          this.cancelLoadingApp();
+        },500) 
       }
     });
   }
@@ -533,8 +541,12 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
       },
     }).onClose.subscribe(async (event) => {
       if (event) {
+        this.callLoadingApp();
         this. skillByCategory = [];
         this.getSkillByUserId();
+        setTimeout(() => {
+          this.cancelLoadingApp();
+        },500)
       }
     });
   }
@@ -547,8 +559,12 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
       },
     }).onClose.subscribe(async (event) => {
       if (event) {
+        this.callLoadingApp();
         this. skillByCategory = [];
         this.getSkillByUserId();
+        setTimeout(() => {
+          this.cancelLoadingApp();
+        },500)
       }
     });
   }
@@ -562,8 +578,12 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
       },
     }).onClose.subscribe(async (event) => {
       if (event) {
+        this.callLoadingApp();
         this.userExperience = [];
         this.getExperiencByUserId();
+        setTimeout(() => {
+          this.cancelLoadingApp();
+        },500)
       }
     });
   }
@@ -577,8 +597,12 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
       },
     }).onClose.subscribe(async (event) => {
       if (event) {
+        this.callLoadingApp();
         this.userCentificate = [];
         this.getCentificateByUserId();
+        setTimeout(() => {
+          this.cancelLoadingApp();
+        },500)
       }
     });
   }
@@ -592,8 +616,12 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
       },
     }).onClose.subscribe(async (event) => {
       if (event) {
+        this.callLoadingApp();
         this.userCourse = [];
         this.getCourseByUserId();
+        setTimeout(() => {
+          this.cancelLoadingApp();
+        },500)
       }
     });
   }
@@ -607,8 +635,12 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
       },
     }).onClose.subscribe(async (event) => {
       if (event) {
+        this.callLoadingApp();
         this.userEducation = [];
         this.getEducationByUserId();
+        setTimeout(() => {
+          this.cancelLoadingApp();
+        },500)
       }
     });
   }
@@ -622,8 +654,12 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
       },
     }).onClose.subscribe(async (event) => {
       if (event) {
+        this.callLoadingApp();
         this.userLanguage = [];
         this.getLanguageByUserId();
+        setTimeout(() => {
+          this.cancelLoadingApp();
+        },500)
       }
     });
   }

@@ -1,5 +1,5 @@
 import { UserOnboardingService } from './../../../../services/user-onboarding.service';
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, Optional } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
+  NbDialogRef,
   NbDialogService,
   NbLayoutScrollService,
   NbToastrService,
@@ -28,7 +29,6 @@ import {
 import { Apollo } from 'apollo-angular';
 import { isArrayFull, isObjectFull, KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
 import { KeyValueCheckedDto } from './interface';
-
 @Component({
   selector: 'ait-user-onboarding',
   templateUrl: './user-onboarding.component.html',
@@ -117,7 +117,6 @@ export class UserOnboardingComponent
   _key = '';
   user_id_profile = '';
   dataCountry: any;
-
   constructor(
     private router: Router,
     private element: ElementRef,
@@ -128,6 +127,7 @@ export class UserOnboardingComponent
     private userOnbService: UserOnboardingService,
     private translateService: AitTranslationService,
     private masterDataService: AitMasterDataService,
+    @Optional() private nbDialogRef: NbDialogRef<UserOnboardingComponent>,
     env: AitEnvironmentService,
     store: Store<AppState>,
     apollo: Apollo,
@@ -149,7 +149,6 @@ export class UserOnboardingComponent
       module: 'user',
       page: 'user_onboarding',
     });
-
     this.userOnboardingInfo = this.formBuilder.group({
       first_name: new FormControl(null, [
         Validators.required,
@@ -189,13 +188,8 @@ export class UserOnboardingComponent
       _key: new FormControl(null),
     });
 
-    // get key form parameters
-    this.user_key = this.activeRouter.snapshot.paramMap.get('id');
-    if (this.user_key) {
-      this.mode = MODE.EDIT;
-    } else {
-    }
-
+    // get key form parameter
+    // this.user_key = this.activeRouter.snapshot.paramMap.get('id');
     this.userOnbService
       .findSiteLanguageById(this.authService.getUserID())
       .then((r) => {
@@ -210,6 +204,10 @@ export class UserOnboardingComponent
 
   async ngOnInit(): Promise<void> {
     if (this.user_key) {
+      this.mode = MODE.EDIT;
+    }
+    if (this.user_key) {
+      this.callLoadingApp();
       await this.userOnbService
         .findUserOnboardingByKey(this.user_key)
         .then(async (r) => {
@@ -223,6 +221,7 @@ export class UserOnboardingComponent
               this._key = this.dataCountry._key;
               isUserExist = true;
             }
+            this.cancelLoadingApp();
             !isUserExist && this.router.navigate([`/404`]);
           }
         });
@@ -403,6 +402,7 @@ export class UserOnboardingComponent
     }, 100);
     this.userOnboardingInfo.get('skills').setErrors(null);
     if (this.userOnboardingInfo.valid) {
+      this.callLoadingApp();
       this.userOnbService
         .save(this.saveDataUserProfile())
         .then((res) => {
@@ -411,12 +411,19 @@ export class UserOnboardingComponent
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
-            this.navigation.back();
+            this.cancelLoadingApp();
+            if(this.user_key){
+              this.close(true);
+            }else{
+              this.navigation.back();
+            }
           } else {
+            this.cancelLoadingApp();
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
         })
         .catch(() => {
+          this.cancelLoadingApp();
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         });
     } else {
@@ -441,7 +448,11 @@ export class UserOnboardingComponent
             await this.userOnbService.remove(_key).then((res) => {
               if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
                 this.showToastr('', this.getMsg('I0003'));
-                history.back();
+                if(this.user_key){
+                  this.close(false);
+                }else{
+                  history.back();
+                }
               } else {
                 this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
               }
@@ -466,11 +477,19 @@ export class UserOnboardingComponent
         })
         .onClose.subscribe(async (event) => {
           if (event) {
-            history.back();
+            if(this.user_key){
+              this.close(false);
+            }else{
+              history.back();
+            }
           }
         });
     } else {
-      history.back();
+      if(this.user_key){
+        this.close(false);
+      }else{
+        history.back();
+      }
     }
   }
 
@@ -549,5 +568,9 @@ export class UserOnboardingComponent
 
     }
 
+  }
+
+  close(event: boolean) {
+    this.nbDialogRef.close(event);
   }
 }
