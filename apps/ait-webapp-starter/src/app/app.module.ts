@@ -13,6 +13,7 @@ import { AitAuthModule } from '@ait/auth';
 import { AitExamplePageModule } from './pages/example/ait-example.module';
 import { environment } from '../environments/environment';
 import { NbMenuModule } from '@nebular/theme';
+import { RenderPageModule } from './pages/example/render-page/render-page.module';
 
 const AIT_UI_MODULES = [];
 
@@ -39,6 +40,7 @@ const config: ExtraOptions = {
     AitUiModule.forRoot(environment),
     RouterModule.forRoot([], config),
     AitExamplePageModule,
+    RenderPageModule,
     AitAuthModule.forRoot(environment),
     StoreModule.forRoot(
       { ...rootReducers },

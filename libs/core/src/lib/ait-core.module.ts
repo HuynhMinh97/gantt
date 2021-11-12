@@ -8,13 +8,15 @@ import { SystemResolver } from './resolvers/system.resolver';
 import { UserSettingResolver } from './resolvers/user-setting.resolver';
 import { SaveTempResolver } from './resolvers/save-temp.resolver';
 import { PermissionResolver } from './resolvers/permission.resolver';
+import { PageRenderResolver } from './resolvers/page-render.resolver';
 
 const RESOLVERS = [
   SystemResolver,
   BinaryResolver,
   SaveTempResolver,
   UserSettingResolver,
-  PermissionResolver
+  PermissionResolver,
+  PageRenderResolver
 ]
 @Module({
   imports: [
