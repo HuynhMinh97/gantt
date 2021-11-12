@@ -65,6 +65,8 @@ import localeVnn from '@angular/common/locales/vi';
 import localeJpp from '@angular/common/locales/ja';
 import { LocaleProvider } from './@theme/locale/locale.provider';
 import { AitTableCellModule } from './components/ait-table-cell/ait-table-cell.module';
+import { AitGroupSearchModule } from './components/ait-group-search/ait-group-search.module';
+import { AitRenderPageService } from './services/common/ait-render-page.service';
 registerLocaleData(localeEnn);
 registerLocaleData(localeVnn);
 registerLocaleData(localeJpp);
@@ -125,6 +127,7 @@ const NB_MODULES = [
     AitAutocompleteMasterDataModule,
     AitOutputTextModule,
     AitTextGradientModule,
+    AitGroupSearchModule,
     StoreModule.forRoot({
       ...rootReducers,
       ...inItialState
@@ -157,6 +160,7 @@ const NB_MODULES = [
     AitProgressModule,
     AitTimePickerModule,
     AitTextGradientModule,
+    AitGroupSearchModule,
     AitCardContentModule,
     AitButtonModule,
     AitConfirmDialogModule,

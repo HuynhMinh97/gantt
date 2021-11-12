@@ -79,7 +79,7 @@ const AIT_MODULES = [
   ]
 })
 export class AitAuthModule {
-
+  
 
   static forRoot(config): ModuleWithProviders<AitAuthModule> {
     return {
