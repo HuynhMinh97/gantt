@@ -31,8 +31,6 @@ export class ReorderSkillResolver extends AitBaseService {
       FILTER e.del_flag != true
       RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name })
     `;
-    console.log(aqlQuery);
-    
       return await this.query(aqlQuery);
 
     } else {
@@ -66,7 +64,6 @@ export class ReorderSkillResolver extends AitBaseService {
       UPDATE data WITH { top_skills:${topSkill} } IN user_profile
       RETURN data.top_skills
     `;
-    console.log(aqlQuery);
       return await this.query(aqlQuery);
     } else {
       return new ReorderSkillResponse(RESULT_STATUS.ERROR, [], 'error');
@@ -75,24 +72,24 @@ export class ReorderSkillResolver extends AitBaseService {
 
     // xoa user_skill
 
-  @Mutation(() => ReorderSkillResponse, { name: 'removeUserSkillReorder' })
-  async removeUserSkillReorder(
-    @AitCtxUser() user: SysUser,
-    @Args('request', { type: () => ReorderSkillRequest }) request: ReorderSkillRequest
-  ) {
-    //return this.remove(request, user);
-    const user_id = request.user_id;
-    if (user_id) {
-      const aqlQuery = `
-      FOR item IN user_skill
-      FOR data IN user_skill
-      FILTER data._from == item._from
-      UPDATE data WITH { del_flag: true } IN user_skill
-      RETURN data
-    `;
-      return await this.query(aqlQuery);
-    } else {
-      return new ReorderSkillResponse(RESULT_STATUS.ERROR, [], 'error');
-    }
-  }
+  // @Mutation(() => ReorderSkillResponse, { name: 'removeUserSkillReorder' })
+  // async removeUserSkillReorder(
+  //   @AitCtxUser() user: SysUser,
+  //   @Args('request', { type: () => ReorderSkillRequest }) request: ReorderSkillRequest
+  // ) {
+  //   //return this.remove(request, user);
+  //   const user_id = request.user_id;
+  //   if (user_id) {
+  //     const aqlQuery = `
+  //     FOR item IN user_skill
+  //     FOR data IN user_skill
+  //     FILTER data._from == item._from
+  //     UPDATE data WITH { del_flag: true } IN user_skill
+  //     RETURN data
+  //   `;
+  //     return await this.query(aqlQuery);
+  //   } else {
+  //     return new ReorderSkillResponse(RESULT_STATUS.ERROR, [], 'error');
+  //   }
+  // }
 }

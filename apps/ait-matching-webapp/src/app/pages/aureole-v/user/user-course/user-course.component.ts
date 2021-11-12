@@ -32,6 +32,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
   isClear = false;
   isClearErrors = false;
   isResetFile = false;
+  isReadonly = false;
   resetCourse = {
     _key: false,
     course_number: false,
@@ -89,6 +90,10 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
       this.mode = MODE.EDIT;
     }
     if (this.mode == MODE.NEW) {
+      this.callLoadingApp();
+      setTimeout(() => {
+        this.cancelLoadingApp();
+      },500);
       this.course.controls["start_date_from"].setValue(this.dateNow);
       this.courseClone = this.course.value;
     } else {
@@ -344,6 +349,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
               this.companyCenter = [{ _key: data.training_center?._key }, { value: data.training_center?.value }];
               if (this.user_id != data.user_id) {
                 this.mode = MODE.VIEW
+                this.isReadonly = true;
               }   
               this.cancelLoadingApp();           
             }

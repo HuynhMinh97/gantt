@@ -110,11 +110,14 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    this.callLoadingApp();
+    setTimeout(() => {
+      this.cancelLoadingApp();
+    },500);
     if (this.user_key) {
       this.mode = MODE.EDIT;
     }
     if (this.user_key) {
-      this.callLoadingApp();
       await this.userEduService
         .findUserEducationByKey(this.user_key)
         .then(async (r) => {
@@ -127,8 +130,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
               this.user_id = data.user_id;
               isUserExist = true;
             }
-            !isUserExist && this.router.navigate([`/404`]);
-            this.cancelLoadingApp();
+            !isUserExist && this.router.navigate([`/404`]);           
           }
         });
     }

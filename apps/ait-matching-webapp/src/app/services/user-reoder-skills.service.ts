@@ -55,7 +55,7 @@ export class UserReoderSkillsService extends AitBaseService{
   async removeUserSkillReorder(data: any[]) {
     const returnFields = { _key: true };
     return await this.mutation(
-      'removeUserSkillReorder',
+      'removeUserSkill',
       this.collection,
       data,
       returnFields

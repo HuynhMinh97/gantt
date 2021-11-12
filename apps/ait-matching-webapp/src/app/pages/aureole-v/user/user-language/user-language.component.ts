@@ -101,11 +101,14 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    this.callLoadingApp();
+    setTimeout(() => {
+      this.cancelLoadingApp();
+    },500);
     if (this.user_key) {
       this.mode = MODE.EDIT;
     }
     if (this.user_key) {
-      this.callLoadingApp();
       await this.userLangService
         .findUserLanguageByKey(this.user_key)
         .then((r) => {
@@ -117,8 +120,7 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
               this.userLanguageInfoClone = this.userLanguageInfo.value;
               this.user_id = data.user_id;
               isExist = true;
-            }
-            this.cancelLoadingApp();
+            }           
             // !isExist && this.router.navigate([`/404`]);
           }
         });
@@ -138,7 +140,6 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
         this.resetUserLangInfo[index] = true;
       }
     }
-    this.cancelLoadingApp();
   }
 
   checkAllowSave() {

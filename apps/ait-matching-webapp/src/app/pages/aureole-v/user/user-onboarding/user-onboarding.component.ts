@@ -83,6 +83,7 @@ export class UserOnboardingComponent
     last_name: false,
     katakana: false,
     romaji: false,
+    gender: false,
     bod: false,
     phone_number: false,
     about: false,

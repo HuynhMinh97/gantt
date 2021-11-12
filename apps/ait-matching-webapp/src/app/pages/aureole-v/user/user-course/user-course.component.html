@@ -1,5 +1,5 @@
 <ait-template-popup
-  [width]="1080"
+  [width]="1000"
 >
   <div class="template__popup">
     <ait-text-gradient
@@ -22,12 +22,14 @@
             [isSubmit]="isSubmit"
             [length]="200"
             [clearError]="isClearErrors"
+            [readonly]="isReadonly"
           ></ait-input-text>
         </div>
   
         <div class="input_inline">
           <div class="input_area">
             <nb-checkbox
+              [disabled]="isReadonly ? true : false"
               class="gray-text"
               [checked]="course.controls['is_online'].value"
               [id]="'is_online'"
@@ -54,6 +56,7 @@
             [isSubmit]="isSubmit"
             [disableOutputDefault]="true"
             [allowNew]="true"
+            [isReadOnly]="isReadonly"
           ></ait-autocomplete-master-data>
         </div>
   
@@ -71,6 +74,7 @@
             [isReset]="resetCourse.course_number"
             [isSubmit]="isSubmit"
             [length]="4000"
+            [readonly]="isReadonly"
           ></ait-input-text>
         </div>
   
@@ -86,6 +90,7 @@
             [defaultValue]="course.controls['start_date_from'].value"
             [isReset]="resetCourse.start_date_from"
             [isSubmit]="isSubmit"
+            [readonly]="isReadonly"
           ></ait-datepicker>
   
           <p class="label-datepiker">{{ '~' }}</p>
@@ -99,6 +104,7 @@
             (watchValue)="takeDatePickerValue($event?.value, 'course', 'start_date_to')"
             [defaultValue]="course.controls['start_date_to'].value"
             [isSubmit]="isSubmit"
+            [readonly]="isReadonly"
           ></ait-datepicker>
         </div>
   
@@ -107,7 +113,7 @@
           [id]="'messagError'"
         ></ait-error-message>
   
-        <div class="input_inline">
+        <div class="input_inline" >
           <ait-input-text
             [height]="'108px'"
             [width]="'400px'"
@@ -122,6 +128,8 @@
             [isSubmit]="isSubmit"
             [length]="4000"
             [clearError]="isClearErrors"
+            [readonly]="isReadonly"
+            [style]="'disabled'"
           ></ait-input-text>
         </div>
         <div class="input_inline">   
@@ -144,6 +152,7 @@
             [fileKeys]="course.controls['file'].value"
             (watchValue)="getFiles($event.value)"
             [isSubmit]="isSubmit"
+            [style]="'disabled'"
           ></ait-input-file>
         </div>
   
@@ -209,7 +218,7 @@
           *ngIf=" mode === 'VIEW'"
           [id]="'save close'"
           [width]="'200px'"
-          [title]="'SAVE & CLOSE'"
+          [title]="'CLOSE'"
           (click)="back()"
           [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
       ></ait-button>
