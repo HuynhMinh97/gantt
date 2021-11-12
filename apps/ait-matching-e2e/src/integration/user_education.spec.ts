@@ -1,74 +1,58 @@
-describe('Navigate user experience', () => {
-  it('Check Mode New', function () {
-    cy.login('lacnt', '12345678');
-    // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(2000);
-    cy.visit(Cypress.env('host') + Cypress.env('user_education'));
-    cy.url().should('eq', Cypress.env('host') + Cypress.env('user_education'));
-    resetFormUserEdu();
-    checkUIUserEdu();
-    // checkValidUserEdu();
-    checkSaveDataEdu();
-  });
-});
+export class UserEducation {
 
-// Check title and placeholder
-function checkUIUserEdu() {
-  cy.label('school', ' SCHOOL*');
-  cy.input('school', 'BACH KHOA Ho Chi Minh Technology University');
-  cy.label('degree', ' DEGREE');
-  cy.input('degree', "Ex: Engineer's");
-  cy.label('field_of_study', ' FIELD OF STUDY');
-  cy.input('field_of_study', 'Ex: Computer');
-  cy.label('grade', ' GRADE');
-  cy.input('grade', 'Good');
-  cy.label('start_date_from', ' START DATE');
-  cy.label('description', ' DESCRIPTION');
-  cy.textarea('description', 'Place your text');
+  static checkUIUserEdu() {
+    cy.label('school', ' SCHOOL*');
+    cy.input('school', 'BACH KHOA Ho Chi Minh Technology University');
+    cy.label('degree', ' DEGREE');
+    cy.input('degree', "Ex: Engineer's");
+    cy.label('field_of_study', ' FIELD OF STUDY');
+    cy.input('field_of_study', 'Ex: Computer');
+    cy.label('grade', ' GRADE');
+    cy.input('grade', 'Good');
+    cy.label('start_date_from', ' START DATE');
+    cy.label('description', ' DESCRIPTION');
+    cy.textarea('description', 'Place your text');
 
-}
+  }
 
-// Check reset Form
-function resetFormUserEdu() {
-  inputDataEdu();
-  cy.clickButton('reset');
-  cy.resetForm([
-    'school_input',
-    'degree_input',
-    'field_of_study_input',
-    'grade_input',
-    'start_date_to_input',
-    'description_textarea'
-  ]);
-}
+  // Check reset Form
+  static resetFormUserEdu() {
+    this.inputDataEdu();
+    cy.clickButton('reset');
+    cy.resetForm([
+      'school_input',
+      'degree_input',
+      'field_of_study_input',
+      'grade_input',
+      'start_date_to_input',
+      'description_textarea'
+    ]);
+  }
 
-// check message error required and date of user_education
-function checkValidUserEdu() {
-  cy.clickButton('saveAndContinue');
-  cy.errorMessage('school', '学校 を入力してください。');
+  // check message error required and date of user_education
+  static checkValidUserEdu() {
+    cy.clickButton('saveAndContinue');
+    cy.errorMessage('school', '学校 を入力してください。');
 
-  cy.chooseValueDate('start_date_from', '2021', '8', '27');
-  cy.chooseValueDate('start_date_to', '2020', '8', '1');
-  cy.clickButton('saveAndClose');
-  cy.errorMessage('start-date', '最終日以下の値で開始日を入力してください。');
-}
+    cy.chooseValueDate('start_date_from', '2021', '8', '27');
+    cy.chooseValueDate('start_date_to', '2020', '8', '1');
+    cy.clickButton('saveAndClose');
+    cy.errorMessage('start-date', '最終日以下の値で開始日を入力してください。');
+  }
 
-// Check save and delete in user_education
-function checkSaveDataEdu() {
-  inputDataEdu();
-  cy.intercept({
-    method: 'POST',
-    url: Cypress.env('host') + Cypress.env('api_url'),
-  }).as('dataSaved');
-  cy.clickButton('saveAndContinue');
-  cy.wait('@dataSaved').then((req) => {
-    cy.status(req.response.statusCode);
-    const _key = req.response.body.data.saveUserEducationInfo.data[0]._key;
-    // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
-    cy.visit(
-      Cypress.env('host') + Cypress.env('user_education') + `${_key}`
-    );
+  // Check save and delete in user_education
+  static checkSaveDataEdu() {
+    this.inputDataEdu();
+    cy.intercept({
+      method: 'POST',
+      url: Cypress.env('host') + Cypress.env('api_url'),
+    }).as('dataSaved');
+    cy.clickButton('saveAndClose');
+    cy.wait('@dataSaved').then((req) => {
+      cy.status(req.response.statusCode);
+    })
+  }
+  static findUserEducation(_key: string) {
     const query = `
     query {
       findUserEducationInfo(
@@ -124,15 +108,15 @@ function checkSaveDataEdu() {
       cy.getValueInput('grade', data.grade);
       cy.textareaValue('description', data.description);
     });
-  });
-}
+  }
 
-function inputDataEdu() {
-  cy.chooseMasterData('school', 'Bach Khoa US');
-  cy.typeText('field_of_study', 'IT');
-  cy.typeText('grade', 'Good');
-  cy.typeText('degree', 'Bachelor');
-  cy.chooseDate('start_date_to');
-  cy.typeTextarea('description', 'test cypress');
-  cy.chooseFile('file_input_file', 'anh.jpg');
+  static inputDataEdu() {
+    cy.chooseMasterData('school', 'Bach Khoa US');
+    cy.typeText('field_of_study', 'IT');
+    cy.typeText('grade', 'Good');
+    cy.typeText('degree', 'Engineer');
+    cy.chooseDate('start_date_to');
+    cy.typeTextarea('description', 'test cypress');
+    cy.chooseFile('file_input_file', 'anh.jpg');
+  }
 }
