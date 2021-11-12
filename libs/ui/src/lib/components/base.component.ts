@@ -203,42 +203,17 @@ export class AitBaseComponent implements OnInit, OnDestroy {
   }
 
   public initBaseComponent = () => {
-    const userId = this.authService.getUserID();
-    console.log(userId)
-    // CAll get user info , such as company, username, email, _key
-    // if (localStorage.getItem('access_token')) {
-    //   if (userId && userId !== '') {
-
-    //     this.getUserInfo(userId).then((res: any) => {
-    //       if (!res || !res?.email) {
-    //         this.authService.removeTokens();
-
-    //         location.reload();
-    //       }
-    //       else {
-
-
-    //         // Push company on store base on user-setting
-    //         this.store.dispatch(
-    //           new CHANGECOMPANY(res?.company || this.env.COMMON.COMPANY_DEFAULT)
-    //         );
-    //         localStorage.setItem('comp', res?.company || this.env.COMMON.COMPANY_DEFAULT);
-    //         this.store.dispatch(new StoreUserInfo(res));
-    //       }
-
-    //     });
-
-    //   }
-    //   else {
-    //     this.authService.removeTokens();
-
-    //     setTimeout(() => {
-    //       location.reload();
-    //     },300)
-    //   }
-    // }
-
-    if (localStorage.getItem('refresh_token')) {
+    const isRemember = (localStorage.getItem('isRemember') === 'true');
+    const isCheckedToken = (localStorage.getItem('isCheckedToken') === 'true');
+    console.log(isRemember);
+    console.log(isCheckedToken);
+    // eslint-disable-next-line no-extra-boolean-cast
+    if (!isRemember && !isCheckedToken) {
+      localStorage.setItem('isCheckedToken', 'true');
+      this.authService.removeTokens();
+      location.reload();
+    } else if (localStorage.getItem('refresh_token')) {
+      localStorage.setItem('isCheckedToken', 'false');
       this.refreshToken().then((r: any) => {
         if (r?.data?.refreshToken) {
           const result: any = r?.data?.refreshToken;
@@ -250,10 +225,9 @@ export class AitBaseComponent implements OnInit, OnDestroy {
           location.reload();
         }
       });
+    } else {
+      localStorage.setItem('isCheckedToken', 'false');
     }
-
-
-
   }
   // api call user-setting from master-data
   private settingUpUser = async () => {

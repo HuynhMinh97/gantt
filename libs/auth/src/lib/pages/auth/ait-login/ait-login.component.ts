@@ -283,6 +283,7 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
             console.log(setUser);
             if (setUser?.email) {
               localStorage.setItem('isRemember', JSON.stringify(this.isRemember));
+              localStorage.setItem('isCheckedToken', 'true');
               location.reload();
             }
           }
