@@ -153,13 +153,13 @@ function checkSaveDataOnboarding() {
               ref_collection: "sys_master_data"
               ref_attribute: "code"
             }
-            country: {
-              attribute: "country"
+            country_region: {
+              attribute: "country_region"
               ref_collection: "sys_master_data"
               ref_attribute: "code"
             }
-            city: {
-              attribute: "city"
+            province_city: {
+              attribute: "province_city"
               ref_collection: "sys_master_data"
               ref_attribute: "code"
             }
@@ -198,11 +198,11 @@ function checkSaveDataOnboarding() {
         data {
           _key
           user_id
-          country {
+          country_region {
             _key
             value
           }
-          city {
+          province_city {
             _key
             value
           }
@@ -262,9 +262,9 @@ function checkSaveDataOnboarding() {
       cy.getValueDate('dob', dataUserOnboarding.dob);
       cy.getValueInput('phone_number', dataUserOnboarding.phone_number);
       cy.typeTextarea("about", dataUserOnboarding.about);
-      cy.getValueMaster('country', dataUserOnboarding.country);
+      cy.getValueMaster('country', dataUserOnboarding.country_region);
       cy.getValueInput('postcode', dataUserOnboarding.postcode);
-      cy.getValueMaster('city', dataUserOnboarding.city);
+      cy.getValueMaster('city', dataUserOnboarding.province_city);
       cy.getValueMaster('district', dataUserOnboarding.district);
       cy.getValueMaster('ward', dataUserOnboarding.ward);
       cy.getValueInput('address', dataUserOnboarding.address);
