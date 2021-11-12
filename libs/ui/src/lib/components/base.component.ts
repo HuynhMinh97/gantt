@@ -205,9 +205,6 @@ export class AitBaseComponent implements OnInit, OnDestroy {
   public initBaseComponent = () => {
     const isRemember = (localStorage.getItem('isRemember') === 'true');
     const isCheckedToken = (localStorage.getItem('isCheckedToken') === 'true');
-    console.log(isRemember);
-    console.log(isCheckedToken);
-    // eslint-disable-next-line no-extra-boolean-cast
     if (!isRemember && !isCheckedToken) {
       localStorage.setItem('isCheckedToken', 'true');
       this.authService.removeTokens();
