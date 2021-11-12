@@ -27,19 +27,19 @@
             />
           </div>
           <div class="user-breakinfo">
-            <p class="fullname-profile">
+            <p id= "fullname_input" class="fullname-profile">
               {{DataUserProfile?.last_name}} {{DataUserProfile?.first_name }}
             </p>
-            <p style="padding-top: 30px">
+            <p id = "company_input" style="padding-top: 30px">
               <span> {{DataUserProfile?.title.value }} at {{DataUserProfile?.company_working.value}} </span>
             </p>
-            <p style="margin-top: -10px">
+            <p id = "country_region_input" style="margin-top: -10px">
               <span>{{DataUserProfile?.province_city.value}}, {{DataUserProfile?.country_region.value}}</span>
             </p>
           </div>
         </div>
         <div class="col-md-5 col-lg-4 col-xxxl-4" id="col2">
-          <p  style="width:100%; margin:0 ; height: 100px;  border: none;
+          <p  id = "about_input" style="width:100%; margin:0 ; height: 100px;  border: none;
           outline: none; font-size: 13px;overflow: hidden;resize: none;white-space: break-spaces">
             {{DataUserProfile?.about}}
           </p>
