@@ -132,11 +132,13 @@
             [id]="'file'"
             [maxSize]="1000"
             [maxFiles]="5"
+            [required]="false"
             [hasStatus]="false"
             [isReset]="isResetFile"
             [placeholder]="'Select file'"
             [fileKeys]="userEducationInfo.controls['file'].value"
             (watchValue)="takeFiles($event.value)"
+            [isSubmit]="isSubmit"            
           ></ait-input-file>
         </div>
       </div>
