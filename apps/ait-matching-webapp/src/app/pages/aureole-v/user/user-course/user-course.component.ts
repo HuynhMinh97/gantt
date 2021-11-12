@@ -25,6 +25,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
   course_key = '';
   companyCenter = [];
   error = [];
+  isSave = false;
   isSubmit = false;
   submitFile = false;
   isChanged = false;
@@ -84,7 +85,6 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
   }
   // get value form
   async ngOnInit(): Promise<any> {
-    this.callLoadingApp();
     if (this.course_key) {
       this.mode = MODE.EDIT;
     }
@@ -101,7 +101,6 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
     if (this.course.value.start_date_from == null && this.mode == 'NEW') {
       this.course.controls["start_date_from"].setValue(this.dateNow);
     }
-    this.cancelLoadingApp();
   }
   checkAllowSave() {
     const courseInfo = { ...this.course.value };
@@ -235,7 +234,6 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
   }
 
   async saveAndContinue() {
-    this.callLoadingApp();
     this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;
@@ -248,6 +246,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
     }
     this.error.length
     if (this.course.valid && this.error.length <= 0) {
+      this.callLoadingApp();
       await this.userCourseService
         .saveCourse(saveData)
         .then(async (res) => {
@@ -259,6 +258,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
             setTimeout(() => {
               this.course.controls['start_date_from'].setValue(this.dateNow);
             }, 100);
+            this.isSave = true;
             this.cancelLoadingApp();
           } else {
             this.cancelLoadingApp();
@@ -269,13 +269,11 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         });
     } else {
-      this.cancelLoadingApp();
       this.scrollIntoError();
     }
   }
 
   async saveAndClose() {
-    this.callLoadingApp();
     this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;
@@ -287,6 +285,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
       saveData['is_online'] == false;
     }
     if (this.course.valid && this.error.length <= 0) {
+      this.callLoadingApp();
       await this.userCourseService
         .saveCourse(saveData)
         .then((res) => {
@@ -297,15 +296,14 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
             this.closeDialog(true);
             this.cancelLoadingApp();
           } else {
-            this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
             this.cancelLoadingApp();
+            this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
         }).catch(() => {
-          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           this.cancelLoadingApp();
+          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         });
     } else {
-      this.cancelLoadingApp();
       this.scrollIntoError();
     }
   }
@@ -334,6 +332,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
 
   async find(key: string) {
     if (this.course_key) {
+      this.callLoadingApp();
       await this.userCourseService
         .findCourseByKey(key)
         .then((r) => {
@@ -345,12 +344,13 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
               this.companyCenter = [{ _key: data.training_center?._key }, { value: data.training_center?.value }];
               if (this.user_id != data.user_id) {
                 this.mode = MODE.VIEW
-              }              
+              }   
+              this.cancelLoadingApp();           
             }
             else {
+              this.cancelLoadingApp();
               this.router.navigate([`/404`]);
             }
-            console.log(this.course.value);
           }
         });
     }
@@ -394,12 +394,15 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
         })
         .onClose.subscribe(async (event) => {
           if (event) {
-            // history.back()
             this.closeDialog(false);
           }
         });
     } else {
-      this.closeDialog(false);
+      if(this.isSave){
+        this.closeDialog(true);
+      }else{
+        this.closeDialog(false);
+      }
     }
   }
 

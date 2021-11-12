@@ -142,16 +142,15 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       this.userProject.controls['title'].setValue(this.titleName);
       this.userProject.controls['company_working'].setValue(this.companyName);
       this.userProjectClone = this.userProject.value;
-      this.cancelLoadingApp()
+      this.cancelLoadingApp();
     } else {
       await this.findBizProject();
       await this.findSkills();
-      this.cancelLoadingApp()
+      this.cancelLoadingApp();
     }
     await this.userProject.valueChanges.subscribe((data) => {
       this.checkAllowSave();
     }); 
-    this.cancelLoadingApp() 
   }
 
   checkAllowSave() {
