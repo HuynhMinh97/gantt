@@ -1,0 +1,117 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { COLLECTIONS, GRAPHQL, isObjectFull } from '@ait/shared';
+import { Injectable } from '@angular/core';
+import { AitBaseService } from './ait-base.service';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AitRenderPageService extends AitBaseService {
+  getKey = {
+    _key: true,
+  };
+
+  searchField = {
+    item_no: true,
+    row_no: true,
+    col_no: true,
+    item_id: true,
+    item_label: true,
+    item_placeholder: true,
+    type: true,
+    component_setting: {
+      collection: true,
+      max_item: true,
+      width: true,
+      from_to: true
+    }
+  };
+
+  searchResult = {
+    item_id: true,
+    collection: true,
+    settings: {
+      no_data_message: true,
+      filter_message: true,
+      select_mode: true,
+      paper: {
+        display: true,
+        per_page: true,
+      },
+    },
+    actions: {
+      view: true,
+      copy: true,
+      edit: true,
+      delete: true
+    },
+    columns: {
+      name: true,
+      title: true,
+      type: true,
+      atribute: true,
+      ref_collection: true,
+      ref_attribute: true,
+      is_multi_language: true,
+      style: {
+        width: true,
+      }
+    }
+  };
+
+  async findModule(condition?: any, rf?: any) {
+    const returnFields = rf ? rf : this.getKey;
+    const request = {};
+    request['collection'] = COLLECTIONS.MODULE;
+    if (isObjectFull(condition)) {
+      request['condition'] = condition;
+    }
+    return await this.query(GRAPHQL.FIND_MODULE, request, returnFields);
+  }
+
+  async findGroup(condition?: any, rf?: any) {
+    const returnFields = rf ? rf : this.getKey;
+    const request = {};
+    request['collection'] = COLLECTIONS.GROUP;
+    if (isObjectFull(condition)) {
+      request['condition'] = condition;
+    }
+    return await this.query(GRAPHQL.FIND_GROUP, request, returnFields);
+  }
+
+  async findPage(condition?: any, rf?: any) {
+    const returnFields = rf ? rf : this.getKey;
+    const request = {};
+    request['collection'] = COLLECTIONS.PAGE;
+    if (isObjectFull(condition)) {
+      request['condition'] = condition;
+    }
+    return await this.query(GRAPHQL.FIND_PAGE, request, returnFields);
+  }
+
+  async findSearchCondition(condition?: any, rf?: any) {
+    const returnFields = rf ? rf : this.searchField;
+    const request = {};
+    request['collection'] = COLLECTIONS.SEARCH_CONDITIONS;
+    if (isObjectFull(condition)) {
+      request['condition'] = condition;
+    }
+    request['options'] = {
+      sort_by: {
+        value: 'col_no'
+      }
+    };
+    return await this.query(GRAPHQL.FIND_SEARCH_CONDITIONS, request, returnFields);
+  }
+
+  async findSearchResult(condition?: any, rf?: any) {
+    const returnFields = rf ? rf : this.searchResult;
+    const request = {};
+    request['collection'] = COLLECTIONS.SEARCH_RESULT;
+    if (isObjectFull(condition)) {
+      request['condition'] = condition;
+    }
+    return await this.query(GRAPHQL.FIND_SEARCH_RESULT, request, returnFields);
+  }
+}
