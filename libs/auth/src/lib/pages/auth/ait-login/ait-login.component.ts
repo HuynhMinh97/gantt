@@ -48,7 +48,6 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
   ) {
 
     super(store, authService, apollo, userService, envService);
-    console.log(this.allMessages)
     this.setModulePage({
       page: PAGES.SIGNIN,
       module: MODULES.AUTH
@@ -94,15 +93,11 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
     (this.errors = { ...this.errors, ...newState });
 
   ngOnInit() {
-    console.log('Login page');
-    // const item = of(localStorage.getItem('access_token'));
-    // item.subscribe(d => console.log(d))
-    console.log(history.state)
     if (history.state?.email) {
       this.formLoginCtrl.setValue({
         ...this.formLoginCtrl.value,
         email : history.state?.email
-      })
+      });
     }
   }
 
