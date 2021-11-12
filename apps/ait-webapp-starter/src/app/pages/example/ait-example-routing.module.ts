@@ -1,6 +1,7 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { AitAuthGuardService, AitAppUtils } from '@ait/ui';
+import { RenderPageComponent } from './render-page/render-page.component';
 
 // Push your routes here one by one 🎉
 
@@ -25,6 +26,10 @@ export const routes: Routes = [
         redirectTo: AitAppUtils.isLogined() ? 'ui' : 'sign-in'
       },
     ]
+  },
+  {
+    path: 'master',
+    component: RenderPageComponent,
   },
   {
     path: '',
