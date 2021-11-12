@@ -1,5 +1,5 @@
 import { AitBaseComponent, DarkScreen } from '@ait/ui';
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MENU_ITEMS } from './app.menus';
 
 @Component({
@@ -13,24 +13,5 @@ export class AppComponent extends AitBaseComponent implements OnInit {
 
   ngOnInit() {
     this.initBaseComponent();
-  }
-
-  @HostListener('window:unload', [ '$event' ])
-  unloadHandler() {
-    console.log(2);
-    if (!localStorage.getItem('isRemember')) {
-
-      localStorage.removeItem('refresh_token');
-      localStorage.removeItem('access_token');
-    }
-  }
-
-  @HostListener('window:beforeunload', [ '$event' ])
-  beforeUnloadHandler() {
-    console.log(1);
-    if (!localStorage.getItem('isRemember')) {
-      localStorage.removeItem('refresh_token');
-      localStorage.removeItem('access_token');
-    }
   }
 }
