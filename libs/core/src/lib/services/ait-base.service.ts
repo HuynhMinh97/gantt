@@ -217,7 +217,7 @@ export class AitBaseService {
     }
     aqlStr += `\r\n RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name }) `;
 
-    // console.log(aqlStr);
+    console.log(aqlStr);
 
     try {
       const result = await this.db.query(aqlStr);

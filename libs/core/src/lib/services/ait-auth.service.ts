@@ -243,7 +243,7 @@ export class AuthService {
   private async signToken(user_key: string) {
     const payload = { user_key } as JwtDto;
     const token = await this.jwt.signAsync(payload, {
-      expiresIn: '86400s',
+      expiresIn: '30s',
     });
     const refreshToken = await this.jwt.signAsync(payload, {
       expiresIn: '172800s',

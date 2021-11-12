@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { HostListener, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
@@ -55,4 +55,22 @@ const config: ExtraOptions = {
   bootstrap: [AppComponent],
 })
 export class AppModule {
+  @HostListener('window:unload', [ '$event' ])
+  unloadHandler() {
+    console.log(2);
+    if (!localStorage.getItem('isRemember')) {
+
+      localStorage.removeItem('refresh_token');
+      localStorage.removeItem('access_token');
+    }
+  }
+
+  @HostListener('window:beforeunload', [ '$event' ])
+  beforeUnloadHandler() {
+    console.log(1);
+    if (!localStorage.getItem('isRemember')) {
+      localStorage.removeItem('refresh_token');
+      localStorage.removeItem('access_token');
+    }
+  }
 }
