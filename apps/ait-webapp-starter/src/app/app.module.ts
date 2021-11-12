@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { HostListener, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
@@ -13,6 +13,7 @@ import { AitAuthModule } from '@ait/auth';
 import { AitExamplePageModule } from './pages/example/ait-example.module';
 import { environment } from '../environments/environment';
 import { NbMenuModule } from '@nebular/theme';
+import { RenderPageModule } from './pages/example/render-page/render-page.module';
 
 const AIT_UI_MODULES = [];
 
@@ -39,6 +40,7 @@ const config: ExtraOptions = {
     AitUiModule.forRoot(environment),
     RouterModule.forRoot([], config),
     AitExamplePageModule,
+    RenderPageModule,
     AitAuthModule.forRoot(environment),
     StoreModule.forRoot(
       { ...rootReducers },
@@ -53,4 +55,22 @@ const config: ExtraOptions = {
   bootstrap: [AppComponent],
 })
 export class AppModule {
+  @HostListener('window:unload', [ '$event' ])
+  unloadHandler() {
+    console.log(2);
+    if (!localStorage.getItem('isRemember')) {
+
+      localStorage.removeItem('refresh_token');
+      localStorage.removeItem('access_token');
+    }
+  }
+
+  @HostListener('window:beforeunload', [ '$event' ])
+  beforeUnloadHandler() {
+    console.log(1);
+    if (!localStorage.getItem('isRemember')) {
+      localStorage.removeItem('refresh_token');
+      localStorage.removeItem('access_token');
+    }
+  }
 }

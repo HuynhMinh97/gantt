@@ -94,6 +94,8 @@ export * from './lib/components/ait-output-text/ait-output-text.module';
 //ait toc menu
 export * from './lib/components/ait-toc-menu/ait-toc-menu.module';
 
+//ait group search
+export * from './lib/components/ait-group-search/ait-group-search.module';
 
 //layout modules
 export * from './lib/@theme/layouts/ait-common-layout/ait-common-layout.module'

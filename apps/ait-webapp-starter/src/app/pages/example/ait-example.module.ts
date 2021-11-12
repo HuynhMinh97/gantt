@@ -39,6 +39,7 @@ import { AitExampleGraphQLModule } from './graphql/ait-example-graphql.module';
 import { AitExampleUiModule } from './ui/ait-example-ui.module';
 import { AitExampleRoutingModule } from './ait-example-routing.module';
 import { NbInputModule } from '@nebular/theme';
+import { NgImageSliderModule } from 'ng-image-slider';
 
 // Những module cần dùng cho 1 pages
 const AIT_UI_MODULES = [
@@ -77,7 +78,8 @@ const AIT_UI_SERVICES = [
 ];
 
 @NgModule({
-  declarations: [],
+  declarations: [
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -89,6 +91,7 @@ const AIT_UI_SERVICES = [
     AitExampleUiModule,
     AitExampleRoutingModule,
     NbInputModule,
+    NgImageSliderModule,
     ...AIT_UI_MODULES,
   ],
   exports: [AitExampleRoutingModule],

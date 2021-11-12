@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { HostListener, ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AitLoginComponent } from './pages/auth/ait-login/ait-login.component';
 import { AitSignUpComponent } from './pages/auth/ait-signup/ait-signup.component';
@@ -79,8 +79,7 @@ const AIT_MODULES = [
   ]
 })
 export class AitAuthModule {
-
-
+  
   static forRoot(config): ModuleWithProviders<AitAuthModule> {
     return {
       ngModule: AitAuthModule,

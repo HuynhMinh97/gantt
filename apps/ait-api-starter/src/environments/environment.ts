@@ -22,8 +22,8 @@ export const environment = {
   },
   DATABASE: {
     HOST: 'http://192.168.136.17:8529/',
-    NAME: 'aureole_v_dev',
-    USER: 'aureole_v_dev',
-    PASS: 'aureole_v_dev',
+    NAME: 'ait_starter',
+    USER: 'ait_starter',
+    PASS: 'ait_starter',
   },
 };

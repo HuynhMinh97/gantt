@@ -240,7 +240,7 @@ export class AitBaseService implements OnDestroy {
     query.query[name]['__args'] = { request };
     // Parse to gql
     const gqlQuery = jsonToGraphQLQuery(query, { pretty: true });
-    // console.log(gqlQuery);
+    console.log(gqlQuery);
 
     const result = this.apollo
       .query({
