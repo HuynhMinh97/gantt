@@ -47,6 +47,7 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
 
   mode = MODE.NEW;
   errorArr: any;
+  isSave = false;
   isReset = false;
   isClear = false;
   isSubmit = false;
@@ -61,9 +62,7 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
   user_id = '';
 
   constructor(
-    private router: Router,
     private element: ElementRef,
-    private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
     private dialogService: NbDialogService,
@@ -98,18 +97,15 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
         Validators.maxLength(200),
       ]),
       proficiency: new FormControl(null),
-    });
-
-    // get key form parameters
-    // this.user_key = this.activeRouter.snapshot.paramMap.get('id');
-    
+    }); 
   }
+
   async ngOnInit(): Promise<void> {
-    this.callLoadingApp()
     if (this.user_key) {
       this.mode = MODE.EDIT;
     }
     if (this.user_key) {
+      this.callLoadingApp();
       await this.userLangService
         .findUserLanguageByKey(this.user_key)
         .then((r) => {
@@ -122,6 +118,7 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
               this.user_id = data.user_id;
               isExist = true;
             }
+            this.cancelLoadingApp();
             // !isExist && this.router.navigate([`/404`]);
           }
         });
@@ -174,12 +171,14 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
   }
 
   saveAndContinue() {
+    this.isChanged = false;
     this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
 
     if (this.userLanguageInfo.valid) {
+      this.callLoadingApp();
       this.userLangService
         .save(this.saveData())
         .then((res) => {
@@ -189,11 +188,15 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
             this.userLanguageInfo.reset();
+            this.isSave = true;
+            this.cancelLoadingApp();
           } else {
+            this.cancelLoadingApp();
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
         })
         .catch(() => {
+          this.cancelLoadingApp();
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         });
     } else {
@@ -208,6 +211,7 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
     }, 100);
 
     if (this.userLanguageInfo.valid) {
+      this.callLoadingApp();
       this.userLangService
         .save(this.saveData())
         .then((res) => {
@@ -216,12 +220,15 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
+            this.cancelLoadingApp();
             this.closeDialog(true);
           } else {
+            this.cancelLoadingApp();
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
         })
         .catch(() => {
+          this.cancelLoadingApp();
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         });
     } else {
@@ -322,7 +329,11 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
           }
         });
     } else {
-      this.closeDialog(false);
+      if(this.isSave){
+        this.closeDialog(true);
+      }else{
+        this.closeDialog(false);
+      }
     }
   }
 

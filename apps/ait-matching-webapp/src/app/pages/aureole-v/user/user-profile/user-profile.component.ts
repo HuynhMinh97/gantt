@@ -115,8 +115,8 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
       }
     });
     this.profileId = this.activeRouter.snapshot.paramMap.get('id');
-    if (this.profileId) {
-      this.mode = MODE.VIEW;
+    if (this.profileId && this.profileId != this.user_id) {     
+      this.mode = MODE.VIEW;         
     }else{
       this.profileId = this.user_id;
       this.mode = MODE.EDIT;
