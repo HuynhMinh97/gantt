@@ -1,4 +1,9 @@
-import { checkResetProject, checkSaveProject, checkUIProject } from "./user_project.spec";
+import { UserCertificate } from "./user_certificate.spec";
+import { UserCourse } from "./user_course.spec";
+import { UserEducation } from "./user_education.spec";
+import { UserExperience } from "./user_experience.spec";
+import { UserLanguage } from "./user_language.spec";
+import { UserProject } from "./user_project.spec";
 
 describe('Navigate user profile', () => {
   it('Check Mode New', function () {
@@ -8,7 +13,14 @@ describe('Navigate user profile', () => {
     cy.visit(Cypress.env('host') + Cypress.env('user_profile'));
     cy.url().should('eq', Cypress.env('host') + Cypress.env('user_profile'));
     checkUI();
-    addProjects();
+    // addProjects();
+    // addExperiences();
+    // addCertificates();
+    // addCourses();
+    // addEducations();
+    // addLanguages();
+
+
   });
 
   function checkUI() {
@@ -104,41 +116,410 @@ describe('Navigate user profile', () => {
     cy.get('#menu_item_' + id).should('have.text', ' ' + value + ' ')
   }
 
-  function addSkills() {
-    console.log(123);
-
-  }
-
   function addProjects() {
     cy.get('#openProjects').click();
-    checkUIProject();
-    checkResetProject();
-    checkSaveProject();
+    UserProject.checkUIProject();
+    // UserProject.checkValidateProject();
+    UserProject.checkResetProject();
+    UserProject.checkSaveProject();
+    const query = `{
+      findUserProject(
+        request: {
+          collection: "biz_project"
+          condition: {
+            company_working: {
+            attribute: "company_working",
+            ref_collection: "m_company",
+            ref_attribute: "code"
+          },
+          title: {
+            attribute: "title",
+            ref_collection: "m_title",
+            ref_attribute: "code"
+          }
+            user_id: "${Cypress.env('user_id')}"
+            del_flag: false
+          }
+          options: { sort_by: { value: "start_date_to", order_by: "DESC" } }
+          company: "${Cypress.env('company')}"
+          lang: "${Cypress.env('lang')}"
+          user_id: "${Cypress.env('user_id')}"
+        }
+      ) {
+        data {
+          _key
+          user_id
+          name
+          start_date_from
+          start_date_to
+          company_working {
+            _key
+            value
+          }
+          title {
+            _key
+            value
+          }
+        }
+        message
+        errors
+        status
+        numData
+        numError
+      }
+    }`;
+    cy.request({
+      method: 'POST',
+      url: Cypress.env('host') + Cypress.env('api_url'),
+      body: { query },
+      failOnStatusCode: false,
 
+    }).then((response) => {
+      const data = response.body.data.findUserProject.data[0];
+      cy.get('#ic-edit').click();
+      UserProject.findProject(data._key);
+    })
+    cy.clickButton('cancel');
   }
 
   function addExperiences() {
-    console.log(123);
+    cy.get('#openExperience').click();
+    UserExperience.resetFormUserExp();
+    UserExperience.checkUIUserExp();
+    UserExperience.checkDataComboboxExp();
+    // UserExperience.checkValidateUserExp();
+
+    UserExperience.checkSaveExper();
+    const query = `query {
+      findUserExperienceInfo(
+        request: {
+          collection: "user_experience"
+          condition: {
+            user_id: "${Cypress.env('user_id')}"
+            location: {
+              attribute: "location"
+              ref_collection: "sys_master_data"
+              ref_attribute: "code"
+            }
+            employee_type: {
+              attribute: "employee_type"
+              ref_collection: "sys_master_data"
+              ref_attribute: "code"
+            }
+            title: {
+              attribute: "title"
+              ref_collection: "m_title"
+              ref_attribute: "code"
+            }
+            company_working: {
+              attribute: "company_working"
+              ref_collection: "m_company"
+              ref_attribute: "code"
+            }
+            del_flag: false
+          }
+          company: "${Cypress.env('company')}"
+          lang: "${Cypress.env('lang')}"
+          user_id: "${Cypress.env('user_id')}"
+        }
+      ) {
+        data {
+          _key
+          user_id
+          title {
+            _key
+            value
+          }
+          company_working {
+            _key
+            value
+          }
+          employee_type {
+            _key
+            value
+          }
+          location {
+            _key
+            value
+          }
+          is_working
+          start_date_from
+          start_date_to
+          description
+          del_flag
+        }
+        message
+        errors
+        status
+        numData
+        numError
+      }
+    }
+    `;
+    cy.request({
+      method: 'POST',
+      url: Cypress.env('host') + Cypress.env('api_url'),
+      body: { query },
+      failOnStatusCode: false,
+
+    }).then((response) => {
+      const data = response.body.data.findUserExperienceInfo.data[0];
+      cy.get('#ic-edit').click();
+      UserExperience.findUserExperienceInfo(data._key);
+    })
+    cy.clickButton('cancel');
 
   }
 
   function addCertificates() {
-    console.log(123);
+    cy.get('#openCertificate').click();
+    UserCertificate.checkUICertificate();
+    // UserCertificate.checkValidateCertificate();
+    UserCertificate.checkResetCertificate();
+    UserCertificate.checkSaveCertificate();
 
+    const query = `
+    query {
+      findUsercertificate(
+        request: {
+          collection: "user_certificate_award"
+          condition: {
+            user_id: "${Cypress.env('user_id')}"
+            del_flag: false
+            name: {
+              attribute: "name"
+              ref_collection: "m_certificate_award"
+              ref_attribute: "code"
+            }
+            issue_by: {
+              attribute: "issue_by"
+              ref_collection: "m_training_center"
+              ref_attribute: "code"
+            }
+          }
+          company: "${Cypress.env('company')}"
+          lang: "${Cypress.env('lang')}"
+          user_id: "${Cypress.env('user_id')}"
+        }
+      ) {
+        data {
+          _key
+          name {
+            _key
+            value
+          }
+          issue_by {
+            _key
+            value
+          }
+          issue_date_from
+          issue_date_to
+          user_id
+        }
+        message
+        errors
+        status
+        numData
+        numError
+      }
+    }
+    `; cy.request({
+      method: 'POST',
+      url: Cypress.env('host') + Cypress.env('api_url'),
+      body: { query },
+      failOnStatusCode: false,
+
+    }).then((response) => {
+      const data = response.body.data.findUsercertificate.data[0];
+      cy.get('#ic-edit').click();
+      UserCertificate.findUsercertificate(data._key);
+    })
+    cy.clickButton('cancel');
   }
 
   function addCourses() {
-    console.log(123);
+    cy.get('#openCourse').click();
+    UserCourse.checkUICourse();
+    // UserCourse.checkValidateCourse();
+    UserCourse.checkResetCourse();
+    UserCourse.checkSaveCourse();
+    const query = `
+    query {
+      findCourse(
+        request: {
+          collection: "user_course"
+          condition: {
+            user_id: "${Cypress.env('user_id')}"
+            del_flag: false
+            training_center: {
+              attribute: "training_center"
+              ref_collection: "m_training_center"
+              ref_attribute: "code"
+            }
+          }
+          company: "${Cypress.env('company')}"
+          lang: "${Cypress.env('lang')}"
+          user_id: "${Cypress.env('user_id')}"
+        }
+      ) {
+        data {
+          _key
+          name
+          training_center {
+            _key
+            value
+          }
+          start_date_from
+          start_date_to
+          user_id
+        }
+        message
+        errors
+        status
+        numData
+        numError
+      }
+    }
+    `; cy.request({
+      method: 'POST',
+      url: Cypress.env('host') + Cypress.env('api_url'),
+      body: { query },
+      failOnStatusCode: false,
 
+    }).then((response) => {
+      const data = response.body.data.findCourse.data[0];
+      cy.get('#ic-edit').click();
+      UserCourse.findUserCourse(data._key);
+    })
+    cy.clickButton('cancel');
   }
   function addEducations() {
-    console.log(123);
+    cy.get('#openEducation').click();
+    UserEducation.checkUIUserEdu();
+    // UserEducation.checkValidUserEdu();
+    UserEducation.resetFormUserEdu();
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(3000);
+    UserEducation.checkSaveDataEdu();
+
+    const query = `
+    query {
+      findUserEducationInfo(
+        request: {
+          collection: "user_education"
+          condition: {
+            user_id: "${Cypress.env('user_id')}"
+            school: {
+              attribute: "school"
+              ref_collection: "m_school"
+              ref_attribute: "code"
+            }
+            del_flag: false
+          }
+          company: "${Cypress.env('company')}"
+          lang: "${Cypress.env('lang')}"
+          user_id: "${Cypress.env('user_id')}"
+        }
+      ) {
+        data {
+          _key
+          user_id
+          school {
+            _key
+            value
+          }
+          field_of_study
+          start_date_from
+          start_date_to
+        }
+        message
+        errors
+        status
+        numData
+        numError
+      }
+    }
+    `; cy.request({
+      method: 'POST',
+      url: Cypress.env('host') + Cypress.env('api_url'),
+      body: { query },
+      failOnStatusCode: false,
+
+    }).then((response) => {
+      const data = response.body.data.findUserEducationInfo.data[0];
+      cy.get('#ic-edit').click();
+      UserEducation.findUserEducation(data._key);
+    })
+    cy.clickButton('cancel');
 
   }
 
   function addLanguages() {
-    console.log(123);
+    cy.get('#openLanguage').click();
+    UserLanguage.checkUILanguage();
+    UserLanguage.checkDataCombobox();
+    // UserLanguage.checkValidateLanguage();
+    UserLanguage.resetFormLanguage();
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(3000);
+    UserLanguage.saveDataLanguage();
 
+    const query = `
+    query {
+      findUserLanguageInfo(
+        request: {
+          collection: "user_language"
+          condition: {
+            user_id: "${Cypress.env('user_id')}"
+            language: {
+              attribute: "language"
+              ref_collection: "sys_master_data"
+              ref_attribute: "code"
+            }
+            proficiency: {
+              attribute: "proficiency"
+              ref_collection: "sys_master_data"
+              ref_attribute: "code"
+            }
+            del_flag: false
+          }
+          company: "${Cypress.env('company')}"
+          lang: "${Cypress.env('lang')}"
+          user_id: "${Cypress.env('user_id')}"
+        }
+      ) {
+        data {
+          _key
+          user_id
+          language {
+            _key
+            value
+          }
+          proficiency {
+            _key
+            value
+          }
+          del_flag
+        }
+        message
+        errors
+        status
+        numData
+        numError
+      }
+    }
+    `; cy.request({
+      method: 'POST',
+      url: Cypress.env('host') + Cypress.env('api_url'),
+      body: { query },
+      failOnStatusCode: false,
+
+    }).then((response) => {
+      const data = response.body.data.findUserLanguage.data[0];
+      cy.get('#ic-edit').click();
+      UserLanguage.findUserLanguage(data._key);
+    })
+    cy.clickButton('cancel');
   }
 
 });
