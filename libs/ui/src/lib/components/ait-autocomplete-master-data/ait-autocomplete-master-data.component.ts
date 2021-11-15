@@ -1106,7 +1106,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     this.clearErrors();
 
     this.selectOne = { _key: $event?.code, value: $event?.value };
-    // this.inputControl.patchValue($event?.value || '')
+    this.inputControl.patchValue($event?.value || '')
     this.onInput.emit({ value: $event?.value })
 
     this.watchValue.emit({

@@ -17,22 +17,22 @@ export const routes: Routes = [
   {
     path: 'sign-in',
     component: AitLoginComponent,
-    // canActivate: [AitAuthScreenService],
+    canActivate: [AitAuthScreenService],
   },
   {
     path: 'sign-up',
     component: AitSignUpComponent,
-    // canActivate: [AitAuthScreenService],
+    canActivate: [AitAuthScreenService],
   },
   {
     path: 'change-password',
     component: AitChangePwdComponent,
-    // canActivate: [AitAuthGuardService],
+    canActivate: [AitAuthGuardService],
   },
   {
     path: 'user-setting',
     component: AitUserSettingComponent,
-    // canActivate: [AitAuthGuardService],
+    canActivate: [AitAuthGuardService],
   },
   {
     path: '403',

@@ -231,6 +231,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   async getProjectByUserId(){
     await this.userProjectService.getProjectByUserId(this.profileId)
     .then(async (res) => {
+      // const companyUserProjects = this.groupBy(res.data, p => p.company_working?.value); 
       const data = res.data;
       for(let item in data){
         let isProject = false;
@@ -249,6 +250,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
             project.title = data[item].title?.value;
             project._key = data[item]._key;
             project.time = await this.fomatDate(dateTo - data[item].start_date_from );
+            project.month = this.dateDiffInYears(dateTo, data[item].start_date_from)  
             project.start_date_from = this.getDateFormat(data[item].start_date_from);
             project.start_date_to = data[item].start_date_to ? this.getDateFormat(data[item].start_date_to): "Present";          
             this.userProject[index].data.push(project);
@@ -271,6 +273,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
             project.is_working = true;
           }
           project._key = data[item]._key;
+          project.month = this.dateDiffInYears(dateTo, data[item].start_date_from)
           project.time = await this.fomatDate(dateTo - data[item].start_date_from )
           project.start_date_from = this.getDateFormat(data[item].start_date_from);
           project.start_date_to = data[item].start_date_to ? this.getDateFormat(data[item].start_date_to): "Present";      
@@ -692,5 +695,36 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
 
   toggleContent(group: string, status: boolean) {
     this.isOpen[group] = status;
+  }
+
+  dateDiffInYears(startDate, endDate) {
+    startDate = new Date(startDate);
+    if(endDate) {
+      endDate = new Date();
+    } else {
+      endDate = new Date(endDate);
+    }
+    let months;
+    months = (endDate.getFullYear() - startDate.getFullYear()) * 12;
+    months += (endDate.getMonth() - startDate.getMonth());
+    if(months == 0){
+      return 1;
+    }else{
+      return months;
+    }
+  }
+
+  groupBy(list, keyGetter) {
+    const map = new Map();
+    list.forEach((item) => {
+        const key = keyGetter(item);
+        const collection = map.get(key);
+        if (!collection) {
+            map.set(key, [item]);
+        } else {
+            collection.push(item);
+        }
+    });
+    return map;
   }
 }
