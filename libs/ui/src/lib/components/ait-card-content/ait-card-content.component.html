@@ -1,0 +1,84 @@
+<div
+  [ngClass]="classContainer"
+  style="width: 100%"
+  [id]="id + '_menu_toc_item_' + LABEL"
+>
+  <div
+    class="card__content_container"
+    [nbSpinner]="loading"
+    nbSpinnerStatus="primary"
+  >
+    <div
+      class="header__card"
+      *ngIf="!disableHeader"
+      (click)="toggleExpan()"
+      style="outline-color: #10529d"
+    >
+      <div style="flex-grow: 1" style="outline-color: #10529d">
+        <div
+          class="text__gradient menu_toc_item"
+          [ngClass]="id + '_menu_toc_item'"
+          *ngIf="gradientString !== ''"
+          [ngStyle]="{
+            'background-image': gradientString,
+            padding: 15 + 'px',
+            'padding-left': '15px'
+          }"
+          [id]="'menu_item_' + LABEL"
+          style="outline-color: #10529d"
+        >
+          {{ LABEL }}
+        </div>
+      </div>
+
+      <div style="display: flex; position: relative">
+        <div
+          class="button_header_card"
+          *ngIf="actionBtn.length !== 0"
+          [ngClass]="tooltip ? 'button_header_card disable' : ''"
+          (click)="handleClickBtnHeader()"
+          [nbTooltip]="tooltip"
+          [nbTooltipTrigger]="tooltip ? 'hover' : 'noop'"
+        >
+          <span style="display: flex">
+            <nb-icon style="color: #fff" [icon]="actionBtn[0].icon"></nb-icon>
+            <span
+              class="text"
+              style="
+                text-transform: uppercase;
+                color: #ffffff;
+                font-size: 10px;
+                margin-left: 10px;
+              "
+              >{{ buttonTitle }}</span
+            >
+          </span>
+        </div>
+        <nb-icon
+          class="icon_expan"
+          style="cursor: pointer"
+          *ngIf="!isOpen"
+          icon="arrow-ios-downward-outline"
+        ></nb-icon>
+        <nb-icon
+          class="icon_expan"
+          style="cursor: pointer"
+          *ngIf="isOpen"
+          icon="arrow-ios-upward-outline"
+        ></nb-icon>
+      </div>
+    </div>
+    <div class="divider" *ngIf="!disableHeader"></div>
+    <div
+      class="content"
+      [ngStyle]="{
+        'flex-direction': isColumn ? 'column' : 'row',
+        'align-items': isColumn || isStart ? 'flex-start' : 'center',
+        padding: padding ? padding : ''
+      }"
+      [ngClass]="isOpen ? null : 'isClose'"
+    >
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>
