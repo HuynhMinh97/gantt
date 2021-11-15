@@ -137,6 +137,10 @@ export class UserExperienceComponent
           }
         });
     }else{
+      this.callLoadingApp();
+      setTimeout(() => {
+        this.cancelLoadingApp();
+      },500);
       await this.userExpService
         .findUserProfile(this.authService.getUserID())
         .then((x) => {
@@ -148,6 +152,7 @@ export class UserExperienceComponent
             ...this.defaultCompany,
           });
           this.userExperienceInfoClone = this.userExperienceInfo.value;
+          
         });
     }
     // Run when form value change

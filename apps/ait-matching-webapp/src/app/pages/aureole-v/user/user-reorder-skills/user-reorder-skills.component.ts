@@ -312,7 +312,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
     this.callLoadingApp();
     let listTop = [];
     this.user_skills._from = 'sys_user/' + this.user_id;
-    this.user_skills.relationship = 'sys_user m_skill';
+    this.user_skills.relationship = 'user_skill';
     const _fromSkill = [
       { _from: 'sys_user/' + this.user_id },
     ]

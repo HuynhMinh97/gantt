@@ -86,8 +86,12 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
       this.mode = MODE.EDIT;
     }
     if (this.mode == MODE.NEW) {
+      this.callLoadingApp();
       this.certificate.controls["issue_date_from"].setValue(this.dateNow);
       this.certificateClone = this.certificate.value;
+      setTimeout(() => {
+        this.cancelLoadingApp();
+      },500);
     } else {
       await this.find(this.certificate_key);
     }

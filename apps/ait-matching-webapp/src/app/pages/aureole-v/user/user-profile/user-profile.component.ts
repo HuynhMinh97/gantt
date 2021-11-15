@@ -125,16 +125,19 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   }
   
   async ngOnInit(): Promise<void> {
+    this.callLoadingApp();
     await this.getMasterData();
-    await this.getUserProfileByUserId();
-    await this.getSkillByUserId();
+    this.getUserProfileByUserId();
+    this.getSkillByUserId();
     this.getProjectByUserId();
     this.getExperiencByUserId()
     this.getCentificateByUserId();
     this.getCourseByUserId();
     this.getEducationByUserId();
     this.getLanguageByUserId();
-    await this.getImg();
+    setTimeout(() => {
+      this.cancelLoadingApp();
+    },1000)
   }
   async getMasterData() {
     try {

@@ -24,7 +24,6 @@ export class UserSkillResolver extends AitBaseService {
           RETURN {_key: v._key, skills:skill} 
       `;
       const result = await this.query(aqlQuery);
-      console.log(aqlQuery);
       return await this.query(aqlQuery);
       } else {
       return new UserSkillResponse(RESULT_STATUS.ERROR, [], 'error');
@@ -75,16 +74,16 @@ export class UserSkillResolver extends AitBaseService {
   ) {
     //return this.remove(request, user);
     const user_id = request.user_id;
-
+    const from = JSON.stringify(request.data[0]._from);
     if (user_id) {
       const aqlQuery = `
-      FOR item IN user_skill
-      FOR data IN user_skill
-      FILTER data._from == item._from
-      UPDATE data WITH { del_flag: true } IN user_skill
-      RETURN data
-    `;
-
+        FOR data IN user_skill
+        FILTER data._from == ${from}
+        UPDATE data WITH { del_flag: true } IN user_skill
+        RETURN data
+      `;
+      console.log(aqlQuery);
+      
       return await this.query(aqlQuery);
     } else {
       return new UserSkillResponse(RESULT_STATUS.ERROR, [], 'error');
