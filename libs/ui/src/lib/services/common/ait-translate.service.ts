@@ -95,9 +95,9 @@ export class AitTranslationService {
       const mainCode = code.slice(1, code.length);
 
       const find = mes.find(m => m.code === mainCode);
-      return find?.message[this.currentLang] || code;
+      return find?.message[this.currentLang] || '';
     }
-    return code;
+    return '';
   }
 
   // Please provide api for search master data for page

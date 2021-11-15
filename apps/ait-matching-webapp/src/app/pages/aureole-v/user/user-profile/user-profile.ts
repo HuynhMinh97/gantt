@@ -36,6 +36,7 @@ export interface ProjectDto {
     isEdited:boolean,
     title:string,
     time: string,
+    month: number,
     _key:string,
 }
 export interface GroupExperienceDto {

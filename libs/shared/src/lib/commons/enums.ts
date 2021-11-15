@@ -193,13 +193,21 @@ export enum GRAPHQL {
   GENERATE_TOKEN = 'generateToken',
   CHANGE_PASSWORD = 'changePassword',
   FIND_USER = 'findByConditionUser',
-  CHECK_PASSWORD = 'checkPassword'
+  CHECK_PASSWORD = 'checkPassword',
+
+  FIND_MODULE = 'findSysModule',
+  FIND_GROUP = 'findSysGroup',
+  FIND_PAGE = 'findSysPage',
+  FIND_SEARCH_CONDITIONS = 'findSysSearchCondition',
+  FIND_SEARCH_RESULT = 'findSysSearchResult',
 }
 
 export enum COLLECTIONS {
   USER = 'sys_user',
   CAPTION = 'sys_caption',
   MODULE = 'sys_module',
+  GROUP = 'sys_group',
+  PAGE = 'sys_page',
   MESSAGE = 'sys_message',
   CLASS = 'sys_class',
   MASTER_DATA = 'sys_master_data',
@@ -208,7 +216,9 @@ export enum COLLECTIONS {
   USER_PROFILE = 'user_profile',
   EXAMPLE = 'example',
   COMPANY = 'sys_company',
-  M_SKILL = 'm_skill'
+  M_SKILL = 'm_skill',
+  SEARCH_CONDITIONS = 'sys_search_condition',
+  SEARCH_RESULT = 'sys_search_result'
 }
 
 export enum OPERATOR {
