@@ -25,12 +25,14 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
   course_key = '';
   companyCenter = [];
   error = [];
+  isSave = false;
   isSubmit = false;
   submitFile = false;
   isChanged = false;
   isClear = false;
   isClearErrors = false;
   isResetFile = false;
+  isReadonly = false;
   resetCourse = {
     _key: false,
     course_number: false,
@@ -88,6 +90,10 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
       this.mode = MODE.EDIT;
     }
     if (this.mode == MODE.NEW) {
+      this.callLoadingApp();
+      setTimeout(() => {
+        this.cancelLoadingApp();
+      },500);
       this.course.controls["start_date_from"].setValue(this.dateNow);
       this.courseClone = this.course.value;
     } else {
@@ -110,16 +116,24 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
     );
     this.isChanged = !(isChangedUserInfo);
   }
-  takeInputValue(val: any, form: string): void {
+  takeMasterValue(val: any, form: string): void {
     if (isObjectFull(val) && val.value.length > 0) {
       this.course.controls[form].markAsDirty();
       this.course.controls[form].setValue(val?.value[0]);
     }
     else {
+      this.course.controls[form].markAsDirty();
       this.course.controls[form].setValue(null);
     }
-
-
+  }
+  takeInputValue(val: any, form: string): void {
+    if (val) {
+      this.course.controls[form].markAsDirty();
+      this.course.controls[form].setValue(val);
+    } else {
+      this.course.controls[form].markAsDirty();
+      this.course.controls[form].setValue(null);
+    }
   }
   // is_online
   toggleCheckBox(checked: boolean) {
@@ -225,18 +239,20 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
   }
 
   async saveAndContinue() {
+    debugger
     this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
     const saveData = this.course.value;
-    saveData.training_center = saveData.training_center._key ? saveData.training_center._key : null;
+    saveData.training_center = saveData.training_center ? saveData.training_center._key : null;
     saveData['user_id'] = this.authService.getUserID();
     if (this.course.value.is_online == null) {
       saveData['is_online'] = false;
     }
     this.error.length
     if (this.course.valid && this.error.length <= 0) {
+      this.callLoadingApp();
       await this.userCourseService
         .saveCourse(saveData)
         .then(async (res) => {
@@ -248,10 +264,14 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
             setTimeout(() => {
               this.course.controls['start_date_from'].setValue(this.dateNow);
             }, 100);
+            this.isSave = true;
+            this.cancelLoadingApp();
           } else {
+            this.cancelLoadingApp();
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
         }).catch(() => {
+          this.cancelLoadingApp();
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         });
     } else {
@@ -265,12 +285,13 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
       this.isSubmit = false;
     }, 100);
     const saveData = this.course.value;
-    saveData.training_center = saveData.training_center._key ? saveData.training_center._key : null;
+    saveData.training_center = saveData.training_center ? saveData.training_center._key : null;
     saveData['user_id'] = this.authService.getUserID();
     if (this.course.value.is_online == null) {
       saveData['is_online'] == false;
     }
     if (this.course.valid && this.error.length <= 0) {
+      this.callLoadingApp();
       await this.userCourseService
         .saveCourse(saveData)
         .then((res) => {
@@ -278,11 +299,14 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
-            this.closeDialog(false);
+            this.closeDialog(true);
+            this.cancelLoadingApp();
           } else {
+            this.cancelLoadingApp();
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
         }).catch(() => {
+          this.cancelLoadingApp();
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         });
     } else {
@@ -314,6 +338,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
 
   async find(key: string) {
     if (this.course_key) {
+      this.callLoadingApp();
       await this.userCourseService
         .findCourseByKey(key)
         .then((r) => {
@@ -325,9 +350,12 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
               this.companyCenter = [{ _key: data.training_center?._key }, { value: data.training_center?.value }];
               if (this.user_id != data.user_id) {
                 this.mode = MODE.VIEW
-              }
+                this.isReadonly = true;
+              }   
+              this.cancelLoadingApp();           
             }
             else {
+              this.cancelLoadingApp();
               this.router.navigate([`/404`]);
             }
           }
@@ -350,7 +378,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
           await this.userCourseService.deleteCourseByKey(this.courseClone._key);
           setTimeout(() => {
             this.showToastr('', this.getMsg('I0003'));
-            this.closeDialog(false);
+            this.closeDialog(true);
           }, 100);
         }
       });
@@ -373,12 +401,15 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
         })
         .onClose.subscribe(async (event) => {
           if (event) {
-            // history.back()
             this.closeDialog(false);
           }
         });
     } else {
-      this.closeDialog(false);
+      if(this.isSave){
+        this.closeDialog(true);
+      }else{
+        this.closeDialog(false);
+      }
     }
   }
 

@@ -14,8 +14,8 @@ export interface ProfileDto {
     first_name: string,
     title: KeyValueDto,
     company_working: KeyValueDto,
-    city: KeyValueDto,
-    country: KeyValueDto,
+    province_city: KeyValueDto,
+    country_region: KeyValueDto,
     about: string,
     top_skills: KeyValueDto[];
 }

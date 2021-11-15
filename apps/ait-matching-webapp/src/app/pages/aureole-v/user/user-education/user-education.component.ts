@@ -44,6 +44,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
 
   mode = MODE.NEW;
   errorArr: any;
+  isSave = false;
   isReset = false;
   isClear = false;
   isSubmit = false;
@@ -105,14 +106,14 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
       start_date_to: new FormControl(null),
       description: new FormControl(null),
       file: new FormControl(null),
-    });
-
-    // get key form parameters
-    // this.user_key = this.activeRouter.snapshot.paramMap.get('id');
-    
+    });  
   }
 
   async ngOnInit(): Promise<void> {
+    this.callLoadingApp();
+    setTimeout(() => {
+      this.cancelLoadingApp();
+    },500);
     if (this.user_key) {
       this.mode = MODE.EDIT;
     }
@@ -129,7 +130,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
               this.user_id = data.user_id;
               isUserExist = true;
             }
-            !isUserExist && this.router.navigate([`/404`]);
+            !isUserExist && this.router.navigate([`/404`]);           
           }
         });
     }
@@ -181,6 +182,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     }, 100);
     this.errorArr = this.checkDatePicker();
     if (this.userEducationInfo.valid && !this.isDateCompare) {
+      this.callLoadingApp();
       this.userEduService
         .save(this.saveData())
         .then((res) => {
@@ -189,11 +191,15 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
             this.resetModeNew();
+            this.cancelLoadingApp();
+            this.isSave = true;
           } else {
+            this.cancelLoadingApp();
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
         })
         .catch(() => {
+          this.cancelLoadingApp();
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         });
     } else {
@@ -208,6 +214,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
       this.isSubmit = false;
     }, 100);
     if (this.userEducationInfo.valid && !this.isDateCompare) {
+      this.callLoadingApp();
       this.userEduService
         .save(this.saveData())
         .then((res) => {
@@ -215,12 +222,15 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
-            this.closeDialog(false);
+            this.cancelLoadingApp();
+            this.closeDialog(true);
           } else {
+            this.cancelLoadingApp();
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
         })
         .catch(() => {
+          this.cancelLoadingApp();
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         });
     } else {
@@ -262,7 +272,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
             await this.userEduService.remove(_key).then((res) => {
               if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
                 this.showToastr('', this.getMsg('I0003'));
-                this.closeDialog(false);
+                this.closeDialog(true);
               } else {
                 this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
               }
@@ -356,7 +366,12 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
           }
         });
     } else {
-      this.closeDialog(false);
+      if(this.isSave){
+        this.closeDialog(true);
+      }else{
+        this.closeDialog(false);
+      }
+      
     }
   }
 

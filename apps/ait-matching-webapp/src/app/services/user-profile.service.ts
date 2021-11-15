@@ -12,13 +12,7 @@ export class UserProfileService extends AitBaseService {
       user_id: user_id,
       del_flag: false,
     }
-    condition['top_skills'] = {
-      attribute: 'top_skills',
-      ref_collection: 'm_skill',
-      ref_attribute: '_key',
-      get_by: '_key',
-    }
-    const specialFields = ['country', 'city'];
+    const specialFields = ['country_region', 'province_city'];
 
     specialFields.forEach((item) => {
       condition[item] = {
@@ -52,21 +46,38 @@ export class UserProfileService extends AitBaseService {
         _key: true,
         value: true,
       },
-      city:{
+      province_city:{
         _key: true,
         value: true,
       },
-      country:{
+      country_region:{
         _key: true,
         value: true,
       },
       about: true,
+    })
+  }
+
+  async findTopSkill(user_id: string){
+    const condition = {
+      user_id: user_id,
+      del_flag: false,
+    }
+    condition['top_skills'] = {
+      attribute: 'top_skills',
+      ref_collection: 'm_skill',
+      ref_attribute: '_key',
+      get_by: '_key',
+    }
+    return await this.query('findProfile', {collection: 'user_profile',  condition    }, 
+    {
       top_skills:{
         _key: true,
         value: true,
       },
     })
   }
+
   async getFilesByFileKeys(file_key: string ) {
     if ((file_key).length !== 0) {
       try {

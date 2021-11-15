@@ -1,39 +1,50 @@
 import { isArrayFull, isObjectFull, KeyValueDto } from '@ait/shared';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Guid } from 'guid-typescript';
 import _ from 'lodash';
-
 @Component({
   selector: 'ait-country',
   templateUrl: './country.component.html',
   styleUrls: ['./country.component.scss'],
 })
-export class CountryComponent {
+export class CountryComponent implements OnChanges {
   dataForm: FormGroup;
   guid = Guid.create().toString();
   @Output() watchValue = new EventEmitter();
   @Input() areaStyle = {};
   @Input() elementStyle = {};
-  @Input() masterStyle = { width: '250px' };
+  @Input() masterStyle = { width: '400px' };
   @Input() inputWidth = '400px';
   @Input() isReset = {
-    country: false,
+    country_region: false,
     postcode: false,
-    province: false,
+    province_city: false,
     district: false,
     ward: false,
   };
+  @Input() defaultValue: any;
+  @Input() isSubmit = false;
+  @Input() isClear = false;
   constructor(private formBuilder: FormBuilder) {
     this.dataForm = this.formBuilder.group({
-      country: new FormControl(null),
-      postcode: new FormControl(null),
-      province: new FormControl(null),
-      district: new FormControl(null),
-      ward: new FormControl(null),
+      country_region: new FormControl(null, [Validators.required]),
+      postcode: new FormControl(null, [
+        Validators.required,
+        Validators.maxLength(20),
+      ]),
+      province_city: new FormControl(null, [Validators.required]),
+      district: new FormControl(null, [Validators.required]),
+      ward: new FormControl(null, [Validators.required]),
     });
   }
 
+  ngOnChanges() {
+    if (this.defaultValue) {
+      this.dataForm.patchValue({ ...this.defaultValue })
+    }
+
+  }
   takeInputValue(value: string): void {
     if (value) {
       this.dataForm.controls['postcode'].markAsDirty();
@@ -41,7 +52,7 @@ export class CountryComponent {
     } else {
       this.dataForm.controls['postcode'].setValue(null);
     }
-    this.watchValue.emit(...this.dataForm.value);
+    this.watchValue.emit({ ...this.dataForm.value });
   }
 
   takeMasterValue(value: KeyValueDto | KeyValueDto[], form: string): void {
@@ -63,7 +74,7 @@ export class CountryComponent {
       this.dataForm.controls[form].setValue(null);
       this.resetValue(form);
     }
-    this.watchValue.emit(...this.dataForm.value);
+    this.watchValue.emit({ ...this.dataForm.value });
   }
 
   resetValue(form: string) {
@@ -80,16 +91,16 @@ export class CountryComponent {
         this.isReset.ward = false;
         this.isReset.district = false;
       }, 50);
-    } else if (form === 'country') {
-      this.dataForm.controls['province'].setValue(null);
+    } else if (form === 'country_region') {
+      this.dataForm.controls['province_city'].setValue(null);
       this.dataForm.controls['district'].setValue(null);
       this.isReset.ward = true;
       this.isReset.district = true;
-      this.isReset.province = true;
+      this.isReset.province_city = true;
       setTimeout(() => {
         this.isReset.ward = false;
         this.isReset.district = false;
-        this.isReset.province = false;
+        this.isReset.province_city = false;
       }, 50);
     }
   }

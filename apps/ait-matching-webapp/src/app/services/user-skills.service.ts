@@ -6,16 +6,33 @@ import { Injectable } from '@angular/core';
 })
 export class UserSkillsService extends AitBaseService{
   collection = 'user_skill';
+
+  // async findSkill(_from: string){
+  //   const condition = {
+  //     _from: _from,
+  //     del_flag: false,
+  //   }
+  //   return await this.query('findUserSkill', {collection: this.collection,  condition    }, 
+  //   {
+  //     _to: true
+  //   })
+  // }
+
   async findSkill(_from: string){
     const condition = {
       _from: _from,
       del_flag: false,
     }
-    return await this.query('findUserSkill', {collection: this.collection,  condition    }, 
+    return await this.query('findMSkillByFrom', {collection: this.collection,  condition    }, 
     {
-      _to: true
+      _key: true,
+      skills:{
+        _key: true,
+        value: true,
+      }
     })
   }
+
   async findSkills(){
     return await this.query('findUserSkill', {collection: 'm_skill'},{
 _key:true

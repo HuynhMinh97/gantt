@@ -1,31 +1,25 @@
-<ait-template-popup
-  [width]="1000"
-  [isLoading]="true"
-  [isPage]="false"
->
-<div class="company__info__wrapper">
-  <ait-text-gradient 
+<ait-template-popup [width]="1000" [isLoading]="true" [isPage]="false">
+  <div class="company__info__wrapper">
+    <ait-text-gradient
       [id]="'title'"
       [content]="getTitleByMode()"
-  ></ait-text-gradient>
-  <ait-space></ait-space>
-  <div class="content__card">  
+    ></ait-text-gradient>
+    <ait-space></ait-space>
+    <div class="content__card">
       <div class="input_inline">
         <ait-autocomplete-master
-        [id]="'skills'"
-        [label]="'Add skill'"
-        [required]="true"
-        [collection]="'m_skill'"
-        [maxItem] = "50"
-        [placeholder]="'Fill name and enter to add your skills'"
-        [style]="{ width: '400px' }"
-        (watchValue)="takeMasterValue($event, 'skills')"
-        [defaultValue]="companySkills"
+          [id]="'skills'"
+          [label]="'Add skill'"
+          [required]="true"
+          [collection]="'m_skill'"
+          [maxItem]="50"
+          [placeholder]="'Fill name and enter to add your skills'"
+          [style]="{ width: '400px' }"
+          (watchValue)="takeMasterValue($event, 'skills')"
+          [defaultValue]="companySkills"
         ></ait-autocomplete-master>
       </div>
-     
-      
-  </div>
+    </div>
     <div class="action-row">
       <div class="block">
         <ait-button
@@ -37,29 +31,40 @@
           [isDefault]="true"
           nbSpinnerStatus="primary"
           [width]="'200px'"
-          [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
         ></ait-button>
-         
+
         <ait-button
-        *ngIf=" mode === 'EDIT' || mode === 'NEW'"
+          *ngIf="mode === 'NEW'"
           [id]="'save_continue'"
           [width]="'200px'"
           [title]="'SAVE & CONTINUE'"
-          [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
-          (click)=" saveAndContinue()"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+          (click)="saveAndContinue()"
         ></ait-button>
 
         <ait-button
-          *ngIf=" mode === 'EDIT' || mode === 'NEW'"
+          *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
           [id]="'save close'"
           [width]="'200px'"
           [title]="'SAVE & CLOSE'"
-          [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
           (click)="saveAndClose()"
+        ></ait-button>
+        <ait-button
+          *ngIf="!isChanged && mode === 'EDIT'"
+          [id]="'disabled'"
+          [width]="'200px'"
+          [title]="'SAVE & CLOSE'"
+          [style]="'disabled'"
         ></ait-button>
       </div>
     </div>
-</div>
+  </div>
 </ait-template-popup>
-
-  

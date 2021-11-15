@@ -71,11 +71,7 @@
           [isReset]="resetUserjobAlert.location"
         ></ait-autocomplete-master-data>
       </div>
-     
-      <ait-error-message
-        [id]="'errorDate'"
-        [errors]="errorArr"
-      ></ait-error-message>
+    
       <div class="input_inline">
         <ait-datepicker
           [label]="'AVAILABLE TIME'"
@@ -106,6 +102,12 @@
           [isSubmit]="isSubmit"
         ></ait-datepicker>
       </div>
+
+      <ait-error-message
+        [errors]="errorDate"
+        [id]="'messagErrorDate'"
+      ></ait-error-message>
+
       <div class="input_inline">
         <ait-input-number
         [id]="'salary_from'"
@@ -141,10 +143,12 @@
         [max]="999999999999"
       ></ait-input-number>
       </div>
+
       <ait-error-message
-        [id]="'errorDate'"
-        [errors]="errorArr"
+        [id]="'errorSalary'"
+        [errors]="errorSalary"
       ></ait-error-message>
+
     </div>
     </div>
     <ait-space></ait-space>
@@ -159,7 +163,7 @@
     >
       <div class="button__group">
         <ait-button
-          *ngIf="mode === 'EDIT' || mode === 'NEW'"
+          *ngIf="mode === 'EDIT'"
           [title]="'CANCEL'"
           [id]="'cancel'"
           [background]="
@@ -168,6 +172,18 @@
           [width]="'200px'"
           (click)="back()"
         ></ait-button>
+
+        <ait-button
+          *ngIf="mode === 'NEW'"
+          [title]="'SKIP'"
+          [id]="'skip'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+          [width]="'200px'"
+          (click)="skip()"
+        ></ait-button>
+
         <ait-button
           *ngIf="mode === 'EDIT' || mode === 'NEW'"
           [title]="'RESET'"
@@ -176,34 +192,14 @@
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
           "
           [width]="'200px'"
-          (click)="reset()"
-        ></ait-button>
-        <ait-button
-          *ngIf="mode === 'EDIT'"
-          [id]="'delete'"
-          [title]="'DELETE'"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
-          [width]="'200px'"
-          (click)="deleteUserById()"
-        ></ait-button>
-        <ait-button
-          *ngIf="mode === 'NEW'"
-          [title]="'SAVE & CONTINUE'"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
-          [id]="'saveContinue'"
-          [width]="'200px'"
-          (click)="save()()"
+          (click)="resetForm()"
         ></ait-button>
 
         <ait-button
           [id]="'saveClose'"
-          *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
+          *ngIf="(isChanged && mode === 'EDIT') || (isChanged && mode === 'NEW')"
           [width]="'200px'"
-          [title]="'SAVE & CLOSE'"
+          [title]="'SAVE'"
           (click)="saveAndClose()"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
@@ -211,23 +207,13 @@
         >
         </ait-button>
         <ait-button
-          *ngIf="!isChanged && mode === 'EDIT'"
+          *ngIf="!isChanged"
           [id]="'saveClose'"
           [width]="'200px'"
-          [title]="'SAVE & CLOSE'"
+          [title]="'SAVE'"
           [style]="'disabled'"
         ></ait-button>
 
-        <ait-button
-          *ngIf="mode === 'VIEW'"
-          [id]="'saveClose'"
-          [width]="'200px'"
-          [title]="'CLOSE'"
-          (click)="back()"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
-        ></ait-button>
       </div>
     </div>
 </div>

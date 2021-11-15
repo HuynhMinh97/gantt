@@ -1,10 +1,5 @@
-import {
-  isArrayFull,
-  isObject,
-  isObjectFull,
-} from './../../../../../../../../libs/shared/src/lib/utils/checks.util';
 import { UserOnboardingService } from './../../../../services/user-onboarding.service';
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, Optional } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -13,6 +8,7 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
+  NbDialogRef,
   NbDialogService,
   NbLayoutScrollService,
   NbToastrService,
@@ -31,9 +27,8 @@ import {
   MODE,
 } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
-import { KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
-import { KeyValueCheckedDto, ONBOARD } from './interface';
-
+import { isArrayFull, isObjectFull, KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
+import { KeyValueCheckedDto } from './interface';
 @Component({
   selector: 'ait-user-onboarding',
   templateUrl: './user-onboarding.component.html',
@@ -56,13 +51,11 @@ export class UserOnboardingComponent
   countryCode: any;
   districtCode: any;
   sort_no: number;
-  isCity = true;
   isReset = false;
-  isCountry = true;
   isLangJP = false;
   isSubmit = false;
+  isClear = false;
   isChanged = false;
-  isDistrict = true;
 
   resetUserInfo = {
     first_name: false,
@@ -72,9 +65,9 @@ export class UserOnboardingComponent
     bod: false,
     phone_number: false,
     about: false,
-    country: false,
+    country_region: false,
     postcode: false,
-    city: false,
+    province_city: false,
     district: false,
     ward: false,
     address: false,
@@ -90,12 +83,13 @@ export class UserOnboardingComponent
     last_name: false,
     katakana: false,
     romaji: false,
+    gender: false,
     bod: false,
     phone_number: false,
     about: false,
-    country: false,
+    country_region: false,
     postcode: false,
-    city: false,
+    province_city: false,
     district: false,
     ward: false,
     address: false,
@@ -104,6 +98,13 @@ export class UserOnboardingComponent
     title: false,
     industry: false,
     skills: false,
+  };
+  isResetCountry = {
+    country_region: false,
+    postcode: false,
+    province_city: false,
+    district: false,
+    ward: false,
   };
 
   user_skill = {
@@ -116,7 +117,7 @@ export class UserOnboardingComponent
   user_key = '';
   _key = '';
   user_id_profile = '';
-
+  dataCountry: any;
   constructor(
     private router: Router,
     private element: ElementRef,
@@ -127,6 +128,7 @@ export class UserOnboardingComponent
     private userOnbService: UserOnboardingService,
     private translateService: AitTranslationService,
     private masterDataService: AitMasterDataService,
+    @Optional() private nbDialogRef: NbDialogRef<UserOnboardingComponent>,
     env: AitEnvironmentService,
     store: Store<AppState>,
     apollo: Apollo,
@@ -148,7 +150,6 @@ export class UserOnboardingComponent
       module: 'user',
       page: 'user_onboarding',
     });
-
     this.userOnboardingInfo = this.formBuilder.group({
       first_name: new FormControl(null, [
         Validators.required,
@@ -159,23 +160,21 @@ export class UserOnboardingComponent
         Validators.maxLength(200),
       ]),
       katakana: new FormControl(null, [
-        Validators.required,
-        Validators.maxLength(200),
+        Validators.maxLength(200)
       ]),
       romaji: new FormControl(null, [
-        Validators.required,
-        Validators.maxLength(200),
+        Validators.maxLength(200)
       ]),
       gender: new FormControl(null, [Validators.required]),
       bod: new FormControl(null, [Validators.required]),
       phone_number: new FormControl(null, [Validators.required]),
       about: new FormControl(null),
-      country: new FormControl(null, [Validators.required]),
+      country_region: new FormControl(null, [Validators.required]),
       postcode: new FormControl(null, [
         Validators.required,
         Validators.maxLength(20),
       ]),
-      city: new FormControl(null, [Validators.required]),
+      province_city: new FormControl(null, [Validators.required]),
       district: new FormControl(null, [Validators.required]),
       ward: new FormControl(null, [Validators.required]),
       address: new FormControl(null, [
@@ -190,16 +189,8 @@ export class UserOnboardingComponent
       _key: new FormControl(null),
     });
 
-    // get key form parameters
-    this.user_key = this.activeRouter.snapshot.paramMap.get('id');
-    if (this.user_key) {
-      this.mode = MODE.EDIT;
-    } else {
-      this.countryCode = ONBOARD.SPECIAL_CHAR;
-      this.cityCode = ONBOARD.SPECIAL_CHAR;
-      this.districtCode = ONBOARD.SPECIAL_CHAR;
-    }
-
+    // get key form parameter
+    // this.user_key = this.activeRouter.snapshot.paramMap.get('id');
     this.userOnbService
       .findSiteLanguageById(this.authService.getUserID())
       .then((r) => {
@@ -214,28 +205,24 @@ export class UserOnboardingComponent
 
   async ngOnInit(): Promise<void> {
     if (this.user_key) {
+      this.mode = MODE.EDIT;
+    }
+    if (this.user_key) {
+      this.callLoadingApp();
       await this.userOnbService
         .findUserOnboardingByKey(this.user_key)
         .then(async (r) => {
           if (r.status === RESULT_STATUS.OK) {
             let isUserExist = false;
-            const data = r.data[0];
-            if (r.data.length > 0 && !data.del_flag) {
-              this.userOnboardingInfo.patchValue({ ...data });
+            this.dataCountry = r.data[0];
+            if (r.data.length > 0 && !this.dataCountry.del_flag) {
+              this.userOnboardingInfo.patchValue({ ...this.dataCountry });
               this.userOnboardingInfoClone = this.userOnboardingInfo.value;
-              this.user_id_profile = data.user_id;
-              this._key = data._key;
-              this.countryCode = this.userOnboardingInfo.controls[
-                'country'
-              ].value._key;
-              this.cityCode = this.userOnboardingInfo.controls[
-                'city'
-              ].value._key;
-              this.districtCode = this.userOnboardingInfo.controls[
-                'district'
-              ].value._key;
+              this.user_id_profile = this.dataCountry.user_id;
+              this._key = this.dataCountry._key;
               isUserExist = true;
             }
+            this.cancelLoadingApp();
             !isUserExist && this.router.navigate([`/404`]);
           }
         });
@@ -333,15 +320,17 @@ export class UserOnboardingComponent
         }, 100);
       }
       this.userOnboardingInfo.reset();
-
       setTimeout(() => {
         this.userOnboardingInfo.controls['gender'].setValue({
           ...this.defaultGender,
         });
       }, 100);
-      this.countryCode = ONBOARD.SPECIAL_CHAR;
-      this.cityCode = ONBOARD.SPECIAL_CHAR;
-      this.districtCode = ONBOARD.SPECIAL_CHAR;
+      for (const index in this.isResetCountry) {
+        this.isResetCountry[index] = true;
+        setTimeout(() => {
+          this.isResetCountry[index] = false;
+        }, 50);
+      }
     } else {
       for (const index in this.resetUserInfo) {
         if (!this.userOnboardingInfo.controls[index].value) {
@@ -351,39 +340,36 @@ export class UserOnboardingComponent
           }, 100);
         }
       }
+      this.isClear = true;
+      setTimeout(() => {
+        this.isClear = false;
+      }, 50);
       this.userOnboardingInfo.patchValue({
         ...this.userOnboardingInfoClone,
       });
-
-      this.countryCode = this.userOnboardingInfo.controls['country'].value._key;
-      this.cityCode = this.userOnboardingInfo.controls['city'].value._key;
-      this.districtCode = this.userOnboardingInfo.controls[
-        'district'
-      ].value._key;
+      this.dataCountry = { ...this.userOnboardingInfo.value }
     }
     this.showToastr('', this.getMsg('I0007'));
   }
 
   saveDataUserProfile() {
     const saveData = this.userOnboardingInfo.value;
-    saveData.ward = saveData.ward?._key;
+    saveData.ward = saveData.ward ? saveData.ward?._key : null;
     saveData.title = saveData.title ? saveData.title?._key : null;
-    saveData.city = saveData.city?._key;
+    saveData.province_city = saveData.province_city ? saveData.province_city?._key : null;
     saveData.gender = saveData.gender._key;
-    saveData.country = saveData.country._key;
-    saveData.district = saveData.district._key;
-    saveData.industry = saveData.industry?._key;
+    saveData.country_region = saveData.country_region ? saveData.country_region?._key : null;
+    saveData.district = saveData.district ? saveData.district?._key : null;
+    saveData.industry = saveData.industry ? saveData.industry?._key : null;
     saveData.company_working = saveData.company_working ? saveData.company_working?._key : null;
     this.skills = saveData.skills;
     saveData['top_skills'] = [];
     delete saveData.skills;
-    if (this.mode = MODE.NEW) {
+    if (this.mode === MODE.NEW) {
       saveData['user_id'] = this.user_id;
-
     } else {
       saveData['user_id'] = this.authService.getUserID();
     }
-
     return saveData;
   }
 
@@ -392,12 +378,9 @@ export class UserOnboardingComponent
     this.user_skill.relationship = 'user_skill';
     this.user_skill.sort_no = this.sort_no + 1;
     let number_sort_no = 1;
-
     const skills = [];
-    for (let item of this.skills) {
+    for (const item of this.skills) {
       await this.userOnbService.findSkillsByCode(item._key).then((res) => {
-        console.log(res);
-
         skills.push(res.data[0]._key);
       });
     }
@@ -418,7 +401,9 @@ export class UserOnboardingComponent
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
-    if (!this.userOnboardingInfo.valid) {
+    this.userOnboardingInfo.get('skills').setErrors(null);
+    if (this.userOnboardingInfo.valid) {
+      this.callLoadingApp();
       this.userOnbService
         .save(this.saveDataUserProfile())
         .then((res) => {
@@ -427,12 +412,19 @@ export class UserOnboardingComponent
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
-            this.navigation.back();
+            this.cancelLoadingApp();
+            if(this.user_key){
+              this.close(true);
+            }else{
+              this.navigation.back();
+            }
           } else {
+            this.cancelLoadingApp();
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
         })
         .catch(() => {
+          this.cancelLoadingApp();
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         });
     } else {
@@ -457,7 +449,11 @@ export class UserOnboardingComponent
             await this.userOnbService.remove(_key).then((res) => {
               if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
                 this.showToastr('', this.getMsg('I0003'));
-                history.back();
+                if(this.user_key){
+                  this.close(false);
+                }else{
+                  history.back();
+                }
               } else {
                 this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
               }
@@ -482,11 +478,19 @@ export class UserOnboardingComponent
         })
         .onClose.subscribe(async (event) => {
           if (event) {
-            history.back();
+            if(this.user_key){
+              this.close(false);
+            }else{
+              history.back();
+            }
           }
         });
     } else {
-      history.back();
+      if(this.user_key){
+        this.close(false);
+      }else{
+        history.back();
+      }
     }
   }
 
@@ -519,42 +523,10 @@ export class UserOnboardingComponent
     }
   }
 
-  checkSelectCountry(value: any, target: string) {
-    if (target === 'country') {
-      this.countryCode = value?.value[0]._key;
-      this.cityCode = ONBOARD.SPECIAL_CHAR;
-      this.districtCode = ONBOARD.SPECIAL_CHAR;
-      console.log(this.countryCode);
-    }
-    if (target === 'city') {
-      this.cityCode = value?.value[0]._key;
-      this.districtCode = ONBOARD.SPECIAL_CHAR;
-    }
-    if (target === 'district') {
-      this.districtCode = value?.value[0]._key;
-    }
-  }
-
   takeMasterValue(value: any, target: string): void {
-    if (!isObjectFull(value?.value)) {
-      this.userOnboardingInfo.controls[target].setValue(null);
-      if (target === 'country') {
-        this.countryCode = ONBOARD.SPECIAL_CHAR;
-        this.cityCode = ONBOARD.SPECIAL_CHAR;
-        this.districtCode = ONBOARD.SPECIAL_CHAR;
-      }
-      if (target === 'city') {
-        this.cityCode = ONBOARD.SPECIAL_CHAR;
-        this.districtCode = ONBOARD.SPECIAL_CHAR;
-      }
-      if (target === 'district') {
-        this.districtCode = ONBOARD.SPECIAL_CHAR;
-      }
-    }
     if (isObjectFull(value)) {
       this.userOnboardingInfo.controls[target].markAsDirty();
       this.userOnboardingInfo.controls[target].setValue(value?.value[0]);
-      this.checkSelectCountry(value, target);
     }
   }
 
@@ -587,5 +559,19 @@ export class UserOnboardingComponent
     } else {
       this[group].controls[form].setValue(null);
     }
+  }
+  takeValueCountry(item: any) {
+    if (item) {
+      this.userOnboardingInfo.markAsDirty();
+      this.userOnboardingInfo.patchValue(item);
+    } else {
+      this.userOnboardingInfo.patchValue(null);
+
+    }
+
+  }
+
+  close(event: boolean) {
+    this.nbDialogRef.close(event);
   }
 }

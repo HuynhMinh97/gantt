@@ -29,13 +29,13 @@ export class UserOnboardingInfoEntity extends BaseEntity {
     about?: string;
 
     @Field(() => KeyValueEntity, { nullable: true })
-    country?: KeyValueEntity;
+    country_region?: KeyValueEntity;
 
     @Field(() => String, { nullable: true })
     postcode?: string;
 
     @Field(() => KeyValueEntity, { nullable: true })
-    city?: KeyValueEntity;
+    province_city?: KeyValueEntity;
 
     @Field(() => KeyValueEntity, { nullable: true })
     district?: KeyValueEntity;

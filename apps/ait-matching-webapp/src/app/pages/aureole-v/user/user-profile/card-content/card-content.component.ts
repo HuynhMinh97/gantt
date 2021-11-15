@@ -20,7 +20,7 @@ export class CardContentProfileComponent implements OnInit {
   @Output() onClickButtonHeader = new EventEmitter();
   @Output() onToggle = new EventEmitter();
   @Input() isColumn = false;
-  @Input() isStart = false;
+  @Input() isStart = true;
   @Input() padding = '';
   @Input() tooltip = '';
   @Input() actionBtn = [];
@@ -41,6 +41,7 @@ export class CardContentProfileComponent implements OnInit {
   @Input() buttonTitle = '';
   @Input() classContainer: any;
   @Input() id;
+  @Input() idBtn = '';
 
   ID(element: string) {
     const idx = this.id && this.id !== '' ? this.id : Date.now();
@@ -66,9 +67,11 @@ export class CardContentProfileComponent implements OnInit {
   };
 
 
-  handleClickBtnHeader = () => {
+  handleClickBtnHeader = (event) => {
+    event.stopPropagation();
     !this.tooltip && this.onClickButtonHeader.emit({ clicked: true });
   }
+  
 
   ngOnInit(): void {
   }

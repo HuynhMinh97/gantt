@@ -29,6 +29,7 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
   submitFile = false;
   isChanged = false;
   isResetFile = false;
+  isSave = false;
   error = [];
   isClearError = false;
   resetCertificate = {
@@ -79,18 +80,18 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
       file: new FormControl(null, [Validators.maxLength(5)]),
       user_id: new FormControl(null),
     });
-    // get key form parameters
-    // this.certificate_key = this.activeRouter.snapshot.paramMap.get('id');
-    
   }
-  // get value form
   async ngOnInit(): Promise<any> {
     if (this.certificate_key) {
       this.mode = MODE.EDIT;
     }
     if (this.mode == MODE.NEW) {
+      this.callLoadingApp();
       this.certificate.controls["issue_date_from"].setValue(this.dateNow);
       this.certificateClone = this.certificate.value;
+      setTimeout(() => {
+        this.cancelLoadingApp();
+      },500);
     } else {
       await this.find(this.certificate_key);
     }
@@ -105,8 +106,6 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
   checkAllowSave() {
     const certificateInfo = { ...this.certificate.value };
     const certificateClone = { ...this.certificateClone };
-    // this.setHours(userInfo);
-
     const isChangedUserInfo = AitAppUtils.isObjectEqual(
       { ...certificateInfo },
       { ...certificateClone }
@@ -133,7 +132,6 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
       this.certificate.controls[form].setValue(null);
     }
   }
-
   //date
   setKanjiDate() {
     const dob_jp = kanjidate.format(
@@ -238,8 +236,8 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
       this.isSubmit = false;
     }, 100);
     const saveData = this.certificate.value;
-    saveData.name = saveData.name._key ? saveData.name._key : null;
-    saveData.issue_by = saveData.issue_by._key ? saveData.issue_by._key : null;
+    saveData['name'] = saveData.name?._key ? saveData.name._key : null;
+    saveData['issue_by'] = saveData.issue_by?._key ? saveData.issue_by._key : null;
     if (this.certificate_key) {
       saveData['_key'] = this.certificate_key;
     } else {
@@ -247,23 +245,24 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
     }
     this.error.length
     if (this.certificate.valid && this.error.length <= 0) {
+      this.callLoadingApp();
       await this.cartificateService
         .saveUserCartificate(saveData)
         .then(async (res) => {
-
           if (res?.status === RESULT_STATUS.OK) {
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
             await this.reset();
-            setTimeout(() => {
-              this.certificate.controls['issue_date_from'].setValue(this.dateNow)
-            }, 100);
-
+            setTimeout(() => {this.certificate.controls['issue_date_from'].setValue(this.dateNow)}, 100);
+            this.isSave = true;
+            this.cancelLoadingApp();
           } else {
+            this.cancelLoadingApp();
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
         }).catch(() => {
+          this.cancelLoadingApp();
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         });
     } else {
@@ -284,6 +283,7 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
       saveData['user_id'] = this.authService.getUserID();
     }
     if (this.certificate.valid && this.error.length <= 0) {
+      this.callLoadingApp();
       await this.cartificateService
         .saveUserCartificate(saveData)
         .then((res) => {
@@ -291,8 +291,10 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
-            this.closeDialog(false);
+            this.closeDialog(true);
+            this.cancelLoadingApp();
           } else {
+            this.cancelLoadingApp();
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
         });
@@ -325,6 +327,7 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
 
   async find(key: string) {
     if (this.certificate_key) {
+      this.callLoadingApp();
       await this.cartificateService
         .findUserByKey(key)
         .then((r) => {
@@ -341,8 +344,10 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
               if (this.user_id != data.user_id) {
                 this.mode = MODE.VIEW
               }
+              this.cancelLoadingApp();
             }
             else {
+              this.cancelLoadingApp();
               this.router.navigate([`/404`]);
             }
           }
@@ -367,7 +372,7 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
             await this.cartificateService.remove(this.certificate_key).then((res) => {
               if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
                 this.showToastr('', this.getMsg('I0003'));
-                this.closeDialog(false);
+                this.closeDialog(true);
               } else {
                 this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
               }
@@ -396,7 +401,11 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
           }
         });
     } else {
-      this.closeDialog(false);
+      if(this.isSave){
+        this.closeDialog(true);
+      }else{
+        this.closeDialog(false);
+      }
     }
   }
 

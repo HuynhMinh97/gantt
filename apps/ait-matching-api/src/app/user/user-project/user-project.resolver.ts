@@ -90,30 +90,6 @@ export class UserProjectResolver extends AitBaseService {
         return new UserProjectResponse(RESULT_STATUS.ERROR, [], 'error');
         }
     }
-    @Query(() => UserProjectResponse, { name: 'findMSkillByFrom' })
-    async findMSkillByFrom(
-        @AitCtxUser() user: SysUser,
-        @Args('request', { type: () => UserProjectRequest }) request: UserProjectRequest
-    ) {  
-        const user_id = request.user_id;
-        const lang = request.lang;
-        const from = request.condition._from as string;
-        const collection = request.collection;
-        if (user_id) {
-        const aqlQuery = `
-            FOR v,e, p IN 1..1 OUTBOUND "${from}" ${collection}
-            FILTER  v.del_flag != true
-            let a= {_key: v.code, value:  v.name.${lang} ? v.name.${lang} : v.name,}
-            RETURN {skills: a}
-        `;
-        const result = await this.query(aqlQuery);
-        console.log(result);
-        return await this.query(aqlQuery);
-        } else {
-        return new UserProjectResponse(RESULT_STATUS.ERROR, [], 'error');
-        }
-    }
-
 
     @Mutation(() => UserProjectResponse, { name: 'removeUserProject' })
     async removeUserProject(

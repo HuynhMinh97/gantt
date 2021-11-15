@@ -1,10 +1,10 @@
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { AitAppUtils, AitAuthService, AitBaseComponent, AitEnvironmentService, AppState, getUserSetting, MODE } from '@ait/ui';
-import { Component, OnInit } from '@angular/core';
-import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
+import { AitAppUtils, AitAuthService, AitBaseComponent, AitConfirmDialogComponent, AitEnvironmentService, AitTranslationService, AppState, getUserSetting, MODE } from '@ait/ui';
+import { Component, ElementRef, OnInit } from '@angular/core';
+import { NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
-import { isArrayFull, isObjectFull, RESULT_STATUS } from '@ait/shared';
+import { isArrayFull, isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
 import dayjs from 'dayjs';
 import { UserJobAlertService } from 'apps/ait-matching-webapp/src/app/services/user-job-alert.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -28,6 +28,8 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
   experienceLevels = [];
   employeeTypes = [];
   locations = [];
+  errorDate = [];
+  errorSalary = [];
   resetUserjobAlert = {
     industry: false,
     experience_level: false,
@@ -43,11 +45,14 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
     private router: Router,
     authService: AitAuthService,
     apollo: Apollo,
+    private element: ElementRef,
     env: AitEnvironmentService,
     layoutScrollService: NbLayoutScrollService,
     toastrService: NbToastrService,
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
+    private dialogService: NbDialogService,
+    private translateService: AitTranslationService,
   ) {
     super(store, authService, apollo, null, env, layoutScrollService, toastrService);
 
@@ -138,6 +143,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
       this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(null);
     }
+    this.errorDate = this.checkDatePicker();
   }
 
   takeInputNumberValue(value: any, group: string, form: string) {  
@@ -145,8 +151,10 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
       this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(Number(value));
     } else {
+      this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(null);
     }
+    this.errorSalary = this.checkSalary();
   }
   takeMasterValues(val: any, form: string): void {   
     if (val) {
@@ -165,6 +173,33 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
         
   }
 
+  checkDatePicker() {
+    const res = [];
+    const msg = this.translateService.getMsg('E0004');
+    const dateFrom = this.userjobAlert.controls['start_date_from'].value;
+    const dateTo = this.userjobAlert.controls['start_date_to'].value;
+    if (dateFrom > dateTo && dateTo != null) {
+      const transferMsg = (msg || '')
+        .replace('{0}', this.translateService.translate('date_from'))
+        .replace('{1}', this.translateService.translate('date_to'));
+      res.push(transferMsg);
+    }
+    return res;
+  }
+
+  checkSalary() {
+    const res = [];
+    const msg = this.translateService.getMsg('E0004');
+    const salaryFrom = this.userjobAlert.controls['salary_from'].value;
+    const salaryTo = this.userjobAlert.controls['salary_to'].value;
+    if (salaryFrom > salaryTo && salaryTo != null) {
+      const transferMsg = (msg || '')
+        .replace('{0}', this.translateService.translate('date_from'))
+        .replace('{1}', this.translateService.translate('date_to'));
+      res.push(transferMsg);
+    }
+    return res;
+  }
   getUserJobAlert(){
     this.userJobAlertService.findUserJobAlert(this.userId)
     .then((res) => {
@@ -186,22 +221,56 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
       }
     })
   }
-  save(){
-    const dataSave = this.userjobAlert.value;
-    if(this.mode == "NEW"){
-      dataSave['user_id'] = this.authService.getUserID();
-    }
-    this.userJobAlertService.saveUserJobAlert(this.userjobAlert.value)
-    .then((res) => {
-      if (res?.status === RESULT_STATUS.OK) {
-        const message =
-        this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
-        this.showToastr('', message);
+
+  saveAndContinue(){
+    if(this.errorDate.length > 0 || this.errorSalary.length > 0 ){
+      this.scrollIntoError();
+      return;
+    }else{
+      const dataSave = this.userjobAlert.value;
+      if(this.mode == "NEW"){
+        dataSave['user_id'] = this.authService.getUserID();
       }
-    })    
+      this.userJobAlertService.saveUserJobAlert(this.userjobAlert.value)
+      .then((res) => {
+        if (res?.status === RESULT_STATUS.OK) {
+          const message =
+          this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
+          this.showToastr('', message);
+          this.reset();
+        }else{
+          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+        }
+      })  
+    }  
+  }
+
+  saveAndClose(){
+    if(this.errorDate.length > 0 || this.errorSalary.length > 0 ){
+      this.scrollIntoError();
+      return;
+    }else{
+      const dataSave = this.userjobAlert.value;
+      if(this.mode == "NEW"){
+        dataSave['user_id'] = this.authService.getUserID();
+      }
+      this.userJobAlertService.saveUserJobAlert(this.userjobAlert.value)
+      .then((res) => {
+        if (res?.status === RESULT_STATUS.OK) {
+          const message =
+          this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
+          this.showToastr('', message);
+          history.back();
+        }else{
+          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+        }
+      })
+    }    
   }
 
   async reset() {
+    this.errorDate = [];
+    this.errorSalary = [];
     this.isSubmit = false;
     this.isChanged = false;
     this.userjobAlert.reset();
@@ -214,8 +283,75 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
     setTimeout(() => {
       this.userjobAlert.controls["start_date_from"].setValue(Date.now());
     }, 100);  
-    console.log(this.userjobAlertClone);
+    console.log(this.userjobAlertClone);     
+  }
+  
+  resetForm(){
+    if(this.mode == MODE.NEW){
+      this.reset();
+    }
+    if(this.mode == MODE.EDIT){
+      this.industrys = [];
+      this.experienceLevels = [];
+      this.employeeTypes =[];
+      this.locations = [];
+      setTimeout(() => {
+        this.industrys = this.userjobAlertClone.industry;
+        this.experienceLevels = this.userjobAlertClone.experience_level;
+        this.employeeTypes = this.userjobAlertClone.employee_type;
+        this.locations = this.userjobAlertClone.location;
+        this.userjobAlert.patchValue({ ...this.userjobAlertClone });
+        this.showToastr('', this.getMsg('I0007'));
+      },100)
      
+    }
+  }
+
+  back() {
+    if (this.isChanged) {
+      this.dialogService
+        .open(AitConfirmDialogComponent, {
+          closeOnBackdropClick: true,
+          hasBackdrop: true,
+          autoFocus: false,
+          context: {
+            title: this.getMsg('I0006'),
+          },
+        })
+        .onClose.subscribe(async (event) => {
+          if (event) {
+            history.back();
+            // this.closeDialog(false);
+          }
+        });
+    } else {
+      history.back();
+      // this.closeDialog(false);
+    }
+  }
+  scrollIntoError() {
+    for (const key of Object.keys(this.userjobAlert.controls)) {
+      if (this.userjobAlert.controls[key].invalid) {
+        let invalidControl = this.element.nativeElement.querySelector(
+          `#${key}_input`
+        );
+        if (key == 'file') {
+          invalidControl = this.element.nativeElement.querySelector(
+            `#${key}_input_file`
+          );
+        }
+        try {
+          invalidControl.scrollIntoView({
+            behavior: 'auto',
+            block: 'center',
+          });
+          break;
+        } catch { }
+      }
+    }
+  }
+  skip(){
+    this.router.navigate([``]);
   }
 
 }

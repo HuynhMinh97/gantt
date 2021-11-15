@@ -80,7 +80,7 @@
           [isSubmit]="isSubmit"
           [isReset]="resetUserProject.company_working"
           (watchValue)=" takeMasterValue($event, 'company_working')"
-          [defaultValue]="[companyName]"
+          [defaultValue]="[userProject.controls['company_working'].value]"
           [clearError] = "isClear"
         ></ait-autocomplete-master-data>
       </div>
@@ -100,7 +100,7 @@
           [isSubmit]="isSubmit"
           [disableOutputDefault]="true"
           (watchValue)=" takeMasterValue($event, 'title')"
-          [defaultValue]="[titleName]"
+          [defaultValue]="[userProject.controls['title'].value]"
           [clearError] = "isClear"
         ></ait-autocomplete-master-data>
       </div>
@@ -203,7 +203,6 @@
           [width]="'200px'"
           [title]="'CANCEL'"
           (click)="cancel()"
-          [nbSpinner]="isLoading"
           [isDefault]="true"
           nbSpinnerStatus="primary"
           [tabIndex]="40"

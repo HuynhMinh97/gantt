@@ -45,6 +45,7 @@ export class UserExperienceComponent
 
   mode = MODE.NEW;
   errorArr: any;
+  isSave = false;
   isReset = false;
   isSubmit = false;
   isChanged = false;
@@ -107,16 +108,18 @@ export class UserExperienceComponent
       start_date_to: new FormControl(null),
       description: new FormControl(null),
     });
-
-    // get key form parameters
-    // this.user_key = this.activeRouter.snapshot.paramMap.get('id');
   }
 
   async ngOnInit(): Promise<void> {
     if (this.user_key) {
-      this.mode = MODE.EDIT;
+      if (this.user_id != this.authService.getUserID()) {
+        this.mode = MODE.VIEW;
+      }else{
+        this.mode = MODE.EDIT;
+      }
     }
     if (this.user_key) {
+      this.callLoadingApp();
       await this.userExpService
         .findUserExperienceByKey(this.user_key)
         .then((r) => {
@@ -127,31 +130,17 @@ export class UserExperienceComponent
               this.userExperienceInfo.patchValue({ ...data });
               this.userExperienceInfoClone = this.userExperienceInfo.value;
               this.user_id = data.user_id;
-              isUserExist = true;
+              isUserExist = true;   
             }
+            this.cancelLoadingApp();
             !isUserExist && this.router.navigate([`/404`]);
           }
         });
-    }
-
-    // Run when form value change
-    await this.userExperienceInfo.valueChanges.subscribe((data) => {
-      if (this.userExperienceInfo.pristine) {
-        this.userExperienceInfoClone = AitAppUtils.deepCloneObject(data);
-        this.checkAllowSave();
-      } else {
-        this.checkAllowSave();
-      }
-    });
-
-    // mode view
-    if (this.user_id != this.authService.getUserID()) {
-      this.mode = MODE.VIEW;
-      for (const index in this.resetUserInfo) {
-        this.resetUserInfo[index] = true;
-      }
-    } else {
-      //get default company
+    }else{
+      this.callLoadingApp();
+      setTimeout(() => {
+        this.cancelLoadingApp();
+      },500);
       await this.userExpService
         .findUserProfile(this.authService.getUserID())
         .then((x) => {
@@ -162,22 +151,20 @@ export class UserExperienceComponent
           this.userExperienceInfo.controls['company_working'].setValue({
             ...this.defaultCompany,
           });
+          this.userExperienceInfoClone = this.userExperienceInfo.value;
+          
         });
-      if (this.mode === MODE.NEW) {
-        this.userExperienceInfoClone = this.userExperienceInfo.value;
-
-        this.isChanged = !AitAppUtils.isObjectEqual(
-          { ...this.userExperienceInfo.value },
-          { ...this.userExperienceInfoClone }
-        );
-      }
     }
+    // Run when form value change
+    this.checkAllowSave();
+    await this.userExperienceInfo.valueChanges.subscribe((data) => {
+      this.checkAllowSave();
+    });
   }
 
   checkAllowSave() {
     const userInfo = { ...this.userExperienceInfo.value };
     const userInfoClone = { ...this.userExperienceInfoClone };
-
     this.isChanged = !AitAppUtils.isObjectEqual(
       { ...userInfo },
       { ...userInfoClone }
@@ -246,7 +233,7 @@ export class UserExperienceComponent
             await this.userExpService.remove(_key).then((res) => {
               if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
                 this.showToastr('', this.getMsg('I0003'));
-                this.closeDialog(false);
+                this.closeDialog(true);
               } else {
                 this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
               }
@@ -280,13 +267,13 @@ export class UserExperienceComponent
 
   saveAndContinue() {
     this.errorArr = this.checkDatePicker();
-
     this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
 
     if (this.userExperienceInfo.valid && !this.isDateCompare) {
+      this.callLoadingApp();
       this.userExpService
         .save(this.saveData())
         .then((res) => {
@@ -295,11 +282,15 @@ export class UserExperienceComponent
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
             this.resetModeNew();
+            this.isSave = true;
+            this.cancelLoadingApp();
           } else {
+            this.cancelLoadingApp();
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
         })
         .catch(() => {
+          this.cancelLoadingApp();
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         });
     } else {
@@ -316,6 +307,7 @@ export class UserExperienceComponent
     }, 100);
 
     if (this.userExperienceInfo.valid && !this.isDateCompare) {
+      this.callLoadingApp();
       this.userExpService
         .save(this.saveData())
         .then((res) => {
@@ -323,12 +315,15 @@ export class UserExperienceComponent
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
-            this.closeDialog(false);
+            this.closeDialog(true);
+            this.cancelLoadingApp();
           } else {
+            this.cancelLoadingApp();
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
         })
         .catch(() => {
+          this.cancelLoadingApp();
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         });
     } else {
@@ -436,9 +431,15 @@ export class UserExperienceComponent
           }
         });
     } else {
-      this.closeDialog(false);
+      if(this.isSave){
+        this.closeDialog(true);
+      }else{
+        this.closeDialog(false);
+      }
+      
     }
   }
+
   closeDialog(event: boolean) {
     this.nbDialogRef.close(event);
   }

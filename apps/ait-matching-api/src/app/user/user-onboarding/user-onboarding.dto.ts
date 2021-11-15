@@ -1,4 +1,4 @@
-import { BaseDto, ConditionDto} from '@ait/core';
+import { BaseDto, ConditionDto } from '@ait/core';
 import { InputType, Field, Float } from '@nestjs/graphql';
 
 @InputType()
@@ -28,13 +28,13 @@ export class UserOnboardingInfoDto extends BaseDto {
     about?: string;
 
     @Field(() => ConditionDto, { nullable: true })
-    country?: ConditionDto;
+    country_region?: ConditionDto;
 
     @Field(() => String, { nullable: true })
     postcode?: string;
 
     @Field(() => ConditionDto, { nullable: true })
-    city?: ConditionDto;
+    province_city?: ConditionDto;
 
     @Field(() => ConditionDto, { nullable: true })
     district?: ConditionDto;
@@ -89,13 +89,13 @@ export class SaveUserOnboardingInfoDto extends BaseDto {
     about?: string;
 
     @Field(() => String, { nullable: true })
-    country?: string;
+    country_region?: string;
 
     @Field(() => String, { nullable: true })
     postcode?: string;
 
     @Field(() => String, { nullable: true })
-    city?: string;
+    province_city?: string;
 
     @Field(() => String, { nullable: true })
     district?: string;
@@ -120,6 +120,6 @@ export class SaveUserOnboardingInfoDto extends BaseDto {
 
     @Field(() => [String], { nullable: true })
     top_skills?: string[];
-    
+
 
 }
