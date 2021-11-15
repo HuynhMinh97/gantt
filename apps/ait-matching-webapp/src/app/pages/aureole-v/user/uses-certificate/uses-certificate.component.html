@@ -163,6 +163,7 @@
       <ait-button
       *ngIf="mode ==='EDIT' || mode ==='NEW' "
         [title]="'CANCEL'"
+        [width]="'200px'"
         [id]="'cancel'"
         [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
         (click)="back()"
@@ -170,6 +171,7 @@
       <ait-button
       *ngIf="mode ==='EDIT' || mode ==='NEW' "
         [title]="'RESET'"
+        [width]="'200px'"
         [id]="'reset'"
         [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
         (click)="resetForm()"
@@ -177,6 +179,7 @@
       <ait-button
         *ngIf="mode ==='EDIT'"
         [id]="'delete'"
+        [width]="'200px'"
         [title]="'DELETE'"
         [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
         (click)="deleteUserById()"
@@ -186,6 +189,7 @@
         [title]="'SAVE & CONTINUE'"
         [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
         [id]="'saveContinue'"
+        [width]="'200px'"
         (click)="saveAndContinue()"
       ></ait-button>
   
