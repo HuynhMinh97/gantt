@@ -26,7 +26,7 @@ export class AitBaseService {
   constructor(
     @Inject(DB_CONNECTION_TOKEN) private readonly db: Database,
     @Inject('ENVIRONMENT') private env: any
-  ) { }
+  ) {}
 
   company = '';
   lang = '';
@@ -72,7 +72,6 @@ export class AitBaseService {
     resData.forEach((item) => {
       permissions = [...permissions, ...item?.permission];
     });
-    const roles = resData.map(c => c?.role_id);
 
     // distince permisssions
     permissions = Array.from(new Set(permissions));
@@ -81,7 +80,6 @@ export class AitBaseService {
     dto.page = page_key;
     dto.module = module_key;
     dto.permission = permissions;
-    dto.role_id = roles.join(', ');
 
     return dto;
   }
@@ -378,11 +376,12 @@ export class AitBaseService {
           case OPERATOR.IN:
             aqlStr += ` FILTER LENGTH(INTERSECTION(TO_ARRAY(${JSON.stringify(
               data.filter_custom.value
-            )}),
-            TO_ARRAY(record.${data.filter_custom.attribute
-              }))) == LENGTH(TO_ARRAY(${JSON.stringify(
-                data.filter_custom.value
-              )})) \r\n`;
+            )}), 
+            TO_ARRAY(record.${
+              data.filter_custom.attribute
+            }))) == LENGTH(TO_ARRAY(${JSON.stringify(
+              data.filter_custom.value
+            )})) \r\n`;
             break;
           case OPERATOR.LIKE:
             aqlStr += ` FILTER LOWER(record.${data.filter_custom.attribute}) LIKE LOWER (CONCAT("%", TRIM("${data.filter_custom.valueAsString}"),"%")) \r\n`;

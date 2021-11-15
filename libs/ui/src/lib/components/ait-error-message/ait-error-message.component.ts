@@ -9,7 +9,7 @@ import { Component, Input } from '@angular/core';
         <div
         *ngFor="let err of errors;let i =index"
         style="color: red; font-style: italic; margin-top: 5px" [ngStyle]="style" >
-            <span [id]="ID('error_message_'+i)">{{ err }}</span>
+            <span>{{ err }}</span>
         </div>
         </div>
     </ng-container>
