@@ -1,3 +1,4 @@
+import 'cypress-file-upload';
 export class UserCertificate {
 
   static inputDataCer() {
