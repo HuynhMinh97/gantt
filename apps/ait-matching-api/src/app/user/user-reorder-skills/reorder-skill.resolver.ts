@@ -69,27 +69,4 @@ export class ReorderSkillResolver extends AitBaseService {
       return new ReorderSkillResponse(RESULT_STATUS.ERROR, [], 'error');
     }
   }
-
-    // xoa user_skill
-
-  // @Mutation(() => ReorderSkillResponse, { name: 'removeUserSkillReorder' })
-  // async removeUserSkillReorder(
-  //   @AitCtxUser() user: SysUser,
-  //   @Args('request', { type: () => ReorderSkillRequest }) request: ReorderSkillRequest
-  // ) {
-  //   //return this.remove(request, user);
-  //   const user_id = request.user_id;
-  //   if (user_id) {
-  //     const aqlQuery = `
-  //     FOR item IN user_skill
-  //     FOR data IN user_skill
-  //     FILTER data._from == item._from
-  //     UPDATE data WITH { del_flag: true } IN user_skill
-  //     RETURN data
-  //   `;
-  //     return await this.query(aqlQuery);
-  //   } else {
-  //     return new ReorderSkillResponse(RESULT_STATUS.ERROR, [], 'error');
-  //   }
-  // }
 }

@@ -239,12 +239,13 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
   }
 
   async saveAndContinue() {
+    debugger
     this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
     const saveData = this.course.value;
-    saveData.training_center = saveData.training_center._key ? saveData.training_center._key : null;
+    saveData.training_center = saveData.training_center ? saveData.training_center._key : null;
     saveData['user_id'] = this.authService.getUserID();
     if (this.course.value.is_online == null) {
       saveData['is_online'] = false;
@@ -284,7 +285,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
       this.isSubmit = false;
     }, 100);
     const saveData = this.course.value;
-    saveData.training_center = saveData.training_center._key ? saveData.training_center._key : null;
+    saveData.training_center = saveData.training_center ? saveData.training_center._key : null;
     saveData['user_id'] = this.authService.getUserID();
     if (this.course.value.is_online == null) {
       saveData['is_online'] == false;
