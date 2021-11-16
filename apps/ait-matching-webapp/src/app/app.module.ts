@@ -61,6 +61,7 @@ import { UserCertificateDetailComponent } from './pages/aureole-v/user/user-cert
 import { UserExperienceDetailComponent } from './pages/aureole-v/user/user-experience-detail/user-experience-detail.component';
 import { UserProjectDetailComponent } from './pages/aureole-v/user/user-project-detail/user-project-detail.component';
 import { UserOnboardingDetailComponent } from './pages/aureole-v/user/user-onboarding-detail/user-onboarding-detail.component';
+import { UserJobAlertDetailComponent } from './pages/aureole-v/user/user-job-alert-detail/user-job-alert-detail.component';
 
 const AIT_UI_MODULES = [AitChipModule, AitTabsModule];
 
@@ -105,6 +106,8 @@ const PAGES = [
   UserProjectDetailComponent,
   UserOnboardingDetailComponent,
   CountryComponent,
+  UserJobAlertDetailComponent,
+
 ];
 
 @NgModule({
