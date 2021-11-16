@@ -170,7 +170,7 @@ export class UserProjectService extends AitBaseService {
   async removeSkill(data: any[]) {
     const returnFields = { _key: true };
     return await this.mutation(
-      'removeSkill',
+      'removeSkillProject',
       'biz_project_skill',
       data,
       returnFields
