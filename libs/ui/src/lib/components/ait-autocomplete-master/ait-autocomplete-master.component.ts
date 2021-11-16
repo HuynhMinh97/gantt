@@ -245,9 +245,6 @@ export class AitAutoCompleteMasterComponent
           this.inputControlMaster.setValue(this.inputDefault);
           this.searchByTerm(this.inputControlMaster.value);
         }
-        if (key === 'required') {
-          // console.log(this.required)
-        }
         if (key === 'isReset') {
           if (this.isReset) {
             this.selectItems = [];
@@ -305,7 +302,6 @@ export class AitAutoCompleteMasterComponent
   };
 
   enterItems = async (value) => {
-    console.log(value);
     if (
       this.isNew &&
       this.maxItem === 1 &&
@@ -419,14 +415,12 @@ export class AitAutoCompleteMasterComponent
   };
 
   getDefaultValueByLang = async (keys: string[]) => {
-    console.log(keys);
     const condition =
-      keys.length > 1
+      this.maxItem > 1
         ? { code: { value: keys } }
         : {
             _key: keys[0],
           };
-
     const returnFields = {
       _key: true,
       name: true,
@@ -444,16 +438,11 @@ export class AitAutoCompleteMasterComponent
         if (r?.status === RESULT_STATUS.OK) {
           const result = r.data.map((m) => ({ ...m, value: m?.name }));
           this.selectItems = [...(result || []), ...this.storeDataDraft];
-
-          console.log(this.selectItems);
         }
       });
   };
 
   searchByTerm = (text: string) => {
-    console.log(1);
-    console.log(this.selectItems);
-
     const condition = {
       name: text,
     };
@@ -491,18 +480,14 @@ export class AitAutoCompleteMasterComponent
                   )
               )
             ).filter((f) => !_keys.includes(f._key));
-            console.log(this.filteredData);
             this.messageSearch = this.getEmptyMessage(this.filteredData);
           } else {
-            console.log(JSON.stringify(this.DataSource));
-            console.log(JSON.stringify(this.selectItems));
             this.filteredData = AitAppUtils.deepCloneArray(
               this.DataSource.filter(
                 (item) =>
                   !(this.selectItems || []).some((e) => e.value === item.value)
               )
             );
-            console.log(this.filteredData);
             this.messageSearch = this.getEmptyMessage(this.filteredData);
           }
           this.isOpenSuggest = true;
@@ -565,21 +550,16 @@ export class AitAutoCompleteMasterComponent
     }));
 
   checkItem = (event: Event, opt: any) => {
-    console.log(1);
-
     this.inputControlMaster.patchValue('');
     const itemFind = this.filteredData.find((f) => f.optionId === opt.optionId);
 
     itemFind.isChecked = !itemFind.isChecked;
     this.optionSelected = this.getSelectedOptions();
 
-    console.log(1);
-
     this.watchValue.emit({ value: this.optionSelected });
   };
 
   getFilteredData = () => {
-    console.log(1);
     const _keys = (this.selectItems || []).map((m) => m._key);
     this.filteredData = this.DataSource.filter((f) => !_keys.includes(f._key));
     if (this.filteredData.length !== 0) {
@@ -590,9 +570,6 @@ export class AitAutoCompleteMasterComponent
   };
 
   addItems = (info) => {
-    console.log(info);
-    console.log(this.selectItems);
-
     const itemFind = this.filteredData.find((f) => f._key === info?._key);
     if (this.maxItem === 1) {
       this.selectItems = [itemFind];
@@ -614,8 +591,6 @@ export class AitAutoCompleteMasterComponent
             ])
           ).values(),
         ];
-        console.log(this.selectItems);
-
         this.watchValue.emit({
           value: this.selectItems.map((m) => ({
             _key: m?._key,
@@ -646,8 +621,6 @@ export class AitAutoCompleteMasterComponent
     if (!this.disabled) {
       if (this.maxItem === 1) {
         this.selectItems = [];
-        console.log(1);
-
         this.watchValue.emit({ value: [] });
       } else {
         const find = this.DataSource.find((f) => f._key === info?._key);
@@ -655,8 +628,6 @@ export class AitAutoCompleteMasterComponent
           this.selectItems = this.selectItems.filter(
             (f) => f._key !== info?._key
           );
-          console.log(1);
-
           this.watchValue.emit({
             value: this.selectItems.map((m) => ({
               _key: m?._key,
@@ -667,8 +638,6 @@ export class AitAutoCompleteMasterComponent
           this.selectItems = this.selectItems.filter(
             (f) => f._key !== find?._key
           );
-          console.log(1);
-
           this.watchValue.emit({
             value: this.selectItems.map((m) => ({
               _key: m?._key,
