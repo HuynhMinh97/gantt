@@ -1,3 +1,4 @@
+@import '../../../../../styles/themes.scss';
 .template__popup {
   width: 100%;
   height: 100%;
@@ -16,153 +17,31 @@
       box-shadow: 0 1px 6px rgb(0 0 0 / 6%), 0 1px 1px rgb(0 0 0 / 3%);
       transition: 0.8s all ease-in-out;
   }
-  .row__date {
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    .item__row__date {
-      width: 400px;
-      display: flex;
-      align-items: flex-end;
-    }
-  }
-  .number__group {
-    width: 400px;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: space-between;
-  }
-  .radio__input {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    width: 400px;
-  }
-  .input__group__inline {
-    // margin-top: 16px;
-    width: 400px;
-    &.date {
-      width: auto;
-      // flex: 1;
-    }
-    .info {
-      margin-top: 8px;
-      display: flex;
-      align-items: center;
-    }
-    /* margin-right:100px; */
-    .inpput {
-      color: #8f9bb3;
-      font-size: 15px;
-      width: 100%;
-    }
-    .label {
-      margin: 0;
-      font-weight: bold;
-      font-size: 12px;
-      text-transform: uppercase;
-
-      /* Text Color / Hint */
-
-      color: #8f9bb3;
-      margin-bottom: 0px;
-    }
-  }
 }
 .user__onboarding__wrapper {
   width: 100%;
   height: 100%;
   display: flex;
   position: relative;
-  background: #f9f9f9;
+  background: nb-theme(color-basic-200);
   flex-direction: column;
   align-items: center;
   padding: 100px;
   padding-top: 50px;
   .content__card {
-    width: 65%;
-  }
-  .row__date {
-    width: 100%;
+    width: 60%;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    .item__row__date {
+    justify-content: center;
+    min-height: 130px;
+    background: nb-theme(color-basic-100);
+    margin:0;
+    padding-bottom: 50px;
+    flex-direction: column;
+    box-shadow: 0 1px 6px rgb(0 0 0 / 6%), 0 1px 1px rgb(0 0 0 / 3%);
+    transition: 0.8s all ease-in-out;
+    .form{
       width: 400px;
-      display: flex;
-      align-items: flex-end;
-    }
-  }
-  .number__group {
-    width: 400px;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: space-between;
-  }
-  .radio__input {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    width: 400px;
-  }
-  .input__group__inline {
-    // margin-top: 16px;
-    width: 400px;
-    &.date {
-      width: auto;
-      // flex: 1;
-    }
-    .info {
-      margin-top: 8px;
-      display: flex;
-      align-items: center;
-    }
-    /* margin-right:100px; */
-    .inpput {
-      color: #8f9bb3;
-      font-size: 15px;
-      width: 100%;
-    }
-    .label {
-      margin: 0;
-      font-weight: bold;
-      font-size: 12px;
-      text-transform: uppercase;
-
-      /* Text Color / Hint */
-
-      color: #8f9bb3;
-      margin-bottom: 0px;
-    }
-  }
-}
-div.content {
-  justify-content: center !important;
-}
-@media only screen and (max-width: 992px) {
-  .user__onboarding__wrapper {
-    padding-left: 10px;
-    padding-right: 10px;
-    .content__card {
-      width: 100%;
-    }
-    .number__group {
-      width: 90%;
-    }
-    .radio__input {
-      width: 90%;
-    }
-    .input__group__inline {
-      width: auto;
-      width: 90%;
-      input {
-        width: 100%;
-      }
+      margin: auto;
     }
   }
 }
@@ -302,10 +181,6 @@ nb-radio-group {
   color: #8f9bb3;
 }
 
-::ng-deep .ait-label span {
-  color: #8f9bb3 !important;
-}
-
 .start-date {
   display: flex;
   align-items: flex-end;
@@ -316,6 +191,9 @@ nb-radio-group {
     margin: 12px;
     font-weight: 600;
   }
+}
+::ng-deep .ait-label span {
+  color: #8f9bb3 !important;
 }
 ::ng-deep #user_onboarding input,
 ::ng-deep #user_onboarding textarea {

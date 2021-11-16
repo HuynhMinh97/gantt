@@ -19,43 +19,6 @@ export interface ProfileDto {
     about: string,
     top_skills: KeyValueDto[];
 }
-//project
-export interface GroupProjectDto {
-    company_name: string,
-    floor_building:"Ho Chi Minh City, Vietnam",
-    street:string,
-    working_time:string,
-    date: number,
-    data: ProjectDto[],
-}
-export interface ProjectDto {
-    is_working: boolean,
-    name:string,
-    start_date_from:string,
-    start_date_to:string,
-    isEdited:boolean,
-    title:string,
-    time: string,
-    month: number,
-    _key:string,
-}
-export interface GroupExperienceDto {
-    company_working: string,
-    floor_building:"Ho Chi Minh City, Vietnam",
-    working_time:string,
-    date: number,
-    data: ExperienDto[],
-}
-export interface ExperienDto {
-    title:string,
-    employee_type:string,
-    is_working: boolean,
-    start_date_from:string,
-    start_date_to:string,
-    isEdited:boolean,
-    time: string,
-    _key:string,
-}
 export interface CertificateDto {
     name: string,
     issue_by: string,

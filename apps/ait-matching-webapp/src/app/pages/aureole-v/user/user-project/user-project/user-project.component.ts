@@ -250,7 +250,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
 
   checkDatePicker() {
     const res = [];
-    const msg = this.translateService.getMsg('E0004');
+    const msg = this.getMsg('E0004');
     const dateFrom = this.userProject.controls['start_date_from'].value;
     const dateTo = this.userProject.controls['start_date_to'].value;
 
@@ -313,7 +313,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
-    if (this.userProject.valid) {
+    if (this.userProject.valid && this.error.length == 0) {
       this.callLoadingApp();
       await this.userProjectService.saveBizProject(this.dataSaveProject())
         .then(async (res) => {
@@ -344,7 +344,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
-    if (this.userProject.valid) {
+    if (this.userProject.valid && this.error.length == 0) {
       this.callLoadingApp();
       await this.userProjectService.saveBizProject(this.dataSaveProject())
         .then(async (res) => {
@@ -384,6 +384,19 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
         } catch { }
       }
     }
+
+      if (this.error.length > 0) {
+        const invalidControl = this.element.nativeElement.querySelector(
+          `#messagErrorProject`
+        );
+        try {
+          invalidControl.scrollIntoView({
+            behavior: 'auto',
+            block: 'center',
+          });
+        } catch { }
+      }
+    
   }
 
   setHours(data: any) {

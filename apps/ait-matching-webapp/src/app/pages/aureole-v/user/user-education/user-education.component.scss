@@ -194,50 +194,50 @@ nb-radio-group {
   }
 }
 
-::ng-deep.nb-theme-default
-  nb-radio.status-basic
-  .native-input:enabled:checked
-  ~ .inner-circle,
-::ng-deep.nb-theme-default nb-radio.status-basic .native-input:active,
-::ng-deep.nb-theme-default nb-radio.status-basic .native-input:focus {
-  background-color: nb-theme(color-basic-100) !important;
-}
+// ::ng-deep.nb-theme-default
+//   nb-radio.status-basic
+//   .native-input:enabled:checked
+//   ~ .inner-circle,
+// ::ng-deep.nb-theme-default nb-radio.status-basic .native-input:active,
+// ::ng-deep.nb-theme-default nb-radio.status-basic .native-input:focus {
+//   background-color: nb-theme(color-basic-100) !important;
+// }
 
-::ng-deep.nb-theme-default
-  nb-radio.status-basic
-  label:hover
-  .native-input:checked:enabled
-  ~ .inner-circle {
-  background-color: nb-theme(color-basic-100) !important;
-}
+// ::ng-deep.nb-theme-default
+//   nb-radio.status-basic
+//   label:hover
+//   .native-input:checked:enabled
+//   ~ .inner-circle {
+//   background-color: nb-theme(color-basic-100) !important;
+// }
 
-::ng-deep.nb-theme-default
-  nb-radio.status-basic
-  .native-input:enabled:checked
-  + .outer-circle {
-  background-color: none !important;
-  border-color: nb-theme(color-basic-100) !important;
-}
+// ::ng-deep.nb-theme-default
+//   nb-radio.status-basic
+//   .native-input:enabled:checked
+//   + .outer-circle {
+//   background-color: none !important;
+//   border-color: nb-theme(color-basic-100) !important;
+// }
 
-::ng-deep.nb-theme-default
-  nb-radio.status-basic
-  .native-input:hover
-  + .outer-circle {
-  border-color: nb-theme(color-basic-100) !important;
-}
+// ::ng-deep.nb-theme-default
+//   nb-radio.status-basic
+//   .native-input:hover
+//   + .outer-circle {
+//   border-color: nb-theme(color-basic-100) !important;
+// }
 
-::ng-deep.nb-theme-default nb-radio.status-basic .text {
-  font-size: 13px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 24px;
-  letter-spacing: 0em;
-  color: #8f9bb3;
-}
+// ::ng-deep.nb-theme-default nb-radio.status-basic .text {
+//   font-size: 13px;
+//   font-style: normal;
+//   font-weight: 400;
+//   line-height: 24px;
+//   letter-spacing: 0em;
+//   color: #8f9bb3;
+// }
 
-::ng-deep .ait-label span {
-  color: #8f9bb3 !important;
-}
+// ::ng-deep .ait-label span {
+//   color: #8f9bb3 !important;
+// }
 
 .start-date {
   display: flex;
@@ -255,26 +255,6 @@ label.file-max {
   margin-bottom: 0;
   color: #8f9bb3;
   font-size: 12px;
-}
-
-::ng-deep #user_education input,
-::ng-deep #user_education textarea#description_textarea {
-  font-size: 12px !important;
-}
-
-::ng-deep #user_education nb-icon.icon_expan,
-::ng-deep #user_education .divider,
-::ng-deep #user_education .header__card {
-  display: none;
-}
-::ng-deep #user_education .card__content_container {
-  padding: 30px;
-}
-::ng-deep #user_education .content {
-  padding-top: 0;
-}
-::ng-deep #user_education ait-error-message div {
-  width: 410px;
 }
 ::ng-deep #user_education .sticky {
   position: -webkit-sticky;
