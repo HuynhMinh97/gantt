@@ -198,7 +198,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           for (let item of data) {
             for (let topskill of this.topSkills) {
               if (topskill._key == item._key) {
-                top5.data.push(item.name);
+                top5.data.push(item);
                 break
               }
             }
@@ -209,7 +209,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           let isCategory = false;
           this.skillByCategory.forEach((element, index) => {
             if (item.category == element.name) {
-              this.skillByCategory[index].data.push(item.name);
+              this.skillByCategory[index].data.push(item);
               isCategory = true;
             }
           })
@@ -217,12 +217,12 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
             let skillsGroup = {} as OrderSkill;
             skillsGroup.name = item.category;
             skillsGroup.data = [];
-            skillsGroup.data.push(item.name);
+            skillsGroup.data.push(item);
             this.skillByCategory.push(skillsGroup);
           }
         });
-      }
-    })
+      }      
+    })  
   }
 
   async getProjectByUserId() {
@@ -278,7 +278,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           this.timeExperienceStr = 'You have ' + this.dateDiffInYears(this.timeExperience) + ' experience working'
         }
       })
-
+      
   }
 
   getCentificateByUserId() {
