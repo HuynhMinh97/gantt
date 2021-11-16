@@ -31,10 +31,10 @@
               {{DataUserProfile?.last_name}} {{DataUserProfile?.first_name }}
             </p>
             <p id = "company_input" style="padding-top: 30px">
-              <span> {{DataUserProfile?.title.value }} at {{DataUserProfile?.company_working.value}} </span>
+              <span> {{DataUserProfile?.title?.value }} at {{DataUserProfile?.company_working?.value}} </span>
             </p>
             <p id = "country_region_input" style="margin-top: -10px">
-              <span>{{DataUserProfile?.province_city.value}}, {{DataUserProfile?.country_region.value}}</span>
+              <span>{{DataUserProfile?.province_city?.value}}, {{DataUserProfile?.country_region?.value}}</span>
             </p>
           </div>
         </div>
@@ -149,15 +149,15 @@
       <div class="container-user-project">
         <hr class="hr_header">
         <div *ngFor="let category of skillByCategory; let last = last">
-          <p class="title-skill">{{ category.name }}</p>
-          <ait-dragscroll-skill
-            [skillList]="category.data"
-            [showField]=""
+          <p class="title-skill">{{ category?.name }}</p>
+          <ait-drag-scroll
+            [list]="category.data"
+            [showField]="'name'"
             [width]="'1500px'"
             [maxWidth]="'1500px'"
             [minWidth]="'1500px'"
             [isNormal]="true"
-          ></ait-dragscroll-skill>
+          ></ait-drag-scroll>
           <hr *ngIf="!last" />
         </div>
       </div>
@@ -217,7 +217,7 @@
           <li
             class="timeline-event"
             *ngFor="
-              let project of listProject.data_project;
+              let project of listProject?.data_project;
               let last = last;
               let firstproj = first
             "
@@ -253,8 +253,8 @@
               </div>
               <div id="ic-edit" >
                 <a 
-                  (click)="openProjects(project._key)"
-                  [id]="'project-' + project._key"
+                  (click)="openProjects(project?._key)"
+                  [id]="'project-' + project?._key"
                 >
                   <nb-icon
                     *ngIf="isMyUserProfile"
@@ -329,7 +329,7 @@
         <li
           class="timeline-event"
           *ngFor="
-            let experience of listSxperience.data_project;
+            let experience of listSxperience?.data_project;
             let last = last;
             let firstproj = first
           "
@@ -353,7 +353,7 @@
               <div>
                 <p id="title-timeline">{{experience?.title.value}}</p>
                 <div class="desc-info">
-                  <p>{{experience?.employee_type.value}}</p>
+                  <p>{{experience?.employee_type?.value}}</p>
                   <p *ngIf="!experience.start_date_to">
                     {{ experience?.start_date_from | date:'yyyy/MM' }} - {{'Presen'}}: {{dateDiffInYears(dateDiffInMonths(experience?.start_date_from,null))}}
                   </p>
