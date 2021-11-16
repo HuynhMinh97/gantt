@@ -5,7 +5,6 @@ import { NavigationStart, Router } from '@angular/router';
 import { NbLayoutScrollService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
-import { Chart } from 'chart.js';
 
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import {
@@ -33,11 +32,6 @@ export enum StorageKey {
   templateUrl: './recommenced-user.component.html',
 })
 export class RecommencedComponent extends AitBaseComponent implements OnInit {
-  chart: any;
-  canvas: any;
-  ctx: any;
-  @ViewChild('mychart') mychart;
-
   i18nRecomenced = 'common.aureole-v.recommenced-user';
   isNavigate = false;
   currentKeyword = {};
@@ -526,19 +520,6 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
   // getValue = (v) => console.log(v);
 
   ngOnInit() {
-    const config = {
-      type: 'line',
-      data: [1, 2, 3, 4, 5],
-      options: {},
-    };
-
-    const myChart = new Chart(
-      document.getElementById('myChart') as any,
-      config as any
-    );
-
-    // // console.log(localStorage.getItem(StorageKey.KEYWORD));
-
     const keyword: any = JSON.parse(
       localStorage.getItem(StorageKey.KEYWORD + `_${this.user_id}`)
     );
