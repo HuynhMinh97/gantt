@@ -15,6 +15,15 @@
     margin: 0;
     height: 0px;
   }
+  ::ng-deep.view_contact {
+    .button__wrapper.button__wrapper__primary.isDefault.appearance-filled.size-medium.shape-round.status-basic.nb-transition {
+      min-width: 120px !important;
+    }
+  }
+  .img-timeline{
+    display: flex;
+    align-items: center;
+  }
 }
 .user_profile_wrapper .user-background {
   margin: 0px;
@@ -462,12 +471,6 @@ ul .timeline {
 .skill-righthead {
   display: flex;
   align-items: center;
-}
-
-::ng-deep.view_contact {
-  .button__wrapper.button__wrapper__primary.isDefault.appearance-filled.size-medium.shape-round.status-basic.nb-transition {
-    min-width: 120px !important;
-  }
 }
 .icon_expan {
   &:hover {

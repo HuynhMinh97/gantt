@@ -1,5 +1,6 @@
-.user__language__wrapper {
-  width: 100%;
+@import '../../../../../styles/themes.scss';
+.company__info__wrapper {
+    width: 100%;
     height: 100%;
     // padding: 80px;
     padding-bottom: 0;
@@ -7,273 +8,117 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    .content__card {
-        width: 60%;
-        display: flex;
-        justify-content: center;
-        min-height: 130px;
-        background: nb-theme(color-basic-100);
-        flex-direction: column;
-        box-shadow: 0 1px 6px rgb(0 0 0 / 6%), 0 1px 1px rgb(0 0 0 / 3%);
-        transition: 0.8s all ease-in-out;
-    }
-  .row__date {
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    .item__row__date {
-      width: 400px;
-      display: flex;
-      align-items: flex-end;
-    }
-  }
-  .number__group {
-    width: 400px;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: space-between;
-  }
-  .radio__input {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    width: 400px;
-  }
-  .input__group__inline {
-    // margin-top: 16px;
-    width: 400px;
-    &.date {
-      width: auto;
-      // flex: 1;
-    }
-    .info {
-      margin-top: 8px;
-      display: flex;
-      align-items: center;
-    }
-    /* margin-right:100px; */
-    .inpput {
-      color: #8f9bb3;
-      font-size: 15px;
-      width: 100%;
-    }
-    .label {
-      margin: 0;
-      font-weight: bold;
-      font-size: 12px;
-      text-transform: uppercase;
-
-      /* Text Color / Hint */
-
-      color: #8f9bb3;
-      margin-bottom: 0px;
-    }
-  }
-}
-div.content {
-  justify-content: center !important;
-}
-@media only screen and (max-width: 992px) {
-  .user__language__wrapper {
-    padding-left: 10px;
-    padding-right: 10px;
-    .content__card {
-      width: 100%;
-    }
-    .number__group {
-      width: 90%;
-    }
-    .radio__input {
-      width: 90%;
-    }
-    .input__group__inline {
-      width: auto;
-      width: 90%;
-      input {
-        width: 100%;
+    ::ng-deep .ait-label span {
+        color: #8f9bb3 !important;
       }
-    }
-  }
-}
-
-@media only screen and (max-width: 1466px) {
-  .user__language__wrapper {
-    padding-left: 10px;
-    padding-right: 10px;
-    .content__card {
-      width: 70%;
-    }
-    .number__group {
-      width: 90%;
-    }
-    .radio__input {
-      width: 90%;
-    }
-    .input__group__inline {
-      width: auto;
-      width: 90%;
-      input {
-        width: 100%;
+    ::ng-deep.sticky {
+        position: -webkit-sticky;
+        position: sticky;
+        bottom: 30px;
+        z-index: 10;
       }
-    }
-  }
 }
 
+.input {
+    width: 400px;
+    height: 140px;
+    margin-top: -14px;
+}
+
+.form {
+    display: flex;
+    align-items: center;
+    margin: auto;
+    flex-direction: column;
+}
+
+.content__card {
+    width: 60%;
+    display: flex;
+    justify-content: center;
+    min-height: 130px;
+    background: nb-theme(color-basic-100);
+    padding: 50px;
+    margin-top: 30px;
+    flex-direction: column;
+    box-shadow: 0 1px 6px rgb(0 0 0 / 6%), 0 1px 1px rgb(0 0 0 / 3%);
+    transition: 0.8s all ease-in-out;
+}
+
+@media only screen and (max-width: 1366px) {
+    .company__info__wrapper {
+        padding-left: 10px;
+        padding-right: 10px;
+        .content__card {
+            width: 70%;
+        }
+    }
+     ::ng-deep.input__container {
+        width: 250px !important;
+    }
+}
+.input_inline {
+  width: 400px;
+  display: flex;
+  justify-content: flex-start;
+}
 .action-row {
-  .block {
+    .block {
+        justify-content: center;
+        align-items: center;
+        display: flex;
+    }
+    margin-top: 50px;
     justify-content: center;
     align-items: center;
+    padding: 20px;
     display: flex;
-  }
-  margin-top: 50px;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-  button {
-    width: 180px;
-  }
-  ait-button + ait-button {
-    padding-left: 20px;
-  }
+    button {
+        width: 180px;
+    }
+    ait-button+ait-button {
+        padding-left: 20px;
+    }
 }
 
+
+
 .input_area {
-  width: 410px;
-  margin-bottom: 14px;
-  margin-top: 14px;
+    width: 400px;
+    margin-bottom: 14px;
+    display: flex;
+    // justify-content: flex-end;
 }
 
 .input_inline {
-  width: 100%;
-  margin-bottom: 14px;
-  margin-top: 4px;
-}
-
-.width_400 {
-  width: 400px;
-}
-
-nb-radio-group {
-  display: flex;
-  margin-bottom: 5px;
-}
-
-:host ::ng-deep .gray-text {
-  .text {
-    color: #8f9bb3 !important;
-  }
-}
-
-:host ::ng-deep .start_date_to {
-  input {
-    height: 40px;
-  }
-}
-
-.nb-radio + .nb-radio {
-  margin-right: 20px;
+    width: 100%;
+    margin-bottom: 4px;
+    margin-top: 14px;
+    display: flex;
 }
 
 .check-form {
-  display: flex;
-  label {
-    border: 2px solid white;
-    border-radius: 2px;
+    display: flex;
+    margin-top: 0px;
+    label {
+        border: 2px solid white;
+        border-radius: 2px;
+    }
+    .pcontent {
+        font-weight: 400;
+        font-size: 13px;
+        line-height: 24px;
+        color: #8f9bb3;
+        margin-left: 6px;
+    }
+}
+p.label-datepiker {
+    position: relative;
+    top: 32px;
+    font-size: 22px;
+    color: #080808;
+    left: 20px;
   }
-  .pcontent {
-    font-weight: 400;
-    font-size: 13px;
-    line-height: 24px;
-    color: #8f9bb3;
-    margin-left: 6px;
-    margin-bottom: 0;
-  }
-}
-
-::ng-deep.nb-theme-default
-  nb-radio.status-basic
-  .native-input:enabled:checked
-  ~ .inner-circle,
-::ng-deep.nb-theme-default nb-radio.status-basic .native-input:active,
-::ng-deep.nb-theme-default nb-radio.status-basic .native-input:focus {
-  background-color: nb-theme(color-basic-100) !important;
-}
-
-::ng-deep.nb-theme-default
-  nb-radio.status-basic
-  label:hover
-  .native-input:checked:enabled
-  ~ .inner-circle {
-  background-color: nb-theme(color-basic-100) !important;
-}
-
-::ng-deep.nb-theme-default
-  nb-radio.status-basic
-  .native-input:enabled:checked
-  + .outer-circle {
-  background-color: none !important;
-  border-color: nb-theme(color-basic-100) !important;
-}
-
-::ng-deep.nb-theme-default
-  nb-radio.status-basic
-  .native-input:hover
-  + .outer-circle {
-  border-color: nb-theme(color-basic-100) !important;
-}
-
-::ng-deep.nb-theme-default nb-radio.status-basic .text {
-  font-size: 13px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 24px;
-  letter-spacing: 0em;
-  color: #8f9bb3;
-}
-
-::ng-deep .ait-label span {
-  color: #8f9bb3 !important;
-}
-
-.start-date {
-  display: flex;
-  align-items: flex-end;
-  width: 400px;
-
-  span {
-    color: #8f9bb3;
-    margin: 12px;
-    font-weight: 600;
-  }
-}
-label.file-max {
-  margin-top: 5px;
-  margin-bottom: 0;
-  color: #8f9bb3;
-  font-size: 12px;
-}
-
-::ng-deep #user_language input {
-  font-size: 12px !important;
-}
-
-::ng-deep #user_language nb-icon.icon_expan,
-::ng-deep #user_language .divider,
-::ng-deep #user_language .header__card {
-  display: none;
-}
-// ::ng-deep #user_language .card__content_container {
-//   padding: 30px;
-// }
-::ng-deep #user_language .content {
-  padding-top: 0;
-}
-::ng-deep #user_language .sticky {
-  position: -webkit-sticky;
-  position: sticky;
-  bottom: 30px;
-  z-index: 10;
+.date{
+    display: flex;
 }

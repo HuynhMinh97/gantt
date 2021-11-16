@@ -330,7 +330,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
 
   checkDatePicker() {
     const res = [];
-    const msg = this.translateService.getMsg('E0004');
+    const msg = this.getMsg('E0004');
     const dateFrom = this.userEducationInfo.controls['start_date_from'].value;
     const dateTo = this.userEducationInfo.controls['start_date_to'].value;
     this.isDateCompare = false;

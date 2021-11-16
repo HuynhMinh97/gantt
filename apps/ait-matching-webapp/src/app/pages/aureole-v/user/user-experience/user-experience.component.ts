@@ -387,7 +387,7 @@ export class UserExperienceComponent
 
   checkDatePicker() {
     const res = [];
-    const msg = this.translateService.getMsg('E0004');
+    const msg = this.getMsg('E0004');
     const dateFrom = this.userExperienceInfo.controls['start_date_from'].value;
     const dateTo = this.userExperienceInfo.controls['start_date_to'].value;
     const isWorking = this.userExperienceInfo.controls['is_working'].value;

@@ -167,7 +167,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
 
   checkDatePicker() {
     const res = [];
-    const msg = this.translateService.getMsg('E0004');
+    const msg = this.getMsg('E0004');
     const dateFrom = this.course.controls['start_date_from'].value;
     const dateTo = this.course.controls['start_date_to'].value;
     if (dateFrom > dateTo && dateTo != null) {
