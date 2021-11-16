@@ -5,22 +5,23 @@ import { ActivatedRoute } from '@angular/router';
 import { NbToastrService, NbLayoutScrollService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
-import { UserProjectDto } from '../user-certificate/certificate-interface';
-import { UserCerfiticateService } from './../../../../services/user-certificate.service';
+import { UserProjectDto } from '../user-project/user-project/interface';
+import { UserProjectService } from './../../../../services/user-project.service';
 
 
 @Component({
-  selector: 'ait-user-certificate-detail',
-  templateUrl: './user-certificate-detail.component.html',
-  styleUrls: ['./user-certificate-detail.component.scss']
+  selector: 'ait-user-project-detail',
+  templateUrl: './user-project-detail.component.html',
+  styleUrls: ['./user-project-detail.component.scss']
 })
-export class UserCertificateDetailComponent extends AitBaseComponent implements OnInit {
+export class UserProjectDetailComponent extends AitBaseComponent implements OnInit {
 
   user_key: any = '';
-  stateUserCertificate = {} as UserProjectDto;
+  stateUserSkill: any;
+  stateUserProject = {} as UserProjectDto;
   constructor(
     public activeRouter: ActivatedRoute,
-    public certificateService: UserCerfiticateService,
+    private userProjectService: UserProjectService,
     env: AitEnvironmentService,
     store: Store<AppState>,
     apollo: Apollo,
@@ -40,7 +41,7 @@ export class UserCertificateDetailComponent extends AitBaseComponent implements 
 
     this.setModulePage({
       module: 'user',
-      page: 'user_certificate',
+      page: 'user_project',
     });
   }
 
@@ -48,15 +49,27 @@ export class UserCertificateDetailComponent extends AitBaseComponent implements 
     const id = AitAppUtils.getParamsOnUrl(true);
     this.user_key = id;
     if (this.user_key) {
-      await this.certificateService
-        .findUserByKey(this.user_key)
+      await this.userProjectService
+        .find(this.user_key)
         .then((r) => {
           if (r.status === RESULT_STATUS.OK) {
             const data = r.data[0];
-            this.stateUserCertificate = data;
+            this.stateUserProject = data;
+            console.log(this.stateUserProject);
+
           }
+        });
+      const from = 'biz_project/' + this.user_key;
+      await this.userProjectService.findSkillsByFrom(from)
+        .then(async (res) => {
+          const listSkills = [];
+          for (const skill of res.data) {
+            listSkills.push(skill?.skills.value);
+          }
+          this.stateUserSkill = listSkills;
         })
     }
   }
+
 
 }

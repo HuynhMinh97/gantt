@@ -1,0 +1,92 @@
+<div class="template__popup">
+  <ait-text-gradient
+    [content]="'User project detail'"
+    [id]="'project-detail'"
+    tabindex="1"
+  ></ait-text-gradient>
+
+  <div class="content__card">
+    <div class="input_inline">
+      <ait-output-text
+        tabindex="2"
+        [label]="'NAME'"
+        [width]="'400px'"
+        [value]="stateUserProject.name"
+        [id]="'name'"
+      ></ait-output-text>
+    </div>
+    <div class="start-date">
+      <ait-datepicker
+        [label]="'START DATE'"
+        [id]="'start_date_from'"
+        [format]="'yyyy/MM'"
+        [disable]="true"
+        [styleInput]="{ color: '#8f9bb3', width: '185px' }"
+        [defaultValue]="stateUserProject.start_date_from"
+      ></ait-datepicker>
+      <span style="margin-bottom: 4px">〜</span>
+      <ait-datepicker
+        [id]="'start_date_to'"
+        [format]="'yyyy/MM'"
+        [disable]="true"
+        [styleInput]="{ color: '#8f9bb3', width: '185px' }"
+        [defaultValue]="stateUserProject.start_date_to"
+      ></ait-datepicker>
+    </div>
+    <div class="input_inline">
+      <ait-output-text
+        tabindex="3"
+        [label]="'COMPANY'"
+        [id]="'company_working'"
+        [width]="'400px'"
+        [value]="stateUserProject.company_working?.value"
+      ></ait-output-text>
+    </div>
+    <div class="input_inline">
+      <ait-output-text
+        tabindex="4"
+        [label]="'TITLE'"
+        [id]="'title'"
+        [width]="'400px'"
+        [value]="stateUserProject.title?.value"
+      ></ait-output-text>
+    </div>
+
+    <div class="input_inline">
+      <ait-output-text
+        tabindex="6"
+        [label]="'DESCRIPTION'"
+        [id]="'description'"
+        [width]="'400px'"
+        [value]="stateUserProject.description"
+      ></ait-output-text>
+    </div>
+    <div class="input_inline">
+      <ait-output-text
+        [label]="'SKILLS (MAX 10)'"
+        style="width: 100%; margin-top: 16px"
+        [id]="'business'"
+        [width]="'400px'"
+        [valueArray]="stateUserSkill"
+      ></ait-output-text>
+    </div>
+    <div class="input_inline">
+      <ait-output-text
+        tabindex="5"
+        [label]="'RESPONSIBILITY'"
+        [width]="'400px'"
+        [value]="stateUserProject.responsibility"
+        [id]="'responsibility'"
+      ></ait-output-text>
+    </div>
+    <div class="input_inline">
+      <ait-output-text
+        tabindex="5"
+        [label]="'ACHIEVEMENT'"
+        [width]="'400px'"
+        [value]="stateUserProject.achievement"
+        [id]="'achievement'"
+      ></ait-output-text>
+    </div>
+  </div>
+</div>

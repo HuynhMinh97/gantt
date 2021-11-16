@@ -1,0 +1,76 @@
+<div class="template__popup">
+    <ait-text-gradient
+      [content]="'User experience detail'"
+      [id]="'experience-detail'"
+      tabindex="1"
+    ></ait-text-gradient>
+  
+    <div class="content__card">
+      <div class="input_inline">
+        <ait-output-text
+          tabindex="2"
+          [label]="'TITLE'"
+          [width]="'400px'"
+          [value]="stateUserExp.title?.value"
+          [id]="'title'"
+        ></ait-output-text>
+      </div>
+      <div class="input_inline">
+        <ait-output-text
+          tabindex="3"
+          [label]="'COMPANY'"
+          [id]="'company_working'"
+          [width]="'400px'"
+          [value]="stateUserExp.company_working?.value"
+        ></ait-output-text>
+        </div>
+        <div class="input_inline">
+          <ait-output-text
+            tabindex="4"
+            [label]="'LOCATION'"
+            [id]="'location'"
+            [width]="'400px'"
+            [value]="stateUserExp.location?.value"
+          ></ait-output-text>
+        </div>
+        <div class="input_inline">
+            <ait-output-text
+              tabindex="5"
+              [label]="'EMPLOYEE TYPE'"
+              [width]="'400px'"
+              [value]="stateUserExp.employee_type?.value"
+              [id]="'employee_type'"
+            ></ait-output-text>
+          </div>
+        <div class="start-date">
+          <ait-datepicker
+            [label]="'START DATE'"
+            [id]="'start_date_from'"
+            [format]="'yyyy/MM'"
+            [disable]="true"
+            [styleInput]="{ color: '#8f9bb3', width: '185px' }"
+            [defaultValue]="stateUserExp.start_date_from"
+          ></ait-datepicker>
+          <span style="margin-bottom: 4px">〜</span>
+          <ait-datepicker
+            [id]="'start_date_to'"
+            [format]="'yyyy/MM'"
+            [disable]="true"
+            [styleInput]="{ color: '#8f9bb3', width: '185px' }"
+            [defaultValue]="stateUserExp.start_date_to"
+          ></ait-datepicker>
+        </div>
+        <div class="input_inline">
+          <ait-output-text
+            tabindex="6"
+            [label]="'DESCRIPTION'"
+            [id]="'description'"
+            [width]="'400px'"
+            [value]="stateUserExp.description"
+          ></ait-output-text>
+        </div>
+      </div>
+  </div>
+  
+
+

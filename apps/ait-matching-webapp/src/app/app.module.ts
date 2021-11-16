@@ -59,6 +59,8 @@ import { UserLanguageDetailComponent } from './pages/aureole-v/user/user-languag
 import { UserEducationDetailComponent } from './pages/aureole-v/user/user-education-detail/user-education-detail.component';
 import { UserCourseDetailComponent } from './pages/aureole-v/user/user-course-detail/user-course-detail.component';
 import { UserCertificateDetailComponent } from './pages/aureole-v/user/user-certificate-detail/user-certificate-detail.component';
+import { UserExperienceDetailComponent } from './pages/aureole-v/user/user-experience-detail/user-experience-detail.component';
+import { UserProjectDetailComponent } from './pages/aureole-v/user/user-project-detail/user-project-detail.component';
 
 const AIT_UI_MODULES = [AitChipModule, AitTabsModule];
 
@@ -107,6 +109,8 @@ const PAGES = [
     ...AUREOLE_V_COMPONENTS,
     ...PAGES,
     CountryComponent,
+    UserExperienceDetailComponent,
+    UserProjectDetailComponent,
 
   ],
   imports: [
