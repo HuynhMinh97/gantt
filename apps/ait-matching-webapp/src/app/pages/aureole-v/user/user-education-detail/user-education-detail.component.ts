@@ -20,7 +20,6 @@ export class UserEducationDetailComponent extends AitBaseComponent implements On
   constructor(
     public activeRouter: ActivatedRoute,
     private userEduService: UserEducationService,
-    private route: ActivatedRoute,
     env: AitEnvironmentService,
     store: Store<AppState>,
     apollo: Apollo,
@@ -40,7 +39,7 @@ export class UserEducationDetailComponent extends AitBaseComponent implements On
 
     this.setModulePage({
       module: 'user',
-      page: 'user_language',
+      page: 'user_education',
     });
   }
 
@@ -54,8 +53,6 @@ export class UserEducationDetailComponent extends AitBaseComponent implements On
           if (r.status === RESULT_STATUS.OK) {
             const data = r.data[0];
             this.stateUserEducation = data;
-            console.log(this.stateUserEducation);
-
           }
         })
     }
