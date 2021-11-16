@@ -66,6 +66,6 @@ export class AitUtils {
     }
 
     static getUnixTime() {
-      return new Date().setHours(0, 0, 0, 0);
+      return new Date().getTime();
     }
 }
