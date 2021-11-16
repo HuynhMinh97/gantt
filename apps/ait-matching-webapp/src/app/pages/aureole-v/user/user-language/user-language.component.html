@@ -28,7 +28,7 @@
         <ait-autocomplete-master-data
           [id]="'proficiency'"
           [label]="'PROFICIENCY'"
-          [placeholder]="'Select'"
+          [placeholder]="'select'"
           [collection]="'sys_master_data'"
           [class]="'LANGUAGE_PROFICIENCY'"
           [disableOutputDefault]="true"
@@ -46,7 +46,7 @@
         <ait-button
           [id]="'cancel'"
           [width]="'200px'"
-          [title]="'CANCEL'"
+          [title]="'cancel'"
           [width]="'200px'"
           (click)="back()"
           [isDefault]="true"
@@ -66,7 +66,7 @@
           *ngIf="mode !== 'VIEW'"
           [id]="'reset'"
           [width]="'200px'"
-          [title]="'RESET'"
+          [title]="'reset'"
           (click)="resetForm()"
           [isDefault]="true"
         ></ait-button>
@@ -74,7 +74,7 @@
         <ait-button
           *ngIf="mode === 'NEW'"
           [id]="'saveAndContinue'"
-          [title]="'SAVE & CONTINUE'"
+          [title]="'save and continue'"
           (click)="saveAndContinue()"
           [isDefault]="true"
         ></ait-button>
@@ -83,7 +83,7 @@
           [id]="'saveAndClose'"
           *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
           [width]="'200px'"
-          [title]="'SAVE & CLOSE'"
+          [title]="'save and close'"
           (click)="saveAndClose()"
           [isDefault]="true"
         >
@@ -92,7 +92,7 @@
           *ngIf="!isChanged && mode === 'EDIT'"
           [id]="'saveAndClose'"
           [width]="'200px'"
-          [title]="'SAVE & CLOSE'"
+          [title]="'save and close'"
           [style]="'disabled'"
         ></ait-button>
       </div>

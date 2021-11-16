@@ -530,13 +530,13 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
   getTitleByMode() {
     let title = '';
     if (this.mode === MODE.EDIT) {
-      title = this.translateService.translate('Edit project')
+      title = this.translateService.translate('edit project')
     }
     else if (this.mode === MODE.NEW) {
-      title = this.translateService.translate('Add project')
+      title = this.translateService.translate('add project')
     }
     else {
-      title = this.translateService.translate('View project')
+      title = this.translateService.translate('view project')
     }
     return title;
   }

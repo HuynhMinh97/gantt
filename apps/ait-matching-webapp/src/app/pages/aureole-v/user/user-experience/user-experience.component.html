@@ -71,7 +71,7 @@
           [id]="'employee_type'"
           [maxItem]="1"
           [width]="'205px'"
-          [placeholder]="'Select'"
+          [placeholder]="'select'"
           [label]="'EMPLOYEE TYPE'"
           [disableOutputDefault]="true"
           [collection]="'sys_master_data'"
@@ -105,7 +105,7 @@
 
       <div class="start-date">
         <ait-datepicker
-          [label]="'START DATE'"
+          [label]="'start date'"
           [id]="'start_date_from'"
           [format]="'yyyy/MM'"
           [placeholder]="'2021/01'"
@@ -162,10 +162,10 @@
           [length]="4000"
           [rows]="4"
           [width]="'420px'"
-          [label]="'DESCRIPTION'"
+          [label]="'description'"
           [isReset]="resetUserInfo.description"
           [readonly]="resetUserInfo.description"
-          [placeholder]="'Place your text'"
+          [placeholder]="'place your text'"
           (watchValue)="takeInputValue($event, 'description')"
           [defaultValue]="userExperienceInfo.controls['description'].value"
         >
@@ -180,7 +180,7 @@
           *ngIf="mode !== 'VIEW'"
           [id]="'cancel'"
           [width]="'200px'"
-          [title]="'CANCEL'"
+          [title]="'cancel'"
           [isDefault]="true"
           (click)="back()"
         ></ait-button>
@@ -199,7 +199,7 @@
           *ngIf="mode !== 'VIEW'"
           [id]="'reset'"
           [width]="'200px'"
-          [title]="'RESET'"
+          [title]="'reset'"
           [isDefault]="true"
           (click)="resetForm()"
         >
@@ -208,7 +208,7 @@
         <ait-button
           *ngIf="mode === 'NEW'"
           [id]="'saveAndContinue'"
-          [title]="'SAVE & CONTINUE'"
+          [title]="'save and continue'"
           (click)="saveAndContinue()"
           [isDefault]="true"
         ></ait-button>
@@ -216,7 +216,7 @@
           [id]="'saveAndClose'"
           *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
           [width]="'200px'"
-          [title]="'SAVE & CLOSE'"
+          [title]="'save and close'"
           (click)="saveAndClose()"
           [isDefault]="true"
         >
@@ -225,7 +225,7 @@
           *ngIf="!isChanged && mode === 'EDIT'"
           [id]="'saveAndClose'"
           [width]="'200px'"
-          [title]="'SAVE & CLOSE'"
+          [title]="'save and close'"
           [style]="'disabled'"
         ></ait-button>
       </div>

@@ -13,7 +13,7 @@
           [required]="false"
           [collection]="'m_industry'"
           [maxItem]="50"
-          [placeholder]="'Select'"
+          [placeholder]="'select'"
           [style]="{ width: '400px' }"
           (watchValue)="takeMasterValues($event, 'industry')"
           [defaultValue]="industrys"
@@ -30,7 +30,7 @@
           [allowNew]="false"
           [maxItem]="999"
           [isSubmit]="isSubmit"
-          [placeholder]="'Select'"
+          [placeholder]="'select'"
           [disableOutputDefault]="true"
           [isReset]="resetUserjobAlert.experience_level"
           (watchValue)="takeMasterValues($event, 'experience_level')"
@@ -47,7 +47,7 @@
           [allowNew]="false"
           [maxItem]="999"
           [isSubmit]="isSubmit"
-          [placeholder]="'Select'"
+          [placeholder]="'select'"
           [collection]="'sys_master_data'"
           [disableOutputDefault]="true"
           [isReset]="resetUserjobAlert.employee_type"
@@ -64,7 +64,7 @@
           [label]="'LOCATION'"
           [required]="false"
           [maxItem]="50"
-          [placeholder]="'Select'"
+          [placeholder]="'select'"
           [style]="{ width: '400px' }"
           (watchValue)="takeMasterValues($event, 'location')"
           [defaultValue]="locations"
@@ -164,7 +164,7 @@
       <div class="button__group">
         <ait-button
           *ngIf="mode === 'EDIT'"
-          [title]="'CANCEL'"
+          [title]="'cancel'"
           [id]="'cancel'"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
@@ -186,7 +186,7 @@
 
         <ait-button
           *ngIf="mode === 'EDIT' || mode === 'NEW'"
-          [title]="'RESET'"
+          [title]="'reset'"
           [id]="'reset'"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'

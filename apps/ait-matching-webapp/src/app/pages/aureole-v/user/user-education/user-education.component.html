@@ -70,7 +70,7 @@
 
       <div class="start-date">
         <ait-datepicker
-          [label]="'START DATE'"
+          [label]="'start date'"
           [format]="'yyyy/MM'"
           [placeholder]="'2021/01'"
           [id]="'start_date_from'"
@@ -112,8 +112,8 @@
           [id]="'description'"
           [length]="4000"
           [rows]="4"
-          [label]="'DESCRIPTION'"
-          [placeholder]="'Place your text'"
+          [label]="'description'"
+          [placeholder]="'place your text'"
           [width]="'415px'"
           [isReset]="resetUserInfo.description"
           [readonly]="resetUserInfo.description"
@@ -123,10 +123,10 @@
         </ait-input-text>
 
         <div class="input_area">
-          <ait-label [label]="'FILES'"></ait-label>
+          <ait-label [label]="'files'"></ait-label>
           <label class="file-max"  style="display: flex !important;"
             ><nb-icon icon="attach-outline"></nb-icon>
-            <ait-label [label]="'Upload max 5 files and 10MB/file.'"></ait-label>
+            <ait-label [label]="'upload max 5 files'"></ait-label>
           </label>
           <ait-input-file
             [id]="'file'"
@@ -135,7 +135,7 @@
             [required]="false"
             [hasStatus]="false"
             [isReset]="isResetFile"
-            [placeholder]="'Select file'"
+            [placeholder]="'select file'"
             [fileKeys]="userEducationInfo.controls['file'].value"
             (watchValue)="takeFiles($event.value)"
             [isSubmit]="isSubmit"            
@@ -151,7 +151,7 @@
           *ngIf="mode !== 'VIEW'"
           [id]="'cancel'"
           [width]="'200px'"
-          [title]="'CANCEL'"
+          [title]="'cancel'"
           [isDefault]="true"
           (click)="back()"
         ></ait-button>
@@ -170,7 +170,7 @@
           *ngIf="mode !== 'VIEW'"
           [id]="'reset'"
           [width]="'200px'"
-          [title]="'RESET'"
+          [title]="'reset'"
           (click)="resetForm()"
           [isDefault]="true"
         >
@@ -179,7 +179,7 @@
         <ait-button
           *ngIf="mode === 'NEW'"
           [id]="'saveAndContinue'"
-          [title]="'SAVE & CONTINUE'"
+          [title]="'save and continue'"
           (click)="saveAndContinue()"
           [isDefault]="true"
         ></ait-button>
@@ -188,7 +188,7 @@
           [id]="'saveAndClose'"
           *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
           [width]="'200px'"
-          [title]="'SAVE & CLOSE'"
+          [title]="'save and close'"
           (click)="saveAndClose()"
           [isDefault]="true"
         >
@@ -197,7 +197,7 @@
           *ngIf="!isChanged && mode === 'EDIT'"
           [id]="'saveAndClose'"
           [width]="'200px'"
-          [title]="'SAVE & CLOSE'"
+          [title]="'save and close'"
           [style]="'disabled'"
         ></ait-button>
       </div>

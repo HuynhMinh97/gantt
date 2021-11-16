@@ -132,7 +132,7 @@
             [length]="4000"
             [label]="'ABOUT'"
             [width]="400"
-            [placeholder]="'Place your text'"
+            [placeholder]="'place your text'"
             [isReset]="resetUserInfo.about"
             [readonly]="userOnbInfo.about"
             (watchValue)="takeInputValue($event, 'about')"
@@ -242,7 +242,7 @@
             [isSubmit]="isSubmit"
             [allowNew]="true"
             [maxItem]="10"
-            [placeholder]="'Fill name and enter to add your skills'"
+            [placeholder]="'fill name and enter to add your skills'"
             [collection]="'m_skill'"
             [disableOutputDefault]="true"
             [isReset]="resetUserInfo.skills"
@@ -259,7 +259,7 @@
           <ait-button
             *ngIf="mode !== 'VIEW'"
             [id]="'cancel'"
-            [title]="'CANCEL'"
+            [title]="'cancel'"
             [width]="'200px'"
             [isDefault]="true"
             (click)="back()"
@@ -279,7 +279,7 @@
             *ngIf="mode !== 'VIEW'"
             [id]="'reset'"
             [width]="'200px'"
-            [title]="'RESET'"
+            [title]="'reset'"
             [isDefault]="true"
             (click)="resetForm()"
           >
@@ -289,7 +289,7 @@
             *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
             [id]="'save'"
             [width]="'200px'"
-            [title]="'SAVE'"
+            [title]="'save'"
             (click)="save()"
             [isDefault]="true"
           >
@@ -298,7 +298,7 @@
             *ngIf="!isChanged && mode === 'EDIT'"
             [id]="'save'"
             [width]="'200px'"
-            [title]="'SAVE'"
+            [title]="'save'"
             [style]="'disabled'"
           ></ait-button>
         </div>
@@ -440,7 +440,7 @@
             [length]="4000"
             [label]="'ABOUT'"
             [width]="400"
-            [placeholder]="'Place your text'"
+            [placeholder]="'place your text'"
             [isReset]="resetUserInfo.about"
             [readonly]="userOnbInfo.about"
             (watchValue)="takeInputValue($event, 'about')"
@@ -550,7 +550,7 @@
             [isSubmit]="isSubmit"
             [allowNew]="true"
             [maxItem]="10"
-            [placeholder]="'Fill name and enter to add your skills'"
+            [placeholder]="'fill name and enter to add your skills'"
             [collection]="'m_skill'"
             [disableOutputDefault]="true"
             [isReset]="resetUserInfo.skills"
@@ -567,7 +567,7 @@
         <ait-button
           *ngIf="mode !== 'VIEW'"
           [id]="'cancel'"
-          [title]="'CANCEL'"
+          [title]="'cancel'"
           [width]="'200px'"
           [isDefault]="true"
           (click)="back()"
@@ -587,7 +587,7 @@
           *ngIf="mode !== 'VIEW'"
           [id]="'reset'"
           [width]="'200px'"
-          [title]="'RESET'"
+          [title]="'reset'"
           [isDefault]="true"
           (click)="resetForm()"
         >
@@ -597,7 +597,7 @@
           *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
           [id]="'save'"
           [width]="'200px'"
-          [title]="'SAVE'"
+          [title]="'save'"
           (click)="save()"
           [isDefault]="true"
         >
@@ -606,7 +606,7 @@
           *ngIf="!isChanged && mode === 'EDIT'"
           [id]="'save'"
           [width]="'200px'"
-          [title]="'SAVE'"
+          [title]="'save'"
           [style]="'disabled'"
         ></ait-button>
         <ait-button

@@ -81,7 +81,7 @@
         <div class="input_inline">
           <ait-datepicker
             [required]="false"
-            [label]="'START DATE'"
+            [label]="'start date'"
             [placeholder]="'01/01/2021'"
             [id]="'start_date_from'"
             [style]="{ width: '170px' }"
@@ -118,10 +118,10 @@
             [height]="'108px'"
             [width]="'400px'"
             [rows]="4"
-            [label]="'DESCRIPTION'"
+            [label]="'description'"
             [required]="false"
             [id]="'description'"
-            [placeholder]="'Place your text'"
+            [placeholder]="'place your text'"
             (watchValue)="takeInputValue($event, 'description')"
             [defaultValue]="course.controls['description'].value"
             [isReset]="resetCourse.description"
@@ -135,10 +135,10 @@
         <div class="input_inline">   
         </div>
         <div class="input_area">
-          <ait-label [label]="'FILES'"></ait-label>
+          <ait-label [label]="'files'"></ait-label>
           <label class="file-max" style="display: flex !important; color: #8f9bb3;margin: 0;"
             ><nb-icon icon="attach-outline"></nb-icon>
-              <p id="max_file">{{ 'Upload max 5 files and 10MB/file.' | translate }}</p>
+              <p id="max_file">{{ 'upload max 5 files' | translate }}</p>
           </label>
           <ait-input-file
             [id]="'file'"
@@ -172,7 +172,7 @@
       <div class="button__group">
         <ait-button
         *ngIf="mode === 'NEW' || mode === 'EDIT' "
-          [title]="'CANCEL'"
+          [title]="'cancel'"
           [width]="'200px'"
           [id]="'cancel'"
           [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
@@ -180,7 +180,7 @@
         ></ait-button>
         <ait-button
         *ngIf="mode ==='EDIT' || mode ==='NEW' "
-          [title]="'RESET'"
+          [title]="'reset'"
           [width]="'200px'"
           [id]="'reset'"
           [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
@@ -196,7 +196,7 @@
         ></ait-button>
         <ait-button
           *ngIf="mode === 'NEW'"
-          [title]="'SAVE & CONTINUE'"
+          [title]="'save and continue'"
           [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
           [id]="'saveContinue'"
           [width]="'200px'"
@@ -206,7 +206,7 @@
           [id]="'saveClose'"
           *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
           [width]="'200px'"
-          [title]="'SAVE & CLOSE'"
+          [title]="'save and close'"
           (click)="saveAndClose()"
           [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
         >
@@ -215,7 +215,7 @@
           *ngIf="!isChanged && mode === 'EDIT'"
           [id]="'save close'"
           [width]="'200px'"
-          [title]="'SAVE & CLOSE'"
+          [title]="'save and close'"
           [style]="'disabled'"
         ></ait-button>
         <ait-button
