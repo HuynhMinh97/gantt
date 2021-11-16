@@ -9,6 +9,26 @@
     align-items: center;
     justify-content: center;
     margin: auto;
+    :host ::ng-deep .ck-editor__editable_inline {
+      width: 100%;
+      min-height: 100px;
+    }
+      
+    :host ::ng-deep nb-card {
+      background: nb-theme(background-gradient-blue);
+      mix-blend-mode: normal;
+      border-radius: 0px;
+    }
+    ::ng-deep .ait-user-reorder-skills {
+      display: flex !important;
+      justify-content: center !important;
+    }
+    ::ng-deep.sticky {
+      position: -webkit-sticky;
+      position: sticky;
+      bottom: 30px;
+      z-index: 10;
+    }
 }
 .content__card {
     width: 100%;
@@ -81,20 +101,6 @@
         display: unset;
       }
     }
-  }
-  
-  
-  
-  :host ::ng-deep .ck-editor__editable_inline {
-  width: 100%;
-  min-height: 100px;
-  }
-  
-  :host ::ng-deep nb-card {
-    background: nb-theme(background-gradient-blue);
-    mix-blend-mode: normal;
-    border-radius: 0px;
-    // min-width: 550px;
   }
   
   .action__job {
@@ -186,13 +192,4 @@
       width: 180px;
     }
   }
-  ::ng-deep .ait-user-reorder-skills {
-    display: flex !important;
-    justify-content: center !important;
-}
-::ng-deep.sticky {
-  position: -webkit-sticky;
-  position: sticky;
-  bottom: 30px;
-  z-index: 10;
-}
+ 

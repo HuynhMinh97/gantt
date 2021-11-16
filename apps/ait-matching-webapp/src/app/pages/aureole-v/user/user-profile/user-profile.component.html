@@ -268,7 +268,7 @@
         <hr class="hr_header">
         <ul
           *ngFor="
-            let company_project of userProject;
+            let listProject of userProject;
             let last = last;
             let firstcomp = first
           "
@@ -284,28 +284,10 @@
               <div class="timeline-info">
                 <div>
                   <p id="title-timeline">
-                    {{ company_project?.company_name }}
+                    {{ listProject?.company_name }}
                   </p>
                   <div class="desc-info">
-                    <p
-                      *ngIf="
-                        company_project?.floor_building &&
-                        company_project?.street
-                      "
-                    >
-                      {{ company_project?.floor_building }}
-                      <span *ngIf="company_project?.street"> , </span>
-                      {{ company_project?.street }}
-                    </p>
-                    <p
-                      *ngIf="
-                        !company_project?.floor_building &&
-                        !company_project?.street
-                      "
-                    >
-                      {{company_project.floor_building}}
-                    </p>
-                    <p>{{ company_project?.working_time }}</p>
+                    <p>{{dateDiffInYears(listProject?.working_time) + 's' }}</p>
                   </div>
                 </div>
               </div>
@@ -315,7 +297,7 @@
           <li
             class="timeline-event"
             *ngFor="
-              let project of company_project.data;
+              let project of listProject.data_project;
               let last = last;
               let firstproj = first
             "
@@ -327,21 +309,24 @@
                 <img
                   src="../../../../../assets/images/Icon.svg"
                   alt="project"
-                  *ngIf="!project?.is_working"
+                  *ngIf="project?.start_date_to && project?.start_date_to <= today"
                 />
                 <img
                   src="../../../../../assets/images/IconEdit.svg"
                   alt="projectcurrent"
-                  *ngIf="project?.is_working"
+                  *ngIf="!project?.start_date_to || project?.start_date_to > today"
                 />
               </div>
               <div class="timeline-info">
                 <div>
                   <p id="title-timeline">{{ project.name }}</p>
                   <div class="desc-info">
-                    <p>{{ project.title }}</p>
-                    <p>
-                      {{ project?.start_date_from }} - {{ project?.start_date_to}}: {{project?.time}}
+                    <p>{{ project?.title.value }}</p>
+                    <p *ngIf="!project.start_date_to">
+                      {{ project?.start_date_from | date:'yyyy/MM' }} - {{'Presen'}}: {{dateDiffInYears(dateDiffInMonths(project?.start_date_from,null))}}
+                    </p>
+                    <p *ngIf="project.start_date_to">
+                      {{ project?.start_date_from | date:'yyyy/MM' }} - {{ project?.start_date_to | date:'yyyy/MM'}}: {{dateDiffInYears(dateDiffInMonths(project?.start_date_from,project?.start_date_to))}}
                     </p>
                   </div>
                 </div>
@@ -395,7 +380,7 @@
       <hr class="hr_header">
       <ul
         *ngFor="
-          let company_experience of userExperience;
+          let listSxperience of userExperience;
           let last = last;
           let firstcomp = first
         "
@@ -411,16 +396,10 @@
             <div class="timeline-info">
               <div>
                 <p id="title-timeline">
-                  {{ company_experience?.company_working }}
+                  {{ listSxperience?.company_name }}
                 </p>
                 <div class="desc-info">
-                  <p>
-                    {{
-                      ''
-                        | translate
-                    }}
-                  </p>
-                  <p>{{ company_experience?.working_time }}</p>
+                  <p>{{dateDiffInYears(listSxperience?.working_time) }}</p>
                 </div>
               </div>
             </div>
@@ -430,7 +409,7 @@
         <li
           class="timeline-event"
           *ngFor="
-            let experience of company_experience.data;
+            let experience of listSxperience.data_project;
             let last = last;
             let firstproj = first
           "
@@ -442,21 +421,24 @@
               <img
                 src="../../../../../assets/images/Icon.svg"
                 alt="project"
-                *ngIf="!experience?.is_working"
+                *ngIf="experience?.start_date_to && experience?.start_date_to <= today"
               />
               <img
                 src="../../../../../assets/images/IconEdit.svg"
                 alt="projectcurrent"
-                *ngIf="experience?.is_working"
+                *ngIf="!experience?.start_date_to || experience?.start_date_to > today"
               />
             </div>
             <div class="timeline-info">
               <div>
-                <p id="title-timeline">{{experience.title }}</p>
+                <p id="title-timeline">{{experience?.title.value}}</p>
                 <div class="desc-info">
-                  <p>{{experience.employee_type}}</p>
-                  <p>
-                    {{ experience?.start_date_from }} - {{ experience?.start_date_to}}: {{experience?.time}}
+                  <p>{{experience?.employee_type.value}}</p>
+                  <p *ngIf="!experience.start_date_to">
+                    {{ experience?.start_date_from | date:'yyyy/MM' }} - {{'Presen'}}: {{dateDiffInYears(dateDiffInMonths(experience?.start_date_from,null))}}
+                  </p>
+                  <p *ngIf="experience.start_date_to">
+                    {{ experience?.start_date_from | date:'yyyy/MM' }} - {{ experience?.start_date_to | date:'yyyy/MM'}}: {{dateDiffInYears(dateDiffInMonths(experience?.start_date_from,experience?.start_date_to))}}
                   </p>
                 </div>
               </div>

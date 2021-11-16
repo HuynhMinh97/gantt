@@ -18,14 +18,10 @@ import dayjs from 'dayjs';
 import { 
   CertificateDto, 
   CourseDto, 
-  EducationDto, 
-  ExperienDto, 
-  GroupExperienceDto, 
-  GroupProjectDto, 
+  EducationDto,
   LanguageDto, 
   OrderSkill, 
-  ProfileDto, 
-  ProjectDto,} from './user-profile';
+  ProfileDto, } from './user-profile';
 import { UserProfileService } from '../../../../services/user-profile.service';
 import { UserProjectService } from '../../../../services/user-project.service';
 import { UserReoderSkillsService } from '../../../../services/user-reoder-skills.service';
@@ -63,8 +59,8 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   url_background: string = ''; 
   avata: any;
   skillByCategory: OrderSkill[] = [];
-  userProject: GroupProjectDto[] = [];
-  userExperience: GroupExperienceDto[] = [];
+  userProject: any = [];
+  userExperience: any = [];
   userCentificate: CertificateDto[] = [];
   userCourse: CourseDto[] = [];
   userEducation: EducationDto[] = [];
@@ -231,63 +227,25 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
   async getProjectByUserId(){
     await this.userProjectService.getProjectByUserId(this.profileId)
     .then(async (res) => {
-      // const companyUserProjects = this.groupBy(res.data, p => p.company_working?.value); 
-      const data = res.data;
-      for(let item in data){
-        let isProject = false;
-        for(let index in this.userProject){        
-          if(this.userProject[index].company_name == data[item].company_working?.value){
-            isProject = true;
-            let project = {} as ProjectDto;
-            let dayNow = Date.now();
-            let dateTo = data[item].start_date_to;
-            project.is_working = false;
-            if(!dateTo || dateTo > dayNow ){
-              dateTo = dayNow;
-              project.is_working = true;
-            }
-            project.name = data[item].name;
-            project.title = data[item].title?.value;
-            project._key = data[item]._key;
-            project.time = await this.fomatDate(dateTo - data[item].start_date_from );
-            project.month = this.dateDiffInYears(dateTo, data[item].start_date_from)  
-            project.start_date_from = this.getDateFormat(data[item].start_date_from);
-            project.start_date_to = data[item].start_date_to ? this.getDateFormat(data[item].start_date_to): "Present";          
-            this.userProject[index].data.push(project);
-            this.userProject[index].date = (this.userProject[index].date + (dateTo - data[item].start_date_from));
-            this.userProject[index].working_time = this.fomatDate(this.userProject[index].date);
-            this.timeProject += (dateTo - data[item].start_date_from);
+      const company_values = Array.from(new Set(res.data.map(m => m?.company_working?.value))).filter(f => !!f);
+      const companyUserProjects = this.groupBy(res.data, p => p.company_working?.value);     
+      const datacompany = company_values.map(element => {   
+        var timeworkingInfo = 0;   
+        companyUserProjects.get(element).forEach(e => {
+          timeworkingInfo += this.dateDiffInMonths(e.start_date_from,e.start_date_to);
+        });
+          this.timeProject += timeworkingInfo;
+          return {
+            company_name : element,
+            data_project : companyUserProjects.get(element),
+            working_time: timeworkingInfo,
           }
-        }
-        if(!isProject){   
-          let groupProject = {} as GroupProjectDto;       
-          groupProject.company_name = data[item].company_working?.value;
-          let project = {} as ProjectDto;
-          let dayNow = Date.now();
-          let dateTo = data[item].start_date_to;
-          project.is_working = false;
-          project.name = data[item].name;
-          project.title = data[item].title?.value;     
-          if(!dateTo || dateTo > dayNow){
-            dateTo = dayNow;
-            project.is_working = true;
-          }
-          project._key = data[item]._key;
-          project.month = this.dateDiffInYears(dateTo, data[item].start_date_from)
-          project.time = await this.fomatDate(dateTo - data[item].start_date_from )
-          project.start_date_from = this.getDateFormat(data[item].start_date_from);
-          project.start_date_to = data[item].start_date_to ? this.getDateFormat(data[item].start_date_to): "Present";      
-          groupProject.data = [];
-          groupProject.data.push(project);
-          groupProject.working_time = project.time;
-          groupProject.date = (dateTo - data[item].start_date_from);
-          this.userProject.push(groupProject);
-          this.timeProject += (dateTo - data[item].start_date_from);
-        }
-        this.showProject = true;
-      };
-      this.timeProject = this.getHours(this.timeProject);
-      this.sumHoursProject = this.timeProject >0 ? "You have spent " + this.timeProject + " hours working on the projects" : "Bạn chưa tham gia dự án nào vui lòng thêm."    
+        }); 
+        setTimeout(() => {
+          this.userProject = datacompany;
+          this.showProject = this.userProject.length > 0 ? true : false;
+        },1000);              
+      this.sumHoursProject = this.timeProject >0 ? "You have spent " + this.timeProject*180 + " hours working on the projects" : "Bạn chưa tham gia dự án nào vui lòng thêm."              
     })
     
   }
@@ -296,59 +254,27 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
     this.userExperienceService.findUserExperienceByUserId(this.profileId)
     .then(async (res) => { 
       if (res?.status === RESULT_STATUS.OK && res.data.length > 0) {
-        const data = res.data;
-      for(let item in data){
-        let isExperience = false;
-        for(let index in this.userExperience){        
-          if(this.userExperience[index].company_working == data[item].company_working?.value){
-            isExperience = true;
-            let experience = {} as ExperienDto;
-            let dayNow = Date.now();
-            let dateTo = data[item].start_date_to;
-            experience.is_working = false;
-            if(!dateTo || dateTo > dayNow){
-              dateTo = dayNow;
-              experience.is_working = true;
+        const company_values = Array.from(new Set(res.data.map(m => m?.company_working?.value))).filter(f => !!f);
+        const companyUserExps = this.groupBy(res.data, p => p.company_working?.value);
+        const datacompany = company_values.map(element => {   
+          var timeworkingInfo = 0;   
+          companyUserExps.get(element).forEach(e => {
+            timeworkingInfo += this.dateDiffInMonths(e.start_date_from,e.start_date_to);
+          });
+            this.timeExperience += timeworkingInfo;
+            return {
+              company_name : element,
+              data_project : companyUserExps.get(element),
+              working_time: timeworkingInfo,
             }
-            experience.title = data[item].title?.value;
-            experience.employee_type = data[item].employee_type?.value;
-            experience._key = data[item]._key;
-            experience.time = await this.fomatDate(dateTo - data[item].start_date_from );
-            experience.start_date_from = this.getDateFormat(data[item].start_date_from);
-            experience.start_date_to = data[item].start_date_to ? this.getDateFormat(data[item].start_date_to): "Present";          
-            this.userExperience[index].data.push(experience);
-            this.userExperience[index].date = (this.userExperience[index].date + (dateTo - data[item].start_date_from));
-            this.userExperience[index].working_time = this.fomatDate(this.userExperience[index].date);
-            this.timeExperience += (dateTo - data[item].start_date_from);
-          }
-        }
-        if(!isExperience){   
-          let groupExperience = {} as GroupExperienceDto;       
-          groupExperience.company_working = data[item].company_working?.value;
-          let experience = {} as ExperienDto;
-          let dayNow = Date.now();
-          let dateTo = data[item].start_date_to;
-          experience.is_working = false;
-          if(!dateTo || dateTo > dayNow){
-            dateTo = Date.now();
-            experience.is_working = true;
-          }
-          experience.title = data[item].title?.value;
-          experience.employee_type = data[item].employee_type?.value;
-          experience._key = data[item]._key;
-          experience.time = await this.fomatDate(dateTo - data[item].start_date_from );
-          experience.start_date_from = this.getDateFormat(data[item].start_date_from);
-          experience.start_date_to = data[item].start_date_to ? this.getDateFormat(data[item].start_date_to): "Present";     
-          groupExperience.data = [];
-          groupExperience.data.push(experience);
-          groupExperience.working_time = experience.time;
-          groupExperience.date = (dateTo - data[item].start_date_from);
-          this.userExperience.push(groupExperience);
-          this.timeExperience += (dateTo - data[item].start_date_from);
-        }
-      };
-      let sumDate = await this.fomatDate( this.timeExperience);
-      this.timeExperienceStr = 'You have ' + sumDate + ' experience working'     
+        }); 
+        setTimeout(() => {
+          this.userExperience = datacompany;
+          this.showExperience =  this.userExperience.length > 0 ? true : false;
+          console.log(this.userExperience);
+          
+        },1000); 
+      this.timeExperienceStr = 'You have ' + this.dateDiffInYears(this.timeExperience) + ' experience working'     
       }   
     })
     
@@ -371,7 +297,7 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
         centificate._key = element._key;
         centificate.issue_by = element.issue_by?.value;
         centificate.issue_date_from = this.getDateFormat(element.issue_date_from);
-        centificate.issue_date_to =element.issue_date_from ? this.getDateFormat(element.issue_date_from): 'Present';
+        centificate.issue_date_to =element.issue_date_to ? this.getDateFormat(element.issue_date_to): 'Present';
         centificate.name = element.name?.value ;
         this.userCentificate.push(centificate);
       }
@@ -464,23 +390,6 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
       }
       
     })   
-  }
-
-  async subtractionDate(from: number, to: number){
-    const fromDay = new Date(from);
-    const toDay = new Date(to);
-    const day = (to - from)/1000/60/60/24;// milliseconds -> day
-    if(day <= 31 ){
-      return "1 Month";
-    }else{
-      let month = (day - day%30)/30 ;
-      if(month < 12 ){
-        return month.toString() + " Month";
-      }else{
-        let year = (month - month%12)/12;
-        return (year.toString() + " Year " +  (month%12).toString() + " Month ");
-      }
-    }
   }
 
   fomatDate(time: number){
@@ -697,9 +606,23 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
     this.isOpen[group] = status;
   }
 
-  dateDiffInYears(startDate, endDate) {
+  dateDiffInYears(month){
+    if(month < 12){
+      return month.toString() + " month";
+    }else{
+      const year = Math.trunc(month/12).toString();
+      month = (month%12)
+      if(month == 0){
+        return year + "year";
+      }else{
+        return year + "year " + month.toString() +   " month";
+      }
+    }
+  }
+
+  dateDiffInMonths(startDate, endDate) {
     startDate = new Date(startDate);
-    if(endDate) {
+    if(!endDate) {
       endDate = new Date();
     } else {
       endDate = new Date(endDate);
@@ -726,5 +649,11 @@ export class UserProfileComponent  extends AitBaseComponent implements OnInit {
         }
     });
     return map;
+  }
+
+
+  _unixtimeToDate = (unix_time: number) => {
+    const result = new Date(unix_time);
+    return result;
   }
 }

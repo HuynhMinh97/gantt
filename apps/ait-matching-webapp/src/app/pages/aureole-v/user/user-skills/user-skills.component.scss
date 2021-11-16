@@ -8,6 +8,15 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    ::ng-deep .ait-label span {
+        color: #8f9bb3 !important;
+      }
+    ::ng-deep.sticky {
+        position: -webkit-sticky;
+        position: sticky;
+        bottom: 30px;
+        z-index: 10;
+      }
 }
 
 .input {
@@ -46,21 +55,6 @@
     }
      ::ng-deep.input__container {
         width: 250px !important;
-    }
-    .occupation_work {
-        margin-left: 0 !important;
-        //margin-top: 10px;
-    }
-    .phone_fax {
-        margin-left: 0 !important;
-        margin-top: 10px;
-    }
-    ait-input-text[ng-reflect-label='電話番号'] {
-        margin-right: 40px;
-    }
-    ait-autocomplete-master-data[ng-reflect-label='職種'] {
-        margin-right: 50%;
-        margin-bottom: 15px;
     }
 }
 .input_inline {
@@ -126,28 +120,4 @@ p.label-datepiker {
   }
 .date{
     display: flex;
-}
-::ng-deep .ait-label span {
-    color: #8f9bb3 !important;
-  }
-::ng-deep.sticky {
-    position: -webkit-sticky;
-    position: sticky;
-    bottom: 30px;
-    z-index: 10;
-  }
-::ng-deep.input__container{
-  width: 400px;
-}
-ait-error-message {
-    width: 410px;
-}
-::ng-deep p#title_information {
-    width: 402px;
-}
-::ng-deep p#skills_information {
-    width: 400px;
-}
-::ng-deep .select_data_wrapper {
-    width: 400px !important;
 }

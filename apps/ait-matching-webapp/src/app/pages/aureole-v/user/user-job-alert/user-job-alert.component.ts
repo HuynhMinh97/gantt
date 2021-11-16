@@ -175,7 +175,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
 
   checkDatePicker() {
     const res = [];
-    const msg = this.translateService.getMsg('E0004');
+    const msg = this.getMsg('E0004');
     const dateFrom = this.userjobAlert.controls['start_date_from'].value;
     const dateTo = this.userjobAlert.controls['start_date_to'].value;
     if (dateFrom > dateTo && dateTo != null) {
@@ -189,7 +189,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
 
   checkSalary() {
     const res = [];
-    const msg = this.translateService.getMsg('E0004');
+    const msg = this.getMsg('E0004');
     const salaryFrom = this.userjobAlert.controls['salary_from'].value;
     const salaryTo = this.userjobAlert.controls['salary_to'].value;
     if (salaryFrom > salaryTo && salaryTo != null) {
