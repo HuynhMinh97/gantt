@@ -1,0 +1,81 @@
+<div class="template__popup">
+    <ait-text-gradient
+      [content]="'User job alert detail'"
+      [id]="'job-alert-detail'"
+    ></ait-text-gradient>
+  
+    <div class="content__card">
+      <div class="input_inline">
+        <ait-output-text
+          [label]="'INDUSTRY'"
+          [width]="'400px'"
+          [id]="'industry'"
+          [valueArray]="industrys"
+        ></ait-output-text>
+      </div>
+      <div class="input_inline">
+        <ait-output-text
+          [label]="'EXPERIENCE_LEVEL'"
+          [id]="'experience_level'"
+          [width]="'400px'"
+          [valueArray]="experienceLevels"
+        ></ait-output-text>
+        </div>
+        <div class="input_inline">
+          <ait-output-text
+            [label]="'EMPLOYEE_TYPE'"
+            [id]="'employee_type'"
+            [width]="'200px'"
+          [valueArray]="employeeTypes"
+          ></ait-output-text>
+        </div>
+        <div class="input_inline">
+            <ait-output-text
+              [label]="'LOCATION'"
+              [id]="'location'"
+              [width]="'400px'"
+              [valueArray]="locations"
+            ></ait-output-text>
+            </div>
+        <div class="start-date">
+          <ait-datepicker
+            [label]="'AVAILABLE TIME'"
+            [id]="'start_date_from'"
+            [disable]="true"
+            [styleInput]="{ color: '#8f9bb3', width: '185px' }"
+            [defaultValue]="stateUserJobAlert.start_date_from"
+          ></ait-datepicker>
+          <span style="margin-bottom: 4px">〜</span>
+          <ait-datepicker
+            [id]="'start_date_to'"
+            [disable]="true"
+            [styleInput]="{ color: '#8f9bb3', width: '185px' }"
+            [defaultValue]="stateUserJobAlert.start_date_to"
+          ></ait-datepicker>
+        </div>
+        <div class="start-date">
+            <ait-input-number
+            [label]="'SALARY'"
+            [defaultValue]="stateUserJobAlert.salary_from"
+            [id]="'salary_from'"
+            [isReadOnly]="true"
+            [styleInput]="{ color: '#8f9bb3' }"
+            [isCurrency]="true"
+            [widthInput]="'185px'"
+          ></ait-input-number>
+          <span style="margin-bottom: 4px">〜</span>
+          <ait-input-number
+          [defaultValue]="stateUserJobAlert.salary_to"
+          [id]="'salary_to'"
+          [isReadOnly]="true"
+          [styleInput]="{ color: '#8f9bb3' }"
+          [isCurrency]="true"
+          [widthInput]="'185px'"
+        ></ait-input-number>
+        </div>
+        
+        
+      </div>
+  </div>
+  
+

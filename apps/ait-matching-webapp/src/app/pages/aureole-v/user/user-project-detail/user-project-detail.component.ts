@@ -67,6 +67,8 @@ export class UserProjectDetailComponent extends AitBaseComponent implements OnIn
             listSkills.push(skill?.skills.value);
           }
           this.stateUserSkill = listSkills;
+          console.log(this.stateUserSkill);
+
         })
     }
   }
