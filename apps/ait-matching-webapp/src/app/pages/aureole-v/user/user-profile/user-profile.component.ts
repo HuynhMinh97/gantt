@@ -221,9 +221,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
             this.skillByCategory.push(skillsGroup);
           }
         });
-      }
-      console.log(this.skillByCategory);
-      
+      }      
     })  
   }
 
