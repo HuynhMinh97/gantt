@@ -2,13 +2,11 @@
     <ait-text-gradient
       [content]="'User course detail'"
       [id]="'course-detail'"
-      tabindex="1"
     ></ait-text-gradient>
   
     <div class="content__card">
       <div class="input_inline">
         <ait-output-text
-          tabindex="2"
           [label]="'NAME'"
           [width]="'400px'"
           [value]="stateUserCourse.name"
@@ -17,7 +15,6 @@
       </div>
       <div class="input_inline">
         <ait-output-text
-          tabindex="3"
           [label]="'DEGREE'"
           [id]="'training_center'"
           [width]="'400px'"
@@ -26,7 +23,6 @@
         </div>
         <div class="input_inline">
           <ait-output-text
-            tabindex="4"
             [label]="'CERTIFICATE'"
             [id]="'course_number'"
             [width]="'400px'"
@@ -51,14 +47,13 @@
         </div>
         <div class="input_inline">
           <ait-output-text
-            tabindex="5"
             [label]="'DESCRIPTION'"
             [id]="'description'"
             [width]="'400px'"
             [value]="stateUserCourse.description"
           ></ait-output-text>
         </div>
-        <div class="input_inline" tabindex="6">
+        <div class="input_inline">
             <div style="width: 100%">
           <ait-output-file
             [id]="'file'"
