@@ -52,7 +52,6 @@ import { CommonModule } from '@angular/common';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { UserJobAlertComponent } from './pages/aureole-v/user/user-job-alert/user-job-alert.component';
 import { UserReorderSkillsComponent } from './pages/aureole-v/user/user-reorder-skills/user-reorder-skills.component';
-import { DragScrollSkillModule } from './pages/aureole-v/user/user-profile/dragscroll-skill/dragscroll-skill.module';
 import { CardContentProfileComponent } from './pages/aureole-v/user/user-profile/card-content/card-content.component';
 import { CountryComponent } from './components/country/country.component';
 import { UserLanguageDetailComponent } from './pages/aureole-v/user/user-language-detail/user-language-detail.component';
@@ -110,8 +109,6 @@ const PAGES = [
 
   ],
   imports: [
-    // , NbIconModule, NbEvaIconsModule, NbButtonModule, NbTooltipModule
-    DragScrollSkillModule,
     NbTooltipModule,
     NbButtonModule,
     NbEvaIconsModule,
