@@ -1,0 +1,68 @@
+<div class="template__popup">
+    <ait-text-gradient
+      [content]="'User course detail'"
+      [id]="'course-detail'"
+    ></ait-text-gradient>
+  
+    <div class="content__card">
+      <div class="input_inline">
+        <ait-output-text
+          [label]="'NAME'"
+          [width]="'400px'"
+          [value]="stateUserCourse.name"
+          [id]="'name'"
+        ></ait-output-text>
+      </div>
+      <div class="input_inline">
+        <ait-output-text
+          [label]="'DEGREE'"
+          [id]="'training_center'"
+          [width]="'400px'"
+          [value]="stateUserCourse.training_center?.value"
+        ></ait-output-text>
+        </div>
+        <div class="input_inline">
+          <ait-output-text
+            [label]="'CERTIFICATE'"
+            [id]="'course_number'"
+            [width]="'400px'"
+            [value]="stateUserCourse.course_number"
+          ></ait-output-text>
+        </div>
+        <div class="start-date">
+          <ait-datepicker
+            [label]="'START DATE'"
+            [id]="'start_date_from'"
+            [disable]="true"
+            [styleInput]="{ color: '#8f9bb3', width: '185px' }"
+            [defaultValue]="stateUserCourse.start_date_from"
+          ></ait-datepicker>
+          <span style="margin-bottom: 4px">〜</span>
+          <ait-datepicker
+            [id]="'start_date_to'"
+            [disable]="true"
+            [styleInput]="{ color: '#8f9bb3', width: '185px' }"
+            [defaultValue]="stateUserCourse.start_date_to"
+          ></ait-datepicker>
+        </div>
+        <div class="input_inline">
+          <ait-output-text
+            [label]="'DESCRIPTION'"
+            [id]="'description'"
+            [width]="'400px'"
+            [value]="stateUserCourse.description"
+          ></ait-output-text>
+        </div>
+        <div class="input_inline">
+            <div style="width: 100%">
+          <ait-output-file
+            [id]="'file'"
+            [fileKeys]="stateUserCourse.file"
+            [label]="'FILES'"
+          ></ait-output-file>
+      </div>
+        </div>
+        
+      </div>
+  </div>
+  

@@ -1,0 +1,77 @@
+<div class="template__popup">
+  <ait-text-gradient
+    [content]="'User education detail'"
+    [id]="'education-detail'"
+  ></ait-text-gradient>
+
+  <div class="content__card">
+    <div class="input_inline">
+      <ait-output-text
+        [label]="'SCHOOL'"
+        [width]="'400px'"
+        [value]="stateUserEducation.school?.value"
+        [id]="'school'"
+      ></ait-output-text>
+    </div>
+    <div class="input_inline">
+      <ait-output-text
+        [label]="'DEGREE'"
+        [id]="'degree'"
+        [width]="'400px'"
+        [value]="stateUserEducation.degree"
+      ></ait-output-text>
+      </div>
+      <div class="input_inline">
+        <ait-output-text
+          [label]="'FIELD OF STUDY'"
+          [id]="'field_of_study'"
+          [width]="'400px'"
+          [value]="stateUserEducation.field_of_study"
+        ></ait-output-text>
+      </div>
+      <div class="input_inline">
+        <ait-output-text
+          [label]="'GRADE'"
+          [id]="'grade'"
+          [width]="'400px'"
+          [value]="stateUserEducation.grade"
+        ></ait-output-text>
+      </div>
+      <div class="start-date">
+        <ait-datepicker
+          [label]="'START DATE'"
+          [id]="'start_date_from'"
+          [format]="'yyyy/MM'"
+          [disable]="true"
+          [styleInput]="{ color: '#8f9bb3', width: '185px' }"
+          [defaultValue]="stateUserEducation.start_date_from"
+        ></ait-datepicker>
+        <span style="margin-bottom: 4px">〜</span>
+        <ait-datepicker
+          [id]="'start_date_to'"
+          [format]="'yyyy/MM'"
+          [disable]="true"
+          [styleInput]="{ color: '#8f9bb3', width: '185px' }"
+          [defaultValue]="stateUserEducation.start_date_to"
+        ></ait-datepicker>
+      </div>
+      <div class="input_inline">
+        <ait-output-text
+          [label]="'DESCRIPTION'"
+          [id]="'description'"
+          [width]="'400px'"
+          [value]="stateUserEducation.description"
+        ></ait-output-text>
+      </div>
+      <div class="input_inline" tabindex="7">
+          <div style="width: 100%">
+        <ait-output-file
+          [id]="'file'"
+          [fileKeys]="stateUserEducation.file"
+          [label]="'FILES'"
+        ></ait-output-file>
+    </div>
+      </div>
+      
+    </div>
+</div>

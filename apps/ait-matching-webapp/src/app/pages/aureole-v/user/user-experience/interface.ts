@@ -9,16 +9,16 @@ export class UserExpInfoErrorsMessage {
     start_date_from: string[];
     start_date_to: string[];
     description: string[];
-  }
-  
-  export interface UserExperienceDto extends BaseDto{
-  
-      title: KeyValueDto,
-      company_working: KeyValueDto,
-      location: KeyValueDto,
-      employee_type: KeyValueDto,
-      is_working: boolean,
-      start_date_from: string,
-      start_date_to: string,
-      description: string,
-  }
+}
+
+export interface UserExperienceDto extends BaseDto {
+
+    title: KeyValueDto,
+    company_working: KeyValueDto,
+    location: KeyValueDto,
+    employee_type: KeyValueDto,
+    is_working: boolean,
+    start_date_from: string,
+    start_date_to: string,
+    description: string,
+}
