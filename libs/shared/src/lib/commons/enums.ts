@@ -183,6 +183,7 @@ export enum GRAPHQL {
   REMOVE_BINARY_DATA = 'removeBinaryData',
   // User settings
   FIND_USER_SETTING = 'findUserSetting',
+  FIND_USER_SETTING_CUSTOM = 'findUserSettingCustom',
   SAVE_USER_SETTING = 'saveUserSetting',
   REMOVE_USER_SETTING = 'removeUserSetting',
   // Auth
