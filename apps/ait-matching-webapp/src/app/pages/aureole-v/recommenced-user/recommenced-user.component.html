@@ -1,5 +1,12 @@
 <div style="display: grid; justify-content: center">
     <h1>Component country</h1>
     <ait-country></ait-country>
+    <ait-space></ait-space>
+    <ait-autocomplete-master [id]="'skills'" [label]="'Add skill'" [required]="true" [collection]="'m_skill'"
+        [maxItem]="50" [placeholder]="'Fill name and enter to add your skills'" [style]="{ width: '400px' }"
+        (watchValue)="takeMasterValue($event)"></ait-autocomplete-master>
 </div>
 
+<div>
+    <canvas id="myChart"></canvas>
+</div>
