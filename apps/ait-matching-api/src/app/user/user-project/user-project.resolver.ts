@@ -68,19 +68,18 @@ export class UserProjectResolver extends AitBaseService {
         return this.remove(request, user);
     }
 
-    @Mutation(() => UserProjectResponse, { name: 'removeSkill' })
-    async removeSkill(
+    @Mutation(() => UserProjectResponse, { name: 'removeSkillProject' })
+    async removeSkillProject(
         @AitCtxUser() user: SysUser,
         @Args('request', { type: () => UserProjectRequest }) request: UserProjectRequest
     ) {
         //return this.remove(request, user);
         const user_id = request.user_id;
-
+        const from = JSON.stringify(request.data[0]._from);
         if (user_id) {
         const aqlQuery = `
-        FOR item IN biz_project_skill
         FOR data IN biz_project_skill
-        FILTER data._from == item._from
+        FILTER data._from == ${from}
         UPDATE data WITH { del_flag: true } IN biz_project_skill
         RETURN data
         `;

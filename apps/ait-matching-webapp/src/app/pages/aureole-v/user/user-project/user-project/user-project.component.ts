@@ -387,7 +387,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
 
       if (this.error.length > 0) {
         const invalidControl = this.element.nativeElement.querySelector(
-          `#messagErrorProject`
+          `span`
         );
         try {
           invalidControl.scrollIntoView({
