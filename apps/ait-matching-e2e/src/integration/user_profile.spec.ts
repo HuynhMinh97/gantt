@@ -13,13 +13,13 @@ describe('Navigate user profile', () => {
     cy.visit(Cypress.env('host') + Cypress.env('user_profile'));
     cy.url().should('eq', Cypress.env('host') + Cypress.env('user_profile'));
     checkUI();
-    // addProjects();
-    // addExperiences();
-    // addCertificates();
-    // addCourses();
-    // addEducations();
-    // addLanguages();
-
+    findUserOnboarding();
+    addProjects();
+    addExperiences();
+    addCertificates();
+    addCourses();
+    addEducations();
+    addLanguages();
 
   });
 
@@ -116,31 +116,57 @@ describe('Navigate user profile', () => {
     cy.get('#menu_item_' + id).should('have.text', ' ' + value + ' ')
   }
 
-  function addProjects() {
-    cy.get('#openProjects').click();
-    UserProject.checkUIProject();
-    // UserProject.checkValidateProject();
-    UserProject.checkResetProject();
-    UserProject.checkSaveProject();
-    const query = `{
-      findUserProject(
+  function findUserOnboarding() {
+    cy.clickButton('openOnboarding');
+    const query = `
+    query {
+      findUserOnboardingInfo(
         request: {
-          collection: "biz_project"
+          collection: "user_profile"
           condition: {
-            company_working: {
-            attribute: "company_working",
-            ref_collection: "m_company",
-            ref_attribute: "code"
-          },
-          title: {
-            attribute: "title",
-            ref_collection: "m_title",
-            ref_attribute: "code"
-          }
             user_id: "${Cypress.env('user_id')}"
+            gender: {
+              attribute: "gender"
+              ref_collection: "sys_master_data"
+              ref_attribute: "code"
+            }
+            country_region: {
+              attribute: "country_region"
+              ref_collection: "sys_master_data"
+              ref_attribute: "code"
+            }
+            province_city: {
+              attribute: "province_city"
+              ref_collection: "sys_master_data"
+              ref_attribute: "code"
+            }
+            district: {
+              attribute: "district"
+              ref_collection: "sys_master_data"
+              ref_attribute: "code"
+            }
+            ward: {
+              attribute: "ward"
+              ref_collection: "sys_master_data"
+              ref_attribute: "code"
+            }
+            title: {
+              attribute: "title"
+              ref_collection: "m_title"
+              ref_attribute: "code"
+            }
+            company_working: {
+              attribute: "company_working"
+              ref_collection: "m_company"
+              ref_attribute: "code"
+            }
+            industry: {
+              attribute: "industry"
+              ref_collection: "m_industry"
+              ref_attribute: "code"
+            }
             del_flag: false
           }
-          options: { sort_by: { value: "start_date_to", order_by: "DESC" } }
           company: "${Cypress.env('company')}"
           lang: "${Cypress.env('lang')}"
           user_id: "${Cypress.env('user_id')}"
@@ -149,9 +175,22 @@ describe('Navigate user profile', () => {
         data {
           _key
           user_id
-          name
-          start_date_from
-          start_date_to
+          country_region {
+            _key
+            value
+          }
+          province_city {
+            _key
+            value
+          }
+          district {
+            _key
+            value
+          }
+          ward {
+            _key
+            value
+          }
           company_working {
             _key
             value
@@ -160,6 +199,24 @@ describe('Navigate user profile', () => {
             _key
             value
           }
+          industry {
+            _key
+            value
+          }
+          gender {
+            _key
+            value
+          }
+          first_name
+          last_name
+          katakana
+          romaji
+          bod
+          phone_number
+          about
+          postcode
+          address
+          floor_building
         }
         message
         errors
@@ -167,7 +224,88 @@ describe('Navigate user profile', () => {
         numData
         numError
       }
-    }`;
+    }
+    `;
+
+    cy.request({
+      method: 'POST',
+      url: Cypress.env('host') + Cypress.env('api_url'),
+      body: { query },
+      failOnStatusCode: false,
+    }).then((response) => {
+      const dataUserOnboarding = response.body.data.findUserOnboardingInfo.data[0];
+      cy.getValueInput('first_name', dataUserOnboarding.first_name);
+      cy.getValueInput('last_name', dataUserOnboarding.last_name);
+      // cy.getValueDate('dob', dataUserOnboarding.dob);
+      cy.getValueInput('phone_number', dataUserOnboarding.phone_number);
+      cy.textareaValue("about", dataUserOnboarding.about);
+      cy.getValueMaster('country', dataUserOnboarding.country_region);
+      cy.getValueInput('postcode', dataUserOnboarding.postcode);
+      cy.getValueMaster('city', dataUserOnboarding.province_city);
+      cy.getValueMaster('district', dataUserOnboarding.district);
+      cy.getValueMaster('ward', dataUserOnboarding.ward);
+      cy.getValueInput('address', dataUserOnboarding.address);
+      cy.getValueInput('floor_building', dataUserOnboarding.floor_building);
+      cy.getValueMaster('industry', dataUserOnboarding.industry);
+      cy.getValueMaster('title', dataUserOnboarding.title);
+      cy.getValueMaster('company_working', dataUserOnboarding.company_working);
+
+    });
+    cy.clickButton('cancel');
+  }
+
+  function addProjects() {
+    cy.get('#openProjects').click();
+    UserProject.checkUIProject();
+    // UserProject.checkValidateProject();
+    UserProject.checkResetProject();
+    UserProject.checkSaveProject();
+    const query = `{
+        findUserProject(
+          request: {
+            collection: "biz_project"
+            condition: {
+              company_working: {
+              attribute: "company_working",
+              ref_collection: "m_company",
+              ref_attribute: "code"
+            },
+            title: {
+              attribute: "title",
+              ref_collection: "m_title",
+              ref_attribute: "code"
+            }
+              user_id: "${Cypress.env('user_id')}"
+              del_flag: false
+            }
+            options: { sort_by: { value: "start_date_to", order_by: "DESC" } }
+            company: "${Cypress.env('company')}"
+            lang: "${Cypress.env('lang')}"
+            user_id: "${Cypress.env('user_id')}"
+          }
+        ) {
+          data {
+            _key
+            user_id
+            name
+            start_date_from
+            start_date_to
+            company_working {
+              _key
+              value
+            }
+            title {
+              _key
+              value
+            }
+          }
+          message
+          errors
+          status
+          numData
+          numError
+        }
+      }`;
     cy.request({
       method: 'POST',
       url: Cypress.env('host') + Cypress.env('api_url'),
@@ -176,7 +314,9 @@ describe('Navigate user profile', () => {
 
     }).then((response) => {
       const data = response.body.data.findUserProject.data[0];
-      cy.get('#ic-edit').click();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(3000);
+      cy.get('#project_detail_menu_toc_item_PROJECTS').find('#project-' + data._key).click();
       UserProject.findProject(data._key);
     })
     cy.clickButton('cancel');
@@ -191,71 +331,72 @@ describe('Navigate user profile', () => {
 
     UserExperience.checkSaveExper();
     const query = `query {
-      findUserExperienceInfo(
-        request: {
-          collection: "user_experience"
-          condition: {
+        findUserExperienceInfo(
+          request: {
+            collection: "user_experience"
+            condition: {
+              user_id: "${Cypress.env('user_id')}"
+              location: {
+                attribute: "location"
+                ref_collection: "sys_master_data"
+                ref_attribute: "code"
+              }
+              employee_type: {
+                attribute: "employee_type"
+                ref_collection: "sys_master_data"
+                ref_attribute: "code"
+              }
+              title: {
+                attribute: "title"
+                ref_collection: "m_title"
+                ref_attribute: "code"
+              }
+              company_working: {
+                attribute: "company_working"
+                ref_collection: "m_company"
+                ref_attribute: "code"
+              }
+              del_flag: false
+            }
+            options: { sort_by: { value: "start_date_to", order_by: "DESC" } }
+            company: "${Cypress.env('company')}"
+            lang: "${Cypress.env('lang')}"
             user_id: "${Cypress.env('user_id')}"
-            location: {
-              attribute: "location"
-              ref_collection: "sys_master_data"
-              ref_attribute: "code"
-            }
-            employee_type: {
-              attribute: "employee_type"
-              ref_collection: "sys_master_data"
-              ref_attribute: "code"
-            }
-            title: {
-              attribute: "title"
-              ref_collection: "m_title"
-              ref_attribute: "code"
-            }
-            company_working: {
-              attribute: "company_working"
-              ref_collection: "m_company"
-              ref_attribute: "code"
-            }
-            del_flag: false
           }
-          company: "${Cypress.env('company')}"
-          lang: "${Cypress.env('lang')}"
-          user_id: "${Cypress.env('user_id')}"
+        ) {
+          data {
+            _key
+            user_id
+            title {
+              _key
+              value
+            }
+            company_working {
+              _key
+              value
+            }
+            employee_type {
+              _key
+              value
+            }
+            location {
+              _key
+              value
+            }
+            is_working
+            start_date_from
+            start_date_to
+            description
+            del_flag
+          }
+          message
+          errors
+          status
+          numData
+          numError
         }
-      ) {
-        data {
-          _key
-          user_id
-          title {
-            _key
-            value
-          }
-          company_working {
-            _key
-            value
-          }
-          employee_type {
-            _key
-            value
-          }
-          location {
-            _key
-            value
-          }
-          is_working
-          start_date_from
-          start_date_to
-          description
-          del_flag
-        }
-        message
-        errors
-        status
-        numData
-        numError
       }
-    }
-    `;
+      `;
     cy.request({
       method: 'POST',
       url: Cypress.env('host') + Cypress.env('api_url'),
@@ -264,11 +405,12 @@ describe('Navigate user profile', () => {
 
     }).then((response) => {
       const data = response.body.data.findUserExperienceInfo.data[0];
-      cy.get('#ic-edit').click();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(3000);
+      cy.get('#experience_detail_menu_toc_item_EXPERIENCES').find('#experience-' + data._key).click();
       UserExperience.findUserExperienceInfo(data._key);
     })
     cy.clickButton('cancel');
-
   }
 
   function addCertificates() {
@@ -331,7 +473,9 @@ describe('Navigate user profile', () => {
 
     }).then((response) => {
       const data = response.body.data.findUsercertificate.data[0];
-      cy.get('#ic-edit').click();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(3000);
+      cy.get('#certificate_detail_menu_toc_item_CERTIFICATES').find('#centificate-' + data._key).click();
       UserCertificate.findUsercertificate(data._key);
     })
     cy.clickButton('cancel');
@@ -388,7 +532,9 @@ describe('Navigate user profile', () => {
 
     }).then((response) => {
       const data = response.body.data.findCourse.data[0];
-      cy.get('#ic-edit').click();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(3000);
+      cy.get('#course_detail_menu_toc_item_COURSES').find('#course-' + data._key).click();
       UserCourse.findUserCourse(data._key);
     })
     cy.clickButton('cancel');
@@ -447,7 +593,9 @@ describe('Navigate user profile', () => {
 
     }).then((response) => {
       const data = response.body.data.findUserEducationInfo.data[0];
-      cy.get('#ic-edit').click();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(3000);
+      cy.get('#education_detail_menu_toc_item_EDUCATIONS').find('#education-' + data._key).click();
       UserEducation.findUserEducation(data._key);
     })
     cy.clickButton('cancel');
@@ -499,7 +647,6 @@ describe('Navigate user profile', () => {
             _key
             value
           }
-          del_flag
         }
         message
         errors
@@ -515,8 +662,10 @@ describe('Navigate user profile', () => {
       failOnStatusCode: false,
 
     }).then((response) => {
-      const data = response.body.data.findUserLanguage.data[0];
-      cy.get('#ic-edit').click();
+      const data = response.body.data.findUserLanguageInfo.data[0];
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(3000);
+      cy.get('#language_detail_menu_toc_item_LANGUAGES').find('#language-' + data._key).click();
       UserLanguage.findUserLanguage(data._key);
     })
     cy.clickButton('cancel');

@@ -1,16 +1,12 @@
-<ait-template-popup
-  [width]="1000"
-  [isLoading]="true"
-  [isPage]="false"
->
-<div class="user__language__wrapper" id="user_language">
-  <ait-text-gradient
-    [content]="getTitleByMode()"
-    id="form_edit_user_language"
-  ></ait-text-gradient>
-  <ait-card-content style="justify-content: center" class="content__card">
-    <div style="margin-top: 14px">
-      <div class="input_area">
+<ait-template-popup [width]="1000" [isLoading]="true" [isPage]="false">
+  <div class="company__info__wrapper">
+    <ait-text-gradient
+      [id]="'title'"
+      [content]="getTitleByMode()"
+    ></ait-text-gradient>
+    <ait-space></ait-space>
+    <div class="content__card">
+      <div class="input_inline">
         <ait-autocomplete-master-data
           [id]="'language'"
           [label]="'LANGUAGE'"
@@ -25,10 +21,10 @@
           (watchValue)="takeMasterValue($event, 'language')"
           [defaultValue]="[userLanguageInfo.controls['language'].value]"
           [isSubmit]="isSubmit"
+          [width]="'400px'"
         ></ait-autocomplete-master-data>
       </div>
-
-      <div class="input_area">
+      <div class="input_inline" style="float: left;">
         <ait-autocomplete-master-data
           [id]="'proficiency'"
           [label]="'PROFICIENCY'"
@@ -45,13 +41,13 @@
         ></ait-autocomplete-master-data>
       </div>
     </div>
-  </ait-card-content>
-  <div class="sticky">
     <div class="action-row">
       <div class="block">
         <ait-button
           [id]="'cancel'"
+          [width]="'200px'"
           [title]="'CANCEL'"
+          [width]="'200px'"
           (click)="back()"
           [isDefault]="true"
         ></ait-button>
@@ -102,6 +98,6 @@
       </div>
     </div>
   </div>
-</div>
 </ait-template-popup>
+
 

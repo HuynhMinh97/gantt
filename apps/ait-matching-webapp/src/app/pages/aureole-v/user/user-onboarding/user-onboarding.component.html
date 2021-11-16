@@ -306,15 +306,14 @@
     </div>
   </div>
 </ait-template-popup>
+
 <div class="user__onboarding__wrapper" id="user_onboarding" *ngIf="!user_key">
   <ait-text-gradient
     [content]="getTitleByMode()"
     id="form_edit_user_onboarding"
   ></ait-text-gradient>
-  <ait-card-content style="justify-content: center" class="content__card">
-    <div style="margin-top: 14px">
-
-      <div style="margin-top: 14px">
+  <div class="content__card">
+      <div class="form">
         <div class="input_area">
           <ait-input-text
             [id]="'first_name'"
@@ -560,9 +559,8 @@
             "
           ></ait-autocomplete-master-data>
         </div>
-      </div>
     </div>
-  </ait-card-content>
+  </div>
   <div class="sticky">
     <div class="action-row">
       <div class="block">

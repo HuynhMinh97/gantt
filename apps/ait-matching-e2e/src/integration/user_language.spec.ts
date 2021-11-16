@@ -97,9 +97,6 @@ export class UserLanguage {
       const data = response.body.data.findUserLanguageInfo.data[0];
       cy.getValueMaster('language', data.language);
       cy.getValueMaster('proficiency', data.proficiency);
-
-    });
+    })
   }
-
-
 }

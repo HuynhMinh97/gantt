@@ -1,3 +1,4 @@
+import 'cypress-file-upload';
 export class UserEducation {
 
   static checkUIUserEdu() {

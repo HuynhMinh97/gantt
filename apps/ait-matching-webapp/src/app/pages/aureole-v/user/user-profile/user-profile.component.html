@@ -163,87 +163,7 @@
       </div>
       </card-content>
     </div>
-    
-    <!-- <nb-card>
-      <nb-card-header>
-        <div id="skills-headparent" (click)="showSkill = !showSkill">
-          <div id="skills-lefthead">
-            {{ 'SKILL' | translate }}
-            <div class="skill-remain">
-              <span>You has {{quantitySkill}} skills. Each person has max 50 skills</span>
-            </div>
-          </div>
-
-          <div class="skill-righthead">
-            <div class="float-right">
-              <ait-button
-                (click)="open('user-reorder-skills')"
-                [iconName]="'menu-outline'"
-                [color]="'#fff'"
-                [styleText]="{ 'font-size': '10px' }"
-                [width]="'150px'"
-                [height]="'24px'"
-                [title]="'REORDER SKILLS'"
-                [id]="'reorder skills'"
-                [background]="
-                  'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-                "
-              ></ait-button>
-            </div>
-
-            <div class="float-right">
-              <ait-button
-                (click)="open('user-skills')"
-                [iconName]="'plus-outline'"
-                [color]="'#fff'"
-                [styleText]="{ 'font-size': '10px' }"
-                [width]="'150px'"
-                [height]="'24px'"
-                [title]="'ADD SKILL'"
-                [id]="'add skill'"
-                [background]="
-                  'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-                "
-              ></ait-button>
-            </div>
-
-             <div
-                class="d-flex justify-content-center"
-                *ngIf="userprojectFilterByCmp?.length > 0"
-              >
-              <nb-icon
-                class="icon_expan"
-                style="cursor: pointer"
-                *ngIf="!showSkill"
-                icon="arrow-ios-downward-outline"
-              ></nb-icon>
-              <nb-icon
-                class="icon_expan"
-                style="cursor: pointer"
-                *ngIf="showSkill"
-                icon="arrow-ios-upward-outline"
-              ></nb-icon>
-              </div>
-          </div>
-        </div>
-      </nb-card-header>
-      <nb-card-body style="padding-top: 0px" *ngIf="true">
-        <div class="container-user-skill" [class.show]="showSkill">
-          <div *ngFor="let category of skillByCategory; let last = last">
-            <p class="title-skill">{{ category.name }}</p>
-            <ait-dragscroll-skill
-              [skillList]="category.data"
-              [showField]=""
-              [width]="'1500px'"
-              [maxWidth]="'1500px'"
-              [minWidth]="'1500px'"
-              [isNormal]="true"
-            ></ait-dragscroll-skill>
-            <hr *ngIf="!last" />
-          </div>
-        </div>
-      </nb-card-body>
-    </nb-card> -->
+   
     <!-- project -->
     <card-content
        tabindex="2"
@@ -268,7 +188,7 @@
         <hr class="hr_header">
         <ul
           *ngFor="
-            let company_project of userProject;
+            let listProject of userProject;
             let last = last;
             let firstcomp = first
           "
@@ -284,28 +204,10 @@
               <div class="timeline-info">
                 <div>
                   <p id="title-timeline">
-                    {{ company_project?.company_name }}
+                    {{ listProject?.company_name }}
                   </p>
                   <div class="desc-info">
-                    <p
-                      *ngIf="
-                        company_project?.floor_building &&
-                        company_project?.street
-                      "
-                    >
-                      {{ company_project?.floor_building }}
-                      <span *ngIf="company_project?.street"> , </span>
-                      {{ company_project?.street }}
-                    </p>
-                    <p
-                      *ngIf="
-                        !company_project?.floor_building &&
-                        !company_project?.street
-                      "
-                    >
-                      {{company_project.floor_building}}
-                    </p>
-                    <p>{{ company_project?.working_time }}</p>
+                    <p>{{dateDiffInYears(listProject?.working_time) + 's' }}</p>
                   </div>
                 </div>
               </div>
@@ -315,7 +217,7 @@
           <li
             class="timeline-event"
             *ngFor="
-              let project of company_project.data;
+              let project of listProject.data_project;
               let last = last;
               let firstproj = first
             "
@@ -327,21 +229,24 @@
                 <img
                   src="../../../../../assets/images/Icon.svg"
                   alt="project"
-                  *ngIf="!project?.is_working"
+                  *ngIf="project?.start_date_to && project?.start_date_to <= today"
                 />
                 <img
                   src="../../../../../assets/images/IconEdit.svg"
                   alt="projectcurrent"
-                  *ngIf="project?.is_working"
+                  *ngIf="!project?.start_date_to || project?.start_date_to > today"
                 />
               </div>
               <div class="timeline-info">
                 <div>
                   <p id="title-timeline">{{ project.name }}</p>
                   <div class="desc-info">
-                    <p>{{ project.title }}</p>
-                    <p>
-                      {{ project?.start_date_from }} - {{ project?.start_date_to}}: {{project?.time}}
+                    <p>{{ project?.title.value }}</p>
+                    <p *ngIf="!project.start_date_to">
+                      {{ project?.start_date_from | date:'yyyy/MM' }} - {{'Presen'}}: {{dateDiffInYears(dateDiffInMonths(project?.start_date_from,null))}}
+                    </p>
+                    <p *ngIf="project.start_date_to">
+                      {{ project?.start_date_from | date:'yyyy/MM' }} - {{ project?.start_date_to | date:'yyyy/MM'}}: {{dateDiffInYears(dateDiffInMonths(project?.start_date_from,project?.start_date_to))}}
                     </p>
                   </div>
                 </div>
@@ -375,7 +280,7 @@
     <!-- EXPERIENCE -->
     <card-content
       tabindex="2"
-      [id]="'company_detail'"
+      [id]="'experience_detail'"
       style="outline-color: #10529d"
       class="content_card"
       style="display: flex; justify-content: center"
@@ -395,7 +300,7 @@
       <hr class="hr_header">
       <ul
         *ngFor="
-          let company_experience of userExperience;
+          let listSxperience of userExperience;
           let last = last;
           let firstcomp = first
         "
@@ -411,16 +316,10 @@
             <div class="timeline-info">
               <div>
                 <p id="title-timeline">
-                  {{ company_experience?.company_working }}
+                  {{ listSxperience?.company_name }}
                 </p>
                 <div class="desc-info">
-                  <p>
-                    {{
-                      ''
-                        | translate
-                    }}
-                  </p>
-                  <p>{{ company_experience?.working_time }}</p>
+                  <p>{{dateDiffInYears(listSxperience?.working_time) }}</p>
                 </div>
               </div>
             </div>
@@ -430,7 +329,7 @@
         <li
           class="timeline-event"
           *ngFor="
-            let experience of company_experience.data;
+            let experience of listSxperience.data_project;
             let last = last;
             let firstproj = first
           "
@@ -442,21 +341,24 @@
               <img
                 src="../../../../../assets/images/Icon.svg"
                 alt="project"
-                *ngIf="!experience?.is_working"
+                *ngIf="experience?.start_date_to && experience?.start_date_to <= today"
               />
               <img
                 src="../../../../../assets/images/IconEdit.svg"
                 alt="projectcurrent"
-                *ngIf="experience?.is_working"
+                *ngIf="!experience?.start_date_to || experience?.start_date_to > today"
               />
             </div>
             <div class="timeline-info">
               <div>
-                <p id="title-timeline">{{experience.title }}</p>
+                <p id="title-timeline">{{experience?.title.value}}</p>
                 <div class="desc-info">
-                  <p>{{experience.employee_type}}</p>
-                  <p>
-                    {{ experience?.start_date_from }} - {{ experience?.start_date_to}}: {{experience?.time}}
+                  <p>{{experience?.employee_type.value}}</p>
+                  <p *ngIf="!experience.start_date_to">
+                    {{ experience?.start_date_from | date:'yyyy/MM' }} - {{'Presen'}}: {{dateDiffInYears(dateDiffInMonths(experience?.start_date_from,null))}}
+                  </p>
+                  <p *ngIf="experience.start_date_to">
+                    {{ experience?.start_date_from | date:'yyyy/MM' }} - {{ experience?.start_date_to | date:'yyyy/MM'}}: {{dateDiffInYears(dateDiffInMonths(experience?.start_date_from,experience?.start_date_to))}}
                   </p>
                 </div>
               </div>
@@ -490,7 +392,7 @@
     <!-- CERTIFICATES -->
     <card-content
       tabindex="2"
-      [id]="'company_detail'"
+      [id]="'certificate_detail'"
       style="outline-color: #10529d"
       class="content_card"
       style="display: flex; justify-content: center"
@@ -567,7 +469,7 @@
     <!-- course -->
     <card-content
       tabindex="2"
-      [id]="'company_detail'"
+      [id]="'course_detail'"
       style="outline-color: #10529d"
       class="content_card"
       style="display: flex; justify-content: center"
@@ -644,7 +546,7 @@
     <!-- education -->
     <card-content
     tabindex="2"
-    [id]="'company_detail'"
+    [id]="'education_detail'"
     style="outline-color: #10529d"
     class="content_card"
     style="display: flex; justify-content: center"
@@ -718,7 +620,7 @@
     <!-- LANGUAGES -->
     <card-content
        tabindex="2"
-      [id]="'company_detail'"
+      [id]="'language_detail'"
       style="outline-color: #10529d"
       class="content_card"
       style="display: flex; justify-content: center"

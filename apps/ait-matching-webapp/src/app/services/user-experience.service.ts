@@ -159,6 +159,13 @@ async findUserExperienceByUserId(user_id?: string) {
   const request = {};
   request['collection'] = this.collection;
   request['condition'] = condition;
-  return await this.query('findUserExperienceInfo', request, returnFields);
+  return await this.query(
+    'findUserExperienceInfo', 
+    {
+      collection: this.collection,
+      condition,
+      options: { sort_by: { value: 'start_date_to', order_by: 'DESC' } }
+    }, 
+    returnFields);
 }
 }
