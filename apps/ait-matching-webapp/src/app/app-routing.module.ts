@@ -19,6 +19,7 @@ import { UserCourseDetailComponent } from './pages/aureole-v/user/user-course-de
 import { UserCertificateDetailComponent } from './pages/aureole-v/user/user-certificate-detail/user-certificate-detail.component';
 import { UserExperienceDetailComponent } from './pages/aureole-v/user/user-experience-detail/user-experience-detail.component';
 import { UserProjectDetailComponent } from './pages/aureole-v/user/user-project-detail/user-project-detail.component';
+import { UserOnboardingDetailComponent } from './pages/aureole-v/user/user-onboarding-detail/user-onboarding-detail.component';
 
 // Push your routes here one by one 🎉
 
@@ -82,6 +83,11 @@ export const routes: Routes = [
     path: 'user-onboarding/:id',
     canActivate: [AitAuthGuardService],
     component: UserOnboardingComponent
+  },
+  {
+    path: 'user-onboarding-detail/:id',
+    canActivate: [AitAuthGuardService],
+    component: UserOnboardingDetailComponent
   },
   {
     path: 'user-course',
