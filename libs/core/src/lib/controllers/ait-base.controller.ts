@@ -71,7 +71,7 @@ export class AitBaseController {
   }
 
   protected getUnixTime() {
-    return new Date().setHours(0, 0, 0, 0);
+    return new Date().getTime();
   }
   /**
    * Generate GUID
