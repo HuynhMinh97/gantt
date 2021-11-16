@@ -44,7 +44,7 @@ import { UserLanguageComponent } from './pages/aureole-v/user/user-language/user
 import { UserOnboardingComponent } from './pages/aureole-v/user/user-onboarding/user-onboarding.component';
 import { UserProjectComponent } from './pages/aureole-v/user/user-project/user-project/user-project.component';
 import { UserCourseComponent } from './pages/aureole-v/user/user-course/user-course.component';
-import { UsesCertificateComponent } from './pages/aureole-v/user/uses-certificate/uses-certificate.component';
+import { UserCertificateComponent } from './pages/aureole-v/user/user-certificate/user-certificate.component';
 import { UserSkillsComponent } from './pages/aureole-v/user/user-skills/user-skills.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { UserProfileComponent } from './pages/aureole-v/user/user-profile/user-profile.component';
@@ -55,6 +55,10 @@ import { UserReorderSkillsComponent } from './pages/aureole-v/user/user-reorder-
 import { DragScrollSkillModule } from './pages/aureole-v/user/user-profile/dragscroll-skill/dragscroll-skill.module';
 import { CardContentProfileComponent } from './pages/aureole-v/user/user-profile/card-content/card-content.component';
 import { CountryComponent } from './components/country/country.component';
+import { UserLanguageDetailComponent } from './pages/aureole-v/user/user-language-detail/user-language-detail.component';
+import { UserEducationDetailComponent } from './pages/aureole-v/user/user-education-detail/user-education-detail.component';
+import { UserCourseDetailComponent } from './pages/aureole-v/user/user-course-detail/user-course-detail.component';
+import { UserCertificateDetailComponent } from './pages/aureole-v/user/user-certificate-detail/user-certificate-detail.component';
 
 const AIT_UI_MODULES = [AitChipModule, AitTabsModule];
 
@@ -85,12 +89,16 @@ const PAGES = [
   UserOnboardingComponent,
   UserProjectComponent,
   UserCourseComponent,
-  UsesCertificateComponent,
+  UserCertificateComponent,
   UserSkillsComponent,
   UserReorderSkillsComponent,
   UserProfileComponent,
   UserJobAlertComponent,
   CardContentProfileComponent,
+  UserLanguageDetailComponent,
+  UserEducationDetailComponent,
+  UserCourseDetailComponent,
+  UserCertificateDetailComponent,
 ];
 
 @NgModule({
@@ -99,6 +107,7 @@ const PAGES = [
     ...AUREOLE_V_COMPONENTS,
     ...PAGES,
     CountryComponent,
+
   ],
   imports: [
     // , NbIconModule, NbEvaIconsModule, NbButtonModule, NbTooltipModule
