@@ -1,10 +1,11 @@
 export const environment = {
   production: false,
   isMatching: true,
+  default: true,
   COMMON: {
     COMPANY_DEFAULT: 'a8cd83a1-5a4d-4500-8751-a790d649c398',
-    LANG_DEFAULT: 'ja_JP',
-    LOCALE_DEFAULT: 'ja-JP',
+    LANG_DEFAULT: 'en_US',
+    LOCALE_DEFAULT: 'en-US',
     VERSION: 'v1.1',
   },
   API_PATH: {

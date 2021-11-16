@@ -6,7 +6,7 @@
   p {
     margin: 0;
   }
-  .left__side {
+  .left__side_auv {
     flex: 1;
     width: 50%;
     height: 100%;
@@ -16,6 +16,18 @@
     background-image: url('../../../../assets/images/mapV.jpg');
     background-position: center;
   }
+
+  .left__side_default {
+    flex: 1;
+    width: 50%;
+    height: 100%;
+    background: #fff;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url('../../../../assets/images/login_image.png');
+    background-position: center;
+  }
+
   .right__side {
     flex: 1;
     width: 50%;
@@ -130,7 +142,8 @@
 
 @media only screen and (max-width: 705px) {
   .login__wrapper {
-    .left__side {
+    .left__side_auv,
+    .left__side_default {
       display: none;
     }
   }

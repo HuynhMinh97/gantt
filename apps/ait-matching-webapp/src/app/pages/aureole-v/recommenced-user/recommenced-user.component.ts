@@ -1,13 +1,22 @@
 import { CompanyInfoDto, RESULT_STATUS } from '@ait/shared';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { NavigationStart, Router } from '@angular/router';
 import { NbLayoutScrollService } from '@nebular/theme';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
+import { Chart } from 'chart.js';
 
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { AitAppUtils, AitAuthService, AitBaseComponent, AitEnvironmentService, AitMasterDataService, AitTranslationService, AppState } from '@ait/ui'
+import {
+  AitAppUtils,
+  AitAuthService,
+  AitBaseComponent,
+  AitEnvironmentService,
+  AitMasterDataService,
+  AitTranslationService,
+  AppState,
+} from '@ait/ui';
 import { RecommencedUserService } from '../../../services/recommenced-user.service';
 import { ReactionService } from '../../../services/reaction.service';
 import { Apollo } from 'apollo-angular';
@@ -15,20 +24,31 @@ import { StoreKeywordsSearch } from '../../../state/actions';
 
 export enum StorageKey {
   KEYWORD = 'keyword',
-  FILTER = 'filter'
+  FILTER = 'filter',
 }
 
 @Component({
   selector: 'ait-recommenced-user',
   styleUrls: ['./recommenced-user.component.scss'],
-  templateUrl: './recommenced-user.component.html'
+  templateUrl: './recommenced-user.component.html',
 })
 export class RecommencedComponent extends AitBaseComponent implements OnInit {
+  chart: any;
+  canvas: any;
+  ctx: any;
+  @ViewChild('mychart') mychart;
+
   i18nRecomenced = 'common.aureole-v.recommenced-user';
   isNavigate = false;
   currentKeyword = {};
   currentCondition = {};
-  master_data_fields = ['gender', 'occupation', 'prefecture', 'residence_status', 'work'];
+  master_data_fields = [
+    'gender',
+    'occupation',
+    'prefecture',
+    'residence_status',
+    'work',
+  ];
   constructor(
     layoutScrollService: NbLayoutScrollService,
     private masterDataService: AitMasterDataService,
@@ -79,7 +99,6 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
       const path = AitAppUtils.getParamsOnUrl(true);
 
       if (path.includes('recommenced-user')) {
-
         this.loadNext(e);
       }
     });
@@ -138,7 +157,9 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
       this.currentDataCard = this.dataFilter;
       if (flag) {
         //
-        this.cardSkeleton = Array(this.getNummberMode8(this.dataFilter.length)).fill(1);
+        this.cardSkeleton = Array(
+          this.getNummberMode8(this.dataFilter.length)
+        ).fill(1);
         // // // // // console.log(this.cardSkeleton, this.getNummberMode8(this.currentDataCard.length));
       } else {
         this.cardSkeleton = [];
@@ -150,7 +171,9 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
       this.currentDataCard = this.dataFilterSave;
       if (flag) {
         //
-        this.cardSkeleton = Array(this.getNummberMode8(this.dataFilterSave.length)).fill(1);
+        this.cardSkeleton = Array(
+          this.getNummberMode8(this.dataFilterSave.length)
+        ).fill(1);
       } else {
         this.cardSkeleton = [];
         this.dataFilterSave = this.currentDataCard;
@@ -181,7 +204,10 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
     localStorage.removeItem(StorageKey.FILTER + `_${this.user_id}`);
   };
 
-  getPlaceHolder = () => (!this.isObjectEmpty(this.currentSearch) ? '' : this.i18nRecomenced + '.search-bar.placeholder');
+  getPlaceHolder = () =>
+    !this.isObjectEmpty(this.currentSearch)
+      ? ''
+      : this.i18nRecomenced + '.search-bar.placeholder';
   goTop = () => {
     this.gotoTop();
   };
@@ -196,26 +222,26 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
       const data = res.data;
       // // console.log(data);
 
-
       if (data && data?.length !== 0) {
         const sort_by_group = data.sort((a, b) => -b.group_no + a.group_no);
         const obj = {
           group1: sort_by_group.filter((f) => f.group_no === 1),
           group2: sort_by_group.filter((f) => f.group_no === 2),
-          group3: sort_by_group.filter((f) => !f.group_no || f.group_no === 3)
+          group3: sort_by_group.filter((f) => !f.group_no || f.group_no === 3),
         };
 
         const sort = {
           sort1: obj.group1.sort((a, b) => b.total_score - a.total_score),
           sort2: obj.group2.sort((a, b) => b.total_score - a.total_score),
-          sort3: obj.group3.sort((a, b) => (b?.total_score || 0) - (a?.total_score || 0))
+          sort3: obj.group3.sort(
+            (a, b) => (b?.total_score || 0) - (a?.total_score || 0)
+          ),
         };
         // // // console.log(sort)
         this.dataIncludesId = [...sort.sort1, ...sort.sort2, ...sort.sort3];
         // // // console.log(this.dataIncludesId);
         // // console.log(filter)
         this.filterCommon = filter;
-
       } else {
         this.setSkeleton(false);
         this.textDataNull = this.i18nRecomenced + '.result.text-data-null';
@@ -224,7 +250,10 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
   };
 
   private getDetailMatching = async (list_ids: string[]) => {
-    const res = await this.matchingCompanyService.getDetailMatching(this.company_key, list_ids);
+    const res = await this.matchingCompanyService.getDetailMatching(
+      this.company_key,
+      list_ids
+    );
     if (res.status === RESULT_STATUS.OK) {
       // // // // // console.log(res.data);
       if (res.data?.length === 0) {
@@ -258,7 +287,6 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
   };
 
   submitSearch = () => {
-
     // // // // console.log('submit')
     this.isLoading = true;
     // this.setSkeleton(true);
@@ -278,7 +306,6 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
     // const conds = AppUtils.isObjectEmpty(this.filterCommonAppended) ? this.filterCommon : this.filterCommonAppended;
     // // console.log(conds);
     const condition = {};
-
 
     Object.entries(this.filterCommon).forEach(([key, value]) => {
       if (value) {
@@ -302,20 +329,29 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
           // Truong hop chi co salary 1
           if (this.filterCommon['salary1']) {
             this.dataFilter = this.dataFilterDf.filter(
-              (f) => (f?.salary_desired || 0) >= this.acceptedSalary(this.filterCommon['salary1'], true)
+              (f) =>
+                (f?.salary_desired || 0) >=
+                this.acceptedSalary(this.filterCommon['salary1'], true)
             );
 
             this.dataFilterSave = this.dataFilterSaveDf.filter(
-              (f) => (f?.salary_desired || 0) >= this.acceptedSalary(this.filterCommon['salary1'], true)
+              (f) =>
+                (f?.salary_desired || 0) >=
+                this.acceptedSalary(this.filterCommon['salary1'], true)
             );
 
             // Truong hop chi co salary 2
           } else if (this.filterCommon['salary2']) {
-            this.dataFilter = this.dataFilterDf.filter((f) =>
-              (f?.salary_desired || 0) <= this.acceptedSalary(this.filterCommon['salary2']));
+            this.dataFilter = this.dataFilterDf.filter(
+              (f) =>
+                (f?.salary_desired || 0) <=
+                this.acceptedSalary(this.filterCommon['salary2'])
+            );
 
             this.dataFilterSave = this.dataFilterSaveDf.filter(
-              (f) => (f?.salary_desired || 0) <= this.acceptedSalary(this.filterCommon['salary2'])
+              (f) =>
+                (f?.salary_desired || 0) <=
+                this.acceptedSalary(this.filterCommon['salary2'])
             );
 
             //Truong hop co car 2 salary
@@ -323,14 +359,18 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
           if (this.filterCommon['salary1'] && this.filterCommon['salary2']) {
             this.dataFilter = this.dataFilterDf.filter(
               (f) =>
-                (f?.salary_desired || 0) >= this.acceptedSalary(this.filterCommon['salary1'], true) &&
-                (f?.salary_desired || 0) <= this.acceptedSalary(this.filterCommon['salary2'])
+                (f?.salary_desired || 0) >=
+                  this.acceptedSalary(this.filterCommon['salary1'], true) &&
+                (f?.salary_desired || 0) <=
+                  this.acceptedSalary(this.filterCommon['salary2'])
             );
 
             this.dataFilterSave = this.dataFilterSaveDf.filter(
               (f) =>
-                (f?.salary_desired || 0) >= this.acceptedSalary(this.filterCommon['salary1'], true) &&
-                (f?.salary_desired || 0) <= this.acceptedSalary(this.filterCommon['salary2'])
+                (f?.salary_desired || 0) >=
+                  this.acceptedSalary(this.filterCommon['salary1'], true) &&
+                (f?.salary_desired || 0) <=
+                  this.acceptedSalary(this.filterCommon['salary2'])
             );
           }
         }
@@ -340,7 +380,6 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
 
     // console.log(condition);
     // // // // console.log(AppUtils.isObjectEmpty(condition))
-
 
     // // // // // console.log(AppUtils.isObjectEmpty(condition))
     if (AitAppUtils.isObjectEmpty(condition)) {
@@ -356,7 +395,10 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
       this.textDataNullSave = this.i18nRecomenced + '.result.text-data-null';
     }
 
-    localStorage.setItem(StorageKey.FILTER + `_${this.user_id}`, JSON.stringify({ ...this.filterCommon }));
+    localStorage.setItem(
+      StorageKey.FILTER + `_${this.user_id}`,
+      JSON.stringify({ ...this.filterCommon })
+    );
 
     // // // // // console.log(condition, this.dataFilter, this.dataFilterSave);
   };
@@ -438,11 +480,13 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
   };
 
   addCompany = (company: any) => {
-
     this.setSkeleton(true);
 
     // //save keyword to localstorage
-    localStorage.setItem(StorageKey.KEYWORD + `_${this.user_id}`, JSON.stringify({ ...company }));
+    localStorage.setItem(
+      StorageKey.KEYWORD + `_${this.user_id}`,
+      JSON.stringify({ ...company })
+    );
 
     // // const getDataFromCompanyValue = this.dataSuggestAll.filter(f => f?.value === company?.value).map(m => m._key);
     // // // // // // console.log(getDataFromCompanyValue);
@@ -454,7 +498,7 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
         fax: [],
         occupation: [],
         phone: [],
-        work: []
+        work: [],
       };
       (r || []).forEach((dataa) => {
         Object.entries(dataa).forEach(([key, value]) => {
@@ -465,7 +509,9 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
         });
       });
       const comma = this.translateService.translate('common.system.key.comma');
-      Object.entries(obj).forEach(([key, value]) => (res[key] = (value || []).join(comma)));
+      Object.entries(obj).forEach(
+        ([key, value]) => (res[key] = (value || []).join(comma))
+      );
       // res = { ...res, ...obj };
       // // // // // console.log(res)
       this.companySelect = [res];
@@ -480,21 +526,32 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
   // getValue = (v) => console.log(v);
 
   ngOnInit() {
+    const config = {
+      type: 'line',
+      data: [1, 2, 3, 4, 5],
+      options: {},
+    };
+
+    const myChart = new Chart(
+      document.getElementById('myChart') as any,
+      config as any
+    );
+
     // // console.log(localStorage.getItem(StorageKey.KEYWORD));
 
-    const keyword: any = JSON.parse(localStorage.getItem(StorageKey.KEYWORD + `_${this.user_id}`));
-    const filter =
-      localStorage.getItem(
-        StorageKey.FILTER + `_${this.user_id}`)
-        ? JSON.parse(localStorage.getItem(StorageKey.FILTER + `_${this.user_id}`))
-        : {};
+    const keyword: any = JSON.parse(
+      localStorage.getItem(StorageKey.KEYWORD + `_${this.user_id}`)
+    );
+    const filter = localStorage.getItem(StorageKey.FILTER + `_${this.user_id}`)
+      ? JSON.parse(localStorage.getItem(StorageKey.FILTER + `_${this.user_id}`))
+      : {};
     // console.log(this.user_id, this.authService.getUserID())
     if (keyword?._key) {
       this.filterCommon = filter;
       this.filterCommonAppended = filter;
       this.addCompany(keyword);
 
-      this.filterMain()
+      this.filterMain();
     }
     // call api # master data
     this.inputControlMaster.valueChanges
@@ -510,12 +567,15 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
           this.masterDataService
             .getSuggestData({
               type: 'COMPANY',
-              keyword: text
+              keyword: text,
             })
             .then((r) => {
               // // // // // console.log(r);
               this.dataSuggestAll = r?.data;
-              this.dataSuggest = AitAppUtils.getUniqueArray((r?.data || []).slice(0, 25), 'value');
+              this.dataSuggest = AitAppUtils.getUniqueArray(
+                (r?.data || []).slice(0, 25),
+                'value'
+              );
 
               // this.filteredOptions$ = of(this.dataSource);
             });
@@ -530,7 +590,9 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
 
     if (this.companySelect.length !== 0 && this.cardSkeleton.length === 0) {
       const startPos = event.target.scrollTop;
-      const pos = (event.target.scrollTop || document.body.scrollTop) + document.documentElement.offsetHeight;
+      const pos =
+        (event.target.scrollTop || document.body.scrollTop) +
+        document.documentElement.offsetHeight;
       const max = event.target.scrollHeight;
       // // // // // console.log(pos, max, startPos)
       // pos/max will give you the distance between scroll bottom and and bottom of screen in percentage.
@@ -584,10 +646,13 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
   // Highlight name option when user type
   highlightName = (name) => {
     // // // // // console.log(this.addressSearch);
-    const res = name.replace(new RegExp(this.addressSearch.trim(), 'gmi'), (match) => {
-      // // // // // console.log(match)
-      return `<b class="hightlighted" style="background:yellow">${match}</b>`;
-    });
+    const res = name.replace(
+      new RegExp(this.addressSearch.trim(), 'gmi'),
+      (match) => {
+        // // // // // console.log(match)
+        return `<b class="hightlighted" style="background:yellow">${match}</b>`;
+      }
+    );
 
     return res;
   };
@@ -610,14 +675,19 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
 
         // push total score to detail
 
-        const uq = AitAppUtils.getUniqueArray([...this.dataFilter, ...(detail || [])], '_key').filter((f) => f?.user_id);
+        const uq = AitAppUtils.getUniqueArray(
+          [...this.dataFilter, ...(detail || [])],
+          '_key'
+        ).filter((f) => f?.user_id);
         if (uq.length === 0) {
           this.textDataNull = this.i18nRecomenced + '.result.text-data-null';
         }
         const data = uq.map((d) => ({
           ...d,
-          total_score: this.dataIncludesId.find((f) => f.value === d.user_id)?.total_score,
-          group_no: this.dataIncludesId.find((f) => f.value === d.user_id)?.group_no
+          total_score: this.dataIncludesId.find((f) => f.value === d.user_id)
+            ?.total_score,
+          group_no: this.dataIncludesId.find((f) => f.value === d.user_id)
+            ?.group_no,
           // current_salary: 100000,
           // salary : 1000000
         }));
@@ -646,18 +716,25 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
     const detail = await this.getDetailMatching(ids);
 
     // push total score to detail
-    const uq = AitAppUtils.getUniqueArray([...this.dataFilterSave, ...(detail || [])], '_key').filter((f) => f?.user_id);
+    const uq = AitAppUtils.getUniqueArray(
+      [...this.dataFilterSave, ...(detail || [])],
+      '_key'
+    ).filter((f) => f?.user_id);
     if (uq.length === 0) {
       this.textDataNullSave = this.i18nRecomenced + '.result.text-data-null';
     }
     // // // // // console.log(uq)
     const data = uq.map((d) => ({
       ...d,
-      total_score: this.dataIncludesIdSave.find((f) => f.value === d.user_id)?.total_score,
-      group_no: this.dataIncludesIdSave.find((f) => f.value === d.user_id)?.group_no
+      total_score: this.dataIncludesIdSave.find((f) => f.value === d.user_id)
+        ?.total_score,
+      group_no: this.dataIncludesIdSave.find((f) => f.value === d.user_id)
+        ?.group_no,
     }));
 
-    const target = (data || []).sort((a, b) => (a.group_no || 99) - (b.group_no || 99));
+    const target = (data || []).sort(
+      (a, b) => (a.group_no || 99) - (b.group_no || 99)
+    );
 
     this.dataFilterSave = target || this.dataFilterSave;
     this.dataFilterSaveDf = target || this.dataFilterSaveDf;
@@ -696,30 +773,37 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
       this.matchingCompanyService.getDataTabSave(this.company_key).then((r) => {
         if (r.status === RESULT_STATUS.OK) {
           if (r.data && r.data.length !== 0) {
-            const _keys = (r.data || []).map((d) => d?.vertex?.user_profile?.user_id).filter((x) => !!x);
+            const _keys = (r.data || [])
+              .map((d) => d?.vertex?.user_profile?.user_id)
+              .filter((x) => !!x);
             // // // // // console.log(_keys)
             if (_keys.length !== 0) {
-              this.matchingCompanyService.matchingCompany(this.company_key, _keys).then((r) => {
-                if (r.status === RESULT_STATUS.OK) {
-                  this.dataIncludesIdSave = r.data || [];
-                  if (this.dataIncludesIdSave.length !== 0) {
-                    this.getDataByRoundSave().then((r) => {
-                      // this.isLoading = false;
-                      // this.setSkeleton(false);
-                    });
-                  } else {
-                    this.setSkeleton(false);
-                    this.textDataNullSave = this.i18nRecomenced + '.result.text-data-null';
+              this.matchingCompanyService
+                .matchingCompany(this.company_key, _keys)
+                .then((r) => {
+                  if (r.status === RESULT_STATUS.OK) {
+                    this.dataIncludesIdSave = r.data || [];
+                    if (this.dataIncludesIdSave.length !== 0) {
+                      this.getDataByRoundSave().then((r) => {
+                        // this.isLoading = false;
+                        // this.setSkeleton(false);
+                      });
+                    } else {
+                      this.setSkeleton(false);
+                      this.textDataNullSave =
+                        this.i18nRecomenced + '.result.text-data-null';
+                    }
                   }
-                }
-              });
+                });
             } else {
               this.setSkeleton(false);
-              this.textDataNullSave = this.i18nRecomenced + '.result.text-data-null';
+              this.textDataNullSave =
+                this.i18nRecomenced + '.result.text-data-null';
             }
           } else {
             this.setSkeleton(false);
-            this.textDataNullSave = this.i18nRecomenced + '.result.text-data-null';
+            this.textDataNullSave =
+              this.i18nRecomenced + '.result.text-data-null';
           }
         }
       });
@@ -729,4 +813,8 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
       this.isLoading = false;
     }
   };
+
+  takeMasterValue(event: any) {
+    console.log(event);
+  }
 }

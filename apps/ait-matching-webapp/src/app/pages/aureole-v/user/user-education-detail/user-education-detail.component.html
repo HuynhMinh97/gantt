@@ -2,13 +2,11 @@
   <ait-text-gradient
     [content]="'User education detail'"
     [id]="'education-detail'"
-    tabindex="1"
   ></ait-text-gradient>
 
   <div class="content__card">
     <div class="input_inline">
       <ait-output-text
-        tabindex="2"
         [label]="'SCHOOL'"
         [width]="'400px'"
         [value]="stateUserEducation.school?.value"
@@ -17,7 +15,6 @@
     </div>
     <div class="input_inline">
       <ait-output-text
-        tabindex="3"
         [label]="'DEGREE'"
         [id]="'degree'"
         [width]="'400px'"
@@ -26,7 +23,6 @@
       </div>
       <div class="input_inline">
         <ait-output-text
-          tabindex="4"
           [label]="'FIELD OF STUDY'"
           [id]="'field_of_study'"
           [width]="'400px'"
@@ -35,7 +31,6 @@
       </div>
       <div class="input_inline">
         <ait-output-text
-          tabindex="5"
           [label]="'GRADE'"
           [id]="'grade'"
           [width]="'400px'"
@@ -46,6 +41,7 @@
         <ait-datepicker
           [label]="'start date'"
           [id]="'start_date_from'"
+          [format]="'yyyy/MM'"
           [disable]="true"
           [styleInput]="{ color: '#8f9bb3', width: '185px' }"
           [defaultValue]="stateUserEducation.start_date_from"
@@ -53,6 +49,7 @@
         <span style="margin-bottom: 4px">〜</span>
         <ait-datepicker
           [id]="'start_date_to'"
+          [format]="'yyyy/MM'"
           [disable]="true"
           [styleInput]="{ color: '#8f9bb3', width: '185px' }"
           [defaultValue]="stateUserEducation.start_date_to"

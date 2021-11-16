@@ -1,9 +1,8 @@
-
 import { Injectable } from '@angular/core';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { COLLECTIONS, GRAPHQL, isObjectFull } from '@ait/shared';
 import { AitBaseService } from './ait-base.service';
-
+import { gql } from 'apollo-angular';
 
 export enum DATA_TYPE {
   COMPANY = 'COMPANY',
@@ -17,18 +16,17 @@ export enum DATA_TYPE {
 }
 
 export enum CLASS {
-  SYSTEM_SETTING = 'SYSTEM_SETTING'
+  SYSTEM_SETTING = 'SYSTEM_SETTING',
 }
 
 export interface ConditionSearch {
   type?: string; // "MASTER",
   keyword?: string; // "java",
-  class?: string;// "ADDRESS",
-  parent_code?: string;// "VIETNAM",
-  code?: string;// "HUE",
-  _key?: string[]
+  class?: string; // "ADDRESS",
+  parent_code?: string; // "VIETNAM",
+  code?: string; // "HUE",
+  _key?: string[];
 }
-
 
 @Injectable()
 export class AitMasterDataService extends AitBaseService {
@@ -37,7 +35,8 @@ export class AitMasterDataService extends AitBaseService {
   private remove = this.env?.API_PATH?.SYS?.MASTER_DATA + '/remove';
   private getClass = this.env?.API_PATH?.SYS?.CLASS + '/get';
   private getLang = this.env?.API_PATH?.SYS?.LANG + '/get';
-  private getClassByParent = this.env?.API_PATH?.SYS?.MASTER_DATA + '/get-by-class-parent-code';
+  private getClassByParent =
+    this.env?.API_PATH?.SYS?.MASTER_DATA + '/get-by-class-parent-code';
   private getByClass = this.env?.API_PATH?.SYS?.MASTER_DATA + '/get-by-class';
   private searchMasterData = this.env?.API_PATH?.SYS?.MASTER_DATA + '/search';
   private getByCode = this.env?.API_PATH?.SYS?.MASTER_DATA + '/get-by-code';
@@ -54,18 +53,16 @@ export class AitMasterDataService extends AitBaseService {
     change_by: true,
     name: true,
     active_flag: true,
-    is_matching: true
+    is_matching: true,
   };
 
   async getSuggestData(condition?: ConditionSearch) {
     return await this.post(this.searchMasterData, { condition }).toPromise();
   }
 
-
   async getMasterData(condition?: any) {
     return await this.post(this.getmaster, { condition }).toPromise();
   }
-
 
   async getClassData(condition?: any) {
     return await this.post(this.getClass, { condition }).toPromise();
@@ -74,7 +71,7 @@ export class AitMasterDataService extends AitBaseService {
     return await this.post(this.getClassByParent, {
       condition: {
         class: classCode,
-        parent_code: parentCode
+        parent_code: parentCode,
       },
     }).toPromise();
   }
@@ -82,7 +79,7 @@ export class AitMasterDataService extends AitBaseService {
     return await this.post(this.getByCode, {
       condition: {
         class: classCode,
-        code: code
+        code: code,
       },
     }).toPromise();
   }
@@ -94,22 +91,45 @@ export class AitMasterDataService extends AitBaseService {
     }).toPromise();
   }
 
-
   async getLangList(condition?: any) {
     return await this.post(this.getLang, { condition }).toPromise();
   }
 
   async deleteDataEachItem(data: { _key: string }) {
     if (data._key) {
-      return await this.mutation('removeSystem', 'sys_master_data', [data], { _key: true });
+      return await this.mutation('removeSystem', 'sys_master_data', [data], {
+        _key: true,
+      });
     }
     return false;
   }
 
   async saveData(data: any[], collection = 'sys_master_data') {
-
-    return await this.mutation('saveSystem', collection, data, this.returnFields);
+    return await this.mutation(
+      'saveSystem',
+      collection,
+      data,
+      this.returnFields
+    );
   }
+
+  numOfRecord = async (collection: string) => {
+    return await this.apollo
+      .query({
+        query: gql`
+        query {
+          findSystem(request : {
+           company :"${this.company}",
+           lang :"${this.currentLang}",
+           collection :"${collection}",
+          }){
+            numData
+          }
+        }
+        `,
+      })
+      .toPromise();
+  };
 
   async getAllMasterData(condition?: any, rf?: any) {
     const returnFields = rf ? rf : this.returnFields;
@@ -121,7 +141,6 @@ export class AitMasterDataService extends AitBaseService {
     return await this.query(GRAPHQL.FIND_SYSTEM, request, returnFields);
   }
 
-
   async find(
     condition: any,
     rf?: any,
@@ -130,7 +149,6 @@ export class AitMasterDataService extends AitBaseService {
     includeNotDelete: boolean = true,
     includeNotActive: boolean = false
   ) {
-    // console.log(options)
     const returnFields = rf ? rf : this.returnFields;
     const request = {};
     if (isObjectFull(condition)) {
@@ -141,6 +159,12 @@ export class AitMasterDataService extends AitBaseService {
     }
     request['collection'] = collection;
 
-    return await this.query(GRAPHQL.FIND_SYSTEM, request, returnFields, includeNotDelete, includeNotActive);
+    return await this.query(
+      GRAPHQL.FIND_SYSTEM,
+      request,
+      returnFields,
+      includeNotDelete,
+      includeNotActive
+    );
   }
 }

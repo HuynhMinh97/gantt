@@ -17,6 +17,9 @@ import { UserLanguageDetailComponent } from './pages/aureole-v/user/user-languag
 import { UserEducationDetailComponent } from './pages/aureole-v/user/user-education-detail/user-education-detail.component';
 import { UserCourseDetailComponent } from './pages/aureole-v/user/user-course-detail/user-course-detail.component';
 import { UserCertificateDetailComponent } from './pages/aureole-v/user/user-certificate-detail/user-certificate-detail.component';
+import { UserExperienceDetailComponent } from './pages/aureole-v/user/user-experience-detail/user-experience-detail.component';
+import { UserProjectDetailComponent } from './pages/aureole-v/user/user-project-detail/user-project-detail.component';
+import { UserOnboardingDetailComponent } from './pages/aureole-v/user/user-onboarding-detail/user-onboarding-detail.component';
 
 // Push your routes here one by one 🎉
 
@@ -35,6 +38,11 @@ export const routes: Routes = [
     path: 'user-experience/:id',
     canActivate: [AitAuthGuardService],
     component: UserExperienceComponent
+  },
+  {
+    path: 'user-experience-detail/:id',
+    canActivate: [AitAuthGuardService],
+    component: UserExperienceDetailComponent
   },
   {
     path: 'user-education',
@@ -77,6 +85,11 @@ export const routes: Routes = [
     component: UserOnboardingComponent
   },
   {
+    path: 'user-onboarding-detail/:id',
+    canActivate: [AitAuthGuardService],
+    component: UserOnboardingDetailComponent
+  },
+  {
     path: 'user-course',
     canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
     component: UserCourseComponent
@@ -115,6 +128,11 @@ export const routes: Routes = [
     path: 'user-project/:id',
     canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
     component: UserProjectComponent
+  },
+  {
+    path: 'user-project-detail/:id',
+    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    component: UserProjectDetailComponent
   },
   {
     path: 'user-skills',

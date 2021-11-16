@@ -4,8 +4,8 @@ export interface UserProjectDto extends BaseDto {
     name: string,
     start_date_from: number,
     start_date_to: number,
-    company: string,
-    title: string,
+    company_working: KeyValueDto,
+    title: KeyValueDto,
     description: string,
     skills: KeyValueDto[],
     responsibility: string,
@@ -15,7 +15,7 @@ export class UserProjectErrorsMessage {
     name: string[];
     start_date_from: string[];
     start_date_to: string[];
-    company: string[];
+    company_working: string[];
     title: string[];
     description: string[];
     skills: string[];
