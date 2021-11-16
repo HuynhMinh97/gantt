@@ -1,0 +1,13 @@
+@import '../../../../../styles/themes.scss';
+@import '../user-job-alert/user-job-alert.component.scss';
+.start-date {
+  display: flex;
+  align-items: flex-end;
+  width: 400px;
+  margin-top: 20px;
+  span {
+    color: #8f9bb3;
+    margin: 12px;
+    font-weight: 600;
+  }
+}

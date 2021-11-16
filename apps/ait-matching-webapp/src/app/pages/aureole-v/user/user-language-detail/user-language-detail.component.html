@@ -1,0 +1,28 @@
+<div class="template__popup">
+  <ait-text-gradient
+    [content]="'User language detail'"
+    [id]="'language-detail'"
+    tabindex="1"
+  ></ait-text-gradient>
+
+  <div class="content__card">
+    <div class="input_inline">
+      <ait-output-text
+        tabindex="2"
+        [label]="'LANGUAGE'"
+        [width]="'400px'"
+        [value]="stateUserLanguage.language?.value"
+        [id]="'language'"
+      ></ait-output-text>
+    </div>
+    <div class="input_inline">
+      <ait-output-text
+        tabindex="3"
+        [label]="'PROFICIENCY'"
+        [id]="'proficiency'"
+        [width]="'400px'"
+        [value]="stateUserLanguage.proficiency?.value"
+      ></ait-output-text>
+    </div>
+  </div>
+</div>

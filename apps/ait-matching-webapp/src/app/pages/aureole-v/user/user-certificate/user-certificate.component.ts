@@ -12,11 +12,11 @@ import { debug } from 'node:console';
 
 
 @Component({
-  selector: 'ait-uses-certificate',
-  templateUrl: './uses-certificate.component.html',
-  styleUrls: ['./uses-certificate.component.scss']
+  selector: 'ait-user-certificate',
+  templateUrl: './user-certificate.component.html',
+  styleUrls: ['./user-certificate.component.scss']
 })
-export class UsesCertificateComponent extends AitBaseComponent implements OnInit {
+export class UserCertificateComponent extends AitBaseComponent implements OnInit {
   certificate: FormGroup;
   certificateClone: any;
   dataOld: any;
@@ -42,7 +42,7 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
     description: false,
     file: false,
   };
-  certificate_key= '';
+  certificate_key = '';
   selectFile = "";
   ;
   constructor(
@@ -91,7 +91,7 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
       this.certificateClone = this.certificate.value;
       setTimeout(() => {
         this.cancelLoadingApp();
-      },500);
+      }, 500);
     } else {
       await this.find(this.certificate_key);
     }
@@ -254,7 +254,7 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
             await this.reset();
-            setTimeout(() => {this.certificate.controls['issue_date_from'].setValue(this.dateNow)}, 100);
+            setTimeout(() => { this.certificate.controls['issue_date_from'].setValue(this.dateNow) }, 100);
             this.isSave = true;
             this.cancelLoadingApp();
           } else {
@@ -401,9 +401,9 @@ export class UsesCertificateComponent extends AitBaseComponent implements OnInit
           }
         });
     } else {
-      if(this.isSave){
+      if (this.isSave) {
         this.closeDialog(true);
-      }else{
+      } else {
         this.closeDialog(false);
       }
     }
