@@ -56,7 +56,7 @@ export class UserSkillResolver extends AitBaseService {
 
     if (user_id) {
       const aqlQuery = `
-    FOR data IN user_skill
+      FOR data IN user_skill
       REMOVE data._key IN user_skill
       LET removed = OLD
       RETURN removed
