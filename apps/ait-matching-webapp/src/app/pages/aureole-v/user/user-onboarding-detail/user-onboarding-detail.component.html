@@ -64,6 +64,24 @@
             [value]="stateUserOnboarding.phone_number"
           ></ait-output-text>
         </div>
+        <div class="input_inline" >
+          <ait-label
+            [label]="'ABOUT'"
+            [id]="'about'"
+          ></ait-label>
+
+          <textarea
+            nbInput
+            style="width: 400px; color: #8f9bb3; min-height: 131px;margin-top:10px; background-color: transparent;"
+            readonly
+            disabled
+            fullWidth
+            [value]="stateUserOnboarding.about || ''"
+            class="textarea"
+            [id]="'about'"
+          >
+          </textarea>
+        </div>
         <div class="input_inline">
             <ait-output-text
               [label]="'COUNTRY/REGION'"

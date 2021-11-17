@@ -42,28 +42,37 @@
             [label]="'ISSUE DATE'"
             [id]="'issue_date_from'"
             [disable]="true"
-            [styleInput]="{ color: '#8f9bb3', width: '185px' }"
+            [styleInput]="{ color: '#8f9bb3', width: '180px' }"
             [defaultValue]="stateUserCertificate.issue_date_from"
           ></ait-datepicker>
           <span style="margin-bottom: 4px">〜</span>
           <ait-datepicker
             [id]="'issue_date_to'"
             [disable]="true"
-            [styleInput]="{ color: '#8f9bb3', width: '185px' }"
+            [styleInput]="{ color: '#8f9bb3', width: '180px' }"
             [defaultValue]="stateUserCertificate.issue_date_to"
           ></ait-datepicker>
         </div>
-        <div class="input_inline">
-          <ait-output-text
-            tabindex="6"
-            [label]="'description'"
+        <div class="input_inline" >
+          <ait-label
+            [label]="'DESCRIPTION'"
             [id]="'description'"
-            [width]="'400px'"
-            [value]="stateUserCertificate.description"
-          ></ait-output-text>
+          ></ait-label>
+  
+          <textarea
+            nbInput
+            style="width: 400px; color: #8f9bb3; min-height: 131px;margin-top:10px; background-color: transparent;"
+            readonly
+            disabled
+            fullWidth
+            [value]="stateUserCertificate.description || ''"
+            class="textarea"
+            [id]="'description'"
+          >
+          </textarea>
         </div>
         <div class="input_inline">
-            <div style="width: 100%">
+            <div style="width: 400px">
           <ait-output-file
             [id]="'file'"
             [fileKeys]="stateUserCertificate.file"

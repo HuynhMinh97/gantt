@@ -603,14 +603,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     userCertificate: true,
   };
 
-  getHours(time: number) {
-    return Math.trunc(time / 1000 / 60 / 60 / 3)
-  }
-
-  toggleContent(group: string, status: boolean) {
-    this.isOpen[group] = status;
-  }
-
   dateDiffInYears(month) {
     if (month < 12) {
       return month.toString() + " month";

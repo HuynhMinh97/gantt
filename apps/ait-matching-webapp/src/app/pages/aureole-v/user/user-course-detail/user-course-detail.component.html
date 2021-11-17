@@ -34,28 +34,37 @@
             [label]="'start date'"
             [id]="'start_date_from'"
             [disable]="true"
-            [styleInput]="{ color: '#8f9bb3', width: '185px' }"
+            [styleInput]="{ color: '#8f9bb3', width: '180px' }"
             [defaultValue]="stateUserCourse.start_date_from"
           ></ait-datepicker>
           <span style="margin-bottom: 4px">〜</span>
           <ait-datepicker
             [id]="'start_date_to'"
             [disable]="true"
-            [styleInput]="{ color: '#8f9bb3', width: '185px' }"
+            [styleInput]="{ color: '#8f9bb3', width: '180px' }"
             [defaultValue]="stateUserCourse.start_date_to"
           ></ait-datepicker>
         </div>
-        <div class="input_inline">
-          <ait-output-text
-            tabindex="5"
-            [label]="'description'"
+        <div class="input_inline" >
+          <ait-label
+            [label]="'DESCRIPTION'"
             [id]="'description'"
-            [width]="'400px'"
-            [value]="stateUserCourse.description"
-          ></ait-output-text>
+          ></ait-label>
+  
+          <textarea
+            nbInput
+            style="width: 400px; color: #8f9bb3; min-height: 131px;margin-top:10px; background-color: transparent;"
+            readonly
+            disabled
+            fullWidth
+            [value]="stateUserCourse.description || ''"
+            class="textarea"
+            [id]="'description'"
+          >
+          </textarea>
         </div>
         <div class="input_inline">
-            <div style="width: 100%">
+            <div style="width: 400px">
           <ait-output-file
             [id]="'file'"
             [fileKeys]="stateUserCourse.file"
