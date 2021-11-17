@@ -1,9 +1,10 @@
+import { MatchingUtils } from '../../../../@constants/utils/matching-utils';
 import { RESULT_STATUS } from '@ait/shared';
-import { AitAppUtils, AitAuthService, AitBaseComponent, AitEnvironmentService, AppState } from '@ait/ui';
+import { AitAppUtils, AitAuthService, AitBaseComponent, AitEnvironmentService, AppState, getSettingLangTime } from '@ait/ui';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NbToastrService, NbLayoutScrollService } from '@nebular/theme';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { UserExperienceService } from './../../../../services/user-experience.service';
 import { UserExperienceDto } from '../user-experience/interface';
@@ -17,6 +18,7 @@ export class UserExperienceDetailComponent extends AitBaseComponent implements O
 
   user_key: any = '';
   stateUserExp = {} as UserExperienceDto;
+  dateFormat: any;
   constructor(
     public activeRouter: ActivatedRoute,
     private userExpService: UserExperienceService,
@@ -36,6 +38,12 @@ export class UserExperienceDetailComponent extends AitBaseComponent implements O
       layoutScrollService,
       toastrService
     );
+    this.store.pipe(select(getSettingLangTime)).subscribe(setting => {
+      if (setting) {
+        const display = setting?.date_format_display;
+        this.dateFormat = MatchingUtils.getFormatYearMonth(display);
+      }
+    });
 
     this.setModulePage({
       module: 'user',
@@ -59,5 +67,7 @@ export class UserExperienceDetailComponent extends AitBaseComponent implements O
         })
     }
   }
+
+
 
 }
