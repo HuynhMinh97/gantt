@@ -1,244 +1,248 @@
 <ait-template-popup [width]="800" [isLoading]="true" [isPage]="false" *ngIf="user_key">
-  <div class="template__popup" id="user_onboarding">
+  <div class="user__wrapper" id="user_onboarding">
     <ait-text-gradient
       [content]="getTitleByMode()"
       id="form_edit_user_onboarding"
     ></ait-text-gradient>
-    <ait-card-content style="justify-content: center" class="content__card">
-      <div style="margin-top: 14px">
-        <div class="input_area">
-          <ait-input-text
-            [id]="'first_name'"
-            [label]="'FIRST NAME'"
-            [length]="200"
-            [width]="400"
-            [required]="true"
-            [isSubmit]="isSubmit"
-            [isReset]="resetUserInfo.first_name"
-            [placeholder]="'PHUC'"
-            (watchValue)="takeInputValue($event, 'first_name')"
-            [defaultValue]="userOnboardingInfo.controls['first_name'].value"
-          ></ait-input-text>
-        </div>
-        <div class="input_area">
-          <ait-input-text
-            [id]="'last_name'"
-            [label]="'LAST NAME'"
-            [length]="200"
-            [width]="400"
-            [required]="true"
-            [isSubmit]="isSubmit"
-            [isReset]="resetUserInfo.last_name"
-            [placeholder]="'LAM QUANG'"
-            (watchValue)="takeInputValue($event, 'last_name')"
-            [defaultValue]="userOnboardingInfo.controls['last_name'].value"
-          ></ait-input-text>
-        </div>
-        <div class="input_area">
-          <ait-input-text
-            *ngIf="isLangJP"
-            [id]="'katakana'"
-            [label]="'KATAKANA'"
-            [length]="200"
-            [width]="400"
-            [isSubmit]="isSubmit"
-            [isReset]="resetUserInfo.katakana"
-            [placeholder]="'ラムクアンフック'"
-            (watchValue)="takeInputValue($event, 'katakana')"
-            [defaultValue]="userOnboardingInfo.controls['katakana'].value"
-          ></ait-input-text>
-        </div>
-        <div class="input_area">
-          <ait-input-text
-            *ngIf="isLangJP"
-            [id]="'romaji'"
-            [label]="'ROMAJI'"
-            [length]="200"
-            [width]="400"
-            [isSubmit]="isSubmit"
-            [isReset]="resetUserInfo.romaji"
-            [placeholder]="'ramu kuan fukku'"
-            (watchValue)="takeInputValue($event, 'romaji')"
-            [defaultValue]="userOnboardingInfo.controls['romaji'].value"
-          ></ait-input-text>
-        </div>
-        <div class="input_area">
-          <ait-label
-            class="ait-label"
-            [label]="'GENDER'"
-            id="gender"
-            [required]="true"
-          ></ait-label>
-          <div>
-            <nb-radio-group >
-              <nb-radio
-                [tabIndex]="5"
-                *ngFor="let option of genderList; let isDefault = three"
-                [value]="option"
-                [checked]="
-                  userOnboardingInfo.controls['gender'].value
-                    ? userOnboardingInfo.controls['gender'].value?._key ==
-                      option.code
-                    : isDefault
-                "
-                (valueChange)="takeGenderValue($event)"
-              >
-                {{ option.name }}
-              </nb-radio>
-            </nb-radio-group>
+    <div class="content__card">
+        <div class="form">
+          <div class="input_inline">
+            <ait-input-text
+              [id]="'first_name'"
+              [label]="'fist name'"
+              [length]="200"
+              [width]="'400px'"
+              [required]="true"
+              [isSubmit]="isSubmit"
+              [isReset]="resetUserInfo.first_name"
+              [placeholder]="'PHUC'"
+              (watchValue)="takeInputValue($event, 'first_name')"
+              [defaultValue]="userOnboardingInfo.controls['first_name'].value"
+            ></ait-input-text>
           </div>
-        </div>
-        <div class="input_area">
-          <ait-datepicker
-            [id]="'bod'"
-            [label]="'BORN ON DATE'"
-            [required]="true"
-            [isSubmit]="isSubmit"
-            [style]="{ width: '180px' }"
-            [isReset]="resetUserInfo.bod"
-            [placeholder]="'01/01/1985'"
-            (watchValue)="
-              takeDatePickerValue($event?.value, 'userOnboardingInfo', 'bod')
-            "
-            [dateInput]="userOnboardingInfo.controls['bod'].value"
-          ></ait-datepicker>
-        </div>
-        <div class="input_area">
-          <ait-input-text
-            [length]="15"
-            [width]="400"
-            [required]="true"
-            [isSubmit]="isSubmit"
-            [id]="'phone_number'"
-            [label]="'PHONE NUMBER'"
-            [placeholder]="'0912345678'"
-            [isReset]="resetUserInfo.phone_number"
-            (watchValue)="takeInputValue($event, 'phone_number')"
-            [defaultValue]="userOnboardingInfo.controls['phone_number'].value"
-          >
-          </ait-input-text>
-        </div>
-        <div class="input_area" >
-          <ait-input-text
-            [rows]="4"
-            [id]="'about'"
-            [length]="4000"
-            [label]="'ABOUT'"
-            [width]="400"
-            [placeholder]="'place your text'"
-            [isReset]="resetUserInfo.about"
-            (watchValue)="takeInputValue($event, 'about')"
-            [defaultValue]="userOnboardingInfo.controls['about'].value"
-          >
-          </ait-input-text>
-        </div>
-        <div class="input_area">
-          <ait-country
-            [width]="'400px'"
-            (watchValue)="takeValueCountry($event)"
-            [isReset]="isResetCountry"
-            [defaultValue]="userOnboardingInfo.value"
-            [isClear]="isClear"
-            [isSubmit]="isSubmit"
-          ></ait-country>
-        </div>
+          <div class="input_inline">
+            <ait-input-text
+              [id]="'last_name'"
+              [label]="'last name'"
+              [length]="200"
+              [width]="'400px'"
+              [required]="true"
+              [isSubmit]="isSubmit"
+              [isReset]="resetUserInfo.last_name"
+              [placeholder]="'LAM QUANG'"
+              (watchValue)="takeInputValue($event, 'last_name')"
+              [defaultValue]="userOnboardingInfo.controls['last_name'].value"
+            ></ait-input-text>
+          </div>
+          <div *ngIf="isLangJP" class="input_inline">
+            <ait-input-text              
+              [id]="'katakana'"
+              [label]="'katakana'"
+              [length]="200"
+              [width]="'400px'"
+              [isSubmit]="isSubmit"
+              [isReset]="resetUserInfo.katakana"
+              [placeholder]="'ラムクアンフック'"
+              (watchValue)="takeInputValue($event, 'katakana')"
+              [defaultValue]="userOnboardingInfo.controls['katakana'].value"
+            ></ait-input-text>
+          </div>
+          <div *ngIf="isLangJP" class="input_inline">
+            <ait-input-text              
+              [id]="'romaji'"
+              [label]="'romaji'"
+              [length]="200"
+              [width]="'400px'"
+              [isSubmit]="isSubmit"
+              [isReset]="resetUserInfo.romaji"
+              [placeholder]="'ramu kuan fukku'"
+              (watchValue)="takeInputValue($event, 'romaji')"
+              [defaultValue]="userOnboardingInfo.controls['romaji'].value"
+            ></ait-input-text>
+          </div>
+          <div class="input_area">
+            <ait-label
+              class="ait-label"
+              [label]="'gender'"
+              id="gender"
+              [required]="true"
+            ></ait-label>
+            <div>
+              <nb-radio-group >
+                <nb-radio
+                  [tabIndex]="5"
+                  *ngFor="let option of genderList; let isDefault = three"
+                  [value]="option"
+                  [checked]="
+                    userOnboardingInfo.controls['gender'].value
+                      ? userOnboardingInfo.controls['gender'].value?._key ==
+                        option.code
+                      : isDefault
+                  "
+                  (valueChange)="takeGenderValue($event)"
+                >
+                  {{ option.name }}
+                </nb-radio>
+              </nb-radio-group>
+            </div>
+          </div>
+          <div class="input_inline">
+            <ait-datepicker
+              [id]="'bod'"
+              [label]="'born on date'"
+              [required]="true"
+              [isSubmit]="isSubmit"
+              [style]="{ width: '170px' }"
+              [isReset]="resetUserInfo.bod"
+              [placeholder]="'01/01/1985'"
+              (watchValue)="
+                takeDatePickerValue($event?.value, 'userOnboardingInfo', 'bod')
+              "
+              [dateInput]="userOnboardingInfo.controls['bod'].value"
+            ></ait-datepicker>
+          </div>
+          <div class="input_inline">
+            <ait-input-text
+              [length]="15"
+              [width]="'190px'"
+              [required]="true"
+              [isSubmit]="isSubmit"
+              [id]="'phone_number'"
+              [label]="'phone number'"
+              [placeholder]="'0912345678'"
+              [isReset]="resetUserInfo.phone_number"
+              (watchValue)="takeInputValue($event, 'phone_number')"
+              [defaultValue]="userOnboardingInfo.controls['phone_number'].value"
+            >
+            </ait-input-text>
+          </div>
+          <div class="input_inline" >
+            <ait-input-text
+              [rows]="4"
+              [id]="'about'"
+              [length]="4000"
+              [label]="'about'"
+              [width]="'400px'"
+              [placeholder]="'place your text'"
+              [isReset]="resetUserInfo.about"
+              (watchValue)="takeInputValue($event, 'about')"
+              [defaultValue]="userOnboardingInfo.controls['about'].value"
+            >
+            </ait-input-text>
+          </div>
+          <div class="input_inline">
+            <ait-country
+              [width]="'400px'"
+              (watchValue)="takeValueCountry($event)"
+              [isReset]="isResetCountry"
+              [defaultValue]="userOnboardingInfo.value"
+              [isClear]="isClear"
+              [isSubmit]="isSubmit"
+            ></ait-country>
+          </div>
+          
+          <div class="input_inline">
+            <ait-input-text
+              [id]="'address'"
+              [length]="500"
+              [width]="'400px'"
+              [required]="true"
+              [label]="'ADDRESS'"
+              [placeholder]="'dinh tien hoang'"
+              [isReset]="resetUserInfo.address"
+              [isSubmit]="isSubmit"
+              (watchValue)="takeInputValue($event, 'address')"
+              [defaultValue]="userOnboardingInfo.controls['address'].value"
+            >
+            </ait-input-text>
+          </div>
+          <div class="input_inline">
+            <ait-input-text
+              [id]="'floor_building'"
+              [label]="'floor/building'"
+              [length]="500"
+              [width]="'400px'"
+              [placeholder]="'Floor 9, SFC Building'"
+              [isReset]="resetUserInfo.floor_building"
+              [isSubmit]="isSubmit"
+              (watchValue)="takeInputValue($event, 'floor_building')"
+              [defaultValue]="userOnboardingInfo.controls['floor_building'].value"
+            >
+            </ait-input-text>
+          </div>
+          <div class="input_inline">
+            <ait-autocomplete-master-data
+              [width]="'400px'"
+              [id]="'company_working'"
+              [label]="'company working'"
+              [isSubmit]="isSubmit"
+              [allowNew]="true"
+              [maxItem]="1"
+              [placeholder]="'Aureole IT'"
+              [collection]="'m_company'"
+              [disableOutputDefault]="true"
+              [isReset]="resetUserInfo.company_working"
+              (watchValue)="takeMasterValue($event, 'company_working')"
+              [defaultValue]="[
+                userOnboardingInfo.controls['company_working'].value
+              ]"
+            ></ait-autocomplete-master-data>
+          </div>
+          <div class="input_inline">
+            <ait-autocomplete-master-data
+              [id]="'title'"
+              [width]="'400px'"
+              [label]="'title'"
+              [isSubmit]="isSubmit"
+              [allowNew]="true"
+              [maxItem]="1"
+              [placeholder]="'Technical Manager'"
+              [collection]="'m_title'"
+              [disableOutputDefault]="true"
+              [isReset]="resetUserInfo.title"
+              (watchValue)="takeMasterValue($event, 'title')"
+              [defaultValue]="[userOnboardingInfo.controls['title'].value]"
+            ></ait-autocomplete-master-data>
+          </div>
+          <div class="input_inline">
+            <ait-autocomplete-master-data
+              [id]="'industry'"
+              [width]="'400px'"
+              [label]="'industry'"
+              [required]="true"
+              [isSubmit]="isSubmit"
+              [allowNew]="true"
+              [maxItem]="1"
+              [placeholder]="'Computer Software'"
+              [collection]="'m_industry'"
+              [disableOutputDefault]="true"
+              [isReset]="resetUserInfo.industry"
+              (watchValue)="takeMasterValue($event, 'industry')"
+              [defaultValue]="[userOnboardingInfo.controls['industry'].value]"
+            ></ait-autocomplete-master-data>
+          </div>
+          <div *ngIf="mode === 'NEW'" class="input_inline">
+            <ait-autocomplete-master-data
+              [id]="'skills'"
+              [width]="'400px'"
+              [label]="'skills (max 10)'"
+              [required]="true"
+              [isSubmit]="isSubmit"
+              [allowNew]="true"
+              [maxItem]="10"
+              [placeholder]="'fill name and enter to add your skills'"
+              [collection]="'m_skill'"
+              [disableOutputDefault]="true"
+              [isReset]="resetUserInfo.skills"
+              (watchValue)="
+                takeMasterValues($event?.value, 'userOnboardingInfo', 'skills')
+              "
+            ></ait-autocomplete-master-data>
+          </div>
         
-        <div class="input_area">
-          <ait-input-text
-            [id]="'address'"
-            [length]="500"
-            [width]="400"
-            [required]="true"
-            [label]="'ADDRESS'"
-            [placeholder]="'9 Dinh Tien Hoang Street'"
-            [isReset]="resetUserInfo.address"
-            [isSubmit]="isSubmit"
-            (watchValue)="takeInputValue($event, 'address')"
-            [defaultValue]="userOnboardingInfo.controls['address'].value"
-          >
-          </ait-input-text>
-        </div>
-        <div class="input_area">
-          <ait-input-text
-            [id]="'floor_building'"
-            [label]="'FLOOR/BUILDING'"
-            [length]="500"
-            [width]="400"
-            [placeholder]="'Floor 9, SFC Building'"
-            [isReset]="resetUserInfo.floor_building"
-            [isSubmit]="isSubmit"
-            (watchValue)="takeInputValue($event, 'floor_building')"
-            [defaultValue]="userOnboardingInfo.controls['floor_building'].value"
-          >
-          </ait-input-text>
-        </div>
-        <div class="input_area">
-          <ait-autocomplete-master-data
-            [id]="'company_working'"
-            [label]="'COMPANY WORKING'"
-            [isSubmit]="isSubmit"
-            [allowNew]="true"
-            [maxItem]="1"
-            [placeholder]="'Aureole IT'"
-            [collection]="'m_company'"
-            [disableOutputDefault]="true"
-            [isReset]="resetUserInfo.company_working"
-            (watchValue)="takeMasterValue($event, 'company_working')"
-            [defaultValue]="[
-              userOnboardingInfo.controls['company_working'].value
-            ]"
-          ></ait-autocomplete-master-data>
-        </div>
-        <div class="input_area">
-          <ait-autocomplete-master-data
-            [id]="'title'"
-            [label]="'TITLE'"
-            [isSubmit]="isSubmit"
-            [allowNew]="true"
-            [maxItem]="1"
-            [placeholder]="'Technical Manager'"
-            [collection]="'m_title'"
-            [disableOutputDefault]="true"
-            [isReset]="resetUserInfo.title"
-            (watchValue)="takeMasterValue($event, 'title')"
-            [defaultValue]="[userOnboardingInfo.controls['title'].value]"
-          ></ait-autocomplete-master-data>
-        </div>
-        <div class="input_area">
-          <ait-autocomplete-master-data
-            [id]="'industry'"
-            [label]="'INDUSTRY'"
-            [required]="true"
-            [isSubmit]="isSubmit"
-            [allowNew]="true"
-            [maxItem]="1"
-            [placeholder]="'Computer Software'"
-            [collection]="'m_industry'"
-            [disableOutputDefault]="true"
-            [isReset]="resetUserInfo.industry"
-            (watchValue)="takeMasterValue($event, 'industry')"
-            [defaultValue]="[userOnboardingInfo.controls['industry'].value]"
-          ></ait-autocomplete-master-data>
-        </div>
-        <div *ngIf="mode === 'NEW'" class="input_area">
-          <ait-autocomplete-master-data
-            [id]="'skills'"
-            [label]="'SKILLS (MAX 10)'"
-            [required]="true"
-            [isSubmit]="isSubmit"
-            [allowNew]="true"
-            [maxItem]="10"
-            [placeholder]="'fill name and enter to add your skills'"
-            [collection]="'m_skill'"
-            [disableOutputDefault]="true"
-            [isReset]="resetUserInfo.skills"
-            (watchValue)="
-              takeMasterValues($event?.value, 'userOnboardingInfo', 'skills')
-            "
-          ></ait-autocomplete-master-data>
-        </div>
       </div>
-    </ait-card-content>
+    </div>
+    
     <div class="sticky">
       <div class="action-row">
         <div class="block">
@@ -255,7 +259,7 @@
             *ngIf="mode === 'EDIT'"
             [id]="'delete'"
             [width]="'150px'"
-            [title]="'DELETE'"
+            [title]="'delete'"
             [isDefault]="true"
             (click)="onDelete()"
           >
@@ -305,9 +309,9 @@
         <div class="input_area">
           <ait-input-text
             [id]="'first_name'"
-            [label]="'FIRST NAME'"
+            [label]="'fist name'"
             [length]="200"
-            [width]="400"
+            [width]="'400px'"
             [required]="true"
             [isSubmit]="isSubmit"
             [isReset]="resetUserInfo.first_name"
@@ -319,9 +323,9 @@
         <div class="input_area">
           <ait-input-text
             [id]="'last_name'"
-            [label]="'LAST NAME'"
+            [label]="'last name'"
             [length]="200"
-            [width]="400"
+            [width]="'400px'"
             [required]="true"
             [isSubmit]="isSubmit"
             [isReset]="resetUserInfo.last_name"
@@ -334,9 +338,9 @@
           <ait-input-text
             *ngIf="isLangJP"
             [id]="'katakana'"
-            [label]="'KATAKANA'"
+            [label]="'katakana'"
             [length]="200"
-            [width]="400"
+            [width]="'400px'"
             [isSubmit]="isSubmit"
             [isReset]="resetUserInfo.katakana"
             [placeholder]="'ラムクアンフック'"
@@ -348,9 +352,9 @@
           <ait-input-text
             *ngIf="isLangJP"
             [id]="'romaji'"
-            [label]="'ROMAJI'"
+            [label]="'romaji'"
             [length]="200"
-            [width]="400"
+            [width]="'400px'"
             [isSubmit]="isSubmit"
             [isReset]="resetUserInfo.romaji"
             [placeholder]="'ramu kuan fukku'"
@@ -361,7 +365,7 @@
         <div class="input_area">
           <ait-label
             class="ait-label"
-            [label]="'GENDER'"
+            [label]="'gender'"
             id="gender"
             [required]="true"
           ></ait-label>
@@ -387,10 +391,10 @@
         <div class="input_area">
           <ait-datepicker
             [id]="'bod'"
-            [label]="'BORN ON DATE'"
+            [label]="'born on date'"
             [required]="true"
             [isSubmit]="isSubmit"
-            [style]="{ width: '180px' }"
+            [style]="{ width: '170px' }"
             [isReset]="resetUserInfo.bod"
             [placeholder]="'01/01/1985'"
             (watchValue)="
@@ -402,11 +406,11 @@
         <div class="input_area">
           <ait-input-text
             [length]="15"
-            [width]="400"
+            [width]="'190px'"
             [required]="true"
             [isSubmit]="isSubmit"
             [id]="'phone_number'"
-            [label]="'PHONE NUMBER'"
+            [label]="'phone number'"
             [placeholder]="'0912345678'"
             [isReset]="resetUserInfo.phone_number"
             (watchValue)="takeInputValue($event, 'phone_number')"
@@ -419,8 +423,8 @@
             [rows]="4"
             [id]="'about'"
             [length]="4000"
-            [label]="'ABOUT'"
-            [width]="400"
+            [label]="'about'"
+            [width]="'400px'"
             [placeholder]="'place your text'"
             [isReset]="resetUserInfo.about"
             (watchValue)="takeInputValue($event, 'about')"
@@ -430,7 +434,7 @@
         </div>
         <div class="input_area">
           <ait-country
-            [width]="400"
+            [width]="'400px'"
             (watchValue)="takeValueCountry($event)"
             [isReset]="isResetCountry"
             [defaultValue]="userOnboardingInfo.value"
@@ -443,10 +447,10 @@
           <ait-input-text
             [id]="'address'"
             [length]="500"
-            [width]="400"
+            [width]="'400px'"
             [required]="true"
             [label]="'ADDRESS'"
-            [placeholder]="'9 Dinh Tien Hoang Street'"
+            [placeholder]="'dinh tien hoang'"
             [isReset]="resetUserInfo.address"
             [isSubmit]="isSubmit"
             (watchValue)="takeInputValue($event, 'address')"
@@ -457,9 +461,9 @@
         <div class="input_area">
           <ait-input-text
             [id]="'floor_building'"
-            [label]="'FLOOR/BUILDING'"
+            [label]="'floor/building'"
             [length]="500"
-            [width]="400"
+            [width]="'400px'"
             [placeholder]="'Floor 9, SFC Building'"
             [isReset]="resetUserInfo.floor_building"
             [isSubmit]="isSubmit"
@@ -471,7 +475,8 @@
         <div class="input_area">
           <ait-autocomplete-master-data
             [id]="'company_working'"
-            [label]="'COMPANY WORKING'"
+            [width]="'400px'"
+            [label]="'company working'"
             [isSubmit]="isSubmit"
             [allowNew]="true"
             [maxItem]="1"
@@ -488,7 +493,8 @@
         <div class="input_area">
           <ait-autocomplete-master-data
             [id]="'title'"
-            [label]="'TITLE'"
+            [width]="'400px'"
+            [label]="'title'"
             [isSubmit]="isSubmit"
             [allowNew]="true"
             [maxItem]="1"
@@ -503,7 +509,8 @@
         <div class="input_area">
           <ait-autocomplete-master-data
             [id]="'industry'"
-            [label]="'INDUSTRY'"
+            [width]="'400px'"
+            [label]="'industry'"
             [required]="true"
             [isSubmit]="isSubmit"
             [allowNew]="true"
@@ -519,7 +526,8 @@
         <div *ngIf="mode === 'NEW'" class="input_area">
           <ait-autocomplete-master-data
             [id]="'skills'"
-            [label]="'SKILLS (MAX 10)'"
+            [width]="'400px'"
+            [label]="'skills (max 10)'"
             [required]="true"
             [isSubmit]="isSubmit"
             [allowNew]="true"
@@ -551,7 +559,7 @@
           *ngIf="mode === 'EDIT'"
           [id]="'delete'"
           [width]="'200px'"
-          [title]="'DELETE'"
+          [title]="'delete'"
           [isDefault]="true"
           (click)="onDelete()"
         >
@@ -587,7 +595,7 @@
           *ngIf=" mode === 'VIEW'"
           [id]="'close'"
           [width]="'200px'"
-          [title]="'CLOSE'"
+          [title]="'close'"
           (click)="back()"
           [background]="'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'"
       ></ait-button>

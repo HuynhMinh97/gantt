@@ -2,11 +2,11 @@
   <div [ngStyle]="elementStyle">
     <ait-autocomplete-master-data
       [class]="'COUNTRY'"
-      [label]="'COUNTRY/REGION'"
+      [label]="'coutry/region'"
       [id]="'country'"
       [maxItem]="1"
       [required]="true"
-      [placeholder]="'Viet Nam'"
+      [placeholder]="'viet nam'"
       [disableOutputDefault]="true"
       [isSubmit]="isSubmit"
       [style]="masterStyle"
@@ -27,7 +27,7 @@
   <div [ngStyle]="elementStyle">
     <ait-input-text
       [length]="20"
-      [label]="'POSTCODE'"
+      [label]="'post code'"
       [required]="true"
       [id]="'postcode'"
       [placeholder]="'70000'"
@@ -47,11 +47,11 @@
     <ait-autocomplete-master-data
       [class]="'CITY'"
       [parentCode]="getParentCode('country_region')"
-      [label]="'PROVINCE/CITY'"
+      [label]="'province/city'"
       [id]="'city'"
       [required]="true"
       [maxItem]="1"
-      [placeholder]="'Ho Chi Minh City'"
+      [placeholder]="'ho chi minh'"
       [disableOutputDefault]="true"
       [isSubmit]="isSubmit"
       [style]="masterStyle"
@@ -72,7 +72,7 @@
     <ait-autocomplete-master-data
       [class]="'DISTRICT'"
       [parentCode]="getParentCode('province_city')"
-      [label]="'DISTRICT'"
+      [label]="'dicstrict'"
       [id]="'district'"
       [maxItem]="1"
       [required]="true"
@@ -97,7 +97,7 @@
     <ait-autocomplete-master-data
       [class]="'WARD'"
       [parentCode]="getParentCode('district')"
-      [label]="'WARD'"
+      [label]="'ward'"
       [id]="'ward'"
       [maxItem]="1"
       [required]="true"
