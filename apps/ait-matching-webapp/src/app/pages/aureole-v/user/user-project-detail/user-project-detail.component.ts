@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NbToastrService, NbLayoutScrollService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
-import { UserProjectDto } from '../user-project/user-project/interface';
+import { UserProjectDto } from '../user-project/interface';
 import { UserProjectService } from './../../../../services/user-project.service';
 
 

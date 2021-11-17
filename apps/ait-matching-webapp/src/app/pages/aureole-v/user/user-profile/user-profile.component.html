@@ -39,10 +39,10 @@
           </div>
         </div>
         <div class="col-md-5 col-lg-4 col-xxxl-4" id="col2">
-          <p  id = "about_input" style="width:100%; margin:0 ; height: 100px;  border: none;
-          outline: none; font-size: 13px;overflow: hidden;resize: none;white-space: break-spaces">
+          <div  id = "about_input" style="width:100%; margin:0 ; height: 100px;  border: none;
+          outline: none; font-size: 13px;overflow: hidden;resize: none;white-space: pre-line">
             {{DataUserProfile?.about}}
-          </p>
+          </div>
         </div>
         <div class="col-md-3 col-lg-3 col-xxxl-3" id="col3">
           <div
@@ -280,6 +280,7 @@
     <!-- EXPERIENCE -->
     <card-content
       tabindex="2"
+      [isOpen]="showExperience"
       [id]="'experience_detail'"
       style="outline-color: #10529d"
       class="content_card"
@@ -406,6 +407,7 @@
       [content]="countCentificate"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'20px'"
+      [isOpen]="showCertificate"
       [idBtn]="'openCertificate'"
     >
     <div class="container-user-project" *ngIf="userCentificate.length > 0">
@@ -468,6 +470,7 @@
     </card-content>
     <!-- course -->
     <card-content
+      [isOpen]="showCourse"
       tabindex="2"
       [id]="'course_detail'"
       style="outline-color: #10529d"
@@ -546,6 +549,7 @@
     <!-- education -->
     <card-content
     tabindex="2"
+    [isOpen]="showEducation"
     [id]="'education_detail'"
     style="outline-color: #10529d"
     class="content_card"
@@ -620,6 +624,7 @@
     <!-- LANGUAGES -->
     <card-content
        tabindex="2"
+       [isOpen]="showLanguages"
       [id]="'language_detail'"
       style="outline-color: #10529d"
       class="content_card"
@@ -637,7 +642,7 @@
       [idBtn]="'openLanguage'"
     >
     
-        <div class="container-user-project" *ngIf="userEducation.length > 0">
+        <div class="container-user-project" *ngIf="userLanguage.length > 0">
           <hr class="hr_header">
           <ul
             *ngFor="

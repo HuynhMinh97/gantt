@@ -13,7 +13,7 @@
           [required]="true"
           [collection]="'m_skill'"
           [maxItem]="50"
-          [placeholder]="'Fill name and enter to add your skills'"
+          [placeholder]="'fill name and enter to add your skills'"
           [style]="{ width: '400px' }"
           (watchValue)="takeMasterValue($event, 'skills')"
           [defaultValue]="companySkills"
@@ -25,7 +25,7 @@
         <ait-button
           *ngIf="mode === 'NEW' || mode === 'EDIT'"
           [id]="'cancel'"
-          [title]="'CANCEL'"
+          [title]="'cancel'"
           (click)="back()"
           [nbSpinner]="isLoading"
           [isDefault]="true"
@@ -40,7 +40,7 @@
           *ngIf="mode === 'NEW'"
           [id]="'save_continue'"
           [width]="'200px'"
-          [title]="'SAVE & CONTINUE'"
+          [title]="'save and continue'"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
           "
@@ -51,7 +51,7 @@
           *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
           [id]="'save close'"
           [width]="'200px'"
-          [title]="'SAVE & CLOSE'"
+          [title]="'save and close'"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
           "
@@ -61,7 +61,7 @@
           *ngIf="!isChanged && mode === 'EDIT'"
           [id]="'disabled'"
           [width]="'200px'"
-          [title]="'SAVE & CLOSE'"
+          [title]="'save and close'"
           [style]="'disabled'"
         ></ait-button>
       </div>
