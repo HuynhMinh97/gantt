@@ -35,7 +35,7 @@
 }
 .input_inline {
   width: 400px;
-  display: flex;
+  display: grid;
   justify-content: space-between;
   margin-top: 20px;
 }
@@ -103,4 +103,15 @@ p#online {
   font-size: 12px;
   color: #8f9bb3;
   font-weight: 600;
+}
+.start-date {
+  display: flex;
+  align-items: flex-end;
+  width: 400px;
+  margin-top: 20px;
+  span {
+    color: #8f9bb3;
+    margin: 12px;
+    font-weight: 600;
+  }
 }
