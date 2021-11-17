@@ -68,6 +68,4 @@ export class UserExperienceDetailComponent extends AitBaseComponent implements O
     }
   }
 
-
-
 }

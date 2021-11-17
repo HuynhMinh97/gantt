@@ -1,6 +1,6 @@
 <div class="template__popup">
   <ait-text-gradient
-    [content]="'User project detail'"
+    [content]="'title header'"
     [id]="'project-detail'"
   ></ait-text-gradient>
 
@@ -17,7 +17,7 @@
       <ait-datepicker
         [label]="'START DATE'"
         [id]="'start_date_from'"
-        [format]="'yyyy/MM'"
+        [format]="dateFormat"
         [disable]="true"
         [styleInput]="{ color: '#8f9bb3', width: '180px' }"
         [defaultValue]="stateUserProject.start_date_from"
@@ -25,7 +25,7 @@
       <span style="margin-bottom: 4px">〜</span>
       <ait-datepicker
         [id]="'start_date_to'"
-        [format]="'yyyy/MM'"
+        [format]="dateFormat"
         [disable]="true"
         [styleInput]="{ color: '#8f9bb3', width: '180px' }"
         [defaultValue]="stateUserProject.start_date_to"
@@ -109,6 +109,18 @@
         [id]="'achievement'"
       >
       </textarea>
+    </div>
+    <div class="sticky">
+      <div class="action-row">
+        <ait-button
+          [id]="'close'"
+          [width]="'150px'"
+          [title]="'close'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+        ></ait-button>
+      </div>
     </div>
   </div>
 </div>
