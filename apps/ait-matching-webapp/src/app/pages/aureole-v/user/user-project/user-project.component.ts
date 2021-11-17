@@ -20,10 +20,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NbToastrService, NbLayoutScrollService, NbDialogService, NbDialogRef } from '@nebular/theme';
 import { Store} from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
-import { UserProjectService } from './../../../../../services/user-project.service';
-import { UserProjectDto, UserProjectErrorsMessage } from './interface';
+import { UserProjectErrorsMessage } from './interface';
 import { isArrayFull, isObjectFull, KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
-import { UserProfileService } from './../../../../../services/user-profile.service';
+import { UserProjectService } from 'apps/ait-matching-webapp/src/app/services/user-project.service';
+import { UserProfileService } from 'apps/ait-matching-webapp/src/app/services/user-profile.service';
+
 
 @Component({
   selector: 'ait-user-project',
@@ -530,13 +531,13 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
   getTitleByMode() {
     let title = '';
     if (this.mode === MODE.EDIT) {
-      title = this.translateService.translate('Edit project')
+      title = this.translateService.translate('edit project')
     }
     else if (this.mode === MODE.NEW) {
-      title = this.translateService.translate('Add project')
+      title = this.translateService.translate('add project')
     }
     else {
-      title = this.translateService.translate('View project')
+      title = this.translateService.translate('view project')
     }
     return title;
   }

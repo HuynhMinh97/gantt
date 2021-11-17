@@ -8,7 +8,6 @@ import { AitAuthGuardService, AitAppUtils } from '@ait/ui';
 import { RecommencedComponent } from './pages/aureole-v/recommenced-user/recommenced-user.component';
 import { UserCourseComponent } from './pages/aureole-v/user/user-course/user-course.component';
 import { UserCertificateComponent } from './pages/aureole-v/user/user-certificate/user-certificate.component';
-import { UserProjectComponent } from './pages/aureole-v/user/user-project/user-project/user-project.component';
 import { UserSkillsComponent } from './pages/aureole-v/user/user-skills/user-skills.component';
 import { UserReorderSkillsComponent } from './pages/aureole-v/user/user-reorder-skills/user-reorder-skills.component';
 import { UserProfileComponent } from './pages/aureole-v/user/user-profile/user-profile.component';
@@ -21,6 +20,7 @@ import { UserExperienceDetailComponent } from './pages/aureole-v/user/user-exper
 import { UserProjectDetailComponent } from './pages/aureole-v/user/user-project-detail/user-project-detail.component';
 import { UserOnboardingDetailComponent } from './pages/aureole-v/user/user-onboarding-detail/user-onboarding-detail.component';
 import { UserJobAlertDetailComponent } from './pages/aureole-v/user/user-job-alert-detail/user-job-alert-detail.component';
+import { UserProjectComponent } from './pages/aureole-v/user/user-project/user-project.component';
 
 // Push your routes here one by one 🎉
 

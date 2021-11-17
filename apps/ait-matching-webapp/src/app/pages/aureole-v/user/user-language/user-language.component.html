@@ -1,103 +1,103 @@
-<ait-template-popup [width]="1000" [isLoading]="true" [isPage]="false">
-  <div class="company__info__wrapper">
-    <ait-text-gradient
-      [id]="'title'"
-      [content]="getTitleByMode()"
-    ></ait-text-gradient>
+<ait-template-popup [width]="800" [isLoading]="true" [isPage]="false">
+  <div class="user__wrapper">
+    <ait-text-gradient [content]="getTitleByMode()"></ait-text-gradient>
     <ait-space></ait-space>
     <div class="content__card">
-      <div class="input_inline">
-        <ait-autocomplete-master-data
-          [id]="'language'"
-          [label]="'LANGUAGE'"
-          [required]="true"
-          [placeholder]="'Japanese'"
-          [maxItem]="1"
-          [collection]="'sys_master_data'"
-          [class]="'LANGUAGE'"
-          [isReadOnly]="resetUserLangInfo.language"
-          [disableOutputDefault]="true"
-          [isReset]="resetUserLangInfo.language"
-          (watchValue)="takeMasterValue($event, 'language')"
-          [defaultValue]="[userLanguageInfo.controls['language'].value]"
-          [isSubmit]="isSubmit"
-          [width]="'400px'"
-        ></ait-autocomplete-master-data>
-      </div>
-      <div class="input_inline" style="float: left;">
-        <ait-autocomplete-master-data
-          [id]="'proficiency'"
-          [label]="'PROFICIENCY'"
-          [placeholder]="'Select'"
-          [collection]="'sys_master_data'"
-          [class]="'LANGUAGE_PROFICIENCY'"
-          [disableOutputDefault]="true"
-          [maxItem]="1"
-          [width]="'205px'"
-          [isReadOnly]="resetUserLangInfo.proficiency"
-          [isReset]="resetUserLangInfo.proficiency"
-          (watchValue)="takeMasterValue($event, 'proficiency')"
-          [defaultValue]="[userLanguageInfo.controls['proficiency'].value]"
-        ></ait-autocomplete-master-data>
+      <div class="form">
+        <div class="input_inline">
+          <ait-autocomplete-master-data
+            [id]="'language'"
+            [label]="'LANGUAGE'"
+            [required]="true"
+            [placeholder]="'Japanese'"
+            [maxItem]="1"
+            [collection]="'sys_master_data'"
+            [class]="'LANGUAGE'"
+            [isReadOnly]="resetUserLangInfo.language"
+            [disableOutputDefault]="true"
+            [isReset]="resetUserLangInfo.language"
+            (watchValue)="takeMasterValue($event, 'language')"
+            [defaultValue]="[userLanguageInfo.controls['language'].value]"
+            [isSubmit]="isSubmit"
+            [width]="'400px'"
+          ></ait-autocomplete-master-data>
+        </div>
+        <div class="input_inline" style="float: left">
+          <ait-autocomplete-master-data
+            [id]="'proficiency'"
+            [label]="'PROFICIENCY'"
+            [placeholder]="'select'"
+            [collection]="'sys_master_data'"
+            [class]="'LANGUAGE_PROFICIENCY'"
+            [disableOutputDefault]="true"
+            [maxItem]="1"
+            [width]="'205px'"
+            [isReadOnly]="resetUserLangInfo.proficiency"
+            [isReset]="resetUserLangInfo.proficiency"
+            (watchValue)="takeMasterValue($event, 'proficiency')"
+            [defaultValue]="[userLanguageInfo.controls['proficiency'].value]"
+          ></ait-autocomplete-master-data>
+        </div>
       </div>
     </div>
-    <div class="action-row">
-      <div class="block">
-        <ait-button
-          [id]="'cancel'"
-          [width]="'200px'"
-          [title]="'CANCEL'"
-          [width]="'200px'"
-          (click)="back()"
-          [isDefault]="true"
-        ></ait-button>
+    <div class="sticky">
+      <div class="action-row">
+        <div class="block">
+          <ait-button
+            [id]="'cancel'"
+            [width]="'200px'"
+            [title]="'cancel'"
+            [width]="'150px'"
+            (click)="back()"
+            [isDefault]="true"
+          ></ait-button>
 
-        <ait-button
-          *ngIf="mode === 'EDIT'"
-          [id]="'delete'"
-          [width]="'200px'"
-          [title]="'DELETE'"
-          (click)="onDelete()"
-          [isDefault]="true"
-        >
-        </ait-button>
+          <ait-button
+            *ngIf="mode === 'EDIT'"
+            [id]="'delete'"
+            [width]="'150px'"
+            [title]="'DELETE'"
+            (click)="onDelete()"
+            [isDefault]="true"
+          >
+          </ait-button>
 
-        <ait-button
-          *ngIf="mode !== 'VIEW'"
-          [id]="'reset'"
-          [width]="'200px'"
-          [title]="'RESET'"
-          (click)="resetForm()"
-          [isDefault]="true"
-        ></ait-button>
+          <ait-button
+            *ngIf="mode !== 'VIEW'"
+            [id]="'reset'"
+            [width]="'150px'"
+            [title]="'reset'"
+            (click)="resetForm()"
+            [isDefault]="true"
+          ></ait-button>
 
-        <ait-button
-          *ngIf="mode === 'NEW'"
-          [id]="'saveAndContinue'"
-          [title]="'SAVE & CONTINUE'"
-          (click)="saveAndContinue()"
-          [isDefault]="true"
-        ></ait-button>
+          <ait-button
+            *ngIf="mode === 'NEW'"
+            [width]="'150px'"
+            [id]="'saveAndContinue'"
+            [title]="'save and continue'"
+            (click)="saveAndContinue()"
+            [isDefault]="true"
+          ></ait-button>
 
-        <ait-button
-          [id]="'saveAndClose'"
-          *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
-          [width]="'200px'"
-          [title]="'SAVE & CLOSE'"
-          (click)="saveAndClose()"
-          [isDefault]="true"
-        >
-        </ait-button>
-        <ait-button
-          *ngIf="!isChanged && mode === 'EDIT'"
-          [id]="'saveAndClose'"
-          [width]="'200px'"
-          [title]="'SAVE & CLOSE'"
-          [style]="'disabled'"
-        ></ait-button>
+          <ait-button
+            [id]="'saveAndClose'"
+            *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
+            [width]="'150px'"
+            [title]="'save and close'"
+            (click)="saveAndClose()"
+            [isDefault]="true"
+          >
+          </ait-button>
+          <ait-button
+            *ngIf="!isChanged && mode === 'EDIT'"
+            [id]="'saveAndClose'"
+            [width]="'150px'"
+            [title]="'save and close'"
+            [style]="'disabled'"
+          ></ait-button>
+        </div>
       </div>
     </div>
   </div>
 </ait-template-popup>
-
-

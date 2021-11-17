@@ -340,7 +340,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     } else {
       if (dateFrom > dateTo) {
         const transferMsg = (msg || '')
-          .replace('{0}', this.translateService.translate('START DATE'))
+          .replace('{0}', this.translateService.translate('start date'))
           .replace('{1}', this.translateService.translate('START DATE TO'));
         res.push(transferMsg);
         this.isDateCompare = true;
