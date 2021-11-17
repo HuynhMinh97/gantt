@@ -19,7 +19,7 @@
         [id]="'start_date_from'"
         [format]="'yyyy/MM'"
         [disable]="true"
-        [styleInput]="{ color: '#8f9bb3', width: '185px' }"
+        [styleInput]="{ color: '#8f9bb3', width: '180px' }"
         [defaultValue]="stateUserProject.start_date_from"
       ></ait-datepicker>
       <span style="margin-bottom: 4px">〜</span>
@@ -27,7 +27,7 @@
         [id]="'start_date_to'"
         [format]="'yyyy/MM'"
         [disable]="true"
-        [styleInput]="{ color: '#8f9bb3', width: '185px' }"
+        [styleInput]="{ color: '#8f9bb3', width: '180px' }"
         [defaultValue]="stateUserProject.start_date_to"
       ></ait-datepicker>
     </div>
@@ -47,14 +47,23 @@
         [value]="stateUserProject.title?.value"
       ></ait-output-text>
     </div>
-
-    <div class="input_inline">
-      <ait-output-text
+    <div class="input_inline" >
+      <ait-label
         [label]="'DESCRIPTION'"
         [id]="'description'"
-        [width]="'400px'"
-        [value]="stateUserProject.description"
-      ></ait-output-text>
+      ></ait-label>
+
+      <textarea
+        nbInput
+        style="width: 400px; color: #8f9bb3; min-height: 131px;margin-top:10px; background-color: transparent;"
+        readonly
+        disabled
+        fullWidth
+        [value]="stateUserProject.description || ''"
+        class="textarea"
+        [id]="'description'"
+      >
+      </textarea>
     </div>
     <div class="input_inline">
       <ait-output-text
@@ -65,21 +74,41 @@
         [valueArray]="stateUserSkill"
       ></ait-output-text>
     </div>
-    <div class="input_inline">
-      <ait-output-text
+    <div class="input_inline" >
+      <ait-label
         [label]="'RESPONSIBILITY'"
-        [width]="'400px'"
-        [value]="stateUserProject.responsibility"
         [id]="'responsibility'"
-      ></ait-output-text>
+      ></ait-label>
+
+      <textarea
+        nbInput
+        style="width: 400px; color: #8f9bb3; min-height: 131px;margin-top:10px; background-color: transparent;"
+        readonly
+        disabled
+        fullWidth
+        [value]="stateUserProject.responsibility || ''"
+        class="textarea"
+        [id]="'responsibility'"
+      >
+      </textarea>
     </div>
-    <div class="input_inline">
-      <ait-output-text
+    <div class="input_inline" >
+      <ait-label
         [label]="'ACHIEVEMENT'"
-        [width]="'400px'"
-        [value]="stateUserProject.achievement"
         [id]="'achievement'"
-      ></ait-output-text>
+      ></ait-label>
+
+      <textarea
+        nbInput
+        style="width: 400px; color: #8f9bb3; min-height: 131px;margin-top:10px; background-color: transparent;"
+        readonly
+        disabled
+        fullWidth
+        [value]="stateUserProject.achievement || ''"
+        class="textarea"
+        [id]="'achievement'"
+      >
+      </textarea>
     </div>
   </div>
 </div>

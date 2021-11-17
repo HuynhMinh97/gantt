@@ -43,7 +43,7 @@
             [id]="'start_date_from'"
             [format]="'yyyy/MM'"
             [disable]="true"
-            [styleInput]="{ color: '#8f9bb3', width: '185px' }"
+            [styleInput]="{ color: '#8f9bb3', width: '180px' }"
             [defaultValue]="stateUserExp.start_date_from"
           ></ait-datepicker>
           <span style="margin-bottom: 4px">〜</span>
@@ -51,17 +51,27 @@
             [id]="'start_date_to'"
             [format]="'yyyy/MM'"
             [disable]="true"
-            [styleInput]="{ color: '#8f9bb3', width: '185px' }"
+            [styleInput]="{ color: '#8f9bb3', width: '180px' }"
             [defaultValue]="stateUserExp.start_date_to"
           ></ait-datepicker>
         </div>
-        <div class="input_inline">
-          <ait-output-text
+        <div class="input_inline" >
+          <ait-label
             [label]="'DESCRIPTION'"
             [id]="'description'"
-            [width]="'400px'"
-            [value]="stateUserExp.description"
-          ></ait-output-text>
+          ></ait-label>
+  
+          <textarea
+            nbInput
+            style="width: 400px; color: #8f9bb3; min-height: 131px;margin-top:10px; background-color: transparent;"
+            readonly
+            disabled
+            fullWidth
+            [value]="stateUserExp.description || ''"
+            class="textarea"
+            [id]="'description'"
+          >
+          </textarea>
         </div>
       </div>
   </div>

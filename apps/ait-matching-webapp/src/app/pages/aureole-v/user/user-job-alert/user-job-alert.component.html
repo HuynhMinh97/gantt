@@ -72,12 +72,12 @@
         ></ait-autocomplete-master-data>
       </div>
     
-      <div class="input_inline">
+      <div class="start-date">
         <ait-datepicker
           [label]="'AVAILABLE TIME'"
           [placeholder]="'01/01/2021'"
           [id]="'start_date_from'"
-          [style]="{ width: '170px' }"
+          [style]="{ width: '180px' }"
           [isReset]="resetUserjobAlert.start_date_from"
           [defaultValue]="userjobAlert.controls['start_date_from'].value"
           (watchValue)="
@@ -86,14 +86,15 @@
           [isSubmit]="isSubmit"
         ></ait-datepicker>
 
-        <p class="label-datepiker">{{ '~' }}</p>
+        <span style="margin-bottom: 12px">〜</span>
+
 
         <ait-datepicker
           [required]="false"
           [label]="''"
           [placeholder]="''"
           [id]="'start_date_to'"
-          [style]="{ width: '170px' }"
+          [style]="{ width: '180px' }"
           (watchValue)="
             takeDatePickerValue($event?.value, 'userjobAlert', 'start_date_to')
           "
@@ -108,12 +109,12 @@
         [id]="'messagErrorDate'"
       ></ait-error-message>
 
-      <div class="input_inline">
+      <div class="start-date">
         <ait-input-number
         [id]="'salary_from'"
         [label]="'SALARY'"
         [height]="'40px'"
-        [widthInput]="'170px'"
+        [widthInput]="'180px'"
         [required]="false"
         [placeholder]="'1,000'"
         (watchValue)="takeInputNumberValue($event,'userjobAlert', 'salary_from')"
@@ -125,13 +126,13 @@
         [max]="999999999999"
       ></ait-input-number>
 
-        <p class="label-datepiker">{{ '~' }}</p>
+      <span style="margin-bottom: 12px">〜</span>
 
         <ait-input-number
         [id]="'salary_to'"
         [height]="'40px'"
         [label]="' '"
-        [widthInput]="'170px'"
+        [widthInput]="'180px'"
         [required]="false"
         [placeholder]="'5,000'"
         (watchValue)="takeInputNumberValue($event,'userjobAlert', 'salary_to')"
