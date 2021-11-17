@@ -32,7 +32,6 @@ import { UserCourseService } from '../../../../services/user-course.service';
 import { UserEducationService } from '../../../../services/user-education.service';
 import { UserLanguageService } from 'apps/ait-matching-webapp/src/app/services/user-language.service';
 import { UserCourseComponent } from '../user-course/user-course.component';
-import { UserProjectComponent } from '../user-project/user-project/user-project.component';
 import { UserSkillsComponent } from '../user-skills/user-skills.component';
 import { UserReorderSkillsComponent } from '../user-reorder-skills/user-reorder-skills.component';
 import { UserExperienceComponent } from '../user-experience/user-experience.component';
@@ -40,6 +39,7 @@ import { UserCertificateComponent } from '../user-certificate/user-certificate.c
 import { UserEducationComponent } from '../user-education/user-education.component';
 import { UserLanguageComponent } from '../user-language/user-language.component';
 import { UserOnboardingComponent } from '../user-onboarding/user-onboarding.component';
+import { UserProjectComponent } from '../user-project/user-project.component';
 
 @Component({
   selector: 'ait-user-profile',
@@ -167,6 +167,8 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           if (res.data.length > 0) {
             const data = res.data[0]
             this.DataUserProfile = data;
+            console.log(data);
+            
           } else {
             this.router.navigate([`/404`]);
           }
@@ -285,6 +287,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     this.userCetificateService.findUserCetificateByKey(this.profileId)
       .then((res) => {
         const data = res.data;
+        this.showCertificate = data.length > 0 ? true : false;
         for (let element of data) {
           let centificate = {} as CertificateDto;
           let datefrom = element.issue_date_from;
@@ -313,6 +316,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     this.userCourseService.findCourseByUserId(this.profileId)
       .then((res) => {
         const data = res.data;
+        this.showCourse = data.length > 0 ? true : false;
         for (let element of data) {
           let course = {} as CourseDto;
           let datefrom = element.start_date_from;
@@ -337,6 +341,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     this.userEducationService.findUserEducationByUserId(this.profileId)
       .then((res) => {
         const data = res.data;
+        this.showEducation = data.length > 0 ? true : false;
         for (let element of data) {
           let education = {} as EducationDto;
           let datefrom = element.start_date_from;
@@ -356,13 +361,12 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         }
 
       })
-    console.log(this.userEducation);
-
   }
   getLanguageByUserId() {
     this.userLanguageService.findUserLanguageByUserId(this.profileId)
       .then((res) => {
         const data = res.data;
+        this.showLanguages = data.length > 0 ? true : false;
         for (let element of data) {
           let language = {} as LanguageDto;
           let datefrom = element.start_date_from;

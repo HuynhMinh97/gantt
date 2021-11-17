@@ -1,12 +1,12 @@
-<ait-template-popup [width]="1000" [isLoading]="true" [isPage]="false">
-  <div class="company__info__wrapper">
+<ait-template-popup [width]="800" [isLoading]="true" [isPage]="false">
+  <div class="user__wrapper">
     <ait-text-gradient [content]="getTitleByMode()"></ait-text-gradient>
-    <ait-space></ait-space>
     <div class="content__card">
       <div class="form">
         <div class="input_inline">
           <ait-input-text
             [id]="'name'"
+            [width]="'400px'"
             [label]="'name'"
             [length]="200"
             [required]="true"
@@ -22,7 +22,7 @@
           >
           </ait-input-text>
         </div>
-        <div class="input_inline">
+        <div class="input_date">
           <ait-datepicker
             [id]="'start_date_from'"
             [label]="'start date'"
@@ -39,9 +39,7 @@
             "
           ></ait-datepicker>
 
-          <div class="lac">
-            <p class="label-datepiker">{{ '~' }}</p>
-          </div>
+          <span>~</span>
 
           <ait-datepicker
             [id]="'start_date_to'"
@@ -68,6 +66,7 @@
         <div class="input_inline">
           <ait-autocomplete-master-data
             [maxItem]="1"
+            [width]="'400px'"
             [id]="'company_working'"
             [label]="'company'"
             [placeholder]="'aureole it'"
@@ -86,6 +85,7 @@
         <div class="input_inline">
           <ait-autocomplete-master-data
             [id]="'title'"
+            [width]="'400px'"
             [maxItem]="1"
             [allowNew]="true"
             [label]="'title'"
@@ -106,6 +106,7 @@
         <div class="input_inline">
           <ait-input-text
             [id]="'description'"
+            [width]="'400px'"
             [label]="'description'"
             [placeholder]="'place your text'"
             [rows]="5"
@@ -126,6 +127,7 @@
         <div class="input_inline">
           <ait-autocomplete-master-data
             [id]="'skills'"
+            [width]="'400px'"
             [allowNew]="true"
             [disableOutputDefault]="true"
             [collection]="'m_skill'"
@@ -149,6 +151,7 @@
         <div class="input_inline">
           <ait-input-text
             [required]="true"
+            [width]="'400px'"
             [label]="'responsibility'"
             [id]="'responsibility'"
             [placeholder]="'place your text'"
@@ -168,6 +171,7 @@
         <div class="input_inline">
           <ait-input-text
             [id]="'achievement'"
+            [width]="'400px'"
             [label]="'achievement'"
             [required]="true"
             [placeholder]="'place your text'"
@@ -186,21 +190,13 @@
         </div>
       </div>
     </div>
-    <div
-      class="sticky"
-      style="
-        min-width: 370px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      "
-    >
+    <div class="sticky">
       <div class="action-row">
         <div class="block">
           <ait-button
             *ngIf="mode === 'NEW' || mode === 'EDIT'"
             [id]="'cancel'"
-            [width]="'200px'"
+            [width]="'150px'"
             [title]="'cancel'"
             (click)="cancel()"
             [isDefault]="true"
@@ -214,7 +210,7 @@
           <ait-button
             *ngIf="mode === 'NEW' || mode === 'EDIT'"
             [id]="'reset'"
-            [width]="'200px'"
+            [width]="'150px'"
             [title]="'reset'"
             (click)="resetForm()"
             [background]="
@@ -225,7 +221,7 @@
           <ait-button
             *ngIf="mode === 'EDIT'"
             [id]="'remove'"
-            [width]="'200px'"
+            [width]="'150px'"
             [title]="'DELETE'"
             (click)="Delete()"
             [background]="
@@ -236,7 +232,7 @@
           <ait-button
             *ngIf="mode === 'NEW'"
             [id]="'save_continue'"
-            [width]="'200px'"
+            [width]="'150px'"
             [title]="'save and continue'"
             [background]="
               'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
@@ -247,7 +243,7 @@
           <ait-button
             *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
             [id]="'saveClose'"
-            [width]="'200px'"
+            [width]="'150px'"
             [title]="'save and close'"
             [background]="
               'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
@@ -258,7 +254,7 @@
           <ait-button
             *ngIf="!isChanged && mode === 'EDIT'"
             [id]="'disabled'"
-            [width]="'200px'"
+            [width]="'150px'"
             [title]="'save and close'"
             [style]="'disabled'"
           ></ait-button>
@@ -266,7 +262,7 @@
           <ait-button
             *ngIf="mode === 'VIEW'"
             [id]="'saveClose'"
-            [width]="'200px'"
+            [width]="'150px'"
             [title]="'CLOSE'"
             (click)="cancel()"
             [background]="

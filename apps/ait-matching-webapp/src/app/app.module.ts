@@ -42,7 +42,6 @@ import { UserExperienceComponent } from './pages/aureole-v/user/user-experience/
 import { UserEducationComponent } from './pages/aureole-v/user/user-education/user-education.component';
 import { UserLanguageComponent } from './pages/aureole-v/user/user-language/user-language.component';
 import { UserOnboardingComponent } from './pages/aureole-v/user/user-onboarding/user-onboarding.component';
-import { UserProjectComponent } from './pages/aureole-v/user/user-project/user-project/user-project.component';
 import { UserCourseComponent } from './pages/aureole-v/user/user-course/user-course.component';
 import { UserCertificateComponent } from './pages/aureole-v/user/user-certificate/user-certificate.component';
 import { UserSkillsComponent } from './pages/aureole-v/user/user-skills/user-skills.component';
@@ -62,6 +61,7 @@ import { UserExperienceDetailComponent } from './pages/aureole-v/user/user-exper
 import { UserProjectDetailComponent } from './pages/aureole-v/user/user-project-detail/user-project-detail.component';
 import { UserOnboardingDetailComponent } from './pages/aureole-v/user/user-onboarding-detail/user-onboarding-detail.component';
 import { UserJobAlertDetailComponent } from './pages/aureole-v/user/user-job-alert-detail/user-job-alert-detail.component';
+import { UserProjectComponent } from './pages/aureole-v/user/user-project/user-project.component';
 
 const AIT_UI_MODULES = [AitChipModule, AitTabsModule];
 

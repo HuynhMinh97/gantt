@@ -20,10 +20,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NbToastrService, NbLayoutScrollService, NbDialogService, NbDialogRef } from '@nebular/theme';
 import { Store} from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
-import { UserProjectService } from './../../../../../services/user-project.service';
-import { UserProjectDto, UserProjectErrorsMessage } from './interface';
+import { UserProjectErrorsMessage } from './interface';
 import { isArrayFull, isObjectFull, KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
-import { UserProfileService } from './../../../../../services/user-profile.service';
+import { UserProjectService } from 'apps/ait-matching-webapp/src/app/services/user-project.service';
+import { UserProfileService } from 'apps/ait-matching-webapp/src/app/services/user-profile.service';
+
 
 @Component({
   selector: 'ait-user-project',

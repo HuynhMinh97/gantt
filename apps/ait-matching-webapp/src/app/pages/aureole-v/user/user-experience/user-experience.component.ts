@@ -173,8 +173,8 @@ export class UserExperienceComponent
 
   getTitleByMode() {
     return this.mode === MODE.EDIT
-      ? this.translateService.translate('Edit experience')
-      : this.translateService.translate('Add experience');
+      ? this.translateService.translate('edit experience')
+      : this.translateService.translate('add experience');
   }
 
   resetModeNew() {

@@ -172,8 +172,8 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
     const dateTo = this.course.controls['start_date_to'].value;
     if (dateFrom > dateTo && dateTo != null) {
       const transferMsg = (msg || '')
-        .replace('{0}', this.translateService.translate('date_from'))
-        .replace('{1}', this.translateService.translate('date_to'));
+        .replace('{0}', this.translateService.translate('start date'))
+        .replace('{1}', this.translateService.translate('start date to'));
       res.push(transferMsg);
     }
     return res;
@@ -417,13 +417,13 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
     this.selectFile = this.translateService.translate('Select');
     let title = '';
     if (this.mode === MODE.EDIT) {
-      title = this.translateService.translate('Edit course');
+      title = this.translateService.translate('edit course');
     }
     else if (this.mode === MODE.NEW) {
-      title = this.translateService.translate('Add course');
+      title = this.translateService.translate('add course');
     }
     else {
-      title = this.translateService.translate('View course');
+      title = this.translateService.translate('view course');
     }
     return title;
   }
