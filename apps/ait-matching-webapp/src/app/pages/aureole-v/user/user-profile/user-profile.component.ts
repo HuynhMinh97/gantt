@@ -4,6 +4,7 @@ import {
   AitBaseComponent,
   AitConfirmDialogComponent,
   AitEnvironmentService,
+  AitTranslationService,
   AppState,
   getUserSetting,
   MODE
@@ -49,6 +50,7 @@ import { UserProjectComponent } from '../user-project/user-project.component';
 export class UserProfileComponent extends AitBaseComponent implements OnInit {
   mode = '';
   profileId = '';
+  skills = '';
   showProject = false;
   showSkill = false;
   showExperience = false;
@@ -78,7 +80,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   dateFormat = "dd/MM/yyyy";
   today = Date.now();
   isMyUserProfile = false;
-  countSkill = "You has 0 skills. Each person has max 50 skills";
+  countSkill = this.translateService.translate('length skills');
   actionBtn = [
     {
       title: '追加',
@@ -96,6 +98,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     private userProfileService: UserProfileService,
     private dialogService: NbDialogService,
     public activeRouter: ActivatedRoute,
+    private translateService: AitTranslationService,
     private router: Router,
     private santilizer: DomSanitizer,
     store: Store<AppState>,
@@ -111,6 +114,10 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         this.dateFormat = setting['date_format_display'];
       }
     });
+    this.setModulePage({
+      module: 'user',
+      page: 'user_profiles',
+    });
     this.profileId = this.activeRouter.snapshot.paramMap.get('id');
     if (this.profileId && this.profileId != this.user_id) {
       this.mode = MODE.VIEW;
@@ -118,10 +125,14 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       this.profileId = this.user_id;
       this.mode = MODE.EDIT;
       this.isMyUserProfile = true;
-    }
+    } 
+    debugger
+    this.skills = this.translateService.translate('skills');
   }
 
   async ngOnInit(): Promise<void> {
+    console.log(this.skills);
+    
     this.callLoadingApp();
     await this.getMasterData();
     this.getUserProfileByUserId();
@@ -177,7 +188,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
 
   }
 
-  async getSkillByUserId() {
+  async getSkillByUserId() { 
     await this.userProfileService.findTopSkill(this.profileId)
       .then((res) => {
         const data = res.data[0];
@@ -192,6 +203,11 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           this.showSkill = true;
         }
         this.countSkill = 'You has ' + data.length + ' skills. Each person has max 50 skills';
+        // this.countSkill = this.translateService.translate('length skills');
+        const transferMsg = (this.countSkill || '')
+        .replace('{0}', data.length)
+        console.log(transferMsg);
+        
         this.quantitySkill = data.length;
         let top5 = {} as OrderSkill;
         top5.name = "TOP 5";
