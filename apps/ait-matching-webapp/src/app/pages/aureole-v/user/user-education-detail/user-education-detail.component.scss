@@ -11,3 +11,12 @@
     font-weight: 600;
   }
 }
+.sticky {
+  min-width: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .action-row {
+    margin-top: 30px;
+  }
+}

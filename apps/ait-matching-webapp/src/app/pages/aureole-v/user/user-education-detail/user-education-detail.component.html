@@ -20,68 +20,82 @@
         [width]="'400px'"
         [value]="stateUserEducation.degree"
       ></ait-output-text>
-      </div>
-      <div class="input_inline">
-        <ait-output-text
-          [label]="'FIELD OF STUDY'"
-          [id]="'field_of_study'"
-          [width]="'400px'"
-          [value]="stateUserEducation.field_of_study"
-        ></ait-output-text>
-      </div>
-      <div class="input_inline">
-        <ait-output-text
-          [label]="'GRADE'"
-          [id]="'grade'"
-          [width]="'400px'"
-          [value]="stateUserEducation.grade"
-        ></ait-output-text>
-      </div>
-      <div class="start-date">
-        <ait-datepicker
-          [label]="'start date'"
-          [id]="'start_date_from'"
-          [format]="dateFormat"
-          [disable]="true"
-          [styleInput]="{ color: '#8f9bb3', width: '180px' }"
-          [defaultValue]="stateUserEducation.start_date_from"
-        ></ait-datepicker>
-        <span style="margin-bottom: 4px">〜</span>
-        <ait-datepicker
-          [id]="'start_date_to'"
-          [format]="dateFormat"
-          [disable]="true"
-          [styleInput]="{ color: '#8f9bb3', width: '180px' }"
-          [defaultValue]="stateUserEducation.start_date_to"
-        ></ait-datepicker>
-      </div>
-      <div class="input_inline" >
-        <ait-label
-          [label]="'DESCRIPTION'"
-          [id]="'description'"
-        ></ait-label>
+    </div>
+    <div class="input_inline">
+      <ait-output-text
+        [label]="'FIELD OF STUDY'"
+        [id]="'field_of_study'"
+        [width]="'400px'"
+        [value]="stateUserEducation.field_of_study"
+      ></ait-output-text>
+    </div>
+    <div class="input_inline">
+      <ait-output-text
+        [label]="'GRADE'"
+        [id]="'grade'"
+        [width]="'400px'"
+        [value]="stateUserEducation.grade"
+      ></ait-output-text>
+    </div>
+    <div class="start-date">
+      <ait-datepicker
+        [label]="'start date'"
+        [id]="'start_date_from'"
+        [format]="dateFormat"
+        [disable]="true"
+        [styleInput]="{ color: '#8f9bb3', width: '180px' }"
+        [defaultValue]="stateUserEducation.start_date_from"
+      ></ait-datepicker>
+      <span style="margin-bottom: 4px">〜</span>
+      <ait-datepicker
+        [id]="'start_date_to'"
+        [format]="dateFormat"
+        [disable]="true"
+        [styleInput]="{ color: '#8f9bb3', width: '180px' }"
+        [defaultValue]="stateUserEducation.start_date_to"
+      ></ait-datepicker>
+    </div>
+    <div class="input_inline">
+      <ait-label [label]="'DESCRIPTION'" [id]="'description'"></ait-label>
 
-        <textarea
-          nbInput
-          style="width: 400px; color: #8f9bb3; min-height: 131px;margin-top:10px; background-color: transparent;"
-          readonly
-          disabled
-          fullWidth
-          [value]="stateUserEducation.description || ''"
-          class="textarea"
-          [id]="'description'"
-        >
-        </textarea>
-      </div>
-      <div class="input_inline">
-          <div style="width:400px">
+      <textarea
+        nbInput
+        style="
+          width: 400px;
+          color: #8f9bb3;
+          min-height: 131px;
+          margin-top: 10px;
+          background-color: transparent;
+        "
+        readonly
+        disabled
+        fullWidth
+        [value]="stateUserEducation.description || ''"
+        class="textarea"
+        [id]="'description'"
+      >
+      </textarea>
+    </div>
+    <div class="input_inline">
+      <div style="width: 400px">
         <ait-output-file
           [id]="'file'"
           [fileKeys]="stateUserEducation.file"
           [label]="'files'"
         ></ait-output-file>
-    </div>
       </div>
-      
     </div>
+    <div class="sticky">
+      <div class="action-row">
+        <ait-button
+          [id]="'close'"
+          [width]="'150px'"
+          [title]="'CLOSE'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+        ></ait-button>
+      </div>
+    </div>
+  </div>
 </div>
