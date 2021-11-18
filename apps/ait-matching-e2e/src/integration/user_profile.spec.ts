@@ -13,12 +13,12 @@ describe('Navigate user profile', () => {
     cy.visit(Cypress.env('host') + Cypress.env('user_profile'));
     cy.url().should('eq', Cypress.env('host') + Cypress.env('user_profile'));
     // checkUI();
-    // findUserOnboarding();
-    // addProjects();
-    // addExperiences();
-    // addCertificates();
-    // addCourses();
-    // addEducations();
+    findUserOnboarding();
+    addProjects();
+    addExperiences();
+    addCertificates();
+    addCourses();
+    addEducations();
     addLanguages();
 
   });
@@ -318,10 +318,6 @@ describe('Navigate user profile', () => {
       cy.wait(3000);
       cy.get('#project_detail_menu_toc_item_PROJECTS').find('#project-' + data._key).click();
       UserProject.findProject(data._key);
-      cy.inputClearMutil('title', 'Technical Lead US');
-      cy.clickButton('saveAndClose');
-      cy.get('#project_detail_menu_toc_item_PROJECTS').find('#project-' + data._key).click();
-      UserProject.findProject(data._key);
     })
     cy.clickButton('cancel');
   }
@@ -413,10 +409,6 @@ describe('Navigate user profile', () => {
       cy.wait(3000);
       cy.get('#experience_detail_menu_toc_item_EXPERIENCES').find('#experience-' + data._key).click();
       UserExperience.findUserExperienceInfo(data._key);
-      cy.inputClearMutil('title', 'Technical Lead US');
-      cy.clickButton('saveAndClose');
-      cy.get('#experience_detail_menu_toc_item_EXPERIENCES').find('#experience-' + data._key).click();
-      UserExperience.findUserExperienceInfo(data._key);
     })
     cy.clickButton('cancel');
   }
@@ -485,10 +477,6 @@ describe('Navigate user profile', () => {
       cy.wait(3000);
       cy.get('#certificate_detail_menu_toc_item_CERTIFICATES').find('#centificate-' + data._key).click();
       UserCertificate.findUsercertificate(data._key);
-      cy.inputClearMutil('name', 'BANG CAO DANG US');
-      cy.clickButton('saveAndClose');
-      cy.get('#certificate_detail_menu_toc_item_CERTIFICATES').find('#centificate-' + data._key).click();
-      UserCertificate.findUsercertificate(data._key);
     })
     cy.clickButton('cancel');
   }
@@ -546,10 +534,6 @@ describe('Navigate user profile', () => {
       const data = response.body.data.findCourse.data[0];
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(3000);
-      cy.get('#course_detail_menu_toc_item_COURSES').find('#course-' + data._key).click();
-      UserCourse.findUserCourse(data._key);
-      cy.inputClearMutil('training_center', 'KHXH US');
-      cy.clickButton('saveAndClose');
       cy.get('#course_detail_menu_toc_item_COURSES').find('#course-' + data._key).click();
       UserCourse.findUserCourse(data._key);
     })
@@ -611,10 +595,6 @@ describe('Navigate user profile', () => {
       const data = response.body.data.findUserEducationInfo.data[0];
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(3000);
-      cy.get('#education_detail_menu_toc_item_EDUCATIONS').find('#education-' + data._key).click();
-      UserEducation.findUserEducation(data._key);
-      cy.inputClearMutil('school', 'University of Technology US');
-      cy.clickButton('saveAndClose');
       cy.get('#education_detail_menu_toc_item_EDUCATIONS').find('#education-' + data._key).click();
       UserEducation.findUserEducation(data._key);
     })
@@ -685,10 +665,6 @@ describe('Navigate user profile', () => {
       const data = response.body.data.findUserLanguageInfo.data[0];
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(3000);
-      cy.get('#language_detail_menu_toc_item_LANGUAGES').find('#language-' + data._key).click();
-      UserLanguage.findUserLanguage(data._key);
-      cy.inputClearMutil('language', 'Vietnamese');
-      cy.clickButton('saveAndClose');
       cy.get('#language_detail_menu_toc_item_LANGUAGES').find('#language-' + data._key).click();
       UserLanguage.findUserLanguage(data._key);
     })
