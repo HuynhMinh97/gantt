@@ -239,7 +239,6 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
   }
 
   async saveAndContinue() {
-    debugger
     this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;
