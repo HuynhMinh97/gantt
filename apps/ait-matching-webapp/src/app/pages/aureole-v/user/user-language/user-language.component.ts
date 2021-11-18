@@ -291,8 +291,8 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
         },
       })
       .onClose.subscribe(async (event) => {
-        this.callLoadingApp();
         if (event) {
+          this.callLoadingApp();
           const _key = [{ _key: this.user_key }];
           if (this.user_key) {
             await this.userLangService.remove(_key).then((res) => {
