@@ -46,7 +46,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
     super(store, authService, apollo, null, env, layoutScrollService, toastrService);
     this.setModulePage({
       module: 'user',
-      page: 'user_reorder_skills',
+      page: 'user_skills',
     });
   }
 
@@ -71,11 +71,18 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
   }
 
   isObjectEqual = (obj1: any, clone: any) => {
+    debugger
     const obj2 = { ...clone };
     let checked = true;
     for (const prop in obj1) {
       if(obj1[prop].data.length != obj2[prop].data.length){
         checked = false;
+      }
+      if(obj1[prop].name == "TOP5"){
+        const isChangedUserInfo = AitAppUtils.isObjectEqual(
+          { ...obj1[prop] },
+          { ...obj2[prop] }
+        );
       }
     }
     return checked

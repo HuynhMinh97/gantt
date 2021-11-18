@@ -88,3 +88,7 @@ nb-radio-group {
       ~ .inner-circle {
       background-color: #979797 !important;
     }
+    ::ng-deep .nb-theme-default nb-radio.status-basic .native-input:enabled:checked + .outer-circle {
+      background-color: transparent;
+      border-color: #979797 !important;;
+  }
