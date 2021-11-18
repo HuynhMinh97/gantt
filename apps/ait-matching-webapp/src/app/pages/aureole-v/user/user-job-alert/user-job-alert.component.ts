@@ -351,7 +351,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
     }
   }
   skip(){
-    this.router.navigate([``]);
+    this.router.navigate([`recommenced-user`]);
   }
 
 }

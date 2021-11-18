@@ -118,4 +118,15 @@ export class UserProfileService extends AitBaseService {
     })
   }
 
+  async finProfileByUserId(user_id: string){
+    const condition = {
+      user_id: user_id,
+      del_flag: false,
+    }
+    return await this.query('findProfile', {collection: 'user_profile', condition}, 
+    {
+      _key: true,
+    })
+  }
+
 }

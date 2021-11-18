@@ -29,6 +29,7 @@ import {
 import { Apollo } from 'apollo-angular';
 import { isArrayFull, isObjectFull, KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
 import { KeyValueCheckedDto } from './interface';
+import { UserProfileService } from 'apps/ait-matching-webapp/src/app/services/user-profile.service';
 @Component({
   selector: 'ait-user-onboarding',
   templateUrl: './user-onboarding.component.html',
@@ -126,6 +127,7 @@ export class UserOnboardingComponent
     private dialogService: NbDialogService,
     private navigation: AitNavigationService,
     private userOnbService: UserOnboardingService,
+    private userProfileService: UserProfileService,
     private translateService: AitTranslationService,
     private masterDataService: AitMasterDataService,
     @Optional() private nbDialogRef: NbDialogRef<UserOnboardingComponent>,
@@ -226,6 +228,14 @@ export class UserOnboardingComponent
             !isUserExist && this.router.navigate([`/404`]);
           }
         });
+    }else{
+      debugger
+      await this.userProfileService.finProfileByUserId(this.user_id)
+      .then((res) => {
+        if(res.status === RESULT_STATUS.OK && res.data.length > 0){
+          this.router.navigate([`recommenced-user`]);
+        }
+      })
     }
 
     await this.getGenderList();
@@ -418,7 +428,7 @@ export class UserOnboardingComponent
             if(this.user_key){
               this.close(true);
             }else{
-              this.navigation.back();
+              this.router.navigate([`user-job-alert`]);
             }
           } else {
             this.cancelLoadingApp();
