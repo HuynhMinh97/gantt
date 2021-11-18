@@ -127,7 +127,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       this.mode = MODE.EDIT;
       this.isMyUserProfile = true;
     } 
-    debugger
     this.skills = this.translateService.translate('skills');
   }
 
