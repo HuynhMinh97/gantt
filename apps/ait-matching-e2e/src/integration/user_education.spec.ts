@@ -33,12 +33,12 @@ export class UserEducation {
   // check message error required and date of user_education
   static checkValidUserEdu() {
     cy.clickButton('saveAndContinue');
-    cy.errorMessage('school', '学校 を入力してください。');
+    cy.errorMessage('school', 'SCHOOL required.');
 
     cy.chooseValueDate('start_date_from', '2021', '8', '27');
     cy.chooseValueDate('start_date_to', '2020', '8', '1');
     cy.clickButton('saveAndClose');
-    cy.errorMessage('start-date', '最終日以下の値で開始日を入力してください。');
+    cy.errorMessage('start-date', 'Enter START DATE FROM with a value less than or equal to START DATE TO.');
   }
 
   // Check save and delete in user_education

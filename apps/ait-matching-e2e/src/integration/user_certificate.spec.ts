@@ -49,7 +49,7 @@ export class UserCertificate {
     cy.chooseValueDate('issue_date_to', '2021', '8', '13');
     cy.errorMessage(
       'errorDate',
-      'Enter START DATE with a value less than or equal to START DATE TO.'
+      'Enter ISSUE DATE FROM with a value less than or equal to ISSUE DATE TO.'
     );
   }
   static checkSaveCertificate() {

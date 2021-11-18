@@ -17,7 +17,7 @@ export class UserLanguage {
   // check validate
   static checkValidateLanguage() {
     cy.clickButton('saveAndContinue');
-    cy.errorMessage('language', '言語 を入力してください。');
+    cy.errorMessage('language', 'LANGUAGE required.');
   }
 
   //check reset

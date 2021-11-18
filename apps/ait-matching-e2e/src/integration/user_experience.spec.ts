@@ -65,9 +65,8 @@ export class UserExperience {
   // Check validate when click save
   static checkValidateUserExp() {
     cy.clickButton('saveAndContinue');
-    cy.errorMessage('title', '題名 を入力してください。');
-    cy.errorMessage('company_working', '会社 を入力してください。');
-    cy.errorMessage('location', '位置 を入力してください。');
+    cy.errorMessage('title', 'TITLE required.');
+    cy.errorMessage('location', 'LOCATION required.');
   }
 
   // Check reset Form
