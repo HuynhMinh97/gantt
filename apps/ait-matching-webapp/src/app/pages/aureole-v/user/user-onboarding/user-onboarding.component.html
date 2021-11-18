@@ -549,7 +549,7 @@
         <ait-button
           *ngIf="mode !== 'VIEW'"
           [id]="'cancel'"
-          [title]="'cancel'"
+          [title]="'cancel onboarding'"
           [width]="'200px'"
           [isDefault]="true"
           (click)="back()"
@@ -559,7 +559,7 @@
           *ngIf="mode === 'EDIT'"
           [id]="'delete'"
           [width]="'200px'"
-          [title]="'delete'"
+          [title]="'delete onboarding'"
           [isDefault]="true"
           (click)="onDelete()"
         >
@@ -569,7 +569,7 @@
           *ngIf="mode !== 'VIEW'"
           [id]="'reset'"
           [width]="'200px'"
-          [title]="'reset'"
+          [title]="'reser onboarding'"
           [isDefault]="true"
           (click)="resetForm()"
         >
@@ -579,7 +579,7 @@
           *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
           [id]="'save'"
           [width]="'200px'"
-          [title]="'save'"
+          [title]="'save onboarding'"
           (click)="save()"
           [isDefault]="true"
         >

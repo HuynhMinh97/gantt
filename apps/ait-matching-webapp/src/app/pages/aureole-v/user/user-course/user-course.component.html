@@ -1,6 +1,6 @@
 <ait-template-popup [width]="800">
   <div class="user__wrapper">
-    <ait-text-gradient [content]="getTitleByMode()"></ait-text-gradient>
+    <ait-text-gradient [content]="getTitleByMode()" [id]="'user_course'"></ait-text-gradient>
     <div class="content__card">
       <div class="form">
         <div class="input_inline">
@@ -173,6 +173,16 @@
             (click)="back()"
           ></ait-button>
           <ait-button
+          *ngIf="mode === 'EDIT'"
+          [id]="'delete'"
+          [width]="'150px'"
+          [title]="'delete'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+          (click)="deleteUserById()"
+        ></ait-button>
+          <ait-button
             *ngIf="mode === 'EDIT' || mode === 'NEW'"
             [title]="'reset'"
             [width]="'150px'"
@@ -181,17 +191,7 @@
               'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
             "
             (click)="resetForm()"
-          ></ait-button>
-          <ait-button
-            *ngIf="mode === 'EDIT'"
-            [id]="'delete'"
-            [width]="'150px'"
-            [title]="'delete'"
-            [background]="
-              'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-            "
-            (click)="deleteUserById()"
-          ></ait-button>
+          ></ait-button>        
           <ait-button
             *ngIf="mode === 'NEW'"
             [title]="'save and continue'"

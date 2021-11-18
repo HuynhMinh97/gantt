@@ -229,13 +229,12 @@ export class UserOnboardingComponent
           }
         });
     }else{
-      debugger
-      await this.userProfileService.finProfileByUserId(this.user_id)
-      .then((res) => {
-        if(res.status === RESULT_STATUS.OK && res.data.length > 0){
-          this.router.navigate([`recommenced-user`]);
-        }
-      })
+      // await this.userProfileService.finProfileByUserId(this.user_id)
+      // .then((res) => {
+      //   if(res.status === RESULT_STATUS.OK && res.data.length > 0){
+      //     this.router.navigate([`recommenced-user`]);
+      //   }
+      // })
     }
 
     await this.getGenderList();

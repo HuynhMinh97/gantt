@@ -219,17 +219,6 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
 
     }
   }
-
-  getTitleByMode() {   
-    let title = ""; 
-    if(this.mode === MODE.NEW){
-      title = "Add skills";
-    } 
-    if(this.mode === MODE.EDIT){
-      title = "Edit skills";
-    }
-    return title;
-  }
   
   closeDialog(event: boolean) {
     this.nbDialogRef.close(event);
