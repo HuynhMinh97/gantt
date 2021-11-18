@@ -2,7 +2,7 @@ import { RESULT_STATUS } from '@ait/shared';
 import { AitBaseComponent, AitEnvironmentService, AppState, AitAuthService, AitAppUtils, getSettingLangTime } from '@ait/ui';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NbToastrService, NbLayoutScrollService } from '@nebular/theme';
+import { NbToastrService, NbLayoutScrollService, NbDialogRef } from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { UserProjectDto } from '../user-project/interface';
@@ -22,6 +22,7 @@ export class UserProjectDetailComponent extends AitBaseComponent implements OnIn
   dateFormat: any;
 
   constructor(
+    private nbDialogRef: NbDialogRef<UserProjectDetailComponent>,
     public activeRouter: ActivatedRoute,
     private userProjectService: UserProjectService,
     env: AitEnvironmentService,
@@ -53,8 +54,6 @@ export class UserProjectDetailComponent extends AitBaseComponent implements OnIn
   }
 
   async ngOnInit(): Promise<void> {
-    const id = AitAppUtils.getParamsOnUrl(true);
-    this.user_key = id;
     if (this.user_key) {
       await this.userProjectService
         .find(this.user_key)
@@ -79,6 +78,11 @@ export class UserProjectDetailComponent extends AitBaseComponent implements OnIn
         })
     }
   }
-
+  close(){
+    this.closeDialog(false);
+  }
+  closeDialog(event: boolean) {
+    this.nbDialogRef.close(event);
+  }
 
 }

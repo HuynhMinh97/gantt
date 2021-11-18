@@ -41,6 +41,7 @@ import { UserEducationComponent } from '../user-education/user-education.compone
 import { UserLanguageComponent } from '../user-language/user-language.component';
 import { UserOnboardingComponent } from '../user-onboarding/user-onboarding.component';
 import { UserProjectComponent } from '../user-project/user-project.component';
+import { UserProjectDetailComponent } from '../user-project-detail/user-project-detail.component';
 
 @Component({
   selector: 'ait-user-profile',
@@ -370,8 +371,8 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           }
           education._key = element._key;
           education.school = element.school?.value;
-          education.start_date_from = this.getDateFormat(element.start_date_from);
-          education.start_date_to = element.start_date_to ? this.getDateFormat(element.start_date_to) : 'Present';
+          education.start_date_from = element.start_date_from;
+          education.start_date_to = element.start_date_to ;
           education.field_of_study = element.field_of_study;
           this.userEducation.push(education);
         }
@@ -455,6 +456,26 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       autoFocus: false,
       context: {
         project_key: key,
+      },
+    }).onClose.subscribe(async (event) => {
+      if (event) {
+        this.callLoadingApp();
+        this.userProject = [];
+        this.timeProject = 0;
+        await this.getProjectByUserId();
+        setTimeout(() => {
+          this.cancelLoadingApp();
+        }, 500)
+      }
+    });
+  }
+  openProjectsDetail(key?: string) {
+    this.dialogService.open(UserProjectDetailComponent, {
+      closeOnBackdropClick: false,
+      hasBackdrop: true,
+      autoFocus: false,
+      context: {
+        user_key: key,
       },
     }).onClose.subscribe(async (event) => {
       if (event) {

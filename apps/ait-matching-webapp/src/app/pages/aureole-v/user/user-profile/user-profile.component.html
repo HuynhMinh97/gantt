@@ -255,15 +255,20 @@
                 <a 
                   (click)="openProjects(project?._key)"
                   [id]="'project-' + project?._key"
+                  *ngIf="isMyUserProfile"
                 >
                   <nb-icon
-                    *ngIf="isMyUserProfile"
                     nbSuffix
                     icon="edit-2-outline"
                     pack="eva"
                   ></nb-icon>
+                </a>
+                <a 
+                  (click)="openProjectsDetail(project?._key)"
+                  [id]="'project-' + project?._key"
+                  *ngIf="!isMyUserProfile"
+                >
                   <nb-icon
-                    *ngIf="!isMyUserProfile"
                     nbSuffix
                     icon="eye-outline"
                     pack="eva"
@@ -594,7 +599,12 @@
                     education?.field_of_study
                   }}
                 </p>
-                <p>{{ education?.start_date_from }} - {{education?.start_date_to}}</p>
+                <p *ngIf="!education.start_date_to">
+                  {{ education?.start_date_from | date:'yyyy/MM' }} - {{'Presen'}}
+                </p>
+                <p *ngIf="education.start_date_to">
+                  {{ education?.start_date_from | date:'yyyy/MM' }} - {{education?.start_date_to | date:'yyyy/MM'}}
+                </p>
               </div>
             </div>
           </div>
