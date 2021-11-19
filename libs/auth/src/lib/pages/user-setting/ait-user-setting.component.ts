@@ -1,3 +1,4 @@
+import { AfterViewInit } from '@angular/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { GRAPHQL, isObjectFull, RESULT_STATUS } from '@ait/shared';
 import {
@@ -15,7 +16,6 @@ import {
   StoreSetting,
 } from '@ait/ui';
 import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { NbToastrService } from '@nebular/theme';
 import { Store, select } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
@@ -27,7 +27,7 @@ import { MODULES, PAGES } from '../../@constant';
 })
 export class AitUserSettingComponent
   extends AitBaseComponent
-  implements OnInit {
+  implements OnInit, AfterViewInit {
   @Input() skillList: any[];
   @Input() showField: string;
   @Input() maxWidth: string;
@@ -38,6 +38,7 @@ export class AitUserSettingComponent
   data: any;
   storeSetting: any;
   loadingSetting = false;
+  isInit = false;
   dataLangs = [];
   dataTimeZone = [];
   langList = ['vi_VN', 'ja_JP', 'en_US'];
@@ -102,16 +103,6 @@ export class AitUserSettingComponent
     this.errors = { ...this.errors, ...newState };
   };
 
-  clearErrors = () => {
-    this.setErrors({
-      lang: [],
-      time: [],
-      input: [],
-      display: [],
-      number: [],
-    });
-  };
-
   getErrorMessageAll = (value: string, label: string, fieldName: string) => {
     const listErrors = [this.checkRequired(value, label)];
     this.setErrors({
@@ -135,7 +126,6 @@ export class AitUserSettingComponent
     toastrService: NbToastrService,
     authService: AitAuthService,
     private translatePipe: AitTranslationService,
-    private router: Router,
     public userService: AitUserService,
     envService: AitEnvironmentService,
     apollo: Apollo
@@ -220,6 +210,33 @@ export class AitUserSettingComponent
     this.getSetting();
   }
 
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.getErrorsMessage();
+      this.isInit = true;
+    }, 2000);
+  }
+
+  getErrorsMessage() {
+    this.getErrorMessageAll(undefined, this.getTitle(this.langLabel), 'lang');
+    this.getErrorMessageAll(
+      undefined,
+      this.getTitle(this.timeLabel),
+      'timezone'
+    );
+    this.getErrorMessageAll(undefined, this.getTitle(this.inputLabel), 'input');
+    this.getErrorMessageAll(
+      undefined,
+      this.getTitle(this.displayLabel),
+      'display'
+    );
+    this.getErrorMessageAll(
+      undefined,
+      this.getTitle(this.numberLabel),
+      'number'
+    );
+  }
+
   async getSetting() {
     this.callLoadingApp();
     try {
@@ -283,6 +300,10 @@ export class AitUserSettingComponent
           dateInputDf: this.dateInputDf,
           numberFormatDf: this.numberFormatDf,
         });
+
+        const df = this.getDataDefault();
+        this.setFormState(df);
+
         this.cancelLoadingApp();
       });
     } catch {
@@ -413,7 +434,7 @@ export class AitUserSettingComponent
   };
 
   handleInput = (val, field: string, label: string) => {
-    this.getErrorMessageAll(val?.value, label, field);
+    // this.getErrorMessageAll(val?.value, label, field);
   };
 
   checkBeforeSaving = () => {
@@ -451,14 +472,15 @@ export class AitUserSettingComponent
   };
 
   isErrors = () => {
-    let checks = [];
-    Object.entries(this.formState).forEach(([key, value]) => {
-      if (!value) {
-        const x: any = value;
-        checks = [...checks, x];
+    let isError = false;
+    for (const prop in this.formState) {
+      if (!this.formState[prop]) {
+        isError = true;
+        break;
       }
-    });
-    return checks.length !== 0;
+    }
+
+    return isError;
   };
 
   jsUcfirst(string) {
@@ -466,12 +488,9 @@ export class AitUserSettingComponent
   }
 
   save = () => {
-    this.loadingSetting = true;
-    this.clearErrors();
     const fields = this.getFieldNotNullFromState().map((m) => ({
       [m]: this.formState[m],
     }));
-    this.checkBeforeSaving();
     const { site_language } = this.formState;
     if (!this.isErrors()) {
       if (fields.length !== 0) {
@@ -537,9 +556,6 @@ export class AitUserSettingComponent
   };
 
   getValueLang = (val) => {
-    if (val.length === 0) {
-      this.getErrorMessageAll('', this.langLabel, 'lang');
-    }
     this.setFormState({
       site_language: val?.value[0]?._key,
     });
@@ -549,9 +565,6 @@ export class AitUserSettingComponent
   };
 
   getValueDateInf = (val) => {
-    if (val.length === 0) {
-      this.getErrorMessageAll('', this.inputLabel, 'input');
-    }
     this.setFormState({
       date_format_input: val?.value[0]?._key,
     });
@@ -561,9 +574,6 @@ export class AitUserSettingComponent
   };
 
   getValueDateDisplay = (val) => {
-    if (val.length === 0) {
-      this.getErrorMessageAll('', this.displayLabel, 'display');
-    }
     this.setFormState({
       date_format_display: val?.value[0]?._key,
     });
@@ -573,9 +583,6 @@ export class AitUserSettingComponent
   };
 
   getValueNumberFormat = (val) => {
-    if (val.length === 0) {
-      this.getErrorMessageAll('', this.numberLabel, 'number');
-    }
     this.setFormState({
       number_format: val?.value[0]?._key,
     });
@@ -585,9 +592,6 @@ export class AitUserSettingComponent
   };
 
   getValueTimeZone = (val) => {
-    if (val.length === 0) {
-      this.getErrorMessageAll('', this.timeLabel, 'timezone');
-    }
     this.setFormState({
       timezone: val?.value[0]?._key || null,
     });
