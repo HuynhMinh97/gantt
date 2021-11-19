@@ -98,7 +98,17 @@
             </div>
             <div class="view_contact">
               <ait-button
+                *ngIf="isMyUserProfile"
                 (click)="openOnboarding(DataUserProfile?.user_id)"
+                [styleText]="{ 'font-size': '10px' }"
+                [height]="'24px'"
+                [title]="'view contact'"
+                [id]="'openOnboarding'"
+                [isDefault]="true"
+              ></ait-button>
+              <ait-button
+                *ngIf="!isMyUserProfile"
+                (click)="openOnboardingDetail(DataUserProfile?.user_id)"
                 [styleText]="{ 'font-size': '10px' }"
                 [height]="'24px'"
                 [title]="'view contact'"
@@ -654,7 +664,7 @@
       style="outline-color: #10529d"
       class="content_card"
       style="display: flex; justify-content: center"
-      [label]="'languages'"
+      [label]="'languages' | translate"
       [styleLabel]="{'font-size':'22px'}"
       (onClickButtonHeader)="openLanguage()"
       [actionBtn]="isMyUserProfile ? actionBtn : ''"

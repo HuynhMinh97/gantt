@@ -90,7 +90,7 @@
           [isSubmit]="isSubmit"
         ></ait-datepicker>
 
-        <span>~</span>
+        <span style="position: relative;bottom: -30px;">~</span>
 
         <ait-datepicker
           [required]="false"
@@ -131,7 +131,7 @@
           [max]="999999999999"
         ></ait-input-number>
 
-        <span>~</span>
+        <span style="position: relative;bottom: -30px;">~</span>
 
         <ait-input-number
           [id]="'salary_to'"
@@ -164,7 +164,7 @@
       <div class="block">
         <ait-button
           *ngIf="mode === 'EDIT'"
-          [title]="'cancel user'"
+          [title]="'キャンセル'"
           [id]="'cancel'"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
@@ -199,7 +199,7 @@
           [id]="'saveClose'"
           *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
           [width]="'200px'"
-          [title]="'SAVE'"
+          [title]="'保存する'"
           (click)="saveAndClose()"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
@@ -210,7 +210,7 @@
           *ngIf="!isChanged && mode === 'EDIT'"
           [id]="'saveClose'"
           [width]="'200px'"
-          [title]="'SAVE'"
+          [title]="'保存する'"
           [style]="'disabled'"
         ></ait-button>
       </div>

@@ -53,6 +53,7 @@ export class UserExperienceDetailComponent extends AitBaseComponent implements O
   }
 
   async ngOnInit(): Promise<void> {
+    this.callLoadingApp();
     if (this.user_key) {
       await this.userExpService
         .findUserExperienceByKey(this.user_key)
@@ -65,6 +66,9 @@ export class UserExperienceDetailComponent extends AitBaseComponent implements O
           }
         })
     }
+    setTimeout(() => {
+      this.cancelLoadingApp();
+    }, 500);
   }
   close(){
     this.closeDialog(false);

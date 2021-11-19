@@ -45,6 +45,7 @@ export class UserCourseDetailComponent extends AitBaseComponent implements OnIni
   }
 
   async ngOnInit(): Promise<void> {
+    this.callLoadingApp();
     if (this.user_key) {
       await this.userCourseService
         .findCourseByKey(this.user_key)
@@ -56,6 +57,9 @@ export class UserCourseDetailComponent extends AitBaseComponent implements OnIni
           }
         })
     }
+    setTimeout(() => {
+      this.cancelLoadingApp();
+    }, 500);
   }
   close(){
     this.closeDialog(false);

@@ -52,6 +52,7 @@ export class UserEducationDetailComponent extends AitBaseComponent implements On
   }
 
   async ngOnInit(): Promise<void> {
+    this.callLoadingApp();
     if (this.user_key) {
       await this.userEduService
         .findUserEducationByKey(this.user_key)
@@ -62,6 +63,9 @@ export class UserEducationDetailComponent extends AitBaseComponent implements On
           }
         })
     }
+    setTimeout(() => {
+      this.cancelLoadingApp();
+    }, 500);
   }
   close(){
     this.closeDialog(false);
