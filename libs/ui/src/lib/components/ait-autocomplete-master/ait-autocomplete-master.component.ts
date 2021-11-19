@@ -329,7 +329,7 @@ export class AitAutoCompleteMasterComponent
               vi_VN: value,
             },
             code: value,
-            sort_no: numOfRecord,
+            sort_no: numOfRecord + 1,
             active_flag: true,
             category: KEYS.OTHER,
           },
@@ -460,16 +460,10 @@ export class AitAutoCompleteMasterComponent
       )
       .then((r) => {
         if (r.status === RESULT_STATUS.OK) {
-          const key = 'name';
-          const data = (r.data || []).map((m) => ({
+          this.DataSource = (r.data || []).map((m: any) => ({
             _key: m._key,
             value: m?.name,
           }));
-          this.DataSource = [
-            ...new Map(
-              data.map((item: KeyValueDto) => [item[key], item])
-            ).values(),
-          ];
           const _keys = this.excludedValue.map((e) => e?._key);
           if (_keys.length !== 0) {
             this.filteredData = AitAppUtils.deepCloneArray(

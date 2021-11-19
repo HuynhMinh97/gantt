@@ -323,6 +323,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
         }
     }
       `,
+      fetchPolicy: 'network-only'
       })
       .toPromise();
     return rest?.data?.findUserSetting;
