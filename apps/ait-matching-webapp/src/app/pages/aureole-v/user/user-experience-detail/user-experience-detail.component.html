@@ -30,54 +30,51 @@
               [value]="stateUserExp.location?.value"
             ></ait-output-text>
           </div>
-        <div class="start-date">
-          <ait-datepicker
-            [label]="'start date'"
-            [id]="'start_date_from'"
-            [format]="dateFormat"
-            [disable]="true"
-            [useFormat]="true"
-            [styleInput]="{ color: '#8f9bb3', width: '180px' }"
-            [defaultValue]="stateUserExp.start_date_from"
-          ></ait-datepicker>
-          <span style="margin-bottom: 4px">〜</span>
-          <ait-datepicker
-            [id]="'start_date_to'"
-            [format]="dateFormat"
-            [disable]="true"
-            [useFormat]="true"
-            [styleInput]="{ color: '#8f9bb3', width: '180px' }"
-            [defaultValue]="stateUserExp.start_date_to"
-          ></ait-datepicker>
-        </div>
-        <div class="input_inline" >
-          <ait-label
-            [label]="'DESCRIPTION'"
-            [id]="'description'"
-          ></ait-label>
-  
-          <textarea
-            nbInput
-            style="width: 400px; color: #8f9bb3; min-height: 131px;margin-top:10px; background-color: transparent;"
-            readonly
-            disabled
-            fullWidth
-            [value]="stateUserExp.description || ''"
-            class="textarea"
-            [id]="'description'"
-          >
-          </textarea>
-        </div>
-        <div class="sticky">
-          <div class="action-row">
-            <ait-button
-              [id]="'close'"
-              [width]="'150px'"
-              [title]="'close'"
-              [background]="
-                'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-              "
-            ></ait-button>
+          <div class="input_inline">
+              <ait-output-text
+                [label]="'employee type'"
+                [width]="'400px'"
+                [value]="stateUserExp.employee_type?.value"
+                [id]="'employee_type'"
+              ></ait-output-text>
+            </div>
+          <div class="start-date">
+            <ait-datepicker
+              [label]="'start date'"
+              [id]="'start_date_from'"
+              [format]="dateFormat"
+              [disable]="true"
+              [useFormat]="true"
+              [styleInput]="{ color: '#8f9bb3', width: '180px', background:'#ffffff'}"
+              [defaultValue]="stateUserExp.start_date_from"
+            ></ait-datepicker>
+            <span style="margin-bottom: 4px">〜</span>
+            <ait-datepicker
+              [id]="'start_date_to'"
+              [format]="dateFormat"
+              [disable]="true"
+              [useFormat]="true"
+              [styleInput]="{ color: '#8f9bb3', width: '180px', background:'#ffffff' }"
+              [defaultValue]="stateUserExp.start_date_to"
+            ></ait-datepicker>
+          </div>
+          <div class="textarea_inline" >
+            <ait-label
+              [label]="'DESCRIPTION'"
+              [id]="'description'"
+            ></ait-label>
+    
+            <textarea
+              nbInput
+              style="width: 400px; color: #8f9bb3; min-height: 131px;margin-top:10px; background-color: transparent;resize: none;"
+              readonly
+              disabled
+              fullWidth
+              [value]="stateUserExp.description || ''"
+              class="textarea"
+              [id]="'description'"
+            >
+            </textarea>
           </div>
           
         </div>
@@ -97,7 +94,6 @@
       </div>
       </div>
     </div>
-  </div>
   </div>
 </ait-template-popup>
   
