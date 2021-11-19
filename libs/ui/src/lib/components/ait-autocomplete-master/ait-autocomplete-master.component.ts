@@ -331,7 +331,7 @@ export class AitAutoCompleteMasterComponent
             code: value,
             sort_no: numOfRecord + 1,
             active_flag: true,
-            category: KEYS.OTHER,
+            category: KEYS.OTHERS,
           },
         ];
         const res = await this.masterDataService.saveData(
