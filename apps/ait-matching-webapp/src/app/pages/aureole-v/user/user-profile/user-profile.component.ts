@@ -403,7 +403,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
             language.image = "../../../../../assets/images/vietnam.png"
           }
           if (element.language?._key == "ja_JP") {
-            language.image = "../../../../../assets/images/japan.png"
+            language.image = "../../../../../assets/images/flag.png"
           }
           setTimeout(() => {
             this.userLanguage.push(language);
