@@ -42,6 +42,7 @@ import { UserLanguageComponent } from '../user-language/user-language.component'
 import { UserOnboardingComponent } from '../user-onboarding/user-onboarding.component';
 import { UserProjectComponent } from '../user-project/user-project.component';
 import { UserProjectDetailComponent } from '../user-project-detail/user-project-detail.component';
+import { UserExperienceDetailComponent } from '../user-experience-detail/user-experience-detail.component';
 
 @Component({
   selector: 'ait-user-profile',
@@ -478,13 +479,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       },
     }).onClose.subscribe(async (event) => {
       if (event) {
-        this.callLoadingApp();
-        this.userProject = [];
-        this.timeProject = 0;
-        await this.getProjectByUserId();
-        setTimeout(() => {
-          this.cancelLoadingApp();
-        }, 500)
       }
     });
   }
@@ -540,6 +534,19 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         setTimeout(() => {
           this.cancelLoadingApp();
         }, 500)
+      }
+    });
+  }
+  openExperiencedetail(key?: string) {
+    this.dialogService.open(UserExperienceDetailComponent, {
+      closeOnBackdropClick: false,
+      hasBackdrop: true,
+      autoFocus: false,
+      context: {
+        user_key: key,
+      },
+    }).onClose.subscribe(async (event) => {
+      if (event) {
       }
     });
   }

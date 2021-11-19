@@ -1,11 +1,11 @@
 <ait-template-popup [width]="800" [isLoading]="true" [isPage]="false">
-<div class="template__popup">
+<div class="user__wrapper">
   <ait-text-gradient
     [content]="'title header'"
     [id]="'project-detail'"
   ></ait-text-gradient>
-
   <div class="content__card">
+  <div class="form">
     <div class="input_inline">
       <ait-output-text
         [label]="'NAME'"
@@ -113,9 +113,11 @@
     </div>
    
   </div>
+</div>
   <ait-space></ait-space>
   <div class="sticky">
     <div class="action-row">
+      <div class="block">
       <ait-button
         [id]="'close'"
         [width]="'150px'"
@@ -125,6 +127,7 @@
           'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
         "
       ></ait-button>
+      </div>
     </div>
   </div>
 </div>
