@@ -18,7 +18,7 @@
             [clearError]="isClearErrors.name"
             (watchValue)="takeInputValue($event, 'name')"
             [defaultValue]="userProject.controls['name'].value"
-            [clearError]="isClear"
+            [clearError]="isClear"           
           >
           </ait-input-text>
         </div>
@@ -199,7 +199,7 @@
             *ngIf="mode === 'NEW' || mode === 'EDIT'"
             [id]="'cancel'"
             [width]="'150px'"
-            [title]="'cancel'"
+            [title]="'キャンセル'"
             (click)="cancel()"
             [isDefault]="true"
             nbSpinnerStatus="primary"
@@ -224,7 +224,7 @@
             *ngIf="mode === 'NEW' || mode === 'EDIT'"
             [id]="'reset'"
             [width]="'150px'"
-            [title]="'reset'"
+            [title]="'リセット'"
             (click)="resetForm()"
             [background]="
               'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'

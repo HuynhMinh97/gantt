@@ -172,8 +172,8 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
     const dateTo = this.course.controls['start_date_to'].value;
     if (dateFrom > dateTo && dateTo != null) {
       const transferMsg = (msg || '')
-        .replace('{0}', this.translateService.translate('start date'))
-        .replace('{1}', this.translateService.translate('start date to'));
+        .replace('{0}', this.translateService.translate('date from'))
+        .replace('{1}', this.translateService.translate('date to'));
       res.push(transferMsg);
     }
     return res;

@@ -21,8 +21,9 @@
               class="example-list"
             >
               <div class="skill-block">
-                <nb-icon nbSuffix icon="menu-2-outline" pack="eva"></nb-icon
-                >{{ category.name }}
+                <nb-icon nbSuffix icon="menu-2-outline" pack="eva"></nb-icon>
+                 <span style="margin: 5px; position: relative; bottom: 2px;" *ngIf="category?.name == 'TOP5'">{{'top' | translate}} </span>
+                 <span style="margin: 5px;position: relative; bottom: 2px;" *ngIf="category?.name != 'TOP5'">{{category?.name }}</span>
               </div>
               <div
                 *ngFor="let skill of category.data"
@@ -93,7 +94,7 @@
         <div class="block">
           <ait-button
             [id]="'cancel'"
-            [title]="'cancel'"
+            [title]="'キャンセル'"
             [isDefault]="true"
             nbSpinnerStatus="primary"
             [tabIndex]="40"
