@@ -127,6 +127,7 @@ export class AitMasterDataService extends AitBaseService {
           }
         }
         `,
+        fetchPolicy: 'network-only'
       })
       .toPromise();
   };
