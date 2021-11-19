@@ -373,15 +373,20 @@
               <a 
                 (click)="openExperience(experience?._key)"
                 [id]="'experience-' + experience?._key"
+                *ngIf="isMyUserProfile"
                 >
                 <nb-icon
-                  *ngIf="isMyUserProfile"
                   nbSuffix
                   icon="edit-2-outline"
                   pack="eva"
                 ></nb-icon>
+              </a>
+              <a 
+                (click)="openExperiencedetail(experience?._key)"
+                [id]="'experience-' + experience?._key"
+                *ngIf="!isMyUserProfile"
+                >
                 <nb-icon
-                  *ngIf="!isMyUserProfile"
                   nbSuffix
                   icon="eye-outline"
                   pack="eva"
@@ -451,15 +456,20 @@
               <a 
                 (click)="openCertificate(centificate?._key)"
                 [id]="'centificate-' + centificate?._key"
+                *ngIf="isMyUserProfile"
                 >
-                <nb-icon
-                  *ngIf="isMyUserProfile"
+                <nb-icon                
                   nbSuffix
                   icon="edit-2-outline"
                   pack="eva"
                 ></nb-icon>
+              </a>
+              <a 
+                (click)="openCertificateDetail(centificate?._key)"
+                [id]="'centificate-' + centificate?._key"
+                *ngIf="!isMyUserProfile"
+                >
                 <nb-icon
-                  *ngIf="!isMyUserProfile"
                   nbSuffix
                   icon="eye-outline"
                   pack="eva"
@@ -529,15 +539,20 @@
               <a 
                 (click)="openCourse(course?._key)"
                 [id]="'course-' + course?._key"
+                *ngIf="isMyUserProfile"
                 >
                 <nb-icon
-                  *ngIf="isMyUserProfile"
                   nbSuffix
                   icon="edit-2-outline"
                   pack="eva"
                 ></nb-icon>
+              </a>
+              <a 
+                (click)="openCourseDetail(course?._key)"
+                [id]="'course-' + course?._key"
+                *ngIf="!isMyUserProfile"
+                >
                 <nb-icon
-                  *ngIf="!isMyUserProfile"
                   nbSuffix
                   icon="eye-outline"
                   pack="eva"
@@ -609,15 +624,15 @@
             </div>
           </div>
           <div id="ic-edit">
-            <a (click)="openEducation(education?._key)" [id]="'education-' + education?._key">
+            <a (click)="openEducation(education?._key)" [id]="'education-' + education?._key" *ngIf="isMyUserProfile">
               <nb-icon
-                *ngIf="isMyUserProfile"
                 nbSuffix
                 icon="edit-2-outline"
                 pack="eva"
               ></nb-icon>
+            </a>
+            <a (click)="openEducationDetail(education?._key)" [id]="'education-' + education?._key" *ngIf="!isMyUserProfile">
               <nb-icon
-                *ngIf="!isMyUserProfile"
                 nbSuffix
                 icon="eye-outline"
                 pack="eva"
@@ -681,15 +696,15 @@
                   </div>
                 </div>
                 <div id="ic-edit">
-                  <a (click)="openLanguage( language?._key)" [id]="'language-' + language?._key ">
+                  <a (click)="openLanguage( language?._key)" [id]="'language-' + language?._key "  *ngIf="isMyUserProfile">
                     <nb-icon
-                      *ngIf="isMyUserProfile"
                       nbSuffix
                       icon="edit-2-outline"
                       pack="eva"
                     ></nb-icon>
+                  </a>
+                  <a (click)="openLanguageDetail( language?._key)" [id]="'language-' + language?._key " *ngIf="!isMyUserProfile">
                     <nb-icon
-                      *ngIf="!isMyUserProfile"
                       nbSuffix
                       icon="eye-outline"
                       pack="eva"

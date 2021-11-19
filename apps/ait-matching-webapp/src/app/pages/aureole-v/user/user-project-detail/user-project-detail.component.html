@@ -1,11 +1,11 @@
 <ait-template-popup [width]="800" [isLoading]="true" [isPage]="false">
-<div class="template__popup">
+<div class="user__wrapper">
   <ait-text-gradient
     [content]="'title header'"
     [id]="'project-detail'"
   ></ait-text-gradient>
-
   <div class="content__card">
+  <div class="form">
     <div class="input_inline">
       <ait-output-text
         [label]="'NAME'"
@@ -50,7 +50,7 @@
         [value]="stateUserProject.title?.value"
       ></ait-output-text>
     </div>
-    <div class="input_inline" >
+    <div class="textarea_inline" >
       <ait-label
         [label]="'DESCRIPTION'"
         [id]="'description'"
@@ -58,7 +58,7 @@
 
       <textarea
         nbInput
-        style="width: 400px; color: #8f9bb3; min-height: 131px;margin-top:10px; background-color: transparent;"
+        style="width: 400px; color: #8f9bb3; min-height: 131px;margin-top:10px; background-color: transparent;resize: none;resize: none;"
         readonly
         disabled
         fullWidth
@@ -77,7 +77,7 @@
         [valueArray]="stateUserSkill"
       ></ait-output-text>
     </div>
-    <div class="input_inline" >
+    <div class="textarea_inline" >
       <ait-label
         [label]="'RESPONSIBILITY'"
         [id]="'responsibility'"
@@ -85,7 +85,7 @@
 
       <textarea
         nbInput
-        style="width: 400px; color: #8f9bb3; min-height: 131px;margin-top:10px; background-color: transparent;"
+        style="width: 400px; color: #8f9bb3; min-height: 131px;margin-top:10px; background-color: transparent;resize: none;"
         readonly
         disabled
         fullWidth
@@ -95,7 +95,7 @@
       >
       </textarea>
     </div>
-    <div class="input_inline" >
+    <div class="textarea_inline" >
       <ait-label
         [label]="'ACHIEVEMENT'"
         [id]="'achievement'"
@@ -103,7 +103,7 @@
 
       <textarea
         nbInput
-        style="width: 400px; color: #8f9bb3; min-height: 131px;margin-top:10px; background-color: transparent;"
+        style="width: 400px; color: #8f9bb3; min-height: 131px;margin-top:10px; background-color: transparent;resize: none;"
         readonly
         disabled
         fullWidth
@@ -115,9 +115,11 @@
     </div>
    
   </div>
+</div>
   <ait-space></ait-space>
   <div class="sticky">
     <div class="action-row">
+      <div class="block">
       <ait-button
         [id]="'close'"
         [width]="'150px'"
@@ -127,6 +129,7 @@
           'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
         "
       ></ait-button>
+      </div>
     </div>
   </div>
 </div>

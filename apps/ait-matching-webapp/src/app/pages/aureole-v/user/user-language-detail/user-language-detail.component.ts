@@ -2,6 +2,7 @@ import { UserLanguageService } from './../../../../services/user-language.servic
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
+  NbDialogRef,
   NbLayoutScrollService,
   NbToastrService,
 } from '@nebular/theme';
@@ -26,6 +27,7 @@ export class UserLanguageDetailComponent extends AitBaseComponent implements OnI
   user_key: any = '';
   stateUserLanguage = {} as LanguageInfo;
   constructor(
+    private nbDialogRef: NbDialogRef<UserLanguageDetailComponent>,
     public activeRouter: ActivatedRoute,
     private userLangService: UserLanguageService,
     private route: ActivatedRoute,
@@ -53,8 +55,6 @@ export class UserLanguageDetailComponent extends AitBaseComponent implements OnI
   }
 
   async ngOnInit(): Promise<void> {
-    const id = AitAppUtils.getParamsOnUrl(true);
-    this.user_key = id;
     if (this.user_key) {
       await this.userLangService
         .findUserLanguageByKey(this.user_key)
@@ -66,5 +66,11 @@ export class UserLanguageDetailComponent extends AitBaseComponent implements OnI
         })
     }
 
+  }
+  close(){
+    this.closeDialog(false);
+  }
+  closeDialog(event: boolean) {
+    this.nbDialogRef.close(event);
   }
 }

@@ -1,9 +1,9 @@
-<div class="template__popup">
-  <ait-text-gradient
-    [content]="'title header'"
-    [id]="'education-detail'"
-  ></ait-text-gradient>
-
+<ait-template-popup [width]="800" [isLoading]="true" [isPage]="false">
+  <div class="user__wrapper">
+    <ait-text-gradient
+      [content]="'title header'"
+      [id]="'education-detail'"
+    ></ait-text-gradient>
   <div class="content__card">
     <div class="input_inline">
       <ait-output-text
@@ -89,15 +89,19 @@
     </div>
     <div class="sticky">
       <div class="action-row">
-        <ait-button
-          [id]="'close'"
-          [width]="'150px'"
-          [title]="'close'"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
-        ></ait-button>
+        <div class="block">
+          <ait-button
+            (click)="close()"
+            [id]="'close'"
+            [width]="'150px'"
+            [title]="'close'"
+            [background]="
+              'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+            "
+          ></ait-button>
+        </div>
       </div>
     </div>
   </div>
-</div>
+  </div>
+</ait-template-popup>
