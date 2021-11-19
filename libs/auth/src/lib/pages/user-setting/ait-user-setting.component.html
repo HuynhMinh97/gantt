@@ -8,44 +8,62 @@
         [id]="'site_language'" [icon]="'search-outline'" [style]="{ width: '400px' }" [defaultValue]="[langDf]"
         (watchValue)="
         getValueLang($event); handleInput($event, 'lang', langLabel)
-      " [required]="true" [placeholder]="'Site language'" [disableOutputDefault]="true" [tabIndex]="1">
+      " [required]="true" [placeholder]="'Site language'" [disableOutputDefault]="true" [tabIndex]="1"
+        [isError]="!formState?.site_language && isInit">
       </ait-autocomplete-master-data>
-      <!-- <ait-error-message [errors]="errors.lang"></ait-error-message> -->
+      <div style="width: 100%">
+        <ait-error-message *ngIf="!formState?.site_language" [errors]="errors?.lang" [style]="{'max-width': '100%'}">
+        </ait-error-message>
+      </div>
       <ait-space [margin]="'7.25px'"></ait-space>
 
       <ait-autocomplete-master-data [label]="'1003' | translate" [class]="'TIMEZONE'" [maxItem]="1" [id]="'timezone'"
         [icon]="'search-outline'" [style]="{ width: '400px' }" [defaultValue]="[timeDf]" (watchValue)="
       getValueTimeZone($event); handleInput($event, 'timezone', timeLabel)
-    " [required]="true" [placeholder]="'Timezone'" [disableOutputDefault]="true" [tabIndex]="2">
+    " [required]="true" [placeholder]="'Timezone'" [disableOutputDefault]="true" [tabIndex]="2"
+        [isError]="!formState?.timezone && isInit">
       </ait-autocomplete-master-data>
-      <!-- <ait-error-message [errors]="errors.timezone"></ait-error-message> -->
+      <div style="width: 100%">
+        <ait-error-message *ngIf="!formState?.timezone" [errors]="errors?.timezone"></ait-error-message>
+      </div>
       <ait-space [margin]="'7.25px'"></ait-space>
 
       <ait-autocomplete-master-data [label]="'1004' | translate" [class]="'USER_SETTING'"
         [parentCode]="'DATE_FORMAT_DISPLAY'" [maxItem]="1" [id]="'date_format_display'" [icon]="'search-outline'"
         [style]="{ width: '400px' }" [defaultValue]="[defaultInputValues?.dateDisplayDf]" (watchValue)="
       getValueDateDisplay($event); handleInput($event, 'display', displayLabel)
-    " [required]="true" [placeholder]="'MM/dd/yyyy'" [disableOutputDefault]="true" [tabIndex]="3">
+    " [required]="true" [placeholder]="'MM/dd/yyyy'" [disableOutputDefault]="true" [tabIndex]="3"
+        [isError]="!formState?.date_format_display && isInit">
       </ait-autocomplete-master-data>
-      <!-- <ait-error-message [errors]="errors.display"></ait-error-message> -->
+      <div style="width: 100%">
+        <ait-error-message *ngIf="!formState?.date_format_display" [errors]="errors?.display"></ait-error-message>
+      </div>
       <ait-space [margin]="'7.25px'"></ait-space>
 
       <ait-autocomplete-master-data [label]="'1005' | translate" [class]="'USER_SETTING'"
         [parentCode]="'DATE_FORMAT_INPUT'" [maxItem]="1" [id]="'date_format_input'" [icon]="'search-outline'"
         [style]="{ width: '400px' }" [defaultValue]="[defaultInputValues?.dateInputDf]" (watchValue)="
       getValueDateInf($event); handleInput($event, 'input', inputLabel)
-    " [required]="true" [placeholder]="'MM/dd/yyyy'" [disableOutputDefault]="true" [tabIndex]="4">
+    " [required]="true" [placeholder]="'MM/dd/yyyy'" [disableOutputDefault]="true" [tabIndex]="4"
+        [isError]="!formState?.date_format_input && isInit">
       </ait-autocomplete-master-data>
-      <!-- <ait-error-message [errors]="errors.input"></ait-error-message> -->
+      <div style="width: 100%">
+        <ait-error-message *ngIf="!formState?.date_format_input" [errors]="errors?.input"></ait-error-message>
+      </div>
+
       <ait-space [margin]="'7.25px'"></ait-space>
 
       <ait-autocomplete-master-data [label]="'1005' | translate" [class]="'USER_SETTING'" [parentCode]="'NUMBER_FORMAT'"
         [maxItem]="1" [id]="'number_format'" [icon]="'search-outline'" [style]="{ width: '400px' }"
         [defaultValue]="[defaultInputValues?.numberFormatDf]" (watchValue)="
       getValueNumberFormat($event); handleInput($event, 'number', numberLabel)
-    " [required]="true" [placeholder]="'###, ###,###.###'" [disableOutputDefault]="true" [tabIndex]="5">
+    " [required]="true" [placeholder]="'###, ###,###.###'" [disableOutputDefault]="true" [tabIndex]="5"
+        [isError]="!formState?.number_format && isInit">
       </ait-autocomplete-master-data>
-      <!-- <ait-error-message [errors]="errors.number"></ait-error-message> -->
+      <div style="width: 100%">
+        <ait-error-message *ngIf="!formState?.number_format" [errors]="errors?.number"></ait-error-message>
+      </div>
+
       <ait-space [margin]="'7.25px'"></ait-space>
     </div>
   </ait-card-content>
