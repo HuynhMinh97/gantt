@@ -100,7 +100,8 @@ export enum KEYS {
   IDS = 'ids',
   DEL_FLAG = 'del_flag',
   IS_MATCHING = 'is_matching',
-  CUSTOM = '$$$$@@@@!!!!'
+  CUSTOM = '$$$$@@@@!!!!',
+  OTHERS = 'OTHERS',
 }
 
 export enum ACTIVE_FLAG {
