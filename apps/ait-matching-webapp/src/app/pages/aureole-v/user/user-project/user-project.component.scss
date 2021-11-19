@@ -11,6 +11,7 @@
         padding: 20px 64px 50px 64px;
         display: flex;
         justify-content: center;
+        align-items: center;
         min-height: 130px;
         background: nb-theme(color-basic-100);
         flex-direction: column;
@@ -37,8 +38,17 @@
                     color: #8b8b8b;
                 }
             }
-        }
-    }
+            ::ng-deep textarea{
+                font-size: 12px !important;
+                font-family: Open Sans;
+            }
+            ::ng-deep input{
+                font-size: 12px !important;
+                font-family: Open Sans;
+            }
+        }      
+    }  
+    
     ::ng-deep .ait-label span {
         color: #8f9bb3 !important;
       }

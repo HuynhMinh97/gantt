@@ -165,7 +165,7 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
     if (dateFrom > dateTo && dateTo != null) {
       const transferMsg = (msg || '')
         .replace('{0}', this.translateService.translate('issue date'))
-        .replace('{1}', this.translateService.translate('end date'));
+        .replace('{1}', this.translateService.translate('issue date to'));
       res.push(transferMsg);
     }
     return res;
