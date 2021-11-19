@@ -1,25 +1,26 @@
-<div class="template__popup">
+<ait-template-popup [width]="800" [isLoading]="true" [isPage]="false">
+  <div class="user__wrapper">
     <ait-text-gradient
       [content]="'title header'"
       [id]="'course-detail'"
     ></ait-text-gradient>
-  
     <div class="content__card">
-      <div class="input_inline">
-        <ait-output-text
-          [label]="'NAME'"
-          [width]="'400px'"
-          [value]="stateUserCourse.name"
-          [id]="'name'"
-        ></ait-output-text>
-      </div>
-      <div class="input_inline">
-        <ait-output-text
-          [label]="'DEGREE'"
-          [id]="'training_center'"
-          [width]="'400px'"
-          [value]="stateUserCourse.training_center?.value"
-        ></ait-output-text>
+      <div class="form">
+        <div class="input_inline">
+          <ait-output-text
+            [label]="'NAME'"
+            [width]="'400px'"
+            [value]="stateUserCourse.name"
+            [id]="'name'"
+          ></ait-output-text>
+        </div>
+        <div class="input_inline">
+          <ait-output-text
+            [label]="'DEGREE'"
+            [id]="'training_center'"
+            [width]="'400px'"
+            [value]="stateUserCourse.training_center?.value"
+          ></ait-output-text>
         </div>
         <div class="input_inline">
           <ait-output-text
@@ -34,26 +35,30 @@
             [label]="'start date'"
             [id]="'start_date_from'"
             [disable]="true"
-            [styleInput]="{ color: '#8f9bb3', width: '180px' }"
+            [styleInput]="{ color: '#8f9bb3', width: '180px', background:'#ffffff' }"
             [defaultValue]="stateUserCourse.start_date_from"
           ></ait-datepicker>
           <span style="margin-bottom: 4px">〜</span>
           <ait-datepicker
             [id]="'start_date_to'"
             [disable]="true"
-            [styleInput]="{ color: '#8f9bb3', width: '180px' }"
+            [styleInput]="{ color: '#8f9bb3', width: '180px', background:'#ffffff' }"
             [defaultValue]="stateUserCourse.start_date_to"
           ></ait-datepicker>
         </div>
-        <div class="input_inline" >
-          <ait-label
-            [label]="'DESCRIPTION'"
-            [id]="'description'"
-          ></ait-label>
-  
+        <div class="textarea_inline">
+          <ait-label [label]="'DESCRIPTION'" [id]="'description'"></ait-label>
+
           <textarea
             nbInput
-            style="width: 400px; color: #8f9bb3; min-height: 131px;margin-top:10px; background-color: transparent;"
+            style="
+              width: 400px;
+              color: #8f9bb3;
+              min-height: 131px;
+              margin-top: 10px;
+              background-color: transparent;
+              resize: none;
+            "
             readonly
             disabled
             fullWidth
@@ -64,26 +69,28 @@
           </textarea>
         </div>
         <div class="input_inline">
-            <div style="width: 400px">
-          <ait-output-file
-            [id]="'file'"
-            [fileKeys]="stateUserCourse.file"
-            [label]="'files'"
-          ></ait-output-file>
+          <div style="width: 400px">
+            <ait-output-file
+              [id]="'file'"
+              [fileKeys]="stateUserCourse.file"
+              [label]="'files'"
+            ></ait-output-file>
+          </div>
+        </div>
       </div>
-        </div>
-      <div class="sticky">
-        <div class="action-row">
-            <ait-button
-            [id]="'close'"
-            [width]="'150px'"
-            [title]="'close'"
-            [background]="
-              'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-            "
-          ></ait-button>
-            </div>
-            </div>
-        </div>
+    </div>
+    <div class="sticky">
+      <div class="action-row">
+        <ait-button
+          [id]="'close'"
+          [width]="'150px'"
+          [title]="'close'"
+          (click)="close()"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+        ></ait-button>
+      </div>
+    </div>
   </div>
-  
+</ait-template-popup>

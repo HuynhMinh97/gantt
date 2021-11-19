@@ -2,7 +2,7 @@ import { RESULT_STATUS } from '@ait/shared';
 import { AitBaseComponent, AitEnvironmentService, AppState, AitAuthService, AitAppUtils } from '@ait/ui';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NbToastrService, NbLayoutScrollService } from '@nebular/theme';
+import { NbToastrService, NbLayoutScrollService, NbDialogRef } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { UserProjectDto } from '../user-certificate/certificate-interface';
@@ -19,6 +19,7 @@ export class UserCertificateDetailComponent extends AitBaseComponent implements 
   user_key: any = '';
   stateUserCertificate = {} as UserProjectDto;
   constructor(
+    private nbDialogRef: NbDialogRef<UserCertificateDetailComponent>,
     public activeRouter: ActivatedRoute,
     public certificateService: UserCerfiticateService,
     env: AitEnvironmentService,
@@ -45,8 +46,6 @@ export class UserCertificateDetailComponent extends AitBaseComponent implements 
   }
 
   async ngOnInit(): Promise<void> {
-    const id = AitAppUtils.getParamsOnUrl(true);
-    this.user_key = id;
     if (this.user_key) {
       await this.certificateService
         .findUserByKey(this.user_key)
@@ -57,6 +56,12 @@ export class UserCertificateDetailComponent extends AitBaseComponent implements 
           }
         })
     }
+  }
+  close(){
+    this.closeDialog(false);
+  }
+  closeDialog(event: boolean) {
+    this.nbDialogRef.close(event);
   }
 
 }

@@ -44,7 +44,7 @@
               [id]="'start_date_from'"
               [format]="dateFormat"
               [disable]="true"
-              [styleInput]="{ color: '#8f9bb3', width: '180px' }"
+              [styleInput]="{ color: '#8f9bb3', width: '180px', background:'#ffffff'}"
               [defaultValue]="stateUserExp.start_date_from"
             ></ait-datepicker>
             <span style="margin-bottom: 4px">〜</span>
@@ -52,11 +52,11 @@
               [id]="'start_date_to'"
               [format]="dateFormat"
               [disable]="true"
-              [styleInput]="{ color: '#8f9bb3', width: '180px' }"
+              [styleInput]="{ color: '#8f9bb3', width: '180px', background:'#ffffff' }"
               [defaultValue]="stateUserExp.start_date_to"
             ></ait-datepicker>
           </div>
-          <div class="input_inline" >
+          <div class="textarea_inline" >
             <ait-label
               [label]="'DESCRIPTION'"
               [id]="'description'"
@@ -64,7 +64,7 @@
     
             <textarea
               nbInput
-              style="width: 400px; color: #8f9bb3; min-height: 131px;margin-top:10px; background-color: transparent;"
+              style="width: 400px; color: #8f9bb3; min-height: 131px;margin-top:10px; background-color: transparent;resize: none;"
               readonly
               disabled
               fullWidth
