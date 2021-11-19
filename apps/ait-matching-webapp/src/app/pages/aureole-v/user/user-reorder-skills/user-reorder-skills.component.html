@@ -1,71 +1,86 @@
-<ait-template-popup [width]="1000" [isLoading]="true" [isPage]="false">
-  <div id="company__info__wrapper">
+<ait-template-popup [width]="800" [isLoading]="true" [isPage]="false">
+  <div class="user__wrapper">
     <ait-text-gradient
-      [content]="'Reorder skills' | translate"
-      [id]="'title'"
+      [content]="'reorder skills' | translate"
+      [id]="'form_user_reorder_skill'"
     ></ait-text-gradient>
     <div class="content__card">
-      <div class="step-container" cdkDropListGroup>
-        <div
-          class="category-area"
-          *ngFor="let category of reorderSkills"
-          style="background: white"
-        >
+      <div class="form">
+        <div class="step-container" cdkDropListGroup>
           <div
-            cdkDropList
-            id="{{ category.name }}"
-            [cdkDropListData]="category.data"
-            (cdkDropListDropped)="drop($event, category)"
-            [cdkDropListEnterPredicate]="evenPredicate"
-            class="example-list"
+            class="category-area"
+            *ngFor="let category of reorderSkills"
+            style="background: white"
           >
-            <div class="skill-block">
-              <nb-icon nbSuffix icon="menu-2-outline" pack="eva"></nb-icon
-              >{{ category.name }}
-            </div>
-            <div *ngFor="let skill of category.data" cdkDrag CdkDragPlaceholder>
-              <div class="col-md-12" class="skill-element">
-                <button nbButton ghost (click)="passToChange(skill, category)">
-                  <nb-icon
-                    *ngIf="skill._key"
-                    nbSuffix
-                    icon="star"
-                    pack="eva"
-                    [ngStyle]="{
-                      color: category.name === 'TOP5' ? '#ffdf00' : '#dad7cd'
-                    }"
-                  ></nb-icon>
-                </button>
-                <span nbTooltip="{{ skill.name }}">{{ skill.name }}</span>
-                <div class="float-right">
+            <div
+              cdkDropList
+              id="{{ category.name }}"
+              [cdkDropListData]="category.data"
+              (cdkDropListDropped)="drop($event, category)"
+              [cdkDropListEnterPredicate]="evenPredicate"
+              class="example-list"
+            >
+              <div class="skill-block">
+                <nb-icon nbSuffix icon="menu-2-outline" pack="eva"></nb-icon>
+                 <span style="margin: 5px; position: relative; bottom: 2px;" *ngIf="category?.name == 'TOP5'">{{'top' | translate}} </span>
+                 <span style="margin: 5px;position: relative; bottom: 2px;" *ngIf="category?.name != 'TOP5'">{{category?.name }}</span>
+              </div>
+              <div
+                *ngFor="let skill of category.data"
+                cdkDrag
+                CdkDragPlaceholder
+              >
+                <div class="col-md-12" class="skill-element">
                   <button
                     nbButton
                     ghost
-                    class="remove-btn"
-                    (click)="removeSkill(category, skill)"
-                    nbTooltip="{{ 'matching.reorder_skill.click' | translate }}"
+                    (click)="passToChange(skill, category)"
                   >
                     <nb-icon
                       *ngIf="skill._key"
                       nbSuffix
-                      icon="close-outline"
+                      icon="star"
                       pack="eva"
-                      style="vertical-align: middle; color: #231f20"
+                      [ngStyle]="{
+                        color: category.name === 'TOP5' ? '#ffdf00' : '#dad7cd'
+                      }"
                     ></nb-icon>
                   </button>
-                  <button
-                    nbButton
-                    ghost
-                    nbTooltip="{{ 'matching.reorder_skill.drag' | translate }}"
-                  >
-                    <nb-icon
-                      *ngIf="skill._key"
-                      nbSuffix
-                      icon="menu-outline"
-                      pack="eva"
-                      style="vertical-align: middle; color: #231f20"
-                    ></nb-icon>
-                  </button>
+                  <span nbTooltip="{{ skill.name }}">{{ skill.name }}</span>
+                  <div class="float-right">
+                    <button
+                      nbButton
+                      ghost
+                      class="remove-btn"
+                      (click)="removeSkill(category, skill)"
+                      nbTooltip="{{
+                        'matching.reorder_skill.click' | translate
+                      }}"
+                    >
+                      <nb-icon
+                        *ngIf="skill._key"
+                        nbSuffix
+                        icon="close-outline"
+                        pack="eva"
+                        style="vertical-align: middle; color: #231f20"
+                      ></nb-icon>
+                    </button>
+                    <button
+                      nbButton
+                      ghost
+                      nbTooltip="{{
+                        'matching.reorder_skill.drag' | translate
+                      }}"
+                    >
+                      <nb-icon
+                        *ngIf="skill._key"
+                        nbSuffix
+                        icon="menu-outline"
+                        pack="eva"
+                        style="vertical-align: middle; color: #231f20"
+                      ></nb-icon>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -74,49 +89,41 @@
       </div>
     </div>
     <ait-space></ait-space>
-    <div 
-      class="sticky"
-      style="
-        min-width: 370px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      "
-  >
-    <div class="action-row">
-      <div class="block">
-        <ait-button
-          [id]="'cancel'"
-          [title]="'CANCEL'"
-          [isDefault]="true"
-          nbSpinnerStatus="primary"
-          [tabIndex]="40"
-          (click)="cancel()"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
-        ></ait-button>
+    <div class="sticky">
+      <div class="action-row">
+        <div class="block">
+          <ait-button
+            [id]="'cancel'"
+            [title]="'キャンセル'"
+            [isDefault]="true"
+            nbSpinnerStatus="primary"
+            [tabIndex]="40"
+            (click)="cancel()"
+            [background]="
+              'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+            "
+          ></ait-button>
 
-        <ait-button
-          *ngIf="isChanged"
-          [id]="'saveClose'"
-          [width]="'200px'"
-          [title]="'SAVE & CLOSE'"
-          (click)="save()"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
-        ></ait-button>
+          <ait-button
+            *ngIf="isChanged"
+            [id]="'saveClose'"
+            [width]="'200px'"
+            [title]="'save and close'"
+            (click)="save()"
+            [background]="
+              'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+            "
+          ></ait-button>
 
-        <ait-button
-          *ngIf="!isChanged"
-          [id]="'disabled'"
-          [width]="'200px'"
-          [title]="'SAVE & CLOSE'"
-          [style]="'disabled'"
-        ></ait-button>
+          <ait-button
+            *ngIf="!isChanged"
+            [id]="'disabled'"
+            [width]="'200px'"
+            [title]="'save and close'"
+            [style]="'disabled'"
+          ></ait-button>
+        </div>
       </div>
     </div>
-  </div>
   </div>
 </ait-template-popup>

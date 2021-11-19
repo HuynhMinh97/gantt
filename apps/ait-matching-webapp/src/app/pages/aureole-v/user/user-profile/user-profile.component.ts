@@ -4,6 +4,7 @@ import {
   AitBaseComponent,
   AitConfirmDialogComponent,
   AitEnvironmentService,
+  AitTranslationService,
   AppState,
   getUserSetting,
   MODE
@@ -32,7 +33,6 @@ import { UserCourseService } from '../../../../services/user-course.service';
 import { UserEducationService } from '../../../../services/user-education.service';
 import { UserLanguageService } from 'apps/ait-matching-webapp/src/app/services/user-language.service';
 import { UserCourseComponent } from '../user-course/user-course.component';
-import { UserProjectComponent } from '../user-project/user-project/user-project.component';
 import { UserSkillsComponent } from '../user-skills/user-skills.component';
 import { UserReorderSkillsComponent } from '../user-reorder-skills/user-reorder-skills.component';
 import { UserExperienceComponent } from '../user-experience/user-experience.component';
@@ -40,6 +40,8 @@ import { UserCertificateComponent } from '../user-certificate/user-certificate.c
 import { UserEducationComponent } from '../user-education/user-education.component';
 import { UserLanguageComponent } from '../user-language/user-language.component';
 import { UserOnboardingComponent } from '../user-onboarding/user-onboarding.component';
+import { UserProjectComponent } from '../user-project/user-project.component';
+import { UserProjectDetailComponent } from '../user-project-detail/user-project-detail.component';
 
 @Component({
   selector: 'ait-user-profile',
@@ -49,6 +51,7 @@ import { UserOnboardingComponent } from '../user-onboarding/user-onboarding.comp
 export class UserProfileComponent extends AitBaseComponent implements OnInit {
   mode = '';
   profileId = '';
+  skills = '';
   showProject = false;
   showSkill = false;
   showExperience = false;
@@ -78,7 +81,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   dateFormat = "dd/MM/yyyy";
   today = Date.now();
   isMyUserProfile = false;
-  countSkill = "You has 0 skills. Each person has max 50 skills";
+  countSkill = this.translateService.translate('length skills');
   actionBtn = [
     {
       title: '追加',
@@ -96,6 +99,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     private userProfileService: UserProfileService,
     private dialogService: NbDialogService,
     public activeRouter: ActivatedRoute,
+    private translateService: AitTranslationService,
     private router: Router,
     private santilizer: DomSanitizer,
     store: Store<AppState>,
@@ -111,6 +115,10 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         this.dateFormat = setting['date_format_display'];
       }
     });
+    this.setModulePage({
+      module: 'user',
+      page: 'user_profiles',
+    });
     this.profileId = this.activeRouter.snapshot.paramMap.get('id');
     if (this.profileId && this.profileId != this.user_id) {
       this.mode = MODE.VIEW;
@@ -118,10 +126,13 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       this.profileId = this.user_id;
       this.mode = MODE.EDIT;
       this.isMyUserProfile = true;
-    }
+    } 
+    this.skills = this.translateService.translate('skills');
   }
 
   async ngOnInit(): Promise<void> {
+    console.log(this.skills);
+    
     this.callLoadingApp();
     await this.getMasterData();
     this.getUserProfileByUserId();
@@ -167,6 +178,8 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           if (res.data.length > 0) {
             const data = res.data[0]
             this.DataUserProfile = data;
+            console.log(data);
+            
           } else {
             this.router.navigate([`/404`]);
           }
@@ -175,7 +188,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
 
   }
 
-  async getSkillByUserId() {
+  async getSkillByUserId() { 
     await this.userProfileService.findTopSkill(this.profileId)
       .then((res) => {
         const data = res.data[0];
@@ -190,6 +203,11 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           this.showSkill = true;
         }
         this.countSkill = 'You has ' + data.length + ' skills. Each person has max 50 skills';
+        // this.countSkill = this.translateService.translate('length skills');
+        const transferMsg = (this.countSkill || '')
+        .replace('{0}', data.length)
+        console.log(transferMsg);
+        
         this.quantitySkill = data.length;
         let top5 = {} as OrderSkill;
         top5.name = "TOP 5";
@@ -285,6 +303,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     this.userCetificateService.findUserCetificateByKey(this.profileId)
       .then((res) => {
         const data = res.data;
+        this.showCertificate = data.length > 0 ? true : false;
         for (let element of data) {
           let centificate = {} as CertificateDto;
           let datefrom = element.issue_date_from;
@@ -313,6 +332,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     this.userCourseService.findCourseByUserId(this.profileId)
       .then((res) => {
         const data = res.data;
+        this.showCourse = data.length > 0 ? true : false;
         for (let element of data) {
           let course = {} as CourseDto;
           let datefrom = element.start_date_from;
@@ -337,6 +357,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     this.userEducationService.findUserEducationByUserId(this.profileId)
       .then((res) => {
         const data = res.data;
+        this.showEducation = data.length > 0 ? true : false;
         for (let element of data) {
           let education = {} as EducationDto;
           let datefrom = element.start_date_from;
@@ -349,20 +370,19 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           }
           education._key = element._key;
           education.school = element.school?.value;
-          education.start_date_from = this.getDateFormat(element.start_date_from);
-          education.start_date_to = element.start_date_to ? this.getDateFormat(element.start_date_to) : 'Present';
+          education.start_date_from = element.start_date_from;
+          education.start_date_to = element.start_date_to ;
           education.field_of_study = element.field_of_study;
           this.userEducation.push(education);
         }
 
       })
-    console.log(this.userEducation);
-
   }
   getLanguageByUserId() {
     this.userLanguageService.findUserLanguageByUserId(this.profileId)
       .then((res) => {
         const data = res.data;
+        this.showLanguages = data.length > 0 ? true : false;
         for (let element of data) {
           let language = {} as LanguageDto;
           let datefrom = element.start_date_from;
@@ -383,7 +403,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
             language.image = "../../../../../assets/images/vietnam.png"
           }
           if (element.language?._key == "ja_JP") {
-            language.image = "../../../../../assets/images/japan.png"
+            language.image = "../../../../../assets/images/flag.png"
           }
           setTimeout(() => {
             this.userLanguage.push(language);
@@ -435,6 +455,26 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       autoFocus: false,
       context: {
         project_key: key,
+      },
+    }).onClose.subscribe(async (event) => {
+      if (event) {
+        this.callLoadingApp();
+        this.userProject = [];
+        this.timeProject = 0;
+        await this.getProjectByUserId();
+        setTimeout(() => {
+          this.cancelLoadingApp();
+        }, 500)
+      }
+    });
+  }
+  openProjectsDetail(key?: string) {
+    this.dialogService.open(UserProjectDetailComponent, {
+      closeOnBackdropClick: false,
+      hasBackdrop: true,
+      autoFocus: false,
+      context: {
+        user_key: key,
       },
     }).onClose.subscribe(async (event) => {
       if (event) {
@@ -598,14 +638,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     userJobQuery: true,
     userCertificate: true,
   };
-
-  getHours(time: number) {
-    return Math.trunc(time / 1000 / 60 / 60 / 3)
-  }
-
-  toggleContent(group: string, status: boolean) {
-    this.isOpen[group] = status;
-  }
 
   dateDiffInYears(month) {
     if (month < 12) {

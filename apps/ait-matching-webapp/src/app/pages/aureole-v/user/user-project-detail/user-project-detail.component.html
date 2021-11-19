@@ -1,6 +1,7 @@
+<ait-template-popup [width]="800" [isLoading]="true" [isPage]="false">
 <div class="template__popup">
   <ait-text-gradient
-    [content]="'User project detail'"
+    [content]="'title header'"
     [id]="'project-detail'"
   ></ait-text-gradient>
 
@@ -17,17 +18,17 @@
       <ait-datepicker
         [label]="'START DATE'"
         [id]="'start_date_from'"
-        [format]="'yyyy/MM'"
+        [format]="dateFormat"
         [disable]="true"
-        [styleInput]="{ color: '#8f9bb3', width: '185px' }"
+        [styleInput]="{ color: '#8f9bb3', width: '180px' }"
         [defaultValue]="stateUserProject.start_date_from"
       ></ait-datepicker>
       <span style="margin-bottom: 4px">〜</span>
       <ait-datepicker
         [id]="'start_date_to'"
-        [format]="'yyyy/MM'"
+        [format]="dateFormat"
         [disable]="true"
-        [styleInput]="{ color: '#8f9bb3', width: '185px' }"
+        [styleInput]="{ color: '#8f9bb3', width: '180px' }"
         [defaultValue]="stateUserProject.start_date_to"
       ></ait-datepicker>
     </div>
@@ -47,14 +48,23 @@
         [value]="stateUserProject.title?.value"
       ></ait-output-text>
     </div>
-
-    <div class="input_inline">
-      <ait-output-text
+    <div class="input_inline" >
+      <ait-label
         [label]="'DESCRIPTION'"
         [id]="'description'"
-        [width]="'400px'"
-        [value]="stateUserProject.description"
-      ></ait-output-text>
+      ></ait-label>
+
+      <textarea
+        nbInput
+        style="width: 400px; color: #8f9bb3; min-height: 131px;margin-top:10px; background-color: transparent;"
+        readonly
+        disabled
+        fullWidth
+        [value]="stateUserProject.description || ''"
+        class="textarea"
+        [id]="'description'"
+      >
+      </textarea>
     </div>
     <div class="input_inline">
       <ait-output-text
@@ -65,21 +75,57 @@
         [valueArray]="stateUserSkill"
       ></ait-output-text>
     </div>
-    <div class="input_inline">
-      <ait-output-text
+    <div class="input_inline" >
+      <ait-label
         [label]="'RESPONSIBILITY'"
-        [width]="'400px'"
-        [value]="stateUserProject.responsibility"
         [id]="'responsibility'"
-      ></ait-output-text>
+      ></ait-label>
+
+      <textarea
+        nbInput
+        style="width: 400px; color: #8f9bb3; min-height: 131px;margin-top:10px; background-color: transparent;"
+        readonly
+        disabled
+        fullWidth
+        [value]="stateUserProject.responsibility || ''"
+        class="textarea"
+        [id]="'responsibility'"
+      >
+      </textarea>
     </div>
-    <div class="input_inline">
-      <ait-output-text
+    <div class="input_inline" >
+      <ait-label
         [label]="'ACHIEVEMENT'"
-        [width]="'400px'"
-        [value]="stateUserProject.achievement"
         [id]="'achievement'"
-      ></ait-output-text>
+      ></ait-label>
+
+      <textarea
+        nbInput
+        style="width: 400px; color: #8f9bb3; min-height: 131px;margin-top:10px; background-color: transparent;"
+        readonly
+        disabled
+        fullWidth
+        [value]="stateUserProject.achievement || ''"
+        class="textarea"
+        [id]="'achievement'"
+      >
+      </textarea>
+    </div>
+   
+  </div>
+  <ait-space></ait-space>
+  <div class="sticky">
+    <div class="action-row">
+      <ait-button
+        [id]="'close'"
+        [width]="'150px'"
+        [title]="'close'"
+        (click)="close()"
+        [background]="
+          'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+        "
+      ></ait-button>
     </div>
   </div>
 </div>
+</ait-template-popup>

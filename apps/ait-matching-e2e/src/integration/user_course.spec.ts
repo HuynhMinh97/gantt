@@ -27,7 +27,7 @@ export class UserCourse {
     cy.errorMessage('name', 'NAME required.');
     cy.errorMessage(
       'messagError',
-      'Enter START DATE with a value less than or equal to START DATE TO.'
+      'Enter START DATE FROM with a value less than or equal to START DATE TO.'
     );
   }
 

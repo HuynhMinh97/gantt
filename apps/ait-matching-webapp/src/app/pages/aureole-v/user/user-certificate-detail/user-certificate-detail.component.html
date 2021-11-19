@@ -1,6 +1,6 @@
 <div class="template__popup">
     <ait-text-gradient
-      [content]="'User certificate detail'"
+      [content]="'title header'"
       [id]="'certificate-detail'"
     ></ait-text-gradient>
   
@@ -42,36 +42,59 @@
             [label]="'ISSUE DATE'"
             [id]="'issue_date_from'"
             [disable]="true"
-            [styleInput]="{ color: '#8f9bb3', width: '185px' }"
+            [styleInput]="{ color: '#8f9bb3', width: '180px' }"
             [defaultValue]="stateUserCertificate.issue_date_from"
           ></ait-datepicker>
           <span style="margin-bottom: 4px">〜</span>
           <ait-datepicker
             [id]="'issue_date_to'"
             [disable]="true"
-            [styleInput]="{ color: '#8f9bb3', width: '185px' }"
+            [styleInput]="{ color: '#8f9bb3', width: '180px' }"
             [defaultValue]="stateUserCertificate.issue_date_to"
           ></ait-datepicker>
         </div>
-        <div class="input_inline">
-          <ait-output-text
+        <div class="input_inline" >
+          <ait-label
             [label]="'DESCRIPTION'"
             [id]="'description'"
-            [width]="'400px'"
-            [value]="stateUserCertificate.description"
-          ></ait-output-text>
+          ></ait-label>
+  
+          <textarea
+            nbInput
+            style="width: 400px; color: #8f9bb3; min-height: 131px;margin-top:10px; background-color: transparent;"
+            readonly
+            disabled
+            fullWidth
+            [value]="stateUserCertificate.description || ''"
+            class="textarea"
+            [id]="'description'"
+          >
+          </textarea>
         </div>
         <div class="input_inline">
-            <div style="width: 100%">
+            <div style="width: 400px">
           <ait-output-file
             [id]="'file'"
             [fileKeys]="stateUserCertificate.file"
-            [label]="'FILES'"
+            [label]="'files'"
           ></ait-output-file>
       </div>
-        </div>
         
       </div>
+      <div class="sticky">
+        <div class="action-row">
+            <ait-button
+            [id]="'close'"
+            [width]="'150px'"
+            [title]="'close'"
+            [background]="
+              'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+            "
+          ></ait-button>
+            </div>
+            </div>
+        </div>
+      
   </div>
   
 

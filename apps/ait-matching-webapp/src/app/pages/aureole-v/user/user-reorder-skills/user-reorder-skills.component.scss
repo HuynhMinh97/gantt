@@ -1,47 +1,4 @@
-@import '../../../../../styles/themes.scss';
-#company__info__wrapper {
-    width: 60%;
-    height: 100%;
-    // padding: 80px;
-    padding-bottom: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: auto;
-    :host ::ng-deep .ck-editor__editable_inline {
-      width: 100%;
-      min-height: 100px;
-    }
-      
-    :host ::ng-deep nb-card {
-      background: nb-theme(background-gradient-blue);
-      mix-blend-mode: normal;
-      border-radius: 0px;
-    }
-    ::ng-deep .ait-user-reorder-skills {
-      display: flex !important;
-      justify-content: center !important;
-    }
-    ::ng-deep.sticky {
-      position: -webkit-sticky;
-      position: sticky;
-      bottom: 30px;
-      z-index: 10;
-    }
-}
-.content__card {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    min-height: 130px;
-    background: nb-theme(color-basic-100);
-    padding: 50px;
-    margin-top: 30px;
-    flex-direction: column;
-    box-shadow: 0 1px 6px rgb(0 0 0 / 6%), 0 1px 1px rgb(0 0 0 / 3%);
-    transition: 0.8s all ease-in-out;
-}
+@import '../user-project/user-project.component.scss';
 :host {
     display: flex;
     flex: 1;

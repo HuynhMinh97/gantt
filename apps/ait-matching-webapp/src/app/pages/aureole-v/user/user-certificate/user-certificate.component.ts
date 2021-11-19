@@ -165,7 +165,7 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
     if (dateFrom > dateTo && dateTo != null) {
       const transferMsg = (msg || '')
         .replace('{0}', this.translateService.translate('issue date'))
-        .replace('{1}', this.translateService.translate('end date'));
+        .replace('{1}', this.translateService.translate('issue date to'));
       res.push(transferMsg);
     }
     return res;
@@ -229,12 +229,7 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
       this.showToastr('', this.getMsg('I0007'));
     }
   }
-
-  async saveAndContinue() {
-    this.isSubmit = true;
-    setTimeout(() => {
-      this.isSubmit = false;
-    }, 100);
+  dataSave(){
     const saveData = this.certificate.value;
     saveData['name'] = saveData.name?._key ? saveData.name._key : null;
     saveData['issue_by'] = saveData.issue_by?._key ? saveData.issue_by._key : null;
@@ -243,11 +238,18 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
     } else {
       saveData['user_id'] = this.authService.getUserID();
     }
-    this.error.length
+    return saveData;
+  }
+
+  async saveAndContinue() {
+    this.isSubmit = true;
+    setTimeout(() => {
+      this.isSubmit = false;
+    }, 100);
     if (this.certificate.valid && this.error.length <= 0) {
       this.callLoadingApp();
       await this.cartificateService
-        .saveUserCartificate(saveData)
+        .saveUserCartificate(this.dataSave())
         .then(async (res) => {
           if (res?.status === RESULT_STATUS.OK) {
             const message =
@@ -274,18 +276,10 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
-    const saveData = this.certificate.value;
-    saveData.name = saveData.name._key ? saveData.name._key : null;
-    saveData.issue_by = saveData.issue_by._key ? saveData.issue_by._key : null;
-    if (this.certificate_key) {
-      saveData['_key'] = this.certificate_key;
-    } else {
-      saveData['user_id'] = this.authService.getUserID();
-    }
     if (this.certificate.valid && this.error.length <= 0) {
       this.callLoadingApp();
       await this.cartificateService
-        .saveUserCartificate(saveData)
+        .saveUserCartificate(this.dataSave())
         .then((res) => {
           if (res?.status === RESULT_STATUS.OK) {
             const message =

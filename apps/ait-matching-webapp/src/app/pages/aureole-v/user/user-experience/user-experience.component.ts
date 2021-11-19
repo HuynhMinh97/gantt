@@ -173,8 +173,8 @@ export class UserExperienceComponent
 
   getTitleByMode() {
     return this.mode === MODE.EDIT
-      ? this.translateService.translate('Edit experience')
-      : this.translateService.translate('Add experience');
+      ? this.translateService.translate('edit experience')
+      : this.translateService.translate('add experience');
   }
 
   resetModeNew() {
@@ -397,16 +397,16 @@ export class UserExperienceComponent
       this.isDateCompare = false;
       if (dateFrom > this.defaultValueDate && isWorking) {
         const transferMsg = (msg || '')
-          .replace('{0}', this.translateService.translate('START DATE'))
-          .replace('{1}', this.translateService.translate('CURRENT DATE'));
+          .replace('{0}', this.translateService.translate('date from'))
+          .replace('{1}', this.translateService.translate('date to'));
         res.push(transferMsg);
         this.isDateCompare = true;
       }
     } else {
       if (dateFrom > dateTo && !isWorking) {
         const transferMsg = (msg || '')
-          .replace('{0}', this.translateService.translate('START DATE'))
-          .replace('{1}', this.translateService.translate('START DATE TO'));
+          .replace('{0}', this.translateService.translate('date from'))
+          .replace('{1}', this.translateService.translate('date to'));
         res.push(transferMsg);
         this.isDateCompare = true;
       }

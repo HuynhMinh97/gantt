@@ -64,6 +64,24 @@
             [value]="stateUserOnboarding.phone_number"
           ></ait-output-text>
         </div>
+        <div class="input_inline" >
+          <ait-label
+            [label]="'ABOUT'"
+            [id]="'about'"
+          ></ait-label>
+
+          <textarea
+            nbInput
+            style="width: 400px; color: #8f9bb3; min-height: 131px;margin-top:10px; background-color: transparent;"
+            readonly
+            disabled
+            fullWidth
+            [value]="stateUserOnboarding.about || ''"
+            class="textarea"
+            [id]="'about'"
+          >
+          </textarea>
+        </div>
         <div class="input_inline">
             <ait-output-text
               [label]="'COUNTRY/REGION'"
@@ -135,6 +153,18 @@
               [width]="'400px'"
               [value]="stateUserOnboarding.industry?.value"
             ></ait-output-text>
+          </div>
+          <div class="sticky">
+            <div class="action-row">
+              <ait-button
+                [id]="'close'"
+                [width]="'150px'"
+                [title]="'close'"
+                [background]="
+                  'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+                "
+              ></ait-button>
+            </div>
           </div>
       </div>
   </div>

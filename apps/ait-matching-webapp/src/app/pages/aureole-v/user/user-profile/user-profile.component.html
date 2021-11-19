@@ -39,10 +39,10 @@
           </div>
         </div>
         <div class="col-md-5 col-lg-4 col-xxxl-4" id="col2">
-          <p  id = "about_input" style="width:100%; margin:0 ; height: 100px;  border: none;
-          outline: none; font-size: 13px;overflow: hidden;resize: none;white-space: break-spaces">
+          <div  id = "about_input" style="width:100%; margin:0 ; height: 100px;  border: none;
+          outline: none; font-size: 13px;overflow: hidden;resize: none;white-space: pre-line">
             {{DataUserProfile?.about}}
-          </p>
+          </div>
         </div>
         <div class="col-md-3 col-lg-3 col-xxxl-3" id="col3">
           <div
@@ -92,7 +92,7 @@
                 [id]="'add friend'"
                 [styleText]="{ 'font-size': '10px' }"
                 [height]="'24px'"
-                [title]="'ADD FRIEND'"
+                [title]="'add friend'"
                 [isDefault]="true"
               ></ait-button>
             </div>
@@ -101,7 +101,7 @@
                 (click)="openOnboarding(DataUserProfile?.user_id)"
                 [styleText]="{ 'font-size': '10px' }"
                 [height]="'24px'"
-                [title]="'VIEW CONTACT'"
+                [title]="'view contact'"
                 [id]="'openOnboarding'"
                 [isDefault]="true"
               ></ait-button>
@@ -120,7 +120,7 @@
           [styleText]="{ 'font-size': '10px' }"
           [width]="'150px'"
           [height]="'25px'"
-          [title]="'REORDER SKILLS'"
+          [title]="'reorder skills'"
           [id]="'openReorderSkill'"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
@@ -133,11 +133,11 @@
         style="outline-color: #10529d"
         class="content_card"
         style="display: flex; justify-content: center"
-        [label]="'SKILLS'"
+        [label]="'skills' | translate"
         [styleLabel]="{'font-size':'22px'}"
         (onClickButtonHeader)="openAddSkill()"
         [actionBtn]="isMyUserProfile ? actionBtn : ''"
-        [buttonTitle]="'ADD SKILL'"
+        [buttonTitle]="'add skills'"
         [disableHeader]="false"
         [widthBtn]="'150px'"
         [content]="countSkill"
@@ -171,11 +171,11 @@
       style="outline-color: #10529d"
       class="content_card"
       style="display: flex; justify-content: center"
-      [label]="'PROJECTS'"
+      [label]="'projects' | translate"
       [styleLabel]="{'font-size':'22px'}"
       (onClickButtonHeader)="openProjects()"
       [actionBtn]="isMyUserProfile ? actionBtn : ''"
-      [buttonTitle]="'ADD PROJECT'"
+      [buttonTitle]="'add projects'"
       [disableHeader]="false"
       [widthBtn]="'150px'"
       [content]="sumHoursProject"
@@ -255,15 +255,20 @@
                 <a 
                   (click)="openProjects(project?._key)"
                   [id]="'project-' + project?._key"
+                  *ngIf="isMyUserProfile"
                 >
                   <nb-icon
-                    *ngIf="isMyUserProfile"
                     nbSuffix
                     icon="edit-2-outline"
                     pack="eva"
                   ></nb-icon>
+                </a>
+                <a 
+                  (click)="openProjectsDetail(project?._key)"
+                  [id]="'project-' + project?._key"
+                  *ngIf="!isMyUserProfile"
+                >
                   <nb-icon
-                    *ngIf="!isMyUserProfile"
                     nbSuffix
                     icon="eye-outline"
                     pack="eva"
@@ -280,15 +285,16 @@
     <!-- EXPERIENCE -->
     <card-content
       tabindex="2"
+      [isOpen]="showExperience"
       [id]="'experience_detail'"
       style="outline-color: #10529d"
       class="content_card"
       style="display: flex; justify-content: center"
-      [label]="'EXPERIENCES'"
+      [label]="'experiencer' | translate"
       [styleLabel]="{'font-size':'22px'}"
       (onClickButtonHeader)="openExperience()"
       [actionBtn]="isMyUserProfile ? actionBtn : ''"
-      [buttonTitle]="'ADD EXPERIENCE'"
+      [buttonTitle]="'add experiencer'"
       [disableHeader]="false"
       [widthBtn]="'150px'"
       [content]="timeExperienceStr"
@@ -400,12 +406,13 @@
       [styleLabel]="{'font-size':'22px'}"
       (onClickButtonHeader)="openCertificate()"
       [actionBtn]="isMyUserProfile ? actionBtn : ''"
-      [buttonTitle]="'ADD EXPERIENCE'"
+      [buttonTitle]="'add certificates'"
       [disableHeader]="false"
       [widthBtn]="'150px'"
       [content]="countCentificate"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'20px'"
+      [isOpen]="showCertificate"
       [idBtn]="'openCertificate'"
     >
     <div class="container-user-project" *ngIf="userCentificate.length > 0">
@@ -468,16 +475,17 @@
     </card-content>
     <!-- course -->
     <card-content
+      [isOpen]="showCourse"
       tabindex="2"
       [id]="'course_detail'"
       style="outline-color: #10529d"
       class="content_card"
       style="display: flex; justify-content: center"
-      [label]="'COURSES'"
+      [label]="'course'"
       [styleLabel]="{'font-size':'22px'}"
       (onClickButtonHeader)="openCourse()"
       [actionBtn]="isMyUserProfile ? actionBtn : ''"
-      [buttonTitle]="'ADD COURSE'"
+      [buttonTitle]="'add course'"
       [disableHeader]="false"
       [widthBtn]="'150px'"
       [content]="countCourse"
@@ -546,15 +554,16 @@
     <!-- education -->
     <card-content
     tabindex="2"
+    [isOpen]="showEducation"
     [id]="'education_detail'"
     style="outline-color: #10529d"
     class="content_card"
     style="display: flex; justify-content: center"
-    [label]="'EDUCATIONS'"
+    [label]="'educations'"
     [styleLabel]="{'font-size':'22px'}"
     (onClickButtonHeader)="openEducation()"
     [actionBtn]="isMyUserProfile ? actionBtn : ''"
-    [buttonTitle]="'ADD EDUCATION'"
+    [buttonTitle]="'add educations'"
     [disableHeader]="false"
     [widthBtn]="'150px'"
     [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
@@ -585,12 +594,17 @@
                 {{ education?.school }}
               </p>
               <div class="desc-info">
-                <p>
+                <p style="text-decoration-line: underline;">
                   {{
                     education?.field_of_study
                   }}
                 </p>
-                <p>{{ education?.start_date_from }} - {{education?.start_date_to}}</p>
+                <p *ngIf="!education.start_date_to">
+                  {{ education?.start_date_from | date:'yyyy/MM' }} - {{'Presen'}}
+                </p>
+                <p *ngIf="education.start_date_to">
+                  {{ education?.start_date_from | date:'yyyy/MM' }} - {{education?.start_date_to | date:'yyyy/MM'}}
+                </p>
               </div>
             </div>
           </div>
@@ -620,15 +634,16 @@
     <!-- LANGUAGES -->
     <card-content
        tabindex="2"
+       [isOpen]="showLanguages"
       [id]="'language_detail'"
       style="outline-color: #10529d"
       class="content_card"
       style="display: flex; justify-content: center"
-      [label]="'LANGUAGES'"
+      [label]="'languages'"
       [styleLabel]="{'font-size':'22px'}"
       (onClickButtonHeader)="openLanguage()"
       [actionBtn]="isMyUserProfile ? actionBtn : ''"
-      [buttonTitle]="'add languager'"
+      [buttonTitle]="'add languages'"
       [disableHeader]="false"
       [widthBtn]="'150px'"
       [content]="''"
@@ -637,7 +652,7 @@
       [idBtn]="'openLanguage'"
     >
     
-        <div class="container-user-project" *ngIf="userEducation.length > 0">
+        <div class="container-user-project" *ngIf="userLanguage.length > 0">
           <hr class="hr_header">
           <ul
             *ngFor="
@@ -661,7 +676,7 @@
                       {{ language?.language }}
                     </p>
                     <div class="desc-info">
-                      <p>{{ language?.proficiency }}</p>
+                      <p style="text-decoration-line: underline;">{{ language?.proficiency }}</p>
                     </div>
                   </div>
                 </div>

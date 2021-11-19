@@ -1,12 +1,13 @@
 import { RESULT_STATUS } from '@ait/shared';
-import { AitAppUtils, AitAuthService, AitBaseComponent, AitEnvironmentService, AppState } from '@ait/ui';
+import { AitAppUtils, AitAuthService, AitBaseComponent, AitEnvironmentService, AppState, getSettingLangTime } from '@ait/ui';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NbToastrService, NbLayoutScrollService } from '@nebular/theme';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { UserEducationService } from './../../../../services/user-education.service';
 import { UserEducationDto } from '../user-education/interface';
+import { MatchingUtils } from '../../../../@constants/utils/matching-utils';
 
 @Component({
   selector: 'ait-user-education-detail',
@@ -17,6 +18,7 @@ export class UserEducationDetailComponent extends AitBaseComponent implements On
 
   user_key: any = '';
   stateUserEducation = {} as UserEducationDto;
+  dateFormat: any;
   constructor(
     public activeRouter: ActivatedRoute,
     private userEduService: UserEducationService,
@@ -36,7 +38,12 @@ export class UserEducationDetailComponent extends AitBaseComponent implements On
       layoutScrollService,
       toastrService
     );
-
+    this.store.pipe(select(getSettingLangTime)).subscribe(setting => {
+      if (setting) {
+        const display = setting?.date_format_display;
+        this.dateFormat = MatchingUtils.getFormatYearMonth(display);
+      }
+    });
     this.setModulePage({
       module: 'user',
       page: 'user_education',

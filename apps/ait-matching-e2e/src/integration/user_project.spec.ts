@@ -4,15 +4,14 @@ export class UserProject {
     cy.chooseValueDate('start_date_to', '2021', '8', '13');
     cy.errorMessage(
       'messagError',
-      'start_date_to以下の値でstart_date_fromを入力してください。'
+      'Enter START DATE FROM with a value less than or equal to START DATE TO.'
     );
-    cy.chooseValueDate('start_date_to', '2021', '9', '13');
-    cy.clickButton('saveContinue');
-    cy.errorMessage('name', 'NAME を入力してください。');
-    cy.errorMessage('description', 'DESCRIPTION を入力してください。');
-    cy.errorMessage('skills', 'SKILLS (MAX 10) を入力してください。');
-    cy.errorMessage('responsibility', 'RESPONSIBILITY を入力してください。');
-    cy.errorMessage('achievement', 'ACHIEVEMENT を入力してください。');
+    cy.clickButton('saveClose');
+    cy.errorMessage('name', 'NAME required.');
+    cy.errorMessage('description', 'DESCRIPTION required.');
+    cy.errorMessage('skills', 'SKILLS (MAX 10) required.');
+    cy.errorMessage('responsibility', 'RESPONSIBILITY required.');
+    cy.errorMessage('achievement', 'ACHIEVEMENT required.');
     // cy.clickButton('reset');
   }
 

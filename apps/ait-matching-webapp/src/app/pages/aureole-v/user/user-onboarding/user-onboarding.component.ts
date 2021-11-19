@@ -29,6 +29,7 @@ import {
 import { Apollo } from 'apollo-angular';
 import { isArrayFull, isObjectFull, KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
 import { KeyValueCheckedDto } from './interface';
+import { UserProfileService } from 'apps/ait-matching-webapp/src/app/services/user-profile.service';
 @Component({
   selector: 'ait-user-onboarding',
   templateUrl: './user-onboarding.component.html',
@@ -50,7 +51,7 @@ export class UserOnboardingComponent
   cityCode: any;
   countryCode: any;
   districtCode: any;
-  sort_no: number;
+  sort_no = 0;
   isReset = false;
   isLangJP = false;
   isSubmit = false;
@@ -126,6 +127,7 @@ export class UserOnboardingComponent
     private dialogService: NbDialogService,
     private navigation: AitNavigationService,
     private userOnbService: UserOnboardingService,
+    private userProfileService: UserProfileService,
     private translateService: AitTranslationService,
     private masterDataService: AitMasterDataService,
     @Optional() private nbDialogRef: NbDialogRef<UserOnboardingComponent>,
@@ -185,10 +187,11 @@ export class UserOnboardingComponent
       company_working: new FormControl(null),
       title: new FormControl(null),
       industry: new FormControl(null, [Validators.required]),
-      skills: new FormControl(null, [Validators.required]),
       _key: new FormControl(null),
     });
-
+    if (this.mode === MODE.NEW) {
+      this.userOnboardingInfo.addControl('skills', new FormControl(null));
+    }
     // get key form parameter
     // this.user_key = this.activeRouter.snapshot.paramMap.get('id');
     this.userOnbService
@@ -226,6 +229,13 @@ export class UserOnboardingComponent
             !isUserExist && this.router.navigate([`/404`]);
           }
         });
+    } else {
+      await this.userProfileService.finProfileByUserId(this.user_id)
+        .then((res) => {
+          if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
+            this.router.navigate([`recommenced-user`]);
+          }
+        })
     }
 
     await this.getGenderList();
@@ -274,6 +284,8 @@ export class UserOnboardingComponent
       if (res.status && res.status === RESULT_STATUS.OK) {
         this.genderList = res.data;
       }
+      console.log(this.genderList);
+
     });
   }
 
@@ -363,11 +375,12 @@ export class UserOnboardingComponent
     saveData.industry = saveData.industry ? saveData.industry?._key : null;
     saveData.company_working = saveData.company_working ? saveData.company_working?._key : null;
     this.skills = saveData.skills;
-    saveData['top_skills'] = [];
     delete saveData.skills;
     if (this.mode === MODE.NEW) {
+      saveData['top_skills'] = [];
       saveData['user_id'] = this.user_id;
     } else {
+      // this.userOnboardingInfo.get('skills').setErrors(null);
       saveData['user_id'] = this.authService.getUserID();
     }
     return saveData;
@@ -376,8 +389,8 @@ export class UserOnboardingComponent
   async saveDataUserSkill() {
     this.user_skill._from = 'sys_user/' + this.authService.getUserID();
     this.user_skill.relationship = 'user_skill';
-    this.user_skill.sort_no = this.sort_no + 1;
-    let number_sort_no = 1;
+    this.user_skill.sort_no = (this.sort_no || 0) + 1;
+    let number_sort_no = 0;
     const skills = [];
     for (const item of this.skills) {
       await this.userOnbService.findSkillsByCode(item._key).then((res) => {
@@ -401,7 +414,6 @@ export class UserOnboardingComponent
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
-    this.userOnboardingInfo.get('skills').setErrors(null);
     if (this.userOnboardingInfo.valid) {
       this.callLoadingApp();
       this.userOnbService
@@ -413,10 +425,10 @@ export class UserOnboardingComponent
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
             this.cancelLoadingApp();
-            if(this.user_key){
+            if (this.user_key) {
               this.close(true);
-            }else{
-              this.navigation.back();
+            } else {
+              this.router.navigate([`user-job-alert`]);
             }
           } else {
             this.cancelLoadingApp();
@@ -449,9 +461,9 @@ export class UserOnboardingComponent
             await this.userOnbService.remove(_key).then((res) => {
               if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
                 this.showToastr('', this.getMsg('I0003'));
-                if(this.user_key){
+                if (this.user_key) {
                   this.close(false);
-                }else{
+                } else {
                   history.back();
                 }
               } else {
@@ -478,17 +490,17 @@ export class UserOnboardingComponent
         })
         .onClose.subscribe(async (event) => {
           if (event) {
-            if(this.user_key){
+            if (this.user_key) {
               this.close(false);
-            }else{
+            } else {
               history.back();
             }
           }
         });
     } else {
-      if(this.user_key){
+      if (this.user_key) {
         this.close(false);
-      }else{
+      } else {
         history.back();
       }
     }

@@ -1,236 +1,236 @@
-<ait-template-popup
-  [width]="1000"
-  [isLoading]="true"
-  [isPage]="false"
->
-<div class="user__experience__wrapper" id="user_experience">
-  <ait-text-gradient
-    [content]="getTitleByMode()"
-    id="form_edit_user_experience"
-  ></ait-text-gradient>
+<ait-template-popup [width]="800" [isLoading]="true" [isPage]="false">
+  <div class="user__wrapper" id="user_experience">
+    <ait-text-gradient [content]="getTitleByMode()" [id]="'form_edit_user_experience'"></ait-text-gradient>
+    <div class="content__card">
+      <div class="form">
+        <div class="input_inline">
+          <ait-autocomplete-master-data
+            [width]="'400px'"
+            [id]="'title'"
+            [label]="'TITLE'"
+            [required]="true"
+            [allowNew]="true"
+            [maxItem]="1"
+            [isSubmit]="isSubmit"
+            [placeholder]="'Developer'"
+            [collection]="'m_title'"
+            [disableOutputDefault]="true"
+            [isReset]="resetUserInfo.title"
+            [isReadOnly]="resetUserInfo.title"
+            (watchValue)="takeMasterValue($event, 'title')"
+            [defaultValue]="[userExperienceInfo.controls['title'].value]"
+          ></ait-autocomplete-master-data>
+        </div>
+        <div class="input_inline">
+          <ait-autocomplete-master-data
+            [width]="'400px'"
+            [required]="true"
+            [label]="'COMPANY'"
+            [isSubmit]="isSubmit"
+            [maxItem]="1"
+            [allowNew]="true"
+            [id]="'company_working'"
+            [collection]="'m_company'"
+            [placeholder]="'Aureole IT'"
+            [disableOutputDefault]="true"
+            [isReset]="resetUserInfo.company_working"
+            [isReadOnly]="resetUserInfo.company_working"
+            (watchValue)="takeMasterValue($event, 'company_working')"
+            [defaultValue]="[
+              userExperienceInfo.controls['company_working'].value
+            ]"
+          ></ait-autocomplete-master-data>
+        </div>
+        <div class="input_inline">
+          <ait-autocomplete-master-data
+            [width]="'400px'"
+            [id]="'location'"
+            [required]="true"
+            [label]="'LOCATION'"
+            [class]="'CITY'"
+            [maxItem]="1"
+            [isSubmit]="isSubmit"
+            [disableOutputDefault]="true"
+            [collection]="'sys_master_data'"
+            [placeholder]="'Ho Chi Minh City'"
+            [isReset]="resetUserInfo.location"
+            [isReadOnly]="resetUserInfo.location"
+            (watchValue)="takeMasterValue($event, 'location')"
+            [defaultValue]="[userExperienceInfo.controls['location'].value]"
+          ></ait-autocomplete-master-data>
+        </div>
 
-  <ait-card-content style="justify-content: center" class="content__card">
-    <div style="margin-top: 14px">
-      <div class="input_area">
-        <ait-autocomplete-master-data
-          [id]="'title'"
-          [label]="'TITLE'"
-          [required]="true"
-          [allowNew]="true"
-          [maxItem]="1"
-          [isSubmit]="isSubmit"
-          [placeholder]="'Developer'"
-          [collection]="'m_title'"
-          [disableOutputDefault]="true"
-          [isReset]="resetUserInfo.title"
-          [isReadOnly]="resetUserInfo.title"
-          (watchValue)="takeMasterValue($event, 'title')"
-          [defaultValue]="[userExperienceInfo.controls['title'].value]"
-        ></ait-autocomplete-master-data>
-      </div>
-      <div class="input_area">
-        <ait-autocomplete-master-data
-          [required]="true"
-          [label]="'COMPANY'"
-          [isSubmit]="isSubmit"
-          [maxItem]="1"
-          [allowNew]="true"
-          [id]="'company_working'"
-          [collection]="'m_company'"
-          [placeholder]="'Aureole IT'"
-          [disableOutputDefault]="true"
-          [isReset]="resetUserInfo.company_working"
-          [isReadOnly]="resetUserInfo.company_working"
-          (watchValue)="takeMasterValue($event, 'company_working')"
-          [defaultValue]="[
-            userExperienceInfo.controls['company_working'].value
-          ]"
-        ></ait-autocomplete-master-data>
-      </div>
-      <div class="input_area">
-        <ait-autocomplete-master-data
-          [id]="'location'"
-          [required]="true"
-          [label]="'LOCATION'"
-          [class]="'CITY'"
-          [maxItem]="1"
-          [isSubmit]="isSubmit"
-          [disableOutputDefault]="true"
-          [collection]="'sys_master_data'"
-          [placeholder]="'Ho Chi Minh City'"
-          [isReset]="resetUserInfo.location"
-          [isReadOnly]="resetUserInfo.location"
-          (watchValue)="takeMasterValue($event, 'location')"
-          [defaultValue]="[userExperienceInfo.controls['location'].value]"
-        ></ait-autocomplete-master-data>
-      </div>
+        <div class="input_inline">
+          <ait-autocomplete-master-data
+            [class]="'EMPLOYEE_TYPE'"
+            [width]="'400px'"
+            [id]="'employee_type'"
+            [maxItem]="1"
+            [width]="'205px'"
+            [placeholder]="'select'"
+            [label]="'EMPLOYEE TYPE'"
+            [disableOutputDefault]="true"
+            [collection]="'sys_master_data'"
+            [isReset]="resetUserInfo.employee_type"
+            [isReadOnly]="resetUserInfo.employee_type"
+            (watchValue)="takeMasterValue($event, 'employee_type')"
+            [defaultValue]="[
+              userExperienceInfo.controls['employee_type'].value
+            ]"
+          >
+          </ait-autocomplete-master-data>
+        </div>
 
-      <div class="input_area">
-        <ait-autocomplete-master-data
-          [class]="'EMPLOYEE_TYPE'"
-          [id]="'employee_type'"
-          [maxItem]="1"
-          [width]="'205px'"
-          [placeholder]="'Select'"
-          [label]="'EMPLOYEE TYPE'"
-          [disableOutputDefault]="true"
-          [collection]="'sys_master_data'"
-          [isReset]="resetUserInfo.employee_type"
-          [isReadOnly]="resetUserInfo.employee_type"
-          (watchValue)="takeMasterValue($event, 'employee_type')"
-          [defaultValue]="[userExperienceInfo.controls['employee_type'].value]"
-        >
-        </ait-autocomplete-master-data>
-      </div>
+        <div class="input_checkbox">
+          <nb-checkbox
+            *ngIf="mode === 'EDIT' || mode === 'NEW'"
+            [checked]="userExperienceInfo.controls['is_working']?.value"
+            [id]="'is_working'"
+            (checkedChange)="toggleCheckBox($event)"
+          >
+          </nb-checkbox>
+          <nb-checkbox
+            *ngIf="mode === 'VIEW'"
+            [checked]="userExperienceInfo.controls['is_working']?.value"
+            [id]="'is_working'"
+            disabled
+          >
+          </nb-checkbox>
+          <p class="pcontent" tabIndex="15">
+            {{ 'i am currently working in this role' | translate }}
+          </p>
+        </div>
 
-      <div class="input_area nb_checkbox">
-        <nb-checkbox
-          *ngIf="mode === 'EDIT' || mode === 'NEW'"
-          [checked]="userExperienceInfo.controls['is_working']?.value"
-          [id]="'is_working'"
-          (checkedChange)="toggleCheckBox($event)"
-        >
-        </nb-checkbox>
-        <nb-checkbox
-          *ngIf="mode === 'VIEW'"
-          [checked]="userExperienceInfo.controls['is_working']?.value"
-          [id]="'is_working'"
-          disabled
-        >
-        </nb-checkbox>
-        <p class="pcontent" tabIndex="15">
-          {{ 'I am currently working in this role' | translate }}
-        </p>
-      </div>
+        <div class="input_date">
+          <ait-datepicker
+            [label]="'start date'"
+            [id]="'start_date_from'"
+            [format]="'yyyy/MM'"
+            [placeholder]="'2021/01'"
+            [width]="'170px'"
+            [isReset]="resetUserInfo.start_date_from"
+            [defaultValue]="
+              userExperienceInfo.controls['start_date_from'].value
+            "
+            (watchValue)="
+              takeDatePickerValue(
+                $event?.value,
+                'userExperienceInfo',
+                'start_date_from'
+              )
+            "
+            [ngClass]="{
+              start_date_to: userExperienceInfo.controls['is_working'].value
+            }"
+          ></ait-datepicker>
+          <span>~</span>
+          <ait-datepicker
+            *ngIf="!userExperienceInfo.controls['is_working'].value"
+            [id]="'start_date_to'"
+            [format]="'yyyy/MM'"
+            [width]="'170px'"
+            [isReset]="resetUserInfo.start_date_to"
+            [defaultValue]="userExperienceInfo.controls['start_date_to'].value"
+            (watchValue)="
+              takeDatePickerValue(
+                $event?.value,
+                'userExperienceInfo',
+                'start_date_to'
+              )
+            "
+            [ngClass]="{
+              start_date_to: userExperienceInfo.controls['is_working'].value
+            }"
+          ></ait-datepicker>
 
-      <div class="start-date">
-        <ait-datepicker
-          [label]="'START DATE'"
-          [id]="'start_date_from'"
-          [format]="'yyyy/MM'"
-          [placeholder]="'2021/01'"
-          [width]="'185px'"
-          [isReset]="resetUserInfo.start_date_from"
-          [defaultValue]="userExperienceInfo.controls['start_date_from'].value"
-          (watchValue)="
-            takeDatePickerValue(
-              $event?.value,
-              'userExperienceInfo',
-              'start_date_from'
-            )
-          "
-          [ngClass]="{
-            start_date_to: userExperienceInfo.controls['is_working'].value
-          }"
-        ></ait-datepicker>
-        <span>〜</span>
-        <ait-datepicker
-          *ngIf="!userExperienceInfo.controls['is_working'].value"
-          [id]="'start_date_to'"
-          [format]="'yyyy/MM'"
-          [width]="'185px'"
-          [isReset]="resetUserInfo.start_date_to"
-          [defaultValue]="userExperienceInfo.controls['start_date_to'].value"
-          (watchValue)="
-            takeDatePickerValue(
-              $event?.value,
-              'userExperienceInfo',
-              'start_date_to'
-            )
-          "
-          [ngClass]="{
-            start_date_to: userExperienceInfo.controls['is_working'].value
-          }"
-        ></ait-datepicker>
+          <ait-datepicker
+            [disable]="true"
+            *ngIf="userExperienceInfo.controls['is_working'].value"
+            [ngClass]="{
+              start_date_to: userExperienceInfo.controls['is_working'].value
+            }"
+          ></ait-datepicker>
+        </div>
+        <ait-error-message
+          [id]="'start-date'"
+          [errors]="errorArr"
+        ></ait-error-message>
 
-        <ait-datepicker
-          [disable]="true"
-          *ngIf="userExperienceInfo.controls['is_working'].value"
-          [ngClass]="{
-            start_date_to: userExperienceInfo.controls['is_working'].value
-          }"
-        ></ait-datepicker>
-      </div>
-      <ait-error-message
-        [id]="'start-date'"
-        [errors]="errorArr"
-      ></ait-error-message>
-
-      <div class="input_area">
-        <ait-input-text
-          [id]="'description'"
-          [length]="4000"
-          [rows]="4"
-          [width]="'420px'"
-          [label]="'DESCRIPTION'"
-          [isReset]="resetUserInfo.description"
-          [readonly]="resetUserInfo.description"
-          [placeholder]="'Place your text'"
-          (watchValue)="takeInputValue($event, 'description')"
-          [defaultValue]="userExperienceInfo.controls['description'].value"
-        >
-        </ait-input-text>
+        <div class="input_inline">
+          <ait-input-text
+            [id]="'description'"
+            [length]="4000"
+            [rows]="4"
+            [width]="'400px'"
+            [label]="'description'"
+            [isReset]="resetUserInfo.description"
+            [readonly]="resetUserInfo.description"
+            [placeholder]="'place your text'"
+            (watchValue)="takeInputValue($event, 'description')"
+            [defaultValue]="userExperienceInfo.controls['description'].value"
+          >
+          </ait-input-text>
+        </div>
       </div>
     </div>
-  </ait-card-content>
-  <div class="sticky">
-    <div class="action-row">
-      <div class="block">
-        <ait-button
-          *ngIf="mode !== 'VIEW'"
-          [id]="'cancel'"
-          [width]="'200px'"
-          [title]="'CANCEL'"
-          [isDefault]="true"
-          (click)="back()"
-        ></ait-button>
 
-        <ait-button
-          *ngIf="mode === 'EDIT'"
-          [id]="'delete'"
-          [width]="'200px'"
-          [title]="'DELETE'"
-          [isDefault]="true"
-          (click)="onDelete()"
-        >
-        </ait-button>
+    <div class="sticky">
+      <div class="action-row">
+        <div class="block">
+          <ait-button
+            *ngIf="mode !== 'VIEW'"
+            [id]="'cancel'"
+            [width]="'150px'"
+            [title]="'キャンセル'"
+            [isDefault]="true"
+            (click)="back()"
+          ></ait-button>
 
-        <ait-button
-          *ngIf="mode !== 'VIEW'"
-          [id]="'reset'"
-          [width]="'200px'"
-          [title]="'RESET'"
-          [isDefault]="true"
-          (click)="resetForm()"
-        >
-        </ait-button>
+          <ait-button
+            *ngIf="mode === 'EDIT'"
+            [id]="'delete'"
+            [width]="'150px'"
+            [title]="'delete'"
+            [isDefault]="true"
+            (click)="onDelete()"
+          >
+          </ait-button>
 
-        <ait-button
-          *ngIf="mode === 'NEW'"
-          [id]="'saveAndContinue'"
-          [title]="'SAVE & CONTINUE'"
-          (click)="saveAndContinue()"
-          [isDefault]="true"
-        ></ait-button>
-        <ait-button
-          [id]="'saveAndClose'"
-          *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
-          [width]="'200px'"
-          [title]="'SAVE & CLOSE'"
-          (click)="saveAndClose()"
-          [isDefault]="true"
-        >
-        </ait-button>
-        <ait-button
-          *ngIf="!isChanged && mode === 'EDIT'"
-          [id]="'saveAndClose'"
-          [width]="'200px'"
-          [title]="'SAVE & CLOSE'"
-          [style]="'disabled'"
-        ></ait-button>
+          <ait-button
+            *ngIf="mode !== 'VIEW'"
+            [id]="'reset'"
+            [width]="'150px'"
+            [title]="'reset'"
+            [isDefault]="true"
+            (click)="resetForm()"
+          >
+          </ait-button>
+
+          <ait-button
+            *ngIf="mode === 'NEW'"
+            [id]="'saveAndContinue'"
+            [title]="'save and continue'"
+            (click)="saveAndContinue()"
+            [isDefault]="true"
+          ></ait-button>
+          <ait-button
+            [id]="'saveAndClose'"
+            *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
+            [width]="'150px'"
+            [title]="'save and close'"
+            (click)="saveAndClose()"
+            [isDefault]="true"
+          >
+          </ait-button>
+          <ait-button
+            *ngIf="!isChanged && mode === 'EDIT'"
+            [id]="'saveAndClose'"
+            [width]="'150px'"
+            [title]="'save and close'"
+            [style]="'disabled'"
+          ></ait-button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </ait-template-popup>
-
