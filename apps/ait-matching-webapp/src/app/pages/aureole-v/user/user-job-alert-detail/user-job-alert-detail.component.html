@@ -42,14 +42,14 @@
             [label]="'AVAILABLE TIME'"
             [id]="'start_date_from'"
             [disable]="true"
-            [styleInput]="{ color: '#8f9bb3', width: '180px' }"
+            [styleInput]="{ color: '#8f9bb3', width: '180px', background:'#ffffff' }"
             [defaultValue]="stateUserJobAlert.start_date_from"
           ></ait-datepicker>
           <span style="margin-bottom: 4px">〜</span>
           <ait-datepicker
             [id]="'start_date_to'"
             [disable]="true"
-            [styleInput]="{ color: '#8f9bb3', width: '180px' }"
+            [styleInput]="{ color: '#8f9bb3', width: '180px', background:'#ffffff' }"
             [defaultValue]="stateUserJobAlert.start_date_to"
           ></ait-datepicker>
         </div>
@@ -60,7 +60,7 @@
             [id]="'salary_from'"
             [isReadOnly]="true"
             [isCurrency]="true"
-            [styleInput]="{ color: '#8f9bb3' }"
+            [styleInput]="{ color: '#8f9bb3', background:'#ffffff' }"
             [widthInput]="'180px'"
             
           ></ait-input-number>
@@ -69,7 +69,7 @@
           [defaultValue]="stateUserJobAlert.salary_to"
           [id]="'salary_to'"
           [isReadOnly]="true"
-          [styleInput]="{ color: '#8f9bb3' }"
+          [styleInput]="{ color: '#8f9bb3', background:'#ffffff' }"
           [isCurrency]="true"
           [widthInput]="'180px'"
         ></ait-input-number>

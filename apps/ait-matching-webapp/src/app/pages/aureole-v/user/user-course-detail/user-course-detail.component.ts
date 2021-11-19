@@ -2,7 +2,7 @@ import { RESULT_STATUS } from '@ait/shared';
 import { AitEnvironmentService, AppState, AitAuthService, AitAppUtils, AitBaseComponent } from '@ait/ui';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NbToastrService, NbLayoutScrollService } from '@nebular/theme';
+import { NbToastrService, NbLayoutScrollService, NbDialogRef } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { UserCourseService } from './../../../../services/user-course.service';
@@ -18,6 +18,7 @@ export class UserCourseDetailComponent extends AitBaseComponent implements OnIni
   user_key: any = '';
   stateUserCourse = {} as UserCourseDto;
   constructor(
+    private nbDialogRef: NbDialogRef<UserCourseDetailComponent>,
     public activeRouter: ActivatedRoute,
     public userCourseService: UserCourseService,
     env: AitEnvironmentService,
@@ -44,8 +45,6 @@ export class UserCourseDetailComponent extends AitBaseComponent implements OnIni
   }
 
   async ngOnInit(): Promise<void> {
-    const id = AitAppUtils.getParamsOnUrl(true);
-    this.user_key = id;
     if (this.user_key) {
       await this.userCourseService
         .findCourseByKey(this.user_key)
@@ -58,5 +57,10 @@ export class UserCourseDetailComponent extends AitBaseComponent implements OnIni
         })
     }
   }
-
+  close(){
+    this.closeDialog(false);
+  }
+  closeDialog(event: boolean) {
+    this.nbDialogRef.close(event);
+  }
 }

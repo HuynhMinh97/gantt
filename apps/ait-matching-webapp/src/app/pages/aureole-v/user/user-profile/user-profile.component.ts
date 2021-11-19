@@ -42,6 +42,11 @@ import { UserLanguageComponent } from '../user-language/user-language.component'
 import { UserOnboardingComponent } from '../user-onboarding/user-onboarding.component';
 import { UserProjectComponent } from '../user-project/user-project.component';
 import { UserProjectDetailComponent } from '../user-project-detail/user-project-detail.component';
+import { UserExperienceDetailComponent } from '../user-experience-detail/user-experience-detail.component';
+import { UserCertificateDetailComponent } from '../user-certificate-detail/user-certificate-detail.component';
+import { UserCourseDetailComponent } from '../user-course-detail/user-course-detail.component';
+import { UserEducationDetailComponent } from '../user-education-detail/user-education-detail.component';
+import { UserLanguageDetailComponent } from '../user-language-detail/user-language-detail.component';
 
 @Component({
   selector: 'ait-user-profile',
@@ -478,13 +483,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       },
     }).onClose.subscribe(async (event) => {
       if (event) {
-        this.callLoadingApp();
-        this.userProject = [];
-        this.timeProject = 0;
-        await this.getProjectByUserId();
-        setTimeout(() => {
-          this.cancelLoadingApp();
-        }, 500)
       }
     });
   }
@@ -543,6 +541,19 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       }
     });
   }
+  openExperiencedetail(key?: string) {
+    this.dialogService.open(UserExperienceDetailComponent, {
+      closeOnBackdropClick: false,
+      hasBackdrop: true,
+      autoFocus: false,
+      context: {
+        user_key: key,
+      },
+    }).onClose.subscribe(async (event) => {
+      if (event) {
+      }
+    });
+  }
   openCertificate(key?: string) {
     this.dialogService.open(UserCertificateComponent, {
       closeOnBackdropClick: false,
@@ -562,6 +573,18 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       }
     });
   }
+  openCertificateDetail(key?: string) {
+    this.dialogService.open(UserCertificateDetailComponent, {
+      closeOnBackdropClick: false,
+      hasBackdrop: true,
+      autoFocus: false,
+      context: {
+        user_key: key,
+      },
+    }).onClose.subscribe(async (event) => {
+      if (event) {}
+    });
+  }
   openCourse(key?: string) {
     this.dialogService.open(UserCourseComponent, {
       closeOnBackdropClick: false,
@@ -578,6 +601,19 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         setTimeout(() => {
           this.cancelLoadingApp();
         }, 500)
+      }
+    });
+  }
+  openCourseDetail(key?: string) {
+    this.dialogService.open(UserCourseDetailComponent, {
+      closeOnBackdropClick: false,
+      hasBackdrop: true,
+      autoFocus: false,
+      context: {
+        user_key: key,
+      },
+    }).onClose.subscribe(async (event) => {
+      if (event) {
       }
     });
   }
@@ -600,6 +636,19 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       }
     });
   }
+  openEducationDetail(key?: string) {
+    this.dialogService.open(UserEducationDetailComponent, {
+      closeOnBackdropClick: false,
+      hasBackdrop: true,
+      autoFocus: false,
+      context: {
+        user_key: key,
+      },
+    }).onClose.subscribe(async (event) => {
+      if (event) {
+      }
+    });
+  }
   openLanguage(key?: string) {
     this.dialogService.open(UserLanguageComponent, {
       closeOnBackdropClick: false,
@@ -616,6 +665,19 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         setTimeout(() => {
           this.cancelLoadingApp();
         }, 500)
+      }
+    });
+  }
+  openLanguageDetail(key?: string) {
+    this.dialogService.open(UserLanguageDetailComponent, {
+      closeOnBackdropClick: false,
+      hasBackdrop: true,
+      autoFocus: false,
+      context: {
+        user_key: key,
+      },
+    }).onClose.subscribe(async (event) => {
+      if (event) {
       }
     });
   }
