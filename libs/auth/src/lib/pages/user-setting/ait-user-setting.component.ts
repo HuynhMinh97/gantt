@@ -603,4 +603,10 @@ export class AitUserSettingComponent
   getNameLang = (name) => {
     return name[this.currentLang];
   };
+
+  getErrors(type: string, name: string): string[] {
+    if (!this.formState[type]) {
+      return this.errors[name];
+    }
+  }
 }
