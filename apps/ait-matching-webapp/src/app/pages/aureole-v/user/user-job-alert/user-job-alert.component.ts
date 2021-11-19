@@ -194,8 +194,8 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
     const salaryTo = this.userjobAlert.controls['salary_to'].value;
     if (salaryFrom > salaryTo && salaryTo != null) {
       const transferMsg = (msg || '')
-        .replace('{0}', this.translateService.translate('date_from'))
-        .replace('{1}', this.translateService.translate('date_to'));
+        .replace('{0}', this.translateService.translate('minimum salary'))
+        .replace('{1}', this.translateService.translate('maximum salary'));
       res.push(transferMsg);
     }
     return res;
