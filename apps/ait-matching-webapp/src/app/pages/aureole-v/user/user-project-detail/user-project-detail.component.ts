@@ -54,6 +54,7 @@ export class UserProjectDetailComponent extends AitBaseComponent implements OnIn
   }
 
   async ngOnInit(): Promise<void> {
+    this.callLoadingApp();
     if (this.user_key) {
       await this.userProjectService
         .find(this.user_key)
@@ -77,6 +78,9 @@ export class UserProjectDetailComponent extends AitBaseComponent implements OnIn
 
         })
     }
+    setTimeout(() => {
+      this.cancelLoadingApp();
+    }, 500);
   }
   close(){
     this.closeDialog(false);

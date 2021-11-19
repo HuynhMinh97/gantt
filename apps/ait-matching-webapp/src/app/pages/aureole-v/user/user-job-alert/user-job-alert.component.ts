@@ -180,8 +180,8 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
     const dateTo = this.userjobAlert.controls['start_date_to'].value;
     if (dateFrom > dateTo && dateTo != null) {
       const transferMsg = (msg || '')
-        .replace('{0}', this.translateService.translate('date from'))
-        .replace('{1}', this.translateService.translate('date to'));
+        .replace('{0}', this.translateService.translate('available time from'))
+        .replace('{1}', this.translateService.translate('available time to'));
       res.push(transferMsg);
     }
     return res;

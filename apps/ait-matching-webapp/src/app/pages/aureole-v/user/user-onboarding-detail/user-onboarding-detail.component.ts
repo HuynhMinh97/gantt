@@ -45,6 +45,7 @@ export class UserOnboardingDetailComponent extends AitBaseComponent implements O
   }
 
   async ngOnInit(): Promise<void> {
+    this.callLoadingApp();
     if (this.user_key) {
       await this.userOnbService
         .findUserOnboardingByKey(this.user_key)
@@ -55,6 +56,9 @@ export class UserOnboardingDetailComponent extends AitBaseComponent implements O
           }
         })
     }
+    setTimeout(() => {
+      this.cancelLoadingApp();
+    },500);
   }
   close(){
     this.closeDialog(false);

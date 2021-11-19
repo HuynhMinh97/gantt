@@ -46,6 +46,7 @@ export class UserCertificateDetailComponent extends AitBaseComponent implements 
   }
 
   async ngOnInit(): Promise<void> {
+    this.callLoadingApp();
     if (this.user_key) {
       await this.certificateService
         .findUserByKey(this.user_key)
@@ -56,6 +57,9 @@ export class UserCertificateDetailComponent extends AitBaseComponent implements 
           }
         })
     }
+    setTimeout(() => {
+      this.cancelLoadingApp();
+    }, 500);
   }
   close(){
     this.closeDialog(false);

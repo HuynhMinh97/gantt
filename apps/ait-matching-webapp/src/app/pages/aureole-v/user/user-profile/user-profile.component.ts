@@ -47,6 +47,7 @@ import { UserCertificateDetailComponent } from '../user-certificate-detail/user-
 import { UserCourseDetailComponent } from '../user-course-detail/user-course-detail.component';
 import { UserEducationDetailComponent } from '../user-education-detail/user-education-detail.component';
 import { UserLanguageDetailComponent } from '../user-language-detail/user-language-detail.component';
+import { UserOnboardingDetailComponent } from '../user-onboarding-detail/user-onboarding-detail.component';
 
 @Component({
   selector: 'ait-user-profile',
@@ -449,6 +450,19 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         setTimeout(() => {
           this.cancelLoadingApp();
         }, 300)
+      }
+    });
+  }
+  openOnboardingDetail(key?: string) {
+    this.dialogService.open(UserOnboardingDetailComponent, {
+      closeOnBackdropClick: false,
+      hasBackdrop: true,
+      autoFocus: false,
+      context: {
+        user_key: key,
+      },
+    }).onClose.subscribe(async (event) => {
+      if (event) {
       }
     });
   }
