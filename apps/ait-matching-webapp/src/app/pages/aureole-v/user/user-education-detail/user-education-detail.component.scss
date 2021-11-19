@@ -10,7 +10,7 @@
     margin: 12px;
     font-weight: 600;
   }
-  ::ng-deep input{
+  ::ng-deep input {
     border: none;
     background-color: white;
     border-bottom: 0.5px solid #e4e9f2;
@@ -18,7 +18,6 @@
   }
 }
 .sticky {
-  min-width: 300px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -26,7 +25,7 @@
     margin-top: 30px;
   }
 }
-.textarea_inline{
+.textarea_inline {
   margin-top: 14px;
   display: block !important;
 }
