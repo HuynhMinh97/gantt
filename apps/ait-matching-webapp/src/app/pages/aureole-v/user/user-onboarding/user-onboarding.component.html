@@ -259,7 +259,7 @@
             *ngIf="mode === 'EDIT'"
             [id]="'delete'"
             [width]="'150px'"
-            [title]="'delete'"
+            [title]="'消去'"
             [isDefault]="true"
             (click)="onDelete()"
           >
@@ -279,7 +279,7 @@
             *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
             [id]="'save'"
             [width]="'150px'"
-            [title]="'save'"
+            [title]="'保存する'"
             (click)="save()"
             [isDefault]="true"
           >
@@ -288,7 +288,7 @@
             *ngIf="!isChanged && mode === 'EDIT'"
             [id]="'save'"
             [width]="'150px'"
-            [title]="'save'"
+            [title]="'保存する'"
             [style]="'disabled'"
           ></ait-button>
         </div>
@@ -588,7 +588,7 @@
           *ngIf="!isChanged && mode === 'EDIT'"
           [id]="'save'"
           [width]="'200px'"
-          [title]="'save'"
+          [title]="'保存する'"
           [style]="'disabled'"
         ></ait-button>
         <ait-button
