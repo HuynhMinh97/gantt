@@ -101,7 +101,6 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
         this.isProfile = true;
       }
     })
-    
     if(!this.isProfile){
       this.router.navigate([`user-onboarding`]);
     }else{
