@@ -395,26 +395,22 @@ export class UserOnboardingComponent
   }
 
   async saveDataUserSkill() {
-    this.user_skill._from = 'sys_user/' + this.authService.getUserID();
-    this.user_skill.relationship = 'user_skill';
-    this.user_skill.sort_no = (this.sort_no || 0) + 1;
-    let number_sort_no = 0;
-    const skills = [];
-    for (const item of this.skills) {
-      await this.userOnbService.findSkillsByCode(item._key).then((res) => {
-        skills.push(res.data[0]._key);
+    if (this.mode === MODE.NEW) {
+      this.user_skill._from = 'sys_user/' + this.authService.getUserID();
+      this.user_skill.relationship = 'user_skill';
+      const skills = [];
+      for (const item of this.skills) {
+        await this.userOnbService.findSkillsByCode(item._key).then((res) => {
+          skills.push(res.data[0]._key);
+        });
+      }
+      skills.forEach(async (skill) => {
+        this.sort_no += 1;
+        this.user_skill.sort_no = this.sort_no;
+        this.user_skill._to = 'm_skill/' + skill;
+        await this.userOnbService.saveUserSkills([this.user_skill]);
       });
     }
-    const _fromUserSkill = [
-      { _from: 'sys_user/' + this.authService.getUserID() },
-    ];
-    await this.userOnbService.removeSkills(_fromUserSkill);
-    skills.forEach(async (skill) => {
-      this.user_skill.sort_no += number_sort_no;
-      this.user_skill._to = 'm_skill/' + skill;
-      await this.userOnbService.saveUserSkills([this.user_skill]);
-      number_sort_no++;
-    });
   }
 
   save() {
