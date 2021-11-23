@@ -295,9 +295,6 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
       return;
     }else{
       this.callLoadingApp();
-      setTimeout(() => {
-        this.cancelLoadingApp();
-      }, 1000);
       const dataSave = this.dataSave();
       console.log(dataSave);
       this.userJobAlertService.saveUserJobAlert(this.userjobAlert.value)
@@ -306,12 +303,14 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
           const message =
           this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
           this.showToastr('', message);
+          this.cancelLoadingApp();
           if(this.mode == 'NEW'){
             this.router.navigate([`recommenced-user`]);
           }else{
             history.back();
           }
         }else{
+          this.cancelLoadingApp();
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         }
       })
@@ -332,12 +331,10 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
     }
     setTimeout(() => {
       this.userjobAlert.controls["start_date_from"].setValue(Date.now());
-    }, 100);  
-    console.log(this.userjobAlertClone);     
+    }, 100);    
   }
   
   resetForm(){
-    debugger
     if(this.mode == MODE.NEW){
       this.reset();
     }

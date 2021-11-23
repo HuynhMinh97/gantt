@@ -156,7 +156,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     this.callLoadingApp();
     await this.getMasterData();
     this.getFriends();
-    this.getCategorySkill();
     this.getCountFriends();
     this.getUserProfileByUserId();
     this.getSkillByUserId();
@@ -195,34 +194,27 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   }
 
   async getUserProfileByUserId() {
+    this.callLoadingApp();
     await this.userProfileService.findProfile(this.profileId)
       .then((res) => {
         if (res.status === RESULT_STATUS.OK) {
           if (res.data.length > 0) {
             const data = res.data[0]
             this.DataUserProfile = data;
-            console.log(data);
-            
+            this.cancelLoadingApp();
           } else {
+            this.cancelLoadingApp();
             this.router.navigate([`/404`]);
           }
         }
       })
-
-  }
-  async getCategorySkill() {
-    const classCategory = "SKILL_CATEGORY";
-    this.userProfileService.getCategorySkill(classCategory).then((res) => {
-      if (res.status === RESULT_STATUS.OK) {
-        this.skillUserName = res.data[0]?.value;
-      }
-    });
+      this.cancelLoadingApp();
   }
 
   async getSkillByUserId() { 
     await this.userProfileService.findTopSkill(this.profileId)
       .then((res) => {
-        const data = res.data[0];
+        const data = res.data[0]; 
         this.topSkills = [];
         this.topSkills = data.top_skills ? data.top_skills : [];
       })
@@ -235,7 +227,9 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         }
         this.countSkill =  data.length ;
         let top5 = {} as OrderSkill;
-        top5.name = "TOP 5";
+        console.log(this.translateService.translate('top 5'));
+        
+        top5.name = this.translateService.translate('top 5');
         top5.data = [];
         if (this.topSkills.length > 0) {
           for (let item of data) {
@@ -251,14 +245,15 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         data.forEach((item) => {
           let isCategory = false;
           this.skillByCategory.forEach((element, index) => {
-            if (item.category == element.name) {
+            if (item.category?.value == element.name) {
               this.skillByCategory[index].data.push(item);
               isCategory = true;
             }
           })
           if (!isCategory) {
             let skillsGroup = {} as OrderSkill;
-            skillsGroup.name = item.category;
+            skillsGroup.name = item.category?.value;
+            skillsGroup.code = item.category?._key;
             skillsGroup.data = [];
             skillsGroup.data.push(item);
             this.skillByCategory.push(skillsGroup);
@@ -266,6 +261,12 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         });
       }      
     })  
+    this.skillByCategory.forEach((element, index) => {
+      if(element.code == "OTHERS"){
+        this.skillByCategory.push(element);
+        this.skillByCategory.splice(index, 1 );
+      }
+    }); 
   }
 
   async getProjectByUserId() {
