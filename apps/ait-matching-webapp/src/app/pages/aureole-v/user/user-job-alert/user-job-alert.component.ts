@@ -191,7 +191,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
       if(isObjectFull(val)  && val.value.length > 0 ){          
         const data = [];       
         val.value.forEach((item) => {
-          data.push(item._key);
+          data.push(item);
         });
         this.userjobAlert.controls[form].markAsDirty();
         this.userjobAlert.controls[form].setValue(data);                        
@@ -251,39 +251,75 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
       }
     })
   }
+  dataSave(){
+    let industrySave = [];
+    let experience_levelSave = [];
+    let locationSave = [];
+    let employee_typeSave = [];
 
-  saveAndContinue(){
-    if(this.errorDate.length > 0 || this.errorSalary.length > 0 ){
-      this.scrollIntoError();
-      return;
-    }else{
-      const dataSave = this.userjobAlert.value;
-      if(this.mode == "NEW"){
-        dataSave['user_id'] = this.authService.getUserID();
-      }
-      this.userJobAlertService.saveUserJobAlert(this.userjobAlert.value)
-      .then((res) => {
-        if (res?.status === RESULT_STATUS.OK) {
-          const message =
-          this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
-          this.showToastr('', message);
-          this.reset();
-        }else{
-          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-        }
-      })  
-    }  
+    if(this.userjobAlert.value.industry){
+      this.userjobAlert.value.industry.forEach(element => {
+        industrySave.push(element._key);
+      });
+    }
+    if(this.userjobAlert.value.experience_level){
+      this.userjobAlert.value.experience_level.forEach(element => {
+        experience_levelSave.push(element._key);
+      });
+    }
+    if(this.userjobAlert.value.location){
+      this.userjobAlert.value.location.forEach(element => {
+        locationSave.push(element._key);
+      });
+    }
+    if(this.userjobAlert.value.employee_type){
+      this.userjobAlert.value.employee_type.forEach(element => {
+        employee_typeSave.push(element._key);
+      });
+    }
+    
+    let dataSave = this.userjobAlert.value;
+    dataSave['industry'] = industrySave;
+    dataSave['experience_level'] = experience_levelSave;
+    dataSave['location'] = locationSave;
+    dataSave['employee_type'] = employee_typeSave;
+    if(this.mode == "NEW"){
+      dataSave['user_id'] = this.authService.getUserID();
+    }
+   return dataSave;    
   }
+
+  // saveAndContinue(){
+  //   if(this.errorDate.length > 0 || this.errorSalary.length > 0 ){
+  //     this.scrollIntoError();
+  //     return;
+  //   }else{
+  //     this.dataSave();
+  //     const dataSave = this.userjobAlert.value;
+  //     if(this.mode == "NEW"){
+  //       dataSave['user_id'] = this.authService.getUserID();
+  //     }
+  //     this.userJobAlertService.saveUserJobAlert(this.userjobAlert.value)
+  //     .then((res) => {
+  //       if (res?.status === RESULT_STATUS.OK) {
+  //         const message =
+  //         this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
+  //         this.showToastr('', message);
+  //         this.reset();
+  //       }else{
+  //         this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+  //       }
+  //     })  
+  //   }  
+  // }
 
   saveAndClose(){
     if(this.errorDate.length > 0 || this.errorSalary.length > 0 ){
       this.scrollIntoError();
       return;
     }else{
-      const dataSave = this.userjobAlert.value;
-      if(this.mode == "NEW"){
-        dataSave['user_id'] = this.authService.getUserID();
-      }
+      const dataSave = this.dataSave();
+      console.log(dataSave);
       this.userJobAlertService.saveUserJobAlert(this.userjobAlert.value)
       .then((res) => {
         if (res?.status === RESULT_STATUS.OK) {
@@ -326,12 +362,15 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
       this.reset();
     }
     if(this.mode == MODE.EDIT){
+      this.reset();
       this.industrys = [];
       this.experienceLevels = [];
       this.employeeTypes =[];
       this.locations = [];
       this.errorDate = [];
       this.errorSalary = [];
+      this.userjobAlert.value.salary_from = null;
+      this.userjobAlert.value.salary_to = null;
       this.isSubmit = false;
       this.isChanged = false;
       setTimeout(() => {
@@ -341,7 +380,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
         this.locations = this.userjobAlertClone.location;
         this.userjobAlert.patchValue({ ...this.userjobAlertClone });
         this.showToastr('', this.getMsg('I0007'));
-      }, 1000);
+      }, 500);
         
 
      
