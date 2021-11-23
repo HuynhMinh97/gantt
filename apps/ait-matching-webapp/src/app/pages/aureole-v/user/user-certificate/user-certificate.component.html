@@ -87,6 +87,7 @@
         <div class="input_date">
           <ait-datepicker
             [label]="'issue date'"
+            [format]="dateFormat"
             [placeholder]="'01/01/2021'"
             [id]="'issue_date_from'"
             [style]="{ width: '170px' }"
@@ -107,6 +108,7 @@
           <ait-datepicker
             [required]="false"
             [label]="''"
+            [format]="dateFormat"
             [placeholder]="'2021/01/15'"
             [id]="'issue_date_to'"
             [style]="{ width: '170px' }"
@@ -181,7 +183,7 @@
             *ngIf="mode === 'EDIT'"
             [id]="'delete'"
             [width]="'150px'"
-            [title]="'delete'"
+            [title]="'消去'"
             [background]="
               'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
             "

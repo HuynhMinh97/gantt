@@ -14,7 +14,7 @@ import {
   NbLayoutScrollService,
   NbToastrService,
 } from '@nebular/theme';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import {
   AitAppUtils,
   AitAuthService,
@@ -23,10 +23,12 @@ import {
   AitEnvironmentService,
   AitTranslationService,
   AppState,
+  getSettingLangTime,
   MODE,
 } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
 import { KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
+import { MatchingUtils } from 'apps/ait-matching-webapp/src/app/@constants/utils/matching-utils';
 
 @Component({
   selector: 'ait-user-experience',
@@ -63,6 +65,7 @@ export class UserExperienceComponent
   };
 
   user_key = '';
+  dateFormat = '';
 
   constructor(
     private router: Router,
@@ -90,6 +93,13 @@ export class UserExperienceComponent
       toastrService
     );
 
+    this.store.pipe(select(getSettingLangTime)).subscribe(setting => {
+      if (setting) {
+        const display = setting?.date_format_display;
+        this.dateFormat= MatchingUtils.getFormatYearMonth(display);
+      }
+    });
+
     this.setModulePage({
       module: 'user',
       page: 'user_experience',
@@ -100,13 +110,13 @@ export class UserExperienceComponent
         Validators.required,
         Validators.maxLength(200),
       ]),
-      company_working: new FormControl(null, [Validators.required]),
-      location: new FormControl(null, [Validators.required]),
-      employee_type: new FormControl(null),
-      is_working: new FormControl(false),
-      start_date_from: new FormControl(this.defaultValueDate),
-      start_date_to: new FormControl(null),
       description: new FormControl(null),
+      is_working: new FormControl(false),
+      start_date_to: new FormControl(null),
+      employee_type: new FormControl(null),
+      start_date_from: new FormControl(this.defaultValueDate),
+      location: new FormControl(null, [Validators.required]),
+      company_working: new FormControl(null, [Validators.required]),
     });
   }
 
@@ -305,7 +315,6 @@ export class UserExperienceComponent
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
-
     if (this.userExperienceInfo.valid && !this.isDateCompare) {
       this.callLoadingApp();
       this.userExpService

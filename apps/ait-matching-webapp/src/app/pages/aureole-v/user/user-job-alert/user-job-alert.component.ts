@@ -23,7 +23,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
   errorArr = [];
   dayNow ='';
   dateFormat = "dd/MM/yyyy";
-  userId = "";
+  userKey = "";
   industrys = [];
   experienceLevels = [];
   employeeTypes = [];
@@ -79,9 +79,14 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
       user_id: new FormControl(null),
 
     })
-    this.userId = this.activeRouter.snapshot.paramMap.get('id');
-    if (this.userId) {
-      this.mode = MODE.EDIT;
+    this.userKey = this.activeRouter.snapshot.paramMap.get('id');
+    if (this.userKey) {
+      if(this.userKey == this.user_id){
+        this.mode = MODE.EDIT;
+      }else{
+        this.mode = MODE.VIEW;
+      }
+      
     }
   }
 
@@ -201,7 +206,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
     return res;
   }
   getUserJobAlert(){
-    this.userJobAlertService.findUserJobAlert(this.userId)
+    this.userJobAlertService.findUserJobAlert(this.userKey)
     .then((res) => {
       if (res.status === RESULT_STATUS.OK) {
         if (res.data.length > 0) {

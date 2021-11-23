@@ -41,6 +41,15 @@ export class UserProfileDto extends BaseDto {
   
   @Field(() => String, { nullable: true })
   about?: string;
+
+  @Field(() => String, { nullable: true })
+  _from?: string;
+
+  @Field(() => String, { nullable: true })
+  _to?: string;
+
+  @Field(() => String, { nullable: true })
+  relationship?: string;
 }
 
 
@@ -72,4 +81,13 @@ export class SaveUserProfileDto extends BaseDto {
 
   @Field(() => String, { nullable: true })
   introduce?: string;
+
+  @Field(() => String, { nullable: true })
+  _from?: string;
+
+  @Field(() => String, { nullable: true })
+  _to?: string;
+
+  @Field(() => String, { nullable: true })
+  relationship?: string;
 }

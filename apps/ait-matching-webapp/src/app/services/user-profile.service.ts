@@ -128,5 +128,44 @@ export class UserProfileService extends AitBaseService {
       _key: true,
     })
   }
+  async getCountFriends(to: string){
+    const condition = {
+      _to: to,
+      del_flag: false,
+    }
+    return await this.query('findFriends', {collection: 'reaction_love', condition}, 
+    {
+      _key: true,
+    })
+  }
+  async getFriends(from: string){
+    const condition = {
+      _from: from,
+      del_flag: false,
+    }
+    return await this.query('findFriends', {collection: 'reaction_love', condition}, 
+    {
+      _key: true,
+    })
+  }
+
+  async saveFriends(data: any) {
+    const returnField = { _key: true };
+    return await this.mutation(
+      'saveFriends',
+      'reaction_love',
+      [data],
+      returnField
+    );
+  }
+  async removeFriends(data: any[]) {
+    const returnFields = { _key: true };
+    return await this.mutation(
+      'removeFriends',
+      'reaction_love',
+      data,
+      returnFields
+    );
+  }
 
 }

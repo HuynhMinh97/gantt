@@ -6,6 +6,7 @@ import {
   AitEnvironmentService,
   AitTranslationService,
   AppState,
+  getSettingLangTime,
   getUserSetting,
   MODE
 } from '@ait/ui';
@@ -48,6 +49,7 @@ import { UserCourseDetailComponent } from '../user-course-detail/user-course-det
 import { UserEducationDetailComponent } from '../user-education-detail/user-education-detail.component';
 import { UserLanguageDetailComponent } from '../user-language-detail/user-language-detail.component';
 import { UserOnboardingDetailComponent } from '../user-onboarding-detail/user-onboarding-detail.component';
+import { MatchingUtils } from 'apps/ait-matching-webapp/src/app/@constants/utils/matching-utils';
 
 @Component({
   selector: 'ait-user-profile',
@@ -58,36 +60,41 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   mode = '';
   profileId = '';
   skills = '';
-  showProject = false;
   showSkill = false;
+  showCourse = false;
+  showProject = false;
+  showLanguages = false;
+  showEducation = false;
   showExperience = false;
   showCertificate = false;
-  showCourse = false;
-  showEducation = false;
-  showLanguages = false;
-  url_avatar: string = '';
-  url_background: string = '';
+
   avata: any;
-  skillByCategory: OrderSkill[] = [];
+  url_avatar: string = '';
+  DataUserProfile: ProfileDto;
+  url_background: string = '';
+
+  topSkills = [];
   userProject: any = [];
   userExperience: any = [];
-  userCentificate: CertificateDto[] = [];
   userCourse: CourseDto[] = [];
-  userEducation: EducationDto[] = [];
   userLanguage: LanguageDto[] = [];
-  DataUserProfile: ProfileDto;
-  topSkills = [];
-  quantitySkill = 0;
+  userEducation: EducationDto[] = [];
+  skillByCategory: OrderSkill[] = [];
+  userCentificate: CertificateDto[] = [];
+
+  isFriend = false;
+  countFriend = 0;
   timeProject = 0;
-  sumHoursProject = "";
+  countCourse = 0;
+  countSkill = 0;
   timeExperience = 0;
-  timeExperienceStr = "Ban chua co nam kn nào";
-  countCentificate = '';
-  countCourse = "You have finished 0 courses"
+  countCentificate = 0;
+  timeExperienceStr = "";
+
   dateFormat = "dd/MM/yyyy";
+  monthFormat: any;
   today = Date.now();
   isMyUserProfile = false;
-  countSkill = this.translateService.translate('length skills');
   actionBtn = [
     {
       title: '追加',
@@ -121,6 +128,12 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         this.dateFormat = setting['date_format_display'];
       }
     });
+    this.store.pipe(select(getSettingLangTime)).subscribe(setting => {
+      if (setting) {
+        const display = setting?.date_format_display;
+        this.monthFormat = MatchingUtils.getFormatYearMonth(display);
+      }
+    });
     this.setModulePage({
       module: 'user',
       page: 'user_profiles',
@@ -141,6 +154,8 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     
     this.callLoadingApp();
     await this.getMasterData();
+    this.getFriends();
+    this.getCountFriends();
     this.getUserProfileByUserId();
     this.getSkillByUserId();
     this.getProjectByUserId();
@@ -208,13 +223,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         if (data.length > 0) {
           this.showSkill = true;
         }
-        this.countSkill = 'You has ' + data.length + ' skills. Each person has max 50 skills';
-        // this.countSkill = this.translateService.translate('length skills');
-        const transferMsg = (this.countSkill || '')
-        .replace('{0}', data.length)
-        console.log(transferMsg);
-        
-        this.quantitySkill = data.length;
+        this.countSkill =  data.length ;
         let top5 = {} as OrderSkill;
         top5.name = "TOP 5";
         top5.data = [];
@@ -254,8 +263,9 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       .then(async (res) => {
         const company_values = Array.from(new Set(res.data.map(m => m?.company_working?.value))).filter(f => !!f);
         const companyUserProjects = this.groupBy(res.data, p => p.company_working?.value);
+
         const datacompany = company_values.map(element => {
-          var timeworkingInfo = 0;
+          var timeworkingInfo = 0;         
           companyUserProjects.get(element).forEach(e => {
             timeworkingInfo += this.dateDiffInMonths(e.start_date_from, e.start_date_to);
           });
@@ -268,11 +278,17 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         });
         setTimeout(() => {
           this.userProject = datacompany;
+          this.userProject.forEach(element => {
+            element.data_project.forEach((item , index)=> {
+              if(!item?.start_date_to){
+                element.data_project.unshift(item);
+                element.data_project.splice(index + 1,1);
+              }
+            });
+          });
           this.showProject = this.userProject.length > 0 ? true : false;
         }, 1000);
-        this.sumHoursProject = this.timeProject > 0 ? "You have spent " + this.timeProject * 180 + " hours working on the projects" : "Bạn chưa tham gia dự án nào vui lòng thêm."
       })
-
   }
 
   getExperiencByUserId() {
@@ -295,11 +311,17 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           });
           setTimeout(() => {
             this.userExperience = datacompany;
+            this.userExperience.forEach(element => {
+              element.data_project.forEach((item , index)=> {
+                if(!item?.start_date_to){
+                  element.data_project.unshift(item);
+                  element.data_project.splice(index + 1,1);
+                }
+              });
+            });
             this.showExperience = this.userExperience.length > 0 ? true : false;
-            console.log(this.userExperience);
-
-          }, 1000);
-          this.timeExperienceStr = 'You have ' + this.dateDiffInYears(this.timeExperience) + ' experience working'
+            this.timeExperienceStr = this.dateDiffInYears(this.timeExperience);
+          }, 1000);   
         }
       })
       
@@ -309,6 +331,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     this.userCetificateService.findUserCetificateByKey(this.profileId)
       .then((res) => {
         const data = res.data;
+        this.countCentificate = data.length;
         this.showCertificate = data.length > 0 ? true : false;
         for (let element of data) {
           let centificate = {} as CertificateDto;
@@ -322,22 +345,18 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           }
           centificate._key = element._key;
           centificate.issue_by = element.issue_by?.value;
-          centificate.issue_date_from = this.getDateFormat(element.issue_date_from);
-          centificate.issue_date_to = element.issue_date_to ? this.getDateFormat(element.issue_date_to) : 'Present';
+          centificate.issue_date_from = element.issue_date_from;
+          centificate.issue_date_to = element.issue_date_to;
           centificate.name = element.name?.value;
           this.userCentificate.push(centificate);
         }
-        setTimeout(() => {
-          this.countCentificate = 'You have ' + this.userCentificate.length + ' certificates';
-
-        }, 100)
-
       })
   }
   getCourseByUserId() {
     this.userCourseService.findCourseByUserId(this.profileId)
       .then((res) => {
         const data = res.data;
+        this.countCourse = data.length;
         this.showCourse = data.length > 0 ? true : false;
         for (let element of data) {
           let course = {} as CourseDto;
@@ -351,12 +370,11 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           }
           course._key = element._key;
           course.name = element.name;
-          course.start_date_from = this.getDateFormat(element.start_date_from);
-          course.start_date_to = element.start_date_to ? this.getDateFormat(element.start_date_to) : 'Present';
+          course.start_date_from = element.start_date_from;
+          course.start_date_to = element.start_date_to;
           course.training_center = element.training_center?.value;
           this.userCourse.push(course);
         }
-        this.countCourse = 'You have finished ' + this.userCourse.length + ' courses';
       })
   }
   getEducationByUserId() {
@@ -483,7 +501,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         await this.getProjectByUserId();
         setTimeout(() => {
           this.cancelLoadingApp();
-        }, 500)
+        }, 1000)
       }
     });
   }
@@ -551,7 +569,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         this.getExperiencByUserId();
         setTimeout(() => {
           this.cancelLoadingApp();
-        }, 500)
+        }, 1000)
       }
     });
   }
@@ -716,15 +734,17 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   };
 
   dateDiffInYears(month) {
+    const months = this.translateService.translate('my-profile.months');
+    const year = this.translateService.translate('my-profile.years');
     if (month < 12) {
-      return month.toString() + " month";
+      return month.toString() + ' ' + months;
     } else {
       const year = Math.trunc(month / 12).toString();
       month = (month % 12)
       if (month == 0) {
-        return year + "year";
+        return year + ' ' + year;
       } else {
-        return year + "year " + month.toString() + " month";
+        return year + ' ' + months + month.toString() +' ' + year;
       }
     }
   }
@@ -760,9 +780,60 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     return map;
   }
 
+  getCounter = (message, value) => {
+      const content = this.translateService.translate(message);
+      return content.replace('{0}', value);
+  }
 
   _unixtimeToDate = (unix_time: number) => {
     const result = new Date(unix_time);
     return result;
+  }
+
+  getCountFriends(){
+    this.userProfileService.getCountFriends("sys_user/" + this.profileId)
+    .then((res) => {
+      if(res?.status == RESULT_STATUS.OK){
+        this.countFriend = res.data.length;
+        console.log(res.data);
+        
+      } 
+    })
+  }
+  getFriends(){
+    this.userProfileService.getFriends("sys_user/" + this.user_id)
+    .then((res) => {
+      if(res?.status == RESULT_STATUS.OK){
+        if(res.data.length > 0)
+        this.isFriend = true;
+      } 
+    })
+  }
+  saveFriends(){
+    const friend = {
+      _from: "sys_user/" + this.user_id,
+      _to: "sys_user/" + this.profileId,
+      relationship: 'love'
+    }
+    this.userProfileService.saveFriends(friend)
+    .then((res) => {
+      if(res?.status == RESULT_STATUS.OK){
+        this.isFriend = true;
+        this.countFriend += 1;
+      }      
+    })
+  }
+  deleteFriends(){
+    const friend = [{
+      _from: "sys_user/" + this.user_id,
+      _to: "sys_user/" + this.profileId,
+    }]
+    this.userProfileService.removeFriends(friend)
+    .then((res) => {
+      if(res?.status == RESULT_STATUS.OK){
+        this.isFriend = false;
+        this.countFriend -= 1;
+      }      
+    })
   }
 }
