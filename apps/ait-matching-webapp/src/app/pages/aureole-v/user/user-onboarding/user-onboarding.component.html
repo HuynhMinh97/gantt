@@ -94,6 +94,7 @@
               [isSubmit]="isSubmit"
               [style]="{ width: '170px' }"
               [isReset]="resetUserInfo.bod"
+              [format]="dateFormat"
               [placeholder]="'01/01/1985'"
               (watchValue)="
                 takeDatePickerValue($event?.value, 'userOnboardingInfo', 'bod')
@@ -393,6 +394,7 @@
             [id]="'bod'"
             [label]="'born on date'"
             [required]="true"
+            [format]="dateFormat"
             [isSubmit]="isSubmit"
             [style]="{ width: '170px' }"
             [isReset]="resetUserInfo.bod"
