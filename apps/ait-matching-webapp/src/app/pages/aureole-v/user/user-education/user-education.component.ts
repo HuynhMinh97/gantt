@@ -17,7 +17,7 @@ import {
   NbLayoutScrollService,
   NbToastrService,
 } from '@nebular/theme';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import {
   AitAppUtils,
   AitAuthService,
@@ -26,10 +26,12 @@ import {
   AitEnvironmentService,
   AitTranslationService,
   AppState,
+  getSettingLangTime,
   MODE,
 } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
 import { KEYS, RESULT_STATUS } from '@ait/shared';
+import { MatchingUtils } from 'apps/ait-matching-webapp/src/app/@constants/utils/matching-utils';
 
 @Component({
   selector: 'ait-user-education',
@@ -51,6 +53,8 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
   isChanged = false;
   isResetFile = false;
   isDateCompare = false;
+
+  dateFormat = '';
 
   resetUserInfo = {
     file: false,
@@ -91,6 +95,13 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
       layoutScrollService,
       toastrService
     );
+
+    this.store.pipe(select(getSettingLangTime)).subscribe(setting => {
+      if (setting) {
+        const display = setting?.date_format_display;
+        this.dateFormat= MatchingUtils.getFormatYearMonth(display);
+      }
+    });
 
     this.setModulePage({
       module: 'user',

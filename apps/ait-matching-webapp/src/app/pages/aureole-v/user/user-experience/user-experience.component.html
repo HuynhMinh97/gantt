@@ -105,7 +105,7 @@
           <ait-datepicker
             [label]="'start date'"
             [id]="'start_date_from'"
-            [format]="'yyyy/MM'"
+            [format]="dateFormat"
             [placeholder]="'2021/01'"
             [width]="'170px'"
             [isReset]="resetUserInfo.start_date_from"
@@ -127,7 +127,7 @@
           <ait-datepicker
             *ngIf="!userExperienceInfo.controls['is_working'].value"
             [id]="'start_date_to'"
-            [format]="'yyyy/MM'"
+            [format]="dateFormat"
             [width]="'170px'"
             [isReset]="resetUserInfo.start_date_to"
             [defaultValue]="userExperienceInfo.controls['start_date_to'].value"
@@ -190,7 +190,7 @@
             *ngIf="mode === 'EDIT'"
             [id]="'delete'"
             [width]="'150px'"
-            [title]="'delete'"
+            [title]="'消去'"
             [isDefault]="true"
             (click)="onDelete()"
           >

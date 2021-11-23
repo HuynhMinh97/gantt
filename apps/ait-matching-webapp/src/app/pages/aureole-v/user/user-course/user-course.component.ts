@@ -1,16 +1,28 @@
 import { RESULT_STATUS, KEYS } from './../../../../../../../../libs/shared/src/lib/commons/enums';
-import { AitAuthService, AitConfirmDialogComponent, AitEnvironmentService, AitTranslationService, AppState, MODE, AitBaseComponent, AitAppUtils } from '@ait/ui';
-import { Component, OnInit, ElementRef, EventEmitter } from '@angular/core';
+import { 
+  MODE, 
+  AppState,
+  AitAppUtils, 
+  AitAuthService, 
+  AitBaseComponent, 
+  AitEnvironmentService, 
+  AitTranslationService, 
+  AitConfirmDialogComponent,
+  getUserSetting, 
+} from '@ait/ui';
+import { 
+  Component, 
+  OnInit, 
+  ElementRef, 
+} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NbToastrService, NbLayoutScrollService, NbDialogService, NbDialogRef } from '@nebular/theme';
 import { isArrayFull, isObjectFull } from '@ait/shared';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
-
 import kanjidate from 'kanjidate';
-
 import { ActivatedRoute, Router } from '@angular/router';
-import { UserCourseService } from 'apps/ait-matching-webapp/src/app/services/user-course.service';
+import { UserCourseService } from '../../../../../../../../apps/ait-matching-webapp/src/app/services/user-course.service';
 
 @Component({
   selector: 'ait-user-course',
@@ -18,50 +30,55 @@ import { UserCourseService } from 'apps/ait-matching-webapp/src/app/services/use
   styleUrls: ['./user-course.component.scss']
 })
 export class UserCourseComponent extends AitBaseComponent implements OnInit {
-  course: FormGroup;
-  courseClone: any;
   mode = MODE.NEW;
+  courseClone: any;
+  course: FormGroup;
+  defaultValue: any;
   dateNow = new Date().setHours(0, 0, 0, 0);
+
+  dateFormat = '';
   course_key = '';
-  companyCenter = [];
+  selectFile = '';
+
   error = [];
+  companyCenter = [];
+
   isSave = false;
-  isSubmit = false;
-  submitFile = false;
-  isChanged = false;
   isClear = false;
-  isClearErrors = false;
-  isResetFile = false;
+  isSubmit = false;
+  isChanged = false;
   isReadonly = false;
+  submitFile = false;
+  isResetFile = false;
+  isClearErrors = false;
+  resetMasterUser = false;
+
   resetCourse = {
     _key: false,
-    course_number: false,
-    description: false,
     file: false,
-    is_online: false,
     name: false,
-    start_date_from: false,
+    is_online: false,
+    description: false,
+    course_number: false,
     start_date_to: false,
+    start_date_from: false,
     training_center: false,
   };
 
-  resetMasterUser = false;
-  selectFile = '';
-  defaultValue: any;
   constructor(
-    private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
-    private element: ElementRef,
-    private translateService: AitTranslationService,
     private router: Router,
+    private element: ElementRef,
+    private formBuilder: FormBuilder,
+    public activeRouter: ActivatedRoute,
     private dialogService: NbDialogService,
     public userCourseService: UserCourseService,
-    private formBuilder: FormBuilder,
+    private translateService: AitTranslationService,
+    private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
     layoutScrollService: NbLayoutScrollService,
-    public activeRouter: ActivatedRoute,
     toastrService: NbToastrService,
-    store: Store<AppState>,
     authService: AitAuthService,
     env: AitEnvironmentService,
+    store: Store<AppState>,
     apollo: Apollo
   ) {
     super(store, authService, apollo, null, env, layoutScrollService, toastrService);
@@ -69,6 +86,11 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
     this.setModulePage({
       module: 'user',
       page: 'user_course',
+    });
+    store.pipe(select(getUserSetting)).subscribe((setting) => {
+      if (isObjectFull(setting) && setting['date_format_display']) {
+        this.dateFormat = setting['date_format_display'];
+      }
     });
     this.course = this.formBuilder.group({
       _key: new FormControl(null),

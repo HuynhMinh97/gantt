@@ -1,14 +1,23 @@
-import { AitAuthService, AitConfirmDialogComponent, AitEnvironmentService, AitTranslationService, AppState, MODE, AitBaseComponent, AitAppUtils } from '@ait/ui';
+import { 
+  MODE, 
+  AppState, 
+  AitAppUtils, 
+  AitAuthService, 
+  AitBaseComponent, 
+  AitEnvironmentService,
+  AitTranslationService, 
+  AitConfirmDialogComponent,
+  getUserSetting, 
+} from '@ait/ui';
+import kanjidate from 'kanjidate';
+import { select, Store } from '@ngrx/store';
+import { Apollo } from 'apollo-angular';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, ElementRef, OnInit } from '@angular/core';
+import { isArrayFull, isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NbToastrService, NbLayoutScrollService, NbDialogService, NbDialogRef } from '@nebular/theme';
-import { isArrayFull, isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
-import { Store } from '@ngrx/store';
-import { Apollo } from 'apollo-angular';
-import kanjidate from 'kanjidate';
-import { ActivatedRoute, Router } from '@angular/router';
 import { UserCerfiticateService } from 'apps/ait-matching-webapp/src/app/services/user-certificate.service';
-import { debug } from 'node:console';
 
 
 @Component({
@@ -17,68 +26,85 @@ import { debug } from 'node:console';
   styleUrls: ['./user-certificate.component.scss']
 })
 export class UserCertificateComponent extends AitBaseComponent implements OnInit {
-  certificate: FormGroup;
-  certificateClone: any;
-  dataOld: any;
   mode = MODE.NEW;
+  certificateClone: any;
+  certificate: FormGroup;
   dateNow = new Date().setHours(0, 0, 0, 0);
+
+  files = [];
+  error = [];
   companyName = [];
   companyIssue = [];
-  files = [];
-  isSubmit = false;
-  submitFile = false;
-  isChanged = false;
-  isResetFile = false;
+
   isSave = false;
-  error = [];
+  isSubmit = false;
+  isChanged = false;
+  submitFile = false;
+  isResetFile = false;
   isClearError = false;
+
   resetCertificate = {
+    file: false,
     name: false,
-    certificate_award_number: false,
     grade: false,
     issue_by: false,
-    issue_date_from: false,
-    issue_date_to: false,
     description: false,
-    file: false,
+    issue_date_to: false,
+    issue_date_from: false,
+    certificate_award_number: false,
   };
+  dateFormat = '';
+  selectFile = '';
   certificate_key = '';
-  selectFile = "";
-  ;
+
   constructor(
-    private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
-    private element: ElementRef,
-    private translateService: AitTranslationService,
     private router: Router,
-    private dialogService: NbDialogService,
-    public cartificateService: UserCerfiticateService,
+    private element: ElementRef,
     private formBuilder: FormBuilder,
-    layoutScrollService: NbLayoutScrollService,
     public activeRouter: ActivatedRoute,
+    private dialogService: NbDialogService,
+    private translateService: AitTranslationService,
+    public cartificateService: UserCerfiticateService,
+    private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
+    layoutScrollService: NbLayoutScrollService,
     toastrService: NbToastrService,
-    store: Store<AppState>,
     authService: AitAuthService,
     env: AitEnvironmentService,
+    store: Store<AppState>,
     apollo: Apollo
   ) {
-    super(store, authService, apollo, null, env, layoutScrollService, toastrService);
+    super(
+      store,
+      authService,
+      apollo,
+      null,
+      env,
+      layoutScrollService,
+      toastrService
+    );
     this.user_id = this.authService.getUserID();
     this.setModulePage({
       module: 'user',
       page: 'user_cerfiticate',
     });
+    
+    store.pipe(select(getUserSetting)).subscribe((setting) => {
+      if (isObjectFull(setting) && setting['date_format_display']) {
+        this.dateFormat = setting['date_format_display'];
+      }
+    });
 
     this.certificate = this.formBuilder.group({
       _key: new FormControl(null),
-      name: new FormControl(null, [Validators.required, Validators.maxLength(200)]),
-      certificate_award_number: new FormControl(null),
       grade: new FormControl(null),
-      issue_by: new FormControl(null),
-      issue_date_from: new FormControl(null),
-      issue_date_to: new FormControl(null),
-      description: new FormControl(null),
-      file: new FormControl(null, [Validators.maxLength(5)]),
       user_id: new FormControl(null),
+      issue_by: new FormControl(null),
+      description: new FormControl(null),
+      issue_date_to: new FormControl(null),
+      issue_date_from: new FormControl(null),
+      certificate_award_number: new FormControl(null),
+      file: new FormControl(null, [Validators.maxLength(5)]),
+      name: new FormControl(null, [Validators.required, Validators.maxLength(200)]),
     });
   }
   async ngOnInit(): Promise<any> {
@@ -229,7 +255,7 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
       this.showToastr('', this.getMsg('I0007'));
     }
   }
-  dataSave(){
+  dataSave() {
     const saveData = this.certificate.value;
     saveData['name'] = saveData.name?._key ? saveData.name._key : null;
     saveData['issue_by'] = saveData.issue_by?._key ? saveData.issue_by._key : null;

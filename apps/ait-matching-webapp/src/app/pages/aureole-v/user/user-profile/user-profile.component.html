@@ -74,7 +74,7 @@
                 padding-bottom: 10px;
               "
             >
-              0
+              {{countFriend}}
             </div>
             <span
               style="
@@ -85,15 +85,26 @@
                 font-size: 15px;
                 margin-bottom: 5px;
               "
-              >{{ 'connections' | translate }}</span
+              >{{ 'my-profile.connections' | translate }}</span
             >
             <div class="view_contact" *ngIf="!isMyUserProfile">
               <ait-button
+              *ngIf="!isFriend"
                 [id]="'add friend'"
                 [styleText]="{ 'font-size': '10px' }"
                 [height]="'24px'"
                 [title]="'add friend'"
                 [isDefault]="true"
+                (click)="saveFriends()"
+              ></ait-button>
+              <ait-button
+                *ngIf="isFriend"
+                [id]="'add friend'"
+                [styleText]="{ 'font-size': '10px' }"
+                [height]="'24px'"
+                [title]="'my-profile.un-friend'"
+                [isDefault]="true"
+                (click)="deleteFriends()"
               ></ait-button>
             </div>
             <div class="view_contact">
@@ -150,7 +161,7 @@
         [buttonTitle]="'add skills'"
         [disableHeader]="false"
         [widthBtn]="'150px'"
-        [content]="countSkill"
+        [content]="getCounter('my-profile.has-skill', countSkill)"
         [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
         [padding]="'20px'"
         [isOpen]="showSkill"
@@ -188,7 +199,7 @@
       [buttonTitle]="'add projects'"
       [disableHeader]="false"
       [widthBtn]="'150px'"
-      [content]="sumHoursProject"
+      [content]="getCounter('my-profile.project-time', timeProject*22*8)"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'20px'"
       [isOpen]="showProject"
@@ -253,10 +264,10 @@
                   <div class="desc-info">
                     <p>{{ project?.title.value }}</p>
                     <p *ngIf="!project.start_date_to">
-                      {{ project?.start_date_from | date:'yyyy/MM' }} - {{'Presen'}}: {{dateDiffInYears(dateDiffInMonths(project?.start_date_from,null))}}
+                      {{ project?.start_date_from | date:monthFormat }} - {{'Presen'}}: {{dateDiffInYears(dateDiffInMonths(project?.start_date_from,null))}}
                     </p>
                     <p *ngIf="project.start_date_to">
-                      {{ project?.start_date_from | date:'yyyy/MM' }} - {{ project?.start_date_to | date:'yyyy/MM'}}: {{dateDiffInYears(dateDiffInMonths(project?.start_date_from,project?.start_date_to))}}
+                      {{ project?.start_date_from | date:monthFormat }} - {{ project?.start_date_to | date:monthFormat}}: {{dateDiffInYears(dateDiffInMonths(project?.start_date_from,project?.start_date_to))}}
                     </p>
                   </div>
                 </div>
@@ -307,7 +318,7 @@
       [buttonTitle]="'add experiencer'"
       [disableHeader]="false"
       [widthBtn]="'150px'"
-      [content]="timeExperienceStr"
+      [content]="getCounter('my-profile.experience-time', timeExperienceStr)"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'20px'"
       [idBtn]="'openExperience'"
@@ -371,10 +382,10 @@
                 <div class="desc-info">
                   <p>{{experience?.employee_type?.value}}</p>
                   <p *ngIf="!experience.start_date_to">
-                    {{ experience?.start_date_from | date:'yyyy/MM' }} - {{'Presen'}}: {{dateDiffInYears(dateDiffInMonths(experience?.start_date_from,null))}}
+                    {{ experience?.start_date_from | date:monthFormat }} - {{'Presen'}}: {{dateDiffInYears(dateDiffInMonths(experience?.start_date_from,null))}}
                   </p>
                   <p *ngIf="experience.start_date_to">
-                    {{ experience?.start_date_from | date:'yyyy/MM' }} - {{ experience?.start_date_to | date:'yyyy/MM'}}: {{dateDiffInYears(dateDiffInMonths(experience?.start_date_from,experience?.start_date_to))}}
+                    {{ experience?.start_date_from | date:monthFormat }} - {{ experience?.start_date_to | date:monthFormat}}: {{dateDiffInYears(dateDiffInMonths(experience?.start_date_from,experience?.start_date_to))}}
                   </p>
                 </div>
               </div>
@@ -424,7 +435,7 @@
       [buttonTitle]="'add certificates'"
       [disableHeader]="false"
       [widthBtn]="'150px'"
-      [content]="countCentificate"
+      [content]="getCounter('my-profile.certificates-count', countCentificate)"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'20px'"
       [isOpen]="showCertificate"
@@ -458,7 +469,11 @@
                       centificate?.issue_by
                     }}
                   </p>
-                  <p>{{ centificate?.issue_date_from }} - {{ centificate?.issue_date_to }}</p>
+                  <p *ngIf="!centificate?.issue_date_to">
+                    {{ centificate?.issue_date_from | date:dateFormat }} - {{'Presen'}}
+                  <p *ngIf="centificate?.issue_date_to">
+                    {{ centificate?.issue_date_from | date:dateFormat }} - {{  centificate?.issue_date_to | date:dateFormat}}
+                  </p>
                 </div>
               </div>
             </div>
@@ -508,7 +523,7 @@
       [buttonTitle]="'add course'"
       [disableHeader]="false"
       [widthBtn]="'150px'"
-      [content]="countCourse"
+      [content]="getCounter('my-profile.course-count', countCourse)"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'20px'"
       [idBtn]="'openCourse'"
@@ -541,7 +556,11 @@
                       course?.training_center
                     }}
                   </p>
-                  <p>{{ course?.start_date_from }} - {{course?.start_date_to}}</p>
+                  <p *ngIf="!course?.start_date_to ">
+                    {{ course?.start_date_from | date:dateFormat }} - {{'Presen'}}
+                  <p *ngIf="course?.start_date_to ">
+                    {{ course?.start_date_from | date:dateFormat }} - {{  course?.start_date_to  | date:dateFormat}}
+                  </p>
                 </div>
               </div>
             </div>
@@ -625,10 +644,10 @@
                   }}
                 </p>
                 <p *ngIf="!education.start_date_to">
-                  {{ education?.start_date_from | date:'yyyy/MM' }} - {{'Presen'}}
+                  {{ education?.start_date_from | date:monthFormat }} - {{'Presen'}}
                 </p>
                 <p *ngIf="education.start_date_to">
-                  {{ education?.start_date_from | date:'yyyy/MM' }} - {{education?.start_date_to | date:'yyyy/MM'}}
+                  {{ education?.start_date_from | date:monthFormat }} - {{education?.start_date_to | date:monthFormat}}
                 </p>
               </div>
             </div>

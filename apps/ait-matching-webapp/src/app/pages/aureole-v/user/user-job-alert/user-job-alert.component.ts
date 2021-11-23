@@ -8,6 +8,7 @@ import { isArrayFull, isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
 import dayjs from 'dayjs';
 import { UserJobAlertService } from 'apps/ait-matching-webapp/src/app/services/user-job-alert.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { UserProfileService } from 'apps/ait-matching-webapp/src/app/services/user-profile.service';
 
 @Component({
   selector: 'ait-user-job-alert',
@@ -18,12 +19,13 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
   userjobAlert: FormGroup;
   userjobAlertClone:any;
   isSubmit = false;
+  isProfile = false;
   mode = "NEW";
   isChanged = false;
   errorArr = [];
   dayNow ='';
   dateFormat = "dd/MM/yyyy";
-  userId = "";
+  userKey = "";
   industrys = [];
   experienceLevels = [];
   employeeTypes = [];
@@ -42,6 +44,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
   }
   constructor(store: Store<AppState>,
     private userJobAlertService : UserJobAlertService,
+    private userProfileService: UserProfileService,
     private router: Router,
     authService: AitAuthService,
     apollo: Apollo,
@@ -79,17 +82,39 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
       user_id: new FormControl(null),
 
     })
-    this.userId = this.activeRouter.snapshot.paramMap.get('id');
-    if (this.userId) {
-      this.mode = MODE.EDIT;
+    this.userKey = this.activeRouter.snapshot.paramMap.get('id');
+    if (this.userKey) {
+      if(this.userKey == this.user_id){
+        this.mode = MODE.EDIT;
+      }else{
+        this.mode = MODE.VIEW;
+      }
+      
     }
   }
 
   async ngOnInit(): Promise<void> {
     await this.getMasterData();
-    this.dayNow = this.getDateFormat(Date.now());
-    this.userjobAlert.controls["start_date_from"].setValue(Date.now());
-    this.getUserJobAlert();
+    await this.userProfileService.finProfileByUserId(this.user_id)
+    .then((res) => {
+      if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
+        this.isProfile = true;
+      }
+    })
+    
+    if(!this.isProfile){
+      this.router.navigate([`user-onboarding`]);
+    }else{
+      if(this.mode == "NEW"){
+        this.dayNow = this.getDateFormat(Date.now());
+        this.userjobAlert.controls["start_date_from"].setValue(Date.now());
+      }else if(this.mode == "EDIT"){
+        this.getUserJobAlert();
+      }else{
+        this.router.navigate([`user-job-alert-detail/` + this.userKey]);
+      }
+    }
+
     await this.userjobAlert.valueChanges.subscribe((data) => {
       this.checkAllowSave();
     });
@@ -201,7 +226,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
     return res;
   }
   getUserJobAlert(){
-    this.userJobAlertService.findUserJobAlert(this.userId)
+    this.userJobAlertService.findUserJobAlert(this.userKey)
     .then((res) => {
       if (res.status === RESULT_STATUS.OK) {
         if (res.data.length > 0) {
