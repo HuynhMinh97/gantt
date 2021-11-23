@@ -94,6 +94,10 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    this.callLoadingApp();
+    setTimeout(() => {
+      this.cancelLoadingApp();
+    },1000);
     await this.getMasterData();
     await this.userProfileService.finProfileByUserId(this.user_id)
     .then((res) => {
@@ -101,6 +105,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
         this.isProfile = true;
       }
     })
+   
     if(!this.isProfile){
       this.router.navigate([`user-onboarding`]);
     }else{
@@ -112,6 +117,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
       }else{
         this.router.navigate([`user-job-alert-detail/` + this.userKey]);
       }
+      
     }
 
     await this.userjobAlert.valueChanges.subscribe((data) => {
@@ -284,7 +290,11 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
           const message =
           this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
           this.showToastr('', message);
-          history.back();
+          if(this.mode == 'NEW'){
+            this.router.navigate([`recommenced-user`]);
+          }else{
+            history.back();
+          }
         }else{
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         }
@@ -311,6 +321,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
   }
   
   resetForm(){
+    debugger
     if(this.mode == MODE.NEW){
       this.reset();
     }
@@ -319,6 +330,10 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
       this.experienceLevels = [];
       this.employeeTypes =[];
       this.locations = [];
+      this.errorDate = [];
+      this.errorSalary = [];
+      this.isSubmit = false;
+      this.isChanged = false;
       setTimeout(() => {
         this.industrys = this.userjobAlertClone.industry;
         this.experienceLevels = this.userjobAlertClone.experience_level;
@@ -326,7 +341,9 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
         this.locations = this.userjobAlertClone.location;
         this.userjobAlert.patchValue({ ...this.userjobAlertClone });
         this.showToastr('', this.getMsg('I0007'));
-      },100)
+      }, 1000);
+        
+
      
     }
   }
