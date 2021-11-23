@@ -644,7 +644,7 @@
                   }}
                 </p>
                 <p *ngIf="!education.start_date_to">
-                  {{ education?.start_date_from | date:monthFormat }} - {{my-profile.prevent' | translate}}
+                  {{ education?.start_date_from | date:monthFormat }} - {{'my-profile.prevent' | translate}}
                 </p>
                 <p *ngIf="education.start_date_to">
                   {{ education?.start_date_from | date:monthFormat }} - {{education?.start_date_to | date:monthFormat}}

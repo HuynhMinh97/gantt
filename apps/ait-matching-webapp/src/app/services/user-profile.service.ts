@@ -168,4 +168,15 @@ export class UserProfileService extends AitBaseService {
     );
   }
 
+  async getCategorySkill(classCategory: string){
+    const condition = {
+      class: classCategory,
+      del_flag: false,
+    }
+    return await this.query('findFriends', {collection: 'reaction_love', condition}, 
+    {
+      _key: true,
+    })
+  }
+
 }

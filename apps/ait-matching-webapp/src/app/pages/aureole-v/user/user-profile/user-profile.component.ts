@@ -101,6 +101,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       icon: 'plus'
     }
   ];
+  skillUserName: any;
   constructor(
     private userLanguageService: UserLanguageService,
     private userEducationService: UserEducationService,
@@ -155,6 +156,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     this.callLoadingApp();
     await this.getMasterData();
     this.getFriends();
+    this.getCategorySkill();
     this.getCountFriends();
     this.getUserProfileByUserId();
     this.getSkillByUserId();
@@ -207,6 +209,14 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         }
       })
 
+  }
+  async getCategorySkill() {
+    const classCategory = "SKILL_CATEGORY";
+    this.userProfileService.getCategorySkill(classCategory).then((res) => {
+      if (res.status === RESULT_STATUS.OK) {
+        this.skillUserName = res.data[0]?.value;
+      }
+    });
   }
 
   async getSkillByUserId() { 
@@ -261,6 +271,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   async getProjectByUserId() {
     await this.userProjectService.getProjectByUserId(this.profileId)
       .then(async (res) => {
+        this.timeProject = 0;
         const company_values = Array.from(new Set(res.data.map(m => m?.company_working?.value))).filter(f => !!f);
         const companyUserProjects = this.groupBy(res.data, p => p.company_working?.value);
 
@@ -295,6 +306,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     this.userExperienceService.findUserExperienceByUserId(this.profileId)
       .then(async (res) => {
         if (res?.status === RESULT_STATUS.OK && res.data.length > 0) {
+          this.timeExperience = 0;
           const company_values = Array.from(new Set(res.data.map(m => m?.company_working?.value))).filter(f => !!f);
           const companyUserExps = this.groupBy(res.data, p => p.company_working?.value);
           const datacompany = company_values.map(element => {
@@ -734,17 +746,17 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   };
 
   dateDiffInYears(month) {
-    const months = this.translateService.translate('my-profile.months');
-    const year = this.translateService.translate('my-profile.years');
+    const monthStr = this.translateService.translate('my-profile.months');
+    const yearStr = this.translateService.translate('my-profile.years');
     if (month < 12) {
-      return month.toString() + ' ' + months;
+      return month.toString() + ' ' + monthStr;
     } else {
       const year = Math.trunc(month / 12).toString();
       month = (month % 12)
       if (month == 0) {
         return year + ' ' + year;
       } else {
-        return year + ' ' + months + month.toString() +' ' + year;
+        return year + ' ' + yearStr + ' ' + month.toString() +' ' + monthStr;
       }
     }
   }
