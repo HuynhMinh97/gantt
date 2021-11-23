@@ -59,6 +59,7 @@ export class UserOnboardingComponent
   isSubmit = false;
   isClear = false;
   isChanged = false;
+  isDisplay = false;
 
   resetUserInfo = {
     first_name: false,
@@ -218,32 +219,35 @@ export class UserOnboardingComponent
     if (this.user_key) {
       this.mode = MODE.EDIT;
     }
-    if (this.user_key) {
-      this.callLoadingApp();
-      await this.userOnbService
-        .findUserOnboardingByKey(this.user_key)
-        .then(async (r) => {
-          if (r.status === RESULT_STATUS.OK) {
-            let isUserExist = false;
-            this.dataCountry = r.data[0];
-            if (r.data.length > 0 && !this.dataCountry.del_flag) {
-              this.userOnboardingInfo.patchValue({ ...this.dataCountry });
-              this.userOnboardingInfoClone = this.userOnboardingInfo.value;
-              this.user_id_profile = this.dataCountry.user_id;
-              this._key = this.dataCountry._key;
-              isUserExist = true;
+    await this.userProfileService.finProfileByUserId(this.user_key ? this.user_key : this.user_id)
+    .then((res) => {
+      if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
+        this.isDisplay = true;
+      }
+    })
+    if(this.isDisplay){
+      this.router.navigate([`/404`]);
+    }else{
+      if (this.user_key) {
+        this.callLoadingApp();
+        await this.userOnbService
+          .findUserOnboardingByKey(this.user_key)
+          .then(async (r) => {
+            if (r.status === RESULT_STATUS.OK) {
+              let isUserExist = false;
+              this.dataCountry = r.data[0];
+              if (r.data.length > 0 && !this.dataCountry.del_flag) {
+                this.userOnboardingInfo.patchValue({ ...this.dataCountry });
+                this.userOnboardingInfoClone = this.userOnboardingInfo.value;
+                this.user_id_profile = this.dataCountry.user_id;
+                this._key = this.dataCountry._key;
+                isUserExist = true;
+              }
+              this.cancelLoadingApp();
+              !isUserExist && this.router.navigate([`/404`]);
             }
-            this.cancelLoadingApp();
-            !isUserExist && this.router.navigate([`/404`]);
-          }
-        });
-    } else {
-      // await this.userProfileService.finProfileByUserId(this.user_id)
-      //   .then((res) => {
-      //     if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
-      //       this.router.navigate([`recommenced-user`]);
-      //     }
-      //   })
+          });
+      } 
     }
 
     await this.getGenderList();

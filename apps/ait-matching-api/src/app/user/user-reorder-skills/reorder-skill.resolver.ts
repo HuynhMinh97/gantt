@@ -29,7 +29,12 @@ export class ReorderSkillResolver extends AitBaseService {
       const aqlQuery = `
       FOR data, e, p IN 1..1 OUTBOUND "${from}" ${collection}
       FILTER e.del_flag != true
-      RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name })
+      let category = (
+        FOR t IN sys_master_data
+        FILTER data.category == t.code && t.class == "SKILL_CATEGORY"
+        RETURN {_key:t.code, value: t.name.${lang} ? t.name.${lang} : t.name }
+      )
+      RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name, category:category[0]})
     `;
       return await this.query(aqlQuery);
 

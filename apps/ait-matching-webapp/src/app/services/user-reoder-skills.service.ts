@@ -70,7 +70,10 @@ export class UserReoderSkillsService extends AitBaseService{
     return await this.query('findReorderSkill', {collection: 'user_skill', condition}, 
     {
       _key: true,
-      category: true,
+      category: {
+        _key: true,
+        value: true
+      },
       name: true,
     })
   }
