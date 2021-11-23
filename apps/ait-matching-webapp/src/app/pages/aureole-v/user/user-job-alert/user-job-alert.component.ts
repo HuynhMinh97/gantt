@@ -8,6 +8,7 @@ import { isArrayFull, isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
 import dayjs from 'dayjs';
 import { UserJobAlertService } from 'apps/ait-matching-webapp/src/app/services/user-job-alert.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { UserProfileService } from 'apps/ait-matching-webapp/src/app/services/user-profile.service';
 
 @Component({
   selector: 'ait-user-job-alert',
@@ -18,6 +19,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
   userjobAlert: FormGroup;
   userjobAlertClone:any;
   isSubmit = false;
+  isProfile = false;
   mode = "NEW";
   isChanged = false;
   errorArr = [];
@@ -42,6 +44,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
   }
   constructor(store: Store<AppState>,
     private userJobAlertService : UserJobAlertService,
+    private userProfileService: UserProfileService,
     private router: Router,
     authService: AitAuthService,
     apollo: Apollo,
@@ -92,9 +95,26 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.getMasterData();
-    this.dayNow = this.getDateFormat(Date.now());
-    this.userjobAlert.controls["start_date_from"].setValue(Date.now());
-    this.getUserJobAlert();
+    await this.userProfileService.finProfileByUserId(this.user_id)
+    .then((res) => {
+      if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
+        this.isProfile = true;
+      }
+    })
+    
+    if(!this.isProfile){
+      this.router.navigate([`user-onboarding`]);
+    }else{
+      if(this.mode == "NEW"){
+        this.dayNow = this.getDateFormat(Date.now());
+        this.userjobAlert.controls["start_date_from"].setValue(Date.now());
+      }else if(this.mode == "EDIT"){
+        this.getUserJobAlert();
+      }else{
+        this.router.navigate([`user-job-alert-detail/` + this.userKey]);
+      }
+    }
+
     await this.userjobAlert.valueChanges.subscribe((data) => {
       this.checkAllowSave();
     });
