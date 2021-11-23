@@ -7,7 +7,7 @@ describe('Navigate user skill', () => {
     function checkUISkill() {
         cy.get('#title_text__gradient').should('have.text', 'Add skill');
         cy.label('skills', ' SKILLS (MAX 50) *');
-        cy.input('skills', 'Fill name and enter to add your skills');
+        // cy.input('skills', 'Fill name and enter to add your skills');
     }
 
     function inputDataSkill() {

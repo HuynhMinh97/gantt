@@ -50,7 +50,7 @@ function checkUIUserOnboarding() {
   cy.label('industry', ' INDUSTRY*');
   cy.input('industry', 'Computer Software');
   cy.label('skills', ' SKILLS (MAX 10)*');
-  cy.input('skills', 'Fill name and enter to add your skills');
+  // cy.input('skills', 'Fill name and enter to add your skills');
 
   cy.styleButton('cancel', ' CANCEL ');
   cy.styleButton('reset', ' RESET ');

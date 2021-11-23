@@ -117,7 +117,7 @@ describe('Navigate user profile', () => {
   }
 
   function findUserOnboarding() {
-    cy.clickButton('openOnboarding');
+    cy.get('.view_contact').click();
     const query = `
     query {
       findUserOnboardingInfo(
