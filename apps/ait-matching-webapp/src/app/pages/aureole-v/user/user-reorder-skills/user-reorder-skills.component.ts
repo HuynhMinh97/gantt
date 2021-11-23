@@ -139,12 +139,12 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
               skills.top_skill = true;
               skills._key = element._key;
               skills.name = element.name;
-              skills.category = element.category;
+              skills.category = element.category?.value;
             } else {
               skills.top_skill = false;
               skills._key = element._key;
               skills.name = element.name;
-              skills.category = element.category;
+              skills.category = element.category?.value;
             }
             this.listSkills.push(skills);
           });
