@@ -13,7 +13,7 @@ import {
   NbLayoutScrollService,
   NbToastrService,
 } from '@nebular/theme';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import {
   AitAppUtils,
   AitAuthService,
@@ -24,6 +24,7 @@ import {
   AitNavigationService,
   AitTranslationService,
   AppState,
+  getUserSetting,
   MODE,
 } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
@@ -51,6 +52,7 @@ export class UserOnboardingComponent
   cityCode: any;
   countryCode: any;
   districtCode: any;
+  dateFormat = '';
   sort_no = 0;
   isReset = false;
   isLangJP = false;
@@ -147,6 +149,12 @@ export class UserOnboardingComponent
       layoutScrollService,
       toastrService
     );
+    
+    store.pipe(select(getUserSetting)).subscribe((setting) => {
+      if (isObjectFull(setting) && setting['date_format_display']) {
+        this.dateFormat = setting['date_format_display'];
+      }
+    });
 
     this.setModulePage({
       module: 'user',
@@ -230,12 +238,12 @@ export class UserOnboardingComponent
           }
         });
     } else {
-      await this.userProfileService.finProfileByUserId(this.user_id)
-        .then((res) => {
-          if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
-            this.router.navigate([`recommenced-user`]);
-          }
-        })
+      // await this.userProfileService.finProfileByUserId(this.user_id)
+      //   .then((res) => {
+      //     if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
+      //       this.router.navigate([`recommenced-user`]);
+      //     }
+      //   })
     }
 
     await this.getGenderList();
