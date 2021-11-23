@@ -167,7 +167,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     this.getLanguageByUserId();
     setTimeout(() => {
       this.cancelLoadingApp();
-    }, 1500)
+    }, 1000)
   }
   async getMasterData() {
     try {
