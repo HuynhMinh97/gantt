@@ -289,35 +289,15 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
    return dataSave;    
   }
 
-  // saveAndContinue(){
-  //   if(this.errorDate.length > 0 || this.errorSalary.length > 0 ){
-  //     this.scrollIntoError();
-  //     return;
-  //   }else{
-  //     this.dataSave();
-  //     const dataSave = this.userjobAlert.value;
-  //     if(this.mode == "NEW"){
-  //       dataSave['user_id'] = this.authService.getUserID();
-  //     }
-  //     this.userJobAlertService.saveUserJobAlert(this.userjobAlert.value)
-  //     .then((res) => {
-  //       if (res?.status === RESULT_STATUS.OK) {
-  //         const message =
-  //         this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
-  //         this.showToastr('', message);
-  //         this.reset();
-  //       }else{
-  //         this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-  //       }
-  //     })  
-  //   }  
-  // }
-
   saveAndClose(){
     if(this.errorDate.length > 0 || this.errorSalary.length > 0 ){
       this.scrollIntoError();
       return;
     }else{
+      this.callLoadingApp();
+      setTimeout(() => {
+        this.cancelLoadingApp();
+      }, 1000);
       const dataSave = this.dataSave();
       console.log(dataSave);
       this.userJobAlertService.saveUserJobAlert(this.userjobAlert.value)
@@ -362,6 +342,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
       this.reset();
     }
     if(this.mode == MODE.EDIT){
+      this.callLoadingApp();
       this.reset();
       this.industrys = [];
       this.experienceLevels = [];
@@ -380,6 +361,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
         this.locations = this.userjobAlertClone.location;
         this.userjobAlert.patchValue({ ...this.userjobAlertClone });
         this.showToastr('', this.getMsg('I0007'));
+        this.cancelLoadingApp();
       }, 500);
         
 
