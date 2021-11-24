@@ -1,123 +1,65 @@
 <div class="template__popup">
-  <p class="title">
-    {{ '1001' | translate }}
-  </p>
+  <ait-text-gradient [content]="'1001' | translate" [id]="'title'"></ait-text-gradient>
   <ait-space></ait-space>
-  <div class="form__wrapper" nbSpinnerStatus="primary" [nbSpinner]="loadingSetting">
-    <div class="input__group">
-      <p class="label">{{ '1002' | translate }} *</p>
-      <ait-autocomplete-master-data
-        [placeholder]="'Site language'"
-        [class]="'LANGUAGE'"
-        [maxItem]="1" [id]="'site_language'"
-        [icon]="'search-outline'"
-        [style]="{ width: '400px' }"
-        [defaultValue]="[langDf]"
+  <ait-card-content class="content__card" [label]="'基本情報'" [padding]="'0 5rem'" [disableHeader]="true"
+    [transition]="false">
+    <div class="form__wrapper" nbSpinnerStatus="primary" [nbSpinner]="loadingSetting">
+      <ait-autocomplete-master-data [label]="'1002' | translate" [class]="'LANGUAGE'" [maxItem]="1"
+        [id]="'site_language'" [icon]="'search-outline'" [style]="{ width: '400px' }" [defaultValue]="[langDf]"
         (watchValue)="
-          getValueLang($event); handleInput($event, 'lang', langLabel)
-        "
-        [style]="{ width: '100%' }"
-      >
+        getValueLang($event); handleInput($event, 'lang', langLabel)
+      " [required]="true" [placeholder]="'Site language'" [disableOutputDefault]="true" [tabIndex]="1"
+        [errorMessages]="getErrors('site_language', 'lang')" [isError]="!formState?.site_language && isInit">
       </ait-autocomplete-master-data>
-      <ait-error-message [errors]="errors.lang"></ait-error-message>
-    </div>
 
-    <ait-space></ait-space>
+      <ait-space [margin]="'7.25px'"></ait-space>
 
-    <div class="input__group">
-      <p class="label">{{ '1003' | translate }} *</p>
-      <ait-autocomplete-master-data
-        [placeholder]="'Timezone'"
-        [class]="'TIMEZONE'"
-        [maxItem]="1" [id]="'timezone'"
-        [icon]="'search-outline'"
-        [style]="{ width: '400px' }"
-        [defaultValue]="[timeDf]"
-        (watchValue)="
-          getValueTimeZone($event); handleInput($event, 'timezone', timeLabel)
-        "
-        [style]="{ width: '100%' }"
-      >
+      <ait-autocomplete-master-data [label]="'1003' | translate" [class]="'TIMEZONE'" [maxItem]="1" [id]="'timezone'"
+        [icon]="'search-outline'" [style]="{ width: '400px' }" [defaultValue]="[timeDf]" (watchValue)="
+      getValueTimeZone($event); handleInput($event, 'timezone', timeLabel)
+    " [required]="true" [placeholder]="'Timezone'" [disableOutputDefault]="true" [tabIndex]="2"
+        [errorMessages]="getErrors('timezone', 'timezone')" [isError]="!formState?.timezone && isInit">
       </ait-autocomplete-master-data>
-      <ait-error-message [errors]="errors.timezone"></ait-error-message>
-    </div>
-    <ait-space></ait-space>
 
-    <div class="input__group">
-      <p class="label">{{ '1004' | translate }}*</p>
-      <ait-autocomplete-master-data
-        [placeholder]="'MM/dd/yyyy'"
-        [class]="'USER_SETTING'"
-        [parentCode]="'DATE_FORMAT_DISPLAY'"
-        [maxItem]="1" [id]="'date_format_display'"
-        [icon]="'search-outline'"
-        [style]="{ width: '400px' }"
-        [defaultValue]="[defaultInputValues?.dateDisplayDf]"
-        (watchValue)="
-          getValueDateDisplay($event);
-          handleInput($event, 'display', displayLabel)
-        "
-        [style]="{ width: '100%' }"
-      >
+      <ait-space [margin]="'7.25px'"></ait-space>
+
+      <ait-autocomplete-master-data [label]="'1004' | translate" [class]="'USER_SETTING'"
+        [parentCode]="'DATE_FORMAT_DISPLAY'" [maxItem]="1" [id]="'date_format_display'" [icon]="'search-outline'"
+        [style]="{ width: '400px' }" [defaultValue]="[defaultInputValues?.dateDisplayDf]" (watchValue)="
+      getValueDateDisplay($event); handleInput($event, 'display', displayLabel)
+    " [required]="true" [placeholder]="'MM/dd/yyyy'" [disableOutputDefault]="true" [tabIndex]="3"
+        [errorMessages]="getErrors('date_format_display', 'display')"
+        [isError]="!formState?.date_format_display && isInit">
       </ait-autocomplete-master-data>
-      <ait-error-message [errors]="errors.display"></ait-error-message>
-    </div>
 
-    <ait-space></ait-space>
+      <ait-space [margin]="'7.25px'"></ait-space>
 
-    <div class="input__group">
-      <p class="label">{{ '1005' | translate }} *</p>
-      <ait-autocomplete-master-data
-        [placeholder]="'MM/dd/yyyy'"
-        [class]="'USER_SETTING'"
-        [parentCode]="'DATE_FORMAT_INPUT'"
-        [maxItem]="1" [id]="'date_format_input'"
-        [icon]="'search-outline'"
-        [style]="{ width: '400px' }"
-        [defaultValue]="[defaultInputValues?.dateInputDf]"
-        (watchValue)="
-          getValueDateInf($event); handleInput($event, 'input', inputLabel)
-        "
-        [style]="{ width: '100%' }"
-      >
+      <ait-autocomplete-master-data [label]="'1005' | translate" [class]="'USER_SETTING'"
+        [parentCode]="'DATE_FORMAT_INPUT'" [maxItem]="1" [id]="'date_format_input'" [icon]="'search-outline'"
+        [style]="{ width: '400px' }" [defaultValue]="[defaultInputValues?.dateInputDf]" (watchValue)="
+      getValueDateInf($event); handleInput($event, 'input', inputLabel)
+    " [required]="true" [placeholder]="'MM/dd/yyyy'" [disableOutputDefault]="true" [tabIndex]="4"
+        [errorMessages]="getErrors('date_format_input', 'input')" [isError]="!formState?.date_format_input && isInit">
       </ait-autocomplete-master-data>
-      <ait-error-message [errors]="errors.input"></ait-error-message>
-    </div>
-    <ait-space></ait-space>
 
-    <div class="input__group">
-      <p class="label">{{ '1006' | translate }} *</p>
-      <ait-autocomplete-master-data
-        [placeholder]="'###, ###,###.###'"
-        [class]="'USER_SETTING'"
-        [parentCode]="'NUMBER_FORMAT'"
-        [maxItem]="1" [id]="'number_format'"
-        [icon]="'search-outline'"
-        [style]="{ width: '400px' }"
-        [defaultValue]="[defaultInputValues?.numberFormatDf]"
-        (watchValue)="
-          getValueNumberFormat($event);
-          handleInput($event, 'number', numberLabel)
-        "
-        [style]="{ width: '100%' }"
-      >
+      <ait-space [margin]="'7.25px'"></ait-space>
+
+      <ait-autocomplete-master-data [label]="'1005' | translate" [class]="'USER_SETTING'" [parentCode]="'NUMBER_FORMAT'"
+        [maxItem]="1" [id]="'number_format'" [icon]="'search-outline'" [style]="{ width: '400px' }"
+        [defaultValue]="[defaultInputValues?.numberFormatDf]" (watchValue)="
+      getValueNumberFormat($event); handleInput($event, 'number', numberLabel)
+    " [required]="true" [placeholder]="'###, ###,###.###'" [disableOutputDefault]="true" [tabIndex]="5"
+        [errorMessages]="getErrors('number_format', 'number')" [isError]="!formState?.number_format && isInit">
       </ait-autocomplete-master-data>
-      <ait-error-message [errors]="errors.number"></ait-error-message>
+
+      <ait-space [margin]="'7.25px'"></ait-space>
+
     </div>
-    <ait-space></ait-space>
-    <div class="button__group">
-      <ait-button
-        (click)="back()"
-        [id]="'back'"
-        [title]="'c_2004'"
-        [background]="'transparent'"
-      ></ait-button>
-      <ait-button
-        (click)="save()"
-        [id]="'save'"
-        [style]="'active'"
-        [title]="'c_2001'"
-      ></ait-button>
-    </div>
+  </ait-card-content>
+  <div class="button__group">
+    <ait-button (click)="back()" [id]="'back'" [width]="'200px'" [title]="'c_2004'" [isDefault]="true" [tabIndex]="6">
+    </ait-button>
+    <ait-button (click)="save()" [id]="'save'" [width]="'200px'" [title]="'c_2001'" [isDefault]="true" [tabIndex]="7">
+    </ait-button>
   </div>
 </div>

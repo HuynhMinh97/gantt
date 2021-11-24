@@ -51,4 +51,7 @@ export class UpdateSystemDto extends BaseDto {
 
   @Field(() => String, { nullable: true })
   file_max_upload?: string;
+
+  @Field(() => String, { nullable: true })
+  category?: string;
 }

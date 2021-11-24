@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { COLLECTIONS, RESULT_STATUS } from '@ait/shared';
+import { COLLECTIONS, isObjectFull, RESULT_STATUS } from '@ait/shared';
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { Database } from 'arangojs';
@@ -7,7 +7,10 @@ import { AitCtxUser } from '../decorators/ait-ctx-user.decorator';
 import { GqlAuthGuard } from '../guards/gql-auth.guard';
 import { SysUser } from '../entities/sys-user.entity';
 import { AitBaseService } from '../services/ait-base.service';
-import { UserSettingResponse } from '../responses/user-setting.response';
+import {
+  UserSettingCustomResponse,
+  UserSettingResponse,
+} from '../responses/user-setting.response';
 import { UserSettingRequest } from '../requests/user-setting.request';
 
 @Resolver()
@@ -25,6 +28,58 @@ export class UserSettingResolver extends AitBaseService {
   ) {
     request['colection'] = this.collection;
     return this.find(request, user);
+  }
+
+  @Query(() => UserSettingCustomResponse, { name: 'findUserSettingCustom' })
+  async findUserSettingCustom(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => UserSettingRequest })
+    request: UserSettingRequest
+  ) {
+    request['colection'] = this.collection;
+    const lang = request['lang'];
+    const settingResult = await this.find(request, user);
+    const settingData = settingResult?.data[0];
+    if (isObjectFull(settingData)) {
+      const parentCode = [
+        'DATE_FORMAT_INPUT',
+        'DATE_FORMAT_DISPLAY',
+        'NUMBER_FORMAT',
+      ];
+      const findAql = `FOR doc IN sys_master_data FILTER doc.parent_code IN ${JSON.stringify(
+        parentCode
+      )} RETURN doc`;
+      const masterResult = await this.query(findAql);
+      const masterData = masterResult?.data || [];
+      const dateFormatDisplay = masterData.find(
+        (item: any) => item.code === settingData.date_format_display
+      );
+      const dateFormatInput = masterData.find(
+        (item: any) => item.code === settingData.date_format_input
+      );
+      const numberFormat = masterData.find(
+        (item: any) => item.code === settingData.number_format
+      );
+
+      Object.assign(settingData, {
+        date_format_display: {
+          value: dateFormatDisplay['name'][lang],
+          code: settingData.date_format_display,
+        },
+        date_format_input: {
+          value: dateFormatInput['name'][lang],
+          code: settingData.date_format_input,
+        },
+        number_format: {
+          value: numberFormat['name'][lang],
+          code: settingData.number_format,
+        },
+      });
+
+      return settingResult;
+    } else {
+      return settingResult;
+    }
   }
 
   @Mutation(() => UserSettingResponse, { name: 'saveUserSetting' })
@@ -61,13 +116,13 @@ export class UserSettingResolver extends AitBaseService {
 
     const result = await this.query(findAql);
     let aqlStr = ``;
-    
+
     if (result.status === RESULT_STATUS.OK) {
       if (result.data.length > 0) {
         this.setCommonUpdate(data);
         data._key = result.data[0]._key;
         dataUpdate.push(data);
-  
+
         aqlStr = `FOR data IN ${JSON.stringify(dataUpdate)}
         UPDATE data WITH data IN ${collection} RETURN NEW `;
       } else {

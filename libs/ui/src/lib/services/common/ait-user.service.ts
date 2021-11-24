@@ -5,12 +5,11 @@ import { HttpClient } from '@angular/common/http';
 import { NbToastrService } from '@nebular/theme';
 import { AitBaseService } from './ait-base.service';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { GRAPHQL, KeyValueDto } from '@ait/shared';
+import { COLLECTIONS, GRAPHQL, KeyValueDto } from '@ait/shared';
 import { AitEnvironmentService } from '../ait-environment.service';
 import gql from 'graphql-tag';
 import { AppState } from '../../state/selectors';
 import { Apollo } from 'apollo-angular';
-import { AitAuthService } from './ait-auth.service';
 
 export interface UserSetting {
   user_id?: string;
@@ -21,61 +20,100 @@ export interface UserSetting {
 @Injectable({
   providedIn: 'root',
 })
-
 export class AitUserService extends AitBaseService {
   //Share service in user component
-  public userBasicInfo = new AitUserInfo;
-  public userTrainingInfo = new AitUserInfo;
-  public backUpBasicInfo = new AitUserInfo;
-  public backUpTrainingInfo = new AitUserInfo;
+  public userBasicInfo = new AitUserInfo();
+  public userTrainingInfo = new AitUserInfo();
+  public backUpBasicInfo = new AitUserInfo();
+  public backUpTrainingInfo = new AitUserInfo();
   onFocus = false;
 
   private getURL = '/auth/find-user';
-  private getSetting = this.env?.API_PATH?.SYS?.USER + '/get-setting';
-  private saveSetting = this.env?.API_PATH?.SYS?.USER + '/save-setting';
-  private storeManagement: Store<AppState>;
   private userJobSetting = this.env?.API_PATH?.SYS?.USER + '/get-job-setting';
   private userCertificate = this.env?.API_PATH?.SYS?.USER + '/get-certificate';
   private saveInfo = this.env?.API_PATH?.SYS?.USER_PROFILE + '/save';
   private removeInfo = this.env?.API_PATH?.SYS?.USER_PROFILE + '/remove';
-  private removeCertificate = this.env?.API_PATH?.SYS?.USER + '/remove-certificate-info';
-  private saveCertificateInfo = this.env?.API_PATH?.SYS?.USER + '/save-user-certificate';
+  private removeCertificate =
+    this.env?.API_PATH?.SYS?.USER + '/remove-certificate-info';
+  private saveCertificateInfo =
+    this.env?.API_PATH?.SYS?.USER + '/save-user-certificate';
   private createUser = this.env?.API_PATH?.SYS?.USER + '/new_sys_user';
   constructor(
     store: Store<AppState>,
     httpService: HttpClient,
     snackbarService: NbToastrService,
     envService: AitEnvironmentService,
-    apollo: Apollo,
+    apollo: Apollo
   ) {
     super(envService, store, httpService, snackbarService, apollo);
-    this.storeManagement = store;
   }
   async getUserSetting(user_id?: string) {
-    return await this.post(this.getSetting, { condition: { user_id: user_id || this.user_id } }).toPromise();
+    const returnFields = {
+      date_format_display: {
+        value: true,
+        code: true,
+      },
+      date_format_input: {
+        value: true,
+        code: true,
+      },
+      number_format: {
+        value: true,
+        code: true,
+      },
+      site_language: true,
+      timezone: true,
+      user_id: true,
+    };
+    const request = {
+      collection: COLLECTIONS.USER_SETTING,
+      condition: { user_id },
+    };
+    return await this.query(
+      GRAPHQL.FIND_USER_SETTING_CUSTOM,
+      request,
+      returnFields
+    );
   }
-  async saveUserSetting(data: UserSetting[]) {
 
-    const dataSave = data.map(d => ({ ...d, user_id: this.user_id, company: this.company }));
+  async saveUserSetting(data: UserSetting[]) {
+    const dataSave = data.map((d) => ({
+      ...d,
+      user_id: this.user_id,
+      company: this.company,
+    }));
     return await this.mutation(
       GRAPHQL.SAVE_USER_SETTING,
       'user_setting',
       dataSave,
-      { user_id: true, date_format_display: true, date_format_input: true, number_format: true, site_language: true, timezone: true });
-    // return await this.post(this.saveSetting, { data: dataSave }).toPromise();
+      {
+        user_id: true,
+        date_format_display: true,
+        date_format_input: true,
+        number_format: true,
+        site_language: true,
+        timezone: true,
+      }
+    );
   }
 
   async getUserJobSetting(user_id?: string) {
-    return await this.post(this.userJobSetting, { condition: { user_id: user_id || this.user_id } }).toPromise();
+    return await this.post(this.userJobSetting, {
+      condition: { user_id: user_id || this.user_id },
+    }).toPromise();
   }
 
   async getUserCertificate(user_id?: string) {
-    return await this.post(this.userCertificate, { condition: { user_id: user_id || this.user_id } }).toPromise();
+    return await this.post(this.userCertificate, {
+      condition: { user_id: user_id || this.user_id },
+    }).toPromise();
   }
 
   getUserProfile = (user_id?: string): Promise<any> => {
-    return this.post('/user-profile/get', { condition: { user_id: user_id || this.user_id } }).toPromise();
-  }
+    return this.post('/user-profile/get', {
+      condition: { user_id: user_id || this.user_id },
+    }).toPromise();
+  };
 
   async saveAitUserInfo(condition: any, data: [AitUserInfo]) {
     return await this.post(this.saveInfo, { condition, data }).toPromise();
@@ -94,14 +132,20 @@ export class AitUserService extends AitBaseService {
   }
 
   async saveUserCertificate(condition: any, data: [UserCertificate]) {
-    return await this.post(this.saveCertificateInfo, { condition, data }).toPromise();
+    return await this.post(this.saveCertificateInfo, {
+      condition,
+      data,
+    }).toPromise();
   }
 
   getAitUserInfo = async (user_id: string) => {
     if (user_id && user_id !== '') {
-
-      const user = await this.post(this.getURL, { condition: { user_id } }).toPromise();
-      const user_profile = await this.post('/user-profile/get', { condition: { user_id } }).toPromise();
+      const user = await this.post(this.getURL, {
+        condition: { user_id },
+      }).toPromise();
+      const user_profile = await this.post('/user-profile/get', {
+        condition: { user_id },
+      }).toPromise();
       const result = {
         ...user?.data[0],
         user_profile: user_profile?.data ? user_profile?.data[0] : {},
@@ -109,14 +153,14 @@ export class AitUserService extends AitBaseService {
       return result;
     }
     return {};
-  }
+  };
 
   getUserInfo = async (user_id: string) => {
-
     if (user_id && user_id !== '') {
       let user = null;
-      const rest_user: any = await this.apollo.query({
-        query: gql`
+      const rest_user: any = await this.apollo
+        .query({
+          query: gql`
         query {
           findByConditionUser(request:{
             company: "${this.company}",
@@ -133,17 +177,18 @@ export class AitUserService extends AitBaseService {
             company
           }
         }
-        `
-      }).toPromise();
+        `,
+        })
+        .toPromise();
       const result = rest_user.findByConditionUser;
       if (result) {
-        user = result[0]
+        user = result[0];
       }
 
       return user;
     }
     return {};
-  }
+  };
 
   getFormInfo() {
     return this.userBasicInfo;

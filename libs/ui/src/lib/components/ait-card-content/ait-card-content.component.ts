@@ -7,15 +7,17 @@ import { AppState, getCaption } from '../../state/selectors';
 @Component({
   selector: 'ait-card-content',
   templateUrl: './ait-card-content.component.html',
-  styleUrls: ['./ait-card-content.component.scss'
-  ],
+  styleUrls: ['./ait-card-content.component.scss'],
 })
-
 export class AitCardContentComponent {
-  constructor(private envService: AitEnvironmentService, private store: Store<AppState>, private translate: AitTranslationService) {
+  constructor(
+    private envService: AitEnvironmentService,
+    private store: Store<AppState>,
+    private translate: AitTranslationService
+  ) {
     store.pipe(select(getCaption)).subscribe(() => {
       this.buttonTitle = translate.translate(this.buttonTitle || '追加する');
-    })
+    });
   }
   @Input() label = 'Default';
   @Input() loading = false;
@@ -23,11 +25,10 @@ export class AitCardContentComponent {
   @Output() onToggle = new EventEmitter();
   @Input() isColumn = false;
   @Input() isStart = false;
+  @Input() transition = true;
   @Input() padding = '';
   @Input() tooltip = '';
-  @Input() actionBtn = [
-
-  ];
+  @Input() actionBtn = [];
   @Input() disableHeader = false;
   gradientString = 'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)';
   isShow = true;
@@ -60,8 +61,7 @@ export class AitCardContentComponent {
     }
   };
 
-
   handleClickBtnHeader = () => {
     !this.tooltip && this.onClickButtonHeader.emit({ clicked: true });
-  }
+  };
 }

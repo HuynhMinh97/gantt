@@ -100,7 +100,8 @@ export enum KEYS {
   IDS = 'ids',
   DEL_FLAG = 'del_flag',
   IS_MATCHING = 'is_matching',
-  CUSTOM = '$$$$@@@@!!!!'
+  CUSTOM = '$$$$@@@@!!!!',
+  OTHERS = 'OTHERS',
 }
 
 export enum ACTIVE_FLAG {
@@ -183,6 +184,7 @@ export enum GRAPHQL {
   REMOVE_BINARY_DATA = 'removeBinaryData',
   // User settings
   FIND_USER_SETTING = 'findUserSetting',
+  FIND_USER_SETTING_CUSTOM = 'findUserSettingCustom',
   SAVE_USER_SETTING = 'saveUserSetting',
   REMOVE_USER_SETTING = 'removeUserSetting',
   // Auth
