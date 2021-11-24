@@ -75,6 +75,7 @@
       <div class="input_date">
         <ait-datepicker
           [label]="'available time'"
+          [format]="dateFormat"
           [placeholder]="'01/01/2021'"
           [id]="'start_date_from'"
           [style]="{ width: '180px' }"
@@ -94,6 +95,7 @@
 
         <ait-datepicker
           [required]="false"
+          [format]="dateFormat"
           [label]="''"
           [placeholder]="''"
           [id]="'start_date_to'"
