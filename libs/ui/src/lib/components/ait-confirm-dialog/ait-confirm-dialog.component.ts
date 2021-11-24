@@ -11,12 +11,11 @@ import { AitBaseComponent } from '../base.component';
   styleUrls: ['./ait-confirm-dialog.component.scss'],
 })
 export class AitConfirmDialogComponent extends AitBaseComponent {
-  width = 'auto';
   title = '';
   btn_left = '';
   btn_right = '';
   @Input() id;
-
+  @Input() style = {};
   ID(element: string) {
     const idx = this.id && this.id !== '' ? this.id : Date.now();
     return idx + '_' + element;
