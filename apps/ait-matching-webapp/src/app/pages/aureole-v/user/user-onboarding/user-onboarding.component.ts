@@ -216,13 +216,19 @@ export class UserOnboardingComponent
   }
 
   async ngOnInit(): Promise<void> {
+    console.log(this.router.url);
+    
     if (this.user_key) {
       this.mode = MODE.EDIT;
     }
     await this.userProfileService.finProfileByUserId(this.user_key ? this.user_key : this.user_id)
     .then((res) => {
-      if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
-        this.isDisplay = true;
+      if (res.status === RESULT_STATUS.OK && res.data.length > 0 ) {
+        const url = this.router.url;
+        const isUrl = url.indexOf('user-onboarding');
+        if(isUrl >= 0 ){
+          this.isDisplay = true;
+        }       
       }
     })
     if(this.isDisplay){

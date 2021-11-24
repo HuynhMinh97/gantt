@@ -40,8 +40,8 @@
           *ngIf="actionBtn.length !== 0"
           [ngClass]="tooltip ? 'button_header_card disable' : ''"
           (click)="handleClickBtnHeader($event)"
-          [nbTooltip]="tooltip"
-          [nbTooltipTrigger]="tooltip ? 'hover' : 'noop'"
+          [nbTooltip]="buttonTitle"
+          [nbTooltipTrigger]="buttonTitle ? 'hover' : 'noop'"
           [style.width]="widthBtn"
           [style]="''"
         >

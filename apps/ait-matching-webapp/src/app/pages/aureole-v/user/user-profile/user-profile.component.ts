@@ -93,7 +93,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
 
   dateFormat = "dd/MM/yyyy";
   monthFormat: any;
-  today = Date.now();
+  today = new Date().setHours(0, 0, 0, 0);
   isMyUserProfile = false;
   actionBtn = [
     {
@@ -206,6 +206,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
             this.cancelLoadingApp();
             this.router.navigate([`/404`]);
           }
+          this.timeExperienceStr = this.dateDiffInYears(this.timeExperience);
         }
       })
       this.cancelLoadingApp();
@@ -303,7 +304,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       })
   }
 
-  getExperiencByUserId() {
+  getExperiencByUserId() {   
     this.userExperienceService.findUserExperienceByUserId(this.profileId)
       .then(async (res) => {
         if (res?.status === RESULT_STATUS.OK && res.data.length > 0) {
@@ -798,9 +799,9 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     return map;
   }
 
-  getCounter = (message, value) => {
-      const content = this.translateService.translate(message);
-      return content.replace('{0}', value);
+  getCounter = (message, value) => {   
+    const content = this.translateService.translate(message);
+    return content.replace('{0}', value);
   }
 
   _unixtimeToDate = (unix_time: number) => {
