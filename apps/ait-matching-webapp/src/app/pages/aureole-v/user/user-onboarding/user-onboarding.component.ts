@@ -6,7 +6,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
 import {
   NbDialogRef,
   NbDialogService,
@@ -213,11 +213,14 @@ export class UserOnboardingComponent
           }
         }
       });
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+          this.close(false);
+      }
+    });
   }
 
-  async ngOnInit(): Promise<void> {
-    console.log(this.router.url);
-    
+  async ngOnInit(): Promise<void> {    
     if (this.user_key) {
       this.mode = MODE.EDIT;
     }

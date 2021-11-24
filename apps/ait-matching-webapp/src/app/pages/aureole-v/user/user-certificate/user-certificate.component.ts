@@ -12,7 +12,7 @@ import {
 import kanjidate from 'kanjidate';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { isArrayFull, isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -91,6 +91,12 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
     store.pipe(select(getUserSetting)).subscribe((setting) => {
       if (isObjectFull(setting) && setting['date_format_display']) {
         this.dateFormat = setting['date_format_display'];
+      }
+    });
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+          this.closeDialog(false);
       }
     });
 

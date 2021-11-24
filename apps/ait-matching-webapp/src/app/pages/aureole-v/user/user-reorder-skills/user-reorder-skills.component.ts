@@ -4,7 +4,7 @@ import { OrderSkill, SkillsDto, UserSkill, } from './user-reorder-skills';
 import { KEYS, RESULT_STATUS } from '@ait/shared';
 import { AitAppUtils, AitAuthService, AitBaseComponent, AitConfirmDialogComponent, AitEnvironmentService, AppState } from '@ait/ui';
 import { UserReoderSkillsService } from 'apps/ait-matching-webapp/src/app/services/user-reoder-skills.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { NbDialogRef, NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { Apollo } from 'apollo-angular';
 import { Store } from '@ngrx/store';
@@ -47,6 +47,12 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
     this.setModulePage({
       module: 'user',
       page: 'user_skills',
+    });
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+          this.closeDialog(false);
+      }
     });
   }
 

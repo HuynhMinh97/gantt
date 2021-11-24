@@ -17,7 +17,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { NbToastrService, NbLayoutScrollService, NbDialogService, NbDialogRef } from '@nebular/theme';
 import { select, Store} from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
@@ -127,6 +127,12 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     this.setModulePage({
       module: 'user',
       page: 'user_project',
+    });
+    
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+          this.closeDialog(false);
+      }
     });
 
     this.userProject = this.formBuilder.group({

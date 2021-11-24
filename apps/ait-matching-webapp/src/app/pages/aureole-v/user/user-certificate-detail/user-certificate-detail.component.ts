@@ -1,7 +1,7 @@
 import { RESULT_STATUS } from '@ait/shared';
 import { AitBaseComponent, AitEnvironmentService, AppState, AitAuthService, AitAppUtils } from '@ait/ui';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { NbToastrService, NbLayoutScrollService, NbDialogRef } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
@@ -19,6 +19,7 @@ export class UserCertificateDetailComponent extends AitBaseComponent implements 
   user_key: any = '';
   stateUserCertificate = {} as UserProjectDto;
   constructor(
+    private router: Router,
     private nbDialogRef: NbDialogRef<UserCertificateDetailComponent>,
     public activeRouter: ActivatedRoute,
     public certificateService: UserCerfiticateService,
@@ -43,6 +44,13 @@ export class UserCertificateDetailComponent extends AitBaseComponent implements 
       module: 'user',
       page: 'user_certificate',
     });
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+          this.closeDialog(false);
+      }
+    });
+
   }
 
   async ngOnInit(): Promise<void> {
