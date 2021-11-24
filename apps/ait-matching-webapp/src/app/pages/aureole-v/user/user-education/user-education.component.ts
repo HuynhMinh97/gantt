@@ -191,7 +191,6 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
-    this.errorArr = this.checkDatePicker();
     if (this.userEducationInfo.valid && !this.isDateCompare) {
       this.callLoadingApp();
       this.userEduService
@@ -219,7 +218,6 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
   }
 
   saveAndClose() {
-    this.errorArr = this.checkDatePicker();
     this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;
@@ -346,10 +344,10 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     const dateTo = this.userEducationInfo.controls['start_date_to'].value;
     this.isDateCompare = false;
 
-    if (dateFrom == null || dateTo == null) {
+    if (dateFrom == null && dateTo == null) {
       this.isDateCompare = false;
     } else {
-      if (dateFrom > dateTo) {
+      if ((dateFrom > dateTo || (!dateFrom && dateTo)) && dateTo != null) {
         const transferMsg = (msg || '')
           .replace('{0}', this.translateService.translate('date from'))
           .replace('{1}', this.translateService.translate('date to'));
@@ -422,6 +420,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
       this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(value);
     }
+    this.errorArr = this.checkDatePicker();
   }
 
   takeFiles(fileList: any[]) {

@@ -309,8 +309,6 @@ export class UserExperienceComponent
   }
 
   saveAndClose() {
-    this.errorArr = this.checkDatePicker();
-
     this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;
@@ -392,6 +390,7 @@ export class UserExperienceComponent
       this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(value);
     }
+    this.errorArr = this.checkDatePicker();
   }
 
   checkDatePicker() {
@@ -402,7 +401,7 @@ export class UserExperienceComponent
     const isWorking = this.userExperienceInfo.controls['is_working'].value;
     this.isDateCompare = false;
 
-    if (dateFrom == null || isWorking || dateTo == null) {
+    if (isWorking || dateTo == null) {
       this.isDateCompare = false;
       if (dateFrom > this.defaultValueDate && isWorking) {
         const transferMsg = (msg || '')
@@ -412,7 +411,9 @@ export class UserExperienceComponent
         this.isDateCompare = true;
       }
     } else {
-      if (dateFrom > dateTo && !isWorking) {
+      if ((dateFrom > dateTo || (!dateFrom && dateTo)) && !isWorking) {
+        console.log(dateFrom, "   ", dateTo );
+        
         const transferMsg = (msg || '')
           .replace('{0}', this.translateService.translate('date from'))
           .replace('{1}', this.translateService.translate('date to'));

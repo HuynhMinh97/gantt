@@ -136,7 +136,7 @@
             [required]="false"
             [hasStatus]="false"
             [isReset]="isResetFile"
-            [placeholder]="'select file'"
+            [placeholder]="'select file' |translate"
             [fileKeys]="userEducationInfo.controls['file'].value"
             (watchValue)="takeFiles($event.value)"
             [isSubmit]="isSubmit"

@@ -188,7 +188,7 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
     const msg = this.getMsg('E0004');
     const dateFrom = this.certificate.controls['issue_date_from'].value;
     const dateTo = this.certificate.controls['issue_date_to'].value;
-    if (dateFrom > dateTo && dateTo != null) {
+    if ((dateFrom > dateTo || !dateFrom) && dateTo != null) {
       const transferMsg = (msg || '')
         .replace('{0}', this.translateService.translate('issue date'))
         .replace('{1}', this.translateService.translate('issue date to'));
