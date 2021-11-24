@@ -11,6 +11,7 @@ import { AitBaseComponent } from '../base.component';
   styleUrls: ['./ait-confirm-dialog.component.scss'],
 })
 export class AitConfirmDialogComponent extends AitBaseComponent {
+  width = 'auto';
   title = '';
   btn_left = '';
   btn_right = '';
