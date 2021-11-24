@@ -764,7 +764,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   }
 
   dateDiffInMonths(startDate, endDate) {
-    debugger
     if(!startDate && !endDate){
       return 0
     }else{
