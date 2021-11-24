@@ -2,7 +2,7 @@ import { MatchingUtils } from '../../../../@constants/utils/matching-utils';
 import { RESULT_STATUS } from '@ait/shared';
 import { AitAppUtils, AitAuthService, AitBaseComponent, AitEnvironmentService, AppState, getSettingLangTime } from '@ait/ui';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { NbToastrService, NbLayoutScrollService, NbDialogRef } from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
@@ -20,6 +20,7 @@ export class UserExperienceDetailComponent extends AitBaseComponent implements O
   stateUserExp = {} as UserExperienceDto;
   dateFormat: any;
   constructor(
+    private router: Router,
     private nbDialogRef: NbDialogRef<UserExperienceDetailComponent>,
     public activeRouter: ActivatedRoute,
     private userExpService: UserExperienceService,
@@ -49,6 +50,12 @@ export class UserExperienceDetailComponent extends AitBaseComponent implements O
     this.setModulePage({
       module: 'user',
       page: 'user_experience',
+    });
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+          this.closeDialog(false);
+      }
     });
   }
 

@@ -24,7 +24,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
   isChanged = false;
   errorArr = [];
   dayNow ='';
-  dateFormat = "dd/MM/yyyy";
+  dateFormat = "";
   userKey = "";
   industrys = [];
   experienceLevels = [];

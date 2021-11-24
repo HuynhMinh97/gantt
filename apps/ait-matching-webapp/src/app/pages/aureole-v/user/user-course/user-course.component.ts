@@ -21,7 +21,7 @@ import { isArrayFull, isObjectFull } from '@ait/shared';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import kanjidate from 'kanjidate';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { UserCourseService } from '../../../../../../../../apps/ait-matching-webapp/src/app/services/user-course.service';
 
 @Component({
@@ -92,6 +92,12 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
         this.dateFormat = setting['date_format_display'];
       }
     });
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+          this.closeDialog(false);
+      }
+    });
+
     this.course = this.formBuilder.group({
       _key: new FormControl(null),
       name: new FormControl(null, [Validators.required]),

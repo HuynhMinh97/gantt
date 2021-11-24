@@ -9,7 +9,7 @@ import {
 } from '@ait/ui';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
 import { UserSkillsService } from './../../../../services/user-skills.service';
@@ -37,6 +37,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
     sort_no: 0,
   };
   constructor(
+    private router: Router,
     private element: ElementRef,
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
@@ -63,6 +64,12 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
     this.setModulePage({
       module: 'user',
       page: 'user_skills',
+    });
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+          this.closeDialog(false);
+      }
     });
 
     this.userSkills = this.formBuilder.group({

@@ -10,7 +10,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import {
   NbDialogRef,
   NbDialogService,
@@ -106,6 +106,12 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     this.setModulePage({
       module: 'user',
       page: 'user_education',
+    });
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+          this.closeDialog(false);
+      }
     });
 
     this.userEducationInfo = this.formBuilder.group({

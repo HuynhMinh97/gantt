@@ -7,7 +7,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import {
   NbDialogRef,
   NbDialogService,
@@ -97,6 +97,12 @@ export class UserExperienceComponent
       if (setting) {
         const display = setting?.date_format_display;
         this.dateFormat= MatchingUtils.getFormatYearMonth(display);
+      }
+    });
+    
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+          this.closeDialog(false);
       }
     });
 
@@ -265,7 +271,7 @@ export class UserExperienceComponent
     }
     saveData.company_working = saveData.company_working._key;
     if (saveData.is_working) {
-      delete saveData.start_date_to;
+      saveData['start_date_to'] = null;
     }
     if (this.user_key) {
       saveData['_key'] = this.user_key;

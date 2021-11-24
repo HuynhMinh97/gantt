@@ -10,7 +10,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import {
   NbDialogRef,
   NbDialogService,
@@ -62,6 +62,7 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
   user_id = '';
 
   constructor(
+    private router: Router,
     private element: ElementRef,
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
@@ -89,6 +90,12 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
     this.setModulePage({
       module: 'user',
       page: 'user_language',
+    });
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+          this.closeDialog(false);
+      }
     });
 
     this.userLanguageInfo = this.formBuilder.group({
