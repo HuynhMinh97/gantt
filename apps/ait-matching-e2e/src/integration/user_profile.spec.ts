@@ -13,11 +13,11 @@ describe('Navigate user profile', () => {
     cy.visit(Cypress.env('host') + Cypress.env('user_profile'));
     cy.url().should('eq', Cypress.env('host') + Cypress.env('user_profile'));
     // checkUI();
-    findUserOnboarding();
-    addProjects();
-    addExperiences();
-    addCertificates();
-    addCourses();
+    // findUserOnboarding();
+    // addProjects();
+    // addExperiences();
+    // addCertificates();
+    // addCourses();
     addEducations();
     addLanguages();
 
@@ -592,6 +592,8 @@ describe('Navigate user profile', () => {
       failOnStatusCode: false,
 
     }).then((response) => {
+      console.log(response.body.data);
+
       const data = response.body.data.findUserEducationInfo.data[0];
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(3000);
