@@ -271,14 +271,14 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   }
 
   async getProjectByUserId() {
+    this.timeProject = 0;
     await this.userProjectService.getProjectByUserId(this.profileId)
       .then(async (res) => {
-        this.timeProject = 0;
         const company_values = Array.from(new Set(res.data.map(m => m?.company_working?.value))).filter(f => !!f);
         const companyUserProjects = this.groupBy(res.data, p => p.company_working?.value);
 
         const datacompany = company_values.map(element => {
-          var timeworkingInfo = 0;         
+          let timeworkingInfo = 0;         
           companyUserProjects.get(element).forEach(e => {
             timeworkingInfo += this.dateDiffInMonths(e.start_date_from, e.start_date_to);
           });
@@ -304,11 +304,13 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       })
   }
 
-  getExperiencByUserId() {   
-    this.userExperienceService.findUserExperienceByUserId(this.profileId)
+  async getExperiencByUserId() {  
+    this.callLoadingApp(); 
+    this.timeExperience = 0;
+    this.timeExperienceStr = this.dateDiffInYears(this.timeExperience);
+    await this.userExperienceService.findUserExperienceByUserId(this.profileId)
       .then(async (res) => {
         if (res?.status === RESULT_STATUS.OK && res.data.length > 0) {
-          this.timeExperience = 0;
           const company_values = Array.from(new Set(res.data.map(m => m?.company_working?.value))).filter(f => !!f);
           const companyUserExps = this.groupBy(res.data, p => p.company_working?.value);
           const datacompany = company_values.map(element => {
@@ -335,14 +337,17 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
             });
             this.showExperience = this.userExperience.length > 0 ? true : false;
             this.timeExperienceStr = this.dateDiffInYears(this.timeExperience);
+            // this.cancelLoadingApp();
           }, 1000);   
+        }else{
+          // this.cancelLoadingApp();
         }
       })
       
   }
 
-  getCentificateByUserId() {
-    this.userCetificateService.findUserCetificateByKey(this.profileId)
+  async getCentificateByUserId() {
+    await this.userCetificateService.findUserCetificateByKey(this.profileId)
       .then((res) => {
         const data = res.data;
         this.countCentificate = data.length;

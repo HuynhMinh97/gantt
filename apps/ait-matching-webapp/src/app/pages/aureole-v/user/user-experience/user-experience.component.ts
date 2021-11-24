@@ -438,6 +438,7 @@ export class UserExperienceComponent
           hasBackdrop: true,
           autoFocus: false,
           context: {
+            style: {width: '90%'},
             title: this.getMsg('I0006'),
           },
         })

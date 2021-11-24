@@ -418,6 +418,7 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
           hasBackdrop: true,
           autoFocus: false,
           context: {
+            style: {width: '90%'},
             title: this.getMsg('I0006'),
           },
         })
