@@ -748,14 +748,14 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
 
   dateDiffInYears(month) {
     const monthStr = this.translateService.translate('my-profile.months');
-    const yearStr = this.translateService.translate('my-profile.years');
+    const yearStr = this.translateService.translate('my-profile.years'); 
     if (month < 12) {
       return month.toString() + ' ' + monthStr;
     } else {
       const year = Math.trunc(month / 12).toString();
       month = (month % 12)
       if (month == 0) {
-        return year + ' ' + year;
+        return year + ' ' + yearStr;
       } else {
         return year + ' ' + yearStr + ' ' + month.toString() +' ' + monthStr;
       }
@@ -763,20 +763,25 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   }
 
   dateDiffInMonths(startDate, endDate) {
-    startDate = new Date(startDate);
-    if (!endDate) {
-      endDate = new Date();
-    } else {
-      endDate = new Date(endDate);
+    if(!startDate && !endDate){
+      return 0
+    }else{
+      startDate = new Date(startDate);
+      if (!endDate) {
+        endDate = new Date();
+      } else {
+        endDate = new Date(endDate);
+      }
+      let months;
+      months = (endDate.getFullYear() - startDate.getFullYear()) * 12;
+      months += (endDate.getMonth() - startDate.getMonth());
+      if (months == 0) {
+        return 1;
+      } else {
+        return months;
+      }
     }
-    let months;
-    months = (endDate.getFullYear() - startDate.getFullYear()) * 12;
-    months += (endDate.getMonth() - startDate.getMonth());
-    if (months == 0) {
-      return 1;
-    } else {
-      return months;
-    }
+    
   }
 
   groupBy(list, keyGetter) {

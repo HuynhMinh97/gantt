@@ -7,7 +7,7 @@
           <ait-autocomplete-master-data
             [id]="'name'"
             [width]="'400px'"
-            [label]="'NAME'"
+            [label]="'name'"
             [required]="true"
             [allowNew]="true"
             [maxItem]="1"
@@ -155,7 +155,7 @@
             [maxSize]="1000"
             [maxFiles]="5"
             [hasStatus]="false"
-            [placeholder]="'select file'"
+            [placeholder]="'select_file' | translate"
             [isReset]="isResetFile"
             [fileKeys]="certificate.controls['file'].value"
             (watchValue)="getFiles($event.value)"
