@@ -222,11 +222,11 @@ export class UserOnboardingComponent
     await this.userProfileService.finProfileByUserId(this.user_key ? this.user_key : this.user_id)
     .then((res) => {
       if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
-        this.isDisplay = true;
+        // this.isDisplay = true;
       }
     })
     if(this.isDisplay){
-      this.router.navigate([`/404`]);
+      // this.router.navigate([`/404`]);
     }else{
       if (this.user_key) {
         this.callLoadingApp();
