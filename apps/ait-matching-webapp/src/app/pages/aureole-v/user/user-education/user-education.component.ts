@@ -343,7 +343,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     this.showToastr('', this.getMsg('I0007'));
   }
 
-  checkDatePicker() {
+  checkDatePicker() {    
     const res = [];
     const msg = this.getMsg('E0004');
     const dateFrom = this.userEducationInfo.controls['start_date_from'].value;
@@ -364,8 +364,9 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
         const transferMsg = (this.getMsg('E0020') || '')
         .replace('{0}', this.translateService.translate('date from'));
         res.push(transferMsg);
+        this.isDateCompare = true;
       }
-      this.isDateCompare = true;
+      
     }
     return res;
   }

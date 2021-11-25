@@ -264,11 +264,7 @@ export class UserOnboardingComponent
 
     // Run when form value change
     await this.userOnboardingInfo.valueChanges.subscribe((data) => {
-      if (this.userOnboardingInfo.pristine) {
-        this.userOnboardingInfoClone = AitAppUtils.deepCloneObject(data);
-      } else if (this.mode == MODE.EDIT) {
-        this.checkAllowSave();
-      }
+      this.checkAllowSave();
     });
 
     if (
@@ -498,7 +494,7 @@ export class UserOnboardingComponent
     if (this.isChanged) {
       this.dialogService
         .open(AitConfirmDialogComponent, {
-          closeOnBackdropClick: true,
+          closeOnBackdropClick: false,
           hasBackdrop: true,
           autoFocus: false,
           context: {

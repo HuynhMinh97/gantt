@@ -54,7 +54,7 @@
                       class="remove-btn"
                       (click)="removeSkill(category, skill)"
                       nbTooltip="{{
-                        'matching.reorder_skill.click' | translate
+                        'remove_skills' | translate
                       }}"
                     >
                       <nb-icon
@@ -68,9 +68,6 @@
                     <button
                       nbButton
                       ghost
-                      nbTooltip="{{
-                        'matching.reorder_skill.drag' | translate
-                      }}"
                     >
                       <nb-icon
                         *ngIf="skill._key"
