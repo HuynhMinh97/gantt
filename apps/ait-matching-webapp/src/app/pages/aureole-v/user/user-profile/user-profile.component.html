@@ -6,6 +6,7 @@
         class="user-background"
         aitUploadDirective
         [title]="'Upload image'"
+        style="background-image: url(../../../../../assets/images/background-profile.png);"
       ></div>
       <div id="parent">
         <div class="col-md-5 col-lg-5 col-xxxl-5" id="col1">
@@ -15,7 +16,7 @@
             (watchValues)="('')"
           >
             <img
-              src="https://anhdep123.com/wp-content/uploads/2021/05/avatar-trang-dep.jpg"
+              src="../../../../../assets/images/avatarV.png"
               alt="user-avatar"
               style="
                 width: 100%;
@@ -31,7 +32,7 @@
               {{DataUserProfile?.last_name}} {{DataUserProfile?.first_name }}
             </p>
             <p id = "company_input" style="padding-top: 30px">
-              <span> {{DataUserProfile?.title?.value }} at {{DataUserProfile?.company_working?.value}} </span>
+              <span> {{DataUserProfile?.title?.value }} {{DataUserProfile?.company_working?.value? ('my-profile.at' | translate) : ''}} {{DataUserProfile?.company_working?.value}} </span>
             </p>
             <p id = "country_region_input" style="margin-top: -10px">
               <span>{{DataUserProfile?.province_city?.value}}, {{DataUserProfile?.country_region?.value}}</span>

@@ -35,6 +35,11 @@ export const routes: Routes = [
     canActivate: [AitAuthGuardService],
     component: UserOnboardingComponent
   },
+  {
+    path: 'user-skills',
+    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    component: UserSkillsComponent
+  },
   // {
   //   path: 'user-onboarding/:id',
   //   canActivate: [AitAuthGuardService],

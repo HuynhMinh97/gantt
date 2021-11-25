@@ -10,7 +10,7 @@ import {
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, Optional } from '@angular/core';
 import { isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
 import { UserSkillsService } from './../../../../services/user-skills.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -43,7 +43,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
     public activeRouter: ActivatedRoute,
     private dialogService: NbDialogService,
     private userSkillsService: UserSkillsService,
-    private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
+    @Optional() private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
     layoutScrollService: NbLayoutScrollService,
     toastrService: NbToastrService,
     authService: AitAuthService,
