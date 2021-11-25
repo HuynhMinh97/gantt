@@ -100,12 +100,12 @@ export const MENU_USER: MenuUser[] = [
   {
     header_title: 'c_1003',
     tabs: [
-      // {
-      //   iconName: 'settings-outline',
-      //   title: 'c_1004',
-      //   action: () => { },
-      //   url: '/user-setting'
-      // },
+      {
+        iconName: 'settings-outline',
+        title: 'c_1004',
+        action: () => { },
+        url: '/user-setting'
+      },
       {
         iconName: 'edit-outline',
         title: 'c_1005',
