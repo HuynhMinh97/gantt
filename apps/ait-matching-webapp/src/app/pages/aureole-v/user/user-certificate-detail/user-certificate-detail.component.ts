@@ -42,12 +42,12 @@ export class UserCertificateDetailComponent extends AitBaseComponent implements 
 
     this.setModulePage({
       module: 'user',
-      page: 'user_certificate',
+      page: 'user_cerfiticate',
     });
 
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
-          this.closeDialog(false);
+        this.closeDialog(false);
       }
     });
 
@@ -69,7 +69,7 @@ export class UserCertificateDetailComponent extends AitBaseComponent implements 
       this.cancelLoadingApp();
     }, 500);
   }
-  close(){
+  close() {
     this.closeDialog(false);
   }
   closeDialog(event: boolean) {
