@@ -29,122 +29,23 @@ export const routes: Routes = [
     path: 'recommenced-user',
     canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
     component: RecommencedComponent
-  },
-  {
-    path: 'user-experience',
-    canActivate: [AitAuthGuardService],
-    component: UserExperienceComponent
-  },
-  {
-    path: 'user-experience/:id',
-    canActivate: [AitAuthGuardService],
-    component: UserExperienceComponent
-  },
-  {
-    path: 'user-experience-detail/:id',
-    canActivate: [AitAuthGuardService],
-    component: UserExperienceDetailComponent
-  },
-  {
-    path: 'user-education',
-    canActivate: [AitAuthGuardService],
-    component: UserEducationComponent
-  },
-  {
-    path: 'user-education/:id',
-    canActivate: [AitAuthGuardService],
-    component: UserEducationComponent
-  },
-  {
-    path: 'user-education-detail/:id',
-    canActivate: [AitAuthGuardService],
-    component: UserEducationDetailComponent
-  },
-  {
-    path: 'user-language',
-    canActivate: [AitAuthGuardService],
-    component: UserLanguageComponent
-  },
-  {
-    path: 'user-language/:id',
-    canActivate: [AitAuthGuardService],
-    component: UserLanguageComponent
-  },
-  {
-    path: 'user-language-detail/:id',
-    canActivate: [AitAuthGuardService],
-    component: UserLanguageDetailComponent
-  },
+  }, 
   {
     path: 'user-onboarding',
     canActivate: [AitAuthGuardService],
     component: UserOnboardingComponent
   },
-  {
-    path: 'user-onboarding/:id',
-    canActivate: [AitAuthGuardService],
-    component: UserOnboardingComponent
-  },
-  {
-    path: 'user-onboarding-detail/:id',
-    canActivate: [AitAuthGuardService],
-    component: UserOnboardingDetailComponent
-  },
-  {
-    path: 'user-course',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
-    component: UserCourseComponent
-  },
-  {
-    path: 'user-course/:id',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
-    component: UserCourseComponent
-  },
-  {
-    path: 'user-course-detail/:id',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
-    component: UserCourseDetailComponent
-  },
-  {
-    path: 'user-certificate/:id',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
-    component: UserCertificateComponent
-  },
-  {
-    path: 'user-certificate',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
-    component: UserCertificateComponent
-  },
-  {
-    path: 'user-certificate-detail/:id',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
-    component: UserCertificateDetailComponent
-  },
-  {
-    path: 'user-project',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
-    component: UserProjectComponent
-  },
-  {
-    path: 'user-project/:id',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
-    component: UserProjectComponent
-  },
-  {
-    path: 'user-project-detail/:id',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
-    component: UserProjectDetailComponent
-  },
-  {
-    path: 'user-skills',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
-    component: UserSkillsComponent
-  },
-  {
-    path: 'user-reorder-skills',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
-    component: UserReorderSkillsComponent
-  },
+  // {
+  //   path: 'user-onboarding/:id',
+  //   canActivate: [AitAuthGuardService],
+  //   component: UserOnboardingComponent
+  // },
+  // {
+  //   path: 'user-onboarding-detail/:id',
+  //   canActivate: [AitAuthGuardService],
+  //   component: UserOnboardingDetailComponent
+  // },
+ 
   {
     path: 'user-profile',
     canActivate: [AitAuthGuardService], // must have this line for auth guard on this page

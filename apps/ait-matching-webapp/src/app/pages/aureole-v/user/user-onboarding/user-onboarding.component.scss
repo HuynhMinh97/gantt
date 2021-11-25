@@ -79,9 +79,10 @@ nb-radio-group {
   margin-bottom: 5px;
 }
 
-:host ::ng-deep #user_onboarding span {
+::ng-deep #user_onboarding .ait-label span {
   color: #8f9bb3 !important;
 }
+
 ::ng-deep
     #user_onboarding nb-radio.status-basic
       .native-input:enabled:checked

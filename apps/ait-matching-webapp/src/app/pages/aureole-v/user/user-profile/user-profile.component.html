@@ -652,7 +652,11 @@
               </div>
             </div>
           </div>
-          <div id="ic-edit" [nbTooltip]="isMyUserProfile ? ('my-profile.edit' | translate) : ('my-profile.view' | translate )">
+          <div 
+            id="ic-edit" 
+            [nbTooltip]="isMyUserProfile ? ('my-profile.edit' | translate) : ('my-profile.view' | translate )"
+            style="top: 18px;"
+          >
             <a (click)="openEducation(education?._key)" [id]="'education-' + education?._key" *ngIf="isMyUserProfile">
               <nb-icon
                 nbSuffix
@@ -724,7 +728,11 @@
                     </div>
                   </div>
                 </div>
-                <div id="ic-edit" [nbTooltip]="isMyUserProfile ? ('my-profile.edit' | translate) : ('my-profile.view' | translate )">
+                <div 
+                  id="ic-edit" 
+                  [nbTooltip]="isMyUserProfile ? ('my-profile.edit' | translate) : ('my-profile.view' | translate )"
+                  style="top: 18px;"
+                  >
                   <a (click)="openLanguage( language?._key)" [id]="'language-' + language?._key "  *ngIf="isMyUserProfile">
                     <nb-icon
                       nbSuffix

@@ -38,6 +38,19 @@
                 [id]="'employee_type'"
               ></ait-output-text>
             </div>
+            <div class="input_inline">
+              <div class="input_area">
+                <nb-checkbox
+                  [disabled]="true "
+                  class="gray-text"
+                  [checked]="stateUserExp.is_working"
+                  [id]="'is_online'"
+                >
+                  <p id="online" style="margin: 0;color: #8f9bb3; font-size: 12px;">{{ 'i am currently working in this role' | translate }}</p>
+                </nb-checkbox>
+              </div>
+            </div>
+            <hr style="margin: -3px; ">
           <div class="start-date">
             <ait-datepicker
               [label]="'start date'"
