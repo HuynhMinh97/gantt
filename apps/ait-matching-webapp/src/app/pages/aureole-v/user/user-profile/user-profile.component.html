@@ -272,7 +272,7 @@
                   </div>
                 </div>
               </div>
-              <div id="ic-edit" >
+              <div id="ic-edit" [nbTooltip]="isMyUserProfile ? ('my-profile.edit' | translate) : ('my-profile.view' | translate )">
                 <a 
                   (click)="openProjects(project?._key)"
                   [id]="'project-' + project?._key"
@@ -390,7 +390,7 @@
                 </div>
               </div>
             </div>
-            <div id="ic-edit">
+            <div id="ic-edit" [nbTooltip]="isMyUserProfile ? ('my-profile.edit' | translate) : ('my-profile.view' | translate )">
               <a 
                 (click)="openExperience(experience?._key)"
                 [id]="'experience-' + experience?._key"
@@ -432,7 +432,7 @@
       [styleLabel]="{'font-size':'22px'}"
       (onClickButtonHeader)="openCertificate()"
       [actionBtn]="isMyUserProfile ? actionBtn : ''"
-      [buttonTitle]="'add certificates'"
+      [buttonTitle]="'add certificate'"
       [disableHeader]="false"
       [widthBtn]="'150px'"
       [content]="getCounter('my-profile.certificates-count', countCentificate)"
@@ -477,7 +477,7 @@
                 </div>
               </div>
             </div>
-            <div id="ic-edit">
+            <div id="ic-edit" [nbTooltip]="isMyUserProfile ? ('my-profile.edit' | translate) : ('my-profile.view' | translate )">
               <a 
                 (click)="openCertificate(centificate?._key)"
                 [id]="'centificate-' + centificate?._key"
@@ -564,7 +564,7 @@
                 </div>
               </div>
             </div>
-            <div id="ic-edit">
+            <div id="ic-edit" [nbTooltip]="isMyUserProfile ? ('my-profile.edit' | translate) : ('my-profile.view' | translate )">
               <a 
                 (click)="openCourse(course?._key)"
                 [id]="'course-' + course?._key"
@@ -607,7 +607,7 @@
     [styleLabel]="{'font-size':'22px'}"
     (onClickButtonHeader)="openEducation()"
     [actionBtn]="isMyUserProfile ? actionBtn : ''"
-    [buttonTitle]="'add educations'"
+    [buttonTitle]="'add education'"
     [disableHeader]="false"
     [widthBtn]="'150px'"
     [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
@@ -652,7 +652,7 @@
               </div>
             </div>
           </div>
-          <div id="ic-edit">
+          <div id="ic-edit" [nbTooltip]="isMyUserProfile ? ('my-profile.edit' | translate) : ('my-profile.view' | translate )">
             <a (click)="openEducation(education?._key)" [id]="'education-' + education?._key" *ngIf="isMyUserProfile">
               <nb-icon
                 nbSuffix
@@ -687,7 +687,7 @@
       [styleLabel]="{'font-size':'22px'}"
       (onClickButtonHeader)="openLanguage()"
       [actionBtn]="isMyUserProfile ? actionBtn : ''"
-      [buttonTitle]="'add languages'"
+      [buttonTitle]="'add language'"
       [disableHeader]="false"
       [widthBtn]="'150px'"
       [content]="''"
@@ -724,7 +724,7 @@
                     </div>
                   </div>
                 </div>
-                <div id="ic-edit">
+                <div id="ic-edit" [nbTooltip]="isMyUserProfile ? ('my-profile.edit' | translate) : ('my-profile.view' | translate )">
                   <a (click)="openLanguage( language?._key)" [id]="'language-' + language?._key "  *ngIf="isMyUserProfile">
                     <nb-icon
                       nbSuffix
