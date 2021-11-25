@@ -364,6 +364,10 @@ export class UserExperienceComponent
   toggleCheckBox(checked: boolean) {
     this.userExperienceInfo.controls['is_working'].markAsDirty();
     this.userExperienceInfo.controls['is_working'].setValue(checked);
+    if(checked){
+      this.userExperienceInfo.controls['start_date_to'].setValue(null);
+      this.errorArr = this.checkDatePicker();
+    }
   }
 
   takeMasterValue(value: any, target: string): void {
@@ -406,23 +410,27 @@ export class UserExperienceComponent
     const dateTo = this.userExperienceInfo.controls['start_date_to'].value;
     const isWorking = this.userExperienceInfo.controls['is_working'].value;
     this.isDateCompare = false;
-
-    if (isWorking || dateTo == null) {
+    debugger 
+    if (isWorking) {
       this.isDateCompare = false;
       if (dateFrom > this.defaultValueDate && isWorking) {
+        const transferMsg = (msg || '')
+          .replace('{0}', this.translateService.translate('date from'))
+          .replace('{1}', this.translateService.translate('today'));
+        res.push(transferMsg);
+        this.isDateCompare = true;
+      }
+    } else {
+      if (dateFrom > dateTo && dateTo) { 
         const transferMsg = (msg || '')
           .replace('{0}', this.translateService.translate('date from'))
           .replace('{1}', this.translateService.translate('date to'));
         res.push(transferMsg);
         this.isDateCompare = true;
       }
-    } else {
-      if ((dateFrom > dateTo || (!dateFrom && dateTo)) && !isWorking) {
-        console.log(dateFrom, "   ", dateTo );
-        
-        const transferMsg = (msg || '')
-          .replace('{0}', this.translateService.translate('date from'))
-          .replace('{1}', this.translateService.translate('date to'));
+      if(!dateFrom && dateTo ){
+        const transferMsg = (this.getMsg('E0020') || '')
+          .replace('{0}', this.translateService.translate('date from'));
         res.push(transferMsg);
         this.isDateCompare = true;
       }
@@ -438,6 +446,7 @@ export class UserExperienceComponent
           hasBackdrop: true,
           autoFocus: false,
           context: {
+            style: {width: '90%'},
             title: this.getMsg('I0006'),
           },
         })

@@ -353,13 +353,19 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     if (dateFrom == null && dateTo == null) {
       this.isDateCompare = false;
     } else {
-      if ((dateFrom > dateTo || (!dateFrom && dateTo)) && dateTo != null) {
+      if (dateFrom > dateTo  && dateTo != null) {
         const transferMsg = (msg || '')
           .replace('{0}', this.translateService.translate('date from'))
           .replace('{1}', this.translateService.translate('date to'));
         res.push(transferMsg);
         this.isDateCompare = true;
       }
+      if(!dateFrom && dateTo){
+        const transferMsg = (this.getMsg('E0020') || '')
+        .replace('{0}', this.translateService.translate('date from'));
+        res.push(transferMsg);
+      }
+      this.isDateCompare = true;
     }
     return res;
   }
@@ -372,6 +378,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
           hasBackdrop: true,
           autoFocus: false,
           context: {
+            style: {width: '90%'},
             title: this.getMsg('I0006'),
           },
         })
