@@ -825,6 +825,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     })
   }
   getFriends(){
+    debugger
     this.userProfileService.getFriends("sys_user/" + this.user_id)
     .then((res) => {
       if(res?.status == RESULT_STATUS.OK){

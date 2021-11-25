@@ -255,7 +255,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
           this.reorderSkills[0].data[event.currentIndex].top_skill = true;
           this.checkAllowSave();
         } else {
-          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+          this.showToastr('', this.getMsg('E0021'), KEYS.WARNING);
         }
       } else if (event.previousContainer.id == "TOP5") {
         let skill = this.reorderSkills[0].data[event.previousIndex];
@@ -336,7 +336,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
           break;
         }
         if (this.reorderSkills[index].name == "TOP5" && this.reorderSkills[index].data.length >= 5) {
-          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+          this.showToastr('', this.getMsg('E0021'), KEYS.WARNING);
         }
       }
       this.checkAllowSave();
