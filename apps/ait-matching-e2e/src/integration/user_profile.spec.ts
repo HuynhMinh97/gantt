@@ -100,7 +100,7 @@ describe('Navigate user profile', () => {
       cy.get('#fullname_input').should('have.text', ' ' + data.last_name + ' ' + data.first_name + ' ');
       cy.get('#company_input').should('have.text', ' ' + data.title.value + " at " + data.company_working.value + ' ');
       cy.get('#country_region_input').should('have.text', data.province_city.value + ', ' + data.country_region.value);
-      cy.get('#about_input').should('have.text', ' ' + data.about + ' ')
+      cy.get('#about_input').should('have.text', ' ' + (data.about ? data.about : '') + ' ')
     });
     getTextMenu('SKILLS', 'SKILLS');
     getTextMenu('PROJECTS', 'PROJECTS');

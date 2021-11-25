@@ -8,7 +8,7 @@
       <div class="form">
         <div class="input_inline">
           <ait-output-text
-            [label]="'NAME'"
+            [label]="'name'"
             [width]="'400px'"
             [value]="stateUserCertificate.name?.value"
             [id]="'name'"
@@ -16,7 +16,7 @@
         </div>
         <div class="input_inline">
           <ait-output-text
-            [label]="'CERTIFICATE NUMBER'"
+            [label]="'certificate number'"
             [id]="'certificate_award_number'"
             [width]="'400px'"
             [value]="stateUserCertificate.certificate_award_number"
@@ -24,7 +24,7 @@
         </div>
         <div class="input_inline">
           <ait-output-text
-            [label]="'GRADE'"
+            [label]="'grade'"
             [id]="'grade'"
             [width]="'400px'"
             [value]="stateUserCertificate.grade"
@@ -32,7 +32,7 @@
         </div>
         <div class="input_inline">
           <ait-output-text
-            [label]="'ISSUE BY'"
+            [label]="'issue_by'"
             [width]="'400px'"
             [value]="stateUserCertificate.issue_by?.value"
             [id]="'issue_by'"
@@ -40,7 +40,7 @@
         </div>
         <div class="start-date">
           <ait-datepicker
-            [label]="'ISSUE DATE'"
+            [label]="'issue date'"
             [id]="'issue_date_from'"
             [disable]="true"
             [styleInput]="{ color: '#8f9bb3', width: '180px' , background:'#ffffff'}"
@@ -55,7 +55,7 @@
           ></ait-datepicker>
         </div>
         <div class="textarea_inline">
-          <ait-label [label]="'DESCRIPTION'" [id]="'description'"></ait-label>
+          <ait-label [label]="'description'" [id]="'description'"></ait-label>
 
           <textarea
             nbInput

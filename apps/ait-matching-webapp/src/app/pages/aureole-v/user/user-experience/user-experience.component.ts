@@ -96,13 +96,13 @@ export class UserExperienceComponent
     this.store.pipe(select(getSettingLangTime)).subscribe(setting => {
       if (setting) {
         const display = setting?.date_format_display;
-        this.dateFormat= MatchingUtils.getFormatYearMonth(display);
+        this.dateFormat = MatchingUtils.getFormatYearMonth(display);
       }
     });
-    
+
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
-          this.closeDialog(false);
+        this.closeDialog(false);
       }
     });
 
@@ -130,7 +130,7 @@ export class UserExperienceComponent
     if (this.user_key) {
       if (this.user_id != this.authService.getUserID()) {
         this.mode = MODE.VIEW;
-      }else{
+      } else {
         this.mode = MODE.EDIT;
       }
     }
@@ -146,17 +146,17 @@ export class UserExperienceComponent
               this.userExperienceInfo.patchValue({ ...data });
               this.userExperienceInfoClone = this.userExperienceInfo.value;
               this.user_id = data.user_id;
-              isUserExist = true;   
+              isUserExist = true;
             }
             this.cancelLoadingApp();
             !isUserExist && this.router.navigate([`/404`]);
           }
         });
-    }else{
+    } else {
       this.callLoadingApp();
       setTimeout(() => {
         this.cancelLoadingApp();
-      },500);
+      }, 500);
       await this.userExpService
         .findUserProfile(this.authService.getUserID())
         .then((x) => {
@@ -168,7 +168,7 @@ export class UserExperienceComponent
             ...this.defaultCompany,
           });
           this.userExperienceInfoClone = this.userExperienceInfo.value;
-          
+
         });
     }
     // Run when form value change
@@ -364,7 +364,7 @@ export class UserExperienceComponent
   toggleCheckBox(checked: boolean) {
     this.userExperienceInfo.controls['is_working'].markAsDirty();
     this.userExperienceInfo.controls['is_working'].setValue(checked);
-    if(checked){
+    if (checked) {
       this.userExperienceInfo.controls['start_date_to'].setValue(null);
       this.errorArr = this.checkDatePicker();
     }
@@ -410,7 +410,7 @@ export class UserExperienceComponent
     const dateTo = this.userExperienceInfo.controls['start_date_to'].value;
     const isWorking = this.userExperienceInfo.controls['is_working'].value;
     this.isDateCompare = false;
-    debugger 
+    // debugger 
     if (isWorking) {
       this.isDateCompare = false;
       if (dateFrom > this.defaultValueDate && isWorking) {
@@ -421,14 +421,14 @@ export class UserExperienceComponent
         this.isDateCompare = true;
       }
     } else {
-      if (dateFrom > dateTo && dateTo) { 
+      if (dateFrom > dateTo && dateTo) {
         const transferMsg = (msg || '')
           .replace('{0}', this.translateService.translate('date from'))
           .replace('{1}', this.translateService.translate('date to'));
         res.push(transferMsg);
         this.isDateCompare = true;
       }
-      if(!dateFrom && dateTo ){
+      if (!dateFrom && dateTo) {
         const transferMsg = (this.getMsg('E0020') || '')
           .replace('{0}', this.translateService.translate('date from'));
         res.push(transferMsg);
@@ -446,7 +446,7 @@ export class UserExperienceComponent
           hasBackdrop: true,
           autoFocus: false,
           context: {
-            style: {width: '90%'},
+            style: { width: '90%' },
             title: this.getMsg('I0006'),
           },
         })
@@ -456,12 +456,12 @@ export class UserExperienceComponent
           }
         });
     } else {
-      if(this.isSave){
+      if (this.isSave) {
         this.closeDialog(true);
-      }else{
+      } else {
         this.closeDialog(false);
       }
-      
+
     }
   }
 
