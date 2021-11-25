@@ -258,11 +258,12 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         }
       } else if (event.previousContainer.id == "TOP5") {
-        const skill = this.reorderSkills[0].data[event.previousIndex];
+        let skill = this.reorderSkills[0].data[event.previousIndex];
+        skill.top_skill = false;
         this.reorderSkills[0].data.splice(event.previousIndex, 1);
         for (let item in this.reorderSkills) {
           if (this.reorderSkills[item].code == skill.categoryCode) {
-            this.reorderSkills[item].data.push(skill);
+            this.reorderSkills[item].data.splice(event.currentIndex, 0, skill);
           }
         }
         this.checkAllowSave();
