@@ -176,7 +176,7 @@ export class UserProject {
     cy.label('description', ' DESCRIPTION*');
     cy.textarea('description', 'Place your text');
     cy.label('skills', ' SKILLS (MAX 10)*');
-    cy.input('skills', 'Fill name and enter to add your skills');
+    // cy.input('skills', 'Fill name and enter to add your skills');
     cy.label('responsibility', ' RESPONSIBILITY*');
     cy.textarea('responsibility', 'Place your text');
     cy.label('achievement', ' ACHIEVEMENT*');

@@ -6,14 +6,14 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
 import {
   NbDialogRef,
   NbDialogService,
   NbLayoutScrollService,
   NbToastrService,
 } from '@nebular/theme';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import {
   AitAppUtils,
   AitAuthService,
@@ -24,6 +24,7 @@ import {
   AitNavigationService,
   AitTranslationService,
   AppState,
+  getUserSetting,
   MODE,
 } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
@@ -51,12 +52,14 @@ export class UserOnboardingComponent
   cityCode: any;
   countryCode: any;
   districtCode: any;
+  dateFormat = '';
   sort_no = 0;
   isReset = false;
   isLangJP = false;
   isSubmit = false;
   isClear = false;
   isChanged = false;
+  isDisplay = false;
 
   resetUserInfo = {
     first_name: false,
@@ -147,6 +150,12 @@ export class UserOnboardingComponent
       layoutScrollService,
       toastrService
     );
+    
+    store.pipe(select(getUserSetting)).subscribe((setting) => {
+      if (isObjectFull(setting) && setting['date_format_display']) {
+        this.dateFormat = setting['date_format_display'];
+      }
+    });
 
     this.setModulePage({
       module: 'user',
@@ -204,38 +213,50 @@ export class UserOnboardingComponent
           }
         }
       });
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+          this.close(false);
+      }
+    });
   }
 
-  async ngOnInit(): Promise<void> {
+  async ngOnInit(): Promise<void> {    
     if (this.user_key) {
       this.mode = MODE.EDIT;
     }
-    if (this.user_key) {
-      this.callLoadingApp();
-      await this.userOnbService
-        .findUserOnboardingByKey(this.user_key)
-        .then(async (r) => {
-          if (r.status === RESULT_STATUS.OK) {
-            let isUserExist = false;
-            this.dataCountry = r.data[0];
-            if (r.data.length > 0 && !this.dataCountry.del_flag) {
-              this.userOnboardingInfo.patchValue({ ...this.dataCountry });
-              this.userOnboardingInfoClone = this.userOnboardingInfo.value;
-              this.user_id_profile = this.dataCountry.user_id;
-              this._key = this.dataCountry._key;
-              isUserExist = true;
+    await this.userProfileService.finProfileByUserId(this.user_key ? this.user_key : this.user_id)
+    .then((res) => {
+      if (res.status === RESULT_STATUS.OK && res.data.length > 0 ) {
+        const url = this.router.url;
+        const isUrl = url.indexOf('user-onboarding');
+        if(isUrl >= 0 ){
+          this.isDisplay = true;
+        }       
+      }
+    })
+    if(this.isDisplay){
+      this.router.navigate([`/404`]);
+    }else{
+      if (this.user_key) {
+        this.callLoadingApp();
+        await this.userOnbService
+          .findUserOnboardingByKey(this.user_key)
+          .then(async (r) => {
+            if (r.status === RESULT_STATUS.OK) {
+              let isUserExist = false;
+              this.dataCountry = r.data[0];
+              if (r.data.length > 0 && !this.dataCountry.del_flag) {
+                this.userOnboardingInfo.patchValue({ ...this.dataCountry });
+                this.userOnboardingInfoClone = this.userOnboardingInfo.value;
+                this.user_id_profile = this.dataCountry.user_id;
+                this._key = this.dataCountry._key;
+                isUserExist = true;
+              }
+              this.cancelLoadingApp();
+              !isUserExist && this.router.navigate([`/404`]);
             }
-            this.cancelLoadingApp();
-            !isUserExist && this.router.navigate([`/404`]);
-          }
-        });
-    } else {
-      await this.userProfileService.finProfileByUserId(this.user_id)
-        .then((res) => {
-          if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
-            this.router.navigate([`recommenced-user`]);
-          }
-        })
+          });
+      } 
     }
 
     await this.getGenderList();
@@ -387,26 +408,22 @@ export class UserOnboardingComponent
   }
 
   async saveDataUserSkill() {
-    this.user_skill._from = 'sys_user/' + this.authService.getUserID();
-    this.user_skill.relationship = 'user_skill';
-    this.user_skill.sort_no = (this.sort_no || 0) + 1;
-    let number_sort_no = 0;
-    const skills = [];
-    for (const item of this.skills) {
-      await this.userOnbService.findSkillsByCode(item._key).then((res) => {
-        skills.push(res.data[0]._key);
+    if (this.mode === MODE.NEW) {
+      this.user_skill._from = 'sys_user/' + this.authService.getUserID();
+      this.user_skill.relationship = 'user_skill';
+      const skills = [];
+      for (const item of this.skills) {
+        await this.userOnbService.findSkillsByCode(item._key).then((res) => {
+          skills.push(res.data[0]._key);
+        });
+      }
+      skills.forEach(async (skill) => {
+        this.sort_no += 1;
+        this.user_skill.sort_no = this.sort_no;
+        this.user_skill._to = 'm_skill/' + skill;
+        await this.userOnbService.saveUserSkills([this.user_skill]);
       });
     }
-    const _fromUserSkill = [
-      { _from: 'sys_user/' + this.authService.getUserID() },
-    ];
-    await this.userOnbService.removeSkills(_fromUserSkill);
-    skills.forEach(async (skill) => {
-      this.user_skill.sort_no += number_sort_no;
-      this.user_skill._to = 'm_skill/' + skill;
-      await this.userOnbService.saveUserSkills([this.user_skill]);
-      number_sort_no++;
-    });
   }
 
   save() {
@@ -485,6 +502,7 @@ export class UserOnboardingComponent
           hasBackdrop: true,
           autoFocus: false,
           context: {
+            style: {width: '90%'},
             title: this.getMsg('I0006'),
           },
         })

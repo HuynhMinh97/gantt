@@ -7,6 +7,7 @@ import {
   AitTranslationService, 
   AitUserService, 
   AppState, 
+  getSettingLangTime, 
   MODE 
 } from '@ait/ui';
 import { Component, ElementRef, OnInit } from '@angular/core';
@@ -16,14 +17,15 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { NbToastrService, NbLayoutScrollService, NbDialogService, NbDialogRef } from '@nebular/theme';
-import { Store} from '@ngrx/store';
+import { select, Store} from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { UserProjectErrorsMessage } from './interface';
 import { isArrayFull, isObjectFull, KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
 import { UserProjectService } from 'apps/ait-matching-webapp/src/app/services/user-project.service';
 import { UserProfileService } from 'apps/ait-matching-webapp/src/app/services/user-profile.service';
+import { MatchingUtils } from 'apps/ait-matching-webapp/src/app/@constants/utils/matching-utils';
 
 
 @Component({
@@ -34,6 +36,7 @@ import { UserProfileService } from 'apps/ait-matching-webapp/src/app/services/us
 export class UserProjectComponent extends AitBaseComponent implements OnInit {
   mode = MODE.NEW;
   listSkills: any;
+  dateFormat: any;
   userProjectClone: any;
   projectDataInput: any;
   userProject: FormGroup;
@@ -115,10 +118,21 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       layoutScrollService,
       toastrService
     );
-
+    this.store.pipe(select(getSettingLangTime)).subscribe(setting => {
+      if (setting) {
+        const display = setting?.date_format_display;
+        this.dateFormat = MatchingUtils.getFormatYearMonth(display);
+      }
+    });
     this.setModulePage({
       module: 'user',
       page: 'user_project',
+    });
+    
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+          this.closeDialog(false);
+      }
     });
 
     this.userProject = this.formBuilder.group({
@@ -511,6 +525,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
           hasBackdrop: true,
           autoFocus: false,
           context: {
+            style: {width: '90%'},
             title: this.getMsg('I0006'),
           },
         })

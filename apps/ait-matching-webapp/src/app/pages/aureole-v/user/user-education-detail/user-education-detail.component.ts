@@ -1,7 +1,7 @@
 import { RESULT_STATUS } from '@ait/shared';
 import { AitAppUtils, AitAuthService, AitBaseComponent, AitEnvironmentService, AppState, getSettingLangTime } from '@ait/ui';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { NbToastrService, NbLayoutScrollService, NbDialogRef } from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
@@ -20,6 +20,7 @@ export class UserEducationDetailComponent extends AitBaseComponent implements On
   stateUserEducation = {} as UserEducationDto;
   dateFormat: any;
   constructor(
+    private router: Router,
     private nbDialogRef: NbDialogRef<UserEducationDetailComponent>,
     public activeRouter: ActivatedRoute,
     private userEduService: UserEducationService,
@@ -49,9 +50,15 @@ export class UserEducationDetailComponent extends AitBaseComponent implements On
       module: 'user',
       page: 'user_education',
     });
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+          this.closeDialog(false);
+      }
+    });
   }
 
   async ngOnInit(): Promise<void> {
+    this.callLoadingApp();
     if (this.user_key) {
       await this.userEduService
         .findUserEducationByKey(this.user_key)
@@ -62,6 +69,9 @@ export class UserEducationDetailComponent extends AitBaseComponent implements On
           }
         })
     }
+    setTimeout(() => {
+      this.cancelLoadingApp();
+    }, 500);
   }
   close(){
     this.closeDialog(false);

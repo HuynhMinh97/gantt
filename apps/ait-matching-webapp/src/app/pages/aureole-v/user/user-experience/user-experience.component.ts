@@ -7,14 +7,14 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import {
   NbDialogRef,
   NbDialogService,
   NbLayoutScrollService,
   NbToastrService,
 } from '@nebular/theme';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import {
   AitAppUtils,
   AitAuthService,
@@ -23,10 +23,12 @@ import {
   AitEnvironmentService,
   AitTranslationService,
   AppState,
+  getSettingLangTime,
   MODE,
 } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
 import { KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
+import { MatchingUtils } from 'apps/ait-matching-webapp/src/app/@constants/utils/matching-utils';
 
 @Component({
   selector: 'ait-user-experience',
@@ -63,6 +65,7 @@ export class UserExperienceComponent
   };
 
   user_key = '';
+  dateFormat = '';
 
   constructor(
     private router: Router,
@@ -90,6 +93,19 @@ export class UserExperienceComponent
       toastrService
     );
 
+    this.store.pipe(select(getSettingLangTime)).subscribe(setting => {
+      if (setting) {
+        const display = setting?.date_format_display;
+        this.dateFormat = MatchingUtils.getFormatYearMonth(display);
+      }
+    });
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        this.closeDialog(false);
+      }
+    });
+
     this.setModulePage({
       module: 'user',
       page: 'user_experience',
@@ -100,13 +116,13 @@ export class UserExperienceComponent
         Validators.required,
         Validators.maxLength(200),
       ]),
-      company_working: new FormControl(null, [Validators.required]),
-      location: new FormControl(null, [Validators.required]),
-      employee_type: new FormControl(null),
-      is_working: new FormControl(false),
-      start_date_from: new FormControl(this.defaultValueDate),
-      start_date_to: new FormControl(null),
       description: new FormControl(null),
+      is_working: new FormControl(false),
+      start_date_to: new FormControl(null),
+      employee_type: new FormControl(null),
+      start_date_from: new FormControl(this.defaultValueDate),
+      location: new FormControl(null, [Validators.required]),
+      company_working: new FormControl(null, [Validators.required]),
     });
   }
 
@@ -114,7 +130,7 @@ export class UserExperienceComponent
     if (this.user_key) {
       if (this.user_id != this.authService.getUserID()) {
         this.mode = MODE.VIEW;
-      }else{
+      } else {
         this.mode = MODE.EDIT;
       }
     }
@@ -130,17 +146,17 @@ export class UserExperienceComponent
               this.userExperienceInfo.patchValue({ ...data });
               this.userExperienceInfoClone = this.userExperienceInfo.value;
               this.user_id = data.user_id;
-              isUserExist = true;   
+              isUserExist = true;
             }
             this.cancelLoadingApp();
             !isUserExist && this.router.navigate([`/404`]);
           }
         });
-    }else{
+    } else {
       this.callLoadingApp();
       setTimeout(() => {
         this.cancelLoadingApp();
-      },500);
+      }, 500);
       await this.userExpService
         .findUserProfile(this.authService.getUserID())
         .then((x) => {
@@ -152,7 +168,7 @@ export class UserExperienceComponent
             ...this.defaultCompany,
           });
           this.userExperienceInfoClone = this.userExperienceInfo.value;
-          
+
         });
     }
     // Run when form value change
@@ -255,7 +271,7 @@ export class UserExperienceComponent
     }
     saveData.company_working = saveData.company_working._key;
     if (saveData.is_working) {
-      delete saveData.start_date_to;
+      saveData['start_date_to'] = null;
     }
     if (this.user_key) {
       saveData['_key'] = this.user_key;
@@ -299,13 +315,10 @@ export class UserExperienceComponent
   }
 
   saveAndClose() {
-    this.errorArr = this.checkDatePicker();
-
     this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
-
     if (this.userExperienceInfo.valid && !this.isDateCompare) {
       this.callLoadingApp();
       this.userExpService
@@ -351,6 +364,10 @@ export class UserExperienceComponent
   toggleCheckBox(checked: boolean) {
     this.userExperienceInfo.controls['is_working'].markAsDirty();
     this.userExperienceInfo.controls['is_working'].setValue(checked);
+    if (checked) {
+      this.userExperienceInfo.controls['start_date_to'].setValue(null);
+      this.errorArr = this.checkDatePicker();
+    }
   }
 
   takeMasterValue(value: any, target: string): void {
@@ -383,6 +400,7 @@ export class UserExperienceComponent
       this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(value);
     }
+    this.errorArr = this.checkDatePicker();
   }
 
   checkDatePicker() {
@@ -392,21 +410,27 @@ export class UserExperienceComponent
     const dateTo = this.userExperienceInfo.controls['start_date_to'].value;
     const isWorking = this.userExperienceInfo.controls['is_working'].value;
     this.isDateCompare = false;
-
-    if (dateFrom == null || isWorking || dateTo == null) {
+    // debugger 
+    if (isWorking) {
       this.isDateCompare = false;
       if (dateFrom > this.defaultValueDate && isWorking) {
+        const transferMsg = (msg || '')
+          .replace('{0}', this.translateService.translate('date from'))
+          .replace('{1}', this.translateService.translate('today'));
+        res.push(transferMsg);
+        this.isDateCompare = true;
+      }
+    } else {
+      if (dateFrom > dateTo && dateTo) {
         const transferMsg = (msg || '')
           .replace('{0}', this.translateService.translate('date from'))
           .replace('{1}', this.translateService.translate('date to'));
         res.push(transferMsg);
         this.isDateCompare = true;
       }
-    } else {
-      if (dateFrom > dateTo && !isWorking) {
-        const transferMsg = (msg || '')
-          .replace('{0}', this.translateService.translate('date from'))
-          .replace('{1}', this.translateService.translate('date to'));
+      if (!dateFrom && dateTo) {
+        const transferMsg = (this.getMsg('E0020') || '')
+          .replace('{0}', this.translateService.translate('date from'));
         res.push(transferMsg);
         this.isDateCompare = true;
       }
@@ -422,6 +446,7 @@ export class UserExperienceComponent
           hasBackdrop: true,
           autoFocus: false,
           context: {
+            style: { width: '90%' },
             title: this.getMsg('I0006'),
           },
         })
@@ -431,12 +456,12 @@ export class UserExperienceComponent
           }
         });
     } else {
-      if(this.isSave){
+      if (this.isSave) {
         this.closeDialog(true);
-      }else{
+      } else {
         this.closeDialog(false);
       }
-      
+
     }
   }
 

@@ -1,5 +1,5 @@
 <ait-template-popup [width]="800" [isLoading]="true" [isPage]="false">
-  <div class="template__popup">
+  <div class="user__wrapper">
     <ait-text-gradient
       [content]="'Basic information detail'"
       [id]="'onboarding-detail'"
@@ -53,7 +53,11 @@
             [label]="'BORN ON DATE'"
             [id]="'bod'"
             [disable]="true"
-            [styleInput]="{ color: '#8f9bb3', width: '180px', background:'#ffffff' }"
+            [styleInput]="{
+              color: '#8f9bb3',
+              width: '180px',
+              background: '#ffffff'
+            }"
             [defaultValue]="stateUserOnboarding.bod"
           ></ait-datepicker>
         </div>
@@ -163,15 +167,17 @@
     </div>
     <div class="sticky">
       <div class="action-row">
-        <ait-button
-          [id]="'close'"
-          (click)="close()"
-          [width]="'150px'"
-          [title]="'close'"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
-        ></ait-button>
+        <div class="block">
+          <ait-button
+            [id]="'close'"
+            (click)="close()"
+            [width]="'150px'"
+            [title]="'close'"
+            [background]="
+              'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+            "
+          ></ait-button>
+        </div>
       </div>
     </div>
   </div>

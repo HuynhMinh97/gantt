@@ -1,10 +1,11 @@
-<div class="template__popup">
+<div class="user__wrapper" id="user_job_alert">
     <ait-text-gradient
       [content]="'title header'"
       [id]="'job-alert-detail'"
     ></ait-text-gradient>
-  
-    <div class="content__card">
+    <ait-space></ait-space>
+  <div class="content__card">
+    <div class="form">
       <div class="input_inline">
         <ait-output-text
           [label]="'INDUSTRY'"
@@ -74,20 +75,23 @@
           [widthInput]="'180px'"
         ></ait-input-number>
         </div>
-        <div class="sticky">
-          <div class="action-row">
-            <ait-button
-              [id]="'close'"
-              [width]="'150px'"
-              [title]="'close'"
-              [background]="
-                'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-              "
-            ></ait-button>
-          </div>
-        </div>
       </div>
-      
+    </div> 
+  <div class="sticky">
+    <div class="action-row">
+      <div class="block">
+      <ait-button
+        [id]="'close'"
+        [width]="'150px'"
+        [title]="'close'"
+        (click)="close()"
+        [background]="
+          'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+        "
+      ></ait-button>
+      </div>
+    </div>
+  </div>   
   </div>
   
 

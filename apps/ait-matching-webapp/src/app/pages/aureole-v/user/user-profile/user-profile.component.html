@@ -74,7 +74,7 @@
                 padding-bottom: 10px;
               "
             >
-              0
+              {{countFriend}}
             </div>
             <span
               style="
@@ -85,20 +85,41 @@
                 font-size: 15px;
                 margin-bottom: 5px;
               "
-              >{{ 'connections' | translate }}</span
+              >{{ 'my-profile.connections' | translate }}</span
             >
             <div class="view_contact" *ngIf="!isMyUserProfile">
               <ait-button
+              *ngIf="!isFriend"
                 [id]="'add friend'"
                 [styleText]="{ 'font-size': '10px' }"
                 [height]="'24px'"
                 [title]="'add friend'"
                 [isDefault]="true"
+                (click)="saveFriends()"
+              ></ait-button>
+              <ait-button
+                *ngIf="isFriend"
+                [id]="'add friend'"
+                [styleText]="{ 'font-size': '10px' }"
+                [height]="'24px'"
+                [title]="'my-profile.un-friend'"
+                [isDefault]="true"
+                (click)="deleteFriends()"
               ></ait-button>
             </div>
             <div class="view_contact">
               <ait-button
+                *ngIf="isMyUserProfile"
                 (click)="openOnboarding(DataUserProfile?.user_id)"
+                [styleText]="{ 'font-size': '10px' }"
+                [height]="'24px'"
+                [title]="'view contact'"
+                [id]="'openOnboarding'"
+                [isDefault]="true"
+              ></ait-button>
+              <ait-button
+                *ngIf="!isMyUserProfile"
+                (click)="openOnboardingDetail(DataUserProfile?.user_id)"
                 [styleText]="{ 'font-size': '10px' }"
                 [height]="'24px'"
                 [title]="'view contact'"
@@ -140,7 +161,7 @@
         [buttonTitle]="'add skills'"
         [disableHeader]="false"
         [widthBtn]="'150px'"
-        [content]="countSkill"
+        [content]="getCounter('my-profile.has-skill', countSkill)"
         [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
         [padding]="'20px'"
         [isOpen]="showSkill"
@@ -178,7 +199,7 @@
       [buttonTitle]="'add projects'"
       [disableHeader]="false"
       [widthBtn]="'150px'"
-      [content]="sumHoursProject"
+      [content]="getCounter('my-profile.project-time', timeProject*22*8)"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'20px'"
       [isOpen]="showProject"
@@ -207,7 +228,7 @@
                     {{ listProject?.company_name }}
                   </p>
                   <div class="desc-info">
-                    <p>{{dateDiffInYears(listProject?.working_time) + 's' }}</p>
+                    <p>{{dateDiffInYears(listProject?.working_time)}}</p>
                   </div>
                 </div>
               </div>
@@ -229,12 +250,12 @@
                 <img
                   src="../../../../../assets/images/Icon.svg"
                   alt="project"
-                  *ngIf="project?.start_date_to && project?.start_date_to <= today"
+                  *ngIf="project?.start_date_to && project?.start_date_to < today"
                 />
                 <img
                   src="../../../../../assets/images/IconEdit.svg"
                   alt="projectcurrent"
-                  *ngIf="!project?.start_date_to || project?.start_date_to > today"
+                  *ngIf="!project?.start_date_to || project?.start_date_to >= today"
                 />
               </div>
               <div class="timeline-info">
@@ -243,15 +264,15 @@
                   <div class="desc-info">
                     <p>{{ project?.title.value }}</p>
                     <p *ngIf="!project.start_date_to">
-                      {{ project?.start_date_from | date:'yyyy/MM' }} - {{'Presen'}}: {{dateDiffInYears(dateDiffInMonths(project?.start_date_from,null))}}
+                      {{ project?.start_date_from | date:monthFormat }} - {{'my-profile.prevent' | translate}}: {{dateDiffInYears(dateDiffInMonths(project?.start_date_from,null))}}
                     </p>
                     <p *ngIf="project.start_date_to">
-                      {{ project?.start_date_from | date:'yyyy/MM' }} - {{ project?.start_date_to | date:'yyyy/MM'}}: {{dateDiffInYears(dateDiffInMonths(project?.start_date_from,project?.start_date_to))}}
+                      {{ project?.start_date_from | date:monthFormat }} - {{ project?.start_date_to | date:monthFormat}}: {{dateDiffInYears(dateDiffInMonths(project?.start_date_from,project?.start_date_to))}}
                     </p>
                   </div>
                 </div>
               </div>
-              <div id="ic-edit" >
+              <div id="ic-edit" [nbTooltip]="isMyUserProfile ? ('my-profile.edit' | translate) : ('my-profile.view' | translate )">
                 <a 
                   (click)="openProjects(project?._key)"
                   [id]="'project-' + project?._key"
@@ -297,7 +318,7 @@
       [buttonTitle]="'add experiencer'"
       [disableHeader]="false"
       [widthBtn]="'150px'"
-      [content]="timeExperienceStr"
+      [content]="getCounter('my-profile.experience-time', timeExperienceStr)"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'20px'"
       [idBtn]="'openExperience'"
@@ -347,12 +368,12 @@
               <img
                 src="../../../../../assets/images/Icon.svg"
                 alt="project"
-                *ngIf="experience?.start_date_to && experience?.start_date_to <= today"
+                *ngIf="experience?.start_date_to && experience?.start_date_to < today"
               />
               <img
                 src="../../../../../assets/images/IconEdit.svg"
                 alt="projectcurrent"
-                *ngIf="!experience?.start_date_to || experience?.start_date_to > today"
+                *ngIf="!experience?.start_date_to || experience?.start_date_to >= today"
               />
             </div>
             <div class="timeline-info">
@@ -361,15 +382,15 @@
                 <div class="desc-info">
                   <p>{{experience?.employee_type?.value}}</p>
                   <p *ngIf="!experience.start_date_to">
-                    {{ experience?.start_date_from | date:'yyyy/MM' }} - {{'Presen'}}: {{dateDiffInYears(dateDiffInMonths(experience?.start_date_from,null))}}
+                    {{ experience?.start_date_from ? (experience?.start_date_from | date:monthFormat) : ('my-profile.unclear' | translate) }} - {{'my-profile.prevent' | translate}}: {{dateDiffInYears(dateDiffInMonths(experience?.start_date_from,null))}}
                   </p>
                   <p *ngIf="experience.start_date_to">
-                    {{ experience?.start_date_from | date:'yyyy/MM' }} - {{ experience?.start_date_to | date:'yyyy/MM'}}: {{dateDiffInYears(dateDiffInMonths(experience?.start_date_from,experience?.start_date_to))}}
+                    {{ experience?.start_date_from ? (experience?.start_date_from | date:monthFormat) : ('my-profile.unclear' | translate)  }} - {{ experience?.start_date_to | date:monthFormat}}: {{dateDiffInYears(dateDiffInMonths(experience?.start_date_from,experience?.start_date_to))}}
                   </p>
                 </div>
               </div>
             </div>
-            <div id="ic-edit">
+            <div id="ic-edit" [nbTooltip]="isMyUserProfile ? ('my-profile.edit' | translate) : ('my-profile.view' | translate )">
               <a 
                 (click)="openExperience(experience?._key)"
                 [id]="'experience-' + experience?._key"
@@ -411,10 +432,10 @@
       [styleLabel]="{'font-size':'22px'}"
       (onClickButtonHeader)="openCertificate()"
       [actionBtn]="isMyUserProfile ? actionBtn : ''"
-      [buttonTitle]="'add certificates'"
+      [buttonTitle]="'add certificate'"
       [disableHeader]="false"
       [widthBtn]="'150px'"
-      [content]="countCentificate"
+      [content]="getCounter('my-profile.certificates-count', countCentificate)"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'20px'"
       [isOpen]="showCertificate"
@@ -448,11 +469,15 @@
                       centificate?.issue_by
                     }}
                   </p>
-                  <p>{{ centificate?.issue_date_from }} - {{ centificate?.issue_date_to }}</p>
+                  <p *ngIf="!centificate?.issue_date_to">
+                    {{ centificate?.issue_date_from ? (centificate?.issue_date_from | date:dateFormat) : ('my-profile.unclear' | translate)}} - {{'my-profile.prevent' | translate}}
+                  <p *ngIf="centificate?.issue_date_to">
+                    {{ centificate?.issue_date_from ? (centificate?.issue_date_from | date:dateFormat) : ('my-profile.unclear' | translate) }} - {{  centificate?.issue_date_to | date:dateFormat}}
+                  </p>
                 </div>
               </div>
             </div>
-            <div id="ic-edit">
+            <div id="ic-edit" [nbTooltip]="isMyUserProfile ? ('my-profile.edit' | translate) : ('my-profile.view' | translate )">
               <a 
                 (click)="openCertificate(centificate?._key)"
                 [id]="'centificate-' + centificate?._key"
@@ -491,14 +516,14 @@
       style="outline-color: #10529d"
       class="content_card"
       style="display: flex; justify-content: center"
-      [label]="'course'"
+      [label]="'my-profile.course'"
       [styleLabel]="{'font-size':'22px'}"
       (onClickButtonHeader)="openCourse()"
       [actionBtn]="isMyUserProfile ? actionBtn : ''"
       [buttonTitle]="'add course'"
       [disableHeader]="false"
       [widthBtn]="'150px'"
-      [content]="countCourse"
+      [content]="getCounter('my-profile.course-count', countCourse)"
       [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
       [padding]="'20px'"
       [idBtn]="'openCourse'"
@@ -531,11 +556,15 @@
                       course?.training_center
                     }}
                   </p>
-                  <p>{{ course?.start_date_from }} - {{course?.start_date_to}}</p>
+                  <p *ngIf="!course?.start_date_to ">
+                    {{ course?.start_date_from ? (course?.start_date_from | date:dateFormat) : ('my-profile.unclear' | translate) }} - {{'my-profile.prevent' | translate}}
+                  <p *ngIf="course?.start_date_to ">
+                    {{ course?.start_date_from ? (course?.start_date_from | date:dateFormat) : ('my-profile.unclear' | translate)}} - {{  course?.start_date_to  | date:dateFormat}}
+                  </p>
                 </div>
               </div>
             </div>
-            <div id="ic-edit">
+            <div id="ic-edit" [nbTooltip]="isMyUserProfile ? ('my-profile.edit' | translate) : ('my-profile.view' | translate )">
               <a 
                 (click)="openCourse(course?._key)"
                 [id]="'course-' + course?._key"
@@ -578,7 +607,7 @@
     [styleLabel]="{'font-size':'22px'}"
     (onClickButtonHeader)="openEducation()"
     [actionBtn]="isMyUserProfile ? actionBtn : ''"
-    [buttonTitle]="'add educations'"
+    [buttonTitle]="'add education'"
     [disableHeader]="false"
     [widthBtn]="'150px'"
     [styleContent]="{'color': '#8F9BB3', 'font-size':'12px', 'margin-top':'12px'}"
@@ -615,15 +644,15 @@
                   }}
                 </p>
                 <p *ngIf="!education.start_date_to">
-                  {{ education?.start_date_from | date:'yyyy/MM' }} - {{'Presen'}}
+                  {{education?.start_date_from ? (education?.start_date_from | date:monthFormat) : ('my-profile.unclear' | translate) }} - {{'my-profile.prevent' | translate}}
                 </p>
                 <p *ngIf="education.start_date_to">
-                  {{ education?.start_date_from | date:'yyyy/MM' }} - {{education?.start_date_to | date:'yyyy/MM'}}
+                  {{ education?.start_date_from ? (education?.start_date_from | date:monthFormat) : ('my-profile.unclear' | translate) }} - {{education?.start_date_to | date:monthFormat}}
                 </p>
               </div>
             </div>
           </div>
-          <div id="ic-edit">
+          <div id="ic-edit" [nbTooltip]="isMyUserProfile ? ('my-profile.edit' | translate) : ('my-profile.view' | translate )">
             <a (click)="openEducation(education?._key)" [id]="'education-' + education?._key" *ngIf="isMyUserProfile">
               <nb-icon
                 nbSuffix
@@ -654,11 +683,11 @@
       style="outline-color: #10529d"
       class="content_card"
       style="display: flex; justify-content: center"
-      [label]="'languages'"
+      [label]="'languages' | translate"
       [styleLabel]="{'font-size':'22px'}"
       (onClickButtonHeader)="openLanguage()"
       [actionBtn]="isMyUserProfile ? actionBtn : ''"
-      [buttonTitle]="'add languages'"
+      [buttonTitle]="'add language'"
       [disableHeader]="false"
       [widthBtn]="'150px'"
       [content]="''"
@@ -695,7 +724,7 @@
                     </div>
                   </div>
                 </div>
-                <div id="ic-edit">
+                <div id="ic-edit" [nbTooltip]="isMyUserProfile ? ('my-profile.edit' | translate) : ('my-profile.view' | translate )">
                   <a (click)="openLanguage( language?._key)" [id]="'language-' + language?._key "  *ngIf="isMyUserProfile">
                     <nb-icon
                       nbSuffix

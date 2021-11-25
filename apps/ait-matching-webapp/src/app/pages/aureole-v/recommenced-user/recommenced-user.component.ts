@@ -20,6 +20,7 @@ import { RecommencedUserService } from '../../../services/recommenced-user.servi
 import { ReactionService } from '../../../services/reaction.service';
 import { Apollo } from 'apollo-angular';
 import { StoreKeywordsSearch } from '../../../state/actions';
+import { UserProfileService } from '../../../services/user-profile.service';
 
 export enum StorageKey {
   KEYWORD = 'keyword',
@@ -49,6 +50,7 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
     private matchingCompanyService: RecommencedUserService,
     private reactionService: ReactionService,
     private translateService: AitTranslationService,
+    private userProfileService: UserProfileService,
     store: Store<AppState>,
     authService: AitAuthService,
     private router: Router,
@@ -87,6 +89,13 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
     //     }
     //   }
     // });
+
+    this.userProfileService.finProfileByUserId(this.user_id)
+    .then((res) => {
+      if (res.status === RESULT_STATUS.OK && res.data.length == 0) {
+        this.router.navigate([`user-onboarding`]);
+      }
+    })
 
     // tslint:disable-next-line: deprecation
     layoutScrollService.onScroll().subscribe((e) => {

@@ -69,7 +69,7 @@
         <div class="input_date">
           <ait-datepicker
             [label]="'start date'"
-            [format]="'yyyy/MM'"
+            [format]="dateFormat"
             [placeholder]="'2021/01'"
             [id]="'start_date_from'"
             [style]="{ width: '170px' }"
@@ -86,7 +86,7 @@
           <span>~</span>
           <ait-datepicker
             [placeholder]="'2021/01'"
-            [format]="'yyyy/MM'"
+            [format]="dateFormat"
             [id]="'start_date_to'"
             [style]="{ width: '170px' }"
             [isReset]="resetUserInfo.start_date_to"
@@ -136,7 +136,7 @@
             [required]="false"
             [hasStatus]="false"
             [isReset]="isResetFile"
-            [placeholder]="'select file'"
+            [placeholder]="'select file' |translate"
             [fileKeys]="userEducationInfo.controls['file'].value"
             (watchValue)="takeFiles($event.value)"
             [isSubmit]="isSubmit"
@@ -160,7 +160,7 @@
             *ngIf="mode === 'EDIT'"
             [id]="'delete'"
             [width]="'150px'"
-            [title]="'delete'"
+            [title]="'消去'"
             (click)="onDelete()"
             [isDefault]="true"
           >

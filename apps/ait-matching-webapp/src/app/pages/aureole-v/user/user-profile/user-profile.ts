@@ -1,4 +1,5 @@
 export interface OrderSkill {
+    code: string;
     name: string;
     data: string[];
 }

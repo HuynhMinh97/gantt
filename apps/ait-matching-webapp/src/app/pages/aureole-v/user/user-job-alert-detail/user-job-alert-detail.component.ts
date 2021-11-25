@@ -76,5 +76,7 @@ export class UserJobAlertDetailComponent extends AitBaseComponent implements OnI
     }
   }
 
-
+  close(){
+    history.back();
+  }
 }

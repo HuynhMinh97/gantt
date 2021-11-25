@@ -1,7 +1,7 @@
 import { RESULT_STATUS } from '@ait/shared';
 import { AitAppUtils, AitAuthService, AitBaseComponent, AitEnvironmentService, AppState } from '@ait/ui';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { NbToastrService, NbLayoutScrollService, NbDialogRef } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
@@ -18,6 +18,7 @@ export class UserOnboardingDetailComponent extends AitBaseComponent implements O
   user_key: any = '';
   stateUserOnboarding = {} as UserOnboardingDto;
   constructor(
+    private router: Router,
     private nbDialogRef: NbDialogRef<UserOnboardingDetailComponent>,
     public activeRouter: ActivatedRoute,
     private userOnbService: UserOnboardingService,
@@ -42,9 +43,16 @@ export class UserOnboardingDetailComponent extends AitBaseComponent implements O
       module: 'user',
       page: 'user_onboarding',
     });
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+          this.closeDialog(false);
+      }
+    });
   }
 
   async ngOnInit(): Promise<void> {
+    this.callLoadingApp();
     if (this.user_key) {
       await this.userOnbService
         .findUserOnboardingByKey(this.user_key)
@@ -55,6 +63,9 @@ export class UserOnboardingDetailComponent extends AitBaseComponent implements O
           }
         })
     }
+    setTimeout(() => {
+      this.cancelLoadingApp();
+    },500);
   }
   close(){
     this.closeDialog(false);

@@ -29,7 +29,7 @@ export class UserLanguage {
 
   static inputDataLanguage() {
     cy.chooseMasterData('language', 'English');
-    cy.chooseMasterData('proficiency', 'Full professional proficiency US');
+    cy.chooseMasterData('proficiency', 'N1 US');
   }
 
   // Check save and delete

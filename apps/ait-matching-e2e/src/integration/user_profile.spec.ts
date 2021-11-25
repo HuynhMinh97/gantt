@@ -12,7 +12,7 @@ describe('Navigate user profile', () => {
     cy.wait(3000);
     cy.visit(Cypress.env('host') + Cypress.env('user_profile'));
     cy.url().should('eq', Cypress.env('host') + Cypress.env('user_profile'));
-    // checkUI();
+    checkUI();
     findUserOnboarding();
     addProjects();
     addExperiences();
@@ -100,9 +100,9 @@ describe('Navigate user profile', () => {
       cy.get('#fullname_input').should('have.text', ' ' + data.last_name + ' ' + data.first_name + ' ');
       cy.get('#company_input').should('have.text', ' ' + data.title.value + " at " + data.company_working.value + ' ');
       cy.get('#country_region_input').should('have.text', data.province_city.value + ', ' + data.country_region.value);
-      cy.get('#about_input').should('have.text', ' ' + data.about + ' ')
+      cy.get('#about_input').should('have.text', ' ' + (data.about ? data.about : '') + ' ')
     });
-    // getTextMenu('SKILLS', 'SKILLS');
+    getTextMenu('SKILLS', 'SKILLS');
     getTextMenu('PROJECTS', 'PROJECTS');
     getTextMenu('EXPERIENCES', 'EXPERIENCES');
     getTextMenu('CERTIFICATES', 'CERTIFICATES');
@@ -117,7 +117,7 @@ describe('Navigate user profile', () => {
   }
 
   function findUserOnboarding() {
-    cy.clickButton('openOnboarding');
+    cy.get('.view_contact').click();
     const query = `
     query {
       findUserOnboardingInfo(
@@ -592,6 +592,8 @@ describe('Navigate user profile', () => {
       failOnStatusCode: false,
 
     }).then((response) => {
+      console.log(response.body.data);
+
       const data = response.body.data.findUserEducationInfo.data[0];
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(3000);

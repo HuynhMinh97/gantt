@@ -10,14 +10,14 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import {
   NbDialogRef,
   NbDialogService,
   NbLayoutScrollService,
   NbToastrService,
 } from '@nebular/theme';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import {
   AitAppUtils,
   AitAuthService,
@@ -26,10 +26,12 @@ import {
   AitEnvironmentService,
   AitTranslationService,
   AppState,
+  getSettingLangTime,
   MODE,
 } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
 import { KEYS, RESULT_STATUS } from '@ait/shared';
+import { MatchingUtils } from 'apps/ait-matching-webapp/src/app/@constants/utils/matching-utils';
 
 @Component({
   selector: 'ait-user-education',
@@ -51,6 +53,8 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
   isChanged = false;
   isResetFile = false;
   isDateCompare = false;
+
+  dateFormat = '';
 
   resetUserInfo = {
     file: false,
@@ -92,9 +96,22 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
       toastrService
     );
 
+    this.store.pipe(select(getSettingLangTime)).subscribe(setting => {
+      if (setting) {
+        const display = setting?.date_format_display;
+        this.dateFormat= MatchingUtils.getFormatYearMonth(display);
+      }
+    });
+
     this.setModulePage({
       module: 'user',
       page: 'user_education',
+    });
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+          this.closeDialog(false);
+      }
     });
 
     this.userEducationInfo = this.formBuilder.group({
@@ -180,7 +197,6 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
-    this.errorArr = this.checkDatePicker();
     if (this.userEducationInfo.valid && !this.isDateCompare) {
       this.callLoadingApp();
       this.userEduService
@@ -208,7 +224,6 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
   }
 
   saveAndClose() {
-    this.errorArr = this.checkDatePicker();
     this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;
@@ -335,16 +350,22 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     const dateTo = this.userEducationInfo.controls['start_date_to'].value;
     this.isDateCompare = false;
 
-    if (dateFrom == null || dateTo == null) {
+    if (dateFrom == null && dateTo == null) {
       this.isDateCompare = false;
     } else {
-      if (dateFrom > dateTo) {
+      if (dateFrom > dateTo  && dateTo != null) {
         const transferMsg = (msg || '')
           .replace('{0}', this.translateService.translate('date from'))
           .replace('{1}', this.translateService.translate('date to'));
         res.push(transferMsg);
         this.isDateCompare = true;
       }
+      if(!dateFrom && dateTo){
+        const transferMsg = (this.getMsg('E0020') || '')
+        .replace('{0}', this.translateService.translate('date from'));
+        res.push(transferMsg);
+      }
+      this.isDateCompare = true;
     }
     return res;
   }
@@ -357,6 +378,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
           hasBackdrop: true,
           autoFocus: false,
           context: {
+            style: {width: '90%'},
             title: this.getMsg('I0006'),
           },
         })
@@ -411,6 +433,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
       this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(value);
     }
+    this.errorArr = this.checkDatePicker();
   }
 
   takeFiles(fileList: any[]) {

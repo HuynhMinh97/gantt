@@ -1,7 +1,7 @@
 import { RESULT_STATUS } from '@ait/shared';
 import { AitBaseComponent, AitEnvironmentService, AppState, AitAuthService, AitAppUtils, getSettingLangTime } from '@ait/ui';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { NbToastrService, NbLayoutScrollService, NbDialogRef } from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
@@ -22,6 +22,7 @@ export class UserProjectDetailComponent extends AitBaseComponent implements OnIn
   dateFormat: any;
 
   constructor(
+    private router: Router,
     private nbDialogRef: NbDialogRef<UserProjectDetailComponent>,
     public activeRouter: ActivatedRoute,
     private userProjectService: UserProjectService,
@@ -51,9 +52,16 @@ export class UserProjectDetailComponent extends AitBaseComponent implements OnIn
       module: 'user',
       page: 'user_project',
     });
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+          this.closeDialog(false);
+      }
+    });
   }
 
   async ngOnInit(): Promise<void> {
+    this.callLoadingApp();
     if (this.user_key) {
       await this.userProjectService
         .find(this.user_key)
@@ -77,6 +85,9 @@ export class UserProjectDetailComponent extends AitBaseComponent implements OnIn
 
         })
     }
+    setTimeout(() => {
+      this.cancelLoadingApp();
+    }, 500);
   }
   close(){
     this.closeDialog(false);

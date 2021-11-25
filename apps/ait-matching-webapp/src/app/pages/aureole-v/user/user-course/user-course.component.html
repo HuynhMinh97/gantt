@@ -78,6 +78,7 @@
             [required]="false"
             [label]="'start date'"
             [placeholder]="'01/01/2021'"
+            [format]="dateFormat"
             [id]="'start_date_from'"
             [style]="{ width: '170px' }"
             [isReset]="resetCourse.start_date_from"
@@ -95,6 +96,7 @@
           <ait-datepicker
             [required]="false"
             [placeholder]="'01/01/2021'"
+            [format]="dateFormat"
             [id]="'start_date_to'"
             [style]="{ width: '170px' }"
             [isReset]="resetCourse.start_date_to"
@@ -146,7 +148,7 @@
             [maxFiles]="5"
             [required]="false"
             [hasStatus]="false"
-            [placeholder]="selectFile"
+            [placeholder]="'ファイルを選択' | translate"
             [isReset]="isResetFile"
             [isClear]="isClear"
             [fileKeys]="course.controls['file'].value"
@@ -176,7 +178,7 @@
           *ngIf="mode === 'EDIT'"
           [id]="'delete'"
           [width]="'150px'"
-          [title]="'delete'"
+          [title]="'消去'"
           [background]="
             'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
           "

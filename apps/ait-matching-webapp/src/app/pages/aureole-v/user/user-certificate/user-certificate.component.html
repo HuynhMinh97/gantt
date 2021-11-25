@@ -7,7 +7,7 @@
           <ait-autocomplete-master-data
             [id]="'name'"
             [width]="'400px'"
-            [label]="'NAME'"
+            [label]="'name'"
             [required]="true"
             [allowNew]="true"
             [maxItem]="1"
@@ -86,7 +86,8 @@
 
         <div class="input_date">
           <ait-datepicker
-            [label]="'issue date'"
+            [label]="'issue_date_lable'"
+            [format]="dateFormat"
             [placeholder]="'01/01/2021'"
             [id]="'issue_date_from'"
             [style]="{ width: '170px' }"
@@ -107,6 +108,7 @@
           <ait-datepicker
             [required]="false"
             [label]="''"
+            [format]="dateFormat"
             [placeholder]="'2021/01/15'"
             [id]="'issue_date_to'"
             [style]="{ width: '170px' }"
@@ -153,7 +155,7 @@
             [maxSize]="1000"
             [maxFiles]="5"
             [hasStatus]="false"
-            [placeholder]="'select file'"
+            [placeholder]="'select_file' | translate"
             [isReset]="isResetFile"
             [fileKeys]="certificate.controls['file'].value"
             (watchValue)="getFiles($event.value)"
@@ -181,7 +183,7 @@
             *ngIf="mode === 'EDIT'"
             [id]="'delete'"
             [width]="'150px'"
-            [title]="'delete'"
+            [title]="'消去'"
             [background]="
               'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
             "

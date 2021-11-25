@@ -55,6 +55,7 @@ export class UserLanguageDetailComponent extends AitBaseComponent implements OnI
   }
 
   async ngOnInit(): Promise<void> {
+    this.callLoadingApp();
     if (this.user_key) {
       await this.userLangService
         .findUserLanguageByKey(this.user_key)
@@ -64,6 +65,9 @@ export class UserLanguageDetailComponent extends AitBaseComponent implements OnI
             this.stateUserLanguage = data;
           }
         })
+        setTimeout(() => {
+          this.cancelLoadingApp();
+        }, 500);
     }
 
   }

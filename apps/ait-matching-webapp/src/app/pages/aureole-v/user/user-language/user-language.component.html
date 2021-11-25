@@ -1,7 +1,6 @@
 <ait-template-popup [width]="800" [isLoading]="true" [isPage]="false">
   <div class="user__wrapper">
     <ait-text-gradient [content]="getTitleByMode()" [id]="'form_edit_user_language'"></ait-text-gradient>
-    <ait-space></ait-space>
     <div class="content__card">
       <div class="form">
         <div class="input_inline">
@@ -56,7 +55,7 @@
             *ngIf="mode === 'EDIT'"
             [id]="'delete'"
             [width]="'150px'"
-            [title]="'delete'"
+            [title]="'消去'"
             (click)="onDelete()"
             [isDefault]="true"
           >

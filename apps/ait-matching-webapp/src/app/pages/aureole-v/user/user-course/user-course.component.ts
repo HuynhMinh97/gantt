@@ -1,16 +1,28 @@
 import { RESULT_STATUS, KEYS } from './../../../../../../../../libs/shared/src/lib/commons/enums';
-import { AitAuthService, AitConfirmDialogComponent, AitEnvironmentService, AitTranslationService, AppState, MODE, AitBaseComponent, AitAppUtils } from '@ait/ui';
-import { Component, OnInit, ElementRef, EventEmitter } from '@angular/core';
+import { 
+  MODE, 
+  AppState,
+  AitAppUtils, 
+  AitAuthService, 
+  AitBaseComponent, 
+  AitEnvironmentService, 
+  AitTranslationService, 
+  AitConfirmDialogComponent,
+  getUserSetting, 
+} from '@ait/ui';
+import { 
+  Component, 
+  OnInit, 
+  ElementRef, 
+} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NbToastrService, NbLayoutScrollService, NbDialogService, NbDialogRef } from '@nebular/theme';
 import { isArrayFull, isObjectFull } from '@ait/shared';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
-
 import kanjidate from 'kanjidate';
-
-import { ActivatedRoute, Router } from '@angular/router';
-import { UserCourseService } from 'apps/ait-matching-webapp/src/app/services/user-course.service';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
+import { UserCourseService } from '../../../../../../../../apps/ait-matching-webapp/src/app/services/user-course.service';
 
 @Component({
   selector: 'ait-user-course',
@@ -18,50 +30,55 @@ import { UserCourseService } from 'apps/ait-matching-webapp/src/app/services/use
   styleUrls: ['./user-course.component.scss']
 })
 export class UserCourseComponent extends AitBaseComponent implements OnInit {
-  course: FormGroup;
-  courseClone: any;
   mode = MODE.NEW;
+  courseClone: any;
+  course: FormGroup;
+  defaultValue: any;
   dateNow = new Date().setHours(0, 0, 0, 0);
+
+  dateFormat = '';
   course_key = '';
-  companyCenter = [];
+  selectFile = '';
+
   error = [];
+  companyCenter = [];
+
   isSave = false;
-  isSubmit = false;
-  submitFile = false;
-  isChanged = false;
   isClear = false;
-  isClearErrors = false;
-  isResetFile = false;
+  isSubmit = false;
+  isChanged = false;
   isReadonly = false;
+  submitFile = false;
+  isResetFile = false;
+  isClearErrors = false;
+  resetMasterUser = false;
+
   resetCourse = {
     _key: false,
-    course_number: false,
-    description: false,
     file: false,
-    is_online: false,
     name: false,
-    start_date_from: false,
+    is_online: false,
+    description: false,
+    course_number: false,
     start_date_to: false,
+    start_date_from: false,
     training_center: false,
   };
 
-  resetMasterUser = false;
-  selectFile = '';
-  defaultValue: any;
   constructor(
-    private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
-    private element: ElementRef,
-    private translateService: AitTranslationService,
     private router: Router,
+    private element: ElementRef,
+    private formBuilder: FormBuilder,
+    public activeRouter: ActivatedRoute,
     private dialogService: NbDialogService,
     public userCourseService: UserCourseService,
-    private formBuilder: FormBuilder,
+    private translateService: AitTranslationService,
+    private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
     layoutScrollService: NbLayoutScrollService,
-    public activeRouter: ActivatedRoute,
     toastrService: NbToastrService,
-    store: Store<AppState>,
     authService: AitAuthService,
     env: AitEnvironmentService,
+    store: Store<AppState>,
     apollo: Apollo
   ) {
     super(store, authService, apollo, null, env, layoutScrollService, toastrService);
@@ -70,6 +87,17 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
       module: 'user',
       page: 'user_course',
     });
+    store.pipe(select(getUserSetting)).subscribe((setting) => {
+      if (isObjectFull(setting) && setting['date_format_display']) {
+        this.dateFormat = setting['date_format_display'];
+      }
+    });
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+          this.closeDialog(false);
+      }
+    });
+
     this.course = this.formBuilder.group({
       _key: new FormControl(null),
       name: new FormControl(null, [Validators.required]),
@@ -170,10 +198,15 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
     const msg = this.getMsg('E0004');
     const dateFrom = this.course.controls['start_date_from'].value;
     const dateTo = this.course.controls['start_date_to'].value;
-    if (dateFrom > dateTo && dateTo != null) {
+    if (dateFrom > dateTo  && dateTo != null) {
       const transferMsg = (msg || '')
         .replace('{0}', this.translateService.translate('date from'))
         .replace('{1}', this.translateService.translate('date to'));
+      res.push(transferMsg);
+    }
+    if(!dateFrom && dateTo){
+      const transferMsg = (this.getMsg('E0020') || '')
+      .replace('{0}', this.translateService.translate('date from'));
       res.push(transferMsg);
     }
     return res;
@@ -333,6 +366,18 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
         } catch { }
       }
     }
+    
+    if (this.error.length > 0) {
+      const invalidControl = this.element.nativeElement.querySelector(
+        `.ng-star-inserted div`
+      );
+      try {
+        invalidControl.scrollIntoView({
+          behavior: 'auto',
+          block: 'center',
+        });
+      } catch { }
+    }
   }
 
   async find(key: string) {
@@ -395,6 +440,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
           hasBackdrop: true,
           autoFocus: false,
           context: {
+            style: {width: '90%'},
             title: this.getMsg('I0006'),
           },
         })
@@ -418,11 +464,8 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
     if (this.mode === MODE.EDIT) {
       title = this.translateService.translate('edit course');
     }
-    else if (this.mode === MODE.NEW) {
+    if (this.mode === MODE.NEW) {
       title = this.translateService.translate('add course');
-    }
-    else {
-      title = this.translateService.translate('view course');
     }
     return title;
   }

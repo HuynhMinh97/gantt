@@ -22,13 +22,13 @@
           >
           </ait-input-text>
         </div>
-        <div class="input_date">
+        <div class="input_date" style="position: relative;">
           <ait-datepicker
             [id]="'start_date_from'"
             [label]="'start date'"
             [required]="true"
             [placeholder]="''"
-            [format]="'yyyy/MM'"
+            [format]="dateFormat"
             [isSubmit]="isSubmit"
             [style]="{ width: '170px' }"
             [isReset]="resetUserProject.start_date_from"
@@ -40,14 +40,14 @@
             "
           ></ait-datepicker>
 
-          <span>~</span>
+          <span style="position: absolute; right: 195px; top: 27px;">~</span>
 
           <ait-datepicker
             [id]="'start_date_to'"
             [required]="false"
             [placeholder]=""
             [label]="''"
-            [format]="'yyyy/MM'"
+            [format]="dateFormat"
             [style]="{ width: '170px' }"
             [isSubmit]="isSubmit"
             [isReset]="resetUserProject.start_date_to"
@@ -213,7 +213,7 @@
             *ngIf="mode === 'EDIT'"
             [id]="'remove'"
             [width]="'150px'"
-            [title]="'delete'"
+            [title]="'消去'"
             (click)="Delete()"
             [background]="
               'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'

@@ -94,6 +94,7 @@
               [isSubmit]="isSubmit"
               [style]="{ width: '170px' }"
               [isReset]="resetUserInfo.bod"
+              [format]="dateFormat"
               [placeholder]="'01/01/1985'"
               (watchValue)="
                 takeDatePickerValue($event?.value, 'userOnboardingInfo', 'bod')
@@ -255,15 +256,15 @@
             (click)="back()"
           ></ait-button>
 
-          <ait-button
+          <!-- <ait-button
             *ngIf="mode === 'EDIT'"
             [id]="'delete'"
             [width]="'150px'"
-            [title]="'delete'"
+            [title]="'消去'"
             [isDefault]="true"
             (click)="onDelete()"
           >
-          </ait-button>
+          </ait-button> -->
 
           <ait-button
             *ngIf="mode !== 'VIEW'"
@@ -279,7 +280,7 @@
             *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
             [id]="'save'"
             [width]="'150px'"
-            [title]="'save'"
+            [title]="'保存する'"
             (click)="save()"
             [isDefault]="true"
           >
@@ -288,7 +289,7 @@
             *ngIf="!isChanged && mode === 'EDIT'"
             [id]="'save'"
             [width]="'150px'"
-            [title]="'save'"
+            [title]="'保存する'"
             [style]="'disabled'"
           ></ait-button>
         </div>
@@ -393,6 +394,7 @@
             [id]="'bod'"
             [label]="'born on date'"
             [required]="true"
+            [format]="dateFormat"
             [isSubmit]="isSubmit"
             [style]="{ width: '170px' }"
             [isReset]="resetUserInfo.bod"
@@ -588,7 +590,7 @@
           *ngIf="!isChanged && mode === 'EDIT'"
           [id]="'save'"
           [width]="'200px'"
-          [title]="'save'"
+          [title]="'保存する'"
           [style]="'disabled'"
         ></ait-button>
         <ait-button

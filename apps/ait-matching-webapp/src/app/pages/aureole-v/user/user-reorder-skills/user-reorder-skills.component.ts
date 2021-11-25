@@ -4,7 +4,7 @@ import { OrderSkill, SkillsDto, UserSkill, } from './user-reorder-skills';
 import { KEYS, RESULT_STATUS } from '@ait/shared';
 import { AitAppUtils, AitAuthService, AitBaseComponent, AitConfirmDialogComponent, AitEnvironmentService, AppState } from '@ait/ui';
 import { UserReoderSkillsService } from 'apps/ait-matching-webapp/src/app/services/user-reoder-skills.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { NbDialogRef, NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { Apollo } from 'apollo-angular';
 import { Store } from '@ngrx/store';
@@ -47,6 +47,12 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
     this.setModulePage({
       module: 'user',
       page: 'user_skills',
+    });
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+          this.closeDialog(false);
+      }
     });
   }
 
@@ -100,7 +106,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
     }
 
   }
-
+  //get top skill in profile
   async findTopSkills() {
     await this.reoderSkillsService.findTopSkills(this.user_id)
       .then((res) => {
@@ -109,16 +115,20 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
           if (data) {
             data.forEach(element => {
               const topSkills = {} as SkillsDto;
-              topSkills.category = "TOP5";
+              topSkills.categoryName = "TOP5";
               topSkills.name = element.value;
               topSkills._key = element._key;
               this.listTopSkills.push(topSkills);
             });
           } else {
             const topSkills = {} as SkillsDto;
-            topSkills.category = "TOP5";
+            topSkills.categoryName = "TOP5";
+
             this.listTopSkills.push(topSkills);
+           
+            
           }
+          console.log(this.listTopSkills);
         }
       })
   }
@@ -139,12 +149,14 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
               skills.top_skill = true;
               skills._key = element._key;
               skills.name = element.name;
-              skills.category = element.category;
+              skills.categoryName = element.category?.value;
+              skills.categoryCode = element.category?._key;
             } else {
               skills.top_skill = false;
               skills._key = element._key;
               skills.name = element.name;
-              skills.category = element.category;
+              skills.categoryName = element.category?.value;
+              skills.categoryCode = element.category?._key;
             }
             this.listSkills.push(skills);
           });
@@ -159,6 +171,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
   async groupSkill() {
     if (this.reorderSkills.length == 0) {
       const dataSkills = {} as OrderSkill;
+      dataSkills.code = 'top5';
       dataSkills.name = 'TOP5';
       dataSkills.data = [];
       this.reorderSkills.push(dataSkills);
@@ -168,14 +181,14 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
         let isCategory = true;
         //  tim category top 5 de them vao
         for (let i = 0; i < this.reorderSkills.length; i++) {
-          if (this.reorderSkills[i].name == "TOP5") {
+          if (this.reorderSkills[i].code == "top5") {
             this.reorderSkills[i].data.push(skills);
             break;
           }
         }
         // kiem tra category co ton tai ko
         for (let i = 0; i < this.reorderSkills.length; i++) {
-          if (skills.category == this.reorderSkills[i].name) {
+          if (skills.categoryCode == this.reorderSkills[i].code) {
             isCategory = true;
             break;
           } else {
@@ -185,7 +198,8 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
         // neu ko ton tai thi them moi
         if (!isCategory) {
           const dataSkills = {} as OrderSkill;
-          dataSkills.name = skills.category;
+          dataSkills.name = skills.categoryName;
+          dataSkills.code = skills.categoryCode;
           dataSkills.data = [];
           this.reorderSkills.push(dataSkills);
         }
@@ -193,7 +207,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
         let isCategory = true;
         // kiem tra category ton tai neu ton tai thi them db vao    
         for (let i = 0; i < this.reorderSkills.length; i++) {
-          if (skills.category == this.reorderSkills[i].name) {
+          if (skills.categoryCode == this.reorderSkills[i].code) {
             isCategory = true;
             this.reorderSkills[i].data.push(skills);
             break;
@@ -206,7 +220,8 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
           const dataSkills = {} as OrderSkill;
           dataSkills.name = '';
           dataSkills.data = [];
-          dataSkills.name = skills.category;
+          dataSkills.name = skills.categoryName;
+          dataSkills.code = skills.categoryCode;
           dataSkills.data.push(skills);
           this.reorderSkills.push(dataSkills);
         }
@@ -214,6 +229,14 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
 
     }
     this.cancelLoadingApp();
+    this.reorderSkills.forEach((element,index) => {
+      if(element.code == "OTHERS"){
+        this.reorderSkills.push(element);
+        this.reorderSkills.splice(index, 1 );
+      }
+    });
+    console.log(this.listSkills);
+    
     this.reorderSkillsClone = JSON.parse(JSON.stringify(this.reorderSkills));
   }
 
@@ -235,11 +258,12 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         }
       } else if (event.previousContainer.id == "TOP5") {
-        const skill = this.reorderSkills[0].data[event.previousIndex];
+        let skill = this.reorderSkills[0].data[event.previousIndex];
+        skill.top_skill = false;
         this.reorderSkills[0].data.splice(event.previousIndex, 1);
         for (let item in this.reorderSkills) {
-          if (this.reorderSkills[item].name == skill.category) {
-            this.reorderSkills[item].data.push(skill);
+          if (this.reorderSkills[item].code == skill.categoryCode) {
+            this.reorderSkills[item].data.splice(event.currentIndex, 0, skill);
           }
         }
         this.checkAllowSave();
@@ -274,7 +298,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
             }
           })
         }
-        if (this.reorderSkills[i].name == skill.category) {
+        if (this.reorderSkills[i].code == skill.categoryCode) {
           skill.top_skill = false;
           this.reorderSkills[i].data.push(skill);
         }
@@ -366,6 +390,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
           hasBackdrop: true,
           autoFocus: false,
           context: {
+            style: {width: '90%'},
             title: this.getMsg('I0006'),
           },
         })
