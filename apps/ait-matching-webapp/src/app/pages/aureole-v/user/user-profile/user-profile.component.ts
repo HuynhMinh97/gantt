@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/member-ordering */
 import { isArrayFull, isObjectFull, RESULT_STATUS } from '@ait/shared';
 import {
   AitAuthService,
   AitBaseComponent,
-  AitConfirmDialogComponent,
   AitEnvironmentService,
   AitTranslationService,
   AppState,
@@ -32,7 +32,7 @@ import { UserExperienceService } from '../../../../services/user-experience.serv
 import { UserCerfiticateService } from '../../../../services/user-certificate.service';
 import { UserCourseService } from '../../../../services/user-course.service';
 import { UserEducationService } from '../../../../services/user-education.service';
-import { UserLanguageService } from 'apps/ait-matching-webapp/src/app/services/user-language.service';
+import { UserLanguageService } from '../../../../services/user-language.service';
 import { UserCourseComponent } from '../user-course/user-course.component';
 import { UserSkillsComponent } from '../user-skills/user-skills.component';
 import { UserReorderSkillsComponent } from '../user-reorder-skills/user-reorder-skills.component';
@@ -49,7 +49,7 @@ import { UserCourseDetailComponent } from '../user-course-detail/user-course-det
 import { UserEducationDetailComponent } from '../user-education-detail/user-education-detail.component';
 import { UserLanguageDetailComponent } from '../user-language-detail/user-language-detail.component';
 import { UserOnboardingDetailComponent } from '../user-onboarding-detail/user-onboarding-detail.component';
-import { MatchingUtils } from 'apps/ait-matching-webapp/src/app/@constants/utils/matching-utils';
+import { MatchingUtils } from '../../../../../../../../apps/ait-matching-webapp/src/app/@constants/utils/matching-utils';
 
 @Component({
   selector: 'ait-user-profile',
@@ -69,9 +69,9 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   showCertificate = false;
 
   avata: any;
-  url_avatar: string = '';
+  url_avatar = '';
   DataUserProfile: ProfileDto;
-  url_background: string = '';
+  url_background = '';
 
   topSkills = [];
   userProject: any = [];
@@ -89,9 +89,9 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   countSkill = 0;
   timeExperience = 0;
   countCentificate = 0;
-  timeExperienceStr = "";
+  timeExperienceStr = '';
 
-  dateFormat = "dd/MM/yyyy";
+  dateFormat = 'dd/MM/yyyy';
   monthFormat: any;
   today = new Date().setHours(0, 0, 0, 0);
   isMyUserProfile = false;
@@ -228,14 +228,14 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           this.showSkill = true;
         }
         this.countSkill =  data.length ;
-        let top5 = {} as OrderSkill;
+        const top5 = {} as OrderSkill;
         console.log(this.translateService.translate('top 5'));
         
         top5.name = this.translateService.translate('top 5');
         top5.data = [];
         if (this.topSkills.length > 0) {
-          for (let item of data) {
-            for (let topskill of this.topSkills) {
+          for (const item of data) {
+            for (const topskill of this.topSkills) {
               if (topskill._key == item._key) {
                 top5.data.push(item);
                 break
@@ -253,7 +253,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
             }
           })
           if (!isCategory) {
-            let skillsGroup = {} as OrderSkill;
+            const skillsGroup = {} as OrderSkill;
             skillsGroup.name = item.category?.value;
             skillsGroup.code = item.category?._key;
             skillsGroup.data = [];
@@ -264,7 +264,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       }      
     })  
     this.skillByCategory.forEach((element, index) => {
-      if(element.code == "OTHERS"){
+      if(element.code == 'OTHERS'){
         this.skillByCategory.push(element);
         this.skillByCategory.splice(index, 1 );
       }
@@ -315,7 +315,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           const company_values = Array.from(new Set(res.data.map(m => m?.company_working?.value))).filter(f => !!f);
           const companyUserExps = this.groupBy(res.data, p => p.company_working?.value);
           const datacompany = company_values.map(element => {
-            var timeworkingInfo = 0;
+            let timeworkingInfo = 0;
             companyUserExps.get(element).forEach(e => {
               timeworkingInfo += this.dateDiffInMonths(e.start_date_from, e.start_date_to);
             });
@@ -353,8 +353,8 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         const data = res.data;
         this.countCentificate = data.length;
         this.showCertificate = data.length > 0 ? true : false;
-        for (let element of data) {
-          let centificate = {} as CertificateDto;
+        for (const element of data) {
+          const centificate = {} as CertificateDto;
           let datefrom = element.issue_date_from;
           let dateTo = element.issue_date_to;
           if (!datefrom) {
@@ -378,8 +378,8 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         const data = res.data;
         this.countCourse = data.length;
         this.showCourse = data.length > 0 ? true : false;
-        for (let element of data) {
-          let course = {} as CourseDto;
+        for (const element of data) {
+          const course = {} as CourseDto;
           let datefrom = element.start_date_from;
           let dateTo = element.start_date_to;
           if (!datefrom) {
@@ -402,8 +402,8 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       .then((res) => {
         const data = res.data;
         this.showEducation = data.length > 0 ? true : false;
-        for (let element of data) {
-          let education = {} as EducationDto;
+        for (const element of data) {
+          const education = {} as EducationDto;
           let datefrom = element.start_date_from;
           let dateTo = element.start_date_to;
           if (!datefrom) {
@@ -427,8 +427,8 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       .then((res) => {
         const data = res.data;
         this.showLanguages = data.length > 0 ? true : false;
-        for (let element of data) {
-          let language = {} as LanguageDto;
+        for (const element of data) {
+          const language = {} as LanguageDto;
           let datefrom = element.start_date_from;
           let dateTo = element.start_date_to;
           if (!datefrom) {
@@ -440,14 +440,14 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           language._key = element._key;
           language.language = element.language?.value;
           language.proficiency = element.proficiency?.value;
-          if (element.language?._key == "en_US") {
-            language.image = "../../../../../assets/images/english.png"
+          if (element.language?._key == 'en_US') {
+            language.image = '../../../../../assets/images/english.png'
           }
-          if (element.language?._key == "vi_VN") {
-            language.image = "../../../../../assets/images/vietnam.png"
+          if (element.language?._key == 'vi_VN') {
+            language.image = '../../../../../assets/images/vietnam.png'
           }
-          if (element.language?._key == "ja_JP") {
-            language.image = "../../../../../assets/images/flag.png"
+          if (element.language?._key == 'ja_JP') {
+            language.image = '../../../../../assets/images/flag.png'
           }
           setTimeout(() => {
             this.userLanguage.push(language);
@@ -460,14 +460,14 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   fomatDate(time: number) {
     const day = time / 1000 / 60 / 60 / 24;// milliseconds -> day
     if (day <= 31) {
-      return "1 Months";
+      return '1 Months';
     } else {
-      let month = (day - day % 30) / 30;
+      const month = (day - day % 30) / 30;
       if (month < 12) {
-        return month.toString() + " Months";
+        return month.toString() + ' Months';
       } else {
-        let year = (month - month % 12) / 12;
-        return (year.toString() + " Year " + (month % 12).toString() + " Months ");
+        const year = (month - month % 12) / 12;
+        return (year.toString() + ' Year ' + (month % 12).toString() + ' Months ');
       }
     }
   }
@@ -748,6 +748,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     return 'https://d30y9cdsu7xlg0.cloudfront.net/png/47682-200.png';
   }
   safelyURL = (data, type) => this.santilizer.bypassSecurityTrustUrl(`data:${type};base64, ${data}`);
+  
   isOpen = {
     userInfo: true,
     userTraining: true,
@@ -818,7 +819,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   }
 
   getCountFriends(){
-    this.userProfileService.getCountFriends("sys_user/" + this.profileId)
+    this.userProfileService.getCountFriends('sys_user/' + this.profileId)
     .then((res) => {
       if(res?.status == RESULT_STATUS.OK){
         this.countFriend = res.data.length;
@@ -828,7 +829,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     })
   }
   getFriends(){
-    this.userProfileService.getFriends("sys_user/" + this.user_id)
+    this.userProfileService.getFriends('sys_user/' + this.user_id)
     .then((res) => {
       if(res?.status == RESULT_STATUS.OK){
         if(res.data.length > 0)
@@ -838,8 +839,8 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   }
   saveFriends(){
     const friend = {
-      _from: "sys_user/" + this.user_id,
-      _to: "sys_user/" + this.profileId,
+      _from: 'sys_user/' + this.user_id,
+      _to: 'sys_user/' + this.profileId,
       relationship: 'love'
     }
     this.userProfileService.saveFriends(friend)
@@ -852,8 +853,8 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   }
   deleteFriends(){
     const friend = [{
-      _from: "sys_user/" + this.user_id,
-      _to: "sys_user/" + this.profileId,
+      _from: 'sys_user/' + this.user_id,
+      _to: 'sys_user/' + this.profileId,
     }]
     this.userProfileService.removeFriends(friend)
     .then((res) => {

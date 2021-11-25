@@ -1,7 +1,5 @@
-import {
-  isArrayFull,
-  isObjectFull,
-} from './../../../../../../../../libs/shared/src/lib/utils/checks.util';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { isObjectFull} from './../../../../../../../../libs/shared/src/lib/utils/checks.util';
 import { UserLanguageService } from './../../../../services/user-language.service';
 import { Component, ElementRef, OnInit } from '@angular/core';
 import {

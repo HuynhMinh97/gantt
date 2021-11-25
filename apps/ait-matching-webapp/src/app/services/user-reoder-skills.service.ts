@@ -41,8 +41,6 @@ export class UserReoderSkillsService extends AitBaseService{
   }
 
   async updateTopSkill(data: any[]){
-    console.log(data);
-    
     const returnField = { _key: true };
     return await this.mutation(
       'UpdateTopSkill',

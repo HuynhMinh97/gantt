@@ -17,7 +17,7 @@ import { Component, ElementRef, OnInit } from '@angular/core';
 import { isArrayFull, isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NbToastrService, NbLayoutScrollService, NbDialogService, NbDialogRef } from '@nebular/theme';
-import { UserCerfiticateService } from 'apps/ait-matching-webapp/src/app/services/user-certificate.service';
+import { UserCerfiticateService } from '../../../../services/user-certificate.service';
 
 
 @Component({
@@ -119,7 +119,7 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
     }
     if (this.mode == MODE.NEW) {
       this.callLoadingApp();
-      this.certificate.controls["issue_date_from"].setValue(this.dateNow);
+      this.certificate.controls['issue_date_from'].setValue(this.dateNow);
       this.certificateClone = this.certificate.value;
       setTimeout(() => {
         this.cancelLoadingApp();
@@ -130,8 +130,8 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
     await this.certificate.valueChanges.subscribe((data) => {
       this.checkAllowSave();
     });
-    if (this.certificate.value.issue_date_from == null && this.mode == "NEW") {
-      this.certificate.controls["issue_date_from"].setValue(this.dateNow);
+    if (this.certificate.value.issue_date_from == null && this.mode == 'NEW') {
+      this.certificate.controls['issue_date_from'].setValue(this.dateNow);
     }
   }
 
