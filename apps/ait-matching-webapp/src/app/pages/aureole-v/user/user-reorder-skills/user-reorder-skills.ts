@@ -12,6 +12,7 @@ export interface UserSkill {
 }
 
 export interface OrderSkill {
+    code: string;
     name: string;
     data: SkillsDto[];
 }
@@ -29,6 +30,7 @@ export class SkillsDto {
     top_skill: boolean;
     _key: string;
     name: string;
-    category: string;
+    categoryName: string;
+    categoryCode: string;
   }
   

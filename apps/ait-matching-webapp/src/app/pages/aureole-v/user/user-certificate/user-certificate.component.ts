@@ -194,10 +194,15 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
     const msg = this.getMsg('E0004');
     const dateFrom = this.certificate.controls['issue_date_from'].value;
     const dateTo = this.certificate.controls['issue_date_to'].value;
-    if ((dateFrom > dateTo || !dateFrom) && dateTo != null) {
+    if (dateFrom > dateTo  && dateTo != null) {
       const transferMsg = (msg || '')
         .replace('{0}', this.translateService.translate('issue date'))
         .replace('{1}', this.translateService.translate('issue date to'));
+      res.push(transferMsg);
+    }
+    if(!dateFrom && dateTo){
+      const transferMsg = (this.getMsg('E0020') || '')
+      .replace('{0}', this.translateService.translate('date from'));
       res.push(transferMsg);
     }
     return res;
@@ -349,6 +354,18 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
         } catch { }
       }
     }
+    
+    if (this.error.length > 0) {
+      const invalidControl = this.element.nativeElement.querySelector(
+        `.ng-star-inserted div`
+      );
+      try {
+        invalidControl.scrollIntoView({
+          behavior: 'auto',
+          block: 'center',
+        });
+      } catch { }
+    }
   }
 
   async find(key: string) {
@@ -440,13 +457,10 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
     let title = '';
     this.selectFile = this.translateService.translate('select_file');
     if (this.mode === MODE.EDIT) {
-      title = this.translateService.translate('Edit certificate')
+      title = this.translateService.translate('edit certificate')
     }
-    else if (this.mode === MODE.NEW) {
-      title = this.translateService.translate('Add certificate')
-    }
-    else {
-      title = this.translateService.translate('View certificate')
+    if (this.mode === MODE.NEW) {
+      title = this.translateService.translate('add certificate')
     }
     return title;
   }
