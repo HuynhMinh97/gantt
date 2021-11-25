@@ -1,6 +1,6 @@
 import { AfterViewInit } from '@angular/core';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { GRAPHQL, isObjectFull, KeyValueDto, RESULT_STATUS } from '@ait/shared';
+import { GRAPHQL, isObjectFull, RESULT_STATUS } from '@ait/shared';
 import {
   AitAppUtils,
   AitAuthService,
@@ -91,7 +91,7 @@ export class AitUserSettingComponent
     number: [],
   };
   defaultInputValues: any = {};
-  
+
   setDefaultInputValues = (newState: any) =>
     (this.defaultInputValues = newState
       ? { ...this.defaultInputValues, ...newState }
@@ -503,7 +503,6 @@ export class AitUserSettingComponent
               // this.store.dispatch(new StoreSetting(r.data[0]));
 
               const newSetting = { ...this.valueState, user_id: this.user_id };
-              this.setFullSetting(newSetting);
               this.store.dispatch(new StoreSetting(newSetting));
               if (site_language) {
                 this.store.dispatch(new ChangeLangage(site_language));
@@ -609,20 +608,5 @@ export class AitUserSettingComponent
     if (!this.formState[type]) {
       return this.errors[name];
     }
-  }
-
-  setFullSetting(newSetting: any) {
-    const setting = [
-      { _key: 'site_language', value: this.langDf?.code },
-      { _key: 'timezone', value: this.timeDf?.code },
-      { _key: 'date_format_display', value: this.defaultInputValues?.dateDisplayDf?.value },
-      { _key: 'date_format_input', value: this.defaultInputValues?.dateInputDf?.value },
-      { _key: 'number_format', value: this.defaultInputValues?.numberFormatDf?.value },
-    ] as KeyValueDto[];
-    setting.forEach(prop => {
-      if (!newSetting[prop._key]) {
-        newSetting[prop._key] = prop.value;
-      }
-    });
   }
 }
