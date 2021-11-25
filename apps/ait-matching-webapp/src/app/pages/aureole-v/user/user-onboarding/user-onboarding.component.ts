@@ -494,7 +494,7 @@ export class UserOnboardingComponent
     if (this.isChanged) {
       this.dialogService
         .open(AitConfirmDialogComponent, {
-          closeOnBackdropClick: true,
+          closeOnBackdropClick: false,
           hasBackdrop: true,
           autoFocus: false,
           context: {
