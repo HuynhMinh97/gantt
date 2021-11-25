@@ -165,6 +165,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     this.getCourseByUserId();
     this.getEducationByUserId();
     this.getLanguageByUserId();
+    this.getImg();
     setTimeout(() => {
       this.cancelLoadingApp();
     }, 1000)
@@ -736,6 +737,8 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   async getImg() {
     await this.userProfileService.getFilesByFileKeys(this.url_avatar)
       .then((res) => {
+        console.log(res.dat);
+        
       })
   }
   getImage = (file: any, isError = false) => {

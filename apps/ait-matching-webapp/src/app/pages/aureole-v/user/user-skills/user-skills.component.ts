@@ -80,10 +80,9 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.callLoadingApp();
     await this.findSkills();
-    await this.userSkills.valueChanges.subscribe((data) => {
+    this.userSkills.valueChanges.subscribe((data) => {
       this.checkAllowSave();
     });
-    this.cancelLoadingApp();
   }
 
   checkAllowSave() {

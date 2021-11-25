@@ -39,8 +39,9 @@
               ></ait-output-text>
             </div>
             <div class="input_inline">
-              <div class="input_area">
+              <div class="input_area" style="display: flex; align-items: center; height: 30px;">
                 <nb-checkbox
+                style="display: flex; align-items: center;"
                   [disabled]="true "
                   class="gray-text"
                   [checked]="stateUserExp.is_working"
@@ -50,7 +51,7 @@
                 </nb-checkbox>
               </div>
             </div>
-          <div class="start-date" style="margin-top: 5px;">
+          <div class="start-date" >
             <ait-datepicker
               [label]="'start date'"
               [id]="'start_date_from'"
