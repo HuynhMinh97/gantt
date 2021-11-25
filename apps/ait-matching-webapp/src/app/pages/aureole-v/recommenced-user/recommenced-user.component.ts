@@ -1,6 +1,6 @@
-import { CompanyInfoDto, RESULT_STATUS } from '@ait/shared';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { CompanyInfoDto, isObjectFull, RESULT_STATUS } from '@ait/shared';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NavigationStart, Router } from '@angular/router';
 import { NbLayoutScrollService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
@@ -44,6 +44,17 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
     'residence_status',
     'work',
   ];
+  Skills = [
+    { _key: 'phython', value: 'python' },
+    { _key: 'angular', value: 'angular' },
+    { _key: 'Technical Support Engineer', value: 'Technical Support Engineer' },
+    { _key: 'code', value: 'code' },
+    { _key: 'Test', value: 'Test' },
+    { _key: 'java', value: 'java' },
+    { _key: 'Automation test', value: 'Automation test' },
+  ];
+  userSkills: FormGroup;
+
   constructor(
     layoutScrollService: NbLayoutScrollService,
     private masterDataService: AitMasterDataService,
@@ -51,6 +62,7 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
     private reactionService: ReactionService,
     private translateService: AitTranslationService,
     private userProfileService: UserProfileService,
+    private formBuilder: FormBuilder,
     store: Store<AppState>,
     authService: AitAuthService,
     private router: Router,
@@ -58,6 +70,10 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
     apollo: Apollo
   ) {
     super(store, authService, apollo, null, env, layoutScrollService);
+
+    this.userSkills = this.formBuilder.group({
+      skills: new FormControl(null, [Validators.required, Validators.maxLength(50)]),
+    });
     router.events.subscribe((val) => {
       // see also
       if (val instanceof NavigationStart) {
@@ -90,12 +106,11 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
     //   }
     // });
 
-    this.userProfileService.finProfileByUserId(this.user_id)
-    .then((res) => {
+    this.userProfileService.finProfileByUserId(this.user_id).then((res) => {
       if (res.status === RESULT_STATUS.OK && res.data.length == 0) {
         this.router.navigate([`user-onboarding`]);
       }
-    })
+    });
 
     // tslint:disable-next-line: deprecation
     layoutScrollService.onScroll().subscribe((e) => {
@@ -804,7 +819,20 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
     }
   };
 
-  takeMasterValue(event: any) {
-    console.log(event);
+  takeMasterValue(val: any, form: string): void {
+    if (val.value.length > 0) {
+      if (isObjectFull(val) && val.value.length > 0) {
+        const data = [];
+        val.value.forEach((item) => {
+          data.push(item);
+        });
+        this.userSkills.controls[form].markAsDirty();
+        this.userSkills.controls[form].setValue(data);
+      }
+    } else {
+      this.userSkills.controls[form].markAsDirty();
+      this.userSkills.controls[form].setValue(null);
+    }
+
   }
 }
