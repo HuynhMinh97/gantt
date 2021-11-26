@@ -180,7 +180,7 @@ export class AitInputNumberComponent
               } else {
                 this.inputCtrl.setValue(
                   this.defaultValue
-                    ? this.numberPipe.transform(this.defaultValue, this.format)
+                    ? this.defaultValue
                     : null
                 );
               }
@@ -288,11 +288,6 @@ export class AitInputNumberComponent
         this.watchValue.emit(0);
       } else {
         if (this.inputCtrl.value) {
-          const target = this.numberPipe.transform(
-            this.inputCtrl.value,
-            this.format
-          );
-          this.inputCtrl.setValue(target);
           this.watchValue.emit(Number(this.replaceAll(this.inputCtrl.value)));
         } else {
           this.inputCtrl.setValue(null);
