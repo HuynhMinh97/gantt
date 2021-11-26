@@ -15,19 +15,19 @@
           ></ait-output-text>
         </div>
         <div class="input_inline">
-          <div class="input_area">
+          <div class="input_area" style="display: flex; align-items: center; height: 30px;">
             <nb-checkbox
               [disabled]="true "
               class="gray-text"
               [checked]="stateUserCourse.is_online"
               [id]="'is_online'"
+              style="display: flex; align-items: center;"
             >
               <p id="online" style="margin: 0;color: #8f9bb3; font-size: 12px;">{{ 'online' | translate }}?</p>
             </nb-checkbox>
           </div>
         </div>
-        <!-- <hr style="margin: -3px; "> -->
-        <div class="input_inline" style="margin-top: 5px;">
+        <div class="input_inline">
           <ait-output-text
             [label]="'center'"
             [id]="'training_center'"

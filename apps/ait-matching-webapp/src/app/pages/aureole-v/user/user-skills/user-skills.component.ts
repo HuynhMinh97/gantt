@@ -10,11 +10,13 @@ import {
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
-import { Component, ElementRef, OnInit, Optional } from '@angular/core';
+import { Component, OnInit, Optional } from '@angular/core';
 import { isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
 import { UserSkillsService } from './../../../../services/user-skills.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NbDialogRef, NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
+import { UserProfileService } from '../../../../services/user-profile.service';
+import { UserReoderSkillsService } from '../../../../services/user-reoder-skills.service';
 
 @Component({
   selector: 'ait-user-skills',
@@ -36,13 +38,15 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
     relationship: '',
     sort_no: 0,
   };
+  topSkills: any[];
   constructor(
     private router: Router,
-    private element: ElementRef,
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
     private dialogService: NbDialogService,
     private userSkillsService: UserSkillsService,
+    private userProfileService: UserProfileService,
+    private reoderSkillsService: UserReoderSkillsService,
     @Optional() private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
     layoutScrollService: NbLayoutScrollService,
     toastrService: NbToastrService,
@@ -80,10 +84,10 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.callLoadingApp();
     await this.findSkills();
-    await this.userSkills.valueChanges.subscribe((data) => {
+    this.findTopSkills();
+    this.userSkills.valueChanges.subscribe((data) => {
       this.checkAllowSave();
     });
-    this.cancelLoadingApp();
   }
 
   checkAllowSave() {
@@ -96,14 +100,23 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
     this.isChanged = !(isChangedUserInfo);
   }
 
+  async findTopSkills(){
+    await this.userProfileService.findTopSkill(this.user_id)
+      .then((res) => {
+        const data = res.data[0]; 
+        this.topSkills = [];
+        this.topSkills = data.top_skills ? data.top_skills : [];
+      })
+  }
+
   async findSkills() {
     const from = 'sys_user/' + this.user_id;
     await this.userSkillsService.findSkill(from).then((res) => {
       if (res.status === RESULT_STATUS.OK) {
         if (res.data.length > 0) {
           this.mode = MODE.EDIT;
-          let listSkills = []
-          for (let item of res.data) {
+          const listSkills = []
+          for (const item of res.data) {
             listSkills.push(item.skills)
           }
           this.userSkills.controls['skills'].setValue(listSkills);
@@ -112,6 +125,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
           this.cancelLoadingApp();
         } else {
           this.userSkillsClone = this.userSkills.value;
+          this.cancelLoadingApp();
         }
       }
     })
@@ -136,6 +150,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
         await this.userSkillsService.saveSkills(this.user_skills)
           .then((res) => {
             if (res?.status === RESULT_STATUS.OK) {
+              console.log(listSkills);              
               this.isSave = true;
               const message = this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
               this.showToastr('', message);
@@ -153,6 +168,19 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
     } else {
       this.cancelLoadingApp();
     }
+  }
+
+  updateTopSkill(){
+    const topSkills = [];
+    const listSkills = this.userSkills.value.skills;
+    this.topSkills.forEach((item) =>{
+      const isSkill = listSkills.find(skill => skill._key == item._key)
+      if(isSkill){
+        topSkills.push(isSkill._key);     
+      }
+    })
+    const data = [{ top_skills: topSkills }]
+    this.reoderSkillsService.updateTopSkill(data);
   }
 
   async saveAndClose() {
@@ -186,6 +214,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           });;
       });
+      this.updateTopSkill();
       this.cancelLoadingApp();
     } else {
       this.cancelLoadingApp();

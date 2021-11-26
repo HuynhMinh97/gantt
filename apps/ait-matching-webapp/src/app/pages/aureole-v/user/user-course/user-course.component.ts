@@ -1,3 +1,4 @@
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { RESULT_STATUS, KEYS } from './../../../../../../../../libs/shared/src/lib/commons/enums';
 import { 
   MODE, 
@@ -122,7 +123,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
       setTimeout(() => {
         this.cancelLoadingApp();
       },500);
-      this.course.controls["start_date_from"].setValue(this.dateNow);
+      this.course.controls['start_date_from'].setValue(this.dateNow);
       this.courseClone = this.course.value;
     } else {
       await this.find(this.course_key);
@@ -132,7 +133,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
     });
 
     if (this.course.value.start_date_from == null && this.mode == 'NEW') {
-      this.course.controls["start_date_from"].setValue(this.dateNow);
+      this.course.controls['start_date_from'].setValue(this.dateNow);
     }
   }
   checkAllowSave() {

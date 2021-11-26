@@ -23,11 +23,9 @@ import { select, Store} from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { UserProjectErrorsMessage } from './interface';
 import { isArrayFull, isObjectFull, KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
-import { UserProjectService } from 'apps/ait-matching-webapp/src/app/services/user-project.service';
-import { UserProfileService } from 'apps/ait-matching-webapp/src/app/services/user-profile.service';
-import { MatchingUtils } from 'apps/ait-matching-webapp/src/app/@constants/utils/matching-utils';
-
-
+import { UserProjectService } from '../../../../services/user-project.service';
+import { UserProfileService } from '../../../../services/user-profile.service';
+import { MatchingUtils } from '../../../../../app/@constants/utils/matching-utils';
 @Component({
   selector: 'ait-user-project',
   templateUrl: './user-project.component.html',
@@ -154,7 +152,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     if (this.project_key) {
       this.mode = MODE.EDIT;
     }
-    if (this.mode === "NEW") {
+    if (this.mode === 'NEW') {
       await this.inputProject();
       this.userProject.controls['title'].setValue(this.titleName);
       this.userProject.controls['start_date_from'].setValue(this.dateNow);
@@ -201,7 +199,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     const from = 'biz_project/' + this.project_key;
     await this.userProjectService.findSkillsByFrom(from)
     .then(async(res) => {
-      let listSkills = [];
+      const listSkills = [];
       for (const skill of res.data) {
         listSkills.push(skill?.skills);
       }    
@@ -304,7 +302,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       ];
       this.userProjectService.removeSkill(_fromSkill);
     }
-    for(let skill of this.listSkills){
+    for(const skill of this.listSkills){
       await this.userProjectService.findMSkillsByCode(skill._key)
         .then(async (res) => {
           this.sort_no += 1;

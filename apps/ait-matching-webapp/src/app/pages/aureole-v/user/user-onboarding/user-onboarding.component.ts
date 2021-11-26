@@ -30,7 +30,7 @@ import {
 import { Apollo } from 'apollo-angular';
 import { isArrayFull, isObjectFull, KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
 import { KeyValueCheckedDto } from './interface';
-import { UserProfileService } from 'apps/ait-matching-webapp/src/app/services/user-profile.service';
+import { UserProfileService } from '../../../../services/user-profile.service';
 @Component({
   selector: 'ait-user-onboarding',
   templateUrl: './user-onboarding.component.html',

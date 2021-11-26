@@ -1,9 +1,9 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { CdkDrag, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { OrderSkill, SkillsDto, UserSkill, } from './user-reorder-skills';
+import { OrderSkill, SkillsDto} from './user-reorder-skills';
 import { KEYS, RESULT_STATUS } from '@ait/shared';
 import { AitAppUtils, AitAuthService, AitBaseComponent, AitConfirmDialogComponent, AitEnvironmentService, AppState } from '@ait/ui';
-import { UserReoderSkillsService } from 'apps/ait-matching-webapp/src/app/services/user-reoder-skills.service';
+import { UserReoderSkillsService } from '../../../../services/user-reoder-skills.service';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { NbDialogRef, NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { Apollo } from 'apollo-angular';
@@ -82,24 +82,25 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
     for (const prop in obj1) {
       if(obj1[prop].data.length != obj2[prop].data.length){
         checked = false;
+        return checked;
       }else{
-        if(obj1[prop].name == "TOP5"){
-          const skillInfoClone = { ...obj1[prop] };
-          const skillInfo = { ...obj2[prop]};
-          const isChangedUserInfo = AitAppUtils.isObjectEqual(
-            { ...skillInfoClone },
-            { ...skillInfo }
-          );
-          checked = isChangedUserInfo;          
-        }
-      }
-     
+        const skillInfoClone = { ...obj1[prop] };
+        const skillInfo = { ...obj2[prop]};
+        const isChangedUserInfo = AitAppUtils.isObjectEqual(
+          { ...skillInfoClone },
+          { ...skillInfo }
+        );
+        checked = isChangedUserInfo;          
+        if(!checked){
+          return checked;
+        }       
+      }     
     }
-    return checked
+    return checked;
   }
   
   evenPredicate(item: CdkDrag<string>) {
-    if (item.data != "TOP5") {
+    if (item.data != 'TOP5') {
       return true;
     } else {
       return false;
@@ -115,14 +116,14 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
           if (data) {
             data.forEach(element => {
               const topSkills = {} as SkillsDto;
-              topSkills.categoryName = "TOP5";
+              topSkills.categoryName = 'TOP5';
               topSkills.name = element.value;
               topSkills._key = element._key;
               this.listTopSkills.push(topSkills);
             });
           } else {
             const topSkills = {} as SkillsDto;
-            topSkills.categoryName = "TOP5";
+            topSkills.categoryName = 'TOP5';
 
             this.listTopSkills.push(topSkills);
            
@@ -176,12 +177,12 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
       dataSkills.data = [];
       this.reorderSkills.push(dataSkills);
     }
-    for (let skills of this.listSkills) {
+    for (const skills of this.listSkills) {
       if (skills.top_skill) {
         let isCategory = true;
         //  tim category top 5 de them vao
         for (let i = 0; i < this.reorderSkills.length; i++) {
-          if (this.reorderSkills[i].code == "top5") {
+          if (this.reorderSkills[i].code == 'top5') {
             this.reorderSkills[i].data.push(skills);
             break;
           }
@@ -230,7 +231,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
     }
     this.cancelLoadingApp();
     this.reorderSkills.forEach((element,index) => {
-      if(element.code == "OTHERS"){
+      if(element.code == 'OTHERS'){
         this.reorderSkills.push(element);
         this.reorderSkills.splice(index, 1 );
       }
@@ -245,7 +246,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       this.checkAllowSave();
     } else {
-      if (event.container.id == "TOP5") {
+      if (event.container.id == 'TOP5') {
         if (this.reorderSkills[0].data.length < 5) {
           transferArrayItem(event.previousContainer.data,
             event.container.data,
@@ -257,11 +258,11 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
         } else {
           this.showToastr('', this.getMsg('E0021'), KEYS.WARNING);
         }
-      } else if (event.previousContainer.id == "TOP5") {
-        let skill = this.reorderSkills[0].data[event.previousIndex];
+      } else if (event.previousContainer.id == 'TOP5') {
+        const skill = this.reorderSkills[0].data[event.previousIndex];
         skill.top_skill = false;
         this.reorderSkills[0].data.splice(event.previousIndex, 1);
-        for (let item in this.reorderSkills) {
+        for (const item in this.reorderSkills) {
           if (this.reorderSkills[item].code == skill.categoryCode) {
             this.reorderSkills[item].data.splice(event.currentIndex, 0, skill);
           }
@@ -274,7 +275,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
   }
 
   deleteSkill(category: OrderSkill, skill: SkillsDto) {
-    for (let i in this.reorderSkills) {
+    for (const i in this.reorderSkills) {
       if (this.reorderSkills[i].name == category.name) {
         const listSkill = this.reorderSkills[i].data;
         listSkill.forEach((element, index) => {
@@ -288,8 +289,8 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
   }
 
   removeSkill(category: OrderSkill, skill: SkillsDto) {
-    if (category.name == "TOP5") {
-      for (let i in this.reorderSkills) {
+    if (category.name == 'TOP5') {
+      for (const i in this.reorderSkills) {
         if (this.reorderSkills[i].name == category.name) {
           const listSkill = this.reorderSkills[i].data;
           listSkill.forEach((element, index) => {
@@ -305,37 +306,24 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
       }
       this.checkAllowSave();
     } else {
-      this.dialogService
-        .open(AitConfirmDialogComponent, {
-          closeOnBackdropClick: true,
-          hasBackdrop: true,
-          autoFocus: false,
-          context: {
-            title: this.getMsg('I0004'),
-          },
-        })
-        .onClose.subscribe(async (event) => {
-          if (event) {
-            this.deleteSkill(category, skill);
-            this.checkAllowSave();
-          }
-        });
+      this.deleteSkill(category, skill);
+      this.checkAllowSave();
     }
   }
 
   passToChange(skill: SkillsDto, category: OrderSkill) {
-    if (category.name === "TOP5") {
+    if (category.name === 'TOP5') {
       this.removeSkill(category, skill);
       this.checkAllowSave();
     } else {
-      for (let index in this.reorderSkills) {
-        if (this.reorderSkills[index].name == "TOP5" && this.reorderSkills[index].data.length < 5) {
+      for (const index in this.reorderSkills) {
+        if (this.reorderSkills[index].name == 'TOP5' && this.reorderSkills[index].data.length < 5) {
           skill.top_skill = true;
           this.reorderSkills[index].data.push(skill);
           this.deleteSkill(category, skill);
           break;
         }
-        if (this.reorderSkills[index].name == "TOP5" && this.reorderSkills[index].data.length >= 5) {
+        if (this.reorderSkills[index].name == 'TOP5' && this.reorderSkills[index].data.length >= 5) {
           this.showToastr('', this.getMsg('E0021'), KEYS.WARNING);
         }
       }
@@ -345,15 +333,15 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
 
   async save() {
     this.callLoadingApp();
-    let listTop = [];
+    const listTop = [];
     this.user_skills._from = 'sys_user/' + this.user_id;
     this.user_skills.relationship = 'user_skill';
     const _fromSkill = [
       { _from: 'sys_user/' + this.user_id },
     ]
     this.reoderSkillsService.removeUserSkillReorder(_fromSkill);
-    for (let category of this.reorderSkills) {
-      for (let skill of category.data) {
+    for (const category of this.reorderSkills) {
+      for (const skill of category.data) {
         this.sort_no += 1;
         this.user_skills.sort_no = this.sort_no;
         this.user_skills._to = 'm_skill/' + skill._key;
@@ -370,7 +358,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
           });
       }
     }
-    let data = [{ top_skills: listTop }]
+    const data = [{ top_skills: listTop }]
     this.reoderSkillsService.updateTopSkill(data).then((res) => {
       if (res?.status === RESULT_STATUS.OK) {
         this.cancelLoadingApp();

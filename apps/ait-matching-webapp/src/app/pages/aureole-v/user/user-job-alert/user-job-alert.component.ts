@@ -1,4 +1,5 @@
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup} from '@angular/forms';
+// eslint-disable-next-line max-len
 import { AitAppUtils, AitAuthService, AitBaseComponent, AitConfirmDialogComponent, AitEnvironmentService, AitTranslationService, AppState, getUserSetting, MODE } from '@ait/ui';
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
@@ -6,9 +7,9 @@ import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { isArrayFull, isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
 import dayjs from 'dayjs';
-import { UserJobAlertService } from 'apps/ait-matching-webapp/src/app/services/user-job-alert.service';
+import { UserJobAlertService } from '../../../../services/user-job-alert.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UserProfileService } from 'apps/ait-matching-webapp/src/app/services/user-profile.service';
+import { UserProfileService } from '../../../../services/user-profile.service';
 
 @Component({
   selector: 'ait-user-job-alert',
@@ -20,12 +21,12 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
   userjobAlertClone:any;
   isSubmit = false;
   isProfile = false;
-  mode = "NEW";
+  mode = 'NEW';
   isChanged = false;
   errorArr = [];
   dayNow ='';
-  dateFormat = "";
-  userKey = "";
+  dateFormat = '';
+  userKey = '';
   industrys = [];
   experienceLevels = [];
   employeeTypes = [];
@@ -109,10 +110,10 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
     if(!this.isProfile){
       this.router.navigate([`user-onboarding`]);
     }else{
-      if(this.mode == "NEW"){
+      if(this.mode == 'NEW'){
         this.dayNow = this.getDateFormat(Date.now());
-        this.userjobAlert.controls["start_date_from"].setValue(Date.now());
-      }else if(this.mode == "EDIT"){
+        this.userjobAlert.controls['start_date_from'].setValue(Date.now());
+      }else if(this.mode == 'EDIT'){
         this.getUserJobAlert();
       }else{
         this.router.navigate([`user-job-alert-detail/` + this.userKey]);
@@ -158,9 +159,6 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
     } else {
       return dayjs(time).format(this.dateFormat.toUpperCase());
     }
-  }
-  takeMasterValue(value: any, target: string): void {
-
   }
 
   takeDatePickerValue(value: number, group: string, form: string) {
@@ -252,10 +250,10 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
     })
   }
   dataSave(){
-    let industrySave = [];
-    let experience_levelSave = [];
-    let locationSave = [];
-    let employee_typeSave = [];
+    const industrySave = [];
+    const experience_levelSave = [];
+    const locationSave = [];
+    const employee_typeSave = [];
 
     if(this.userjobAlert.value.industry){
       this.userjobAlert.value.industry.forEach(element => {
@@ -278,12 +276,12 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
       });
     }
     
-    let dataSave = this.userjobAlert.value;
+    const dataSave = this.userjobAlert.value;
     dataSave['industry'] = industrySave;
     dataSave['experience_level'] = experience_levelSave;
     dataSave['location'] = locationSave;
     dataSave['employee_type'] = employee_typeSave;
-    if(this.mode == "NEW"){
+    if(this.mode == 'NEW'){
       dataSave['user_id'] = this.authService.getUserID();
     }
    return dataSave;    
@@ -330,7 +328,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
       }, 10);
     }
     setTimeout(() => {
-      this.userjobAlert.controls["start_date_from"].setValue(Date.now());
+      this.userjobAlert.controls['start_date_from'].setValue(Date.now());
     }, 100);    
   }
   
