@@ -1,6 +1,6 @@
 @import '../../../../../styles/themes.scss';
 .user_profile_wrapper{
-  min-width: 1280px;
+  min-width: 880px;
   .content__card{
     position: relative;
     margin: auto;
@@ -479,5 +479,16 @@ ul .timeline {
   }
 }
 @media only screen and (max-width: 1280px) {
-
+  .user_profile_wrapper{
+    .content__card{
+      width: 90%;
+    }
+  }
+}
+@media only screen and (max-width: 1024px) {
+  .user_profile_wrapper{
+    .content__card{
+      width: 95%;
+    }
+  }
 }

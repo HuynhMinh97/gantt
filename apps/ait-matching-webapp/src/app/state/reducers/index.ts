@@ -1,5 +1,5 @@
-import { AureoleAppState } from "../models";
-import { AureoleActionTypes } from "../types";
+import { AureoleAppState } from '../models';
+import { AureoleActionTypes } from '../types';
 
 const initialState: AureoleAppState = {
   keywordsSearch: {}

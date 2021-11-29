@@ -69,7 +69,6 @@ export class UserProjectDetailComponent extends AitBaseComponent implements OnIn
           if (r.status === RESULT_STATUS.OK) {
             const data = r.data[0];
             this.stateUserProject = data;
-            console.log(this.stateUserProject);
 
           }
         });
@@ -81,8 +80,6 @@ export class UserProjectDetailComponent extends AitBaseComponent implements OnIn
             listSkills.push(skill?.skills.value);
           }
           this.stateUserSkill = listSkills;
-          console.log(this.stateUserSkill);
-
         })
     }
     setTimeout(() => {

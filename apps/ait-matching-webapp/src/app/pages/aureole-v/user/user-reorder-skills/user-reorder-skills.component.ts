@@ -236,8 +236,6 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
         this.reorderSkills.splice(index, 1 );
       }
     });
-    console.log(this.listSkills);
-    
     this.reorderSkillsClone = JSON.parse(JSON.stringify(this.reorderSkills));
   }
 

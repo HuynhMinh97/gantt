@@ -3,11 +3,12 @@ import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'card-content',
   templateUrl: './card-content.component.html',
   styleUrls: ['./card-content.component.scss']
 })
-export class CardContentProfileComponent implements OnInit {
+export class CardContentProfileComponent  {
 
   constructor(private envService: AitEnvironmentService, private store: Store<AppState>, private translate: AitTranslationService) {
     store.pipe(select(getCaption)).subscribe(() => {
@@ -17,7 +18,9 @@ export class CardContentProfileComponent implements OnInit {
   @Input() label = 'Default';
   @Input() sumDate = 'Default';
   @Input() loading = false;
+  // eslint-disable-next-line @angular-eslint/no-output-on-prefix
   @Output() onClickButtonHeader = new EventEmitter();
+  // eslint-disable-next-line @angular-eslint/no-output-on-prefix
   @Output() onToggle = new EventEmitter();
   @Input() isColumn = false;
   @Input() isStart = true;
@@ -71,9 +74,4 @@ export class CardContentProfileComponent implements OnInit {
     event.stopPropagation();
     !this.tooltip && this.onClickButtonHeader.emit({ clicked: true });
   }
-  
-
-  ngOnInit(): void {
-  }
-
 }
