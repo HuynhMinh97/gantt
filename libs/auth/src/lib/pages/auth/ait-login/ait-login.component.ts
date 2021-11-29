@@ -257,8 +257,10 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
 
   loginHandle2 = async () => {
     const { email, password } = this.formLoginCtrl.value;
-    const hashedPwd = await this.hashPwd(password);
+    this.getErrorEmailMessage(email);
+    this.getErrorPasswordMessage(password);
     if (!AitAppUtils.isLogined() && !this.isErrors()) {
+      const hashedPwd = await this.hashPwd(password);
       if (email && hashedPwd) {
         this.isLoading = true;
         try {

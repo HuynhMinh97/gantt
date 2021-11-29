@@ -11,7 +11,7 @@
         <p class="labell" style="margin-bottom: 8px;">{{ emailLabel }}</p>
         <div class="input__container">
           <input pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" [formControlName]="'email'" type="text" name="email"
-            id="email" [placeholder]="'004' | translate" (input)="handleFocus($event.target.value, 'email')" />
+            id="email" [placeholder]="'004' | translate" (input)="handleFocus($event.target.value, 'email')" (keyup.enter)="login()" />
         </div>
         <ait-error-message [errors]="errors.email"></ait-error-message>
       </div>
@@ -21,7 +21,7 @@
         </p>
         <div class="input__container">
           <input [formControlName]="'password'" [type]="isShowPassword ? 'text' : 'password'" name="password"
-            id="password" (input)="handleFocus($event.target.value, 'password')" [placeholder]="'005' | translate" />
+            id="password" (input)="handleFocus($event.target.value, 'password')" [placeholder]="'005' | translate" (keyup.enter)="login()" />
           <nb-icon style="
               height: 24px;
               width: 24px;
