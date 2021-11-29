@@ -17,6 +17,7 @@
     flex-direction: column;
     box-shadow: 0 1px 6px rgb(0 0 0 / 6%), 0 1px 1px rgb(0 0 0 / 3%);
     transition: 0.8s all ease-in-out;
+    margin-bottom: 50px;
     .form {
       width: 400px;
       .input_inline {
@@ -69,10 +70,10 @@
         align-items: center;
         display: flex;
       }
-      margin-top: 30px;
+      margin-bottom: 20px;
       justify-content: center;
       align-items: center;
-      padding: 20px;
+      padding: 0px;
       display: flex;
       button {
         width: 180px;
