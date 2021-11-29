@@ -162,8 +162,8 @@ export class UserExperienceComponent
         .findUserProfile(this.authService.getUserID())
         .then((x) => {
           this.defaultCompany = {
-            _key: x.data[0].company_working._key,
-            value: x.data[0].company_working.value,
+            _key: x.data[0].company_working?._key,
+            value: x.data[0].company_working?.value,
           };
           this.userExperienceInfo.controls['company_working'].setValue({
             ...this.defaultCompany,
