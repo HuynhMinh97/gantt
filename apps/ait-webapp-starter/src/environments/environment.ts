@@ -7,6 +7,7 @@ export const environment = {
     LANG_DEFAULT: 'ja_JP',
     LOCALE_DEFAULT: 'ja-JP',
     VERSION: 'v1.1',
+    APP_TITLE: ''
   },
   API_PATH: {
     BASE_REST_PREFIX: '/rest-api/v1',
