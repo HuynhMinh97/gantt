@@ -2,6 +2,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { AitAuthGuardService, AitAppUtils } from '@ait/ui';
 import { RenderPageComponent } from './render-page/render-page.component';
+import { RenderInputComponent } from './render-input/render-input.component';
 
 // Push your routes here one by one 🎉
 
@@ -30,6 +31,10 @@ export const routes: Routes = [
   {
     path: 'master',
     component: RenderPageComponent,
+  },
+  {
+    path: 'input',
+    component: RenderInputComponent
   },
   {
     path: '',

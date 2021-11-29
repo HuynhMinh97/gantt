@@ -24,6 +24,7 @@ export class AitRenderPageService extends AitBaseService {
       collection: true,
       max_item: true,
       width: true,
+      required: true,
       from_to: true
     }
   };
@@ -71,7 +72,7 @@ export class AitRenderPageService extends AitBaseService {
   }
 
   async findGroup(condition?: any, rf?: any) {
-    const returnFields = rf ? rf : this.getKey;
+    const returnFields = rf ? rf : { _key: true, collection: true };
     const request = {};
     request['collection'] = COLLECTIONS.GROUP;
     if (isObjectFull(condition)) {
@@ -105,6 +106,21 @@ export class AitRenderPageService extends AitBaseService {
     return await this.query(GRAPHQL.FIND_SEARCH_CONDITIONS, request, returnFields);
   }
 
+  async findSysInput(condition?: any, rf?: any) {
+    const returnFields = rf ? rf : this.searchField;
+    const request = {};
+    request['collection'] = COLLECTIONS.SYS_INPUT;
+    if (isObjectFull(condition)) {
+      request['condition'] = condition;
+    }
+    request['options'] = {
+      sort_by: {
+        value: 'col_no'
+      }
+    };
+    return await this.query(GRAPHQL.FIND_SYS_INPUT, request, returnFields);
+  }
+
   async findSearchResult(condition?: any, rf?: any) {
     const returnFields = rf ? rf : this.searchResult;
     const request = {};
@@ -113,5 +129,10 @@ export class AitRenderPageService extends AitBaseService {
       request['condition'] = condition;
     }
     return await this.query(GRAPHQL.FIND_SEARCH_RESULT, request, returnFields);
+  }
+
+  async saveRenderData(collection: string, data: any[], rf?: any) {
+    const returnFields = rf ? rf : { _key: true, data: true };
+    return await this.mutation(GRAPHQL.SAVE_DATA_RENDER, collection, data, returnFields);
   }
 }

@@ -202,6 +202,8 @@ export enum GRAPHQL {
   FIND_PAGE = 'findSysPage',
   FIND_SEARCH_CONDITIONS = 'findSysSearchCondition',
   FIND_SEARCH_RESULT = 'findSysSearchResult',
+  FIND_SYS_INPUT = 'findSysInput',
+  SAVE_DATA_RENDER = 'saveDataRender'
 }
 
 export enum COLLECTIONS {
@@ -220,7 +222,8 @@ export enum COLLECTIONS {
   COMPANY = 'sys_company',
   M_SKILL = 'm_skill',
   SEARCH_CONDITIONS = 'sys_search_condition',
-  SEARCH_RESULT = 'sys_search_result'
+  SEARCH_RESULT = 'sys_search_result',
+  SYS_INPUT = 'sys_input'
 }
 
 export enum OPERATOR {
