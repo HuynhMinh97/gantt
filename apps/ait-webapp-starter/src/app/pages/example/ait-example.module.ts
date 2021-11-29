@@ -30,6 +30,7 @@ import {
   AitTranslationService,
   AitUserService,
   AitUserSettingService,
+  AitGroupInputModule,
 } from '@ait/ui';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -39,6 +40,7 @@ import { AitExampleGraphQLModule } from './graphql/ait-example-graphql.module';
 import { AitExampleUiModule } from './ui/ait-example-ui.module';
 import { AitExampleRoutingModule } from './ait-example-routing.module';
 import { NbInputModule } from '@nebular/theme';
+import { RenderInputComponent } from './render-input/render-input.component';
 
 // Những module cần dùng cho 1 pages
 const AIT_UI_MODULES = [
@@ -66,6 +68,7 @@ const AIT_UI_MODULES = [
   AitButtonGroupModule,
   AitAutocompleteMasterDataModule,
   AitAutocompleteMasterModule,
+  AitGroupInputModule
 ];
 
 const AIT_UI_SERVICES = [
@@ -78,6 +81,8 @@ const AIT_UI_SERVICES = [
 
 @NgModule({
   declarations: [
+  
+    RenderInputComponent
   ],
   imports: [
     BrowserModule,
