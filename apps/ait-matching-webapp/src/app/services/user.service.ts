@@ -8,7 +8,6 @@ export class UserService extends AitBaseService {
 
  
   saveJobInfo = async (data: any[]) => {
-    console.log("thuan",data);
     return this.mutation('saveJobInfo', 'biz_job', data, { _key: true });
   }
 }

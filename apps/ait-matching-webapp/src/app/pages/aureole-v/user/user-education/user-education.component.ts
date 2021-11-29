@@ -425,7 +425,6 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
 
   takeDatePickerValue(value: number, group: string, form: string) {
     if (value == null) {
-      this.isChanged = true;
       this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(value);
     }

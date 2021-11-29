@@ -377,8 +377,6 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
           if (r.status === RESULT_STATUS.OK) {
             if (r.data.length > 0) {
               const data = r.data[0];
-              console.log(data);
-
               this.certificate.patchValue({ ...data });
               this.certificateClone = this.certificate.value;
               this.companyName = [{ _key: data.name?._key }, { value: data.name?.value }];

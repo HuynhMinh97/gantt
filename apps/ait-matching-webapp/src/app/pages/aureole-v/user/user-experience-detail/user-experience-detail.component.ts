@@ -68,8 +68,6 @@ export class UserExperienceDetailComponent extends AitBaseComponent implements O
           if (r.status === RESULT_STATUS.OK) {
             const data = r.data[0];
             this.stateUserExp = data;
-            console.log(this.stateUserExp);
-
           }
         })
     }

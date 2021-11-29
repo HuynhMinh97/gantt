@@ -1,4 +1,4 @@
-import { BaseDto, KeyValueDto } from "@ait/shared";
+import { BaseDto, KeyValueDto } from '@ait/shared';
 
 
 export interface UserEducationDto extends BaseDto{

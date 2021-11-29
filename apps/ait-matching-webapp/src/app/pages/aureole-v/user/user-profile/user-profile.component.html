@@ -39,7 +39,7 @@
             </p>
           </div>
         </div>
-        <div class="col-md-5 col-lg-4 col-xxxl-4" id="col2">
+        <div class="col-md-4 col-lg-4 col-xxxl-4" id="col2">
           <div  id = "about_input" style="width:100%; margin:0 ; height: 100px;  border: none;
           outline: none; font-size: 13px;overflow: hidden;resize: none;white-space: pre-line">
             {{DataUserProfile?.about}}
@@ -175,10 +175,9 @@
           <ait-drag-scroll
             [list]="category.data"
             [showField]="'name'"
-            [width]="'1500px'"
             [maxWidth]="'1500px'"
-            [minWidth]="'1500px'"
-            [isNormal]="true"
+            [minWidth]="'100px'"
+            [isNormal]="false"
           ></ait-drag-scroll>
           <hr *ngIf="!last" />
         </div>

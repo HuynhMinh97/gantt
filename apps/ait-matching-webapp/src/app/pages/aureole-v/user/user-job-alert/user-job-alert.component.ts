@@ -117,11 +117,10 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
         this.getUserJobAlert();
       }else{
         this.router.navigate([`user-job-alert-detail/` + this.userKey]);
-      }
-      
+      }      
     }
 
-    await this.userjobAlert.valueChanges.subscribe((data) => {
+    await this.userjobAlert.valueChanges.subscribe(() => {
       this.checkAllowSave();
     });
     
@@ -294,8 +293,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
     }else{
       this.callLoadingApp();
       const dataSave = this.dataSave();
-      console.log(dataSave);
-      this.userJobAlertService.saveUserJobAlert(this.userjobAlert.value)
+      this.userJobAlertService.saveUserJobAlert(dataSave)
       .then((res) => {
         if (res?.status === RESULT_STATUS.OK) {
           const message =

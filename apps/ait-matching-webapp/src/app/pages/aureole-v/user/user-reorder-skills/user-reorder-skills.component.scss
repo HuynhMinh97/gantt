@@ -133,20 +133,23 @@
           color: rgb(255, 223, 0);
         }
   }
-  
+  .sticky {
+    margin-bottom: 30px;
   .action-row {
-    .block {
+      height: 40px;
+      .block {
+        justify-content: center;
+        align-items: center;
+        display: flex;
+      }
+      margin: 0 !important;
       justify-content: center;
       align-items: center;
+      padding: 0px !important;
       display: flex;
-    }
-    justify-content: center;
-    align-items: center;
-    padding-bottom: 20px;
-    padding-top: 10px;
-    display: flex;
-    button {
-      width: 180px;
+      button {
+        width: 180px;
+      }
     }
   }
  

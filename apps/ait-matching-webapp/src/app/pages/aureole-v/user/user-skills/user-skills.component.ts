@@ -150,7 +150,6 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
         await this.userSkillsService.saveSkills(this.user_skills)
           .then((res) => {
             if (res?.status === RESULT_STATUS.OK) {
-              console.log(listSkills);              
               this.isSave = true;
               const message = this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
               this.showToastr('', message);

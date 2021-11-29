@@ -188,7 +188,6 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
       this.userLangService
         .save(this.saveData())
         .then((res) => {
-          console.log(res);
           if (res?.status === RESULT_STATUS.OK) {
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
@@ -221,7 +220,6 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
       this.userLangService
         .save(this.saveData())
         .then((res) => {
-          console.log(res);
           if (res?.status === RESULT_STATUS.OK) {
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');

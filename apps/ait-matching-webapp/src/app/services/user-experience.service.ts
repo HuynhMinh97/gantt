@@ -85,9 +85,9 @@ export class UserExperienceService extends AitBaseService {
     const condition = {
       user_id: _key,
       company_working: {
-        attribute: "company_working",
-        ref_collection: "m_company",
-        ref_attribute: "code",
+        attribute: 'company_working',
+        ref_collection: 'm_company',
+        ref_attribute: 'code',
       }
     };
     const returnFields = {

@@ -204,8 +204,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
         listSkills.push(skill?.skills);
       }    
         this.userProject.controls['skills'].setValue([...listSkills]);
-        this.userProjectClone = this.userProject.value;    
-        console.log(this.userProjectClone);
+        this.userProjectClone = this.userProject.value; 
     });    
   }
 

@@ -174,7 +174,7 @@ export class UserExperienceComponent
     }
     // Run when form value change
     this.checkAllowSave();
-    await this.userExperienceInfo.valueChanges.subscribe((data) => {
+    await this.userExperienceInfo.valueChanges.subscribe(() => {
       this.checkAllowSave();
     });
   }

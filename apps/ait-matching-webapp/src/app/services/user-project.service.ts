@@ -156,8 +156,6 @@ export class UserProjectService extends AitBaseService {
   }
 
   async saveConnectionUserProject(data: any) {
-    console.log(data);
-
     const returnField = { _key: true };
     return await this.mutation(
       'saveConnectionUserProject',
