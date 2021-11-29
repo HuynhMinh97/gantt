@@ -67,6 +67,7 @@ import { LocaleProvider } from './@theme/locale/locale.provider';
 import { AitTableCellModule } from './components/ait-table-cell/ait-table-cell.module';
 import { AitGroupSearchModule } from './components/ait-group-search/ait-group-search.module';
 import { AitRenderPageService } from './services/common/ait-render-page.service';
+import { AitGroupInputModule } from './components/ait-group-input/ait-group-input.module';
 registerLocaleData(localeEnn);
 registerLocaleData(localeVnn);
 registerLocaleData(localeJpp);
@@ -128,6 +129,7 @@ const NB_MODULES = [
     AitOutputTextModule,
     AitTextGradientModule,
     AitGroupSearchModule,
+    AitGroupInputModule,
     StoreModule.forRoot({
       ...rootReducers,
       ...inItialState
@@ -161,6 +163,7 @@ const NB_MODULES = [
     AitTimePickerModule,
     AitTextGradientModule,
     AitGroupSearchModule,
+    AitGroupInputModule,
     AitCardContentModule,
     AitButtonModule,
     AitConfirmDialogModule,

@@ -31,3 +31,8 @@
   font-size:  2vmax;
   word-break: keep-all;
 }
+
+
+:host ::ng-deep nb-layout-header .fixed {
+  z-index: 99999999;
+}
