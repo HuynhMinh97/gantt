@@ -227,8 +227,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         }
         this.countSkill =  data.length ;
         const top5 = {} as OrderSkill;
-        console.log(this.translateService.translate('top 5'));
-        
         top5.name = this.translateService.translate('top 5');
         top5.data = [];
         if (this.topSkills.length > 0) {
@@ -735,8 +733,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   async getImg() {
     await this.userProfileService.getFilesByFileKeys(this.url_avatar)
       .then((res) => {
-        console.log(res.dat);
-        
+        console.log(res);       
       })
   }
   getImage = (file: any, isError = false) => {
@@ -821,8 +818,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     .then((res) => {
       if(res?.status == RESULT_STATUS.OK){
         this.countFriend = res.data.length;
-        console.log(res.data);
-        
       } 
     })
   }

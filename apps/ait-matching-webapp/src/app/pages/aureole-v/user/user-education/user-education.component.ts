@@ -188,8 +188,6 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     } else {
       saveData['user_id'] = this.authService.getUserID();
     }
-    console.log(saveData);
-
     return saveData;
   }
 

@@ -1,5 +1,6 @@
 import { AitBaseService, AitCtxUser, KeyValueDto, SysUser } from '@ait/core';
 import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { RESULT_STATUS } from 'libs/shared/src/lib/commons/enums';
 import { UserSkillRequest } from './user-skill.request';
 import { UserSkillResponse } from './user-skill.response';
