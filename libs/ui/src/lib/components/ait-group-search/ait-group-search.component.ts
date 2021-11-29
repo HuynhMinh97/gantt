@@ -7,8 +7,8 @@ import {
   RESULT_STATUS,
 } from '@ait/shared';
 import {
-  ChangeDetectorRef,
   Component,
+  DoCheck,
   ElementRef,
   EventEmitter,
   Input,
@@ -32,7 +32,6 @@ import {
   AitMasterDataService,
   AitRenderPageService,
   AitSaveTempService,
-  AitTranslationService,
   AitUserService,
 } from '../../services';
 import { AppState } from '../../state/selectors';
@@ -46,7 +45,7 @@ import { AitBaseComponent } from '../base.component';
 })
 export class AitGroupSearchComponent
   extends AitBaseComponent
-  implements OnInit {
+  implements OnInit, DoCheck {
   @ViewChild('table') table: Ng2SmartTableComponent;
   @ViewChild('area') area: ElementRef;
   source: LocalDataSource;
@@ -68,171 +67,6 @@ export class AitGroupSearchComponent
   rightSide: any[] = [];
   selectedItems: any[] = [];
   settings = {};
-  settings2 = {
-    actions: false,
-    noDataMessage: 'データは空白となっています。',
-    selectMode: 'multi',
-    pager: {
-      display: true,
-      perPage: 10,
-    },
-    columns: {
-      name: {
-        title: '社名',
-        type: 'custom',
-        renderComponent: AitTableCellComponent,
-        valuePrepareFunction: (value: string) => {
-          const obj = {
-            text: value,
-            style: {
-              width: 250,
-            },
-          };
-          return obj;
-        },
-      },
-      address: {
-        title: '住所（登記上）',
-        type: 'custom',
-        renderComponent: AitTableCellComponent,
-        valuePrepareFunction: (value: string) => {
-          const obj = {
-            text: value,
-            style: {
-              width: 250,
-            },
-          };
-          return obj;
-        },
-      },
-      business: {
-        title: '分野・業務区分',
-        type: 'custom',
-        renderComponent: AitTableCellComponent,
-        valuePrepareFunction: (value: string) => {
-          const obj = {
-            text: value,
-            style: {
-              width: 200,
-            },
-          };
-          return obj;
-        },
-      },
-      occupation: {
-        title: '職種',
-        type: 'custom',
-        renderComponent: AitTableCellComponent,
-        valuePrepareFunction: (value: string) => {
-          const obj = {
-            text: value,
-            style: {
-              width: 150,
-            },
-          };
-          return obj;
-        },
-      },
-      work: {
-        title: '作業',
-        type: 'custom',
-        renderComponent: AitTableCellComponent,
-        valuePrepareFunction: (value: string) => {
-          const obj = {
-            text: value,
-            style: {
-              width: 150,
-            },
-          };
-          return obj;
-        },
-      },
-      phone: {
-        title: '電話番号',
-        type: 'custom',
-        renderComponent: AitTableCellComponent,
-        valuePrepareFunction: (value: string) => {
-          const obj = {
-            text: value,
-            style: {
-              width: 150,
-            },
-          };
-          return obj;
-        },
-      },
-      fax: {
-        title: 'FAX番号',
-        type: 'custom',
-        renderComponent: AitTableCellComponent,
-        valuePrepareFunction: (value: string) => {
-          const obj = {
-            text: value,
-            style: {
-              width: 150,
-            },
-          };
-          return obj;
-        },
-      },
-      create_by: {
-        title: '登録者',
-        type: 'custom',
-        renderComponent: AitTableCellComponent,
-        valuePrepareFunction: (value: string) => {
-          const obj = {
-            text: value,
-            style: {
-              width: 150,
-            },
-          };
-          return obj;
-        },
-      },
-      create_at: {
-        title: '登録日時',
-        type: 'custom',
-        renderComponent: AitTableCellComponent,
-        valuePrepareFunction: (value: string) => {
-          const obj = {
-            text: value,
-            style: {
-              width: 150,
-            },
-          };
-          return obj;
-        },
-      },
-      change_by: {
-        title: '最終更新者',
-        type: 'custom',
-        renderComponent: AitTableCellComponent,
-        valuePrepareFunction: (value: string) => {
-          const obj = {
-            text: value,
-            style: {
-              width: 150,
-            },
-          };
-          return obj;
-        },
-      },
-      change_at: {
-        title: '最終更新日時',
-        type: 'custom',
-        renderComponent: AitTableCellComponent,
-        valuePrepareFunction: (value: string) => {
-          const obj = {
-            text: value,
-            style: {
-              width: 150,
-            },
-          };
-          return obj;
-        },
-      },
-    },
-  };
   isReset = false;
   isCreateAtError = false;
   isChangeAtError = false;
@@ -248,8 +82,6 @@ export class AitGroupSearchComponent
     public router: Router,
     public store: Store<AppState>,
     private dialogService: NbDialogService,
-    // private translateService: AitTranslationService,
-    // private changeDetectorRef: ChangeDetectorRef,
     authService: AitAuthService,
     userService: AitUserService,
     toastrService: NbToastrService,
@@ -372,7 +204,7 @@ export class AitGroupSearchComponent
 
     this.settings['columns'] = {};
 
-    columns.forEach((col : any) => {
+    columns.forEach((col: any) => {
       const obj = {
         type: 'custom',
         renderComponent: AitTableCellComponent,
@@ -390,9 +222,9 @@ export class AitGroupSearchComponent
       this.settings['columns'][col['name']] = obj;
     });
 
-    this.setupTable(data);
+    this.setupTable();
   }
-  async setupTable(setting: any) {
+  async setupTable() {
     const res = await this.masterDataService.getAllMasterData();
     const data = res.data as any[];
     this.source = new LocalDataSource(data);
@@ -561,7 +393,9 @@ export class AitGroupSearchComponent
   }
 
   getLeft(page: number): number {
-    const length = (document.getElementsByClassName('ng2-smart-page-item') || []).length;
+    const length = (
+      document.getElementsByClassName('ng2-smart-page-item') || []
+    ).length;
     if (length === 6) {
       return 405;
     }

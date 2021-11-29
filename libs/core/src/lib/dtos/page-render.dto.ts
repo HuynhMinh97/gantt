@@ -1,6 +1,6 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { BaseDto } from './base.dto';
-
+import { GraphQLJSONObject } from 'graphql-type-json';
 @InputType()
 export class SysGroupDto extends BaseDto {
   @Field(() => String, { nullable: true })
@@ -11,6 +11,12 @@ export class SysGroupDto extends BaseDto {
 
   @Field(() => String, { nullable: true })
   name: string;
+
+  @Field(() => String, { nullable: true })
+  type: string;
+
+  @Field(() => String, { nullable: true })
+  collection: string;
 
   @Field(() => Boolean, { nullable: true })
   active_flag: boolean;
@@ -47,6 +53,9 @@ export class ComponentSettingDto {
   
   @Field(() => String, { nullable: true })
   width: string;
+
+  @Field(() => Boolean, { nullable: true })
+  required: boolean;
 
   @Field(() => Boolean, { nullable: true })
   from_to: boolean;
@@ -93,3 +102,13 @@ export class SysSearchConditionDto extends BaseDto {
 
 @InputType()
 export class SysSearchResultDto extends SysSearchConditionDto {}
+
+@InputType()
+export class SysInputDto extends SysSearchConditionDto {}
+
+@InputType()
+export class SaveDataDto extends BaseDto {
+  @Field(() => GraphQLJSONObject, { nullable: true })
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: any;
+}

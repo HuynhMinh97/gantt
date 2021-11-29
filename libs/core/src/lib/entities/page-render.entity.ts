@@ -1,3 +1,4 @@
+import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { BaseEntity } from './base.entity';
 
@@ -11,6 +12,12 @@ export class SysGroupEntity extends BaseEntity {
 
   @Field(() => String, { nullable: true })
   name: string;
+
+  @Field(() => String, { nullable: true })
+  type: string;
+
+  @Field(() => String, { nullable: true })
+  collection: string;
 
   @Field(() => Boolean, { nullable: true })
   active_flag: boolean;
@@ -47,6 +54,9 @@ export class ComponentSettingEntity {
   
   @Field(() => String, { nullable: true })
   width: string;
+
+  @Field(() => Boolean, { nullable: true })
+  required: boolean;
 
   @Field(() => Boolean, { nullable: true })
   from_to: boolean;
@@ -188,4 +198,14 @@ export class SysSearchResultEntity extends BaseEntity {
 
   @Field(() => [ColumnEntity], { nullable: true })
   columns: ColumnEntity[];
+}
+
+@ObjectType()
+export class SysInputEntity extends SysSearchConditionEntity {}
+
+@ObjectType()
+export class SaveDataEntity extends BaseEntity {
+  @Field(() => GraphQLJSONObject, { nullable: true })
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: any;
 }
