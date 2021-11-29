@@ -1,5 +1,6 @@
 import { AitBaseService, AitCtxUser, KeyValueDto, SysUser } from '@ait/core';
 import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { RESULT_STATUS } from 'libs/shared/src/lib/commons/enums';
 import { ReorderSkillResponse } from './reorde-skill.response';
 import { ReorderSkillRequest } from './reorder-skill.request';
@@ -74,4 +75,28 @@ export class ReorderSkillResolver extends AitBaseService {
       return new ReorderSkillResponse(RESULT_STATUS.ERROR, [], 'error');
     }
   }
+
+  @Mutation(() => ReorderSkillResponse, { name: 'removeSkillReorder' })
+  async removeSkillReorder(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => ReorderSkillRequest }) request: ReorderSkillRequest
+  ) {
+    // return this.remove(request, user);
+    const user_id = request.user_id;
+    const data = JSON.stringify(request.data);   
+    if (user_id) {
+      const aqlQuery=`
+        FOR data IN user_skill
+        FOR skill in ${data}
+        FILTER data._from == skill._from && data._to == skill._to && "del_flag" != true
+        UPDATE data WITH { del_flag: true } IN user_skill
+        RETURN data
+      `;
+      return await this.query(aqlQuery);
+    } else {
+      return new ReorderSkillResponse(RESULT_STATUS.ERROR, [], 'error');
+    }
+  }
+
+
 }

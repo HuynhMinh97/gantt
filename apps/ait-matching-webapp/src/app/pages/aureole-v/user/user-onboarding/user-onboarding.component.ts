@@ -301,8 +301,6 @@ export class UserOnboardingComponent
       if (res.status && res.status === RESULT_STATUS.OK) {
         this.genderList = res.data;
       }
-      console.log(this.genderList);
-
     });
   }
 

@@ -40,7 +40,6 @@ _key:true
   }
 
   async saveSkills(data: any) {
-    console.log(data); 
     const returnField = { _key: true };
     return await this.mutation(
       'saveUserSkill',
