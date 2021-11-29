@@ -1,12 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Field, InputType } from '@nestjs/graphql';
 import {
+  SaveDataDto,
   SysGroupDto,
+  SysInputDto,
   SysModuleDto,
   SysPageDto,
   SysSearchConditionDto,
   SysSearchResultDto,
 } from '../dtos/page-render.dto';
 import { BaseRequest } from './base.request';
+import { GraphQLJSONObject } from 'graphql-type-json';
 
 @InputType()
 export class SysGroupRequest extends BaseRequest {
@@ -36,4 +40,16 @@ export class SysSearchConditionRequest extends BaseRequest {
 export class SysSearchResultRequest extends BaseRequest {
   @Field(() => SysSearchResultDto, { nullable: true })
   condition: SysSearchResultDto;
+}
+
+@InputType()
+export class SysInputRequest extends BaseRequest {
+  @Field(() => SysInputDto, { nullable: true })
+  condition: SysInputDto;
+}
+
+@InputType()
+export class SaveDataRequest extends BaseRequest {
+  @Field(() => [GraphQLJSONObject], { nullable: true })
+  data: any[];
 }
