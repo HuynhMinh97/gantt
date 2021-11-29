@@ -23,6 +23,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
   listSkillRemove = [];
   isChanged = false;
   isDelete = false;
+  isLoad = false;
   sort_no = 0;
   user_skills = {
     _from: '',
@@ -60,6 +61,9 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
 
   async ngOnInit(): Promise<void> {
     this.callLoadingApp();
+    setTimeout(() => {
+      this.isLoad = true;
+    }, 100);
     await this.findTopSkills();
     await this.findSkills();
     await this.groupSkill();

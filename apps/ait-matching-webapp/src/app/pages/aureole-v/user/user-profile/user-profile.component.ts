@@ -82,6 +82,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   skillByCategory: OrderSkill[] = [];
   userCentificate: CertificateDto[] = [];
 
+  isload = false;
   isFriend = false;
   countFriend = 0;
   timeProject = 0;
@@ -151,7 +152,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.callLoadingApp();
     await this.getMasterData();
     this.getFriends();
     this.getCountFriends();
@@ -164,9 +164,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     this.getEducationByUserId();
     this.getLanguageByUserId();
     this.getImg();
-    setTimeout(() => {
-      this.cancelLoadingApp();
-    }, 1000)
   }
   async getMasterData() {
     try {
@@ -200,6 +197,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           if (res.data.length > 0) {
             const data = res.data[0]
             this.DataUserProfile = data;
+            this.isload = true;
             this.cancelLoadingApp();
           } else {
             this.cancelLoadingApp();
