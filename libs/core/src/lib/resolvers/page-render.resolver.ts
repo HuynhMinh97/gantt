@@ -1,15 +1,19 @@
-import { Args, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AitCtxUser } from '../decorators/ait-ctx-user.decorator';
 import { SysUser } from '../entities/sys-user.entity';
 import {
+  SaveDataRequest,
   SysGroupRequest,
+  SysInputRequest,
   SysModuleRequest,
   SysPageRequest,
   SysSearchConditionRequest,
   SysSearchResultRequest,
 } from '../requests/page-render.request';
 import {
+  SaveDataResponse,
   SysGroupResponse,
+  SysInputResponse,
   SysModuleResponse,
   SysPageResponse,
   SysSearchConditionResponse,
@@ -62,5 +66,23 @@ export class PageRenderResolver extends AitBaseService {
     request: SysSearchResultRequest
   ) {
     return this.find(request, user);
+  }
+
+  @Query(() => SysInputResponse, { name: 'findSysInput' })
+  findSysInput(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => SysInputRequest })
+    request: SysInputRequest
+  ) {
+    return this.find(request, user);
+  }
+
+  @Mutation(() => SaveDataResponse, { name: 'saveDataRender' })
+  saveDataRender(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => SaveDataRequest })
+    request: SaveDataRequest
+  ) {
+    return this.save(request, user);
   }
 }

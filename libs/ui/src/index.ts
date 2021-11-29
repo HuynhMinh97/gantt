@@ -97,6 +97,9 @@ export * from './lib/components/ait-toc-menu/ait-toc-menu.module';
 //ait group search
 export * from './lib/components/ait-group-search/ait-group-search.module';
 
+//ait group input
+export * from './lib/components/ait-group-input/ait-group-input.module';
+
 //layout modules
 export * from './lib/@theme/layouts/ait-common-layout/ait-common-layout.module'
 

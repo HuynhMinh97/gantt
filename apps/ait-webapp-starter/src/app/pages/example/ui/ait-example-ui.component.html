@@ -3,26 +3,33 @@
   <ait-divider></ait-divider>
   <ait-space></ait-space>
 
-  <ait-tabs
-    [tabs]="tabs"
-    (onTabSelect)="getTabSelected($event)"
-    [tabSelected]="tabSelect"
-  ></ait-tabs>
+  <ait-tabs [tabs]="tabs" (onTabSelect)="getTabSelected($event)" [tabSelected]="tabSelect"></ait-tabs>
   <ait-space></ait-space>
 
   <div class="container" *ngIf="tabSelect === 'C'">
     <h4>COMPONENTS</h4>
 
+    <ait-card-content [isColumn]="true" [label]="'NUMBER'">
+
+      <div style="width: 100%; display: flex">
+        <ait-input-number [label]="'給与（円）'" [defaultValue]="100000000" [placeholder]="'300,000'" [id]="'salary'"
+        [isReadOnly]="true" [styleInput]="{ color: '#8f9bb3' }" [isCurrency]="true" [widthInput]="'200px'">
+      </ait-input-number>
+
+      <ait-space></ait-space>
+
+      <ait-input-number [min]="0" [max]="999999999999" [widthInput]="'200px'" [id]="'salary_from'"
+        [label]="'給与（円）'"
+        [defaultValue]="100000000">
+      </ait-input-number>
+      </div>
+
+    </ait-card-content>
+
     <ait-card-content [isColumn]="true" [label]="'Output text input'">
       <p>This is a component, which is used to input value from user 🎉</p>
-      <div
-        style="margin-left: 20px; display: flex; width: 100%; flex-wrap: wrap"
-      >
-        <ait-output-text
-          [label]="'Default'"
-          [valueArray]="['abc', 'def']"
-          [width]="'100%'"
-        ></ait-output-text>
+      <div style="margin-left: 20px; display: flex; width: 100%; flex-wrap: wrap">
+        <ait-output-text [label]="'Default'" [valueArray]="['abc', 'def']" [width]="'100%'"></ait-output-text>
       </div>
     </ait-card-content>
     <!-- <ait-card-content [isColumn]="true" [label]="'Text input'">
@@ -56,75 +63,35 @@
     <ait-card-content [isColumn]="true" [label]="'Error styles'">
       <p>This is a component, which is used to input value from user 🎉</p>
 
-      <button
-        nbButton
-        status="primary"
-        (click)="resetAll()"
-        style="width: 100px; margin: 15px"
-      >
+      <button nbButton status="primary" (click)="resetAll()" style="width: 100px; margin: 15px">
         reset all
       </button>
 
-      <div
-        style="
+      <div style="
           margin-left: 20px;
           display: flex;
           max-width: 400px;
           flex-wrap: wrap;
           flex-direction: column;
-        "
-      >
-        <ait-input-text
-          [placeholder]="'c_2003'"
-          [label]="'c_2003'"
-          [guidance]="'c_2003'"
-          [guidanceIcon]="'star'"
-          [length]="5"
-          (watchValue)="getValueTextInput($event)"
-          [styleLabel]="{ 'text-transform': 'initial' }"
-          [width]="'300px'"
-          (onError)="result.error_text = $event.isValid"
-          [isSubmit]="result.submit_text_input"
-          [id]="'example1'"
-          [errorMessages]="errors"
-          [isReset]="result.resetAll"
-          [required]="true"
-          [readonly]="true"
-        ></ait-input-text>
-        <button
-          nbButton
-          status="primary"
-          (click)="subMitTextInput()"
-          style="width: 100px; margin: 15px"
-        >
+        ">
+        <ait-input-text [placeholder]="'c_2003'" [label]="'c_2003'" [guidance]="'c_2003'" [guidanceIcon]="'star'"
+          [length]="5" (watchValue)="getValueTextInput($event)" [styleLabel]="{ 'text-transform': 'initial' }"
+          [width]="'300px'" (onError)="result.error_text = $event.isValid" [isSubmit]="result.submit_text_input"
+          [id]="'example1'" [errorMessages]="errors" [isReset]="result.resetAll" [required]="true" [readonly]="true">
+        </ait-input-text>
+        <button nbButton status="primary" (click)="subMitTextInput()" style="width: 100px; margin: 15px">
           submit
         </button>
         <code>#isValid : {{ result?.error_text }}</code>
         <code>#Ouput : {{ result?.text_input }}</code>
         <ait-space></ait-space>
-        <ait-input-number
-          [isReset]="result.resetAll"
-          [label]="'c_2003'"
-          [placeholder]="'c_2003'"
-          [max]="999999999999"
-          [min]="1"
-          [guidance]="'whatever you want'"
-          [guidanceIcon]="'star'"
-          (watchValue)="getValueNumberInput($event)"
-          [styleLabel]="{ 'text-transform': 'uppercase' }"
-          (onError)="result.error_number = $event.isValid"
-          [id]="'example2'"
-          [isSubmit]="result.submit_text_number"
-          [errorMessages]="errors"
-          [required]="true"
-        ></ait-input-number>
+        <ait-input-number [isReset]="result.resetAll" [label]="'c_2003'" [placeholder]="'c_2003'" [max]="999999999999"
+          [min]="1" [guidance]="'whatever you want'" [guidanceIcon]="'star'" (watchValue)="getValueNumberInput($event)"
+          [styleLabel]="{ 'text-transform': 'uppercase' }" (onError)="result.error_number = $event.isValid"
+          [id]="'example2'" [isSubmit]="result.submit_text_number" [errorMessages]="errors" [required]="true">
+        </ait-input-number>
 
-        <button
-          nbButton
-          status="primary"
-          (click)="subMitTextNumber()"
-          style="width: 100px; margin: 15px"
-        >
+        <button nbButton status="primary" (click)="subMitTextNumber()" style="width: 100px; margin: 15px">
           submit
         </button>
 
@@ -132,97 +99,41 @@
 
         <code>#Ouput : {{ result?.number_input }}</code>
         <ait-space></ait-space>
-        <ait-datepicker
-          [isReset]="result.resetAll"
-          [required]="true"
-          [label]="'Datepicker'"
-          [styleLabel]="{ 'text-transform': 'initial' }"
-          [width]="'400px'"
-          (onError)="result.error_datepicker = $event.isValid"
-          [placeholder]="null"
-          [guidance]="'c_2003'"
-          (watchValue)="getValueDatePicker($event)"
-          [guidanceIcon]="'star'"
-          [defaultValue]="date"
-          [isSubmit]="result.submit_datepicker"
-          [required]="true"
-          [errorMessages]="errors"
-          [format]="'yyyy/MM'"
-        ></ait-datepicker>
+        <ait-datepicker [isReset]="result.resetAll" [required]="true" [label]="'Datepicker'"
+          [styleLabel]="{ 'text-transform': 'initial' }" [width]="'400px'"
+          (onError)="result.error_datepicker = $event.isValid" [placeholder]="null" [guidance]="'c_2003'"
+          (watchValue)="getValueDatePicker($event)" [guidanceIcon]="'star'" [defaultValue]="date"
+          [isSubmit]="result.submit_datepicker" [required]="true" [errorMessages]="errors" [format]="'yyyy/MM'">
+        </ait-datepicker>
 
-        <button
-          nbButton
-          status="primary"
-          (click)="subMitDatepicker()"
-          style="width: 100px; margin: 15px"
-        >
+        <button nbButton status="primary" (click)="subMitDatepicker()" style="width: 100px; margin: 15px">
           submit
         </button>
         <code>#isValid : {{ result.error_datepicker }}</code>
 
         <code>#Ouput : {{ result?.date_picker?.value }}</code>
         <ait-space></ait-space>
-        <ait-autocomplete-master
-          [label]="'autocomplete master'"
-          [placeholder]="'one'"
-          [collection]="'sys_caption'"
-          (watchValue)="getValueMaster($event)"
-          [styleLabel]="{ 'text-transform': 'initial' }"
-          [isSubmit]="result.submit_master"
-          [isReset]="result.resetAll"
-          [required]="true"
-        ></ait-autocomplete-master>
+        <ait-autocomplete-master [label]="'autocomplete master'" [placeholder]="'one'" [collection]="'sys_caption'"
+          (watchValue)="getValueMaster($event)" [styleLabel]="{ 'text-transform': 'initial' }"
+          [isSubmit]="result.submit_master" [isReset]="result.resetAll" [required]="true"></ait-autocomplete-master>
         <code>#Ouput : {{ result?.master | json }}</code>
-        <button
-          nbButton
-          status="primary"
-          (click)="subMitMaster()"
-          style="width: 100px; margin: 15px"
-        >
+        <button nbButton status="primary" (click)="subMitMaster()" style="width: 100px; margin: 15px">
           submit
         </button>
 
         <ait-space></ait-space>
-        <input
-          nbInput
-          placeholder="Add error"
-          (keydown.enter)="getErrors(input.value); input.value = ''"
-          #input
-        />
+        <input nbInput placeholder="Add error" (keydown.enter)="getErrors(input.value); input.value = ''" #input />
         <ait-space></ait-space>
-        <ait-chip
-          [title]="e"
-          *ngFor="let e of errors"
-          [icon]="'close-outline'"
-          (action)="removeSearch(e)"
-        ></ait-chip>
+        <ait-chip [title]="e" *ngFor="let e of errors" [icon]="'close-outline'" (action)="removeSearch(e)"></ait-chip>
         <ait-space></ait-space>
 
-        <ait-autocomplete-master-data
-          [width]="'300px'"
-          [styleLabel]="{ 'text-transform': 'initial' }"
-          [placeholder]="'c_2003'"
-          [label]="'c_2003'"
-          (watchValue)="getValueMasterData($event)"
-          (onError)="result.error_data1 = $event.isValid"
-          [isSubmit]="result.master1"
-          [allowNew]="true"
-          [errorMessages]="errors"
-          [required]="true"
-          [isReset]="result.resetAll"
-          [required]="true"
-          [allowDelete]="true"
-          [sortBy]="'sort_no'"
-          [maxItem]="1"
-          [defaultValue]="[{ _key: 'c_b001', value: 'OK' }]"
-          [collection]="'sys_caption'"
-        ></ait-autocomplete-master-data>
-        <button
-          nbButton
-          status="primary"
-          (click)="subMitMasterData1()"
-          style="width: 100px; margin: 15px"
-        >
+        <ait-autocomplete-master-data [width]="'300px'" [styleLabel]="{ 'text-transform': 'initial' }"
+          [placeholder]="'c_2003'" [label]="'c_2003'" (watchValue)="getValueMasterData($event)"
+          (onError)="result.error_data1 = $event.isValid" [isSubmit]="result.master1" [allowNew]="true"
+          [errorMessages]="errors" [required]="true" [isReset]="result.resetAll" [required]="true" [allowDelete]="true"
+          [sortBy]="'sort_no'" [maxItem]="1" [defaultValue]="[{ _key: 'c_b001', value: 'OK' }]"
+          [collection]="'sys_caption'"></ait-autocomplete-master-data>
+        <button nbButton status="primary" (click)="subMitMasterData1()" style="width: 100px; margin: 15px">
           submit
         </button>
         <code>#isValid : {{ result.error_data1 }}</code>
@@ -230,29 +141,13 @@
 
         <ait-space></ait-space>
 
-        <ait-autocomplete-master-data
-          [styleLabel]="{ 'text-transform': 'initial' }"
-          [width]="'300px'"
-          [label]="'autocomplete master data'"
-          [placeholder]="'one'"
-          [guidance]="'c_2003'"
-          [guidanceIcon]="'star'"
-          [class]="'RESIDENCE_STATUS'"
-          (onError)="result.error_data2 = $event.isValid"
-          (watchValue)="result.multi_data = $event"
-          [isSubmit]="result.master2"
-          [allowNew]="true"
-          [errorMessages]="errors"
-          [isReset]="result.resetAll"
-          [required]="true"
-          [allowDelete]="true"
-        ></ait-autocomplete-master-data>
-        <button
-          nbButton
-          status="primary"
-          (click)="subMitMasterData2()"
-          style="width: 100px; margin: 15px"
-        >
+        <ait-autocomplete-master-data [styleLabel]="{ 'text-transform': 'initial' }" [width]="'300px'"
+          [label]="'autocomplete master data'" [placeholder]="'one'" [guidance]="'c_2003'" [guidanceIcon]="'star'"
+          [class]="'RESIDENCE_STATUS'" (onError)="result.error_data2 = $event.isValid"
+          (watchValue)="result.multi_data = $event" [isSubmit]="result.master2" [allowNew]="true"
+          [errorMessages]="errors" [isReset]="result.resetAll" [required]="true" [allowDelete]="true">
+        </ait-autocomplete-master-data>
+        <button nbButton status="primary" (click)="subMitMasterData2()" style="width: 100px; margin: 15px">
           submit
         </button>
         <code>#isValid : {{ result.error_data2 }}</code>
@@ -277,67 +172,31 @@
 
         ></ait-input-file> -->
 
-        <button
-          nbButton
-          status="primary"
-          (click)="subMitFile()"
-          style="width: 100px; margin: 15px"
-        >
+        <button nbButton status="primary" (click)="subMitFile()" style="width: 100px; margin: 15px">
           submit
         </button>
 
         <code>#isValid : {{ result.error_file }}</code>
 
         <ait-space></ait-space>
-        <ait-input-text
-          [label]="'textarea'"
-          [required]="true"
-          [rows]="10"
-          [placeholder]="'one'"
-          [guidance]="'whatever you want'"
-          [width]="'400px'"
-          [isReset]="result.resetAll"
-
-        ></ait-input-text>
+        <ait-input-text [label]="'textarea'" [required]="true" [rows]="10" [placeholder]="'one'"
+          [guidance]="'whatever you want'" [width]="'400px'" [isReset]="result.resetAll"></ait-input-text>
         <ait-label [label]="'Time picker'"></ait-label>
         <div style="display: flex; margin: 30px">
-          <ait-timepicker
-            [ishourValue]="true"
-            [defaultValue]="state.time1"
-            [fieldName]="'time1'"
-            [placeholder]="'HH'"
-            (watchValue)="result.time1 = $event.value.time1"
-            [id]="'shift_1_from_hour'"
-            [isReset]="result.resetAll"
-          ></ait-timepicker>
-          <ait-timepicker
-            [isminuteValue]="true"
-            [fieldName]="'time1_min'"
-            [placeholder]="'mm'"
-            (watchValue)="result.time1_min = $event.value.time1_min"
-            [defaultValue]="state.time1_min"
-            [isReset]="result.resetAll"
-            [id]="'shift_1_from_hour'"
-          ></ait-timepicker>
+          <ait-timepicker [ishourValue]="true" [defaultValue]="state.time1" [fieldName]="'time1'" [placeholder]="'HH'"
+            (watchValue)="result.time1 = $event.value.time1" [id]="'shift_1_from_hour'" [isReset]="result.resetAll">
+          </ait-timepicker>
+          <ait-timepicker [isminuteValue]="true" [fieldName]="'time1_min'" [placeholder]="'mm'"
+            (watchValue)="result.time1_min = $event.value.time1_min" [defaultValue]="state.time1_min"
+            [isReset]="result.resetAll" [id]="'shift_1_from_hour'"></ait-timepicker>
           <span style="margin: 20px">~</span>
 
-          <ait-timepicker
-            [ishourValue]="true"
-            [defaultValue]="state.time2"
-            [fieldName]="'time2'"
-            [placeholder]="'HH'"
-            (watchValue)="result.time2 = $event.value.time2"
-            [id]="'shift_1_from_hour'"
-            [isReset]="result.resetAll"
-          ></ait-timepicker>
-          <ait-timepicker
-            [isminuteValue]="true"
-            [fieldName]="'time2_min'"
-            [defaultValue]="state.time2_min"
-            [placeholder]="'mm'"
-            (watchValue)="result.time2_min = $event.value.time2_min"
-            [isReset]="result.resetAll"
-          ></ait-timepicker>
+          <ait-timepicker [ishourValue]="true" [defaultValue]="state.time2" [fieldName]="'time2'" [placeholder]="'HH'"
+            (watchValue)="result.time2 = $event.value.time2" [id]="'shift_1_from_hour'" [isReset]="result.resetAll">
+          </ait-timepicker>
+          <ait-timepicker [isminuteValue]="true" [fieldName]="'time2_min'" [defaultValue]="state.time2_min"
+            [placeholder]="'mm'" (watchValue)="result.time2_min = $event.value.time2_min" [isReset]="result.resetAll">
+          </ait-timepicker>
         </div>
         <code>#Ouput time1 : {{ result?.time1 | json }}</code>
         <code>#Ouput time1_min : {{ result?.time1_min | json }}</code>
@@ -358,19 +217,13 @@
     <ait-space></ait-space>
     <ait-card-content [isColumn]="true" [label]="'Chips'">
       <p>This is a component, which is used to show items of somethings 🎉</p>
-      <div
-        style="
+      <div style="
           margin-left: 20px;
           display: flex;
           max-width: 400px;
           flex-wrap: wrap;
-        "
-      >
-        <ait-chip
-          *ngFor="let st of status"
-          [title]="st + '🍓'"
-          [isTooltip]="true"
-        ></ait-chip>
+        ">
+        <ait-chip *ngFor="let st of status" [title]="st + '🍓'" [isTooltip]="true"></ait-chip>
       </div>
     </ait-card-content>
 
@@ -380,35 +233,23 @@
         This is a component, which is used to show popup to confirm whatever you
         want 🎉
       </p>
-      <div
-        style="
+      <div style="
           margin-left: 20px;
           display: flex;
           max-width: 400px;
           flex-wrap: wrap;
-        "
-      >
-        <ait-button
-          *ngFor="let s of status"
-          [title]="s"
-          [height]="'24px'"
-          [fontsize]="'10px'"
-          [color]="'#fff'"
-          [style]="'active'"
-          [background]="
+        ">
+        <ait-button *ngFor="let s of status" [title]="s" [height]="'24px'" [fontsize]="'10px'" [color]="'#fff'"
+          [style]="'active'" [background]="
             'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
-          "
-          [styleText]="{
+          " [styleText]="{
             'font-weight': 'bold',
             color: '#fff'
-          }"
-          [styleBtn]="{
+          }" [styleBtn]="{
             'min-width': '100px',
             'max-width': '150px',
             margin: '5px'
-          }"
-          (click)="confirmDialog(s)"
-        ></ait-button>
+          }" (click)="confirmDialog(s)"></ait-button>
       </div>
     </ait-card-content>
 
@@ -416,59 +257,39 @@
     <ait-card-content [isColumn]="true" [label]="'Special Matching Button'">
       <p>This is a button component, user can click, hover,...</p>
 
-      <div
-        style="
+      <div style="
           margin-left: 20px;
           display: flex;
           max-width: 400px;
           flex-wrap: wrap;
-        "
-      >
-        <ait-button
-          *ngFor="let s of status"
-          [title]="s"
-          [height]="'24px'"
-          [fontsize]="'10px'"
-          [background]="
+        ">
+        <ait-button *ngFor="let s of status" [title]="s" [height]="'24px'" [fontsize]="'10px'" [background]="
             'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)'
-          "
-          [styleText]="{
+          " [styleText]="{
             'font-weight': 'bold',
             color: '#fff'
-          }"
-          [styleBtn]="{
+          }" [styleBtn]="{
             'min-width': '100px',
             'max-width': '150px',
             margin: '5px'
-          }"
-        ></ait-button>
+          }"></ait-button>
       </div>
     </ait-card-content>
 
     <ait-space></ait-space>
-    <ait-card-content
-      [isColumn]="true"
-      [label]="'Input file'"
-      [styleContainer]="{
+    <ait-card-content [isColumn]="true" [label]="'Input file'" [styleContainer]="{
         padding: '10px'
-      }"
-    >
+      }">
       <p>This is a input-file component</p>
 
-      <div
-        style="
+      <div style="
           margin-left: 20px;
           display: flex;
           max-width: 400px;
           flex-wrap: wrap;
-        "
-      >
-        <ait-input-file
-          [isDefault]="false"
-          [file_keys]="['7bfedd70-a3db-f0c5-6340-d0e728d407ba']"
-          [maxSize]="40"
-          [maxFiles]="10"
-        ></ait-input-file>
+        ">
+        <ait-input-file [isDefault]="false" [file_keys]="['7bfedd70-a3db-f0c5-6340-d0e728d407ba']" [maxSize]="40"
+          [maxFiles]="10"></ait-input-file>
       </div>
     </ait-card-content>
     <ait-space></ait-space>
@@ -476,37 +297,24 @@
       <p>This is list component, you can scroll by draging chips 😜</p>
 
       <code># [isNormal]="true"</code>
-      <div
-        style="
+      <div style="
           margin-left: 20px;
           display: flex;
           max-width: 400px;
           flex-wrap: wrap;
-        "
-      >
-        <ait-drag-scroll
-          [list]="skills"
-          [showField]="'value'"
-          [minWidth]="'400px'"
-          [isNormal]="true"
-        ></ait-drag-scroll>
+        ">
+        <ait-drag-scroll [list]="skills" [showField]="'value'" [minWidth]="'400px'" [isNormal]="true"></ait-drag-scroll>
       </div>
       <ait-space></ait-space>
       <code># [isNormal]="false"</code>
-      <div
-        style="
+      <div style="
           margin-left: 20px;
           display: flex;
           max-width: 400px;
           flex-wrap: wrap;
-        "
-      >
-        <ait-drag-scroll
-          [list]="skills"
-          [showField]="'value'"
-          [minWidth]="'400px'"
-          [isNormal]="false"
-        ></ait-drag-scroll>
+        ">
+        <ait-drag-scroll [list]="skills" [showField]="'value'" [minWidth]="'400px'" [isNormal]="false">
+        </ait-drag-scroll>
       </div>
     </ait-card-content>
 
@@ -516,20 +324,14 @@
         This is a datepicker component, which is used to pick a date you want.
         You can set format by <code>[staticFormat]="YOUR_FORMAT"</code>
       </p>
-      <div
-        style="
+      <div style="
           margin-left: 20px;
           display: flex;
           max-width: 400px;
           flex-direction: column;
-        "
-      >
-        <ait-datepicker
-          (onDateChange)="getDate($event)"
-          [label]="'date picker'"
-          [dateInput]="date"
-          [format]="'yyyy'"
-        ></ait-datepicker>
+        ">
+        <ait-datepicker (onDateChange)="getDate($event)" [label]="'date picker'" [dateInput]="date" [format]="'yyyy'">
+        </ait-datepicker>
         <br />
         <code>#Result output : {{ result.date?.value }}</code>
       </div>
@@ -541,22 +343,16 @@
         This is a output file component, which display files you that you set
         and upload from local 📁
       </p>
-      <div
-        style="
+      <div style="
           margin-left: 20px;
           display: flex;
           max-width: 400px;
           flex-direction: column;
-        "
-      >
-        <ait-output-file
-          [classContainer]="'filene'"
-          [label]="'Output files'"
-          [fileKeys]="[
+        ">
+        <ait-output-file [classContainer]="'filene'" [label]="'Output files'" [fileKeys]="[
             '71305a2f-1d23-0f7b-25a8-94b1687e11b9',
             '1afb64a5-1f79-e403-eaa4-c8ec30d73550'
-          ]"
-        ></ait-output-file>
+          ]"></ait-output-file>
       </div>
     </ait-card-content>
 
