@@ -141,7 +141,7 @@ export class AitAutoCompleteMasterComponent
   getFieldName = () => this.translateService.translate(this.label);
 
   getInfo = () => {
-    const msg = this.translateService.getMsg('E0021');
+    const msg = this.translateService.getMsg('E0044');
     const res = (msg || '')
       .replace('{0}', this.maxItem)
       .replace('{1}', this.getFieldName());
