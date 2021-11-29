@@ -1,12 +1,14 @@
 <drag-scroll
-  [scrollbar-hidden]="true"
+  [scrollbar-hidden]="false"
+  [drag-scroll-y-disabled]="true"
   *ngIf="!isNormal"
   [ngStyle]="{
     'max-width': maxWidth || null,
     'min-width': minWidth || null,
     width: width || null
   }"
-  style="overflow: hidden;"
+  style="overflow: hidden;height: 50px;"
+  id="drag-scroll-button"
 >
   <button
     nbButton
@@ -38,6 +40,7 @@
 
     <!-- {{skillList | json}} -->
   </button>
+  <p *ngIf="list.length === 0" style="color: rgb(143, 155, 179);">{{errorList}} </p>
 </drag-scroll>
 <div *ngIf="isNormal" class="normal">
   <button
@@ -70,5 +73,5 @@
 
     <!-- {{skillList | json}} -->
   </button>
+  <p *ngIf="list.length === 0" style="color: rgb(143, 155, 179);">{{errorList}} </p>
 </div>
-<p *ngIf="list.length === 0" style="color: rgb(143, 155, 179);">{{errorList}} </p>
