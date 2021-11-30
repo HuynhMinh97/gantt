@@ -1,5 +1,4 @@
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { isObjectFull } from './../../../../../../../../libs/shared/src/lib/utils/checks.util';
 import { UserExperienceService } from './../../../../services/user-experience.service';
 import { Component, ElementRef, OnInit } from '@angular/core';
 import {
@@ -28,7 +27,7 @@ import {
   MODE,
 } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
-import { KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
+import { isObjectFull, KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
 import { MatchingUtils } from '../../../../../app/@constants/utils/matching-utils';
 
 @Component({
