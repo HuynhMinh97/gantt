@@ -102,7 +102,7 @@
         },
         "ait-matching-api": {
             "root": "apps/ait-matching-api",
-            "sourceRoot": "apps\\ait-matching-api\\src",
+            "sourceRoot": "apps/ait-matching-api/src",
             "projectType": "application",
             "architect": {
                 "build": {
