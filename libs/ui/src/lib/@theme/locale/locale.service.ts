@@ -1,11 +1,13 @@
 import { Injectable, Optional, SkipSelf } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-
 import { noop } from 'rxjs';
 import { AppState, getLang } from '../../state/selectors';
 
-type ShouldReuseRoute = (future: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot) => boolean;
+type ShouldReuseRoute = (
+  future: ActivatedRouteSnapshot,
+  curr: ActivatedRouteSnapshot
+) => boolean;
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +25,7 @@ export class LocaleService {
     private store: Store<AppState>,
     @Optional()
     @SkipSelf()
-    otherInstance: LocaleService,
+    otherInstance: LocaleService
   ) {
     if (otherInstance) throw 'LocaleService should have only one instance.';
   }
@@ -34,17 +36,14 @@ export class LocaleService {
 
   private subscribeToLangChange() {
     this.store.pipe(select(getLang)).subscribe(async (lang) => {
-      const lc = lang.replace('_', '-');
+      const lc = (lang || '').replace('_', '-');
       if (this._locale !== lc) {
         const { shouldReuseRoute } = this.router.routeReuseStrategy;
-
         this.setRouteReuse(() => false);
         this.router.navigated = false;
-
         await this.router.navigateByUrl(this.router.url).catch(noop);
         this.setRouteReuse(shouldReuseRoute);
       }
-
     });
   }
 
@@ -56,12 +55,12 @@ export class LocaleService {
     this.subscribeToLangChange();
 
     this.initialized = true;
-    this.store.pipe(select(getLang)).subscribe(lang => {
-      const lc = lang.replace('_', '-');
+    this.store.pipe(select(getLang)).subscribe((lang) => {
+      const lc = (lang || '').replace('_', '-');
       if (this._locale !== lc) {
         this.setLocale(lc);
       }
-    })
+    });
   }
 
   setDefaultLocale(localeId: string) {
