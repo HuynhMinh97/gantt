@@ -24,6 +24,7 @@ import { NbToastrService } from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { Apollo, gql } from 'apollo-angular';
 import * as CryptoJS from 'crypto-js';
+import _ from 'lodash';
 
 @Component({
   selector: 'ait-login',
@@ -66,6 +67,8 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
     password: [],
   };
   notifyText = '';
+  requireMessage = '';
+  lengthMessage = '';
   isShowPassword = false;
   toggleShowPass = () => (this.isShowPassword = !this.isShowPassword);
   navigateToResetPassword = () => {
@@ -84,13 +87,17 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
   setErrors = (newState: { email?: any[]; password?: any[] }) =>
     (this.errors = { ...this.errors, ...newState });
 
-  ngOnInit() {
+  async ngOnInit() {
     if (history.state?.email) {
       this.formLoginCtrl.setValue({
         ...this.formLoginCtrl.value,
         email: history.state?.email,
       });
     }
+
+    const res = await this.getMessageByTypeAndCode('E', ['0001', '0010']);
+    this.lengthMessage = res?.data['findSystem']?.data[0]?.message[this.lang || this.env?.COMMON?.LANG_DEFAULT];
+    this.requireMessage = res?.data['findSystem']?.data[1]?.message[this.lang || this.env?.COMMON?.LANG_DEFAULT];
   }
 
   isAureoleV = () => {
@@ -103,9 +110,17 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
       this.checkRequired(value, this.emailLabel), // method này mình dùng để check required
       // this.checkMaxLength(value, 5), // method này dùng để check maxlength nè 😋😋
     ];
-    this.setErrors({
-      email: errorList,
-    });
+    
+    if (this.requireMessage && _.isEqual(errorList, ['E0001'])) {
+      const message = this.requireMessage.replace('{0}', this.emailLabel);
+      this.setErrors({
+        email: [message],
+      });
+    } else {
+      this.setErrors({
+        email: errorList,
+      });
+    }
   };
 
   getErrorPasswordMessage = (value) => {
@@ -113,6 +128,17 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
       this.checkRequired(value, this.passwordLabel),
       this.checkMinLength(value, PASSWORD_LENGTH, this.passwordLabel),
     ];
+    const message = this.requireMessage.replace('{0}', this.passwordLabel);
+
+    const index1 = (errorList || []).indexOf('E0001');
+    const index2 = (errorList || []).indexOf('E0010');
+
+    if (index1 !== -1) {
+      errorList[index1] = message;
+    }
+    if (index2 !== -1) {
+      errorList[index2] = this.getMinLengthMessage(value, PASSWORD_LENGTH, this.passwordLabel, this.lengthMessage);
+    }
     this.setErrors({
       password: errorList,
     });

@@ -488,6 +488,21 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     return value.length < minLength && value.length !== 0 ? message : null;
   };
 
+  getMinLengthMessage = (value: string, minLength: number, fieldName: string, errorMessage: string) => {
+    const target = value || '';
+    if (value.length === 0) {
+      return null;
+    }
+    const message = errorMessage
+      .replace('{0}', fieldName)
+      .replace('{1}', minLength.toString());
+    if (target === null) {
+      return null;
+    }
+
+    return value.length < minLength && value.length !== 0 ? message : null;
+  };
+
   checkBetween = (value: any, range: number[]) => {
     const message = this.getMsg('E0005');
     if (value === null || !value) {
@@ -616,6 +631,34 @@ export class AitBaseComponent implements OnInit, OnDestroy {
       .toPromise();
   };
 
+  getMessageByTypeAndCode = async (type: string, code: string[]) => {
+    return await this.apollo
+    .query({
+      query: gql`
+        query {
+        findSystem(
+          request: {
+            company: "d3415d06-601b-42c4-9ede-f5d9ff2bcac3"
+            lang: "${this.lang || this.env?.COMMON?.LANG_DEFAULT}"
+            collection: "sys_message"
+            user_id: ""
+            condition: { type: "${type}", code: { value: ${JSON.stringify(code)} } }
+          }
+        ) {
+          data {
+            _key
+            code
+            message {
+              ${this.lang || this.env?.COMMON?.LANG_DEFAULT}
+              }
+            }
+          }
+        }
+      `
+    })
+    .toPromise();
+  }
+
   // Start basecomponent for initializing
   ngOnInit() {
     // register locale by language setting
@@ -707,7 +750,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
               _key
               code
               message {
-                ${this.lang}
+                ${this.lang || this.env.COMMON.LANG_DEFAULT}
               }
               type
             }
