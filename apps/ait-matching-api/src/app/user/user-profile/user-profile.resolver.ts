@@ -1,6 +1,6 @@
 import { AitBaseService, AitCtxUser, KeyValueDto, SysUser } from '@ait/core';
+import { RESULT_STATUS } from '@ait/shared';
 import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
-import { RESULT_STATUS } from 'libs/shared/src/lib/commons/enums';
 import { UserProfileRequest } from './user-profile.request';
 import { UserProfileResponse as UserProfileResponse } from './user-profile.response';
 
