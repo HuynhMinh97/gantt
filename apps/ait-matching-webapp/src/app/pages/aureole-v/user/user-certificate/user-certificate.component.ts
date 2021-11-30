@@ -435,6 +435,7 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
           context: {
             style: {width: '90%'},
             title: this.getMsg('I0006'),
+            id:'back-user-certificate',
           },
         })
         .onClose.subscribe(async (event) => {

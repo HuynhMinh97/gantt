@@ -273,6 +273,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
         autoFocus: false,
         context: {
           title: this.getMsg('I0004'),
+          id:'delete-user-education',
         },
       })
       .onClose.subscribe(async (event) => {
@@ -376,6 +377,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
           context: {
             style: {width: '90%'},
             title: this.getMsg('I0006'),
+            id:'back-user-education',
           },
         })
         .onClose.subscribe(async (event) => {

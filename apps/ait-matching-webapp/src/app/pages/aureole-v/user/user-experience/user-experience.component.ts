@@ -240,6 +240,7 @@ export class UserExperienceComponent
         autoFocus: false,
         context: {
           title: this.getMsg('I0004'),
+          id:'delete-user-skill',
         },
       })
       .onClose.subscribe(async (event) => {
@@ -447,6 +448,7 @@ export class UserExperienceComponent
           context: {
             style: { width: '90%' },
             title: this.getMsg('I0006'),
+            id:'back-user-experience',
           },
         })
         .onClose.subscribe(async (event) => {
