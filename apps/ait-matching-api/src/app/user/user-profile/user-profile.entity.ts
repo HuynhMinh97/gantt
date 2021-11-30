@@ -1,6 +1,5 @@
-import { BaseEntity } from '../../../../../../libs/core/src/lib/entities/base.entity';
-import { Field, Float, ObjectType } from '@nestjs/graphql';
-import { KeyValueEntity } from '@ait/core';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { BaseEntity, KeyValueEntity } from '@ait/core';
 
 @ObjectType()
 export class UserProfileEntity extends BaseEntity {

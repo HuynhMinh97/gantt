@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AitBaseService, AitCtxUser, KeyValueDto, SysUser } from '@ait/core';
+import { AitBaseService, AitCtxUser, SysUser } from '@ait/core';
 import { Resolver,  Mutation, Args, Query } from '@nestjs/graphql';
-import { UserLanguageInfoResponse } from './user-Language.response';
-import { UserLanguageInfoRequest } from './user-Language.request';
+import { UserLanguageInfoResponse } from './user-language.response';
+import { UserLanguageInfoRequest } from './user-language.request';
 
 @Resolver()
 export class UserLanguageInfoResolver extends AitBaseService {
