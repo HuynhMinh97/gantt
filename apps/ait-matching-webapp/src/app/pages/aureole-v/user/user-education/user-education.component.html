@@ -144,7 +144,7 @@
             [hasStatus]="false"
             [isReset]="isResetFile"
             [placeholder]="'select file' | translate"
-            [fileKeys]="userEducationInfo.controls['file'].value"
+            [fileKeys]="listFile"
             (watchValue)="takeFiles($event.value)"
             [isSubmit]="isSubmit"
           ></ait-input-file>
