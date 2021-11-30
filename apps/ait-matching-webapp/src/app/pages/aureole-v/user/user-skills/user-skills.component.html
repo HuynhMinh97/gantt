@@ -1,10 +1,14 @@
 <ait-template-popup [width]="800" [isLoading]="true" [isPage]="false">
   <div class="user__wrapper">
-    <ait-text-gradient
-    *ngIf="isLoad"
-      [id]="'form_edit_user_skill'"
-      [content]="'edit skills'"
-    ></ait-text-gradient>
+    <div style="height: 85px">
+      <ait-text-gradient
+        *ngIf="isLoad"
+        [fontsize]="'36px'"
+        [id]="'form_edit_user_skill'"
+        [content]="'edit skills'"
+      ></ait-text-gradient>
+    </div>
+
     <div class="content__card">
       <div class="form">
         <div class="input_inline">

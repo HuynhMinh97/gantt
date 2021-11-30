@@ -88,7 +88,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
     this.callLoadingApp();
     setTimeout(() => {
       this.isLoad = true;
-    }, 100);
+    }, 300);
     await this.getMaxSkill();
     await this.findSkills();
     await this.findTopSkills();

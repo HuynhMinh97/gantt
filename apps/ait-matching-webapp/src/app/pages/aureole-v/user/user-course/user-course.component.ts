@@ -46,7 +46,9 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
 
   error = [];
   companyCenter = [];
+  listFile = [];
 
+  isLoad = false;
   isSave = false;
   isClear = false;
   isSubmit = false;
@@ -120,16 +122,17 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
   // get value form
   async ngOnInit(): Promise<any> {
     this.getMaxFile();
+    setTimeout(() => {
+      this.isLoad = true;      
+    },500);
     if (this.course_key) {
       this.mode = MODE.EDIT;
     }
     if (this.mode == MODE.NEW) {
       this.callLoadingApp();
-      setTimeout(() => {
-        this.cancelLoadingApp();
-      },500);
       this.course.controls['start_date_from'].setValue(this.dateNow);
       this.courseClone = this.course.value;
+      this.cancelLoadingApp();
     } else {
       await this.find(this.course_key);
     }
@@ -285,6 +288,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
       this.companyCenter = [];
       this.companyCenter.push({ _key: this.courseClone.training_center?._key, value: this.courseClone.training_center?.value });
       this.course.patchValue({ ...this.courseClone });
+      this.listFile = this.course.value.file;
       this.showToastr('', this.getMsg('I0007'));
     }
 
@@ -411,6 +415,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
               this.course.patchValue({ ...data });
               this.courseClone = this.course.value;
               this.companyCenter = [{ _key: data.training_center?._key }, { value: data.training_center?.value }];
+              this.listFile = this.course.value.file;
               if (this.user_id != data.user_id) {
                 this.mode = MODE.VIEW
                 this.isReadonly = true;

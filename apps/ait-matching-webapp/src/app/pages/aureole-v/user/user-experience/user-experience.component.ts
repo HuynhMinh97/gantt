@@ -47,6 +47,7 @@ export class UserExperienceComponent
 
   mode = MODE.NEW;
   errorArr: any;
+  isLoad = false;
   isSave = false;
   isReset = false;
   isSubmit = false;
@@ -148,6 +149,7 @@ export class UserExperienceComponent
               this.user_id = data.user_id;
               isUserExist = true;
             }
+            this.isLoad = true;
             this.cancelLoadingApp();
             !isUserExist && this.router.navigate([`/404`]);
           }
@@ -155,6 +157,7 @@ export class UserExperienceComponent
     } else {
       this.callLoadingApp();
       setTimeout(() => {
+        this.isLoad = true;
         this.cancelLoadingApp();
       }, 500);
       await this.userExpService

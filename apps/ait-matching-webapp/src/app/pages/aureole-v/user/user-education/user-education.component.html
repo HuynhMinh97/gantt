@@ -1,6 +1,13 @@
 <ait-template-popup [width]="800" [isLoading]="true" [isPage]="false">
   <div class="user__wrapper" id="user_education">
-    <ait-text-gradient [content]="getTitleByMode()" [id]="'form_edit_user_education'"></ait-text-gradient>
+    <div style="min-height: 85px">
+      <ait-text-gradient
+        [fontsize]="'36px'"
+        [content]="getTitleByMode()"
+        [id]="'form_edit_user_education'"
+        *ngIf="isLoad"
+      ></ait-text-gradient>
+    </div>
     <div class="content__card">
       <div class="form">
         <div class="input_inline">
@@ -127,7 +134,7 @@
             class="file-max"
             style="display: flex !important; color: #8f9bb3; margin: 0"
             ><nb-icon icon="attach-outline"></nb-icon>
-            <p id="max_file">{{titlFile}}</p>
+            <p id="max_file">{{ titlFile }}</p>
           </label>
           <ait-input-file
             [id]="'file'"
@@ -136,7 +143,7 @@
             [required]="false"
             [hasStatus]="false"
             [isReset]="isResetFile"
-            [placeholder]="'select file' |translate"
+            [placeholder]="'select file' | translate"
             [fileKeys]="userEducationInfo.controls['file'].value"
             (watchValue)="takeFiles($event.value)"
             [isSubmit]="isSubmit"

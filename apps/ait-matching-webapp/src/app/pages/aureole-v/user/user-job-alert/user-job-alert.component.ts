@@ -21,6 +21,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
   userjobAlertClone:any;
   isSubmit = false;
   isProfile = false;
+  isLoad = false;
   mode = 'NEW';
   isChanged = false;
   errorArr = [];
@@ -97,6 +98,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.callLoadingApp();
     setTimeout(() => {
+      this.isLoad = true;
       this.cancelLoadingApp();
     },1000);
     await this.getMasterData();

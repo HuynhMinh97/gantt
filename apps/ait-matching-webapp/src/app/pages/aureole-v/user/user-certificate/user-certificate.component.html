@@ -1,6 +1,14 @@
 <ait-template-popup [width]="800" [isLoading]="true" [isPage]="false">
   <div class="user__wrapper">
-    <ait-text-gradient [content]="getTitleByMode()" [id]="'form_edit_user_certificate'"> </ait-text-gradient>
+    <div style="min-height: 85px">
+      <ait-text-gradient
+        *ngIf="isLoad"
+        [fontsize]="'36px'"
+        [content]="getTitleByMode()"
+        [id]="'form_edit_user_certificate'"
+      >
+      </ait-text-gradient>
+    </div>
     <div class="content__card">
       <div class="form">
         <div class="input_inline">
@@ -142,13 +150,13 @@
           ></ait-input-text>
         </div>
 
-        <div class="input_area" style="margin-top: 14px;">
+        <div class="input_area" style="margin-top: 14px">
           <ait-label [label]="'FILES'"></ait-label>
           <label
             class="file-max"
             style="display: flex !important; color: #8f9bb3; margin: 0"
             ><nb-icon icon="attach-outline"></nb-icon>
-            <p id="max_file">{{titlFile}}</p>
+            <p id="max_file">{{ titlFile }}</p>
           </label>
           <ait-input-file
             [id]="'file'"
@@ -157,7 +165,7 @@
             [hasStatus]="false"
             [placeholder]="'select_file' | translate"
             [isReset]="isResetFile"
-            [fileKeys]="certificate.controls['file'].value"
+            [fileKeys]="files"
             (watchValue)="getFiles($event.value)"
             [isSubmit]="isSubmit"
           ></ait-input-file>
@@ -200,7 +208,7 @@
             "
             (click)="resetForm()"
           ></ait-button>
-         
+
           <ait-button
             *ngIf="mode === 'NEW'"
             [title]="'save and continue'"
