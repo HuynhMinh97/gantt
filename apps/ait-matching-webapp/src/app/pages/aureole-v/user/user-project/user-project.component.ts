@@ -152,7 +152,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     this.callLoadingApp();
     setTimeout(() => {
       this.isLoad = true;
-    }, 200);
+    }, 300);
     if (this.project_key) {
       this.mode = MODE.EDIT;
     }

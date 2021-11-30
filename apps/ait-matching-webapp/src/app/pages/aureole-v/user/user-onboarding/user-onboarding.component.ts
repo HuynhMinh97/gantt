@@ -122,6 +122,7 @@ export class UserOnboardingComponent
   _key = '';
   user_id_profile = '';
   dataCountry: any;
+  isLoad = false;
   constructor(
     private router: Router,
     private element: ElementRef,
@@ -221,6 +222,9 @@ export class UserOnboardingComponent
   }
 
   async ngOnInit(): Promise<void> {    
+    setTimeout(() => {
+      this.isLoad = true;
+    }, 300);
     if (this.user_key) {
       this.mode = MODE.EDIT;
     }

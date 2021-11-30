@@ -1,6 +1,7 @@
 <ait-template-popup [width]="800" [isLoading]="true" [isPage]="false" *ngIf="user_key">
   <div class="user__wrapper" id="user_onboarding">
     <ait-text-gradient
+      *ngIf="isLoad"
       [content]="getTitleByMode()"
       [id]="'form_edit_user_onboarding'"
     ></ait-text-gradient>
