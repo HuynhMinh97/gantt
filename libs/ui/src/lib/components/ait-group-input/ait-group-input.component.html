@@ -15,7 +15,8 @@
                             inputForm.controls[component?.item_id].value
                                 ? [inputForm.controls[component?.item_id].value]
                                 : null
-                            " [style]="{ width: '250px' }" [id]="component?.item_id" [required]="true" [isSubmit]="isSubmit">
+                            " [style]="{ width: '250px' }" [id]="component?.item_id" [required]="true"
+                            [isSubmit]="isSubmit">
                         </ait-autocomplete-master-data>
 
                         <ait-input-number *ngIf="component.type === 'number'">
@@ -49,7 +50,8 @@
                             inputForm.controls[component?.item_id].value
                                 ? [inputForm.controls[component?.item_id].value]
                                 : null
-                            " [style]="{ width: '250px' }" [id]="component?.item_id" [isReset]="isReset" [required]="true" [isSubmit]="isSubmit">
+                            " [style]="{ width: '250px' }" [id]="component?.item_id" [isReset]="isReset"
+                            [required]="true" [isSubmit]="isSubmit">
                         </ait-autocomplete-master-data>
 
                         <ait-input-number *ngIf="component.type === 'number'">
@@ -83,8 +85,20 @@
                         (click)="clear()">
                     </ait-button>
 
+                    <ait-button *ngIf="mode === 'EDIT'" [id]="'remove'" [width]="'200px'" [title]="'削除'"
+                        [isDefault]="true" [tabIndex]="43">
+                    </ait-button>
+
+                    <ait-button *ngIf="mode === 'EDIT'" [id]="'reset'" [width]="'200px'" [title]="'リセット'"
+                        [isDefault]="true" [tabIndex]="44">
+                    </ait-button>
+
                     <ait-button [id]="'save'" [width]="'200px'" [title]="'保存'" [isDefault]="true" [tabIndex]="45"
                         (click)="save()">
+                    </ait-button>
+
+                    <ait-button *ngIf="!isChanged && mode === 'EDIT'" [id]="'disabled'" [width]="'200px'" [title]="'保存'"
+                        [style]="'disabled'" [tabIndex]="46">
                     </ait-button>
                 </div>
             </div>

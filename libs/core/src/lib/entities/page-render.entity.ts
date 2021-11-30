@@ -209,3 +209,9 @@ export class SaveDataEntity extends BaseEntity {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any;
 }
+
+@ObjectType()
+export class StringDataEntity extends BaseEntity {
+  @Field(() => String, { nullable: true })
+  data: string;
+}
