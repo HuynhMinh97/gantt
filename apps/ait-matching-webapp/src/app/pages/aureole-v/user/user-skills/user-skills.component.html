@@ -13,7 +13,7 @@
             [label]="'skills (max 50)'"
             [required]="true"
             [collection]="'m_skill'"
-            [maxItem]="maxSkill + 1"
+            [maxItem]="maxSkill"
             [placeholder]="'fill name and enter to add your skills' | translate"
             [style]="{ width: '400px' }"
             (watchValue)="takeMasterValue($event, 'skills')"

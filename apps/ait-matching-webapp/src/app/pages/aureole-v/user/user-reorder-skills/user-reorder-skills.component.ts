@@ -363,6 +363,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
           context: {
             style: {width: '90%'},
             title: this.getMsg('I0006'),
+            id:'back-user-project',
           },
         })
         .onClose.subscribe(async (event) => {

@@ -369,6 +369,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
           autoFocus: false,
           context: {
             title: this.getMsg('I0006'),
+            id:'back-user-job-alert',
           },
         })
         .onClose.subscribe(async (event) => {

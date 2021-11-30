@@ -290,6 +290,7 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
         autoFocus: false,
         context: {
           title: this.getMsg('I0004'),
+          id:'delete-user-language',
         },
       })
       .onClose.subscribe(async (event) => {
@@ -325,6 +326,7 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
           context: {
             style: {width: '90%'},
             title: this.getMsg('I0006'),
+            id:'back-user-language',
           },
         })
         .onClose.subscribe(async (event) => {

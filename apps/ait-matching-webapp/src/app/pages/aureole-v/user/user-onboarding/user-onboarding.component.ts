@@ -467,6 +467,7 @@ export class UserOnboardingComponent
         autoFocus: false,
         context: {
           title: this.getMsg('I0004'),
+          id:'delete-user-onboading',
         },
       })
       .onClose.subscribe(async (event) => {
@@ -502,6 +503,7 @@ export class UserOnboardingComponent
           context: {
             style: {width: '90%'},
             title: this.getMsg('I0006'),
+            id:'back-user-onboading',
           },
         })
         .onClose.subscribe(async (event) => {
