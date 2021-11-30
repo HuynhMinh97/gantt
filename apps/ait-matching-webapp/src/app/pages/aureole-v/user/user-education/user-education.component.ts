@@ -44,6 +44,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
 
   mode = MODE.NEW;
   errorArr: any;
+  isLoad = false;
   isSave = false;
   isReset = false;
   isClear = false;
@@ -53,6 +54,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
   isDateCompare = false;
 
   dateFormat = '';
+  listFile = [];
   maxFile = 0;
   sizeFile = 0;
   titlFile = '';
@@ -129,15 +131,15 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.callLoadingApp();
     setTimeout(() => {
-      this.cancelLoadingApp();
+      this.isLoad = true;
     },500);
     if (this.user_key) {
       this.mode = MODE.EDIT;
     }
     this.getMaxFile();
     if (this.user_key) {
+      this.callLoadingApp();
       await this.userEduService
         .findUserEducationByKey(this.user_key)
         .then(async (r) => {
@@ -147,9 +149,11 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
             if (r.data.length > 0 && !data.del_flag) {
               this.userEducationInfo.patchValue({ ...data });
               this.userEducationInfoClone = this.userEducationInfo.value;
+              this.listFile = this.userEducationInfo.value.file;
               this.user_id = data.user_id;
               isUserExist = true;
             }
+            this.cancelLoadingApp();
             !isUserExist && this.router.navigate([`/404`]);           
           }
         });
@@ -355,6 +359,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
       this.userEducationInfo.patchValue({
         ...this.userEducationInfoClone,
       });
+      this.listFile = this.userEducationInfo.value.file;
     }
     this.showToastr('', this.getMsg('I0007'));
   }

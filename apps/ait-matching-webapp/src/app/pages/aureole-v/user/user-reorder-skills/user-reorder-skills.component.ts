@@ -63,7 +63,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
     this.callLoadingApp();
     setTimeout(() => {
       this.isLoad = true;
-    }, 100);
+    }, 300);
     await this.findTopSkills();
     await this.findSkills();
     await this.groupSkill();

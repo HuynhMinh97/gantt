@@ -1,12 +1,15 @@
 <ait-template-popup [width]="800" [isLoading]="true" [isPage]="false">
   <div class="user__wrapper">
-    <ait-text-gradient
-      *ngIf="isLoad"
-      [content]="'reorder skills' | translate"
-      [id]="'form_user_reorder_skill'"
-    ></ait-text-gradient>
+    <div style="height: 85px">
+      <ait-text-gradient
+        *ngIf="isLoad"
+        [fontsize]="'36px'"
+        [content]="'reorder skills' | translate"
+        [id]="'form_user_reorder_skill'"
+      ></ait-text-gradient>
+    </div>
     <div class="content__card">
-      <div class="form" style="margin-top: 35px;">
+      <div class="form" style="margin-top: 35px; min-height: 70px;">
         <div class="step-container" cdkDropListGroup>
           <div
             class="category-area"
@@ -23,8 +26,16 @@
             >
               <div class="skill-block">
                 <nb-icon nbSuffix icon="menu-2-outline" pack="eva"></nb-icon>
-                 <span style="margin: 5px; position: relative; bottom: 2px;" *ngIf="category?.name == 'TOP5'">{{'top' | translate}} </span>
-                 <span style="margin: 5px;position: relative; bottom: 2px;" *ngIf="category?.name != 'TOP5'">{{category?.name }}</span>
+                <span
+                  style="margin: 5px; position: relative; bottom: 2px"
+                  *ngIf="category?.name == 'TOP5'"
+                  >{{ 'top' | translate }}
+                </span>
+                <span
+                  style="margin: 5px; position: relative; bottom: 2px"
+                  *ngIf="category?.name != 'TOP5'"
+                  >{{ category?.name }}</span
+                >
               </div>
               <div
                 *ngFor="let skill of category.data"
@@ -54,9 +65,7 @@
                       ghost
                       class="remove-btn"
                       (click)="removeSkill(category, skill)"
-                      nbTooltip="{{
-                        'remove_skills' | translate
-                      }}"
+                      nbTooltip="{{ 'remove_skills' | translate }}"
                     >
                       <nb-icon
                         *ngIf="skill._key"
@@ -66,10 +75,7 @@
                         style="vertical-align: middle; color: #231f20"
                       ></nb-icon>
                     </button>
-                    <button
-                      nbButton
-                      ghost
-                    >
+                    <button nbButton ghost>
                       <nb-icon
                         *ngIf="skill._key"
                         nbSuffix

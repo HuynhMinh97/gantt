@@ -1,6 +1,13 @@
 <ait-template-popup [width]="800" [isLoading]="true" [isPage]="false">
   <div class="user__wrapper">
-    <ait-text-gradient [content]="getTitleByMode()" [id]="'form_edit_user_project'"  *ngIf="isLoad"></ait-text-gradient>
+    <div style="min-height: 85px; font-size: 36px">
+      <ait-text-gradient
+        [content]="getTitleByMode()"
+        [id]="'form_edit_user_project'"
+        [fontsize]="'36px'"
+        *ngIf="isLoad"
+      ></ait-text-gradient>
+    </div>
     <div class="content__card">
       <div class="form">
         <div class="input_inline">
@@ -18,11 +25,11 @@
             [clearError]="isClearErrors.name"
             (watchValue)="takeInputValue($event, 'name')"
             [defaultValue]="userProject.controls['name'].value"
-            [clearError]="isClear"           
+            [clearError]="isClear"
           >
           </ait-input-text>
         </div>
-        <div class="input_date" style="position: relative;">
+        <div class="input_date" style="position: relative">
           <ait-datepicker
             [id]="'start_date_from'"
             [label]="'start date'"
@@ -40,7 +47,7 @@
             "
           ></ait-datepicker>
 
-          <span style="position: absolute; right: 195px; top: 27px;">~</span>
+          <span style="position: absolute; right: 195px; top: 27px">~</span>
 
           <ait-datepicker
             [id]="'start_date_to'"
@@ -230,7 +237,7 @@
               'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
             "
           ></ait-button>
-          
+
           <ait-button
             *ngIf="mode === 'NEW'"
             [id]="'save_continue'"

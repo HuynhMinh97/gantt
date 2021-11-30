@@ -1,9 +1,13 @@
 <div class="user__wrapper" id="user_job_alert">
-  <ait-text-gradient
-    [content]="'title header'"
-    [id]="'title header'"
-  ></ait-text-gradient>
-  <ait-space></ait-space>
+  <div style="min-height: 85px;">
+    <ait-text-gradient
+    *ngIf="isLoad"
+      [fontsize]="'36px'"
+      [content]="'title header'"
+      [id]="'title header'"
+    ></ait-text-gradient>
+    <ait-space></ait-space>
+  </div>
   <div class="content__card">
     <div class="form">
       <div class="input_inline">

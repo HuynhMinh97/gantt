@@ -41,6 +41,7 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
   sizeFile = 0;
   titlFile = '';
 
+  isLoad = false;
   isSave = false;
   isSubmit = false;
   isChanged = false;
@@ -120,6 +121,9 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
     });
   }
   async ngOnInit(): Promise<any> {
+    setTimeout(() => {
+      this.isLoad = true;
+    }, 500);
     this.getMaxFile();
     if (this.certificate_key) {
       this.mode = MODE.EDIT;
@@ -284,6 +288,7 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
       this.certificate.patchValue({ ...this.certificateClone });
       this.companyName = [{ _key: this.certificateClone.name?._key }];
       this.companyIssue = [{ _key: this.certificateClone.issue_by?._key }];
+      this.files = this.certificate.value.file;
       this.showToastr('', this.getMsg('I0007'));
     }
   }

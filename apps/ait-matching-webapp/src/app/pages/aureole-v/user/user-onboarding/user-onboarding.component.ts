@@ -224,7 +224,7 @@ export class UserOnboardingComponent
   async ngOnInit(): Promise<void> {    
     setTimeout(() => {
       this.isLoad = true;
-    }, 300);
+    }, 500);
     if (this.user_key) {
       this.mode = MODE.EDIT;
     }
