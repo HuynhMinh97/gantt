@@ -178,7 +178,7 @@
                     'margin-bottom': isTableExpan ? null : '0px',
                     'margin-top': isTableExpan ? null : '0px'
                   }">
-                    <div style="width: 100%" [class.visibled]="!isTableExpan">
+                    <div style="width: 100%" [ngStyle]="{ 'display': isTableExpan ? 'block' : 'none' }">
                         <div class="table__area" #area>
                             <ng2-smart-table [settings]="settings" [source]="source"
                                 (userRowSelect)="onUserRowSelect($event)" #table *ngIf="done"></ng2-smart-table>
