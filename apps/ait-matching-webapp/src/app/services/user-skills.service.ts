@@ -7,16 +7,16 @@ import { Injectable } from '@angular/core';
 export class UserSkillsService extends AitBaseService{
   collection = 'user_skill';
 
-  // async findSkill(_from: string){
-  //   const condition = {
-  //     _from: _from,
-  //     del_flag: false,
-  //   }
-  //   return await this.query('findUserSkill', {collection: this.collection,  condition    }, 
-  //   {
-  //     _to: true
-  //   })
-  // }
+  async getMaxSkill(code: any){
+    const condition = {
+      code: code,
+      del_flag: false,
+    }
+    return await this.query('findSystem', {collection: 'sys_master_data',  condition    }, 
+    {
+      name:true,
+    })
+  }
 
   async findSkill(_from: string){
     const condition = {
