@@ -31,6 +31,7 @@ import { AitBaseComponent } from '../base.component';
 })
 export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   @Input() style: any;
+  @Input() _key: string;
   @Input() page: string;
   @Input() module: string;
   inputForm: FormGroup;
@@ -41,6 +42,7 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   mode = MODE.NEW;
   isReset = false;
   isSubmit = false;
+  isChanged = false;
   searchComponents: any;
   leftSide: any[] = [];
   rightSide: any[] = [];
@@ -68,8 +70,11 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.setupData();
+    if (this._key) {
+      this.mode = MODE.EDIT;
+    }
   }
 
   async setupData() {
@@ -105,9 +110,25 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
         ) {
           this.searchComponents = resSearch.data;
           this.setupForm(this.searchComponents);
-          this.setupComponent(this.searchComponents);
+          this.setupComponent(this.searchComponents);  
+          if (this._key) {
+            this.patchDataToForm();
+          }
         }
       }
+    }
+  }
+  
+  async patchDataToForm() {
+    const res = await this.renderPageService.findDataByCollection(
+      this.collection,
+      this._key
+    );
+    if (res.data.length > 0) {
+      const data = res.data[0]['data'];
+      console.log(data);
+      this.inputForm.patchValue(JSON.parse(data));
+      console.log(this.inputForm.value);
     }
   }
 
