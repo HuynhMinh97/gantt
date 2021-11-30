@@ -1,5 +1,5 @@
-import { RESULT_STATUS } from 'libs/shared/src/lib/commons/enums';
 import { AitBaseService, AitCtxUser, SysUser } from '@ait/core';
+import { RESULT_STATUS } from '@ait/shared';
 import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
 import { UserProjectRequest } from './user-project.request';
 import { UserProjectResponse } from './user-project.response';
