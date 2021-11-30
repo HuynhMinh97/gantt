@@ -1,5 +1,4 @@
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { isObjectFull} from './../../../../../../../../libs/shared/src/lib/utils/checks.util';
 import { UserLanguageService } from './../../../../services/user-language.service';
 import { Component, ElementRef, OnInit } from '@angular/core';
 import {
@@ -30,7 +29,7 @@ import {
   PAGES,
 } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
-import { KEYS, RESULT_STATUS } from '@ait/shared';
+import { isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
 
 @Component({
   selector: 'ait-user-language',

@@ -1,5 +1,5 @@
 import { BaseDto, ConditionDto} from '@ait/core';
-import { InputType, Field, Float } from '@nestjs/graphql';
+import { InputType, Field } from '@nestjs/graphql';
 
 @InputType()
 export class UserLanguageInfoDto extends BaseDto {

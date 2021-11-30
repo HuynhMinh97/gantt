@@ -1,5 +1,4 @@
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { RESULT_STATUS, KEYS } from './../../../../../../../../libs/shared/src/lib/commons/enums';
 import { 
   MODE, 
   AppState,
@@ -18,7 +17,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NbToastrService, NbLayoutScrollService, NbDialogService, NbDialogRef } from '@nebular/theme';
-import { isArrayFull, isObjectFull } from '@ait/shared';
+import { isArrayFull, isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import kanjidate from 'kanjidate';

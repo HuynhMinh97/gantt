@@ -1,6 +1,6 @@
 import { BaseRequest } from '@ait/core';
 import { InputType, Field } from '@nestjs/graphql';
-import { SaveUserLanguageInfoDto, UserLanguageInfoDto } from './user-Language.dto';
+import { SaveUserLanguageInfoDto, UserLanguageInfoDto } from './user-language.dto';
 
 @InputType()
 export class UserLanguageInfoRequest extends BaseRequest {
