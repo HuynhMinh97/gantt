@@ -1,6 +1,6 @@
 import { RESULT_STATUS, Utils } from '@ait/shared';
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { UserOnboardingInfoEntity } from './user-Onboarding.entity';
+import { UserOnboardingInfoEntity } from './user-onboarding.entity';
 
 @ObjectType()
 export class UserOnboardingInfoResponse {

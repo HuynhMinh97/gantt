@@ -1,6 +1,6 @@
 import { RESULT_STATUS, Utils } from '@ait/shared';
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { UserLanguageInfoEntity } from './user-Language.entity';
+import { UserLanguageInfoEntity } from './user-language.entity';
 
 @ObjectType()
 export class UserLanguageInfoResponse {
