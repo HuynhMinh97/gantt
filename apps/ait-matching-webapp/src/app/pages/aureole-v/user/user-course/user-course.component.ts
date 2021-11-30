@@ -23,6 +23,7 @@ import { Apollo } from 'apollo-angular';
 import kanjidate from 'kanjidate';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { UserCourseService } from '../../../../../../../../apps/ait-matching-webapp/src/app/services/user-course.service';
+import { UserSkillsService } from '../../../../services/user-skills.service';
 
 @Component({
   selector: 'ait-user-course',
@@ -39,6 +40,9 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
   dateFormat = '';
   course_key = '';
   selectFile = '';
+  maxFile = 0;
+  sizeFile = 0;
+  titlFile = '';
 
   error = [];
   companyCenter = [];
@@ -72,6 +76,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
     public activeRouter: ActivatedRoute,
     private dialogService: NbDialogService,
     public userCourseService: UserCourseService,
+    private userSkillsService: UserSkillsService,
     private translateService: AitTranslationService,
     private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
     layoutScrollService: NbLayoutScrollService,
@@ -114,6 +119,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
   }
   // get value form
   async ngOnInit(): Promise<any> {
+    this.getMaxFile();
     if (this.course_key) {
       this.mode = MODE.EDIT;
     }
@@ -143,6 +149,19 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
       { ...courseClone }
     );
     this.isChanged = !(isChangedUserInfo);
+  }
+  async getMaxFile(){
+    await this.userSkillsService.getMaxSkill({value: ['maxSizeFile']})
+    .then((res) => {
+      this.sizeFile = parseInt(res.data[0].name);
+    })
+    await this.userSkillsService.getMaxSkill({value: ['maxFile']})
+    .then((res) => {
+      this.maxFile = parseInt(res.data[0].name);
+      this.titlFile = this.translateService.translate('upload max 5 files')
+        .replace('{0}', this.maxFile.toString())
+        .replace('{1}', this.sizeFile.toString());
+    })
   }
   takeMasterValue(val: any, form: string): void {
     if (isObjectFull(val) && val.value.length > 0) {

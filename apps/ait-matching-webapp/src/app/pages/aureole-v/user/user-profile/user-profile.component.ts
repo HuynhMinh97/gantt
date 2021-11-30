@@ -50,6 +50,7 @@ import { UserEducationDetailComponent } from '../user-education-detail/user-educ
 import { UserLanguageDetailComponent } from '../user-language-detail/user-language-detail.component';
 import { UserOnboardingDetailComponent } from '../user-onboarding-detail/user-onboarding-detail.component';
 import { MatchingUtils } from '../../../../../../../../apps/ait-matching-webapp/src/app/@constants/utils/matching-utils';
+import { UserSkillsService } from '../../../../services/user-skills.service';
 
 @Component({
   selector: 'ait-user-profile',
@@ -91,6 +92,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   timeExperience = 0;
   countCentificate = 0;
   timeExperienceStr = '';
+  maxSkill = 0;
 
   dateFormat = 'dd/MM/yyyy';
   monthFormat: any;
@@ -104,6 +106,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   ];
   skillUserName: any;
   constructor(
+    private userSkillsService: UserSkillsService,
     private userLanguageService: UserLanguageService,
     private userEducationService: UserEducationService,
     private userCourseService: UserCourseService,
@@ -153,6 +156,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.getMasterData();
+    await this.getMaxSkill();
     this.getFriends();
     this.getCountFriends();
     this.getUserProfileByUserId();
@@ -180,6 +184,12 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       }
     } catch (e) {
     }
+  }
+  async getMaxSkill(){
+    await this.userSkillsService.getMaxSkill({value: ['maxSkill']})
+    .then((res) => {
+      this.maxSkill = parseInt(res.data[0].name);
+    })
   }
   getDateFormat(time: number) {
     if (!time) {
@@ -804,6 +814,10 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   getCounter = (message, value) => {   
     const content = this.translateService.translate(message);
     return content.replace('{0}', value);
+  }
+  getCounterSkill = async (message, value) => { 
+    const content = this.translateService.translate(message);
+    return content.replace('{0}', value).replace('{1}', this.maxSkill.toString());
   }
 
   _unixtimeToDate = (unix_time: number) => {

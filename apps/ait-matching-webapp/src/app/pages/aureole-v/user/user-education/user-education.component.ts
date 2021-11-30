@@ -29,6 +29,7 @@ import {
 import { Apollo } from 'apollo-angular';
 import { isArrayFull, isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
 import { MatchingUtils } from '../../../../../app/@constants/utils/matching-utils';
+import { UserSkillsService } from '../../../../services/user-skills.service';
 
 @Component({
   selector: 'ait-user-education',
@@ -52,6 +53,9 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
   isDateCompare = false;
 
   dateFormat = '';
+  maxFile = 0;
+  sizeFile = 0;
+  titlFile = '';
 
   resetUserInfo = {
     file: false,
@@ -74,6 +78,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     public activeRouter: ActivatedRoute,
     private dialogService: NbDialogService,
     private userEduService: UserEducationService,
+    private userSkillsService: UserSkillsService,
     private translateService: AitTranslationService,
     private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
     env: AitEnvironmentService,
@@ -131,6 +136,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     if (this.user_key) {
       this.mode = MODE.EDIT;
     }
+    this.getMaxFile();
     if (this.user_key) {
       await this.userEduService
         .findUserEducationByKey(this.user_key)
@@ -174,6 +180,20 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
       { ...userInfo },
       { ...userInfoClone }
     );
+  }
+
+  async getMaxFile(){
+    await this.userSkillsService.getMaxSkill({value: ['maxSizeFile']})
+    .then((res) => {
+      this.sizeFile = parseInt(res.data[0].name);
+    })
+    await this.userSkillsService.getMaxSkill({value: ['maxFile']})
+    .then((res) => {
+      this.maxFile = parseInt(res.data[0].name);
+      this.titlFile = this.translateService.translate('upload max 5 files')
+        .replace('{0}', this.maxFile.toString())
+        .replace('{1}', this.sizeFile.toString());
+    })
   }
 
   saveData() {

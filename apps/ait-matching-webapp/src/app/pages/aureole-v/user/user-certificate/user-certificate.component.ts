@@ -18,6 +18,7 @@ import { isArrayFull, isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NbToastrService, NbLayoutScrollService, NbDialogService, NbDialogRef } from '@nebular/theme';
 import { UserCerfiticateService } from '../../../../services/user-certificate.service';
+import { UserSkillsService } from '../../../../services/user-skills.service';
 
 
 @Component({
@@ -35,6 +36,10 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
   error = [];
   companyName = [];
   companyIssue = [];
+
+  maxFile = 0;
+  sizeFile = 0;
+  titlFile = '';
 
   isSave = false;
   isSubmit = false;
@@ -63,6 +68,7 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
     private dialogService: NbDialogService,
+    private userSkillsService: UserSkillsService,
     private translateService: AitTranslationService,
     public cartificateService: UserCerfiticateService,
     private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
@@ -114,6 +120,7 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
     });
   }
   async ngOnInit(): Promise<any> {
+    this.getMaxFile();
     if (this.certificate_key) {
       this.mode = MODE.EDIT;
     }
@@ -143,6 +150,20 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
       { ...certificateClone }
     );
     this.isChanged = !(isChangedUserInfo);
+  }
+
+  async getMaxFile(){
+    await this.userSkillsService.getMaxSkill({value: ['maxSizeFile']})
+    .then((res) => {
+      this.sizeFile = parseInt(res.data[0].name);
+    })
+    await this.userSkillsService.getMaxSkill({value: ['maxFile']})
+    .then((res) => {
+      this.maxFile = parseInt(res.data[0].name);
+      this.titlFile = this.translateService.translate('upload max 5 files')
+        .replace('{0}', this.maxFile.toString())
+        .replace('{1}', this.sizeFile.toString());
+    })
   }
 
   takeMasterValue(val: any, form: string): void {

@@ -17,6 +17,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { NbDialogRef, NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { UserProfileService } from '../../../../services/user-profile.service';
 import { UserReoderSkillsService } from '../../../../services/user-reoder-skills.service';
+import { parseInt } from 'lodash';
 
 @Component({
   selector: 'ait-user-skills',
@@ -33,7 +34,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
   isSave = false;
   isChanged = false;
   sort_no = 0;
-  maxSkill = 50;
+  maxSkill = 0;
   user_skills = {
     _from: '',
     _to: '',
@@ -88,13 +89,14 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
     setTimeout(() => {
       this.isLoad = true;
     }, 100);
+    await this.getMaxSkill();
     await this.findSkills();
     await this.findTopSkills();
     this.userSkills.valueChanges.subscribe((data) => {
       this.checkAllowSave();
     });
   }
-
+ 
   checkAllowSave() {
     const userSkill = { ...this.userSkills.value };
     const userSkillClone = { ...this.userSkillsClone };
@@ -103,6 +105,13 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
       { ...userSkillClone }
     );
     this.isChanged = !(isChangedUserInfo);
+  }
+
+  async getMaxSkill(){
+    await this.userSkillsService.getMaxSkill({value: ['maxSkill']})
+    .then((res) => {
+      this.maxSkill = parseInt(res.data[0].name);
+    })
   }
 
   async findTopSkills(){
