@@ -11,6 +11,7 @@ import {
 } from '../dtos/page-render.dto';
 import { BaseRequest } from './base.request';
 import { GraphQLJSONObject } from 'graphql-type-json';
+import { BaseDto } from '../dtos/base.dto';
 
 @InputType()
 export class SysGroupRequest extends BaseRequest {
@@ -52,4 +53,10 @@ export class SysInputRequest extends BaseRequest {
 export class SaveDataRequest extends BaseRequest {
   @Field(() => [GraphQLJSONObject], { nullable: true })
   data: any[];
+}
+
+@InputType()
+export class JsonDataRequest extends BaseRequest {
+  @Field(() => BaseDto, { nullable: true })
+  condition: BaseDto;
 }

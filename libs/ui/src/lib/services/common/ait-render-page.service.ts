@@ -25,8 +25,8 @@ export class AitRenderPageService extends AitBaseService {
       max_item: true,
       width: true,
       required: true,
-      from_to: true
-    }
+      from_to: true,
+    },
   };
 
   searchResult = {
@@ -45,7 +45,7 @@ export class AitRenderPageService extends AitBaseService {
       view: true,
       copy: true,
       edit: true,
-      delete: true
+      delete: true,
     },
     columns: {
       name: true,
@@ -57,8 +57,8 @@ export class AitRenderPageService extends AitBaseService {
       is_multi_language: true,
       style: {
         width: true,
-      }
-    }
+      },
+    },
   };
 
   async findModule(condition?: any, rf?: any) {
@@ -100,10 +100,14 @@ export class AitRenderPageService extends AitBaseService {
     }
     request['options'] = {
       sort_by: {
-        value: 'col_no'
-      }
+        value: 'col_no',
+      },
     };
-    return await this.query(GRAPHQL.FIND_SEARCH_CONDITIONS, request, returnFields);
+    return await this.query(
+      GRAPHQL.FIND_SEARCH_CONDITIONS,
+      request,
+      returnFields
+    );
   }
 
   async findSysInput(condition?: any, rf?: any) {
@@ -115,8 +119,8 @@ export class AitRenderPageService extends AitBaseService {
     }
     request['options'] = {
       sort_by: {
-        value: 'col_no'
-      }
+        value: 'col_no',
+      },
     };
     return await this.query(GRAPHQL.FIND_SYS_INPUT, request, returnFields);
   }
@@ -131,8 +135,28 @@ export class AitRenderPageService extends AitBaseService {
     return await this.query(GRAPHQL.FIND_SEARCH_RESULT, request, returnFields);
   }
 
+  async findDataByCollection(collection: string, _key: string) {
+    const returnFields = { data: true };
+    const request = {
+      collection,
+      condition: {
+        _key,
+      },
+    };
+    return await this.query(
+      GRAPHQL.FIND_DATA_BY_COLLECTION,
+      request,
+      returnFields
+    );
+  }
+
   async saveRenderData(collection: string, data: any[], rf?: any) {
     const returnFields = rf ? rf : { _key: true, data: true };
-    return await this.mutation(GRAPHQL.SAVE_DATA_RENDER, collection, data, returnFields);
+    return await this.mutation(
+      GRAPHQL.SAVE_DATA_RENDER,
+      collection,
+      data,
+      returnFields
+    );
   }
 }

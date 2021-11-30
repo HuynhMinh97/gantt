@@ -27,4 +27,7 @@ export class BaseDto {
 
   @Field(() => Boolean, { nullable: true })
   del_flag: boolean;
+
+  @Field(() => Boolean, { nullable: true })
+  active_flag?: boolean;
 }
