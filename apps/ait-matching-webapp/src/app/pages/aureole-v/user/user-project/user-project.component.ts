@@ -40,6 +40,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
   userProject: FormGroup;
   dateNow = new Date().setHours(0, 0, 0, 0);
   userProjectErros = new UserProjectErrorsMessage();
+  isLoad = false;
   isSave = false;
   isReset = false;
   isClear = false;
@@ -149,6 +150,9 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
 
   async ngOnInit() {
     this.callLoadingApp();
+    setTimeout(() => {
+      this.isLoad = true;
+    }, 300);
     if (this.project_key) {
       this.mode = MODE.EDIT;
     }
@@ -545,11 +549,8 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     if (this.mode === MODE.EDIT) {
       title = this.translateService.translate('edit project')
     }
-    else if (this.mode === MODE.NEW) {
+    if (this.mode === MODE.NEW) {
       title = this.translateService.translate('add project')
-    }
-    else {
-      title = this.translateService.translate('view project')
     }
     return title;
   }

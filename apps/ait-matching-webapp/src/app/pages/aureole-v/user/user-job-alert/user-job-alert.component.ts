@@ -239,8 +239,6 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
           this.experienceLevels = data.experience_level;
           this.employeeTypes = data.employee_type;
           this.locations = data.location;
-          console.log(this.userjobAlert.value);
-          
         }
         else {
           this.router.navigate([`/404`]);

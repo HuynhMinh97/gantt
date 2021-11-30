@@ -29,9 +29,11 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
   dataSkill = [];
   companySkills = [];
   userSkillsClone: any;
+  isLoad = false;
   isSave = false;
   isChanged = false;
   sort_no = 0;
+  maxSkill = 50;
   user_skills = {
     _from: '',
     _to: '',
@@ -83,8 +85,11 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.callLoadingApp();
+    setTimeout(() => {
+      this.isLoad = true;
+    }, 100);
     await this.findSkills();
-    this.findTopSkills();
+    await this.findTopSkills();
     this.userSkills.valueChanges.subscribe((data) => {
       this.checkAllowSave();
     });
@@ -222,13 +227,16 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
 
   takeMasterValue(val: any, form: string): void {
     if (val.value.length > 0) {
-      if (isObjectFull(val) && val.value.length > 0) {
+      if (isObjectFull(val) && val.value.length <= this.maxSkill) {
         const data = [];
         val.value.forEach((item) => {
           data.push(item);
         });
         this.userSkills.controls[form].markAsDirty();
         this.userSkills.controls[form].setValue(data);
+      }else{
+        const msg = this.getMsg('E0022').replace('{0}', this.maxSkill.toString());
+        this.showToastr('', msg, KEYS.WARNING);
       }
     } else {
       this.userSkills.controls[form].markAsDirty();

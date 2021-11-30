@@ -1,6 +1,7 @@
 <ait-template-popup [width]="800" [isLoading]="true" [isPage]="false">
   <div class="user__wrapper">
     <ait-text-gradient
+      *ngIf="isLoad"
       [content]="'reorder skills' | translate"
       [id]="'form_user_reorder_skill'"
     ></ait-text-gradient>
@@ -91,6 +92,7 @@
         <div class="block">
           <ait-button
             [id]="'cancel'"
+            [width]="'200px'"
             [title]="'キャンセル'"
             [isDefault]="true"
             nbSpinnerStatus="primary"

@@ -1,5 +1,5 @@
 <div class="user_profile_wrapper" id="user_profile">
-  <div class="content__card">
+  <div class="content__card" *ngIf="isload">
     <!-- profile -->
     <div style="background-color: #ffffff">
       <div
@@ -179,7 +179,7 @@
             [minWidth]="'100px'"
             [isNormal]="false"
           ></ait-drag-scroll>
-          <hr *ngIf="!last" />
+          <hr style="margin-top: 5px;" *ngIf="!last" />
         </div>
       </div>
       </card-content>

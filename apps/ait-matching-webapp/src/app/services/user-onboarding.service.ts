@@ -167,16 +167,6 @@ export class UserOnboardingService extends AitBaseService {
     );
   }
 
-  async removeUserSkills(data: any[]) {
-    const returnFields = { _key: true };
-    return await this.mutation(
-      'removeUserSkill',
-      'user_skill',
-      data,
-      returnFields
-    );
-  }
-
   async removeSkills(data: any[]) {
     const returnFields = { _key: true };
     return await this.mutation(

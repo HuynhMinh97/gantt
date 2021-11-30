@@ -82,6 +82,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   skillByCategory: OrderSkill[] = [];
   userCentificate: CertificateDto[] = [];
 
+  isload = false;
   isFriend = false;
   countFriend = 0;
   timeProject = 0;
@@ -151,7 +152,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.callLoadingApp();
     await this.getMasterData();
     this.getFriends();
     this.getCountFriends();
@@ -164,9 +164,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     this.getEducationByUserId();
     this.getLanguageByUserId();
     this.getImg();
-    setTimeout(() => {
-      this.cancelLoadingApp();
-    }, 1000)
   }
   async getMasterData() {
     try {
@@ -200,6 +197,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           if (res.data.length > 0) {
             const data = res.data[0]
             this.DataUserProfile = data;
+            this.isload = true;
             this.cancelLoadingApp();
           } else {
             this.cancelLoadingApp();
@@ -227,8 +225,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         }
         this.countSkill =  data.length ;
         const top5 = {} as OrderSkill;
-        console.log(this.translateService.translate('top 5'));
-        
         top5.name = this.translateService.translate('top 5');
         top5.data = [];
         if (this.topSkills.length > 0) {
@@ -735,8 +731,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   async getImg() {
     await this.userProfileService.getFilesByFileKeys(this.url_avatar)
       .then((res) => {
-        console.log(res.dat);
-        
+        console.log(res);       
       })
   }
   getImage = (file: any, isError = false) => {
@@ -821,8 +816,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     .then((res) => {
       if(res?.status == RESULT_STATUS.OK){
         this.countFriend = res.data.length;
-        console.log(res.data);
-        
       } 
     })
   }
