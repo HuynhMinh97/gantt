@@ -127,7 +127,9 @@ export class AitGroupSearchComponent
   }
 
   ngOnInit(): void {
+    this.callLoadingApp();
     this.setupData();
+    setTimeout(() => { this.cancelLoadingApp() }, 2000);
   }
 
   async setupData() {
