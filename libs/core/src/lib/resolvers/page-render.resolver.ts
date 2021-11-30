@@ -2,6 +2,7 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AitCtxUser } from '../decorators/ait-ctx-user.decorator';
 import { SysUser } from '../entities/sys-user.entity';
 import {
+  JsonDataRequest,
   SaveDataRequest,
   SysGroupRequest,
   SysInputRequest,
@@ -11,6 +12,7 @@ import {
   SysSearchResultRequest,
 } from '../requests/page-render.request';
 import {
+  JsonDataResponse,
   SaveDataResponse,
   SysGroupResponse,
   SysInputResponse,
@@ -75,6 +77,19 @@ export class PageRenderResolver extends AitBaseService {
     request: SysInputRequest
   ) {
     return this.find(request, user);
+  }
+
+  @Query(() => JsonDataResponse, { name: 'findDataByCollection' })
+  async findDataByCollection(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => JsonDataRequest })
+    request: JsonDataRequest
+  ) {
+    const res = await this.find(request, user);
+    if (res.data && res.data.length > 0) {
+      res.data[0]['data'] = JSON.stringify(res.data[0]);
+    }
+    return res;
   }
 
   @Mutation(() => SaveDataResponse, { name: 'saveDataRender' })
