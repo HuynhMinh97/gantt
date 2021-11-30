@@ -96,8 +96,8 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
     }
 
     const res = await this.getMessageByTypeAndCode('E', ['0001', '0010']);
-    this.lengthMessage = res?.data['findSystem']?.data[0]?.message[this.lang || this.env?.COMMON?.LANG_DEFAULT];
-    this.requireMessage = res?.data['findSystem']?.data[1]?.message[this.lang || this.env?.COMMON?.LANG_DEFAULT];
+    this.lengthMessage = res?.data['findSystem']?.data[0]?.message[this.lang || this.env?.COMMON?.LANG_DEFAULT] || '';
+    this.requireMessage = res?.data['findSystem']?.data[1]?.message[this.lang || this.env?.COMMON?.LANG_DEFAULT] || '';
   }
 
   isAureoleV = () => {
