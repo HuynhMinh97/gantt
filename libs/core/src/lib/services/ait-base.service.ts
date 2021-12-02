@@ -246,7 +246,7 @@ export class AitBaseService {
     const mapData = [];
     const joinData = [];
     const customData = [];
-    const atributes = [];
+    const attributes = [];
 
     let hasName = false;
 
@@ -273,7 +273,7 @@ export class AitBaseService {
         const isValid = this.checkValidFilter(condition[prop]);
         if (isValid) {
           customData.push(condition[prop]);
-          atributes.push(condition[prop]['join_field']);
+          attributes.push(condition[prop]['join_field']);
         }
       } else {
         const data = condition[prop];
@@ -400,8 +400,8 @@ export class AitBaseService {
       aqlStr += ` RETURN record \r\n`;
       aqlStr += ` )\r\n`;
     }
-    if (atributes.length > 0) {
-      aqlStr += `FILTER LENGTH(${atributes[0]}) > 0\r\n`;
+    if (attributes.length > 0) {
+      aqlStr += `FILTER LENGTH(${attributes[0]}) > 0\r\n`;
     }
 
     if (isObjectFull(options?.sort_by)) {
@@ -418,9 +418,9 @@ export class AitBaseService {
       aqlStr += ` name:  data.name.${lang} ? data.name.${lang} : data.name, \r\n`;
     }
     
-    // atribute
-    if (atributes.length > 0) {
-      aqlStr += `\r\n ${atributes[0]}, `;
+    // attribute
+    if (attributes.length > 0) {
+      aqlStr += `\r\n ${attributes[0]}, `;
     }
     //custom
     this.forAuv.forEach((prop) => {
@@ -437,7 +437,7 @@ export class AitBaseService {
     });
     //join
     joinData.forEach((data) => {
-      if (!atributes.includes(data.join_field)) {
+      if (!attributes.includes(data.join_field)) {
         aqlStr += ` \r\n ${data.join_field} : ( `;
         aqlStr += ` \r\n FOR record IN ${data.join_collection}`;
         aqlStr += ` \r\n FILTER record.${data.join_attribute} == data.${data.join_target}`;
@@ -447,7 +447,7 @@ export class AitBaseService {
     });
     //ref
     mapData.forEach((data) => {
-      if (!atributes.includes(data.join_field)) {
+      if (!attributes.includes(data.join_field)) {
         const ref_condition = data.ref_condition;
 
         aqlStr += ` \r\n ${data.attribute} : ( `;
