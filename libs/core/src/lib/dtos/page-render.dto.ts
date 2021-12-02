@@ -1,6 +1,7 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { BaseDto } from './base.dto';
 import { GraphQLJSONObject } from 'graphql-type-json';
+import { ConditionDto } from './condition.dto';
 @InputType()
 export class SysGroupDto extends BaseDto {
   @Field(() => String, { nullable: true })
@@ -47,10 +48,10 @@ export class SysPageDto extends SysModuleDto {
 export class ComponentSettingDto {
   @Field(() => String, { nullable: true })
   collection: string;
-  
+
   @Field(() => Int, { nullable: true })
   max_item: number;
-  
+
   @Field(() => String, { nullable: true })
   width: string;
 
@@ -59,6 +60,30 @@ export class ComponentSettingDto {
 
   @Field(() => Boolean, { nullable: true })
   from_to: boolean;
+
+  @Field(() => Boolean, { nullable: true })
+  is_multi_language: boolean;
+}
+
+@InputType()
+export class SearchSettingDto {
+  @Field(() => String, { nullable: true })
+  operator: string;
+
+  @Field(() => String, { nullable: true })
+  type: string;
+
+  @Field(() => String, { nullable: true })
+  attribute: string;
+
+  @Field(() => String, { nullable: true })
+  ref_collection: string;
+
+  @Field(() => String, { nullable: true })
+  ref_attribute: string;
+
+  @Field(() => String, { nullable: true })
+  get_by: string;
 }
 
 @InputType()
@@ -96,6 +121,9 @@ export class SysSearchConditionDto extends BaseDto {
   @Field(() => ComponentSettingDto, { nullable: true })
   component_setting: ComponentSettingDto;
 
+  @Field(() => SearchSettingDto, { nullable: true })
+  search_setting: SearchSettingDto;
+
   @Field(() => String, { nullable: true })
   validate: string;
 }
@@ -111,4 +139,13 @@ export class SaveDataDto extends BaseDto {
   @Field(() => GraphQLJSONObject, { nullable: true })
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any;
+}
+
+@InputType()
+export class JsonDataDto extends BaseDto {
+  @Field(() => ConditionDto, { nullable: true })
+  class?: ConditionDto;
+
+  @Field(() => ConditionDto, { nullable: true })
+  parent_code?: ConditionDto;
 }

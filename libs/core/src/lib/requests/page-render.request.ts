@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Field, InputType } from '@nestjs/graphql';
 import {
-  SaveDataDto,
+  JsonDataDto,
   SysGroupDto,
   SysInputDto,
   SysModuleDto,
@@ -11,7 +11,6 @@ import {
 } from '../dtos/page-render.dto';
 import { BaseRequest } from './base.request';
 import { GraphQLJSONObject } from 'graphql-type-json';
-import { BaseDto } from '../dtos/base.dto';
 
 @InputType()
 export class SysGroupRequest extends BaseRequest {
@@ -57,6 +56,6 @@ export class SaveDataRequest extends BaseRequest {
 
 @InputType()
 export class JsonDataRequest extends BaseRequest {
-  @Field(() => BaseDto, { nullable: true })
-  condition: BaseDto;
+  @Field(() => JsonDataDto, { nullable: true })
+  condition: JsonDataDto;
 }

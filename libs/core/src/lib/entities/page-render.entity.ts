@@ -60,6 +60,30 @@ export class ComponentSettingEntity {
 
   @Field(() => Boolean, { nullable: true })
   from_to: boolean;
+
+  @Field(() => Boolean, { nullable: true })
+  is_multi_language: boolean;
+}
+
+@ObjectType()
+export class SearchSettingEntity {
+  @Field(() => String, { nullable: true })
+  operator: string;
+
+  @Field(() => String, { nullable: true })
+  type: string;
+
+  @Field(() => String, { nullable: true })
+  attribute: string;
+
+  @Field(() => String, { nullable: true })
+  ref_collection: string;
+
+  @Field(() => String, { nullable: true })
+  ref_attribute: string;
+
+  @Field(() => String, { nullable: true })
+  get_by: string;
 }
 
 @ObjectType()
@@ -96,6 +120,10 @@ export class SysSearchConditionEntity extends BaseEntity {
 
   @Field(() => ComponentSettingEntity, { nullable: true })
   component_setting: ComponentSettingEntity;
+
+  @Field(() => SearchSettingEntity, { nullable: true })
+  search_setting: SearchSettingEntity;
+
 
   @Field(() => String, { nullable: true })
   validate: string;
@@ -158,7 +186,7 @@ export class ColumnEntity {
   type: string;
 
   @Field(() => String, { nullable: true })
-  atribute: string;
+  attribute: string;
 
   @Field(() => String, { nullable: true })
   ref_collection: string;
