@@ -308,12 +308,14 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
           this.isLoading = false;
         } catch (e) {
           if (!(e?.message || '').includes('email')) {
-            const message = this.translateService.getMsg('E0107');
+            const res = await this.getMessageByTypeAndCode('E',['0107']);
+            const message = res?.data['findSystem']?.data[0]?.message[this.lang || this.env?.COMMON?.LANG_DEFAULT] || '';
             this.setErrors({
               password: [...this.errors.password, message],
             });
           } else if ((e?.message || '').includes('email')) {
-            const message = this.translateService.getMsg('E0104');
+            const res = await this.getMessageByTypeAndCode('E',['0104']);
+            const message = res?.data['findSystem']?.data[0]?.message[this.lang || this.env?.COMMON?.LANG_DEFAULT] || '';
             this.setErrors({
               email: [...this.errors.email, message],
             });
