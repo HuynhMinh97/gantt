@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {
@@ -10,18 +11,21 @@ import {
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
+import { NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
+import _ from 'lodash';
 import { MODE } from '../../@constant';
 import {
   AitAuthService,
   AitEnvironmentService,
   AitRenderPageService,
   AitSaveTempService,
+  AitTranslationService,
   AitUserService,
 } from '../../services';
 import { AppState } from '../../state/selectors';
+import { AitConfirmDialogComponent } from '../ait-confirm-dialog/ait-confirm-dialog.component';
 import { AitBaseComponent } from '../base.component';
 
 @Component({
@@ -43,12 +47,16 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   isReset = false;
   isSubmit = false;
   isChanged = false;
+  isDialogOpen = false;
+  cloneData: any;
   searchComponents: any;
   leftSide: any[] = [];
   rightSide: any[] = [];
   constructor(
     private renderPageService: AitRenderPageService,
     public router: Router,
+    private dialogService: NbDialogService,
+    private translateService: AitTranslationService,
     public store: Store<AppState>,
     authService: AitAuthService,
     userService: AitUserService,
@@ -108,27 +116,40 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
           resSearch.status === RESULT_STATUS.OK &&
           resSearch?.data?.length > 0
         ) {
+          console.log(resSearch.data);
           this.searchComponents = resSearch.data;
           this.setupForm(this.searchComponents);
           this.setupComponent(this.searchComponents);  
           if (this._key) {
-            this.patchDataToForm();
+            this.inputForm.addControl('_key', new FormControl(null));
+            this.patchDataToForm(resSearch.data || []);
           }
         }
       }
     }
   }
   
-  async patchDataToForm() {
+  async patchDataToForm(data: any[]) {
+    const conditions = {};
+    this.cloneData = {};
+    conditions['_key'] = this._key;
+    data.forEach(e => {
+      console.log(e);
+      if (e['search_setting']) {
+        const prop = Object.entries(e['search_setting']).reduce((a,[k,v]) => (v == null ? a : (a[k]=v, a)), {});
+        conditions[e['item_id']] = prop;
+      }
+    });
     const res = await this.renderPageService.findDataByCollection(
       this.collection,
-      this._key
+      conditions
     );
     if (res.data.length > 0) {
-      const data = res.data[0]['data'];
-      console.log(data);
-      this.inputForm.patchValue(JSON.parse(data));
-      console.log(this.inputForm.value);
+      const value = JSON.parse(res.data[0]['data'] || '[]');
+      this.inputForm.patchValue(value);
+      (Object.keys(this.inputForm.controls) || []).forEach(name => {
+        this.cloneData[name] = this.inputForm.controls[name].value;
+      });
     }
   }
 
@@ -165,6 +186,12 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
     this.inputForm = new FormGroup(group);
   }
 
+  checkAllowSave() {
+    // isChanged
+    const currentValue = this.inputForm.value;
+    this.isChanged = !_.isEqual(currentValue, this.cloneData);
+  }
+
   takeInputValue(value: string, form: string): void {
     if (value) {
       this.inputForm.controls[form].markAsDirty();
@@ -172,6 +199,7 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
     } else {
       this.inputForm.controls[form].setValue(null);
     }
+    this.checkAllowSave();
   }
 
   takeMaster(
@@ -184,6 +212,7 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
     } else {
       this.takeMasterValues((value || []) as KeyValueDto[], form);
     }
+    this.checkAllowSave();
   }
 
   takeMasterValue(value: KeyValueDto[] | KeyValueDto, form: string): void {
@@ -195,6 +224,7 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
     } else {
       this.inputForm.controls[form].setValue(null);
     }
+    this.checkAllowSave();
   }
 
   // Take values form components and assign to form
@@ -205,6 +235,7 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
     } else {
       this.inputForm.controls[form].setValue(null);
     }
+    this.checkAllowSave();
   }
 
   takeDatePickerValue(value: number, form: string): void {
@@ -216,19 +247,54 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
     } else {
       this.inputForm.controls[form].setValue(null);
     }
+    this.checkAllowSave();
   }
 
-  reset(event: any) {
-    event.preventDefault();
-    this.inputForm.reset();
-    // this.isCreateAtError = false;
-    // this.isChangeAtError = false;
-    // this.isReset = true;
-    // this.clearTemp();
-    setTimeout(() => {
-      // this.isReset = false;
-    }, 100);
-    // this.showToastr('', this.getMsg('I0007'));
+  reset() {
+    this.inputForm.patchValue({ ...this.cloneData });
+  }
+
+  remove() {
+    console.log(this.inputForm.controls['_key'].value);
+    try {
+      this.isDialogOpen = true;
+      this.dialogService
+        .open(AitConfirmDialogComponent, {
+          context: {
+            title: this.translateService.translate(
+              'このデータを削除しますか。'
+            ),
+          },
+        })
+        .onClose.subscribe(async (event) => {
+          this.isDialogOpen = false;
+          if (event) {
+            this.onDelete();
+          } else {
+          }
+        });
+      } catch {
+    }
+  }
+
+  async onDelete() {
+    this.callLoadingApp();
+    try {
+      await this.renderPageService
+      .remove(this.collection, this._key)
+      .then((res) => {
+        if (res.status === RESULT_STATUS.OK) {
+          this.cancelLoadingApp();
+          this.showToastr('', this.getMsg('I0003'));
+          history.back();
+        } else {
+          this.cancelLoadingApp();
+          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+        }
+      });
+    } catch {
+      this.cancelLoadingApp();
+    }
   }
 
   search(event = null, isInit = false) {
@@ -243,16 +309,13 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   }
 
   clear() {
-    if (this.mode === MODE.NEW) {
-      this.inputForm.reset();
-      this.isReset = true;
-      setTimeout(() => {
-        this.isReset = false;
-      }, 100);
-    } else {
-      console.log('edit');
-    }
+    this.inputForm.reset();
+    this.isReset = true;
+    setTimeout(() => {
+      this.isReset = false;
+    }, 100);
   }
+
   save() {
     this.isSubmit = true;
     if (this.inputForm.valid) {
@@ -265,7 +328,10 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
           objSave[prop] = formValue[prop];
         }
       }
-      this.renderPageService
+
+      console.log(objSave);
+      if (this.mode === MODE.NEW) {
+        this.renderPageService
         .saveRenderData(this.collection, [objSave])
         .then((res) => {
           if (res.status === RESULT_STATUS.OK) {
@@ -278,6 +344,9 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
           }
         })
         .catch(() => this.showToastr('', this.getMsg('E0100'), KEYS.WARNING));
+      } else {
+        console.log(objSave);
+      }
     }
   }
 }
