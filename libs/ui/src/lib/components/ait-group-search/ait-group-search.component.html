@@ -179,6 +179,18 @@
                     'margin-top': isTableExpan ? null : '0px'
                   }">
                     <div style="width: 100%" [ngStyle]="{ 'display': isTableExpan ? 'block' : 'none' }">
+                        <div style="margin-bottom: 15px; display: flex;">
+                            <ait-button
+                                [id]="'remove'"
+                                [minwidth]="'80px'"
+                                [height]="'20px'"
+                                [fontsize]="'14px'"
+                                [marginleft]="'0px'"
+                                [title]="'Export Csv'"
+                                [isDefault]="true"
+                                (click)="exportCsv()"
+                            ></ait-button>
+                            </div>
                         <div class="table__area" #area>
                             <ng2-smart-table [settings]="settings" [source]="source"
                                 (userRowSelect)="onUserRowSelect($event)" #table *ngIf="done"></ng2-smart-table>
