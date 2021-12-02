@@ -638,7 +638,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
         query {
         findSystem(
           request: {
-            company: "d3415d06-601b-42c4-9ede-f5d9ff2bcac3"
+            company: "${this.company}"
             lang: "${this.lang || this.env?.COMMON?.LANG_DEFAULT}"
             collection: "sys_message"
             user_id: ""

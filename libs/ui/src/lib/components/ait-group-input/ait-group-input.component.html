@@ -23,7 +23,7 @@
 
                         </ait-input-number>
 
-                        <ait-input-text *ngIf="component.type === 'text'" [length]="1000"
+                        <ait-input-text *ngIf="component.type === 'text'" [length]="1000" [isReset]="isReset"
                             [label]="component?.item_label" [placeholder]="component?.item_placeholder"
                             [width]="component?.component_setting?.width" [fullWidth]="true" [id]="component?.item_id"
                             [defaultValue]="inputForm.controls[component?.item_id].value" [isSubmit]="isSubmit"
@@ -58,7 +58,7 @@
 
                         </ait-input-number>
 
-                        <ait-input-text *ngIf="component.type === 'text'" [length]="1000"
+                        <ait-input-text *ngIf="component.type === 'text'" [length]="1000" [isReset]="isReset"
                             [label]="component?.item_label" [placeholder]="component?.item_placeholder"
                             [width]="component?.component_setting?.width" [fullWidth]="true" [id]="component?.item_id"
                             [defaultValue]="inputForm.controls[component?.item_id].value" [isSubmit]="isSubmit"
@@ -86,14 +86,14 @@
                     </ait-button>
 
                     <ait-button *ngIf="mode === 'EDIT'" [id]="'remove'" [width]="'200px'" [title]="'削除'"
-                        [isDefault]="true" [tabIndex]="43">
+                        [isDefault]="true" [tabIndex]="43" (click)="remove()">
                     </ait-button>
 
                     <ait-button *ngIf="mode === 'EDIT'" [id]="'reset'" [width]="'200px'" [title]="'リセット'"
-                        [isDefault]="true" [tabIndex]="44">
+                        [isDefault]="true" [tabIndex]="44" (click)="reset()">
                     </ait-button>
 
-                    <ait-button [id]="'save'" [width]="'200px'" [title]="'保存'" [isDefault]="true" [tabIndex]="45"
+                    <ait-button *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'" [id]="'save'" [width]="'200px'" [title]="'保存'" [isDefault]="true" [tabIndex]="45"
                         (click)="save()">
                     </ait-button>
 
