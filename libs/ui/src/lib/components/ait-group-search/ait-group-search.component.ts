@@ -7,6 +7,7 @@ import {
   RESULT_STATUS,
 } from '@ait/shared';
 import {
+  ChangeDetectorRef,
   Component,
   DoCheck,
   ElementRef,
@@ -37,6 +38,8 @@ import {
 import { AppState } from '../../state/selectors';
 import { AitTableCellComponent } from '../ait-table-cell/ait-table-cell.component';
 import { AitBaseComponent } from '../base.component';
+import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
+import { NgxCsvParser,NgxCSVParserError } from 'ngx-csv-parser';
 
 @Component({
   selector: 'ait-group-search',
@@ -76,8 +79,13 @@ export class AitGroupSearchComponent
   changeAtErrorMessage = '';
   pageDetail = '';
   perPage = '10';
-
+  dataExport: any[] = [];
+  hearder = [];
+  csvRecords: any[] = [];
+  header = false;
   constructor(
+    private changeDetectorRef: ChangeDetectorRef,
+    private ngxCsvParser: NgxCsvParser,
     private renderPageService: AitRenderPageService,
     public router: Router,
     public store: Store<AppState>,
@@ -205,7 +213,6 @@ export class AitGroupSearchComponent
     }
 
     this.settings['columns'] = {};
-
     columns.forEach((col: any) => {
       const obj = {
         type: 'custom',
@@ -220,6 +227,7 @@ export class AitGroupSearchComponent
           return obj;
         },
       };
+      this.hearder.push(col.name);
       obj['title'] = col.title || '';
       this.settings['columns'][col['name']] = obj;
     });
@@ -229,6 +237,7 @@ export class AitGroupSearchComponent
   async setupTable() {
     const res = await this.masterDataService.getAllMasterData();
     const data = res.data as any[];
+    this.dataExport = data;
     this.source = new LocalDataSource(data);
     this.done = true;
   }
@@ -416,4 +425,75 @@ export class AitGroupSearchComponent
       return 535;
     }
   }
+
+  ngAfterViewChecked(): void {
+    this.syncTable();
+  }
+  syncTable() {
+    if (this.table) {
+      this.table.grid.getRows().forEach((row) => {
+        if (this.selectedItems.find((r) => r._key == row.getData()._key)) {
+          row.isSelected = true;
+        }
+      });
+      this.changeDetectorRef.detectChanges();
+    }
+  }
+
+  exportCsv(){
+    console.log(this.settings);    
+    const options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: false, 
+      showTitle: false,
+      title: 'Your title',
+      useBom: true,
+      noDownload: false,
+      headers: this.hearder,
+      useHeader: true,
+      nullToEmptyString: true,
+      keys:this.hearder,
+    };  
+    if(this.selectedItems.length > 0 ){
+      new AngularCsv(this.selectedItems, 'my csv',options);
+    }else{
+      new AngularCsv(this.dataExport, 'my csv',options);
+    }
+
+  } 
+  ImportCsv(){
+    const input = document.getElementById('import');
+    input.click();  
+  }
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  @ViewChild('fileImportInput', { static: false }) fileImportInput: any;
+
+  // Your applications input change listener for the CSV File
+  fileChangeListener($event: any): void {
+
+    // Select the files from the event
+    const files = $event.srcElement.files;
+    // Parse the file you want to select for the operation along with the configuration
+    this.ngxCsvParser.parse(files[0], { header: this.header, delimiter: ',' })
+      .pipe().subscribe((result: Array<any>) => {
+        const listData = [];
+        const header = result[0];
+
+        for(let element=1; element < result.length; element++) {
+          const data = {};
+          header.forEach((item, i) => {
+            data[item] = result[element][i]
+          });
+          listData.push(data);
+        }
+        console.log(listData);
+        this.csvRecords = result;
+      }, (error: NgxCSVParserError) => {
+        console.log('Error', error);
+      });
+
+  }
+ 
 }
