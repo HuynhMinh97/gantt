@@ -67,6 +67,9 @@ export class ConditionDto {
   // Như trên nhưng trỏ đến nhiều cột, hỗ trợ biểu thức || -> hien tai chua support
   @Field(() => [String], { nullable: true })
   targets: string[];
+  // Update later
+  @Field(() => String, { nullable: true })
+  type: string;
   // giá trị tìm kiếm, input string
   @Field(() => String, { nullable: true, defaultValue: '' })
   valueAsString: string;

@@ -118,6 +118,10 @@
         text-transform: uppercase;
         color: nb-theme(color-basic-800);
       }
+
+      &:hover {
+        transform: scale(1.1) perspective(1px);
+      }
     }
     .more__link {
       margin-top: 50px;
