@@ -26,7 +26,16 @@ export class AitRenderPageService extends AitBaseService {
       width: true,
       required: true,
       from_to: true,
+      is_multi_language: true
     },
+    search_setting: {
+      operator: true,
+      type: true,
+      attribute: true,
+      ref_collection: true,
+      ref_attribute: true,
+      get_by: true
+    }
   };
 
   searchResult = {
@@ -51,7 +60,7 @@ export class AitRenderPageService extends AitBaseService {
       name: true,
       title: true,
       type: true,
-      atribute: true,
+      attribute: true,
       ref_collection: true,
       ref_attribute: true,
       is_multi_language: true,
@@ -135,13 +144,11 @@ export class AitRenderPageService extends AitBaseService {
     return await this.query(GRAPHQL.FIND_SEARCH_RESULT, request, returnFields);
   }
 
-  async findDataByCollection(collection: string, _key: string) {
+  async findDataByCollection(collection: string, condition?: any) {
     const returnFields = { data: true };
     const request = {
       collection,
-      condition: {
-        _key,
-      },
+      condition
     };
     return await this.query(
       GRAPHQL.FIND_DATA_BY_COLLECTION,
@@ -158,5 +165,10 @@ export class AitRenderPageService extends AitBaseService {
       data,
       returnFields
     );
+  }
+
+  async remove(collection: string, _key: string) {
+    const data = { _key };
+    return await this.mutation('removeSystem', collection, [data], { _key: true });
   }
 }
