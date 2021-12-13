@@ -157,6 +157,19 @@ export class AitRenderPageService extends AitBaseService {
     );
   }
 
+  async findAllDataByCollection(collection: string, condition?: any) {
+    const returnFields = { data: true };
+    const request = {
+      collection,
+      condition
+    };
+    return await this.query(
+      GRAPHQL.FIND_ALL_DATA_BY_COLLECTION,
+      request,
+      returnFields
+    );
+  }
+
   async saveRenderData(collection: string, data: any[], rf?: any) {
     const returnFields = rf ? rf : { _key: true, data: true };
     return await this.mutation(

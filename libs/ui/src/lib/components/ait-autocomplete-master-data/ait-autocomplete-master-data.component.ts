@@ -26,6 +26,7 @@ import { AitAuthService, AitEnvironmentService, AitMasterDataService, AitTransla
 import { AppState, } from '../../state/selectors';
 import { AitAppUtils } from '../../utils/ait-utils';
 import { AitBaseComponent } from '../base.component';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 
 
@@ -119,6 +120,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Input() height;
   @Input() isSubmit = false;
   @Input() allowNew = false;
+  @Input() allowDragDrop = false;
   @Output() onError = new EventEmitter();
   dataFilter = [1];
   @Input() errorMessages;
@@ -1162,10 +1164,15 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     const result = m.filter((f) => {
 
       const target = f?.value;
-
       return target.toString().toLowerCase().includes(filterValue);
     });
     this.dataFilter = filterValue !== '' ? result : this.DataSource;
     return filterValue !== '' ? result : this.DataSource;
+  }
+
+  drop(event: CdkDragDrop<any[]>) {
+    this.filteredOptions$.subscribe((data: any[]) => {
+      moveItemInArray((data || []), event.previousIndex, event.currentIndex);
+    });
   }
 }

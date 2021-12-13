@@ -1,0 +1,176 @@
+.company__info__wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    // justify-content: center;
+    background: #f9f9f9;
+    flex-direction: column;
+    padding: 100px;
+    padding-top: 50px;
+    position: relative;
+    transition: 1s all ease-in-out;
+    .content_card {
+      width: 65%;
+    }
+    .icon_btn {
+      nb-icon {
+        &:hover {
+          transform: scale(1.5);
+        }
+      }
+    }
+    .disable {
+      cursor: not-allowed !important;
+      opacity: 0.8;
+      background: gray !important;
+    }
+    .expansion {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      margin-top: 30px;
+      &:hover {
+        .header__expansion .button_header_card {
+          visibility: visible;
+        }
+      }
+      .header__expansion {
+        min-height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-left: 20px;
+        padding-right: 20px;
+        cursor: pointer;
+        position: relative;
+        border: 2px solid #f9f9f9;
+        border-bottom: 0;
+        .button_header_card {
+          &.disable {
+            background: nb-theme(color-basic-600) !important;
+            border: 1px solid nb-theme(color-basic-100);
+            span {
+              color: #000;
+            }
+          }
+          &:hover {
+            transform: scale(1.1);
+          }
+          visibility: hidden;
+          min-width: 100px;
+          height: 24px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%);
+          border-radius: 25px;
+          cursor: pointer;
+          margin-right: 20px;
+          .text {
+            text-transform: uppercase;
+            color: #ffffff;
+            font-size: 10px;
+          }
+        }
+        .title {
+          flex: 3;
+          min-height: 100px;
+          padding-top: 10px;
+          display: flex;
+          align-items: flex-start;
+          justify-content: center;
+          flex-direction: column;
+          p {
+            margin: 0;
+            font-size: 12px;
+            color: #8f9bb3;
+            &.hidden {
+              display: none;
+            }
+          }
+          .h6 {
+            font-size: 14px;
+            max-width: 65%;
+            line-height: 0 !important;
+            margin-bottom: 12px;
+            color: #000;
+          }
+        }
+        .icon__expan {
+          // flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 70px;
+          min-width: 70px;
+        }
+      }
+      .content__expansion {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        background: #fff;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        transition: 0.5s all ease-in-out;
+        padding: 10px;
+        border: 0.5px solid #f5f5f5;
+        height: auto;
+        padding-bottom: 30px;
+        &.hidden {
+          transition: 0.5s all ease-in-out;
+          height: 0px;
+          overflow: hidden;
+          padding-top: 0;
+          padding-bottom: 0;
+        }
+      }
+    }
+    .input__group__inline {
+      width: 400px;
+      &.date {
+        width: auto;
+        // flex: 1;
+      }
+      p {
+        color: #8f9bb3;
+        font-size: 15px;
+        margin: 0;
+        text-decoration: underline;
+        margin-left: 16px;
+        text-underline-position: under;
+      }
+      .info {
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+      }
+      /* margin-right:100px; */
+      .inpput {
+        color: #8f9bb3;
+        font-size: 15px;
+        width: 100%;
+      }
+      .label {
+        margin: 0;
+        font-weight: bold;
+        font-size: 12px;
+        text-transform: uppercase;
+  
+        /* Text Color / Hint */
+  
+        color: #8f9bb3;
+        margin-bottom: 8px;
+      }
+    }
+  }
+  @media only screen and (max-width: 1669px) {
+    .company__info__wrapper {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+  

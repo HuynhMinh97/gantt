@@ -32,4 +32,7 @@ export class CreateByDto {
     defaultValue: KEYS.NAME,
   })
   return_field: string;
+
+  @Field(() => String, { nullable: true })
+  type: string;
 }
