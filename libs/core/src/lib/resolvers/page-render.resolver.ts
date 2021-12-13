@@ -92,6 +92,32 @@ export class PageRenderResolver extends AitBaseService {
     return res;
   }
 
+  @Query(() => JsonDataResponse, { name: 'findAllDataByCollection' })
+  async findAllDataByCollection(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => JsonDataRequest })
+    request: JsonDataRequest
+  ) {
+    const res = await this.find(request, user);
+    if (res.data && res.data.length > 0) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      res.data.forEach((e: any,i: number) => {
+        if (e) {
+          res.data[i]['data'] = JSON.stringify(res.data[i]);
+        }
+      })
+    }
+    return res;
+    if (res.data && res.data.length > 0) {
+      res.data.forEach((item: any) => {
+        if (item) {
+          item['data'] = JSON.stringify(item);
+        }
+      })
+    }
+    return res;
+  }
+
   @Mutation(() => SaveDataResponse, { name: 'saveDataRender' })
   saveDataRender(
     @AitCtxUser() user: SysUser,

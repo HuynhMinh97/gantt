@@ -1,4 +1,4 @@
-import { Field, InputType, Int } from '@nestjs/graphql';
+import { Field, InputType, Int, OmitType } from '@nestjs/graphql';
 import { BaseDto } from './base.dto';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { ConditionDto } from './condition.dto';
@@ -142,10 +142,22 @@ export class SaveDataDto extends BaseDto {
 }
 
 @InputType()
-export class JsonDataDto extends BaseDto {
+export class JsonDataDto extends OmitType(BaseDto, ['create_at', 'change_at'] as const) {
   @Field(() => ConditionDto, { nullable: true })
-  class?: ConditionDto;
+  class: ConditionDto;
+  
+  @Field(() => ConditionDto, { nullable: true })
+  parent_code: ConditionDto;
+  
+  @Field(() => ConditionDto, { nullable: true })
+  name: ConditionDto;
 
   @Field(() => ConditionDto, { nullable: true })
-  parent_code?: ConditionDto;
+  code: ConditionDto;
+
+  @Field(() => ConditionDto, { nullable: true })
+  create_at: ConditionDto;
+  
+  @Field(() => ConditionDto, { nullable: true })
+  change_at: ConditionDto;
 }

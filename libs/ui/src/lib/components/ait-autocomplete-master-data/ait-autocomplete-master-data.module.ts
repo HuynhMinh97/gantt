@@ -5,6 +5,7 @@ import { NbCheckboxModule, NbIconModule, NbInputModule, NbTooltipModule } from '
 import { AitErrorMessageModule } from '../ait-error-message/ait-error-message.module';
 import { AitLabelModule } from '../ait-label/ait-label.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [AitAutoCompleteMasterDataComponent],
@@ -17,7 +18,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     AitErrorMessageModule,
     AitLabelModule,
     FormsModule,
-    ReactiveFormsModule],
+    ReactiveFormsModule,
+    DragDropModule
+  ],
   exports: [AitAutoCompleteMasterDataComponent],
   providers: [],
 })

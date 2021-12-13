@@ -204,6 +204,7 @@ export enum GRAPHQL {
   FIND_SEARCH_RESULT = 'findSysSearchResult',
   FIND_SYS_INPUT = 'findSysInput',
   FIND_DATA_BY_COLLECTION = 'findDataByCollection',
+  FIND_ALL_DATA_BY_COLLECTION = 'findAllDataByCollection',
   SAVE_DATA_RENDER = 'saveDataRender'
 }
 
