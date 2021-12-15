@@ -40,6 +40,7 @@ import { AitTableCellComponent } from '../ait-table-cell/ait-table-cell.componen
 import { AitBaseComponent } from '../base.component';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
+import { AitTableButtonComponent } from '../ait-table-button/ait-table-button.component';
 
 @Component({
   selector: 'ait-group-search',
@@ -201,10 +202,27 @@ export class AitGroupSearchComponent
       this.cancelLoadingApp();
     }
   }
+  
   navigateTo404() {
     this.cancelLoadingApp();
     this.router.navigate([`/404`]);
   }
+
+  detail(data: any) {
+   // 
+  }
+
+  copy(data: any) {
+    // 
+   }
+
+  edit(data: any) {
+    // 
+   }
+
+   delete(data: any, e: any) {
+    // 
+   }
 
   setupSetting(tableComponents: any[]) {
     try {
@@ -214,6 +232,21 @@ export class AitGroupSearchComponent
       const settings = data['settings'] || {};
 
       this.settings['actions'] = false;
+
+      this.settings['_key'] = {
+        type: 'custom',
+        filter: false,
+        renderComponent: AitTableButtonComponent,
+        onComponentInitFunction: (instance: any) => {
+          instance?.detailEvent.subscribe((data: string) => this.detail(data));
+          instance?.copyEvent.subscribe((data: string) => this.copy(data));
+          instance?.editEvent.subscribe((data: string) => this.edit(data));
+          instance?.deleteEvent.subscribe((data: string) =>
+            this.delete(data, instance?.rowData)
+          );
+        },
+      }
+
       if (settings['no_data_message']) {
         this.settings['noDataMessage'] = settings['no_data_message'];
       }
