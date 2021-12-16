@@ -134,6 +134,21 @@ export class AitRenderPageService extends AitBaseService {
     return await this.query(GRAPHQL.FIND_SYS_INPUT, request, returnFields);
   }
 
+  async findSysView(condition?: any, rf?: any) {
+    const returnFields = rf ? rf : this.searchField;
+    const request = {};
+    request['collection'] = COLLECTIONS.SYS_VIEW;
+    if (isObjectFull(condition)) {
+      request['condition'] = condition;
+    }
+    request['options'] = {
+      sort_by: {
+        value: 'col_no',
+      },
+    };
+    return await this.query(GRAPHQL.FIND_SYS_VIEW, request, returnFields);
+  }
+
   async findSearchResult(condition?: any, rf?: any) {
     const returnFields = rf ? rf : this.searchResult;
     const request = {};

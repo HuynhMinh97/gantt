@@ -79,6 +79,15 @@ export class PageRenderResolver extends AitBaseService {
     return this.find(request, user);
   }
 
+  @Query(() => SysInputResponse, { name: 'findSysView' })
+  findSysView(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => SysInputRequest })
+    request: SysInputRequest
+  ) {
+    return this.find(request, user);
+  }
+
   @Query(() => JsonDataResponse, { name: 'findDataByCollection' })
   async findDataByCollection(
     @AitCtxUser() user: SysUser,

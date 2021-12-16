@@ -100,6 +100,9 @@ export * from './lib/components/ait-group-search/ait-group-search.module';
 //ait group input
 export * from './lib/components/ait-group-input/ait-group-input.module';
 
+//ait group view
+export * from './lib/components/ait-group-view/ait-group-view.module';
+
 //layout modules
 export * from './lib/@theme/layouts/ait-common-layout/ait-common-layout.module'
 
