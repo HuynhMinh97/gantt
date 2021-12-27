@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { ExtraOptions, RouterModule } from '@angular/router';
-import { AitUiModule } from '@ait/ui';
+import { AitGroupViewModule, AitUiModule } from '@ait/ui';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
@@ -15,7 +15,7 @@ import { environment } from '../environments/environment';
 import { NbMenuModule } from '@nebular/theme';
 import { RenderPageModule } from './pages/example/render-page/render-page.module';
 
-const AIT_UI_MODULES = [];
+const AIT_UI_MODULES = [ AitGroupViewModule ];
 
 const AIT_UI_SERVICES = [];
 

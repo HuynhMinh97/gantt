@@ -31,6 +31,8 @@ import {
   AitUserService,
   AitUserSettingService,
   AitGroupInputModule,
+  AitGroupViewModule,
+  AitTableButtonModule
 } from '@ait/ui';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -69,7 +71,9 @@ const AIT_UI_MODULES = [
   AitButtonGroupModule,
   AitAutocompleteMasterDataModule,
   AitAutocompleteMasterModule,
-  AitGroupInputModule
+  AitGroupInputModule,
+  AitGroupViewModule,
+  AitTableButtonModule
 ];
 
 const AIT_UI_SERVICES = [
