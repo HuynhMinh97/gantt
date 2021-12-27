@@ -1,12 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { isObjectFull } from '@ait/shared';
-import {
-  AitBaseComponent,
-  AppState,
-  AitAuthService,
-  AitUserService,
-  AitEnvironmentService,
-} from '@ait/ui';
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import {
   NbToastrService,
@@ -17,6 +11,9 @@ import { Store } from '@ngrx/store';
 import { ViewCell } from 'ng2-smart-table';
 import { Router } from '@angular/router';
 import { NbIconLibraries } from '@nebular/theme';
+import { AitBaseComponent } from '../base.component';
+import { AppState } from '../../state/selectors';
+import { AitAuthService, AitEnvironmentService, AitUserService } from '../../services';
 
 @Component({
   encapsulation: ViewEncapsulation.None,

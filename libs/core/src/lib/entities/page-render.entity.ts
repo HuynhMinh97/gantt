@@ -3,6 +3,33 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { BaseEntity } from './base.entity';
 
 @ObjectType()
+export class ButtonEntity {
+  @Field(() => String, { nullable: true })
+  type: string;
+
+  @Field(() => String, { nullable: true })
+  text: string;
+
+  @Field(() => String, { nullable: true })
+  icon: string;
+
+  @Field(() => String, { nullable: true })
+  tooltip: string;
+}
+
+@ObjectType()
+export class RouterEntity {
+  @Field(() => String, { nullable: true })
+  search: string;
+
+  @Field(() => String, { nullable: true })
+  input: string;
+
+  @Field(() => String, { nullable: true })
+  view: string;
+}
+
+@ObjectType()
 export class SysGroupEntity extends BaseEntity {
   @Field(() => String, { nullable: true })
   module: string;
@@ -24,6 +51,7 @@ export class SysGroupEntity extends BaseEntity {
 
   @Field(() => Int, { nullable: true })
   sort_no: number;
+
 }
 
 @ObjectType()
@@ -36,12 +64,18 @@ export class SysModuleEntity extends SysGroupEntity {
 export class SysPageEntity extends SysGroupEntity {
   @Field(() => String, { nullable: true })
   slug: string;
-
+  
   @Field(() => String, { nullable: true })
   param: string;
-
+  
   @Field(() => String, { nullable: true })
   type: string;
+
+  @Field(() => RouterEntity, { nullable: true })
+  router: RouterEntity;
+
+  @Field(() => [ButtonEntity], { nullable: true })
+  button: ButtonEntity[];
 }
 
 @ObjectType()

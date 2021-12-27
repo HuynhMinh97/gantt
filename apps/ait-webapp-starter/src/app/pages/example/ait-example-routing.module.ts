@@ -30,7 +30,7 @@ export const routes: Routes = [
     ]
   },
   {
-    path: 'master',
+    path: 'search',
     component: RenderPageComponent,
   },
   {

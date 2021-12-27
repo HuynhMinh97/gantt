@@ -31,6 +31,7 @@ import {
   AitUserService,
   AitOutputTextModule,
   AitConfirmDialogModule,
+  AitTableButtonModule
 } from '@ait/ui';
 import { AitUiComponent } from './ait-example-ui.component';
 import { NbButtonModule, NbInputModule } from '@nebular/theme';
@@ -67,7 +68,8 @@ const AIT_UI_MODULES = [
   AitConfirmDialogModule,
   NbButtonModule,
   NbInputModule,
-  AitTimePickerModule
+  AitTimePickerModule,
+  AitTableButtonModule
 ];
 
 // There are some service from @ait/ui you need

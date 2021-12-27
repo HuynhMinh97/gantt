@@ -12,6 +12,21 @@ export class AitRenderPageService extends AitBaseService {
     _key: true,
   };
 
+  getPage = {
+    _key: true,
+    router: {
+      search: true,
+      input: true,
+      view: true
+    },
+    button: {
+      type: true,
+      text: true,
+      icon: true,
+      tooltip: true
+    }
+  }
+
   searchField = {
     item_no: true,
     row_no: true,
@@ -91,7 +106,7 @@ export class AitRenderPageService extends AitBaseService {
   }
 
   async findPage(condition?: any, rf?: any) {
-    const returnFields = rf ? rf : this.getKey;
+    const returnFields = rf ? rf : this.getPage;
     const request = {};
     request['collection'] = COLLECTIONS.PAGE;
     if (isObjectFull(condition)) {

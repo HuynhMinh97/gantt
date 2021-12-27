@@ -84,6 +84,9 @@ export class AitGroupSearchComponent
   hearder = [];
   csvRecords: any[] = [];
   header = false;
+  pageRouter: any;
+  pageButton: any;
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private ngxCsvParser: NgxCsvParser,
@@ -154,6 +157,9 @@ export class AitGroupSearchComponent
       ) {
         this.moduleKey = resModule.data[0]?._key || '';
         this.pageKey = resPage.data[0]?._key || '';
+        this.pageRouter = resPage.data[0]?.router || null;
+        this.pageButton = resPage.data[0]?.button || null;
+        console.log(resPage);
 
         const resGroup = await this.renderPageService.findGroup({
           module: this.moduleKey,
@@ -209,19 +215,25 @@ export class AitGroupSearchComponent
   }
 
   detail(data: any) {
-   // 
+   if (this.pageRouter) {
+     this.router.navigate([`${this.pageRouter?.view || ''}`]);
+   }
   }
 
   copy(data: any) {
-    // 
+    if (this.pageRouter) {
+      this.router.navigate([`${this.pageRouter?.input || ''}`]);
+    }
    }
 
   edit(data: any) {
-    // 
+    if (this.pageRouter) {
+      this.router.navigate([`${this.pageRouter?.input || ''}`]);
+    }
    }
 
    delete(data: any, e: any) {
-    // 
+    //
    }
 
   setupSetting(tableComponents: any[]) {
@@ -232,20 +244,6 @@ export class AitGroupSearchComponent
       const settings = data['settings'] || {};
 
       this.settings['actions'] = false;
-
-      this.settings['_key'] = {
-        type: 'custom',
-        filter: false,
-        renderComponent: AitTableButtonComponent,
-        onComponentInitFunction: (instance: any) => {
-          instance?.detailEvent.subscribe((data: string) => this.detail(data));
-          instance?.copyEvent.subscribe((data: string) => this.copy(data));
-          instance?.editEvent.subscribe((data: string) => this.edit(data));
-          instance?.deleteEvent.subscribe((data: string) =>
-            this.delete(data, instance?.rowData)
-          );
-        },
-      }
 
       if (settings['no_data_message']) {
         this.settings['noDataMessage'] = settings['no_data_message'];
@@ -264,6 +262,21 @@ export class AitGroupSearchComponent
       }
 
       this.settings['columns'] = {};
+
+      this.settings['columns']['_key'] = {
+        type: 'custom',
+        filter: false,
+        renderComponent: AitTableButtonComponent,
+        onComponentInitFunction: (instance: any) => {
+          instance?.detailEvent.subscribe((data: string) => this.detail(data));
+          instance?.copyEvent.subscribe((data: string) => this.copy(data));
+          instance?.editEvent.subscribe((data: string) => this.edit(data));
+          instance?.deleteEvent.subscribe((data: string) =>
+            this.delete(data, instance?.rowData)
+          );
+        },
+      }
+
       columns.forEach((col: any) => {
         const obj = {
           type: 'custom',
