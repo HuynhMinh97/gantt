@@ -203,7 +203,9 @@ export enum GRAPHQL {
   FIND_SEARCH_CONDITIONS = 'findSysSearchCondition',
   FIND_SEARCH_RESULT = 'findSysSearchResult',
   FIND_SYS_INPUT = 'findSysInput',
+  FIND_SYS_VIEW = 'findSysView',
   FIND_DATA_BY_COLLECTION = 'findDataByCollection',
+  FIND_ALL_DATA_BY_COLLECTION = 'findAllDataByCollection',
   SAVE_DATA_RENDER = 'saveDataRender'
 }
 
@@ -224,7 +226,8 @@ export enum COLLECTIONS {
   M_SKILL = 'm_skill',
   SEARCH_CONDITIONS = 'sys_search_condition',
   SEARCH_RESULT = 'sys_search_result',
-  SYS_INPUT = 'sys_input'
+  SYS_INPUT = 'sys_input',
+  SYS_VIEW = 'sys_view',
 }
 
 export enum OPERATOR {

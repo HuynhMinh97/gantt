@@ -31,9 +31,11 @@ import {
   AitUserService,
   AitOutputTextModule,
   AitConfirmDialogModule,
+  AitTableButtonModule
 } from '@ait/ui';
 import { AitUiComponent } from './ait-example-ui.component';
 import { NbButtonModule, NbInputModule } from '@nebular/theme';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 
 // There are some module from @ait/ui you need
@@ -66,7 +68,8 @@ const AIT_UI_MODULES = [
   AitConfirmDialogModule,
   NbButtonModule,
   NbInputModule,
-  AitTimePickerModule
+  AitTimePickerModule,
+  AitTableButtonModule
 ];
 
 // There are some service from @ait/ui you need
@@ -81,6 +84,7 @@ const AIT_UI_SERVICES = [
   declarations: [AitUiComponent],
   imports: [
     CommonModule,
+    DragDropModule,
     ...AIT_UI_MODULES,
   ],
   exports: [AitUiComponent],

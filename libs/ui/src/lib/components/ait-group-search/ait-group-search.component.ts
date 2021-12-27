@@ -39,7 +39,8 @@ import { AppState } from '../../state/selectors';
 import { AitTableCellComponent } from '../ait-table-cell/ait-table-cell.component';
 import { AitBaseComponent } from '../base.component';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
-import { NgxCsvParser,NgxCSVParserError } from 'ngx-csv-parser';
+import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
+import { AitTableButtonComponent } from '../ait-table-button/ait-table-button.component';
 
 @Component({
   selector: 'ait-group-search',
@@ -83,6 +84,9 @@ export class AitGroupSearchComponent
   hearder = [];
   csvRecords: any[] = [];
   header = false;
+  pageRouter: any;
+  pageButton: any;
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private ngxCsvParser: NgxCsvParser,
@@ -135,143 +139,257 @@ export class AitGroupSearchComponent
   }
 
   ngOnInit(): void {
-    this.callLoadingApp();
     this.setupData();
-    setTimeout(() => { this.cancelLoadingApp() }, 2000);
   }
 
   async setupData() {
-    const resModule = await this.renderPageService.findModule({
-      code: this.module,
-    });
-    const resPage = await this.renderPageService.findPage({ code: this.page });
-    console.log(resModule, resPage);
-    if (
-      resModule.status === RESULT_STATUS.OK &&
-      resPage.status === RESULT_STATUS.OK
-    ) {
-      this.moduleKey = resModule.data[0]?._key || '';
-      this.pageKey = resPage.data[0]?._key || '';
-
-      const resGroup = await this.renderPageService.findGroup({
-        module: this.moduleKey,
-        page: this.pageKey,
+    this.callLoadingApp();
+    try {
+      const resModule = await this.renderPageService.findModule({
+        code: this.module,
       });
-      if (resGroup.status === RESULT_STATUS.OK) {
-        this.groupKey = resGroup.data[0]?._key || '';
+      const resPage = await this.renderPageService.findPage({
+        code: this.page,
+      });
+      if (
+        resModule.status === RESULT_STATUS.OK &&
+        resPage.status === RESULT_STATUS.OK
+      ) {
+        this.moduleKey = resModule.data[0]?._key || '';
+        this.pageKey = resPage.data[0]?._key || '';
+        this.pageRouter = resPage.data[0]?.router || null;
+        this.pageButton = resPage.data[0]?.button || null;
+        console.log(resPage);
 
-        const resSearch = await this.renderPageService.findSearchCondition({
+        const resGroup = await this.renderPageService.findGroup({
           module: this.moduleKey,
           page: this.pageKey,
-          group: this.groupKey,
         });
+        if (resGroup.status === RESULT_STATUS.OK) {
+          this.groupKey = resGroup.data[0]?._key || '';
 
-        const resResult = await this.renderPageService.findSearchResult({
-          module: this.moduleKey,
-          page: this.pageKey,
-          group: this.groupKey,
-        });
-        if (
-          resSearch.status === RESULT_STATUS.OK &&
-          resSearch?.data?.length > 0
-        ) {
-          this.searchComponents = resSearch.data;
-          this.setupForm(this.searchComponents);
-          this.setupComponent(this.searchComponents);
+          const resSearch = await this.renderPageService.findSearchCondition({
+            module: this.moduleKey,
+            page: this.pageKey,
+            group: this.groupKey,
+          });
+
+          const resResult = await this.renderPageService.findSearchResult({
+            module: this.moduleKey,
+            page: this.pageKey,
+            group: this.groupKey,
+          });
+          if (
+            resSearch.status === RESULT_STATUS.OK &&
+            resSearch?.data?.length > 0
+          ) {
+            this.searchComponents = resSearch.data;
+            this.setupForm(this.searchComponents);
+            this.setupComponent(this.searchComponents);
+          } else {
+            this.cancelLoadingApp();
+          }
+          if (
+            resResult.status === RESULT_STATUS.OK &&
+            resResult.data?.length > 0
+          ) {
+            this.tableComponents = resResult.data;
+            this.setupSetting(this.tableComponents);
+          } else {
+            this.cancelLoadingApp();
+          }
+        } else {
+          this.navigateTo404();
         }
-        if (
-          resResult.status === RESULT_STATUS.OK &&
-          resResult.data?.length > 0
-        ) {
-          this.tableComponents = resResult.data;
-          console.log(this.tableComponents);
-          this.setupSetting(this.tableComponents);
-        }
+      } else {
+        this.navigateTo404();
       }
+    } catch {
+      this.cancelLoadingApp();
     }
   }
+  
+  navigateTo404() {
+    this.cancelLoadingApp();
+    this.router.navigate([`/404`]);
+  }
+
+  detail(data: any) {
+   if (this.pageRouter) {
+     this.router.navigate([`${this.pageRouter?.view || ''}`]);
+   }
+  }
+
+  copy(data: any) {
+    if (this.pageRouter) {
+      this.router.navigate([`${this.pageRouter?.input || ''}`]);
+    }
+   }
+
+  edit(data: any) {
+    if (this.pageRouter) {
+      this.router.navigate([`${this.pageRouter?.input || ''}`]);
+    }
+   }
+
+   delete(data: any, e: any) {
+    //
+   }
+
   setupSetting(tableComponents: any[]) {
-    const data = tableComponents[0];
-    const columns = data['columns'] || [];
-    const settings = data['settings'] || {};
+    try {
+      console.log(tableComponents);
+      const data = tableComponents[0];
+      const columns = data['columns'] || [];
+      const settings = data['settings'] || {};
 
-    this.settings['actions'] = false;
-    if (settings['no_data_message']) {
-      this.settings['noDataMessage'] = settings['no_data_message'];
-    }
-    if (settings['select_mode']) {
-      this.settings['selectMode'] = settings['select_mode'];
-    }
-    if (settings['paper']) {
-      this.settings['paper'] = {};
-      if (settings['paper']['display']) {
-        this.settings['paper']['display'] = settings['paper']['display'];
-      }
-      if (settings['paper']['per_page']) {
-        this.settings['paper']['per_page'] = settings['paper']['per_page'];
-      }
-    }
+      this.settings['actions'] = false;
 
-    this.settings['columns'] = {};
-    columns.forEach((col: any) => {
-      const obj = {
+      if (settings['no_data_message']) {
+        this.settings['noDataMessage'] = settings['no_data_message'];
+      }
+      if (settings['select_mode']) {
+        this.settings['selectMode'] = settings['select_mode'];
+      }
+      if (settings['paper']) {
+        this.settings['paper'] = {};
+        if (settings['paper']['display']) {
+          this.settings['paper']['display'] = settings['paper']['display'];
+        }
+        if (settings['paper']['per_page']) {
+          this.settings['paper']['per_page'] = settings['paper']['per_page'];
+        }
+      }
+
+      this.settings['columns'] = {};
+
+      this.settings['columns']['_key'] = {
         type: 'custom',
-        renderComponent: AitTableCellComponent,
-        valuePrepareFunction: (value: string) => {
-          const obj = {
-            text: value,
-            style: {
-              width: col.style?.width || '',
-            },
-          };
-          return obj;
+        filter: false,
+        renderComponent: AitTableButtonComponent,
+        onComponentInitFunction: (instance: any) => {
+          instance?.detailEvent.subscribe((data: string) => this.detail(data));
+          instance?.copyEvent.subscribe((data: string) => this.copy(data));
+          instance?.editEvent.subscribe((data: string) => this.edit(data));
+          instance?.deleteEvent.subscribe((data: string) =>
+            this.delete(data, instance?.rowData)
+          );
         },
-      };
-      this.hearder.push(col.name);
-      obj['title'] = col.title || '';
-      this.settings['columns'][col['name']] = obj;
-    });
+      }
 
-    this.setupTable();
+      columns.forEach((col: any) => {
+        const obj = {
+          type: 'custom',
+          renderComponent: AitTableCellComponent,
+          valuePrepareFunction: (value: string) => {
+            const obj = {
+              text: value,
+              style: {
+                width: col.style?.width || '',
+              },
+            };
+            return obj;
+          },
+        };
+        this.hearder.push(col.name);
+        obj['title'] = col.title || '';
+        this.settings['columns'][col['name']] = obj;
+      });
+
+      this.setupTable();
+    } catch {
+      this.cancelLoadingApp();
+    }
   }
   async setupTable() {
-    const res = await this.masterDataService.getAllMasterData();
-    const data = res.data as any[];
-    this.dataExport = data;
-    this.source = new LocalDataSource(data);
-    this.done = true;
+    try {
+      const conditions = this.getSearchCondition();
+      console.log(conditions);
+      // const res = await this.masterDataService.getAllMasterData();
+      const res = await this.renderPageService.findAllDataByCollection(
+        'sys_master_data',
+        conditions
+      );
+      console.log(res);
+      if (res && res.status === RESULT_STATUS.OK && res.data.length > 0) {
+        const data = this.getDataFromJSON(res.data as any[]);
+        this.dataExport = data;
+        this.source = new LocalDataSource(data);
+        this.done = true;
+      }
+    } catch {
+      this.cancelLoadingApp();
+    } finally {
+      this.cancelLoadingApp();
+    }
+  }
+  getSearchCondition() {
+    const conditions = {};
+    try {
+      (this.searchComponents || []).forEach((e) => {
+        if (e['search_setting']) {
+          const prop = Object.entries(e['search_setting']).reduce(
+            (a, [k, v]) => (v == null ? a : ((a[k] = v), a)),
+            {}
+          );
+          conditions[e['item_id']] = prop;
+        }
+      });
+    } catch {}
+
+    return conditions;
+  }
+  getDataFromJSON(data: any[]) {
+    const returnData = [];
+    data.forEach((item) => {
+      if (item) {
+        try {
+          returnData.push(JSON.parse(item.data));
+        } catch {}
+      }
+    });
+
+    return returnData;
   }
 
   setupForm(components: any[]) {
-    const group = {};
-    components.forEach((component) => {
-      if (component.item_id) {
-        if (
-          component.type === 'date' &&
-          component?.component_setting?.from_to
-        ) {
-          group[component.item_id + '_from'] = new FormControl();
-          group[component.item_id + '_to'] = new FormControl();
-        } else {
-          group[component.item_id] = new FormControl();
+    try {
+      const group = {};
+      components.forEach((component) => {
+        if (component.item_id) {
+          if (
+            component.type === 'date' &&
+            component?.component_setting?.from_to
+          ) {
+            group[component.item_id + '_from'] = new FormControl();
+            group[component.item_id + '_to'] = new FormControl();
+          } else {
+            group[component.item_id] = new FormControl();
+          }
         }
-      }
-    });
-    this.searchForm = new FormGroup(group);
+      });
+      this.searchForm = new FormGroup(group);
+    } catch {
+      this.cancelLoadingApp();
+    }
   }
 
   setupComponent(components: any[]) {
-    const leftSide = [];
-    const rightSide = [];
-    components.forEach((component) => {
-      if (component.col_no === 1) {
-        leftSide.push(component);
-      } else {
-        rightSide.push(component);
-      }
-    });
-    this.leftSide = leftSide.sort((a, b) => a.row_no - b.row_no);
-    this.rightSide = rightSide.sort((a, b) => a.row_no - b.row_no);
+    try {
+      const leftSide = [];
+      const rightSide = [];
+      components.forEach((component) => {
+        if (component.col_no === 1) {
+          leftSide.push(component);
+        } else {
+          rightSide.push(component);
+        }
+      });
+      this.leftSide = leftSide.sort((a, b) => a.row_no - b.row_no);
+      this.rightSide = rightSide.sort((a, b) => a.row_no - b.row_no);
+    } catch {
+      this.cancelLoadingApp();
+    }
   }
 
   toggleExpan = () => {
@@ -440,13 +558,13 @@ export class AitGroupSearchComponent
     }
   }
 
-  exportCsv(){
-    console.log(this.settings);    
-    const options = { 
+  exportCsv() {
+    console.log(this.settings);
+    const options = {
       fieldSeparator: ',',
       quoteStrings: '"',
       decimalseparator: '.',
-      showLabels: false, 
+      showLabels: false,
       showTitle: false,
       title: 'Your title',
       useBom: true,
@@ -454,46 +572,47 @@ export class AitGroupSearchComponent
       headers: this.hearder,
       useHeader: true,
       nullToEmptyString: true,
-      keys:this.hearder,
-    };  
-    if(this.selectedItems.length > 0 ){
-      new AngularCsv(this.selectedItems, 'my csv',options);
-    }else{
-      new AngularCsv(this.dataExport, 'my csv',options);
+      keys: this.hearder,
+    };
+    if (this.selectedItems.length > 0) {
+      new AngularCsv(this.selectedItems, 'my csv', options);
+    } else {
+      new AngularCsv(this.dataExport, 'my csv', options);
     }
-
-  } 
-  ImportCsv(){
+  }
+  ImportCsv() {
     const input = document.getElementById('import');
-    input.click();  
+    input.click();
   }
   // eslint-disable-next-line @typescript-eslint/member-ordering
   @ViewChild('fileImportInput', { static: false }) fileImportInput: any;
 
   // Your applications input change listener for the CSV File
   fileChangeListener($event: any): void {
-
     // Select the files from the event
     const files = $event.srcElement.files;
     // Parse the file you want to select for the operation along with the configuration
-    this.ngxCsvParser.parse(files[0], { header: this.header, delimiter: ',' })
-      .pipe().subscribe((result: Array<any>) => {
-        const listData = [];
-        const header = result[0];
+    this.ngxCsvParser
+      .parse(files[0], { header: this.header, delimiter: ',' })
+      .pipe()
+      .subscribe(
+        (result: Array<any>) => {
+          const listData = [];
+          const header = result[0];
 
-        for(let element=1; element < result.length; element++) {
-          const data = {};
-          header.forEach((item, i) => {
-            data[item] = result[element][i]
-          });
-          listData.push(data);
+          for (let element = 1; element < result.length; element++) {
+            const data = {};
+            header.forEach((item, i) => {
+              data[item] = result[element][i];
+            });
+            listData.push(data);
+          }
+          console.log(listData);
+          this.csvRecords = result;
+        },
+        (error: NgxCSVParserError) => {
+          console.log('Error', error);
         }
-        console.log(listData);
-        this.csvRecords = result;
-      }, (error: NgxCSVParserError) => {
-        console.log('Error', error);
-      });
-
+      );
   }
- 
 }

@@ -93,8 +93,8 @@
                         [isDefault]="true" [tabIndex]="44" (click)="reset()">
                     </ait-button>
 
-                    <ait-button *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'" [id]="'save'" [width]="'200px'" [title]="'保存'" [isDefault]="true" [tabIndex]="45"
-                        (click)="save()">
+                    <ait-button *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'" [id]="'save'" [width]="'200px'"
+                        [title]="'保存'" [isDefault]="true" [tabIndex]="45" (click)="save()">
                     </ait-button>
 
                     <ait-button *ngIf="!isChanged && mode === 'EDIT'" [id]="'disabled'" [width]="'200px'" [title]="'保存'"

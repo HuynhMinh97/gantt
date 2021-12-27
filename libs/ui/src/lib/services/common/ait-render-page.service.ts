@@ -12,6 +12,21 @@ export class AitRenderPageService extends AitBaseService {
     _key: true,
   };
 
+  getPage = {
+    _key: true,
+    router: {
+      search: true,
+      input: true,
+      view: true
+    },
+    button: {
+      type: true,
+      text: true,
+      icon: true,
+      tooltip: true
+    }
+  }
+
   searchField = {
     item_no: true,
     row_no: true,
@@ -91,7 +106,7 @@ export class AitRenderPageService extends AitBaseService {
   }
 
   async findPage(condition?: any, rf?: any) {
-    const returnFields = rf ? rf : this.getKey;
+    const returnFields = rf ? rf : this.getPage;
     const request = {};
     request['collection'] = COLLECTIONS.PAGE;
     if (isObjectFull(condition)) {
@@ -134,6 +149,21 @@ export class AitRenderPageService extends AitBaseService {
     return await this.query(GRAPHQL.FIND_SYS_INPUT, request, returnFields);
   }
 
+  async findSysView(condition?: any, rf?: any) {
+    const returnFields = rf ? rf : this.searchField;
+    const request = {};
+    request['collection'] = COLLECTIONS.SYS_VIEW;
+    if (isObjectFull(condition)) {
+      request['condition'] = condition;
+    }
+    request['options'] = {
+      sort_by: {
+        value: 'col_no',
+      },
+    };
+    return await this.query(GRAPHQL.FIND_SYS_VIEW, request, returnFields);
+  }
+
   async findSearchResult(condition?: any, rf?: any) {
     const returnFields = rf ? rf : this.searchResult;
     const request = {};
@@ -152,6 +182,19 @@ export class AitRenderPageService extends AitBaseService {
     };
     return await this.query(
       GRAPHQL.FIND_DATA_BY_COLLECTION,
+      request,
+      returnFields
+    );
+  }
+
+  async findAllDataByCollection(collection: string, condition?: any) {
+    const returnFields = { data: true };
+    const request = {
+      collection,
+      condition
+    };
+    return await this.query(
+      GRAPHQL.FIND_ALL_DATA_BY_COLLECTION,
       request,
       returnFields
     );

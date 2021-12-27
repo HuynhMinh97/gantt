@@ -154,6 +154,7 @@
               "apps/ait-webapp-starter/src/assets"
             ],
             "styles": [
+              "node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "node_modules/@nebular/theme/styles/prebuilt/default.css",
               "node_modules/bootstrap/dist/css/bootstrap.css",
               "node_modules/roboto-fontface/css/roboto/roboto-fontface.css",
@@ -287,8 +288,7 @@
           "options": {
             "outputPath": "dist/apps/ait-api-starter",
             "main": "apps/ait-api-starter/src/main.ts",
-            "tsConfig": "apps/ait-api-starter/tsconfig.app.json",
-            "assets": ["apps/ait-api-starter/src/assets"]
+            "tsConfig": "apps/ait-api-starter/tsconfig.app.json"
           },
           "configurations": {
             "production": {
