@@ -86,6 +86,7 @@ export class AitGroupSearchComponent
   header = false;
   pageRouter: any;
   pageButton: any;
+  collection: string;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -167,7 +168,7 @@ export class AitGroupSearchComponent
         });
         if (resGroup.status === RESULT_STATUS.OK) {
           this.groupKey = resGroup.data[0]?._key || '';
-
+          this.collection = resGroup.data[0]?.collection || '';
           const resSearch = await this.renderPageService.findSearchCondition({
             module: this.moduleKey,
             page: this.pageKey,
@@ -307,7 +308,7 @@ export class AitGroupSearchComponent
       console.log(conditions);
       // const res = await this.masterDataService.getAllMasterData();
       const res = await this.renderPageService.findAllDataByCollection(
-        'sys_master_data',
+        this.collection,
         conditions
       );
       console.log(res);
