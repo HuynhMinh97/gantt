@@ -160,4 +160,22 @@ export class JsonDataDto extends OmitType(BaseDto, ['create_at', 'change_at'] as
   
   @Field(() => ConditionDto, { nullable: true })
   change_at: ConditionDto;
+
+  @Field(() => ConditionDto, { nullable: true })
+  change_by: ConditionDto;
+
+  @Field(() => ConditionDto, { nullable: true })
+  create_by: ConditionDto;
+
+  @Field(() => ConditionDto, { nullable: true })
+  host: ConditionDto;
+
+  @Field(() => ConditionDto, { nullable: true })
+  username: ConditionDto;
+
+  @Field(() => ConditionDto, { nullable: true })
+  db_type: ConditionDto;
+
+  @Field(() => ConditionDto, { nullable: true })
+  db_name: ConditionDto;
 }
