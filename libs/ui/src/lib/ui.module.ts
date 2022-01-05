@@ -69,6 +69,7 @@ import { AitGroupSearchModule } from './components/ait-group-search/ait-group-se
 import { AitRenderPageService } from './services/common/ait-render-page.service';
 import { AitGroupInputModule } from './components/ait-group-input/ait-group-input.module';
 import { AitTableButtonModule } from './components/ait-table-button/ait-table-button.module';
+import { AitGroupViewModule } from './components/ait-group-view/ait-group-view.module';
 registerLocaleData(localeEnn);
 registerLocaleData(localeVnn);
 registerLocaleData(localeJpp);
@@ -131,6 +132,7 @@ const NB_MODULES = [
     AitTextGradientModule,
     AitGroupSearchModule,
     AitGroupInputModule,
+    AitGroupViewModule,
     StoreModule.forRoot({
       ...rootReducers,
       ...inItialState
@@ -166,6 +168,7 @@ const NB_MODULES = [
     AitTextGradientModule,
     AitGroupSearchModule,
     AitGroupInputModule,
+    AitGroupViewModule,
     AitCardContentModule,
     AitButtonModule,
     AitConfirmDialogModule,
