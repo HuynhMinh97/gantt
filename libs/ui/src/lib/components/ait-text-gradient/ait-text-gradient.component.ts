@@ -18,6 +18,7 @@ export class AitTextGradientComponent {
   @Input() id;
 
   ID(element: string) {
+    return '';
     const idx = this.id && this.id !== '' ? this.id : Date.now();
     return idx + '_' + element;
   }
