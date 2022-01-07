@@ -32,6 +32,9 @@ export class RouterEntity {
 @ObjectType()
 export class SysGroupEntity extends BaseEntity {
   @Field(() => String, { nullable: true })
+  code: string;
+
+  @Field(() => String, { nullable: true })
   module: string;
 
   @Field(() => String, { nullable: true })
@@ -62,6 +65,9 @@ export class SysModuleEntity extends SysGroupEntity {
 
 @ObjectType()
 export class SysPageEntity extends SysGroupEntity {
+  @Field(() => String, { nullable: true })
+  code: string;
+
   @Field(() => String, { nullable: true })
   slug: string;
   
@@ -245,6 +251,9 @@ export class SysSearchResultEntity extends BaseEntity {
 
   @Field(() => String, { nullable: true })
   group: string;
+
+  @Field(() => String, { nullable: true })
+  name: string;
 
   @Field(() => String, { nullable: true })
   item_id: string;

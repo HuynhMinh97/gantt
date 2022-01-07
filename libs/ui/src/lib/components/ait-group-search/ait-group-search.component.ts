@@ -65,6 +65,9 @@ export class AitGroupSearchComponent
   moduleKey = '';
   pageKey = '';
   groupKey = '';
+  pageTitle = '';
+  tableTitle = '';
+  searchContent = '';
   searchComponents: any[] = [];
   tableComponents: any[] = [];
   leftSide: any[] = [];
@@ -156,19 +159,23 @@ export class AitGroupSearchComponent
         resModule.status === RESULT_STATUS.OK &&
         resPage.status === RESULT_STATUS.OK
       ) {
-        this.moduleKey = resModule.data[0]?._key || '';
-        this.pageKey = resPage.data[0]?._key || '';
+        this.moduleKey = resModule.data[0]?.code || '';
+        this.pageKey = resPage.data[0]?.code || '';
+        this.pageTitle = resPage.data[0]?.name || '';
+
         this.pageRouter = resPage.data[0]?.router || null;
         this.pageButton = resPage.data[0]?.button || null;
-        console.log(resPage);
 
         const resGroup = await this.renderPageService.findGroup({
           module: this.moduleKey,
           page: this.pageKey,
         });
-        if (resGroup.status === RESULT_STATUS.OK) {
-          this.groupKey = resGroup.data[0]?._key || '';
+        if (resGroup.status === RESULT_STATUS.OK && resGroup.data.length > 0) {
+          const group = resGroup.data.find((e: any) => e['type'] === 'search');
+          this.groupKey = group?.code || '';
+          this.searchContent = group?.name || '';
           this.collection = resGroup.data[0]?.collection || '';
+
           const resSearch = await this.renderPageService.findSearchCondition({
             module: this.moduleKey,
             page: this.pageKey,
@@ -194,6 +201,7 @@ export class AitGroupSearchComponent
             resResult.status === RESULT_STATUS.OK &&
             resResult.data?.length > 0
           ) {
+            this.tableTitle = resResult.data[0]?.name;
             this.tableComponents = resResult.data;
             this.setupSetting(this.tableComponents);
           } else {
@@ -377,8 +385,8 @@ export class AitGroupSearchComponent
 
   setupComponent(components: any[]) {
     try {
-      const leftSide = [];
-      const rightSide = [];
+      let leftSide = [];
+      let rightSide = [];
       components.forEach((component) => {
         if (component.col_no === 1) {
           leftSide.push(component);
@@ -386,8 +394,33 @@ export class AitGroupSearchComponent
           rightSide.push(component);
         }
       });
-      this.leftSide = leftSide.sort((a, b) => a.row_no - b.row_no);
-      this.rightSide = rightSide.sort((a, b) => a.row_no - b.row_no);
+      leftSide = leftSide.sort((a, b) => a.row_no - b.row_no);
+      rightSide = rightSide.sort((a, b) => a.row_no - b.row_no);
+
+      const leftSideIndex = leftSide[leftSide.length - 1]?.row_no;
+      const rightSideIndex = rightSide[rightSide.length - 1]?.row_no;
+      try {
+        [...Array(+leftSideIndex)].forEach((e, i) => {
+          const item = leftSide.find(m => m.row_no == (i + 1));
+          if (item) {
+            this.leftSide.push(item);
+          } else {
+            this.leftSide.push({type: 'space'});
+          }
+        });
+
+        [...Array(+rightSideIndex)].forEach((e, i) => {
+          const item = rightSide.find(m => m.row_no == (i + 1));
+          if (item) {
+            this.rightSide.push(item);
+          } else {
+            this.rightSide.push({type: 'space'});
+          }
+        }); 
+      } catch(e) {
+        console.error(e);
+      }
+      console.log(this.leftSide, this.rightSide);
     } catch {
       this.cancelLoadingApp();
     }
@@ -483,8 +516,6 @@ export class AitGroupSearchComponent
     }
     if (this.searchForm.valid) {
       console.log(this.searchForm.value);
-    } else {
-      console.log('form invalid');
     }
   }
 
