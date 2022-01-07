@@ -10,10 +10,13 @@ import { AitBaseService } from './ait-base.service';
 export class AitRenderPageService extends AitBaseService {
   getKey = {
     _key: true,
+    code: true
   };
 
   getPage = {
     _key: true,
+    code: true,
+    name: true,
     router: {
       search: true,
       input: true,
@@ -56,6 +59,7 @@ export class AitRenderPageService extends AitBaseService {
   searchResult = {
     item_id: true,
     collection: true,
+    name: true,
     settings: {
       no_data_message: true,
       filter_message: true,
@@ -96,7 +100,7 @@ export class AitRenderPageService extends AitBaseService {
   }
 
   async findGroup(condition?: any, rf?: any) {
-    const returnFields = rf ? rf : { _key: true, collection: true };
+    const returnFields = rf ? rf : { _key: true, code: true, type: true, name: true, collection: true };
     const request = {};
     request['collection'] = COLLECTIONS.GROUP;
     if (isObjectFull(condition)) {
