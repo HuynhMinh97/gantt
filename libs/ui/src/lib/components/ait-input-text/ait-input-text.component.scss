@@ -67,3 +67,16 @@
     border: 1px solid #10529d;
   }
 }
+.inputPass{
+  position: relative;
+  nb-icon{
+    height: 24px;
+    width: 24px;
+    color: #8f9bb3;
+    cursor: pointer;
+    margin-right: 3px;
+    position: absolute;
+    top: 9px;
+    right: 5px;
+  }
+}
