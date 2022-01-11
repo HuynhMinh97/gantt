@@ -40,6 +40,8 @@ export class AitTextInputComponent implements OnChanges {
   @Input() readonly = false;
   @Input() errorMessages = [];
   @Input() clearError = false;
+  @Input() type = 'text';
+  isShowPass = false;
   componentErrors = []
   msgRequired = '';
   errorArray = [];
@@ -198,5 +200,8 @@ export class AitTextInputComponent implements OnChanges {
     this.checkMaxLength(value);
     this.watchValue.emit(value);
 
+  }
+  toggleShowPass() {
+    this.isShowPass = !this.isShowPass;
   }
 }

@@ -90,7 +90,7 @@
       [shape]="shape"
       [placeholder]="getPlaceholder()"
       [maxLength]="length"
-      *ngIf="rows === 1 && readonly"
+      *ngIf="rows === 1 && readonly && type === 'text'"
       type="text"
       [class.disable]="readonly"
       [style.width]="width"
@@ -115,7 +115,7 @@
       [shape]="shape"
       [placeholder]="getPlaceholder()"
       [maxLength]="length"
-      *ngIf="rows === 1 && !readonly"
+      *ngIf="rows === 1 && !readonly && type === 'text'"
       type="text"
       [style.width]="width"
       [style.height]="height"
@@ -130,6 +130,76 @@
       id="{{ ID('input') }}"
       tabindex="{{ tabIndex }}"
     />
+
+    <div class="inputPass" [style.width]="width">
+      <input
+        class="input_area"
+        autocomplete="doNotAutoComplete"
+        nbInput
+        [status]="status"
+        [fieldSize]="fieldSize"
+        [shape]="shape"
+        [placeholder]="getPlaceholder()"
+        [maxLength]="length"
+        *ngIf="rows === 1 && !readonly && type ==='password'"
+        [type]="isShowPass ? 'text' : 'password'"
+        [style.width]="width"
+        [style.height]="height"
+        (input)="onChange($event.target.value)"
+        [formControl]="inputCtrl"
+        [class.isError]="isError"
+        (focusout)="focusout()"
+        (focus)="focusInput()"
+        [class.focus]="getFocus()"
+        (blur)="this.isFocus = false"
+        style="width: 100%; max-width: 100%; padding-left: 10px"
+        id="{{ ID('input') }}"
+        tabindex="{{ tabIndex }}"
+        autocomplete="new-password"
+      />
+
+      <nb-icon
+        *ngIf="rows === 1 && !readonly && type ==='password'"
+        icon="{{ isShowPass ? 'eye' : 'eye-off' }}"
+        (click)="toggleShowPass()"
+      ></nb-icon>
+    </div>
+
+    <div class="inputPass" [style.width]="width">
+      <input
+        class="input_area"
+        autocomplete="doNotAutoComplete"
+        nbInput
+        [status]="status"
+        [fieldSize]="fieldSize"
+        [disabled]="readonly"
+        [readOnly]="readonly"
+        [shape]="shape"
+        [placeholder]="getPlaceholder()"
+        [maxLength]="length"
+        *ngIf="rows === 1 && readonly && type === 'password'"
+        type="password"
+        [class.disable]="readonly"
+        [style.width]="width"
+        [style.height]="height"
+        (input)="onChange($event.target.value)"
+        [formControl]="inputCtrl"
+        [class.isError]="isError"
+        (focus)="focusInput()"
+        (blur)="this.isFocus = false"
+        [class.focus]="getFocus()"
+        style="width: 100%; max-width: 100%; padding-left: 10px"
+        id="{{ ID('input') }}"
+        tabindex="{{ tabIndex }}"
+        autocomplete="new-password"
+      />
+
+      <nb-icon
+      *ngIf="rows === 1 && readonly && type === 'password'"
+        icon="{{ isShowPass ? 'eye' : 'eye-off' }}"
+      ></nb-icon>
+    </div>
+
   </nb-form-field>
   <div class="caption" *ngIf="guidance">
     <div class="icon" *ngIf="guidanceIcon">
