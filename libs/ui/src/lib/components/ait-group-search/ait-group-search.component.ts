@@ -3,6 +3,7 @@
 import {
   isArrayFull,
   isObjectFull,
+  KEYS,
   KeyValueDto,
   RESULT_STATUS,
 } from '@ait/shared';
@@ -33,6 +34,7 @@ import {
   AitMasterDataService,
   AitRenderPageService,
   AitSaveTempService,
+  AitTranslationService,
   AitUserService,
 } from '../../services';
 import { AppState } from '../../state/selectors';
@@ -41,6 +43,7 @@ import { AitBaseComponent } from '../base.component';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
 import { AitTableButtonComponent } from '../ait-table-button/ait-table-button.component';
+import { AitConfirmDialogComponent } from '../ait-confirm-dialog/ait-confirm-dialog.component';
 
 @Component({
   selector: 'ait-group-search',
@@ -57,6 +60,7 @@ export class AitGroupSearchComponent
   @Input() module: string;
   @Input() isExpan = false;
   @Input() isTableExpan = true;
+  @Input() public find: (condition?: any) => Promise<any>;
   @Output() toggle = new EventEmitter();
   @Output() toggleTable = new EventEmitter();
   searchForm: FormGroup;
@@ -95,6 +99,7 @@ export class AitGroupSearchComponent
     private changeDetectorRef: ChangeDetectorRef,
     private ngxCsvParser: NgxCsvParser,
     private renderPageService: AitRenderPageService,
+    private translateService: AitTranslationService,
     public router: Router,
     public store: Store<AppState>,
     private dialogService: NbDialogService,
@@ -217,33 +222,63 @@ export class AitGroupSearchComponent
       this.cancelLoadingApp();
     }
   }
-  
+
   navigateTo404() {
     this.cancelLoadingApp();
     this.router.navigate([`/404`]);
   }
 
   detail(data: any) {
-   if (this.pageRouter) {
-     this.router.navigate([`${this.pageRouter?.view || ''}`]);
-   }
+    if (this.pageRouter) {
+      this.router.navigate([`${this.pageRouter?.view || ''}`]);
+    }
   }
 
   copy(data: any) {
     if (this.pageRouter) {
       this.router.navigate([`${this.pageRouter?.input || ''}`]);
     }
-   }
+  }
 
   edit(data: any) {
     if (this.pageRouter) {
       this.router.navigate([`${this.pageRouter?.input || ''}`]);
     }
-   }
+  }
 
-   delete(data: any, e: any) {
-    //
-   }
+  delete(data: any, e: any) {
+    this.dialogService
+      .open(AitConfirmDialogComponent, {
+        context: {
+          title: this.translateService.translate('このデータを削除しますか。'),
+        },
+      })
+      .onClose.subscribe(async (event) => {
+        if (event) {
+          this.onDelete(data || '');
+        }
+      });
+  }
+
+  async onDelete(_key: string) {
+    const data = await this.source.getAll();
+    const item = (data || []).find((e) => e._key === _key);
+    this.callLoadingApp();
+    try {
+      await this.renderPageService.remove(this.collection, _key).then((res) => {
+        if (res.status === RESULT_STATUS.OK) {
+          this.showToastr('', this.getMsg('I0003'));
+          this.source.remove(item);
+        } else {
+          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+        }
+      });
+    } catch {
+      this.cancelLoadingApp();
+    } finally {
+      this.cancelLoadingApp();
+    }
+  }
 
   setupSetting(tableComponents: any[]) {
     try {
@@ -284,7 +319,7 @@ export class AitGroupSearchComponent
             this.delete(data, instance?.rowData)
           );
         },
-      }
+      };
 
       columns.forEach((col: any) => {
         const obj = {
@@ -313,18 +348,23 @@ export class AitGroupSearchComponent
   async setupTable() {
     try {
       const conditions = this.getSearchCondition();
-      console.log(conditions);
-      // const res = await this.masterDataService.getAllMasterData();
-      const res = await this.renderPageService.findAllDataByCollection(
-        this.collection,
-        conditions
-      );
-      console.log(res);
-      if (res && res.status === RESULT_STATUS.OK && res.data.length > 0) {
-        const data = this.getDataFromJSON(res.data as any[]);
+      if (this.find) {
+        const res = await this.find(conditions);
+        const data = res.data as any[];
         this.dataExport = data;
         this.source = new LocalDataSource(data);
         this.done = true;
+      } else {
+        const res = await this.renderPageService.findAllDataByCollection(
+          this.collection,
+          conditions
+        );
+        if (res && res.status === RESULT_STATUS.OK && res.data.length > 0) {
+          const data = this.getDataFromJSON(res.data as any[]);
+          this.dataExport = data;
+          this.source = new LocalDataSource(data);
+          this.done = true;
+        }
       }
     } catch {
       this.cancelLoadingApp();
@@ -401,26 +441,25 @@ export class AitGroupSearchComponent
       const rightSideIndex = rightSide[rightSide.length - 1]?.row_no;
       try {
         [...Array(+leftSideIndex)].forEach((e, i) => {
-          const item = leftSide.find(m => m.row_no == (i + 1));
+          const item = leftSide.find((m) => m.row_no == i + 1);
           if (item) {
             this.leftSide.push(item);
           } else {
-            this.leftSide.push({type: 'space'});
+            this.leftSide.push({ type: 'space' });
           }
         });
 
         [...Array(+rightSideIndex)].forEach((e, i) => {
-          const item = rightSide.find(m => m.row_no == (i + 1));
+          const item = rightSide.find((m) => m.row_no == i + 1);
           if (item) {
             this.rightSide.push(item);
           } else {
-            this.rightSide.push({type: 'space'});
+            this.rightSide.push({ type: 'space' });
           }
-        }); 
-      } catch(e) {
+        });
+      } catch (e) {
         console.error(e);
       }
-      console.log(this.leftSide, this.rightSide);
     } catch {
       this.cancelLoadingApp();
     }
@@ -510,12 +549,18 @@ export class AitGroupSearchComponent
     this.showToastr('', this.getMsg('I0007'));
   }
 
-  search(event = null, isInit = false) {
+  async search(event = null, isInit = false) {
     if (event) {
       event.preventDefault();
     }
     if (this.searchForm.valid) {
-      console.log(this.searchForm.value);
+      const conditions = this.getSearchCondition();
+      if (this.find) {
+        const res = await this.find(conditions);
+        const data = res.data as any[];
+        this.dataExport = data;
+        this.source = new LocalDataSource(data);
+      }
     }
   }
 
@@ -591,7 +636,6 @@ export class AitGroupSearchComponent
   }
 
   exportCsv() {
-    console.log(this.settings);
     const options = {
       fieldSeparator: ',',
       quoteStrings: '"',
@@ -639,7 +683,6 @@ export class AitGroupSearchComponent
             });
             listData.push(data);
           }
-          console.log(listData);
           this.csvRecords = result;
         },
         (error: NgxCSVParserError) => {
