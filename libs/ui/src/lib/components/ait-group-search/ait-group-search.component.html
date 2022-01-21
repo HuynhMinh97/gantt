@@ -87,6 +87,7 @@
                     <div class="right__side" *ngIf="rightSide.length > 0">
                         <ng-container *ngFor="let component of rightSide">
                             <ait-autocomplete-master-data *ngIf="component.type === 'combobox'"
+                                [class]="component?.component_setting?.class"
                                 [collection]="component?.component_setting?.collection" [label]="component?.item_label"
                                 [maxItem]="component?.component_setting?.max_item"
                                 [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
@@ -182,18 +183,16 @@
                     'margin-top': isTableExpan ? null : '0px'
                   }">
                     <div style="width: 100%" [ngStyle]="{ 'display': isTableExpan ? 'block' : 'none' }">
-                        <div style="margin-bottom: 15px; display: flex;">
-                            <ait-button
-                                [id]="'remove'"
-                                [minwidth]="'80px'"
-                                [height]="'20px'"
-                                [fontsize]="'14px'"
-                                [marginleft]="'0px'"
-                                [title]="'Export Csv'"
-                                [isDefault]="true"
-                                (click)="exportCsv()"
-                            ></ait-button>
-                            </div>
+                        <ait-button-table
+                        [columnAll]="columnTable"
+                        (columnDislay)="settingColumnTable($event.value)"
+                        [dataExport]="exportCsv()"
+                        [columnExport]="hearder"
+                        [dataDelete]="selectedItems"
+                        [fileName]="nameFileCsv"
+                        (isDelete)="deleteAll($event.value)"
+                      ></ait-button-table>
+
                         <div class="table__area" #area>
                             <ng2-smart-table [settings]="settings" [source]="source"
                                 (userRowSelect)="onUserRowSelect($event)" #table *ngIf="done"></ng2-smart-table>
