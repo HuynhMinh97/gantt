@@ -70,6 +70,7 @@ import { AitRenderPageService } from './services/common/ait-render-page.service'
 import { AitGroupInputModule } from './components/ait-group-input/ait-group-input.module';
 import { AitTableButtonModule } from './components/ait-table-button/ait-table-button.module';
 import { AitGroupViewModule } from './components/ait-group-view/ait-group-view.module';
+import { AitButtonTableModule } from './components/ait-button-setting-table/ait-button-setting-table.module';
 registerLocaleData(localeEnn);
 registerLocaleData(localeVnn);
 registerLocaleData(localeJpp);
@@ -133,6 +134,7 @@ const NB_MODULES = [
     AitGroupSearchModule,
     AitGroupInputModule,
     AitGroupViewModule,
+    AitButtonTableModule,
     StoreModule.forRoot({
       ...rootReducers,
       ...inItialState
@@ -182,7 +184,8 @@ const NB_MODULES = [
     AitBaseComponent,
     AitTocMenuModule,
     AitTableCellModule,
-    AitTableButtonModule
+    AitTableButtonModule,
+    AitButtonTableModule,
   ],
   providers: [
     AitBaseService,

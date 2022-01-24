@@ -103,6 +103,9 @@ export class ComponentSettingEntity {
 
   @Field(() => Boolean, { nullable: true })
   is_multi_language: boolean;
+  
+  @Field(() => String, { nullable: true })
+  class: string;
 }
 
 @ObjectType()
