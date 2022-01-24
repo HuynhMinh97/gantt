@@ -60,7 +60,7 @@ export class AitGroupSearchComponent
   @Input() module: string;
   @Input() isExpan = false;
   @Input() isTableExpan = true;
-  @Input() public find: (condition?: any) => Promise<any>;
+  @Input() public find: (condition?: any, dataSearch?: any) => Promise<any>;
   @Output() toggle = new EventEmitter();
   @Output() toggleTable = new EventEmitter();
   searchForm: FormGroup;
@@ -87,13 +87,13 @@ export class AitGroupSearchComponent
   changeAtErrorMessage = '';
   pageDetail = '';
   perPage = '10';
-  dataExport: any[] = [];
+  dataTable: any[] = [];
+  nameFileCsv = '';
   hearder = [];
-  csvRecords: any[] = [];
-  header = false;
   pageRouter: any;
   pageButton: any;
   collection: string;
+  columnTable = [];
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -236,13 +236,13 @@ export class AitGroupSearchComponent
 
   copy(data: any) {
     if (this.pageRouter) {
-      this.router.navigate([`${this.pageRouter?.input || ''}`]);
+      this.router.navigate([`${this.pageRouter?.input || ''}`+ `/coppy/${data}`]);
     }
   }
 
   edit(data: any) {
     if (this.pageRouter) {
-      this.router.navigate([`${this.pageRouter?.input || ''}`]);
+      this.router.navigate([`${this.pageRouter?.input || ''}`+ `/edit/${data}`]);
     }
   }
 
@@ -280,7 +280,7 @@ export class AitGroupSearchComponent
     }
   }
 
-  setupSetting(tableComponents: any[]) {
+  setupSetting(tableComponents: any[],  diplay?: KeyValueDto[]) {
     try {
       console.log(tableComponents);
       const data = tableComponents[0];
@@ -320,27 +320,60 @@ export class AitGroupSearchComponent
           );
         },
       };
-
-      columns.forEach((col: any) => {
-        const obj = {
-          type: 'custom',
-          renderComponent: AitTableCellComponent,
-          valuePrepareFunction: (value: string) => {
+      if(!diplay){
+        columns.forEach((col: any) => {
+          const obj = {
+            type: 'custom',
+            renderComponent: AitTableCellComponent,
+            valuePrepareFunction: (value: string) => {
+              const obj = {
+                text: value,
+                style: {
+                  width: col.style?.width || '',
+                },
+              };
+              return obj;
+            },
+          };
+          this.hearder.push(col.name);
+          obj['title'] = col.title || '';
+          this.settings['columns'][col['name']] = obj;
+          this.columnTable.push({ _key: col.name, value: col.title });
+        });
+        this.setupTable();
+      }else{
+        // this.callLoadingApp();
+        columns.forEach((col: any) => {
+          if(diplay.find(element => element._key == col.name)){
             const obj = {
-              text: value,
-              style: {
-                width: col.style?.width || '',
+              type: 'custom',
+              renderComponent: AitTableCellComponent,
+              valuePrepareFunction: (value: string) => {
+                const obj = {
+                  text: value,
+                  style: {
+                    width: col.style?.width || '',
+                  },
+                };
+                return obj;
               },
             };
-            return obj;
-          },
-        };
-        this.hearder.push(col.name);
-        obj['title'] = col.title || '';
-        this.settings['columns'][col['name']] = obj;
-      });
-
-      this.setupTable();
+            obj['title'] = col.title || '';
+            this.settings['columns'][col['name']] = obj;
+          }
+        });
+        if(diplay.length == 0){
+          delete this.settings['columns']['_key'];
+          delete this.settings['selectMode'];
+        }
+        console.log(this.settings);
+        
+        this.done = false;
+        setTimeout(() =>{
+          this.done = true;
+          this.cancelLoadingApp();
+        },200)
+      }
     } catch {
       this.cancelLoadingApp();
     }
@@ -349,10 +382,11 @@ export class AitGroupSearchComponent
     try {
       const conditions = this.getSearchCondition();
       if (this.find) {
-        const res = await this.find(conditions);
+        const res = await this.find(conditions);        
         const data = res.data as any[];
-        this.dataExport = data;
+        this.dataTable = data;
         this.source = new LocalDataSource(data);
+        console.log(this.source);
         this.done = true;
       } else {
         const res = await this.renderPageService.findAllDataByCollection(
@@ -361,11 +395,12 @@ export class AitGroupSearchComponent
         );
         if (res && res.status === RESULT_STATUS.OK && res.data.length > 0) {
           const data = this.getDataFromJSON(res.data as any[]);
-          this.dataExport = data;
+          this.dataTable = data;
           this.source = new LocalDataSource(data);
           this.done = true;
         }
       }
+      this.focusToTable();
     } catch {
       this.cancelLoadingApp();
     } finally {
@@ -556,11 +591,12 @@ export class AitGroupSearchComponent
     if (this.searchForm.valid) {
       const conditions = this.getSearchCondition();
       if (this.find) {
-        const res = await this.find(conditions);
+        const res = await this.find(conditions, this.searchForm.value);
         const data = res.data as any[];
-        this.dataExport = data;
+        this.dataTable = data;
         this.source = new LocalDataSource(data);
       }
+      this.focusToTable();
     }
   }
 
@@ -635,59 +671,57 @@ export class AitGroupSearchComponent
     }
   }
 
+  settingColumnTable(value: KeyValueDto[]){
+    console.log(value);
+    
+    const data = [];
+    value.forEach((file) => {
+      data.push(file);
+    });
+    this.setupSetting(this.tableComponents,data);
+  }
+
   exportCsv() {
-    const options = {
-      fieldSeparator: ',',
-      quoteStrings: '"',
-      decimalseparator: '.',
-      showLabels: false,
-      showTitle: false,
-      title: 'Your title',
-      useBom: true,
-      noDownload: false,
-      headers: this.hearder,
-      useHeader: true,
-      nullToEmptyString: true,
-      keys: this.hearder,
-    };
-    if (this.selectedItems.length > 0) {
-      new AngularCsv(this.selectedItems, 'my csv', options);
-    } else {
-      new AngularCsv(this.dataExport, 'my csv', options);
+    const dayNow = Date.now();
+    this.nameFileCsv = this.collection + dayNow.toString();
+    let data = [];
+    if(this.selectedItems.length > 0){
+      data = this.selectedItems;
+    }else {
+      data = this.dataTable;
+    }
+    return data;
+  } 
+
+  deleteAll(isDelete){
+    if(isDelete){
+      this.dialogService
+      .open(AitConfirmDialogComponent, {
+        context: {
+          title: this.translateService.translate('このデータを削除しますか。'),
+        },
+      })
+      .onClose.subscribe(async (event) => {
+        if (event) {
+          for(const item of this.selectedItems){
+            console.log(item._key);
+            this.onDelete(item._key);
+          }
+          this.selectedItems = [];
+        }
+      });
     }
   }
-  ImportCsv() {
-    const input = document.getElementById('import');
-    input.click();
+  focusToTable() {
+    try {
+      setTimeout(() => {
+        this.area.nativeElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }, 0);
+    } catch {
+    }
   }
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  @ViewChild('fileImportInput', { static: false }) fileImportInput: any;
-
-  // Your applications input change listener for the CSV File
-  fileChangeListener($event: any): void {
-    // Select the files from the event
-    const files = $event.srcElement.files;
-    // Parse the file you want to select for the operation along with the configuration
-    this.ngxCsvParser
-      .parse(files[0], { header: this.header, delimiter: ',' })
-      .pipe()
-      .subscribe(
-        (result: Array<any>) => {
-          const listData = [];
-          const header = result[0];
-
-          for (let element = 1; element < result.length; element++) {
-            const data = {};
-            header.forEach((item, i) => {
-              data[item] = result[element][i];
-            });
-            listData.push(data);
-          }
-          this.csvRecords = result;
-        },
-        (error: NgxCSVParserError) => {
-          console.log('Error', error);
-        }
-      );
-  }
+  
 }
