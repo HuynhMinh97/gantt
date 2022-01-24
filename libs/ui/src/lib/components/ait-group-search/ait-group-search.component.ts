@@ -236,13 +236,13 @@ export class AitGroupSearchComponent
 
   copy(data: any) {
     if (this.pageRouter) {
-      this.router.navigate([`${this.pageRouter?.input || ''}`]);
+      this.router.navigate([`${this.pageRouter?.input || ''}`+ `/coppy/${data}`]);
     }
   }
 
   edit(data: any) {
     if (this.pageRouter) {
-      this.router.navigate([`${this.pageRouter?.input || ''}`]);
+      this.router.navigate([`${this.pageRouter?.input || ''}`+ `/edit/${data}`]);
     }
   }
 
@@ -683,7 +683,7 @@ export class AitGroupSearchComponent
 
   exportCsv() {
     const dayNow = Date.now();
-    this.nameFileCsv = 'db_connection_' + dayNow.toString();
+    this.nameFileCsv = this.collection + dayNow.toString();
     let data = [];
     if(this.selectedItems.length > 0){
       data = this.selectedItems;
@@ -707,6 +707,7 @@ export class AitGroupSearchComponent
             console.log(item._key);
             this.onDelete(item._key);
           }
+          this.selectedItems = [];
         }
       });
     }

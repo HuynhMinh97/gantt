@@ -146,4 +146,4 @@ export * from './lib/components/ait-table-cell/ait-table-cell.module';
 export * from './lib/components/ait-table-cell/ait-table-cell.component';
 
 //ait table button
-export * from './lib/components/ait-button-table/ait-button-table.module';
+export * from './lib/components/ait-button-setting-table/ait-button-setting-table.module';
