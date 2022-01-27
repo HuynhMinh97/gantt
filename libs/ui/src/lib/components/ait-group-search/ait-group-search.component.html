@@ -152,7 +152,7 @@
         
                     <div class="bottom__side">
                         <!-- reset -->
-                        <ait-button [id]="'reset'" [width]="'150px'" [height]="'32px'" [title]="'クリア'" [isDefault]="true" (click)="reset($event)">
+                        <ait-button [id]="'reset'" [width]="'150px'" [height]="'32px'" [title]="'reset'" [isDefault]="true" (click)="reset($event)">
                         </ait-button>
                         <!-- search -->
                         <ait-button [id]="'search'" [width]="'150px'" [height]="'32px'" [title]="'検索'" [isDefault]="true" (click)="search($event)">
@@ -184,14 +184,15 @@
                   }">
                     <div style="width: 100%" [ngStyle]="{ 'display': isTableExpan ? 'block' : 'none' }">
                         <ait-button-setting-table
-                        [columnAll]="columnTable"
-                        (columnDislay)="settingColumnTable($event.value)"
-                        [dataExport]="exportCsv()"
-                        [columnExport]="hearder"
-                        [dataDelete]="selectedItems"
-                        [fileName]="nameFileCsv"
-                        (isDelete)="deleteAll($event.value)"
-                      ></ait-button-setting-table>
+                            [id]="collection"
+                            [dataSource]="columnTable"
+                            (columnDislay)="settingColumnTable($event.value)"
+                            [dataExport]="exportCsv()"
+                            [columnExport]="hearder"
+                            [dataDelete]="selectedItems"
+                            [fileName]="nameFileCsv"
+                            (isDelete)="deleteAll($event.value)"
+                        ></ait-button-setting-table>
 
                         <div class="table__area" #area>
                             <ng2-smart-table [settings]="settings" [source]="source"

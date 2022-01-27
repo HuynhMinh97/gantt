@@ -682,8 +682,7 @@ export class AitGroupSearchComponent
   }
 
   exportCsv() {
-    const dayNow = Date.now();
-    this.nameFileCsv = this.collection + dayNow.toString();
+    this.nameFileCsv = this.collection;
     let data = [];
     if(this.selectedItems.length > 0){
       data = this.selectedItems;

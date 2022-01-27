@@ -1,9 +1,9 @@
 <div class="button_table">
     <div class="button_left">
-      <button (click)=" exportCsv()" nbTooltip="Export Csv">
+      <button (click)=" exportCsv()" [nbTooltip]="toolTipExport" id="{{ ID('exportCsv') }}">
         <i class="fas fa-download"></i>
       </button>
-      <button nbTooltip="Delete All"*ngIf="this.dataDelete.length == 0" >
+      <button [nbTooltip]="toolTipDelete" *ngIf="this.dataDelete.length == 0" id="{{ ID('delete_all') }}">
         <i style=" background:gray;-webkit-background-clip: text;" class="far fa-trash-alt"></i>
       </button>
       <button (click)="deletAll()" nbTooltip="Delete All" *ngIf="this.dataDelete.length > 0">
@@ -19,17 +19,19 @@
         [required]="false"
         [maxItem]="50"
         [placeholder]="'Please select column'"
-        [dataSource]="columnAll"
         [disableOutputDefault]="true"
         (watchValue)="settingColumnTable($event?.value)"
         [defaultValue]="columns"
-        [collection]=""
+        [dataSource]="dataSource"
+        [collection]="collection"
+        [class]="class"
       >
       </ait-autocomplete-master-data>
       </div>
       <button 
-      (click)="toggleSetting()"
-      nbTooltip="Setting Table"
+        (click)="toggleSetting()"
+        [nbTooltip]="toolTipSettings"
+        id="{{ ID('setting_table') }}"
       >
         <i class="fas fa-table"></i>
       </button>
