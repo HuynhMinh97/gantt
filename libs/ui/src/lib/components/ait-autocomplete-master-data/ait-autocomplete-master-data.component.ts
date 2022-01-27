@@ -132,7 +132,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   includeNotDelete = true
   monitorLabel = true;
   @Output() onSendAllowText;
-
+  @Input() checkAll = false;
   lastSortNo = 0;
 
   isFocusInput = false;
@@ -514,6 +514,52 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         this.inputControl.setValue(this.modifileOption(this.selectOne?.value) || '');
         this.getFilteredDataSource();
       }
+    }
+    if(this.checkAll){
+      const dataCheck = this.dataSourceDf.map((m) => {
+        const result = {_key: m.code , value: m.value}
+        return result;
+      });
+     
+      const typeDF = this.getUniqueSelection(AitAppUtils.getArrayNotFalsy(dataCheck));
+
+      const findByKeys = typeDF.map((m) => {
+        const result = this.dataSourceDf.find(
+          (f) => f._key === m?._key || f.code === m?._key || f?.id === m?._key
+        );
+        return result;
+      });
+
+      this.optionSelected = [...AitAppUtils.getArrayNotFalsy(findByKeys)].filter(
+        (f) => !!f
+      )
+
+      if (!this.disableOutputDefault) {
+
+        this.watchValue.emit({ value: this.optionSelected.map(m => ({ _key: m?.code, value: m?.value })) });
+      }
+      
+      const _keys = this.optionSelected.map((m) => m?.code);
+
+      this.DataSource = AitAppUtils.deepCloneArray(this.dataSourceDf).map((d) => {
+          if (this.isReset) {
+            return {
+              ...d,
+              isChecked: false,
+            };
+          }
+          return {
+            ...d,
+            isChecked: _keys.includes(d.code),
+          };
+      });
+
+      this.data = this.DataSource;
+
+      if (!this.isClickOption && !this.isOpenAutocomplete) {
+        this.filteredOptions$ = of(this.DataSource)
+      }
+
     }
   };
 
