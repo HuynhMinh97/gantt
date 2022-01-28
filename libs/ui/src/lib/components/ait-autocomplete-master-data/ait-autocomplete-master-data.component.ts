@@ -132,7 +132,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   includeNotDelete = true
   monitorLabel = true;
   @Output() onSendAllowText;
-  @Input() checkAll = false;
+
   lastSortNo = 0;
 
   isFocusInput = false;
@@ -287,7 +287,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
 
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges) {       
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
         if (key === 'errorMessages') {
@@ -453,69 +453,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   }
 
-  setupDefault = () => {
-    if (this.defaultValue && this.defaultValue.length !== 0) {
-
-      if (this.MAXITEM !== 1) {
-        const typeDF = this.getUniqueSelection(AitAppUtils.getArrayNotFalsy(this.defaultValue));
-
-        const findByKeys = typeDF.map((m) => {
-          const result = this.dataSourceDf.find(
-            (f) => f._key === m?._key || f.code === m?._key || f?.id === m?._key
-          );
-          return result;
-        });
-        this.optionSelected = [...AitAppUtils.getArrayNotFalsy(findByKeys)].filter(
-          (f) => !!f
-        )
-
-        if (!this.disableOutputDefault) {
-
-          this.watchValue.emit({ value: this.optionSelected.map(m => ({ _key: m?.code, value: m?.value })) });
-        }
-
-
-        const _keys = this.optionSelected.map((m) => m?.code);
-
-        this.DataSource = AitAppUtils.deepCloneArray(this.dataSourceDf).map((d) => {
-          if (this.isReset) {
-            return {
-              ...d,
-              isChecked: false,
-            };
-          }
-          return {
-            ...d,
-            isChecked: _keys.includes(d.code),
-          };
-        });
-
-        this.data = this.DataSource;
-
-        if (!this.isClickOption && !this.isOpenAutocomplete) {
-          this.filteredOptions$ = of(this.DataSource)
-        }
-
-
-
-      } else {
-
-        const findByKey = this.dataSourceDf.find(
-          (f) =>
-            f._key === this.defaultValue[0]?._key ||
-            f.code === this.defaultValue[0]?._key
-        );
-        this.selectOne = { _key: findByKey?.code, value: findByKey?.value };
-        if (!this.disableOutputDefault) {
-          const res = this.selectOne?._key ? [this.selectOne] : []
-          this.watchValue.emit({ value: res });
-        }
-
-        this.inputControl.setValue(this.modifileOption(this.selectOne?.value) || '');
-        this.getFilteredDataSource();
-      }
-    }
-    if(this.checkAll){
+  setupCheckAll = () => {
       const dataCheck = this.dataSourceDf.map((m) => {
         const result = {_key: m.code , value: m.value}
         return result;
@@ -559,11 +497,77 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       if (!this.isClickOption && !this.isOpenAutocomplete) {
         this.filteredOptions$ = of(this.DataSource)
       }
+  }
 
+  setupDefault = () => {
+    if (this.defaultValue && this.defaultValue.length !== 0) {
+
+      if (this.MAXITEM !== 1) {
+        const all = this.defaultValue.find((f) => f?._key === 'all'); 
+        if(all){
+          this.setupCheckAll();
+        }else{
+          const typeDF = this.getUniqueSelection(AitAppUtils.getArrayNotFalsy(this.defaultValue));
+
+          const findByKeys = typeDF.map((m) => {
+            const result = this.dataSourceDf.find(
+              (f) => f._key === m?._key || f.code === m?._key || f?.id === m?._key
+            );
+            return result;
+          });
+          this.optionSelected = [...AitAppUtils.getArrayNotFalsy(findByKeys)].filter(
+            (f) => !!f
+          )
+
+          if (!this.disableOutputDefault) {
+
+            this.watchValue.emit({ value: this.optionSelected.map(m => ({ _key: m?.code, value: m?.value })) });
+          }
+
+
+          const _keys = this.optionSelected.map((m) => m?.code);
+
+          this.DataSource = AitAppUtils.deepCloneArray(this.dataSourceDf).map((d) => {
+            if (this.isReset) {
+              return {
+                ...d,
+                isChecked: false,
+              };
+            }
+            return {
+              ...d,
+              isChecked: _keys.includes(d.code),
+            };
+          });
+
+          this.data = this.DataSource;
+
+          if (!this.isClickOption && !this.isOpenAutocomplete) {
+            this.filteredOptions$ = of(this.DataSource)
+          }
+        }
+
+
+      } else {
+
+        const findByKey = this.dataSourceDf.find(
+          (f) =>
+            f._key === this.defaultValue[0]?._key ||
+            f.code === this.defaultValue[0]?._key
+        );
+        this.selectOne = { _key: findByKey?.code, value: findByKey?.value };
+        if (!this.disableOutputDefault) {
+          const res = this.selectOne?._key ? [this.selectOne] : []
+          this.watchValue.emit({ value: res });
+        }
+
+        this.inputControl.setValue(this.modifileOption(this.selectOne?.value) || '');
+        this.getFilteredDataSource();
+      }
     }
   };
 
-  settingData = (cb?: any) => {
+  settingData = async(cb?: any) => {
     const cond = {};
     const options = {};
     if (this.parentCode) {
@@ -577,14 +581,14 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     }
 
     if (this.class && this.collection === 'sys_master_data') {
-      this.usingGraphQL(cond, options).then(() => {
+      await this.usingGraphQL(cond, options).then(() => {
         if (cb) {
           cb();
         }
       });
     }
     else {
-      this.usingGraphQL({}, options, false).then(() => {
+      await this.usingGraphQL({}, options, false).then(() => {
         if (cb) {
           cb();
         }
@@ -629,7 +633,18 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       is_matching: r?.is_matching,
       id: r?._key
     }));
-
+    if(this.MAXITEM > 1){
+      const all = {
+        code: 'all',
+        id: 'all',
+        is_matching: undefined,
+        value: 'Check All',
+        _key: 'all',
+      }
+      r.unshift(all);
+      console.log(r);
+    }
+    
     const sortNoArr = dataMaster.map(x => x?.sort_no).filter(s => !!s);
     this.lastSortNo = sortNoArr.length !== 0 ? Math.max.apply(null, sortNoArr) : dataMaster.length;
 
@@ -680,8 +695,8 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     return [...this.optionSelected, ...data]
   }
 
-  ngOnInit() {
-    this.settingData();
+  async ngOnInit() {
+    await this.settingData();
   }
 
   convertToBoolean = (value) => {
@@ -755,26 +770,10 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     let targetId;
 
     const itemFind = this.DataSource.find((f) => f?.optionId === opt?.optionId || f?._key === opt?.code);
-    if (this.optionSelected.length < this.MAXITEM) {
+    if(itemFind.code == 'all' && this.DataSource.length < this.MAXITEM){
       itemFind.isChecked = !itemFind.isChecked;
-
-      this.optionSelected = this.getSelectedOptions();
-      target = this.DataSource;
-      this.filteredOptions$ = of(this.DataSource);
-      this.watchValue.emit({ value: this.optionSelected.map(m => ({ _key: m?._key, value: m?.value })) });
-      setTimeout(() => {
-        if (target) {
-          this.DataSource = target
-          // this.filteredOptions$ = of(this.DataSource);
-
-          this.currentSortData = AitAppUtils.deepCloneArray(target);
-          this.isHideLabel = false;
-          this.isClickOption = false;
-        }
-      }, 10)
-    } else {
-      if (itemFind.isChecked) {
-        itemFind.isChecked = !itemFind.isChecked;
+      for(let i=0; i<this.DataSource.length; i++){
+        this.DataSource[i].isChecked = itemFind.isChecked;
         this.optionSelected = this.getSelectedOptions();
         target = this.DataSource;
         this.filteredOptions$ = of(this.DataSource);
@@ -783,22 +782,66 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
           if (target) {
             this.DataSource = target
             // this.filteredOptions$ = of(this.DataSource);
-
+  
             this.currentSortData = AitAppUtils.deepCloneArray(target);
             this.isHideLabel = false;
             this.isClickOption = false;
           }
         }, 10)
       }
-      else {
-        this.dataFilter = [];
+    }else{
+      if (this.optionSelected.length < this.MAXITEM) {
+        itemFind.isChecked = !itemFind.isChecked;
+  
+        this.optionSelected = this.getSelectedOptions();
+        if(this.optionSelected.length == 1){
+          const item = this.DataSource.find((f) =>  f?._key === 'all');
+          if(item){
+            item.isChecked = false;
+            this.optionSelected = this.getSelectedOptions();
+          }
+        }
+        target = this.DataSource;
+        this.filteredOptions$ = of(this.DataSource);
+        this.watchValue.emit({ value: this.optionSelected.map(m => ({ _key: m?._key, value: m?.value })) });
         setTimeout(() => {
-          this.dataFilter = [1];
-          this.isHideLabel = false;
-          this.isClickOption = false;
+          if (target) {
+            this.DataSource = target
+            // this.filteredOptions$ = of(this.DataSource);
+  
+            this.currentSortData = AitAppUtils.deepCloneArray(target);
+            this.isHideLabel = false;
+            this.isClickOption = false;
+          }
         }, 10)
+      } else {
+        if (itemFind.isChecked) {
+          itemFind.isChecked = !itemFind.isChecked;
+          this.optionSelected = this.getSelectedOptions();
+          target = this.DataSource;
+          this.filteredOptions$ = of(this.DataSource);
+          this.watchValue.emit({ value: this.optionSelected.map(m => ({ _key: m?._key, value: m?.value })) });
+          setTimeout(() => {
+            if (target) {
+              this.DataSource = target
+              // this.filteredOptions$ = of(this.DataSource);
+  
+              this.currentSortData = AitAppUtils.deepCloneArray(target);
+              this.isHideLabel = false;
+              this.isClickOption = false;
+            }
+          }, 10)
+        }
+        else {
+          this.dataFilter = [];
+          setTimeout(() => {
+            this.dataFilter = [1];
+            this.isHideLabel = false;
+            this.isClickOption = false;
+          }, 10)
+        }
       }
-    }
+    }   
 
 
     if (this.required) {
