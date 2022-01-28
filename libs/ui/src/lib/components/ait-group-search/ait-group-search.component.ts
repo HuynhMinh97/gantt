@@ -63,6 +63,8 @@ export class AitGroupSearchComponent
   @Input() public find: (condition?: any, dataSearch?: any) => Promise<any>;
   @Output() toggle = new EventEmitter();
   @Output() toggleTable = new EventEmitter();
+  @Output() watchKey = new EventEmitter();
+
   searchForm: FormGroup;
   totalRows: number;
   left = 0;
@@ -236,13 +238,14 @@ export class AitGroupSearchComponent
 
   copy(data: any) {
     if (this.pageRouter) {
-      this.router.navigate([`${this.pageRouter?.input || ''}`+ `/coppy/${data}`]);
+      this.watchKey.emit(data);
+      // this.router.navigate([`${this.pageRouter?.input || ''}`]);
     }
   }
 
   edit(data: any) {
     if (this.pageRouter) {
-      this.router.navigate([`${this.pageRouter?.input || ''}`+ `/edit/${data}`]);
+      this.router.navigate([`${this.pageRouter?.input || ''}`+ `/${data}`]);
     }
   }
 

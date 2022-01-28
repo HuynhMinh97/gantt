@@ -37,8 +37,11 @@ export class AitButtonTableComponent implements OnInit,OnChanges {
 
   // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void {
-    this.isDelete.emit({value: false});
-    console.log(this.dataDelete);  
+    this.columns.push({_key: 'all', value:'Check all'});
+    if(isObjectFull(this.dataSource)){
+      this.columns = this.dataSource;
+      console.log(this.columns);    
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
