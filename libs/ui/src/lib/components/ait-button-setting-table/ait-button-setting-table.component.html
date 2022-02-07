@@ -21,7 +21,7 @@
         [placeholder]="'Please select column'"
         [disableOutputDefault]="true"
         (watchValue)="settingColumnTable($event?.value)"
-        [defaultValue]="columns"
+        [defaultValue]="[{_key: 'all'}]"
         [dataSource]="dataSource"
         [collection]="collection"
         [class]="class"
