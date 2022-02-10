@@ -35,6 +35,9 @@ export * from './lib/components/ait-datepicker/ait-datepicker.module';
 //template-popup
 export * from './lib/components/ait-template-popup/ait-template-popup.module';
 
+//template-page
+export * from './lib/components/ait-template-page/ait-template-page.module';
+
 //display file
 export * from './lib/components/ait-output-file/ait-output-file.module';
 
@@ -146,4 +149,6 @@ export * from './lib/components/ait-table-cell/ait-table-cell.module';
 export * from './lib/components/ait-table-cell/ait-table-cell.component';
 
 //ait table button
+export * from './lib/components/ait-table-button/ait-table-button.module';
+export * from './lib/components/ait-table-button/ait-table-button.component';
 export * from './lib/components/ait-button-setting-table/ait-button-setting-table.module';
