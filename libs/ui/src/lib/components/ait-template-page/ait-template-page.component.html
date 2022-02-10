@@ -1,0 +1,59 @@
+<div class="template__container">
+    <div class="main__container">
+        <ait-text-gradient [content]="pageTitle" [id]="'title'"></ait-text-gradient>
+        <div class="template__filter__container">
+            <div class="template__header__filter" (click)="toggleExpan()"
+                [ngStyle]="!isExpan ? { border: 'none' } : null">
+                <ait-text-gradient [content]="searchTitle" [id]="'title'" [fontsize]="'21px'"></ait-text-gradient>
+                <div class="icon__expan" (click)="toggleExpan()">
+                    <nb-icon icon="arrow-ios-upward-outline" *ngIf="isExpan" (click)="toggleExpan()"></nb-icon>
+                    <nb-icon icon="arrow-ios-downward-outline" *ngIf="!isExpan" (click)="toggleExpan()"></nb-icon>
+                </div>
+            </div>
+
+            <div class="template__input__area" [ngStyle]="{
+                'height': isExpan ? 'auto' : '0px',
+                'margin-bottom': isExpan ? null : '0px',
+                'margin-top': isExpan ? null : '0px'
+              }">
+                <div class="content" [ngStyle]="{'visibility' : isExpan ? 'visible' : 'collapse'}">
+                    <div class="left__side">
+                        <ait-space [margin]="'7.25px'"></ait-space>
+                        <ng-content select="[leftArea]"></ng-content>
+                    </div>
+                    <div class="right__side">
+                        <ait-space [margin]="'7.25px'"></ait-space>
+                        <ng-content select="[rightArea]"></ng-content>
+                    </div>
+                    <div class="bottom__side">
+                        <ng-content select="[buttonArea]"></ng-content>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="template__filter__container">
+            <div class="template__header__filter" (click)="toggleTableExpan()"
+                [ngStyle]="!isTableExpan ? { border: 'none' } : null">
+                <ait-text-gradient [content]="tableTitle" [id]="'title'" [fontsize]="'21px'"></ait-text-gradient>
+                <div class="icon__expan" (click)="toggleTableExpan()">
+                    <nb-icon icon="arrow-ios-upward-outline" *ngIf="isTableExpan" (click)="toggleTableExpan()">
+                    </nb-icon>
+                    <nb-icon icon="arrow-ios-downward-outline" *ngIf="!isTableExpan" (click)="toggleTableExpan()">
+                    </nb-icon>
+                </div>
+            </div>
+
+            <div class="template__input__area" [ngStyle]="{
+            'height': isTableExpan ? 'auto' : '0px',    
+            'margin-bottom': isTableExpan ? null : '0px',
+                'margin-top': isTableExpan ? null : '0px'
+              }">
+                <div style="width: 100%" [ngStyle]="{'visibility' : isTableExpan ? 'visible' : 'collapse'}">
+                    <ng-content select="[tableArea]"></ng-content>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
