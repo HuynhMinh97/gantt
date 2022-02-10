@@ -352,8 +352,67 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
             this.isError = false;
           }
         }
+
+        if (key === 'dataSource') {
+          const dataMaster = this.dataSource;
+          const r = dataMaster.map(r => ({
+            code: r.code || r._key,
+            value: r[this.targetValue] || r?.value,
+            _key: r.code || r._key,
+            is_matching: r?.is_matching,
+            id: r?._key
+          }));
+          
+          this.setupNew(r, dataMaster);
+        }
       }
     }
+  }
+
+  setupNew(r: any[], dataMaster: any[]) {
+    if(this.MAXITEM > 1 && this.allowCheckAll) {
+      const all = {
+        code: 'all',
+        id: 'all',
+        is_matching: false,
+        value: 'Check All',
+        _key: 'all',
+       }
+       r.unshift(all);
+     }
+
+    const sortNoArr = dataMaster.map(x => x?.sort_no).filter(s => !!s);
+    this.lastSortNo = sortNoArr.length !== 0 ? Math.max.apply(null, sortNoArr) : dataMaster.length;
+
+    const dataFiltered = AitAppUtils.getUniqueArray((r || []), 'value');
+
+    const data = [...dataFiltered].map((m) => {
+      const idx = Date.now() + Math.floor(Math.random() * 100);
+      if (typeof m === 'string') {
+        return {
+          name: m,
+          isChecked: false,
+          optionId: idx,
+        };
+      }
+      return {
+        ...m,
+        isChecked: false,
+        optionId: m._key ? m._key + idx : idx,
+      };
+    });
+
+    const dataFilter = data.filter(d => d.value);
+    let ret = dataFilter;
+    const _keys = this.excludedValue.map(e => e?._key);
+    if (_keys.length !== 0) {
+      ret = dataFilter.filter(f => !_keys.includes(f?._key));
+    }
+
+    this.DataSource = ret;
+    this.dataSourceDf = AitAppUtils.deepCloneArray(this.DataSource);
+
+    this.setupDefault();
   }
 
   getAllowNewText = () => {
@@ -571,6 +630,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         dataMaster = result || [];
       }
     }
+
     const r = dataMaster.map(r => ({
       code: r.code || r._key,
       value: r[this.targetValue] || r?.value,
@@ -578,60 +638,8 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       is_matching: r?.is_matching,
       id: r?._key
     }));
-
-    if(this.MAXITEM > 1 && this.allowCheckAll) {
-      const all = {
-        code: 'all',
-        id: 'all',
-        is_matching: false,
-        value: 'Check All',
-        _key: 'all',
-       }
-       r.unshift(all);
-     }
-
-    const sortNoArr = dataMaster.map(x => x?.sort_no).filter(s => !!s);
-    this.lastSortNo = sortNoArr.length !== 0 ? Math.max.apply(null, sortNoArr) : dataMaster.length;
-
-
-
-    const dataFiltered = AitAppUtils.getUniqueArray((r || []), 'value');
-
-    const data = [...dataFiltered].map((m) => {
-      const idx = Date.now() + Math.floor(Math.random() * 100);
-      if (typeof m === 'string') {
-        return {
-          name: m,
-          isChecked: false,
-          optionId: idx,
-        };
-      }
-      return {
-        ...m,
-        isChecked: false,
-        optionId: m._key ? m._key + idx : idx,
-      };
-    });
-
-    const dataFilter = data.filter(d => d.value);
-    let ret = dataFilter;
-    const _keys = this.excludedValue.map(e => e?._key);
-    if (_keys.length !== 0) {
-      ret = dataFilter.filter(f => !_keys.includes(f?._key));
-    }
-
-
-
-    this.DataSource = ret;
-    this.dataSourceDf = AitAppUtils.deepCloneArray(this.DataSource);
-
-    this.setupDefault();
-    if (this.maxItem !== 1) {
-      this.inputControl.valueChanges.subscribe(value => {
-        // this.filteredOptions$ = of(this.DataSource);
-      })
-    }
-
+    
+    this.setupNew(r, dataMaster);
   }
 
   get DATASUGGEST(): any[] {
