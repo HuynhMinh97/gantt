@@ -1,6 +1,7 @@
 <div class="template__container">
     <div class="main__container">
         <ait-text-gradient [content]="pageTitle" [id]="'title'"></ait-text-gradient>
+        <ng-content select="[topArea]"></ng-content>
         <div class="template__filter__container">
             <div class="template__header__filter" (click)="toggleExpan()"
                 [ngStyle]="!isExpan ? { border: 'none' } : null">
@@ -51,7 +52,6 @@
               }">
                 <div style="width: 100%" [ngStyle]="{'visibility' : isTableExpan ? 'visible' : 'collapse'}">
                     <ng-content select="[tableArea]"></ng-content>
-
                 </div>
             </div>
         </div>

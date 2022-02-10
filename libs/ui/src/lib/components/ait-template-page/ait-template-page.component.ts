@@ -10,8 +10,8 @@ export class AitTemplatePageComponent {
   @Input() searchTitle = '';
   @Input() tableTitle = '';
 
-  isExpan = false;
-  isTableExpan = false;
+  @Input() isExpan = false;
+  @Input() isTableExpan = false;
 
   toggleExpan = () => (this.isExpan = !this.isExpan);
   toggleTableExpan = () => (this.isTableExpan = !this.isTableExpan);

@@ -96,12 +96,12 @@
           *ngIf="MAXITEM !== 1 && isOpenAutocomplete && dataFilter.length !== 0"
           (cdkDropListDropped)="drop($event)"
         >
-          <div cdkDrag [cdkDragDisabled]="allowDragDrop"
+          <div cdkDrag [cdkDragDisabled]="allowCheckAll && i === 0 ? true : !allowDragDrop"
             *ngFor="let option of filteredOptions$ | async; let i = index"
             class="option__container"
             style="cursor: pointer; position: relative; height: 37px"
           >
-            <div
+            <div 
               (click)="optionClicked($event, option)"
               style="
                 position: absolute;
@@ -149,7 +149,7 @@
             (click)="onSelectionChange(option)"
             nbTooltipPlacement="right"
             [nbTooltip]="option?.value"
-            cdkDrag [cdkDragDisabled]="allowDragDrop"
+            cdkDrag [cdkDragDisabled]="!allowDragDrop"
           >
             <div
               style="
