@@ -100,6 +100,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Output() onInput = new EventEmitter();
   @Output() onInputValues = new EventEmitter();
   @Output() outFocusValues = new EventEmitter();
+  @Output() onDragDrop = new EventEmitter();
   isDropDownList = false;
   @Input() isReadOnly = false;
   @Input() disableOutputDefault = false;
@@ -121,6 +122,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Input() isSubmit = false;
   @Input() allowNew = false;
   @Input() allowDragDrop = false;
+  @Input() allowCheckAll = false;
   @Output() onError = new EventEmitter();
   dataFilter = [1];
   @Input() errorMessages;
@@ -279,13 +281,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     }
 
   }
-
-  // removeData = () => {
-
-  // }
-
-
-
 
   ngOnChanges(changes: SimpleChanges) {
     for (const key in changes) {
@@ -584,6 +579,17 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       id: r?._key
     }));
 
+    if(this.MAXITEM > 1 && this.allowCheckAll) {
+      const all = {
+        code: 'all',
+        id: 'all',
+        is_matching: false,
+        value: 'Check All',
+        _key: 'all',
+       }
+       r.unshift(all);
+     }
+
     const sortNoArr = dataMaster.map(x => x?.sort_no).filter(s => !!s);
     this.lastSortNo = sortNoArr.length !== 0 ? Math.max.apply(null, sortNoArr) : dataMaster.length;
 
@@ -704,23 +710,37 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       .map((m) => ({ _key: m?.code, value: m?.value }));
 
   checkItem = (event: Event, opt: any) => {
-
     let target;
-    let targetId;
-
     const itemFind = this.DataSource.find((f) => f?.optionId === opt?.optionId || f?._key === opt?.code);
     if (this.optionSelected.length < this.MAXITEM) {
       itemFind.isChecked = !itemFind.isChecked;
-
+      if (this.allowCheckAll) {
+        if (opt.code === 'all') {
+          this.DataSource.map(e => e.isChecked = opt.isChecked);
+        } else if (!opt.isChecked) {
+          this.DataSource[0].isChecked = opt.isChecked;
+        } else {
+          const isCheckAll = this.DataSource.every((e, i) => {
+            if (i === 0) {
+              return true;
+            } else {
+              return e.isChecked;
+            }
+          });
+          if (isCheckAll) {
+          this.DataSource[0].isChecked = true;
+          }
+        }
+      }
       this.optionSelected = this.getSelectedOptions();
       target = this.DataSource;
       this.filteredOptions$ = of(this.DataSource);
-      this.watchValue.emit({ value: this.optionSelected.map(m => ({ _key: m?._key, value: m?.value })) });
+      const dataReturn = (this.allowCheckAll && (this.DataSource || [])[0]?.isChecked) ? 
+      (this.optionSelected || []).slice(1) : this.optionSelected;
+      this.watchValue.emit({ value: (dataReturn || []).map(m => ({ _key: m?._key, value: m?.value })) });
       setTimeout(() => {
         if (target) {
           this.DataSource = target
-          // this.filteredOptions$ = of(this.DataSource);
-
           this.currentSortData = AitAppUtils.deepCloneArray(target);
           this.isHideLabel = false;
           this.isClickOption = false;
@@ -792,7 +812,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   };
 
   sortItems = (array: any[]) => {
-    return array.sort((x, y) => (x.isChecked === y.isChecked) ? 0 : x.isChecked ? -1 : 1);
+    return this.allowDragDrop ? array : array.sort((x, y) => (x.isChecked === y.isChecked) ? 0 : x.isChecked ? -1 : 1);
   }
 
   get MAXITEM(): number {
@@ -1149,9 +1169,9 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       const statement = target[0];
       return this.modifileOption(statement);
     } else if ((target || []).length !== 1) {
-
+      const index = (this.allowCheckAll && (this.DataSource || [])[0]?.isChecked) ? target.length - 2 : target.length - 1;
       const statement = this.modifileOption(this.getStringByLength(target), 15);
-      return statement + `（+${target.length - 1} ${itemsText})`;
+      return statement + `（+${index} ${itemsText})`;
     }
     return '';
   };
@@ -1171,8 +1191,16 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   }
 
   drop(event: CdkDragDrop<any[]>) {
-    this.filteredOptions$.subscribe((data: any[]) => {
+    if (this.allowCheckAll && event.currentIndex === 0) return;
+    const eventDrop = this.filteredOptions$.subscribe((data: any[]) => {
       moveItemInArray((data || []), event.previousIndex, event.currentIndex);
+      if (this.allowCheckAll) {
+        const [, ...returnData] = data;
+        this.onDragDrop.emit(returnData);
+      } else {
+        this.onDragDrop.emit(data);
+      }
     });
+    eventDrop.unsubscribe();
   }
 }
