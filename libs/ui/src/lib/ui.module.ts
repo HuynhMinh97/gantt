@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { APP_INITIALIZER, LOCALE_ID, ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
+import { APP_INITIALIZER, ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
+import { AitTemplatePageModule } from './components/ait-template-page/ait-template-page.module';
 import { CommonModule, registerLocaleData } from '@angular/common';
 import { AitButtonModule } from './components/ait-button/ait-button.module';
 import { AitThemeModule } from './@theme/theme.module';
@@ -66,7 +67,6 @@ import localeJpp from '@angular/common/locales/ja';
 import { LocaleProvider } from './@theme/locale/locale.provider';
 import { AitTableCellModule } from './components/ait-table-cell/ait-table-cell.module';
 import { AitGroupSearchModule } from './components/ait-group-search/ait-group-search.module';
-import { AitRenderPageService } from './services/common/ait-render-page.service';
 import { AitGroupInputModule } from './components/ait-group-input/ait-group-input.module';
 import { AitTableButtonModule } from './components/ait-table-button/ait-table-button.module';
 import { AitGroupViewModule } from './components/ait-group-view/ait-group-view.module';
@@ -142,7 +142,8 @@ const NB_MODULES = [
     ...NB_MODULES,
     AitTocMenuModule,
     AitTableCellModule,
-    AitTableButtonModule
+    AitTableButtonModule,
+    AitTemplatePageModule
   ],
   exports: [
     CommonModule,
@@ -186,6 +187,7 @@ const NB_MODULES = [
     AitTableCellModule,
     AitTableButtonModule,
     AitButtonTableModule,
+    AitTemplatePageModule
   ],
   providers: [
     AitBaseService,
