@@ -19,15 +19,17 @@
     padding: 100px;
     padding-top: 30px;
     padding-bottom: 0px;
-    .template__filter__container {
+    .radius {
+      border: 1px solid #e0eeff;
+      border-radius: 10px;
       outline-color: #10529d;
+    }
+    .template__filter__container {
       margin-top: 30px;
       min-height: 61px;
       width: 100%;
       background: #ffffff;
-      border: 1px solid #e0eeff;
       box-sizing: border-box;
-      border-radius: 10px;
       padding: 10px;
       display: flex;
       flex-direction: column;
