@@ -11,8 +11,8 @@ export class AitTemplatePageComponent {
   @Input() tableTitle = '';
   @Input() isTableIncluded = true;
   @Input() isExpandIncluded = true;
-  @Input() isExpan = false;
-  @Input() isTableExpan = false;
+  @Input() isExpan = true;
+  @Input() isTableExpan = true;
 
   toggleExpan = () => (this.isExpan = !this.isExpan);
   toggleTableExpan = () => (this.isTableExpan = !this.isTableExpan);
