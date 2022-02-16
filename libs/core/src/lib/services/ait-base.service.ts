@@ -21,6 +21,10 @@ import { SysUser } from '../entities/sys-user.entity';
 import { BaseResponse } from '../responses/base.response';
 import { AitUtils } from '../utils/ait-utils';
 
+export enum TYPE {
+  AUREOLE_V = 'aureole_v',
+  MATCHING = 'matching'
+}
 @Injectable()
 export class AitBaseService {
   constructor(
@@ -32,7 +36,8 @@ export class AitBaseService {
   lang = '';
   username = '';
   refList = ['operator', 'value', 'target', 'valueAsString', 'valueAsNumber'];
-  forAuv = [];
+  type = TYPE.MATCHING;
+  mappingUser = [];
   filterAfter = [];
 
   async getPermission(request: any, user?: SysUser): Promise<PermissionOutput> {
@@ -179,7 +184,7 @@ export class AitBaseService {
 
   async find(request: any, user?: SysUser) {
     const lang = request.lang;
-    this.forAuv = [];
+    this.mappingUser = [];
     this.filterAfter = [];
     let aqlStr = `LET current_data = ( \r\n ${this.getSearchCondition(
       request,
@@ -192,9 +197,9 @@ export class AitBaseService {
     )} \r\n) `;
     aqlStr += `\r\n`;
     aqlStr += `\r\nFOR data IN result`;
-    if (this.forAuv.length > 0) {
-      this.forAuv.length = Math.ceil(this.forAuv.length / 2);
-      this.forAuv.forEach((data, index) => {
+    if (this.mappingUser.length > 0) {
+      this.mappingUser.length = Math.ceil(this.mappingUser.length / 2);
+      this.mappingUser.forEach((data, index) => {
         if (index === 0) {
           aqlStr += `\r\n FILTER`;
         } else {
@@ -326,10 +331,11 @@ export class AitBaseService {
             }
           }
           if (
-            data.type === 'aureole-v' &&
+            (data.type === 'aureole-v' || data.type === 'matching') &&
             (prop === KEYS.CREATE_BY || prop === KEYS.CHANGE_BY)
           ) {
-            this.forAuv.push({ type: prop, value: data.value ?? '' });
+            this.mappingUser.push({ type: prop, value: data.value ?? '' });
+            this.type = (data.type === TYPE.MATCHING ? TYPE.MATCHING: TYPE.AUREOLE_V); 
           }
           if (
             data.attribute &&
@@ -423,7 +429,7 @@ export class AitBaseService {
       aqlStr += `\r\n ${attributes[0]}, `;
     }
     //custom
-    this.forAuv.forEach((prop) => {
+    this.mappingUser.forEach((prop) => {
       aqlStr += `\r\n ${prop.type}: (`;
       aqlStr += `\r\n data.is_matching == true ? (`;
       aqlStr += `\r\n LET item = (`;
@@ -431,7 +437,11 @@ export class AitBaseService {
       aqlStr += `\r\n FILTER record.user_id == data.${prop.type}`;
       aqlStr += `\r\n RETURN record`;
       aqlStr += `\r\n )[0]`;
-      aqlStr += `\r\n RETURN item.name`;
+      if (this.type === TYPE.MATCHING) {
+        aqlStr += `\r\n RETURN CONCAT(item.first_name, " ", item.last_name) `;
+      } else {
+        aqlStr += `\r\n RETURN item.name `;
+      }
       aqlStr += `\r\n )[0] : data.${prop.type}`;
       aqlStr += `\r\n ), `;
     });
