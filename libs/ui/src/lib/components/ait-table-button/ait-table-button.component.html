@@ -1,0 +1,39 @@
+<div class="menu_icon">
+    <div id="detail_text_button" [matMenuTriggerFor]="menu" style="cursor: pointer;">
+        <nb-icon icon="more-horizontal-outline"></nb-icon>
+    </div>
+    <mat-menu #menu="matMenu">
+      <!-- view -->
+      <button mat-menu-item (click)="view()">
+        <nb-icon icon="eye" pack="font-awesome"></nb-icon>
+        <span class="icon_text">View</span>
+      </button>
+      <!-- edit -->
+      <button mat-menu-item (click)="edit()">
+        <nb-icon icon="pen" pack="font-awesome-fas"></nb-icon>
+        <span class="icon_text">Edit</span>
+      </button>
+      <!-- <div nbTooltip="{{message}}" nbTooltipPlacement="top" *ngIf="!isMatching" style="cursor: not-allowed">
+        <button mat-menu-item disabled [ngStyle]="{background: 'lightgray', color: 'white'}">
+          <nb-icon icon="pen" pack="font-awesome-fas"></nb-icon>
+          <span class="icon_text">編集</span>
+        </button>
+      </div> -->
+      <!-- copy -->
+      <button mat-menu-item (click)="copy()">
+        <nb-icon icon="copy" pack="font-awesome"></nb-icon>
+        <span class="icon_text">Copy</span>
+      </button>
+      <!-- delete -->
+      <button mat-menu-item (click)="remove()">
+        <nb-icon icon="times" pack="font-awesome-fas"></nb-icon>
+        <span class="icon_text">Delete</span>
+      </button>
+      <!-- <div nbTooltip="{{message}}" nbTooltipPlacement="top" *ngIf="!isMatching" style="cursor: not-allowed">
+        <button mat-menu-item disabled [ngStyle]="{background: 'lightgray', color: 'white'}">
+          <nb-icon icon="times" pack="font-awesome-fas"></nb-icon>
+          <span class="icon_text">削除</span>
+        </button>
+      </div> -->
+    </mat-menu>
+</div>

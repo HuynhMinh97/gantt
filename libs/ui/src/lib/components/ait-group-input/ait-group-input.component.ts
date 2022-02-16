@@ -11,7 +11,11 @@ import {
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
+import {
+  NbDialogService,
+  NbLayoutScrollService,
+  NbToastrService,
+} from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import _ from 'lodash';
@@ -52,6 +56,7 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   searchComponents: any;
   leftSide: any[] = [];
   rightSide: any[] = [];
+  multiLang: string[] = [];
   constructor(
     private renderPageService: AitRenderPageService,
     public router: Router,
@@ -86,57 +91,71 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   }
 
   async setupData() {
-    const resModule = await this.renderPageService.findModule({
-      code: this.module,
-    });
-    const resPage = await this.renderPageService.findPage({ code: this.page });
-    if (
-      resModule.status === RESULT_STATUS.OK &&
-      resPage.status === RESULT_STATUS.OK
-    ) {
-      this.moduleKey = resModule.data[0]?._key || '';
-      this.pageKey = resPage.data[0]?._key || '';
-
-      const resGroup = await this.renderPageService.findGroup({
-        module: this.moduleKey,
-        page: this.pageKey,
-        type: 'input',
+    this.callLoadingApp();
+    try {
+      const resModule = await this.renderPageService.findModule({
+        code: this.module,
       });
-      if (resGroup.status === RESULT_STATUS.OK) {
-        this.groupKey = resGroup.data[0]?._key || '';
-        this.collection = resGroup.data[0]?.collection || '';
+      const resPage = await this.renderPageService.findPage({
+        code: this.page,
+      });
+      if (
+        resModule.status === RESULT_STATUS.OK &&
+        resPage.status === RESULT_STATUS.OK
+      ) {
+        this.moduleKey = resModule.data[0]?._key || '';
+        this.pageKey = resPage.data[0]?._key || '';
 
-        const resSearch = await this.renderPageService.findSysInput({
+        const resGroup = await this.renderPageService.findGroup({
           module: this.moduleKey,
           page: this.pageKey,
-          group: this.groupKey,
+          type: 'input',
         });
+        if (resGroup.status === RESULT_STATUS.OK) {
+          this.groupKey = resGroup.data[0]?._key || '';
+          this.collection = resGroup.data[0]?.collection || '';
 
-        if (
-          resSearch.status === RESULT_STATUS.OK &&
-          resSearch?.data?.length > 0
-        ) {
-          console.log(resSearch.data);
-          this.searchComponents = resSearch.data;
-          this.setupForm(this.searchComponents);
-          this.setupComponent(this.searchComponents);  
-          if (this._key) {
-            this.inputForm.addControl('_key', new FormControl(null));
-            this.patchDataToForm(resSearch.data || []);
+          const resSearch = await this.renderPageService.findSysInput({
+            module: this.moduleKey,
+            page: this.pageKey,
+            group: this.groupKey,
+          });
+
+          if (
+            resSearch.status === RESULT_STATUS.OK &&
+            resSearch?.data?.length > 0
+          ) {
+            this.searchComponents = resSearch.data;
+            this.setupForm(this.searchComponents);
+            this.setupComponent(this.searchComponents);
+            if (this._key) {
+              this.inputForm.addControl('_key', new FormControl(null));
+              this.patchDataToForm(resSearch.data || []);
+            }
           }
         }
       }
+    } catch {
+      setTimeout(() => {
+        this.cancelLoadingApp();
+      }, 100);
+    } finally {
+      setTimeout(() => {
+        this.cancelLoadingApp();
+      }, 100);
     }
   }
-  
+
   async patchDataToForm(data: any[]) {
     const conditions = {};
     this.cloneData = {};
     conditions['_key'] = this._key;
-    data.forEach(e => {
-      console.log(e);
+    data.forEach((e) => {
       if (e['search_setting']) {
-        const prop = Object.entries(e['search_setting']).reduce((a,[k,v]) => (v == null ? a : (a[k]=v, a)), {});
+        const prop = Object.entries(e['search_setting']).reduce(
+          (a, [k, v]) => (v == null ? a : ((a[k] = v), a)),
+          {}
+        );
         conditions[e['item_id']] = prop;
       }
     });
@@ -147,14 +166,15 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
     if (res.data.length > 0) {
       const value = JSON.parse(res.data[0]['data'] || '[]');
       this.inputForm.patchValue(value);
-      (Object.keys(this.inputForm.controls) || []).forEach(name => {
+      (Object.keys(this.inputForm.controls) || []).forEach((name) => {
         this.cloneData[name] = this.inputForm.controls[name].value;
       });
+    } else {
+      this.router.navigate([`/404`]);
     }
   }
 
   setupComponent(components: any[]) {
-    console.log(components);
     const leftSide = [];
     const rightSide = [];
     components.forEach((component) => {
@@ -180,6 +200,10 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
           group[component.item_id + '_to'] = new FormControl();
         } else {
           group[component.item_id] = new FormControl(null, Validators.required);
+        }
+
+        if (component['component_setting']?.is_multi_language) {
+          this.multiLang.push(component.item_id);
         }
       }
     });
@@ -255,56 +279,38 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   }
 
   remove() {
-    console.log(this.inputForm.controls['_key'].value);
-    try {
-      this.isDialogOpen = true;
-      this.dialogService
-        .open(AitConfirmDialogComponent, {
-          context: {
-            title: this.translateService.translate(
-              'このデータを削除しますか。'
-            ),
-          },
-        })
-        .onClose.subscribe(async (event) => {
-          this.isDialogOpen = false;
-          if (event) {
-            this.onDelete();
-          } else {
-          }
-        });
-      } catch {
-    }
+    this.isDialogOpen = true;
+    this.dialogService
+      .open(AitConfirmDialogComponent, {
+        context: {
+          title: this.translateService.translate('このデータを削除しますか。'),
+        },
+      })
+      .onClose.subscribe(async (event) => {
+        this.isDialogOpen = false;
+        if (event) {
+          this.onDelete();
+        }
+      });
   }
 
   async onDelete() {
     this.callLoadingApp();
     try {
       await this.renderPageService
-      .remove(this.collection, this._key)
-      .then((res) => {
-        if (res.status === RESULT_STATUS.OK) {
-          this.cancelLoadingApp();
-          this.showToastr('', this.getMsg('I0003'));
-          history.back();
-        } else {
-          this.cancelLoadingApp();
-          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-        }
-      });
+        .remove(this.collection, this._key)
+        .then((res) => {
+          if (res.status === RESULT_STATUS.OK) {
+            this.showToastr('', this.getMsg('I0003'));
+            history.back();
+          } else {
+            this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+          }
+        });
     } catch {
       this.cancelLoadingApp();
-    }
-  }
-
-  search(event = null, isInit = false) {
-    if (event) {
-      event.preventDefault();
-    }
-    if (this.inputForm.valid) {
-      console.log(this.inputForm.value);
-    } else {
-      console.log('form invalid');
+    } finally {
+      this.cancelLoadingApp();
     }
   }
 
@@ -319,34 +325,48 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   save() {
     this.isSubmit = true;
     if (this.inputForm.valid) {
-      const objSave = {};
-      const formValue = this.inputForm.value;
-      for (const prop in formValue) {
-        if (isObjectFull(formValue[prop])) {
-          objSave[prop] = formValue[prop][KEYS.KEY];
-        } else {
-          objSave[prop] = formValue[prop];
-        }
-      }
-
-      console.log(objSave);
-      if (this.mode === MODE.NEW) {
-        this.renderPageService
-        .saveRenderData(this.collection, [objSave])
-        .then((res) => {
-          if (res.status === RESULT_STATUS.OK) {
-            this.showToastr('', this.getMsg('I0005'));
-            setTimeout(() => {
-              history.back();
-            }, 1000);
+      this.callLoadingApp();
+      try {
+        const objSave = {};
+        const formValue = this.inputForm.value;
+        for (const prop in formValue) {
+          if (isObjectFull(formValue[prop])) {
+            objSave[prop] = formValue[prop][KEYS.KEY];
+          } else if (
+            this.multiLang.includes(prop) &&
+            typeof formValue[prop] === 'string'
+          ) {
+            objSave[prop] = this.getMultiLang(formValue[prop]);
           } else {
-            this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+            objSave[prop] = formValue[prop];
           }
-        })
-        .catch(() => this.showToastr('', this.getMsg('E0100'), KEYS.WARNING));
-      } else {
-        console.log(objSave);
+        }
+        this.renderPageService
+          .saveRenderData(this.collection, [objSave])
+          .then((res) => {
+            if (res.status === RESULT_STATUS.OK) {
+              this.showToastr('', this.getMsg('I0005'));
+              setTimeout(() => {
+                history.back();
+              }, 1000);
+            } else {
+              this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+            }
+          })
+          .catch(() => this.showToastr('', this.getMsg('E0100'), KEYS.WARNING));
+      } catch {
+        this.cancelLoadingApp();
+      } finally {
+        this.cancelLoadingApp();
       }
     }
+  }
+
+  getMultiLang(text: any): any {
+    return {
+      ja_JP: text,
+      en_US: text,
+      vi_VN: text,
+    };
   }
 }

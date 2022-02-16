@@ -1,23 +1,25 @@
-import { AitAutocompleteMasterDataModule } from './../ait-autocomplete-master-data/ait-autocomplete-master-data.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AitGroupSearchComponent } from './ait-group-search.component';
-import { AitTextGradientModule } from '../ait-text-gradient/ait-text-gradient.module';
+import { AitGroupViewComponent } from './ait-group-view.component';
 import { NbIconModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
-import { AitButtonModule } from '../ait-button/ait-button.module';
+import { AitTextGradientModule } from '../ait-text-gradient/ait-text-gradient.module';
+import { AitAutocompleteMasterDataModule } from '../ait-autocomplete-master-data/ait-autocomplete-master-data.module';
 import { AitInputTextModule } from '../ait-input-text/ait-input-text.module';
-import { AitSpaceModule } from '../ait-space/ait-space.module';
 import { AitDatepickerModule } from '../ait-datepicker/ait-datepicker.module';
 import { AitErrorMessageModule } from '../ait-error-message/ait-error-message.module';
-import { Ng2SmartTableModule } from 'ng2-smart-table';
+import { AitSpaceModule } from '../ait-space/ait-space.module';
+import { AitButtonModule } from '../ait-button/ait-button.module';
+import { AitCardContentModule } from '../ait-card-content/ait-card-content.module';
 import { NB_MODULES } from '../../@theme/theme.module';
-import { AitButtonTableModule } from '../ait-button-setting-table/ait-button-setting-table.module';
+import { AitOutputTextModule } from '../ait-output-text/ait-output-text.module';
 
 
 
 @NgModule({
-  declarations: [AitGroupSearchComponent],
+  declarations: [
+    AitGroupViewComponent
+  ],
   imports: [
     CommonModule,
     NbIconModule,
@@ -29,10 +31,12 @@ import { AitButtonTableModule } from '../ait-button-setting-table/ait-button-set
     AitErrorMessageModule,
     AitSpaceModule,
     AitButtonModule,
-    Ng2SmartTableModule,
-    AitButtonTableModule,
+    AitCardContentModule,
+    AitOutputTextModule,
     ...NB_MODULES,
   ],
-  exports: [AitGroupSearchComponent]
+  exports: [
+    AitGroupViewComponent
+  ]
 })
-export class AitGroupSearchModule { }
+export class AitGroupViewModule { }

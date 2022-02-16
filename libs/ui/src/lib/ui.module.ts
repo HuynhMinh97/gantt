@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { APP_INITIALIZER, LOCALE_ID, ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
+import { APP_INITIALIZER, ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
+import { AitTemplatePageModule } from './components/ait-template-page/ait-template-page.module';
 import { CommonModule, registerLocaleData } from '@angular/common';
 import { AitButtonModule } from './components/ait-button/ait-button.module';
 import { AitThemeModule } from './@theme/theme.module';
@@ -66,8 +67,10 @@ import localeJpp from '@angular/common/locales/ja';
 import { LocaleProvider } from './@theme/locale/locale.provider';
 import { AitTableCellModule } from './components/ait-table-cell/ait-table-cell.module';
 import { AitGroupSearchModule } from './components/ait-group-search/ait-group-search.module';
-import { AitRenderPageService } from './services/common/ait-render-page.service';
 import { AitGroupInputModule } from './components/ait-group-input/ait-group-input.module';
+import { AitTableButtonModule } from './components/ait-table-button/ait-table-button.module';
+import { AitGroupViewModule } from './components/ait-group-view/ait-group-view.module';
+import { AitButtonTableModule } from './components/ait-button-setting-table/ait-button-setting-table.module';
 registerLocaleData(localeEnn);
 registerLocaleData(localeVnn);
 registerLocaleData(localeJpp);
@@ -130,13 +133,17 @@ const NB_MODULES = [
     AitTextGradientModule,
     AitGroupSearchModule,
     AitGroupInputModule,
+    AitGroupViewModule,
+    AitButtonTableModule,
     StoreModule.forRoot({
       ...rootReducers,
       ...inItialState
     }),
     ...NB_MODULES,
     AitTocMenuModule,
-    AitTableCellModule
+    AitTableCellModule,
+    AitTableButtonModule,
+    AitTemplatePageModule
   ],
   exports: [
     CommonModule,
@@ -164,6 +171,7 @@ const NB_MODULES = [
     AitTextGradientModule,
     AitGroupSearchModule,
     AitGroupInputModule,
+    AitGroupViewModule,
     AitCardContentModule,
     AitButtonModule,
     AitConfirmDialogModule,
@@ -176,7 +184,10 @@ const NB_MODULES = [
     AitUiComponent,
     AitBaseComponent,
     AitTocMenuModule,
-    AitTableCellModule
+    AitTableCellModule,
+    AitTableButtonModule,
+    AitButtonTableModule,
+    AitTemplatePageModule
   ],
   providers: [
     AitBaseService,
