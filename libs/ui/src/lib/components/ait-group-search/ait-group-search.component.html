@@ -1,9 +1,9 @@
 <div class="component__container">
     <div class="main__container">
-        <ait-text-gradient [content]="'MASTER DATA'" [id]="'title'"></ait-text-gradient>
+        <ait-text-gradient [content]="pageTitle"></ait-text-gradient>
         <div class="filter__container">
             <div class="header__filter" (click)="toggleExpan()" [ngStyle]="!isExpan ? { border: 'none' } : null">
-                <ait-text-gradient [content]="'条件'" [id]="'title'" [fontsize]="'21px'"></ait-text-gradient>
+                <ait-text-gradient [content]="searchContent" [fontsize]="'21px'"></ait-text-gradient>
                 <div class="icon__expan" (click)="toggleExpan()">
                     <nb-icon icon="arrow-ios-upward-outline" *ngIf="isExpan" (click)="toggleExpan()"></nb-icon>
                     <nb-icon icon="arrow-ios-downward-outline" *ngIf="!isExpan" (click)="toggleExpan()"></nb-icon>
@@ -21,6 +21,7 @@
                     <div class="left__side" *ngIf="leftSide.length > 0">
                         <ng-container *ngFor="let component of leftSide">
                             <ait-autocomplete-master-data *ngIf="component.type === 'combobox'"
+                                [class]="component?.component_setting?.class"
                                 [collection]="component?.component_setting?.collection" [label]="component?.item_label"
                                 [maxItem]="component?.component_setting?.max_item"
                                 [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
@@ -78,6 +79,7 @@
                                 </div>
                             </ng-container>
         
+                            <ait-space *ngIf="component.type === 'space'" [margin]="'31.75px'"></ait-space>
                             <ait-space [margin]="'7.25px'"></ait-space>
                         </ng-container>
                     </div>
@@ -85,6 +87,7 @@
                     <div class="right__side" *ngIf="rightSide.length > 0">
                         <ng-container *ngFor="let component of rightSide">
                             <ait-autocomplete-master-data *ngIf="component.type === 'combobox'"
+                                [class]="component?.component_setting?.class"
                                 [collection]="component?.component_setting?.collection" [label]="component?.item_label"
                                 [maxItem]="component?.component_setting?.max_item"
                                 [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
@@ -142,13 +145,14 @@
                                 </div>
                             </ng-container>
         
+                            <ait-space *ngIf="component.type === 'space'" [margin]="'31.75px'"></ait-space>
                             <ait-space [margin]="'7.25px'"></ait-space>
                         </ng-container>
                     </div>
         
                     <div class="bottom__side">
                         <!-- reset -->
-                        <ait-button [id]="'reset'" [width]="'150px'" [height]="'32px'" [title]="'クリア'" [isDefault]="true" (click)="reset($event)">
+                        <ait-button [id]="'reset'" [width]="'150px'" [height]="'32px'" [title]="'reset'" [isDefault]="true" (click)="reset($event)">
                         </ait-button>
                         <!-- search -->
                         <ait-button [id]="'search'" [width]="'150px'" [height]="'32px'" [title]="'検索'" [isDefault]="true" (click)="search($event)">
@@ -164,7 +168,7 @@
             <div class="filter_container">
                 <div class="header__filter" (click)="toggleTableExpan()"
                     [ngStyle]="!isTableExpan ? { border: 'none' } : null">
-                    <ait-text-gradient [content]="element.item_id" [id]="'title'" [fontsize]="'21px'"></ait-text-gradient>
+                    <ait-text-gradient [content]="tableTitle" [fontsize]="'21px'"></ait-text-gradient>
                     <div class="icon__expan" (click)="toggleTableExpan()">
                         <nb-icon icon="arrow-ios-upward-outline" *ngIf="isTableExpan" (click)="toggleTableExpan()">
                         </nb-icon>
@@ -179,18 +183,17 @@
                     'margin-top': isTableExpan ? null : '0px'
                   }">
                     <div style="width: 100%" [ngStyle]="{ 'display': isTableExpan ? 'block' : 'none' }">
-                        <div style="margin-bottom: 15px; display: flex;">
-                            <ait-button
-                                [id]="'remove'"
-                                [minwidth]="'80px'"
-                                [height]="'20px'"
-                                [fontsize]="'14px'"
-                                [marginleft]="'0px'"
-                                [title]="'Export Csv'"
-                                [isDefault]="true"
-                                (click)="exportCsv()"
-                            ></ait-button>
-                            </div>
+                        <ait-button-setting-table
+                            [id]="collection"
+                            [dataSource]="columnTable"
+                            (columnDislay)="settingColumnTable($event.value)"
+                            [dataExport]="exportCsv()"
+                            [columnExport]="hearder"
+                            [dataDelete]="selectedItems"
+                            [fileName]="nameFileCsv"
+                            (isDelete)="deleteAll($event.value)"
+                        ></ait-button-setting-table>
+
                         <div class="table__area" #area>
                             <ng2-smart-table [settings]="settings" [source]="source"
                                 (userRowSelect)="onUserRowSelect($event)" #table *ngIf="done"></ng2-smart-table>

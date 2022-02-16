@@ -35,6 +35,9 @@ export * from './lib/components/ait-datepicker/ait-datepicker.module';
 //template-popup
 export * from './lib/components/ait-template-popup/ait-template-popup.module';
 
+//template-page
+export * from './lib/components/ait-template-page/ait-template-page.module';
+
 //display file
 export * from './lib/components/ait-output-file/ait-output-file.module';
 
@@ -64,6 +67,9 @@ export * from './lib/components/ait-text-gradient/ait-text-gradient.module';
 
 //card content
 export * from './lib/components/ait-card-content/ait-card-content.module';
+
+//table button
+export * from './lib/components/ait-table-button/ait-table-button.module';
 
 
 //confirm dialog
@@ -99,6 +105,9 @@ export * from './lib/components/ait-group-search/ait-group-search.module';
 
 //ait group input
 export * from './lib/components/ait-group-input/ait-group-input.module';
+
+//ait group view
+export * from './lib/components/ait-group-view/ait-group-view.module';
 
 //layout modules
 export * from './lib/@theme/layouts/ait-common-layout/ait-common-layout.module'
@@ -138,3 +147,8 @@ export * from './lib/components/ait-table-cell/ait-table-cell.module';
 
 //ait table cell
 export * from './lib/components/ait-table-cell/ait-table-cell.component';
+
+//ait table button
+export * from './lib/components/ait-table-button/ait-table-button.module';
+export * from './lib/components/ait-table-button/ait-table-button.component';
+export * from './lib/components/ait-button-setting-table/ait-button-setting-table.module';

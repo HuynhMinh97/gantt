@@ -1,0 +1,94 @@
+@import '../../@theme/styles/themes.scss';
+@import '../../@theme/styles/smart-table.scss';
+
+.template__container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f9f9f9;
+  .main__container {
+    width: 100vmax !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 67vmax;
+    height: 100%;
+    margin: 10px;
+    padding: 100px;
+    padding-top: 30px;
+    padding-bottom: 0px;
+    .radius {
+      border: 1px solid #e0eeff;
+      border-radius: 10px;
+      outline-color: #10529d;
+    }
+    .template__filter__container {
+      margin-top: 30px;
+      min-height: 61px;
+      width: 100%;
+      background: #ffffff;
+      box-sizing: border-box;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+
+      .template__header__filter {
+        height: 50px;
+        border-bottom: 2px solid #8f9bb3;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        .icon__expan {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+        }
+      }
+      .template__input__area {
+        margin-top: 15px;
+        width: 100%;
+        margin-bottom: 35px;
+        display: flex;
+        flex-wrap: wrap;
+        transition: 0.5s all ease;
+        .left__side,
+        .right__side {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+        }
+        .bottom__side {
+          display: flex;
+          width: 100%;
+          margin-top: 40px;
+          align-items: center;
+          justify-content: flex-end;
+        }
+        .content {
+          display: flex;
+          flex-wrap: wrap;
+          width: 100%;
+          padding: 0 40px;
+        }
+        .center_span {
+          margin: 35px 15px 0px 15px;
+          font-size: 18px;
+          font-weight: 800;
+          color: #c5cee0;
+          width: 27px;
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1280px) and (max-width: 1281px) {
+  .template__filter__container {
+    width: calc(100% - 65px) !important;
+  }
+}
