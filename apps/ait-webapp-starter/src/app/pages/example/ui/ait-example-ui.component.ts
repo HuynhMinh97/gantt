@@ -302,4 +302,7 @@ export class AitUiComponent extends AitBaseComponent {
   getValueMasterOne = (value) => {
     this.result.masterOne = value;
   };
+
+  // data(e) {console.log()}
+  dd(e) {console.log(e)}
 }
