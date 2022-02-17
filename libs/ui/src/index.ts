@@ -17,9 +17,6 @@ export * from './lib/components/ait-label/ait-label.module';
 //chip
 export * from './lib/components/ait-chip/ait-chip.module';
 
-//dragscroll
-export * from './lib/components/ait-drag-scroll/ait-drag-scroll.module';
-
 //input number
 export * from './lib/components/ait-input-number/ait-input-number.module';
 
