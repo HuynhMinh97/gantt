@@ -8,7 +8,6 @@ import { AitInputTextModule } from './components/ait-input-text/ait-input-text.m
 import { AitSpaceModule } from './components/ait-space/ait-space.module';
 import { AitLabelModule } from './components/ait-label/ait-label.module';
 import { AitChipModule } from './components/ait-chip/ait-chip.module';
-import { AitDragScrollModule } from './components/ait-drag-scroll/ait-drag-scroll.module';
 import { AitBackButtonModule } from './components/ait-back-button/ait-back-button.module';
 import { AitUpButtonModule } from './components/ait-up-button/ait-up-button.module';
 import { AitDatepickerModule } from './components/ait-datepicker/ait-datepicker.module';
@@ -111,7 +110,6 @@ const NB_MODULES = [
     AitCommonLayoutModule,
     AitLabelModule,
     AitChipModule,
-    AitDragScrollModule,
     AitBackButtonModule,
     AitUpButtonModule,
     AitDatepickerModule,
@@ -154,7 +152,6 @@ const NB_MODULES = [
     AitCommonLayoutModule,
     AitLabelModule,
     AitChipModule,
-    AitDragScrollModule,
     AitBackButtonModule,
     AitUpButtonModule,
     AitDatepickerModule,
