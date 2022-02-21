@@ -19,7 +19,7 @@ export class AitButtonTableComponent implements OnInit,OnChanges {
   @Input() class: string;
   @Input() dataSource: any[];
 
-  @Output()columnDislay = new EventEmitter();
+  @Output()watchValue = new EventEmitter();
 
   @Input() dataDelete: any = [];
   @Output() isDelete = new EventEmitter();
@@ -29,6 +29,8 @@ export class AitButtonTableComponent implements OnInit,OnChanges {
   toolTipDelete = '';
   toolTipExport = '';
   toolTipSettings = '';
+  position = [];
+  positionAll = [];
   sortNo = 0;
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor(
@@ -37,17 +39,18 @@ export class AitButtonTableComponent implements OnInit,OnChanges {
 
   // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void {
-    this.columns.push({_key: 'all', value:'Check all'});
-    if(isObjectFull(this.dataSource)){
-      this.columns = this.dataSource;
-      console.log(this.columns);    
-    }
+    setTimeout(() => {
+      if(isObjectFull(this.dataSource)){
+        this.columns = this.dataSource;  
+      }
+    }, 1000);
   }
 
   ngOnChanges(changes: SimpleChanges) {
     this.toolTipDelete = this.translateService.translate('delete_selected_item');
     this.toolTipExport = this.translateService.translate('export_csv');
     this.toolTipSettings = this.translateService.translate('setting_table');
+   
    }
 
   ID(element: string) {
@@ -56,6 +59,24 @@ export class AitButtonTableComponent implements OnInit,OnChanges {
   }
 
   exportCsv() {
+    const header = [];
+    const data = [];
+    for(const column of this.columnExport) {
+      header.push('"'+ column +'"');
+    }
+    // tìm kiếm và sắp xếp
+    for(const i of this.dataExport){
+      const item = {};
+      for(const column of this.columnExport) {
+        for(const j in i){
+          if(column == j){
+            item[j] = i[j];
+          }           
+        }
+      }
+      data.push(item);
+    }
+
     if(isObjectFull(this.columnExport)){
       const name = this.fileName + Date.now().toString();
       const options = {
@@ -67,13 +88,12 @@ export class AitButtonTableComponent implements OnInit,OnChanges {
         title: 'Your title',
         useBom: true,
         noDownload: false,
-        headers: this.columnExport,
-        useHeader: true,
+        headers: header,
+        useHeader: false,
         nullToEmptyString: true,
-        keys: this.columnExport 
       };
       if (this.dataExport.length > 0) {
-        new AngularCsv(this.dataExport, name, options);
+        new AngularCsv(data, name, options);
       } 
     }else{
       const name = this.fileName + Date.now().toString();
@@ -101,16 +121,37 @@ export class AitButtonTableComponent implements OnInit,OnChanges {
     this.isSetting = !this.isSetting;
   }
 
-  settingColumnTable(val: any[]) {
+  async settingColumnTable(val: any[]) {   
     if(this.sortNo == 0 && isObjectFull(val)){
       this.columns = val;     
-      this.columnDislay.emit({value: val});  
+      await this.arrange(this.columns);
       this.sortNo++;
-    }
-    if(this.sortNo > 0){
+    }else if(this.sortNo > 0){
       this.columns = val;     
-      this.columnDislay.emit({value: val}); 
+      await this.arrange(this.columns);
     }
+  }
+
+  async settingArrangeTable(val: any[]){
+    this.positionAll = val;
+    await this.arrange(this.columns);
+  }
+
+  arrange(val: any[]){
+    this.position = [];
+    if(this.positionAll.length > 0){
+      for(const item of this.positionAll){
+        for(const i of val ){
+          if(item.code == i._key){
+            this.position.push(i);
+          }
+        }
+      }
+      this.watchValue.emit({value: this.position});  
+    }else{
+      this.watchValue.emit({value: val}); 
+    }
+    
   }
 
   deletAll(){
