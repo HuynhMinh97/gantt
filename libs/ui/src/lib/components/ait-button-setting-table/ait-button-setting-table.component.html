@@ -1,39 +1,42 @@
 <div class="button_table">
-    <div class="button_left">
-      <button (click)=" exportCsv()" [nbTooltip]="toolTipExport" id="{{ ID('exportCsv') }}">
-        <i class="fas fa-download"></i>
-      </button>
-      <button [nbTooltip]="toolTipDelete" *ngIf="this.dataDelete.length == 0" id="{{ ID('delete_all') }}">
-        <i style=" background:gray;-webkit-background-clip: text;" class="far fa-trash-alt"></i>
-      </button>
-      <button (click)="deletAll()" nbTooltip="Delete All" *ngIf="this.dataDelete.length > 0">
-        <i class="far fa-trash-alt"></i>
-      </button>
-    </div>
-    <div class="button_right" #display>
-      <div class="setting_table" *ngIf="isSetting" >
-        <ait-autocomplete-master-data
-        [id]="'db_type'"
-        [width]="'200px'"
-        [height]="'40px'"
-        [required]="false"
-        [maxItem]="50"
-        [placeholder]="'Please select column'"
-        [disableOutputDefault]="true"
-        (watchValue)="settingColumnTable($event?.value)"
-        [defaultValue]="[{_key: 'all'}]"
-        [dataSource]="dataSource"
-        [collection]="collection"
-        [class]="class"
-      >
-      </ait-autocomplete-master-data>
-      </div>
-      <button 
-        (click)="toggleSetting()"
-        [nbTooltip]="toolTipSettings"
-        id="{{ ID('setting_table') }}"
-      >
-        <i class="fas fa-table"></i>
-      </button>
-    </div>
+  <div class="button_left">
+    <button (click)=" exportCsv()" [nbTooltip]="toolTipExport" id="{{ ID('exportCsv') }}">
+      <i class="fas fa-download"></i>
+    </button>
+    <button [nbTooltip]="toolTipDelete" *ngIf="this.dataDelete.length == 0" id="{{ ID('delete_all') }}">
+      <i style=" background:gray;-webkit-background-clip: text;" class="far fa-trash-alt"></i>
+    </button>
+    <button (click)="deletAll()" nbTooltip="Delete All" *ngIf="this.dataDelete.length > 0">
+      <i class="far fa-trash-alt"></i>
+    </button>
   </div>
+  <div class="button_right" #display>
+    <div class="setting_table" *ngIf="isSetting" >
+      <ait-autocomplete-master-data
+      [id]="'db_type'"
+      [width]="'200px'"
+      [height]="'40px'"
+      [required]="false"
+      [maxItem]="50"
+      [placeholder]="'Please select column'"
+      [disableOutputDefault]="true"
+      (watchValue)="settingColumnTable($event?.value)"
+      [defaultValue]="dataSource"
+      [dataSource]="dataSource"
+      [collection]="collection"
+      [class]="class"
+      [allowCheckAll]="true"
+      (onDragDrop)="settingArrangeTable($event)"
+      [allowDragDrop]="true"
+    >
+    </ait-autocomplete-master-data>
+    </div>
+    <button 
+      (click)="toggleSetting()"
+      [nbTooltip]="toolTipSettings"
+      id="{{ ID('setting_table') }}"
+    >
+      <i class="fas fa-table"></i>
+    </button>
+  </div>
+</div>
