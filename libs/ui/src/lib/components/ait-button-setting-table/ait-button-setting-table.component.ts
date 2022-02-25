@@ -1,5 +1,5 @@
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { isObjectFull, KeyValueDto } from '@ait/shared';
+import { isObjectFull} from '@ait/shared';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { NbMenuService } from '@nebular/theme';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';

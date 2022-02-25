@@ -151,5 +151,5 @@ export * from './lib/components/ait-table-button/ait-table-button.component';
 export * from './lib/components/ait-button-setting-table/ait-button-setting-table.module';
 
 //confirm message error
-export * from './lib/components/ait-message-error/ait-message-error.module';
-export * from './lib/components/ait-message-error/ait-message-error.component';
+export * from './lib/components/ait-dialog-messsge/ait-dialog-messsge.component';
+export * from './lib/components/ait-dialog-messsge/ait-dialog-messsge.module';

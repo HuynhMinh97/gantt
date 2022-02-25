@@ -7,19 +7,18 @@ import {
   AitTranslationService, 
   AppState 
 } from '@ait/ui';
-import { Component, EventEmitter, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit} from '@angular/core';
 import { NbDialogRef, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { LocalDataSource } from 'ng2-smart-table';
-import { getCaption, getLang } from '../../state/selectors';
 
 @Component({
   selector: 'ait-ait-message-error',
-  templateUrl: './ait-message-error.component.html',
-  styleUrls: ['./ait-message-error.component.scss']
+  templateUrl: './ait-dialog-messsge.component.html',
+  styleUrls: ['./ait-dialog-messsge.component.scss']
 })
-export class AitMessageErrorComponent extends AitBaseComponent implements OnInit {
+export class AitDialogMesssgeComponent extends AitBaseComponent implements OnInit {
 
   @Input() listDataError: any = [];
   @Input() style = {};
