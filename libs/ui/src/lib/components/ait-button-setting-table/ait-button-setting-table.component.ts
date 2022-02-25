@@ -1,6 +1,7 @@
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { isObjectFull, KeyValueDto } from '@ait/shared';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { NbMenuService } from '@nebular/theme';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { AitTranslationService } from '../../services';
 @Component({
@@ -12,17 +13,21 @@ export class AitButtonTableComponent implements OnInit,OnChanges {
 
   @ViewChild('display', { static: false }) display: ElementRef;
   @Input() columnExport = [];
-  @Input() dataExport: any[] = [];
+  @Input() dataCheck: any[] = [];
+  @Input() dataAll: any[] = [];
   @Input() fileName = 'My Csv';
   @Input() id = '';
   @Input() collection = 'sys_master_data';
   @Input() class: string;
   @Input() dataSource: any[];
+  @Input() defaultValue: any[] = [];
 
   @Output()watchValue = new EventEmitter();
 
   @Input() dataDelete: any = [];
-  @Output() isDelete = new EventEmitter();
+  @Output() typeDelete = new EventEmitter();
+ 
+  dataCsv: any[] = [];
   isSetting = false;
   selectedItems = [];
   columns = [];
@@ -32,19 +37,32 @@ export class AitButtonTableComponent implements OnInit,OnChanges {
   position = [];
   positionAll = [];
   sortNo = 0;
+  items = [
+    { title: 'Profile', data: { id: 'logout' } },
+    { title: 'Logout' },
+  ];
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor(
     private translateService: AitTranslationService,
+    private menuService: NbMenuService,
   ) { }
 
   // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void {
+    if(!isObjectFull(this.defaultValue)){
+      this.defaultValue = this.dataSource;  
+    }
     setTimeout(() => {
-      if(isObjectFull(this.dataSource)){
-        this.columns = this.dataSource;  
-      }
+      this.dataCsv = JSON.parse(JSON.stringify(this.dataCheck));
     }, 1000);
+    this.menuService.onItemClick().subscribe((event) => {
+      if (event.item.title === 'Logout') {
+        console.log('logout clicked');
+      }
+    });
   }
+
+  
 
   ngOnChanges(changes: SimpleChanges) {
     this.toolTipDelete = this.translateService.translate('delete_selected_item');
@@ -58,14 +76,20 @@ export class AitButtonTableComponent implements OnInit,OnChanges {
     return idx + '_' + element;
   }
 
-  exportCsv() {
+  exportCsv(checkType: boolean) {
+    let dataInput = [];
+    if(checkType){
+      dataInput = this.dataAll;
+    }else{
+      dataInput = this.dataCheck;
+    }
     const header = [];
     const data = [];
     for(const column of this.columnExport) {
       header.push('"'+ column +'"');
     }
     // tìm kiếm và sắp xếp
-    for(const i of this.dataExport){
+    for(const i of dataInput){
       const item = {};
       for(const column of this.columnExport) {
         for(const j in i){
@@ -92,7 +116,7 @@ export class AitButtonTableComponent implements OnInit,OnChanges {
         useHeader: false,
         nullToEmptyString: true,
       };
-      if (this.dataExport.length > 0) {
+      if (dataInput.length > 0) {
         new AngularCsv(data, name, options);
       } 
     }else{
@@ -110,8 +134,8 @@ export class AitButtonTableComponent implements OnInit,OnChanges {
         useHeader: true,
         nullToEmptyString: true,
       };
-      if (this.dataExport.length > 0) {
-        new AngularCsv(this.dataExport, name, options);
+      if (dataInput.length > 0) {
+        new AngularCsv(dataInput, name, options);
       } 
     }
    
@@ -154,8 +178,9 @@ export class AitButtonTableComponent implements OnInit,OnChanges {
     
   }
 
-  deletAll(){
-    this.isDelete.emit({value: true});
+  deletAll(checkType: boolean){
+    console.log(checkType);
+    this.typeDelete.emit({value: checkType});
   }
 
 }
