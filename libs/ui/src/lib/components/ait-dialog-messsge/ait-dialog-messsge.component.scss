@@ -20,3 +20,69 @@
       }
     }
 }
+.table__area1 {
+  overflow-x: scroll;
+}
+
+.table__area1::-webkit-scrollbar {
+  -webkit-appearance: none;
+}
+
+.table__area1::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: lightgray;
+  -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.table__area1::-webkit-scrollbar:horizontal {
+  height: 10px;
+}
+
+:host ::ng-deep .table__area1 ng2-smart-table tbody td {
+  padding: 5px 10px !important;
+  font-size: 14px !important;
+}
+
+:host ::ng-deep .table__area1 ng2-smart-table tbody tr:hover {
+  background: #fbe8da !important;
+}
+
+:host ::ng-deep .table__area1 .ng2-smart-sort-link {
+  color: rgba(0, 0, 0, 0.54) !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+}
+
+:host ::ng-deep .table__area1 .ng2-smart-titles {
+  background: whitesmoke;
+}
+
+:host ::ng-deep .table__area1 .ng2-smart-action-multiple-select {
+  text-align: center;
+}
+
+:host ::ng-deep .table__area1 input[type='checkbox'] {
+  width: 20px;
+  height: 20px;
+  display: unset;
+}
+
+:host ::ng-deep .table__area1 table th:first-child {
+  text-align: center;
+  max-width: 150px;
+  min-width: 70px;
+}
+
+:host ::ng-deep .table__area1 .ng2-smart-pagination-nav {
+  justify-content: flex-start !important;
+}
+
+:host ::ng-deep .table__area1 .ng2-smart-pagination {
+  position: sticky;
+  left: 0;
+}
+
+:host ::ng-deep .table__area1 .select-button {
+  background: white !important;
+}
