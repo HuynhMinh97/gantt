@@ -32,7 +32,6 @@ export class AitDialogMesssgeComponent extends AitBaseComponent implements OnIni
   left = 0;
   settings = {
     actions: false,
-    selectMode: 'multi',
     pager: {
       display: true,
       perPage: 10,
@@ -49,7 +48,8 @@ export class AitDialogMesssgeComponent extends AitBaseComponent implements OnIni
     columns: {
       row: {
         title: 'Row',
-        filter: true
+        filter: true,
+        width: '100'
       },
       name: {
         title: 'Name',

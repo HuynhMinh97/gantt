@@ -3,7 +3,7 @@
     <div class="dropdown">
       <button class="dropbtn"><i class="fas fa-download"></i></button>
       <div class="dropdown-content">
-        <div *ngIf="this.dataCheck.length > 0" class="content" (click)=" exportCsv(false)">Export</div>
+        <div *ngIf="selectedItems.length > 0" class="content" (click)=" exportCsv(false)" style="border-bottom: 0.5px solid rgb(212, 212, 212);">Export</div>
         <div class="content" (click)=" exportCsv(true)">Export All</div>
       </div>
     </div>
@@ -11,7 +11,7 @@
     <div class="dropdown">
       <button class="dropbtn"><i class="far fa-trash-alt"></i></button>
       <div class="dropdown-content">
-        <div *ngIf="this.dataDelete.length > 0" class="content" (click)=" deletAll(false)">Delete</div>
+        <div *ngIf="selectedItems.length > 0" class="content" (click)=" deletAll(false)" style="border-bottom: 0.5px solid rgb(212, 212, 212);">Delete</div>
         <div class="content" (click)=" deletAll(true)">Delete All</div>
       </div>
     </div>

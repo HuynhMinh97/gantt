@@ -13,23 +13,21 @@ export class AitButtonTableComponent implements OnInit,OnChanges {
 
   @ViewChild('display', { static: false }) display: ElementRef;
   @Input() columnExport = [];
-  @Input() dataCheck: any[] = [];
-  @Input() dataAll: any[] = [];
+  @Input() dataExport: any[] = [];
+  @Input() dataExportAll: any[] = [];
   @Input() fileName = 'My Csv';
   @Input() id = '';
   @Input() collection = 'sys_master_data';
   @Input() class: string;
   @Input() dataSource: any[];
   @Input() defaultValue: any[] = [];
+  @Input() selectedItems: any[] = [];
 
   @Output()watchValue = new EventEmitter();
-
-  @Input() dataDelete: any = [];
   @Output() typeDelete = new EventEmitter();
  
   dataCsv: any[] = [];
   isSetting = false;
-  selectedItems = [];
   columns = [];
   toolTipDelete = '';
   toolTipExport = '';
@@ -53,7 +51,7 @@ export class AitButtonTableComponent implements OnInit,OnChanges {
       this.defaultValue = this.dataSource;  
     }
     setTimeout(() => {
-      this.dataCsv = JSON.parse(JSON.stringify(this.dataCheck));
+      this.dataCsv = JSON.parse(JSON.stringify(this.dataExport));
     }, 1000);
     this.menuService.onItemClick().subscribe((event) => {
       if (event.item.title === 'Logout') {
@@ -79,9 +77,9 @@ export class AitButtonTableComponent implements OnInit,OnChanges {
   exportCsv(checkType: boolean) {
     let dataInput = [];
     if(checkType){
-      dataInput = this.dataAll;
+      dataInput = this.dataExportAll;
     }else{
-      dataInput = this.dataCheck;
+      dataInput = this.dataExport;
     }
     const header = [];
     const data = [];

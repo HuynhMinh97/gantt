@@ -54,7 +54,7 @@
         <div class="template__filter__container radius" *ngIf="isTableIncluded">
             <div class="template__header__filter" (click)="toggleTableExpan()"
                 [ngStyle]="!isTableExpan ? { border: 'none' } : null">
-                <ait-text-gradient [content]="tableTitle" [id]="'title'" [fontsize]="'21px'"></ait-text-gradient>
+                <ait-text-gradient [content]="tableTitle" [id]="'title'" [fontsize]="'21px'" style="width: 100%;"></ait-text-gradient>
                 <ng-content select="[searchButtonArea]"></ng-content>
                 <div class="icon__expan" (click)="toggleTableExpan()">
                     <nb-icon icon="arrow-ios-upward-outline" *ngIf="isTableExpan" (click)="toggleTableExpan()">
