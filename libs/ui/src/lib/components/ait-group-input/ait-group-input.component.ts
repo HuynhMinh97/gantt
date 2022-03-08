@@ -103,16 +103,17 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
         resModule.status === RESULT_STATUS.OK &&
         resPage.status === RESULT_STATUS.OK
       ) {
-        this.moduleKey = resModule.data[0]?._key || '';
-        this.pageKey = resPage.data[0]?._key || '';
+        this.moduleKey = resModule.data[0]?.code || '';
+        this.pageKey = resPage.data[0]?.code || '';
 
         const resGroup = await this.renderPageService.findGroup({
           module: this.moduleKey,
           page: this.pageKey,
           type: 'input',
         });
+        
         if (resGroup.status === RESULT_STATUS.OK) {
-          this.groupKey = resGroup.data[0]?._key || '';
+          this.groupKey = resGroup.data[0]?.code || '';
           this.collection = resGroup.data[0]?.collection || '';
 
           const resSearch = await this.renderPageService.findSysInput({
@@ -163,6 +164,7 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
       this.collection,
       conditions
     );
+    
     if (res.data.length > 0) {
       const value = JSON.parse(res.data[0]['data'] || '[]');
       this.inputForm.patchValue(value);

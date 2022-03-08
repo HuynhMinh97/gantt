@@ -194,6 +194,9 @@ export class AitGroupSearchComponent
             page: this.pageKey,
             group: this.groupKey,
           });
+
+          console.log(resResult);
+          
           if (
             resSearch.status === RESULT_STATUS.OK &&
             resSearch?.data?.length > 0
@@ -228,6 +231,13 @@ export class AitGroupSearchComponent
   navigateTo404() {
     this.cancelLoadingApp();
     this.router.navigate([`/404`]);
+  }
+
+  create() {
+    console.log(this.pageRouter)
+    if (this.pageRouter) {
+      this.router.navigate([`${this.pageRouter?.input || ''}`]);
+    }
   }
 
   detail(data: any) {
@@ -323,7 +333,7 @@ export class AitGroupSearchComponent
           );
         },
       };
-      if(!diplay){
+      if (!diplay) {
         columns.forEach((col: any) => {
           const obj = {
             type: 'custom',
@@ -344,10 +354,10 @@ export class AitGroupSearchComponent
           this.columnTable.push({ _key: col.name, value: col.title });
         });
         this.setupTable();
-      }else{
+      } else {
         // this.callLoadingApp();
         columns.forEach((col: any) => {
-          if(diplay.find(element => element._key == col.name)){
+          if (diplay.find(element => element._key == col.name)) {
             const obj = {
               type: 'custom',
               renderComponent: AitTableCellComponent,
@@ -365,7 +375,7 @@ export class AitGroupSearchComponent
             this.settings['columns'][col['name']] = obj;
           }
         });
-        if(diplay.length == 0){
+        if (diplay.length == 0) {
           delete this.settings['columns']['_key'];
           delete this.settings['selectMode'];
         }
@@ -381,6 +391,7 @@ export class AitGroupSearchComponent
       this.cancelLoadingApp();
     }
   }
+
   async setupTable() {
     try {
       const conditions = this.getSearchCondition();
