@@ -202,6 +202,7 @@ export const APP_LOGO = '../assets/images/logo4.svg';
 
 export const APP_TITLE = 'matching system'
 
+export const APP_HEADER = 'AIT FRAMEWORK'
 
 export const AppLayout = [
   {
