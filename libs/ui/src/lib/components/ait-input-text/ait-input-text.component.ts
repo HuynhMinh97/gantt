@@ -40,6 +40,9 @@ export class AitTextInputComponent implements OnChanges {
   @Input() readonly = false;
   @Input() errorMessages = [];
   @Input() clearError = false;
+  @Input() type = 'text';
+  @Input() regex: RegExp;
+  isShowPass = false;
   componentErrors = []
   msgRequired = '';
   errorArray = [];
@@ -165,13 +168,12 @@ export class AitTextInputComponent implements OnChanges {
     this.checkMaxLength(this.inputCtrl.value);
   }
 
-  checkReq = (value) => {
+  checkReq = (value: string) => {
     if (this.required) {
       if (!value) {
         const msg = this.translateService.getMsg('E0001').replace('{0}', this.getNameField());
         this.isError = true;
-        this.componentErrors = [msg]
-
+        this.componentErrors = [msg];
         this.onError.emit({ isValid: false });
       }
       else {
@@ -180,13 +182,25 @@ export class AitTextInputComponent implements OnChanges {
         if (this.messagesError().length === 0) {
           this.isError = false;
           this.onError.emit({ isValid: true });
-
         }
-
       }
     }
-    else {
-      // this.onError.emit({ isValid: true });
+    
+    if (value && this.regex) {
+      const isValid = !!value.match(this.regex);
+      if (!isValid) {
+        const msg = this.translateService.getMsg('E0013') || 'Dữ liệu không hợp lệ';
+        this.isError = true;
+        this.componentErrors = [msg];
+        this.onError.emit({ isValid: false });
+      } else {
+        this.componentErrors = [];
+        this.errorMessages = [];
+        if (this.messagesError().length === 0) {
+          this.isError = false;
+          this.onError.emit({ isValid: true });
+        }
+      }
     }
   }
 
@@ -198,5 +212,8 @@ export class AitTextInputComponent implements OnChanges {
     this.checkMaxLength(value);
     this.watchValue.emit(value);
 
+  }
+  toggleShowPass() {
+    this.isShowPass = !this.isShowPass;
   }
 }
