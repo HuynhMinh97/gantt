@@ -6,34 +6,22 @@
       <!-- view -->
       <button mat-menu-item (click)="view()">
         <nb-icon icon="eye" pack="font-awesome"></nb-icon>
-        <span class="icon_text">View</span>
+        <span class="icon_text">{{getTitle('view')}}</span>
       </button>
       <!-- edit -->
       <button mat-menu-item (click)="edit()">
         <nb-icon icon="pen" pack="font-awesome-fas"></nb-icon>
-        <span class="icon_text">Edit</span>
+        <span class="icon_text">{{getTitle('edit')}}</span>
       </button>
-      <!-- <div nbTooltip="{{message}}" nbTooltipPlacement="top" *ngIf="!isMatching" style="cursor: not-allowed">
-        <button mat-menu-item disabled [ngStyle]="{background: 'lightgray', color: 'white'}">
-          <nb-icon icon="pen" pack="font-awesome-fas"></nb-icon>
-          <span class="icon_text">編集</span>
-        </button>
-      </div> -->
       <!-- copy -->
       <button mat-menu-item (click)="copy()">
         <nb-icon icon="copy" pack="font-awesome"></nb-icon>
-        <span class="icon_text">Copy</span>
+        <span class="icon_text">{{getTitle('copy')}}</span>
       </button>
       <!-- delete -->
       <button mat-menu-item (click)="remove()">
         <nb-icon icon="times" pack="font-awesome-fas"></nb-icon>
-        <span class="icon_text">Delete</span>
+        <span class="icon_text">{{getTitle('delete')}}</span>
       </button>
-      <!-- <div nbTooltip="{{message}}" nbTooltipPlacement="top" *ngIf="!isMatching" style="cursor: not-allowed">
-        <button mat-menu-item disabled [ngStyle]="{background: 'lightgray', color: 'white'}">
-          <nb-icon icon="times" pack="font-awesome-fas"></nb-icon>
-          <span class="icon_text">削除</span>
-        </button>
-      </div> -->
     </mat-menu>
 </div>
