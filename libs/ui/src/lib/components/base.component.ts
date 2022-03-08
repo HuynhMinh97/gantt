@@ -886,33 +886,33 @@ export class AitBaseComponent implements OnInit, OnDestroy {
   }
 
   public async getPermission(page: string, module: string) {
-    try {
-      const page_key = await this.getKey(page, 'page');
-      const module_key = await this.getKey(module, 'module');
-      const result: any = await this.apollo
-        .query({
-          query: gql`query{
-          findPermission(request : {
-            page_key : "${page_key}",
-            module_key: "${module_key}",
-            user_key: "${this.user_id}"
-          }) {
-            page
-            module
-            permission
-            user_id
-          }
-        }`,
-        })
-        .toPromise();
+    // try {
+    //   const page_key = await this.getKey(page, 'page');
+    //   const module_key = await this.getKey(module, 'module');
+    //   const result: any = await this.apollo
+    //     .query({
+    //       query: gql`query{
+    //       findPermission(request : {
+    //         page_key : "${page_key}",
+    //         module_key: "${module_key}",
+    //         user_key: "${this.user_id}"
+    //       }) {
+    //         page
+    //         module
+    //         permission
+    //         user_id
+    //       }
+    //     }`,
+    //     })
+    //     .toPromise();
 
-      const p = result.data?.findPermission;
-      this.currentPermission = p?.permission;
-      return p;
-    } catch (e) {
-      console.log(e);
-      return null;
-    }
+    //   const p = result.data?.findPermission;
+    //   this.currentPermission = p?.permission;
+    //   return p;
+    // } catch (e) {
+    //   console.log(e);
+    //   return null;
+    // }
   }
 
   // get message erros when form invalid

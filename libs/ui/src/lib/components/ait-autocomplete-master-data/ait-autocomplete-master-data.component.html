@@ -1,4 +1,4 @@
-<div [ngClass]="classContainer">
+<div [ngClass]="classContainer" cdkDropListGroup>
   <ait-label
     [label]="label"
     [required]="required"
@@ -21,7 +21,7 @@
       [style.height]="height"
       [class.focus]="getFocus()"
     >
-      <div
+      <div cdkDropList
         style="
           width: 100%;
           height: 100%;
@@ -91,16 +91,17 @@
           tabindex="{{ tabIndex }}"
         />
 
-        <div
+        <div cdkDropList
           class="autocompleteeeee emptyy"
           *ngIf="MAXITEM !== 1 && isOpenAutocomplete && dataFilter.length !== 0"
+          (cdkDropListDropped)="drop($event)"
         >
-          <div
+          <div cdkDrag [cdkDragDisabled]="allowCheckAll && i === 0 ? true : !allowDragDrop"
             *ngFor="let option of filteredOptions$ | async; let i = index"
             class="option__container"
             style="cursor: pointer; position: relative; height: 37px"
           >
-            <div
+            <div 
               (click)="optionClicked($event, option)"
               style="
                 position: absolute;
@@ -135,9 +136,10 @@
             ></nb-icon>
           </div>
         </div>
-        <div
+        <div cdkDropList
           class="autocompleteeeee emptyy"
           *ngIf="MAXITEM === 1 && isOpenAutocomplete && dataFilter.length !== 0"
+          (cdkDropListDropped)="drop($event)"
         >
           <div
             *ngFor="let option of filteredOptions$ | async"
@@ -147,6 +149,7 @@
             (click)="onSelectionChange(option)"
             nbTooltipPlacement="right"
             [nbTooltip]="option?.value"
+            cdkDrag [cdkDragDisabled]="!allowDragDrop"
           >
             <div
               style="

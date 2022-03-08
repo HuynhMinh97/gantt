@@ -24,6 +24,7 @@ export class AitErrorMessageComponent {
   @Input() id;
   now = Date.now();
   ID(element: string) {
+    return '';
     const idx = this.id && this.id !== '' ? this.id : this.now;
     return idx + '_' + element;
   }

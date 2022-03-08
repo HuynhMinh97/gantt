@@ -26,6 +26,7 @@ import { AitAuthService, AitEnvironmentService, AitMasterDataService, AitTransla
 import { AppState, } from '../../state/selectors';
 import { AitAppUtils } from '../../utils/ait-utils';
 import { AitBaseComponent } from '../base.component';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 
 
@@ -99,6 +100,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Output() onInput = new EventEmitter();
   @Output() onInputValues = new EventEmitter();
   @Output() outFocusValues = new EventEmitter();
+  @Output() onDragDrop = new EventEmitter();
   isDropDownList = false;
   @Input() isReadOnly = false;
   @Input() disableOutputDefault = false;
@@ -119,6 +121,8 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   @Input() height;
   @Input() isSubmit = false;
   @Input() allowNew = false;
+  @Input() allowDragDrop = false;
+  @Input() allowCheckAll = false;
   @Output() onError = new EventEmitter();
   dataFilter = [1];
   @Input() errorMessages;
@@ -278,13 +282,6 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
 
   }
 
-  // removeData = () => {
-
-  // }
-
-
-
-
   ngOnChanges(changes: SimpleChanges) {
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
@@ -355,8 +352,67 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
             this.isError = false;
           }
         }
+
+        if (key === 'dataSource') {
+          const dataMaster = this.dataSource;
+          const r = dataMaster.map(r => ({
+            code: r.code || r._key,
+            value: r[this.targetValue] || r?.value,
+            _key: r.code || r._key,
+            is_matching: r?.is_matching,
+            id: r?._key
+          }));
+          
+          this.setupNew(r, dataMaster);
+        }
       }
     }
+  }
+
+  setupNew(r: any[], dataMaster: any[]) {
+    if(this.MAXITEM > 1 && this.allowCheckAll) {
+      const all = {
+        code: 'all',
+        id: 'all',
+        is_matching: false,
+        value: 'Check All',
+        _key: 'all',
+       }
+       r.unshift(all);
+     }
+
+    const sortNoArr = dataMaster.map(x => x?.sort_no).filter(s => !!s);
+    this.lastSortNo = sortNoArr.length !== 0 ? Math.max.apply(null, sortNoArr) : dataMaster.length;
+
+    const dataFiltered = AitAppUtils.getUniqueArray((r || []), 'value');
+
+    const data = [...dataFiltered].map((m) => {
+      const idx = Date.now() + Math.floor(Math.random() * 100);
+      if (typeof m === 'string') {
+        return {
+          name: m,
+          isChecked: false,
+          optionId: idx,
+        };
+      }
+      return {
+        ...m,
+        isChecked: false,
+        optionId: m._key ? m._key + idx : idx,
+      };
+    });
+
+    const dataFilter = data.filter(d => d.value);
+    let ret = dataFilter;
+    const _keys = this.excludedValue.map(e => e?._key);
+    if (_keys.length !== 0) {
+      ret = dataFilter.filter(f => !_keys.includes(f?._key));
+    }
+
+    this.DataSource = ret;
+    this.dataSourceDf = AitAppUtils.deepCloneArray(this.DataSource);
+
+    this.setupDefault();
   }
 
   getAllowNewText = () => {
@@ -574,6 +630,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
         dataMaster = result || [];
       }
     }
+
     const r = dataMaster.map(r => ({
       code: r.code || r._key,
       value: r[this.targetValue] || r?.value,
@@ -581,49 +638,8 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       is_matching: r?.is_matching,
       id: r?._key
     }));
-
-    const sortNoArr = dataMaster.map(x => x?.sort_no).filter(s => !!s);
-    this.lastSortNo = sortNoArr.length !== 0 ? Math.max.apply(null, sortNoArr) : dataMaster.length;
-
-
-
-    const dataFiltered = AitAppUtils.getUniqueArray((r || []), 'value');
-
-    const data = [...dataFiltered].map((m) => {
-      const idx = Date.now() + Math.floor(Math.random() * 100);
-      if (typeof m === 'string') {
-        return {
-          name: m,
-          isChecked: false,
-          optionId: idx,
-        };
-      }
-      return {
-        ...m,
-        isChecked: false,
-        optionId: m._key ? m._key + idx : idx,
-      };
-    });
-
-    const dataFilter = data.filter(d => d.value);
-    let ret = dataFilter;
-    const _keys = this.excludedValue.map(e => e?._key);
-    if (_keys.length !== 0) {
-      ret = dataFilter.filter(f => !_keys.includes(f?._key));
-    }
-
-
-
-    this.DataSource = ret;
-    this.dataSourceDf = AitAppUtils.deepCloneArray(this.DataSource);
-
-    this.setupDefault();
-    if (this.maxItem !== 1) {
-      this.inputControl.valueChanges.subscribe(value => {
-        // this.filteredOptions$ = of(this.DataSource);
-      })
-    }
-
+    
+    this.setupNew(r, dataMaster);
   }
 
   get DATASUGGEST(): any[] {
@@ -702,23 +718,37 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       .map((m) => ({ _key: m?.code, value: m?.value }));
 
   checkItem = (event: Event, opt: any) => {
-
     let target;
-    let targetId;
-
     const itemFind = this.DataSource.find((f) => f?.optionId === opt?.optionId || f?._key === opt?.code);
     if (this.optionSelected.length < this.MAXITEM) {
       itemFind.isChecked = !itemFind.isChecked;
-
+      if (this.allowCheckAll) {
+        if (opt.code === 'all') {
+          this.DataSource.map(e => e.isChecked = opt.isChecked);
+        } else if (!opt.isChecked) {
+          this.DataSource[0].isChecked = opt.isChecked;
+        } else {
+          const isCheckAll = this.DataSource.every((e, i) => {
+            if (i === 0) {
+              return true;
+            } else {
+              return e.isChecked;
+            }
+          });
+          if (isCheckAll) {
+          this.DataSource[0].isChecked = true;
+          }
+        }
+      }
       this.optionSelected = this.getSelectedOptions();
       target = this.DataSource;
       this.filteredOptions$ = of(this.DataSource);
-      this.watchValue.emit({ value: this.optionSelected.map(m => ({ _key: m?._key, value: m?.value })) });
+      const dataReturn = (this.allowCheckAll && (this.DataSource || [])[0]?.isChecked) ? 
+      (this.optionSelected || []).slice(1) : this.optionSelected;
+      this.watchValue.emit({ value: (dataReturn || []).map(m => ({ _key: m?._key, value: m?.value })) });
       setTimeout(() => {
         if (target) {
           this.DataSource = target
-          // this.filteredOptions$ = of(this.DataSource);
-
           this.currentSortData = AitAppUtils.deepCloneArray(target);
           this.isHideLabel = false;
           this.isClickOption = false;
@@ -790,7 +820,7 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
   };
 
   sortItems = (array: any[]) => {
-    return array.sort((x, y) => (x.isChecked === y.isChecked) ? 0 : x.isChecked ? -1 : 1);
+    return this.allowDragDrop ? array : array.sort((x, y) => (x.isChecked === y.isChecked) ? 0 : x.isChecked ? -1 : 1);
   }
 
   get MAXITEM(): number {
@@ -1147,9 +1177,9 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
       const statement = target[0];
       return this.modifileOption(statement);
     } else if ((target || []).length !== 1) {
-
+      const index = (this.allowCheckAll && (this.DataSource || [])[0]?.isChecked) ? target.length - 2 : target.length - 1;
       const statement = this.modifileOption(this.getStringByLength(target), 15);
-      return statement + `（+${target.length - 1} ${itemsText})`;
+      return statement + `（+${index} ${itemsText})`;
     }
     return '';
   };
@@ -1162,10 +1192,23 @@ export class AitAutoCompleteMasterDataComponent extends AitBaseComponent
     const result = m.filter((f) => {
 
       const target = f?.value;
-
       return target.toString().toLowerCase().includes(filterValue);
     });
     this.dataFilter = filterValue !== '' ? result : this.DataSource;
     return filterValue !== '' ? result : this.DataSource;
+  }
+
+  drop(event: CdkDragDrop<any[]>) {
+    if (this.allowCheckAll && event.currentIndex === 0) return;
+    const eventDrop = this.filteredOptions$.subscribe((data: any[]) => {
+      moveItemInArray((data || []), event.previousIndex, event.currentIndex);
+      if (this.allowCheckAll) {
+        const [, ...returnData] = data;
+        this.onDragDrop.emit(returnData);
+      } else {
+        this.onDragDrop.emit(data);
+      }
+    });
+    eventDrop.unsubscribe();
   }
 }

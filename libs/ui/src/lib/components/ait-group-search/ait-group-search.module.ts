@@ -12,6 +12,7 @@ import { AitDatepickerModule } from '../ait-datepicker/ait-datepicker.module';
 import { AitErrorMessageModule } from '../ait-error-message/ait-error-message.module';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { NB_MODULES } from '../../@theme/theme.module';
+import { AitButtonTableModule } from '../ait-button-setting-table/ait-button-setting-table.module';
 
 
 
@@ -29,6 +30,7 @@ import { NB_MODULES } from '../../@theme/theme.module';
     AitSpaceModule,
     AitButtonModule,
     Ng2SmartTableModule,
+    AitButtonTableModule,
     ...NB_MODULES,
   ],
   exports: [AitGroupSearchComponent]

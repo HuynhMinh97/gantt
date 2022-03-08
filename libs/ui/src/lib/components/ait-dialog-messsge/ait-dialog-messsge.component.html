@@ -1,0 +1,59 @@
+<div class="component__container" [ngStyle]="style">
+  <div class="main__container">
+    <ait-text-gradient
+      [content]="'error list'"
+      [id]="'title'"
+    ></ait-text-gradient>
+
+    <div class="table__area1" id="table_message" #area>
+      <ng2-smart-table
+        [settings]="settings"
+        [source]="source"
+      
+        #table
+      ></ng2-smart-table>
+    </div>
+
+    <div
+      *ngIf="totalRows > 0 "
+      [ngClass]="isValidPage ? 'per_page' : 'per_page2'"
+    >
+      <nb-select
+        placeholder="Select Showcase"
+        [(selected)]="perPage"
+        (selectedChange)="changePage()"
+      >
+        <nb-option value="10">10{{'case' | translate}}</nb-option>
+        <nb-option value="20">20{{'case' | translate}}</nb-option>
+        <nb-option value="30">30{{'case' | translate}}</nb-option>
+        <nb-option value="50">50{{'case' | translate}}</nb-option>
+        <nb-option value="100">100{{'case' | translate}}</nb-option>
+      </nb-select>
+    </div>
+
+    <div
+      class="num_page"
+      *ngIf="pageDetail && totalRows > 0 && done"
+      [ngStyle]="{
+        left: isValidPage ? left + 'px' : '0px',
+        'margin-top': isValidPage ? '-67px' : '10px',
+        'margin-left': '750px'
+      }"
+    >
+      {{ pageDetail }}
+    </div>
+    <div class="group-button">
+      <ait-button
+      [isDefault]="true" 
+      [id]="'close'"
+      [title]="'close'"
+      [background]="'#FFFFFF'"
+      [style]="'active'"
+      [color]="'#000000'"
+      (click)="closeDialog(true)"
+    ></ait-button>
+    </div>
+
+  </div>
+</div>
+  
