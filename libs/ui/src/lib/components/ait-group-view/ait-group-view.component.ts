@@ -78,8 +78,8 @@ export class AitGroupViewComponent extends AitBaseComponent implements OnInit {
         resModule.status === RESULT_STATUS.OK &&
         resPage.status === RESULT_STATUS.OK
       ) {
-        this.moduleKey = resModule.data[0]?._key || '';
-        this.pageKey = resPage.data[0]?._key || '';
+        this.moduleKey = resModule.data[0]?.code || '';
+        this.pageKey = resPage.data[0]?.code || '';
 
         const resGroup = await this.renderPageService.findGroup({
           module: this.moduleKey,
@@ -87,12 +87,8 @@ export class AitGroupViewComponent extends AitBaseComponent implements OnInit {
           type: 'view'
         });
         if (resGroup.status === RESULT_STATUS.OK) {
-          this.groupKey = resGroup.data[0]?._key || '';
+          this.groupKey = resGroup.data[0]?.code || '';
           this.collection = resGroup.data[0]?.collection || '';
-
-          console.log(this.moduleKey);
-          console.log(this.pageKey);
-          console.log(this.groupKey);
 
           const resView = await this.renderPageService.findSysView({
             module: this.moduleKey,
@@ -106,7 +102,7 @@ export class AitGroupViewComponent extends AitBaseComponent implements OnInit {
           ) {
             this.viewComponents = resView.data;
             this.setupForm(this.viewComponents);
-            this.setupComponent(this.viewComponents);
+            
             if (this._key) {
               this.viewForm.addControl('_key', new FormControl(null));
               this.patchDataToForm(resView.data || []);
@@ -140,14 +136,14 @@ export class AitGroupViewComponent extends AitBaseComponent implements OnInit {
       this.collection,
       conditions
     );
+
     if (res.data.length > 0) {
       const value = JSON.parse(res.data[0]['data'] || '[]');
       this.viewForm.patchValue(value);
-      (Object.keys(this.viewForm.controls) || []).forEach((name) => {
-        this.cloneData[name] = this.viewForm.controls[name].value;
-      });
+
+      this.setupComponent(this.viewComponents);
     } else {
-      this.router.navigate([`/404`]);
+      this.navigateTo404();
     }
   }
 
@@ -165,22 +161,14 @@ export class AitGroupViewComponent extends AitBaseComponent implements OnInit {
     });
     this.leftSide = leftSide.sort((a, b) => a.row_no - b.row_no);
     this.rightSide = rightSide.sort((a, b) => a.row_no - b.row_no);
-
-    console.log(this.leftSide, this.rightSide);
   }
+
   getValue(item_id: string) {
-    switch (item_id) {
-      case 'class':
-        return '性別';
-      case 'parernt_code':
-        return '機械保全';
-      case 'name':
-        return '機械保全123123';
-      case 'code':
-        return '機械保全';
+    try {
+      return this.viewForm.controls[item_id].value || '';
+    } catch {
+      return '';
     }
-    console.log(item_id)
-    return 'man';
   }
 
   setupForm(components: any) {

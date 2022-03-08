@@ -9,6 +9,7 @@
                     <ng-container *ngFor="let component of leftSide">
                         <ait-autocomplete-master-data *ngIf="component.type === 'combobox'"
                             [collection]="component?.component_setting?.collection" [label]="component?.item_label"
+                            [class]="component?.component_setting?.class"
                             [maxItem]="component?.component_setting?.max_item" [isReset]="isReset"
                             [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
                             (watchValue)="takeMasterValue($event?.value, component?.item_id)" [defaultValue]="
@@ -45,6 +46,7 @@
                         <ait-autocomplete-master-data *ngIf="component.type === 'combobox'"
                             [collection]="component?.component_setting?.collection" [label]="component?.item_label"
                             [maxItem]="component?.component_setting?.max_item"
+                            [class]="component?.component_setting?.class"
                             [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
                             (watchValue)="takeMasterValue($event?.value, component?.item_id)" [defaultValue]="
                             inputForm.controls[component?.item_id].value
