@@ -1,6 +1,15 @@
 <div class="component__container">
     <div class="main__container">
         <ait-text-gradient [content]="pageTitle"></ait-text-gradient>
+
+        <div topArea style="width: 100%;
+    text-align: right;
+    margin-bottom: -10px;">
+        <ait-button [id]="'new'" [width]="'150px'" [height]="'32px'" [title]="'New'" [isDefault]="true"
+            (click)="create()">
+        </ait-button>
+    </div>
+    
         <div class="filter__container">
             <div class="header__filter" (click)="toggleExpan()" [ngStyle]="!isExpan ? { border: 'none' } : null">
                 <ait-text-gradient [content]="searchContent" [fontsize]="'21px'"></ait-text-gradient>
