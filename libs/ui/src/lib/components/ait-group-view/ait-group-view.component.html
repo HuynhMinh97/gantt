@@ -9,12 +9,14 @@
           <ng-container *ngFor="let component of leftSide">
             <ait-output-text [label]="component?.item_label" style="margin-bottom: 16px; width: 100%" [width]="'200px'"
               [value]="component?.value" [id]="component?.item_id"></ait-output-text>
+              <ait-space [margin]="'7.25px'"></ait-space>
           </ng-container>
         </div>
         <div class="right__side" *ngIf="rightSide.length > 0">
           <ng-container *ngFor="let component of rightSide">
             <ait-output-text [label]="component?.item_label" style="margin-bottom: 16px; width: 100%" [width]="'200px'"
             [value]="component?.value" [id]="component?.item_id"></ait-output-text>
+            <ait-space [margin]="'7.25px'"></ait-space>
           </ng-container>
         </div>
       </div>
