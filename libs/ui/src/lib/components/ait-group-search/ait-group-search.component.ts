@@ -349,7 +349,7 @@ export class AitGroupSearchComponent
             },
           };
           this.hearder.push(col.name);
-          obj['title'] = col.title || '';
+          obj['title'] = this.translateService.translate(col.title || '');
           this.settings['columns'][col['name']] = obj;
           this.columnTable.push({ _key: col.name, value: col.title });
         });
