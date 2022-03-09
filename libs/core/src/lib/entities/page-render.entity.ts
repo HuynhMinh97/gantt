@@ -91,6 +91,9 @@ export class ComponentSettingEntity {
   
   @Field(() => Int, { nullable: true })
   max_item: number;
+
+  @Field(() => Int, { nullable: true })
+  rows: number;
   
   @Field(() => String, { nullable: true })
   width: string;
