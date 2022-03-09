@@ -52,8 +52,14 @@ export class ComponentSettingDto {
   @Field(() => Int, { nullable: true })
   max_item: number;
 
+  @Field(() => Int, { nullable: true })
+  rows: number;
+
   @Field(() => String, { nullable: true })
   width: string;
+
+  @Field(() => String, { nullable: true })
+  title: string;
 
   @Field(() => Boolean, { nullable: true })
   required: boolean;
