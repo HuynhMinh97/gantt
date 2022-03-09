@@ -25,16 +25,16 @@
     }
   }
   .footer__home__home {
-    height: 124px;
+    height: 100px;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-around;
     background-color: nb-theme(background-footer);
     .img {
-      height: 100px;
+      height: 60px;
       object-fit: cover;
-      width: 100px;
+      width: 60px;
     }
     .content__foot {
       width: 35%;
