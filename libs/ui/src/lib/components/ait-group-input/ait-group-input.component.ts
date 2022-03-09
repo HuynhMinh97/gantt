@@ -57,6 +57,7 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   leftSide: any[] = [];
   rightSide: any[] = [];
   multiLang: string[] = [];
+  pageTitle = '';
   constructor(
     private renderPageService: AitRenderPageService,
     public router: Router,
@@ -105,6 +106,7 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
       ) {
         this.moduleKey = resModule.data[0]?.code || '';
         this.pageKey = resPage.data[0]?.code || '';
+        this.pageTitle = resPage.data[0]?.name || '';
 
         const resGroup = await this.renderPageService.findGroup({
           module: this.moduleKey,
@@ -187,6 +189,8 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
       }
     });
     this.leftSide = leftSide.sort((a, b) => a.row_no - b.row_no);
+    console.log(this.leftSide);
+    
     this.rightSide = rightSide.sort((a, b) => a.row_no - b.row_no);
   }
 
@@ -370,5 +374,18 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
       en_US: text,
       vi_VN: text,
     };
+  }
+
+  toggle(checked: boolean, form: string): void {
+    console.log(checked);
+    
+    this.inputForm.controls[form].setValue(checked);
+
+    console.log(this.inputForm.value);
+    
+  }
+
+  getCheckBoxTitle(title: string): string {
+    return this.translateService.translate(title);
   }
 }
