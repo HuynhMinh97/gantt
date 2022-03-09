@@ -27,6 +27,7 @@
 
                         <ait-input-text *ngIf="component.type === 'text'" [length]="1000" [isReset]="isReset"
                             [label]="component?.item_label" [placeholder]="component?.item_placeholder"
+                            [rows]="component?.component_setting?.rows ? component?.component_setting?.rows : 1"
                             [width]="component?.component_setting?.width" [fullWidth]="true" [id]="component?.item_id"
                             [defaultValue]="inputForm.controls[component?.item_id].value" [isSubmit]="isSubmit"
                             (watchValue)="takeInputValue($event, component?.item_id)" [required]="true">
@@ -76,6 +77,7 @@
 
                         <ait-input-text *ngIf="component.type === 'text'" [length]="1000" [isReset]="isReset"
                             [label]="component?.item_label" [placeholder]="component?.item_placeholder"
+                            [rows]="component?.component_setting?.rows ? component?.component_setting?.rows : 1"
                             [width]="component?.component_setting?.width" [fullWidth]="true" [id]="component?.item_id"
                             [defaultValue]="inputForm.controls[component?.item_id].value" [isSubmit]="isSubmit"
                             (watchValue)="takeInputValue($event, component?.item_id)" [required]="true">
