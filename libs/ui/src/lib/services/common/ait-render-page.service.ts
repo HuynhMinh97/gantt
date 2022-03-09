@@ -46,6 +46,8 @@ export class AitRenderPageService extends AitBaseService {
       from_to: true,
       is_multi_language: true,
       class: true,
+      title: true,
+      rows: true
     },
     search_setting: {
       operator: true,
