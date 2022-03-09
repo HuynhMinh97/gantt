@@ -1,9 +1,9 @@
 <div class="component__container">
     <div class="main__container">
-        <ait-text-gradient [content]="'MASTER DATA'" [id]="'title'"></ait-text-gradient>
+        <ait-text-gradient [content]="pageTitle" [id]="'title'"></ait-text-gradient>
         <ait-space></ait-space>
 
-        <ait-card-content class="content__card" [label]="'基本情報'" [disableHeader]="true" [transition]="false">
+        <ait-card-content class="content__card" [disableHeader]="true" [transition]="false">
             <div class="content">
                 <div class="left__side" *ngIf="leftSide.length > 0">
                     <ng-container *ngFor="let component of leftSide">
@@ -16,7 +16,8 @@
                             inputForm.controls[component?.item_id].value
                                 ? [inputForm.controls[component?.item_id].value]
                                 : null
-                            " [style]="{ width: '250px' }" [id]="component?.item_id" [required]="true"
+                            " [style]="{ width: component?.component_setting?.max_item ? component?.component_setting?.max_item : '250px' }" 
+                            [id]="component?.item_id" [required]="component?.component_setting?.required ? component?.component_setting?.required : false"
                             [isSubmit]="isSubmit">
                         </ait-autocomplete-master-data>
 
@@ -38,6 +39,18 @@
                             [isReset]="isReset">
                         </ait-date-picker>
 
+                        <div class="check-form" *ngIf="component.type === 'checkbox'" style="margin-top: 5px;">
+                            <nb-checkbox
+                              [id]="component?.item_id"
+                              [checked]="inputForm.controls[component?.item_id].value"
+                              (checkedChange)="toggle($event, component?.item_id)"
+                            >
+                            </nb-checkbox>
+                            <p class="pcontent">
+                                {{ getCheckBoxTitle(component?.component_setting?.title) }}
+                            </p>
+                        </div>
+
                         <ait-space [margin]="'7.25px'"></ait-space>
                     </ng-container>
                 </div>
@@ -45,15 +58,16 @@
                     <ng-container *ngFor="let component of rightSide">
                         <ait-autocomplete-master-data *ngIf="component.type === 'combobox'"
                             [collection]="component?.component_setting?.collection" [label]="component?.item_label"
-                            [maxItem]="component?.component_setting?.max_item"
                             [class]="component?.component_setting?.class"
+                            [maxItem]="component?.component_setting?.max_item" [isReset]="isReset"
                             [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
                             (watchValue)="takeMasterValue($event?.value, component?.item_id)" [defaultValue]="
                             inputForm.controls[component?.item_id].value
                                 ? [inputForm.controls[component?.item_id].value]
                                 : null
-                            " [style]="{ width: '250px' }" [id]="component?.item_id" [isReset]="isReset"
-                            [required]="true" [isSubmit]="isSubmit">
+                            " [style]="{ width: component?.component_setting?.max_item ? component?.component_setting?.max_item : '250px' }" 
+                            [id]="component?.item_id" [required]="component?.component_setting?.required ? component?.component_setting?.required : false"
+                            [isSubmit]="isSubmit">
                         </ait-autocomplete-master-data>
 
                         <ait-input-number *ngIf="component.type === 'number'">
@@ -73,6 +87,18 @@
                             [label]="component?.item_label" [style]="component?.component_setting?.width"
                             [isReset]="isReset">
                         </ait-date-picker>
+
+                        <div class="check-form" *ngIf="component.type === 'checkbox'" style="margin-top: 5px;">
+                            <nb-checkbox
+                              [id]="component?.item_id"
+                              [checked]="inputForm.controls[component?.item_id].value"
+                              (checkedChange)="toggle($event, component?.item_id)"
+                            >
+                            </nb-checkbox>
+                            <p class="pcontent">
+                                {{ getCheckBoxTitle(component?.component_setting?.title) }}
+                            </p>
+                        </div>
 
                         <ait-space [margin]="'7.25px'"></ait-space>
                     </ng-container>
