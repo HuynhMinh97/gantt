@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 import { NbIconLibraries } from '@nebular/theme';
 import { AitBaseComponent } from '../base.component';
 import { AppState } from '../../state/selectors';
-import { AitAuthService, AitEnvironmentService, AitUserService } from '../../services';
+import { AitAuthService, AitEnvironmentService, AitTranslationService, AitUserService } from '../../services';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -26,6 +26,7 @@ export class AitTableButtonComponent
   implements OnInit, ViewCell {
   constructor(
     private iconLibraries: NbIconLibraries,
+    private translateService: AitTranslationService,
     public store: Store<AppState>,
     authService: AitAuthService,
     userService: AitUserService,
@@ -81,6 +82,11 @@ export class AitTableButtonComponent
       ];
     }
   }
+
+  getTitle(title: string) {
+    return this.translateService.translate(title);
+  }
+
   view() {
     this.detailEvent.emit(this.value);
   }
