@@ -51,4 +51,19 @@ export class UserProfileEntity extends BaseEntity {
 
   @Field(() => String, { nullable: true })
   relationship?: string;
+
+  @Field(() => String, { nullable: true })
+  gender?: string;
+
+  @Field(() => String, { nullable: true })
+  bod?: string;
+
+  @Field(() => String, { nullable: true })
+  katakana?: string;
+
+  @Field(() => String, { nullable: true })
+  romaji?: string;
+
+  @Field(() => String, { nullable: true })
+  phone_number?: string;
 }

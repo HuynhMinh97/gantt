@@ -43,81 +43,36 @@
             "unitTestRunner": "jest"
         }
     },
-    "ait-webapp-starter": {
-      "projectType": "application",
-      "root": "apps/ait-webapp-starter",
-      "sourceRoot": "apps/ait-webapp-starter/src",
-      "prefix": "ait",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "outputPath": "dist/apps/ait-webapp-starter",
-            "index": "apps/ait-webapp-starter/src/index.html",
-            "main": "apps/ait-webapp-starter/src/main.ts",
-            "polyfills": "apps/ait-webapp-starter/src/polyfills.ts",
-            "tsConfig": "apps/ait-webapp-starter/tsconfig.app.json",
-            "aot": true,
-            "assets": [
-              "apps/ait-webapp-starter/src/favicon.ico",
-              "apps/ait-webapp-starter/src/assets"
-            ],
-            "styles": [
-              "node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-              "node_modules/@nebular/theme/styles/prebuilt/default.css",
-              "node_modules/bootstrap/dist/css/bootstrap.css",
-              "node_modules/roboto-fontface/css/roboto/roboto-fontface.css",
-              "node_modules/ionicons/scss/ionicons.scss",
-              "node_modules/@fortawesome/fontawesome-free/css/all.css",
-              "node_modules/socicon/css/socicon.css",
-              "node_modules/nebular-icons/scss/nebular-icons.scss",
-              "node_modules/pace-js/templates/pace-theme-flash.tmpl.css",
-              "node_modules/leaflet/dist/leaflet.css",
-              "apps/ait-webapp-starter/src/styles/styles.scss"
-            ],
-            "scripts": [
-              "node_modules/pace-js/pace.min.js",
-              "node_modules/tinymce/tinymce.min.js",
-              "node_modules/tinymce/themes/modern/theme.min.js",
-              "node_modules/tinymce/plugins/link/plugin.min.js",
-              "node_modules/tinymce/plugins/paste/plugin.min.js",
-              "node_modules/tinymce/plugins/table/plugin.min.js"
-            ],
-            "allowedCommonJsDependencies": [
-              "lodash",
-              "zrender/lib/svg/svg",
-              "zrender/lib/vml/vml",
-              "style-loader!leaflet/dist/leaflet.css",
-              "numeral",
-              "date-fns/format",
-              "dayjs",
-              "numeral",
-              "date-fns",
-              "crypto-js",
-              "json-to-graphql-query",
-              "zen-observable"
-            ]
-          },
-          "configurations": {
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "apps/ait-webapp-starter/src/environments/environment.ts",
-                  "with": "apps/ait-webapp-starter/src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+    "projects": {
+        "ait-api-starter": {
+            "root": "apps/ait-api-starter",
+            "sourceRoot": "apps\\ait-api-starter\\src",
+            "projectType": "application",
+            "architect": {
+                "build": {
+                    "builder": "@nrwl/node:build",
+                    "outputs": [
+                        "{options.outputPath}"
+                    ],
+                    "options": {
+                        "outputPath": "dist/apps/ait-api-starter",
+                        "main": "apps/ait-api-starter/src/main.ts",
+                        "tsConfig": "apps/ait-api-starter/tsconfig.app.json",
+                        "assets": [
+                            "apps/ait-api-starter/src/assets"
+                        ]
+                    },
+                    "configurations": {
+                        "production": {
+                            "optimization": true,
+                            "extractLicenses": true,
+                            "inspect": false,
+                            "fileReplacements": [{
+                                "replace": "apps/ait-api-starter/src/environments/environment.ts",
+                                "with": "apps/ait-api-starter/src/environments/environment.prod.ts"
+                            }]
+                        }
+                    }
                 },
                 "serve": {
                     "builder": "@nrwl/node:execute",
@@ -201,38 +156,116 @@
                 }
             }
         },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/core"],
-          "options": {
-            "jestConfig": "libs/core/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "ait-api-starter": {
-      "root": "apps/ait-api-starter",
-      "sourceRoot": "apps\\ait-api-starter\\src",
-      "projectType": "application",
-      "architect": {
-        "build": {
-          "builder": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
-          "options": {
-            "outputPath": "dist/apps/ait-api-starter",
-            "main": "apps/ait-api-starter/src/main.ts",
-            "tsConfig": "apps/ait-api-starter/tsconfig.app.json"
-          },
-          "configurations": {
-            "production": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {
-                  "replace": "apps/ait-api-starter/src/environments/environment.ts",
-                  "with": "apps/ait-api-starter/src/environments/environment.prod.ts"
+
+        "ait-matching-webapp": {
+            "projectType": "application",
+            "root": "apps/ait-matching-webapp",
+            "sourceRoot": "apps/ait-matching-webapp/src",
+            "prefix": "ait",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/apps/ait-matching-webapp",
+                        "index": "apps/ait-matching-webapp/src/index.html",
+                        "main": "apps/ait-matching-webapp/src/main.ts",
+                        "polyfills": "apps/ait-matching-webapp/src/polyfills.ts",
+                        "tsConfig": "apps/ait-matching-webapp/tsconfig.app.json",
+                        "aot": true,
+                        "assets": [
+                            "apps/ait-matching-webapp/src/favicon.ico",
+                            "apps/ait-matching-webapp/src/assets"
+                        ],
+                        "styles": [
+                            "apps/ait-matching-webapp/src/styles.scss",
+                            "node_modules/@nebular/theme/styles/prebuilt/default.css",
+                            "node_modules/bootstrap/dist/css/bootstrap.css",
+                            "node_modules/roboto-fontface/css/roboto/roboto-fontface.css",
+                            "node_modules/ionicons/scss/ionicons.scss",
+                            "node_modules/@fortawesome/fontawesome-free/css/all.css",
+                            "node_modules/socicon/css/socicon.css",
+                            "node_modules/nebular-icons/scss/nebular-icons.scss",
+                            "node_modules/pace-js/templates/pace-theme-flash.tmpl.css",
+                            "node_modules/leaflet/dist/leaflet.css",
+                            "apps/ait-webapp-starter/src/styles/styles.scss"
+                        ],
+                        "scripts": []
+                    },
+                    "configurations": {
+                        "production": {
+                            "fileReplacements": [{
+                                "replace": "apps/ait-matching-webapp/src/environments/environment.ts",
+                                "with": "apps/ait-matching-webapp/src/environments/environment.prod.ts"
+                            }],
+                            "optimization": true,
+                            "outputHashing": "all",
+                            "sourceMap": false,
+                            "namedChunks": false,
+                            "extractLicenses": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": true,
+                            "budgets": [{
+                                    "type": "initial",
+                                    "maximumWarning": "2mb",
+                                    "maximumError": "5mb"
+                                },
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "6kb",
+                                    "maximumError": "10kb"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "browserTarget": "ait-matching-webapp:build",
+                        "proxyConfig": "apps/ait-matching-webapp/proxy.conf.json"
+                    },
+                    "configurations": {
+                        "production": {
+                            "browserTarget": "ait-matching-webapp:build:production"
+                        }
+                    }
+                },
+                "serve-with-api": {
+                    "builder": "@angular-devkit/architect:allOf",
+                    "options": {
+                        "targets": [{
+                                "target": "ait-matching-webapp:serve"
+                            },
+                            {
+                                "target": "ait-matching-api:serve"
+                            }
+                        ]
+                    }
+                },
+                "extract-i18n": {
+                    "builder": "@angular-devkit/build-angular:extract-i18n",
+                    "options": {
+                        "browserTarget": "ait-matching-webapp:build"
+                    }
+                },
+                "lint": {
+                    "builder": "@nrwl/linter:eslint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "apps/ait-matching-webapp/src/**/*.ts",
+                            "apps/ait-matching-webapp/src/**/*.html"
+                        ]
+                    }
+                },
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": [
+                        "coverage/apps/ait-matching-webapp"
+                    ],
+                    "options": {
+                        "jestConfig": "apps/ait-matching-webapp/jest.config.js",
+                        "passWithNoTests": true
+                    }
                 }
             }
         },

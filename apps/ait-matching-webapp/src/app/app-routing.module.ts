@@ -21,6 +21,7 @@ import { UserProjectDetailComponent } from './pages/aureole-v/user/user-project-
 import { UserOnboardingDetailComponent } from './pages/aureole-v/user/user-onboarding-detail/user-onboarding-detail.component';
 import { UserJobAlertDetailComponent } from './pages/aureole-v/user/user-job-alert-detail/user-job-alert-detail.component';
 import { UserProjectComponent } from './pages/aureole-v/user/user-project/user-project.component';
+import { UserProjectAutoComponent } from './pages/aureole-v/user/user-project-auto/user-project-auto.component';
 
 // Push your routes here one by one 🎉
 
@@ -52,6 +53,11 @@ export const routes: Routes = [
   // },
  
   {
+    path: 'user-project',
+    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    component: UserProjectAutoComponent
+  },
+  {
     path: 'user-profile',
     canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
     component: UserProfileComponent
@@ -79,7 +85,7 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: localStorage.getItem('access_token') ? 'recommenced-user' : 'sign-in'
+    redirectTo: localStorage.getItem('access_token') ? 'user-profile' : 'sign-in'
   },
 
 ];

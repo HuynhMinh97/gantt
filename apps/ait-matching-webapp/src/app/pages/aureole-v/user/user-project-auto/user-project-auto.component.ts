@@ -30,12 +30,15 @@ export class UserProjectAutoComponent extends AitBaseComponent implements OnInit
       layoutScrollService,
       toastrService
     );
-
+    this.setModulePage({
+      module: 'user',
+      page: 'user_project',
+    });
     this.key= this.activeRouter.snapshot.paramMap.get('id');
   }
 
   ngOnInit(): void {
-    
+    this.cancelLoadingApp();
   }
 
 }
