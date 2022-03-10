@@ -16,7 +16,7 @@
                             inputForm.controls[component?.item_id].value
                                 ? [inputForm.controls[component?.item_id].value]
                                 : null
-                            " [style]="{ width: component?.component_setting?.max_item ? component?.component_setting?.max_item : '250px' }" 
+                            " [style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" 
                             [id]="component?.item_id" [required]="component?.component_setting?.required ? component?.component_setting?.required : false"
                             [isSubmit]="isSubmit">
                         </ait-autocomplete-master-data>
@@ -66,7 +66,7 @@
                             inputForm.controls[component?.item_id].value
                                 ? [inputForm.controls[component?.item_id].value]
                                 : null
-                            " [style]="{ width: component?.component_setting?.max_item ? component?.component_setting?.max_item : '250px' }" 
+                            " [style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" 
                             [id]="component?.item_id" [required]="component?.component_setting?.required ? component?.component_setting?.required : false"
                             [isSubmit]="isSubmit">
                         </ait-autocomplete-master-data>
