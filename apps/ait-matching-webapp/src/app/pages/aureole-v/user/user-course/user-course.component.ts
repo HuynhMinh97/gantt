@@ -80,7 +80,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
     public userCourseService: UserCourseService,
     private userSkillsService: UserSkillsService,
     private translateService: AitTranslationService,
-    private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
+    // private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
     layoutScrollService: NbLayoutScrollService,
     toastrService: NbToastrService,
     authService: AitAuthService,
@@ -99,11 +99,14 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
         this.dateFormat = setting['date_format_display'];
       }
     });
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationStart) {
-          this.closeDialog(false);
-      }
-    });
+
+    this.course_key = this.activeRouter.snapshot.paramMap.get('id');
+
+    // this.router.events.subscribe((event) => {
+    //   if (event instanceof NavigationStart) {
+    //       this.closeDialog(false);
+    //   }
+    // });
 
     this.course = this.formBuilder.group({
       _key: new FormControl(null),
@@ -453,7 +456,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
   }
   //end delete
   closeDialog(event: boolean) {
-    this.nbDialogRef.close(event);
+    // this.nbDialogRef.close(event);
   }
 
   back() {

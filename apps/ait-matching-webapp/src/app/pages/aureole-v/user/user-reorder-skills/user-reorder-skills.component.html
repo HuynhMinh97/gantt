@@ -1,6 +1,6 @@
-<ait-template-popup [width]="800" [isLoading]="true" [isPage]="false">
+
   <div class="user__wrapper">
-    <div style="height: 85px">
+    <div class="header"> 
       <ait-text-gradient
         *ngIf="isLoad"
         [fontsize]="'36px'"
@@ -9,7 +9,7 @@
       ></ait-text-gradient>
     </div>
     <div class="content__card">
-      <div class="form" style="margin-top: 35px; min-height: 70px;">
+      <div class="form" >
         <div class="step-container" cdkDropListGroup>
           <div
             class="category-area"
@@ -92,18 +92,30 @@
         </div>
       </div>
     </div>
-    <ait-space></ait-space>
     <div class="sticky">
       <div class="action-row">
         <div class="block">
           <ait-button
             [id]="'cancel'"
-            [width]="'200px'"
-            [title]="'キャンセル'"
+            [width]="'150px'"
+            [title]="'clear'"
             [isDefault]="true"
             nbSpinnerStatus="primary"
             [tabIndex]="40"
-            (click)="cancel()"
+            (click)="clear()"
+            [background]="
+              'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+            "
+          ></ait-button>
+
+          <ait-button
+            [id]="'cancel'"
+            [width]="'150px'"
+            [title]="'reset'"
+            [isDefault]="true"
+            nbSpinnerStatus="primary"
+            [tabIndex]="40"
+            (click)="reset()"
             [background]="
               'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
             "
@@ -112,7 +124,7 @@
           <ait-button
             *ngIf="isChanged"
             [id]="'saveClose'"
-            [width]="'200px'"
+            [width]="'150px'"
             [title]="'save and close'"
             (click)="save()"
             [background]="
@@ -123,7 +135,7 @@
           <ait-button
             *ngIf="!isChanged"
             [id]="'disabled'"
-            [width]="'200px'"
+            [width]="'150px'"
             [title]="'save and close'"
             [style]="'disabled'"
           ></ait-button>
@@ -131,4 +143,3 @@
       </div>
     </div>
   </div>
-</ait-template-popup>

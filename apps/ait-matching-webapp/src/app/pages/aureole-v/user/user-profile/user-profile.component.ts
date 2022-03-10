@@ -185,6 +185,15 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     } catch (e) {
     }
   }
+
+  nextPage(link: string, key?: string){
+    if(key){
+      this.router.navigate([`${link}/${key}`]);
+    }else{
+      this.router.navigate([`${link}`]);
+    }
+  }
+
   async getMaxSkill(){
     await this.userSkillsService.getMaxSkill({value: ['maxSkill']})
     .then((res) => {
@@ -509,26 +518,26 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     });
   }
 
-  openProjects(key?: string) {
-    this.dialogService.open(UserProjectComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-        project_key: key,
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-        this.callLoadingApp();
-        this.userProject = [];
-        this.timeProject = 0;
-        await this.getProjectByUserId();
-        setTimeout(() => {
-          this.cancelLoadingApp();
-        }, 1000)
-      }
-    });
-  }
+  // openProjects(key?: string) {
+  //   this.dialogService.open(UserProjectComponent, {
+  //     closeOnBackdropClick: false,
+  //     hasBackdrop: true,
+  //     autoFocus: false,
+  //     context: {
+  //       project_key: key,
+  //     },
+  //   }).onClose.subscribe(async (event) => {
+  //     if (event) {
+  //       this.callLoadingApp();
+  //       this.userProject = [];
+  //       this.timeProject = 0;
+  //       await this.getProjectByUserId();
+  //       setTimeout(() => {
+  //         this.cancelLoadingApp();
+  //       }, 1000)
+  //     }
+  //   });
+  // }
   openProjectsDetail(key?: string) {
     this.dialogService.open(UserProjectDetailComponent, {
       closeOnBackdropClick: false,

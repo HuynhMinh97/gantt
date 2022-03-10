@@ -33,7 +33,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
   };
 
   constructor(
-    private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
+    // private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
     private reoderSkillsService: UserReoderSkillsService,
     private dialogService: NbDialogService,
     public activeRouter: ActivatedRoute,
@@ -52,11 +52,6 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
       page: 'user_skills',
     });
 
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationStart) {
-          this.closeDialog(false);
-      }
-    });
   }
 
   async ngOnInit(): Promise<void> {
@@ -346,36 +341,23 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
       if (res?.status === RESULT_STATUS.OK) {
         this.cancelLoadingApp();
         this.showToastr('', this.getMsg('I0002'));
-        this.closeDialog(true);
+        history.back();
       } else {
         this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
       }
     });
   }
 
-  cancel() {
-    if (this.isChanged) {
-      this.dialogService
-        .open(AitConfirmDialogComponent, {
-          closeOnBackdropClick: true,
-          hasBackdrop: true,
-          autoFocus: false,
-          context: {
-            style: {width: '90%'},
-            title: this.getMsg('I0006'),
-            id:'back-user-project',
-          },
-        })
-        .onClose.subscribe(async (event) => {
-          if (event) {
-            this.closeDialog(false);
-          }
-        });
-    } else {
-      this.closeDialog(false);
-    }
+  clear() {
+    this.reorderSkills = []; 
+    const dataSkills = {} as OrderSkill;
+    dataSkills.code = 'top5';
+    dataSkills.name = 'TOP5';
+    dataSkills.data = [];
+    this.reorderSkills.push(dataSkills)
   }
-  closeDialog(event: boolean) {
-    this.nbDialogRef.close(event);
+  reset(){
+    this.reorderSkills = JSON.parse(JSON.stringify(this.reorderSkillsClone));
   }
+  
 }

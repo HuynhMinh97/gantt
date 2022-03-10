@@ -139,7 +139,7 @@
     <div style="position: relative" class="skills">
       <div class="reorder_skills" style="z-index: 100" *ngIf="isMyUserProfile">
         <ait-button
-          (click)="openReorderSkill()"
+          (click)="nextPage('user-reorder-skills')"
           [iconName]="'menu-outline'"
           [color]="'#fff'"
           [styleText]="{ 'font-size': '10px' }"
@@ -160,7 +160,7 @@
         style="display: flex; justify-content: center"
         [label]="'skills' | translate"
         [styleLabel]="{ 'font-size': '22px' }"
-        (onClickButtonHeader)="openAddSkill()"
+        (onClickButtonHeader)="nextPage('user-skills')"
         [actionBtn]="isMyUserProfile ? actionBtn : ''"
         [buttonTitle]="'add skills'"
         [disableHeader]="false"
@@ -202,7 +202,7 @@
         style="display: flex; justify-content: center"
         [label]="'projects' | translate"
         [styleLabel]="{ 'font-size': '22px' }"
-        (onClickButtonHeader)="openProjects()"
+        (onClickButtonHeader)="nextPage('user-project')"
         [actionBtn]="isMyUserProfile ? actionBtn : ''"
         [buttonTitle]="'add projects'"
         [disableHeader]="false"
@@ -310,7 +310,7 @@
                   "
                 >
                   <a
-                    (click)="openProjects(project?._key)"
+                    (click)="nextPage('user-project',project?._key)"
                     [id]="'project-' + project?._key"
                     *ngIf="isMyUserProfile"
                   >
@@ -500,7 +500,7 @@
         style="display: flex; justify-content: center"
         [label]="'CERTIFICATES'"
         [styleLabel]="{ 'font-size': '22px' }"
-        (onClickButtonHeader)="openCertificate()"
+        (onClickButtonHeader)="nextPage('user-certificate')"
         [actionBtn]="isMyUserProfile ? actionBtn : ''"
         [buttonTitle]="'add certificate'"
         [disableHeader]="false"
@@ -572,7 +572,7 @@
                   "
                 >
                   <a
-                    (click)="openCertificate(centificate?._key)"
+                    (click)="nextPage('user-project',project?._key)"
                     [id]="'centificate-' + centificate?._key"
                     *ngIf="isMyUserProfile"
                   >
@@ -609,7 +609,7 @@
         style="display: flex; justify-content: center"
         [label]="'my-profile.course'"
         [styleLabel]="{ 'font-size': '22px' }"
-        (onClickButtonHeader)="openCourse()"
+        (onClickButtonHeader)="nextPage('user-course')"
         [actionBtn]="isMyUserProfile ? actionBtn : ''"
         [buttonTitle]="'add course'"
         [disableHeader]="false"
@@ -678,7 +678,7 @@
                   "
                 >
                   <a
-                    (click)="openCourse(course?._key)"
+                    (click)="nextPage('user-course',course?._key)"
                     [id]="'course-' + course?._key"
                     *ngIf="isMyUserProfile"
                   >

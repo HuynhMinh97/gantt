@@ -216,6 +216,8 @@ export class AitAutoCompleteMasterComponent
   };
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log(this.defaultValue);
+    
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
         // const element = changes[key].currentValue;
