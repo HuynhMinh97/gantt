@@ -41,6 +41,7 @@ export class UserProfileService extends AitBaseService {
       katakana: true,
       bod: true,
       about: true,
+      gender: true,
       // avatar_url:true,
       // background_url: true,
       
