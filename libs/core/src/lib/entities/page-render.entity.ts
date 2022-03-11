@@ -104,6 +104,15 @@ export class ComponentSettingEntity {
   @Field(() => String, { nullable: true })
   title: string;
 
+  @Field(() => String, { nullable: true })
+  guidance_icon: string;
+
+  @Field(() => String, { nullable: true })
+  guidance: string;
+
+  @Field(() => Boolean, { nullable: true })
+  has_status: boolean;
+
   @Field(() => Boolean, { nullable: true })
   required: boolean;
 
