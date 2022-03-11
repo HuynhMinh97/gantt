@@ -2,11 +2,11 @@
     <div class="main__container">
         <ait-text-gradient [content]="pageTitle"></ait-text-gradient>
 
-        <div topArea style="width: 100%;
+        <div *ngIf="allowNew" style="width: 100%;
     text-align: right;
     margin-bottom: -10px;">
         <ait-button [id]="'new'" [width]="'150px'" [height]="'32px'" [title]="'New'" [isDefault]="true"
-            (click)="create()">
+            (onClick)="create()">
         </ait-button>
     </div>
     
@@ -34,7 +34,7 @@
                                 [collection]="component?.component_setting?.collection" [label]="component?.item_label"
                                 [maxItem]="component?.component_setting?.max_item"
                                 [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
-                                [style]="{ width: '250px' }" [id]="component?.item_id"
+                                [style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" [id]="component?.item_id"
                                 (watchValue)="takeMaster($event?.value, component?.item_id, component?.component_setting?.max_item)"
                                 [defaultValue]="getDefaultValue(searchForm.controls[component?.item_id].value, component?.component_setting?.max_item)"
                                 >
@@ -62,6 +62,18 @@
                             (watchValue)="takeDatePickerValue($event?.value, component?.item_id)"
                             >
                             </ait-date-picker>
+
+                            <div class="check-form" *ngIf="component.type === 'checkbox'" style="margin-top: 5px;">
+                                <nb-checkbox
+                                  [id]="component?.item_id"
+                                  [checked]="inputForm.controls[component?.item_id].value"
+                                  (checkedChange)="toggle($event, component?.item_id)"
+                                >
+                                </nb-checkbox>
+                                <p class="pcontent">
+                                    {{ getCheckBoxTitle(component?.component_setting?.title) }}
+                                </p>
+                            </div>
 
                             <ng-container *ngIf="component.type === 'date' && component?.component_setting?.from_to === true">
                                 <div style="display: flex">
@@ -100,7 +112,7 @@
                                 [collection]="component?.component_setting?.collection" [label]="component?.item_label"
                                 [maxItem]="component?.component_setting?.max_item"
                                 [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
-                                [style]="{ width: '250px' }" [id]="component?.item_id"
+                                [style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" [id]="component?.item_id"
                                 (watchValue)="takeMaster($event?.value, component?.item_id, component?.component_setting?.max_item)"
                                 [defaultValue]="getDefaultValue(searchForm.controls[component?.item_id].value, component?.component_setting?.max_item)"
                                 >
@@ -128,6 +140,18 @@
                             (watchValue)="takeDatePickerValue($event?.value, component?.item_id)"
                             >
                             </ait-date-picker>
+
+                            <div class="check-form" *ngIf="component.type === 'checkbox'" style="margin-top: 5px;">
+                                <nb-checkbox
+                                  [id]="component?.item_id"
+                                  [checked]="inputForm.controls[component?.item_id].value"
+                                  (checkedChange)="toggleCheckbox($event, component?.item_id)"
+                                >
+                                </nb-checkbox>
+                                <p class="pcontent">
+                                    {{ getCheckBoxTitle(component?.component_setting?.title) }}
+                                </p>
+                            </div>
 
                             <ng-container *ngIf="component.type === 'date' && component?.component_setting?.from_to === true">
                                 <div style="display: flex">
