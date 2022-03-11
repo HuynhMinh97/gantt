@@ -15,6 +15,7 @@ import { AitInputNumberModule } from '../ait-input-number/ait-input-number.modul
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NbCheckboxModule, NbIconModule, NbInputModule, NbSpinnerModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
+import { AitInputFileModule } from '../ait-input-file/ait-input-file.module';
 
 const AIT_MODULES = [
   AitCommonLayoutModule,
@@ -27,7 +28,8 @@ const AIT_MODULES = [
   AitCardContentModule,
   AitTextGradientModule,
   AitInputTextModule,
-  AitInputNumberModule
+  AitInputNumberModule,
+  AitInputFileModule
 ];
 
 @NgModule({
