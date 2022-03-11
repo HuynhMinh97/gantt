@@ -50,7 +50,10 @@ export class AitRenderPageService extends AitBaseService {
       title: true,
       rows: true,
       allow_new: true,
-      allow_delete: true
+      allow_delete: true,
+      has_status: true,
+      guidance_icon: true,
+      guidance: true
     },
     search_setting: {
       operator: true,
