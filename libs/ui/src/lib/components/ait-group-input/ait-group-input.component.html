@@ -18,7 +18,8 @@
                                 : null
                             " [style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" 
                             [id]="component?.item_id" [required]="component?.component_setting?.required ? component?.component_setting?.required : false"
-                            [isSubmit]="isSubmit">
+                            [isSubmit]="isSubmit" [allowNew]="component?.component_setting?.allow_new ? component?.component_setting?.allow_new : false" 
+                            [allowDelete]="component?.component_setting?.allow_delete ? component?.component_setting?.allow_delete : false">
                         </ait-autocomplete-master-data>
 
                         <ait-input-number *ngIf="component.type === 'number'">
@@ -66,9 +67,10 @@
                             inputForm.controls[component?.item_id].value
                                 ? [inputForm.controls[component?.item_id].value]
                                 : null
-                            " [style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" 
+                            "[style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" 
                             [id]="component?.item_id" [required]="component?.component_setting?.required ? component?.component_setting?.required : false"
-                            [isSubmit]="isSubmit">
+                            [isSubmit]="isSubmit" [allowNew]="component?.component_setting?.allow_new ? component?.component_setting?.allow_new : false" 
+                            [allowDelete]="component?.component_setting?.allow_delete ? component?.component_setting?.allow_delete : false">
                         </ait-autocomplete-master-data>
 
                         <ait-input-number *ngIf="component.type === 'number'">
@@ -111,24 +113,28 @@
         <div class="sticky">
             <div class="action-row">
                 <div class="block">
-                    <ait-button [id]="'clear'" [width]="'200px'" [title]="'clear'" [isDefault]="true" [tabIndex]="42"
+                    <ait-button *ngIf="mode === 'EDIT'" [id]="'remove'" [width]="'200px'" [title]="'delete'"
+                        [isDefault]="true" (click)="remove()">
+                    </ait-button>
+
+                    <ait-button *ngIf="mode === 'EDIT'" [id]="'copy'" [width]="'200px'" [title]="'copy'"
+                        [isDefault]="true">
+                    </ait-button>
+
+                    <ait-button [id]="'clear'" [width]="'200px'" [title]="'clear'" [isDefault]="true"
                         (click)="clear()">
                     </ait-button>
 
-                    <ait-button *ngIf="mode === 'EDIT'" [id]="'remove'" [width]="'200px'" [title]="'削除'"
-                        [isDefault]="true" [tabIndex]="43" (click)="remove()">
-                    </ait-button>
-
-                    <ait-button *ngIf="mode === 'EDIT'" [id]="'reset'" [width]="'200px'" [title]="'リセット'"
-                        [isDefault]="true" [tabIndex]="44" (click)="reset()">
+                    <ait-button *ngIf="mode === 'EDIT'" [id]="'reset'" [width]="'200px'" [title]="'reset'"
+                        [isDefault]="true" (click)="reset()">
                     </ait-button>
 
                     <ait-button *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'" [id]="'save'" [width]="'200px'"
-                        [title]="'保存'" [isDefault]="true" [tabIndex]="45" (click)="save()">
+                        [title]="'save'" [isDefault]="true"(click)="onSave()">
                     </ait-button>
 
-                    <ait-button *ngIf="!isChanged && mode === 'EDIT'" [id]="'disabled'" [width]="'200px'" [title]="'保存'"
-                        [style]="'disabled'" [tabIndex]="46">
+                    <ait-button *ngIf="!isChanged && mode === 'EDIT'" [id]="'disabled'" [width]="'200px'" [title]="'save'"
+                        [style]="'disabled'">
                     </ait-button>
                 </div>
             </div>
