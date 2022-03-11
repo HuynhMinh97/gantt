@@ -68,6 +68,13 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   showEducation = false;
   showExperience = false;
   showCertificate = false;
+  isShowSkill = false;
+  isShowCourse = false;
+  isShowProject = false;
+  isShowLanguages = false;
+  isShowEducation = false;
+  isShowExperience = false;
+  isShowCertificate = false;
 
   avata: any;
   url_avatar = '';
@@ -102,6 +109,12 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     {
       title: '追加',
       icon: 'plus'
+    }
+  ];
+  actionBtnProfile = [
+    {
+      title: '追加',
+      icon: 'edit-outline'
     }
   ];
   skillUserName: any;
@@ -877,5 +890,11 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         this.countFriend -= 1;
       }      
     })
+  }
+  getExpan(data, val){
+    console.log(data);
+    console.log(this[val]);
+    this[val] = true;
+    console.log(this[val]);
   }
 }

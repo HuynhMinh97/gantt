@@ -7,24 +7,21 @@
     class="card__content_container"
     [nbSpinner]="loading"
     nbSpinnerStatus="primary"
-    [style.padding]="padding"
   >
     <div
       class="header__card"
       *ngIf="!disableHeader"
       (click)="toggleExpan()"
-      style="outline-color: #10529d"
+      [style.padding]="padding"
     >
       <div style="flex-grow: 1" style="outline-color: #10529d">
         <div
           class="text__gradient menu_toc_item"
           [ngClass]="id + '_menu_toc_item'"
-          *ngIf="gradientString !== ''"
           [ngStyle]="styleLabel"
           [id]="'menu_item_' + LABEL"
-          style="outline-color: #10529d"
         >
-          {{ LABEL }}
+          <span style="padding: 5px 0">{{ LABEL }}</span>
         </div>
         <div
             [ngStyle]="styleContent"
@@ -82,7 +79,10 @@
       }"
       [ngClass]="isOpen ? null : 'isClose'"
     >
-      <ng-content></ng-content>
+      <div class="lineHeader"></div>
+      <div class="main" style="width: 100%;">
+        <ng-content></ng-content>
+      </div>
     </div>
   </div>
 </div>

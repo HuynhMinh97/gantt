@@ -63,7 +63,6 @@ import { UserProjectDetailComponent } from './pages/aureole-v/user/user-project-
 import { UserOnboardingDetailComponent } from './pages/aureole-v/user/user-onboarding-detail/user-onboarding-detail.component';
 import { UserJobAlertDetailComponent } from './pages/aureole-v/user/user-job-alert-detail/user-job-alert-detail.component';
 import { UserProjectComponent } from './pages/aureole-v/user/user-project/user-project.component';
-import { UserProjectAutoComponent } from './pages/aureole-v/user/user-project-auto/user-project-auto.component';
 import { DragScrollComponent } from './pages/aureole-v/user/user-profile/drag-scroll/drag-scroll.component';
 
 const AIT_UI_MODULES = [AitChipModule, AitTabsModule];
@@ -110,8 +109,6 @@ const PAGES = [
   UserOnboardingDetailComponent,
   CountryComponent,
   UserJobAlertDetailComponent,
-  UserProjectAutoComponent
-
 ];
 
 @NgModule({

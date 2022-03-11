@@ -150,7 +150,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     });
   }
 
-  async ngOnInit() {
+  async ngOnInit() {    
     this.callLoadingApp();
     setTimeout(() => {
       this.isLoad = true;

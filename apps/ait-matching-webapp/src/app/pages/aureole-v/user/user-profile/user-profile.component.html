@@ -1,6 +1,13 @@
 <div class="user_profile_wrapper" id="user_profile">
   <div class="content__card" *ngIf="isload">
-    <div style="margin-top: 20px; font-size: 36px; display: flex; justify-content: center;">
+    <div
+      style="
+        margin-top: 20px;
+        font-size: 36px;
+        display: flex;
+        justify-content: center;
+      "
+    >
       <ait-text-gradient
         [content]="'User profile'"
         [id]="'form_edit_user_project'"
@@ -16,32 +23,24 @@
         class="content_card"
         style="display: flex; justify-content: center"
         [label]="'Basic information' | translate"
-        [styleLabel]="{ 'font-size': '22px' }"
+        [styleLabel]="{ 'font-size': '26px' }"
         (onClickButtonHeader)="openAddSkill()"
-        [actionBtn]="isMyUserProfile ? actionBtn : ''"
+        [actionBtn]="isMyUserProfile ? actionBtnProfile : ''"
         [buttonTitle]="'Edit profile'"
         [disableHeader]="false"
         [widthBtn]="'120px'"
         [content]=""
         [styleContent]="{
           color: '#8F9BB3',
-          'font-size': '12px',
-          'margin-top': '12px'
+          'font-size': '12px'
         }"
-        [padding]="'20px'"
+        [padding]="'25px 22px'"
         [isOpen]="showSkill"
         [idBtn]="'openAddSkill'"
       >
         <div class="container-user-project">
-          <hr class="hr_header" />
           <div
-            style="
-              margin-top: 15px;
-              display: flex;
-              flex-wrap: wrap;
-              width: 100%;
-              padding: 0 40px;
-            "
+            style="display: flex; flex-wrap: wrap; width: 100%; padding: 20px"
           >
             <div
               class="left"
@@ -113,16 +112,16 @@
                   [value]="DataUserProfile?.romaji || ''"
                   [id]="'romaji'"
                 ></ait-output-text>
-                </div>
-                <div class="input_inline">
+              </div>
+              <div class="input_inline">
                 <ait-output-text
                   [label]="'gender'"
                   [width]="'200px'"
                   [value]="DataUserProfile?.gender || ''"
                   [id]="'gender'"
                 ></ait-output-text>
-                </div>
-                <div class="input_inline">
+              </div>
+              <div class="input_inline">
                 <ait-output-text
                   [label]="'phone number'"
                   [width]="'200px'"
@@ -143,13 +142,13 @@
           [iconName]="'menu-outline'"
           [color]="'#fff'"
           [styleText]="{ 'font-size': '10px' }"
-          [width]="'150px'"
-          [height]="'25px'"
+          [styleBtn]="{ width: '120px', 'min-width': '100px' }"
+          [width]="'120px'"
+          [minWidth]="'120px'"
+          [height]="'26px'"
           [title]="'reorder skills'"
           [id]="'openReorderSkill'"
-          [background]="
-            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-          "
+          [isDefault]="'true'"
         ></ait-button>
       </div>
       <card-content
@@ -159,34 +158,47 @@
         class="content_card"
         style="display: flex; justify-content: center"
         [label]="'skills' | translate"
-        [styleLabel]="{ 'font-size': '22px' }"
+        [styleLabel]="{ 'font-size': '26px' }"
         (onClickButtonHeader)="nextPage('user-skills')"
         [actionBtn]="isMyUserProfile ? actionBtn : ''"
         [buttonTitle]="'add skills'"
         [disableHeader]="false"
-        [widthBtn]="'150px'"
+        [widthBtn]="'120px'"
         [content]="getCounter('my-profile.has-skill', countSkill)"
+        [padding]="'13px 22px'"
         [styleContent]="{
           color: '#8F9BB3',
           'font-size': '12px',
-          'margin-top': '12px'
+          'margin-top': '5px'
         }"
-        [padding]="'20px'"
         [isOpen]="showSkill"
         [idBtn]="'openAddSkill'"
+        (onToggle)="getExpan($event,'isShowSkill')"
       >
-        <div class="container-user-project">
-          <hr class="hr_header" />
-          <div *ngFor="let category of skillByCategory; let last = last">
-            <p class="title-skill">{{ category?.name }}</p>
-            <ait-drag-scroll
-              [list]="category.data"
-              [showField]="'name'"
-              [maxWidth]="'1500px'"
-              [minWidth]="'100px'"
-              [isNormal]="false"
-            ></ait-drag-scroll>
-            <hr style="margin-top: 5px" *ngIf="!last" />
+        <div class="container_user" >
+          <div *ngFor="let category of skillByCategory; let index = index; let first = first">
+            <div *ngIf="index <3 && !isShowSkill">
+              <hr style="margin-top: 5px" *ngIf="!first" />
+              <p class="title-skill">{{ category?.name }}</p>
+              <ait-drag-scroll
+                [list]="category.data"
+                [showField]="'name'"
+                [maxWidth]="'1500px'"
+                [minWidth]="'100px'"
+                [isNormal]="false"
+              ></ait-drag-scroll>
+            </div>           
+            <div *ngIf="index <100 && isShowSkill">
+              <hr style="margin-top: 5px" *ngIf="!first" />
+              <p class="title-skill">{{ category?.name }}</p>
+              <ait-drag-scroll
+                [list]="category.data"
+                [showField]="'name'"
+                [maxWidth]="'1500px'"
+                [minWidth]="'100px'"
+                [isNormal]="false"
+              ></ait-drag-scroll>
+            </div>           
           </div>
         </div>
       </card-content>
@@ -201,24 +213,56 @@
         class="content_card"
         style="display: flex; justify-content: center"
         [label]="'projects' | translate"
-        [styleLabel]="{ 'font-size': '22px' }"
+        [styleLabel]="{ 'font-size': '26px' }"
+        [styleText]="{ 'font-size': '15px' }"
         (onClickButtonHeader)="nextPage('user-project')"
         [actionBtn]="isMyUserProfile ? actionBtn : ''"
         [buttonTitle]="'add projects'"
         [disableHeader]="false"
-        [widthBtn]="'150px'"
+        [widthBtn]="'120px'"
         [content]="getCounter('my-profile.project-time', timeProject * 22 * 8)"
         [styleContent]="{
           color: '#8F9BB3',
           'font-size': '12px',
-          'margin-top': '12px'
+          'margin-top': '5px'
         }"
-        [padding]="'20px'"
         [isOpen]="showProject"
         [idBtn]="'openProjects'"
+        [padding]="'13px 22px'"
       >
-        <div class="container-user-project" *ngIf="userProject.length > 0">
-          <hr class="hr_header" />
+        <div class="container_user" *ngIf="userProject.length > 0">
+          <div *ngIf="userProject.length > 2">
+            <ul
+            *ngFor="
+              let listProject of userProject;
+              let index = index;
+              let firstcomp = first
+            "
+          >
+          <hr style="margin-top: 5px" *ngIf="!firstcomp" />
+            <li class="timeline-event">
+              <div class="timeline-block">
+                <div class="img-timeline-cmp">
+                  <img
+                    src="../../../../../assets/images/image.png"
+                    alt="project"
+                  />
+                </div>
+                <div class="timeline-info">
+                  <div>
+                    <p id="title-timeline">
+                      {{ listProject?.company_name }}
+                    </p>
+                    <div class="desc-info">
+                      <p>{{ dateDiffInYears(listProject?.working_time) }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            </ul>
+          </div>
+
           <ul
             *ngFor="
               let listProject of userProject;
@@ -310,7 +354,7 @@
                   "
                 >
                   <a
-                    (click)="nextPage('user-project',project?._key)"
+                    (click)="nextPage('user-project', project?._key)"
                     [id]="'project-' + project?._key"
                     *ngIf="isMyUserProfile"
                   >
@@ -346,23 +390,23 @@
         class="content_card"
         style="display: flex; justify-content: center"
         [label]="'experiencer' | translate"
-        [styleLabel]="{ 'font-size': '22px' }"
+        [styleLabel]="{ 'font-size': '26px' }"
+        [styleText]="{ 'font-size': '15px' }"
         (onClickButtonHeader)="openExperience()"
         [actionBtn]="isMyUserProfile ? actionBtn : ''"
         [buttonTitle]="'add experiencer'"
         [disableHeader]="false"
-        [widthBtn]="'150px'"
+        [widthBtn]="'120px'"
         [content]="getCounter('my-profile.experience-time', timeExperienceStr)"
         [styleContent]="{
           color: '#8F9BB3',
           'font-size': '12px',
-          'margin-top': '12px'
+          'margin-top': '5px'
         }"
-        [padding]="'20px'"
         [idBtn]="'openExperience'"
+        [padding]="'13px 22px'"
       >
-        <div class="container-user-project" *ngIf="userExperience.length > 0">
-          <hr class="hr_header" />
+        <div class="container_user" *ngIf="userExperience.length > 0">
           <ul
             *ngFor="
               let listSxperience of userExperience;
@@ -499,26 +543,26 @@
         class="content_card"
         style="display: flex; justify-content: center"
         [label]="'CERTIFICATES'"
-        [styleLabel]="{ 'font-size': '22px' }"
+        [styleLabel]="{ 'font-size': '26px' }"
+        [styleText]="{ 'font-size': '15px' }"
         (onClickButtonHeader)="nextPage('user-certificate')"
         [actionBtn]="isMyUserProfile ? actionBtn : ''"
         [buttonTitle]="'add certificate'"
         [disableHeader]="false"
-        [widthBtn]="'150px'"
+        [widthBtn]="'120px'"
         [content]="
           getCounter('my-profile.certificates-count', countCentificate)
         "
         [styleContent]="{
           color: '#8F9BB3',
           'font-size': '12px',
-          'margin-top': '12px'
+          'margin-top': '5px'
         }"
-        [padding]="'20px'"
         [isOpen]="showCertificate"
         [idBtn]="'openCertificate'"
+        [padding]="'13px 22px'"
       >
-        <div class="container-user-project" *ngIf="userCentificate.length > 0">
-          <hr class="hr_header" />
+        <div class="container_user" *ngIf="userCentificate.length > 0">
           <ul
             *ngFor="
               let centificate of userCentificate;
@@ -572,7 +616,7 @@
                   "
                 >
                   <a
-                    (click)="nextPage('user-project',project?._key)"
+                    (click)="nextPage('user-project', project?._key)"
                     [id]="'centificate-' + centificate?._key"
                     *ngIf="isMyUserProfile"
                   >
@@ -608,23 +652,23 @@
         class="content_card"
         style="display: flex; justify-content: center"
         [label]="'my-profile.course'"
-        [styleLabel]="{ 'font-size': '22px' }"
+        [styleLabel]="{ 'font-size': '26px' }"
+        [styleText]="{ 'font-size': '15px' }"
         (onClickButtonHeader)="nextPage('user-course')"
         [actionBtn]="isMyUserProfile ? actionBtn : ''"
         [buttonTitle]="'add course'"
         [disableHeader]="false"
-        [widthBtn]="'150px'"
+        [widthBtn]="'120px'"
         [content]="getCounter('my-profile.course-count', countCourse)"
         [styleContent]="{
           color: '#8F9BB3',
           'font-size': '12px',
-          'margin-top': '12px'
+          'margin-top': '5px'
         }"
-        [padding]="'20px'"
         [idBtn]="'openCourse'"
+        [padding]="'13px 22px'"
       >
-        <div class="container-user-project" *ngIf="userCourse.length > 0">
-          <hr class="hr_header" />
+        <div class="container_user" *ngIf="userCourse.length > 0">
           <ul
             *ngFor="
               let course of userCourse;
@@ -678,7 +722,7 @@
                   "
                 >
                   <a
-                    (click)="nextPage('user-course',course?._key)"
+                    (click)="nextPage('user-course', course?._key)"
                     [id]="'course-' + course?._key"
                     *ngIf="isMyUserProfile"
                   >
@@ -714,23 +758,26 @@
         class="content_card"
         style="display: flex; justify-content: center"
         [label]="'educations'"
-        [styleLabel]="{ 'font-size': '22px' }"
+        [styleLabel]="{ 'font-size': '26px' }"
+        [styleText]="{ 'font-size': '15px' }"
         (onClickButtonHeader)="openEducation()"
         [actionBtn]="isMyUserProfile ? actionBtn : ''"
         [buttonTitle]="'add education'"
         [disableHeader]="false"
-        [widthBtn]="'150px'"
+        [widthBtn]="'120px'"
         [styleContent]="{
           color: '#8F9BB3',
           'font-size': '12px',
-          'margin-top': '12px'
+          'margin-top': '5px'
         }"
-        [padding]="'20px'"
         [content]="''"
         [idBtn]="'openEducation'"
+        [padding]="'25px 22px'"
       >
-        <div class="container-user-project" *ngIf="userEducation.length > 0">
-          <hr class="hr_header" />
+        <div
+          class="container_user"
+          *ngIf="userEducation.length > 0"
+        >
           <ul
             *ngFor="
               let education of userEducation;
@@ -820,23 +867,23 @@
         class="content_card"
         style="display: flex; justify-content: center"
         [label]="'languages' | translate"
-        [styleLabel]="{ 'font-size': '22px' }"
+        [styleLabel]="{ 'font-size': '26px' }"
+        [styleText]="{ 'font-size': '15px' }"
         (onClickButtonHeader)="openLanguage()"
         [actionBtn]="isMyUserProfile ? actionBtn : ''"
         [buttonTitle]="'add language'"
         [disableHeader]="false"
-        [widthBtn]="'150px'"
-        [content]="''"
+        [widthBtn]="'120px'"
+        [content]=""
         [styleContent]="{
           color: '#8F9BB3',
           'font-size': '12px',
-          'margin-top': '12px'
+          'margin-top': '5px'
         }"
-        [padding]="'20px'"
         [idBtn]="'openLanguage'"
+        [padding]="'25px 22px'"
       >
-        <div class="container-user-project" *ngIf="userLanguage.length > 0">
-          <hr class="hr_header" />
+        <div class="container_user" *ngIf="userLanguage.length > 0">
           <ul
             *ngFor="
               let language of userLanguage;

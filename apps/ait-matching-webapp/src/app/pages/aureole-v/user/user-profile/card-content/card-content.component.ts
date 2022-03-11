@@ -24,7 +24,7 @@ export class CardContentProfileComponent  {
   @Output() onToggle = new EventEmitter();
   @Input() isColumn = false;
   @Input() isStart = true;
-  @Input() padding = '';
+  @Input() padding = '20px';
   @Input() tooltip = '';
   @Input() actionBtn = [];
   @Input() widthBtn = 'auto';

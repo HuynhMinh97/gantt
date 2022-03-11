@@ -23,6 +23,7 @@
     flex-direction: column;
     box-shadow: 0 1px 6px rgb(0 0 0 / 6%), 0 1px 1px rgb(0 0 0 / 3%);
     transition: 0.8s all ease-in-out;
+   
     .form {
       margin: 60px 0px;
       width: 400px;
@@ -55,7 +56,6 @@
       }
     }
   }
-
   ::ng-deep .ait-label span {
     color: #8f9bb3 !important;
   }
