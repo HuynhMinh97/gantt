@@ -53,6 +53,9 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   isSubmit = false;
   isChanged = false;
   isDialogOpen = false;
+  isResetFile = false;
+  isClear = false;
+  isClearErrors = false;
   cloneData: any;
   searchComponents: any;
   leftSide: any[] = [];
@@ -215,6 +218,7 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
       }
     });
     this.inputForm = new FormGroup(group);
+    console.log(this.inputForm.value)
   }
 
   checkAllowSave() {
@@ -281,6 +285,21 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
     this.checkAllowSave();
   }
 
+  takeFiles(fileList: any[], form: string): void {
+    console.log(form);
+    
+    if (isArrayFull(fileList)) {
+      const data = [];
+      fileList.forEach((file) => {
+        data.push(file._key);
+      });
+      this.inputForm.controls[form].markAsDirty();
+      this.inputForm.controls[form].setValue(data);
+    } else {
+      this.inputForm.controls[form].setValue(null);
+    }
+  }
+
   reset() {
     this.inputForm.patchValue({ ...this.cloneData });
   }
@@ -330,6 +349,7 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   }
 
   async onSave() {
+    console.log(this.inputForm.value);
     this.isSubmit = true;
     if (this.inputForm.valid) {
       this.callLoadingApp();
