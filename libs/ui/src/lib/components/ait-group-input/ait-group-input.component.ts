@@ -42,6 +42,7 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   @Input() _key: string;
   @Input() page: string;
   @Input() module: string;
+  @Input() public save: (objSave: any) => Promise<any>;
   inputForm: FormGroup;
   moduleKey: string;
   groupKey: string;
@@ -52,6 +53,9 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   isSubmit = false;
   isChanged = false;
   isDialogOpen = false;
+  isResetFile = false;
+  isClear = false;
+  isClearErrors = false;
   cloneData: any;
   searchComponents: any;
   leftSide: any[] = [];
@@ -214,6 +218,7 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
       }
     });
     this.inputForm = new FormGroup(group);
+    console.log(this.inputForm.value)
   }
 
   checkAllowSave() {
@@ -280,6 +285,21 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
     this.checkAllowSave();
   }
 
+  takeFiles(fileList: any[], form: string): void {
+    console.log(form);
+    
+    if (isArrayFull(fileList)) {
+      const data = [];
+      fileList.forEach((file) => {
+        data.push(file._key);
+      });
+      this.inputForm.controls[form].markAsDirty();
+      this.inputForm.controls[form].setValue(data);
+    } else {
+      this.inputForm.controls[form].setValue(null);
+    }
+  }
+
   reset() {
     this.inputForm.patchValue({ ...this.cloneData });
   }
@@ -328,7 +348,8 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
     }, 100);
   }
 
-  save() {
+  async onSave() {
+    console.log(this.inputForm.value);
     this.isSubmit = true;
     if (this.inputForm.valid) {
       this.callLoadingApp();
@@ -347,7 +368,19 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
             objSave[prop] = formValue[prop];
           }
         }
-        this.renderPageService
+
+        if (this.save) {
+          const res = await this.save(objSave);
+          if (res.status === RESULT_STATUS.OK) {
+            this.showToastr('', this.getMsg('I0005'));
+            setTimeout(() => {
+              history.back();
+            }, 1000);
+          } else {
+            this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+          }
+        } else {
+          this.renderPageService
           .saveRenderData(this.collection, [objSave])
           .then((res) => {
             if (res.status === RESULT_STATUS.OK) {
@@ -360,6 +393,7 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
             }
           })
           .catch(() => this.showToastr('', this.getMsg('E0100'), KEYS.WARNING));
+        }
       } catch {
         this.cancelLoadingApp();
       } finally {
@@ -377,12 +411,7 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   }
 
   toggle(checked: boolean, form: string): void {
-    console.log(checked);
-    
     this.inputForm.controls[form].setValue(checked);
-
-    console.log(this.inputForm.value);
-    
   }
 
   getCheckBoxTitle(title: string): string {

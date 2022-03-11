@@ -42,6 +42,9 @@ export class SysPageDto extends SysModuleDto {
 
   @Field(() => String, { nullable: true })
   type: string;
+
+  @Field(() => Boolean, { nullable: true })
+  allow_new: boolean;
 }
 
 @InputType()
@@ -61,6 +64,15 @@ export class ComponentSettingDto {
   @Field(() => String, { nullable: true })
   title: string;
 
+  @Field(() => String, { nullable: true })
+  guidance_icon: string;
+
+  @Field(() => String, { nullable: true })
+  guidance: string;
+
+  @Field(() => Boolean, { nullable: true })
+  has_status: boolean;
+
   @Field(() => Boolean, { nullable: true })
   required: boolean;
 
@@ -69,6 +81,12 @@ export class ComponentSettingDto {
 
   @Field(() => Boolean, { nullable: true })
   is_multi_language: boolean;
+
+  @Field(() => Boolean, { nullable: true })
+  allow_new: boolean;
+
+  @Field(() => Boolean, { nullable: true })
+  allow_delete: boolean;
 }
 
 @InputType()
