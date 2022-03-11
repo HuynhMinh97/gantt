@@ -51,6 +51,7 @@
   tabindex="{{ tabIndex }}"
 >
   <button
+    (click)="click()"
     shape="round"
     class="button__wrapper button__wrapper__active"
     [nbTooltip]="toolTip"
@@ -96,6 +97,7 @@
   tabindex="{{ tabIndex }}"
 >
   <button
+    (click)="click()"
     shape="round"
     class="button__wrapper button__wrapper__primary"
     [nbTooltip]="toolTip"

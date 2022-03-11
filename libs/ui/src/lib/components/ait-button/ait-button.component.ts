@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { title } from 'node:process';
 import { AitTranslationService } from '../../services';
@@ -39,6 +39,8 @@ export class AitButtonComponent implements OnChanges {
   @Input() toolTip = '';
   @Input() style = 'normal';
   @Input() tabIndex;
+  // eslint-disable-next-line @angular-eslint/no-output-on-prefix
+  @Output() onClick: EventEmitter<boolean> = new EventEmitter();
   isFocus = false;
 
   setFocus = (value) => this.isFocus = !!value;
@@ -48,7 +50,9 @@ export class AitButtonComponent implements OnChanges {
     return idx + '_' + element;
   }
 
-
+  click() {
+    this.onClick.emit(true);
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     for (const key in changes) {

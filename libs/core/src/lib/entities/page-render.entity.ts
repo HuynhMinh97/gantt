@@ -77,6 +77,9 @@ export class SysPageEntity extends SysGroupEntity {
   @Field(() => String, { nullable: true })
   type: string;
 
+  @Field(() => Boolean, { nullable: true })
+  allow_new: boolean;
+
   @Field(() => RouterEntity, { nullable: true })
   router: RouterEntity;
 
@@ -112,6 +115,12 @@ export class ComponentSettingEntity {
   
   @Field(() => String, { nullable: true })
   class: string;
+
+  @Field(() => Boolean, { nullable: true })
+  allow_new: boolean;
+
+  @Field(() => Boolean, { nullable: true })
+  allow_delete: boolean;
 }
 
 @ObjectType()

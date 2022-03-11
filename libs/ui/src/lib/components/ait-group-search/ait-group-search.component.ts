@@ -40,8 +40,7 @@ import {
 import { AppState } from '../../state/selectors';
 import { AitTableCellComponent } from '../ait-table-cell/ait-table-cell.component';
 import { AitBaseComponent } from '../base.component';
-import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
-import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
+import { NgxCsvParser } from 'ngx-csv-parser';
 import { AitTableButtonComponent } from '../ait-table-button/ait-table-button.component';
 import { AitConfirmDialogComponent } from '../ait-confirm-dialog/ait-confirm-dialog.component';
 
@@ -85,6 +84,7 @@ export class AitGroupSearchComponent
   isChangeAtError = false;
   isValidPage = true;
   done = false;
+  allowNew = false;
   createAtErrorMessage = '';
   changeAtErrorMessage = '';
   pageDetail = '';
@@ -169,6 +169,7 @@ export class AitGroupSearchComponent
         this.moduleKey = resModule.data[0]?.code || '';
         this.pageKey = resPage.data[0]?.code || '';
         this.pageTitle = resPage.data[0]?.name || '';
+        this.allowNew = !!resPage.data[0]?.allow_new;
 
         this.pageRouter = resPage.data[0]?.router || null;
         this.pageButton = resPage.data[0]?.button || null;
@@ -234,7 +235,6 @@ export class AitGroupSearchComponent
   }
 
   create() {
-    console.log(this.pageRouter)
     if (this.pageRouter) {
       this.router.navigate([`${this.pageRouter?.input || ''}`]);
     }
@@ -400,7 +400,6 @@ export class AitGroupSearchComponent
         const data = res.data as any[];
         this.dataTable = data;
         this.source = new LocalDataSource(data);
-        console.log(this.source);
         this.done = true;
       } else {
         const res = await this.renderPageService.findAllDataByCollection(
@@ -736,5 +735,8 @@ export class AitGroupSearchComponent
     } catch {
     }
   }
-  
+
+  toggleCheckbox(checked: boolean, form: string): void {
+    this.searchForm.controls[form].setValue(checked);
+  }
 }
