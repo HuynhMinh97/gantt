@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { RESULT_STATUS } from '@ait/shared';
 import { Component, Input, OnInit } from '@angular/core';
@@ -24,11 +25,13 @@ export class AitGroupViewComponent extends AitBaseComponent implements OnInit {
   viewForm: FormGroup;
   @Input() page: string;
   @Input() module: string;
+  @Input() public find: (condition?: any) => Promise<any>;
   @Input() _key = '';
   moduleKey = '';
   pageKey = '';
   groupKey = '';
   collection = '';
+  pageTitle = '';
   viewComponents: any;
   cloneData: any;
   multiLang: string[] = [];
@@ -80,6 +83,7 @@ export class AitGroupViewComponent extends AitBaseComponent implements OnInit {
       ) {
         this.moduleKey = resModule.data[0]?.code || '';
         this.pageKey = resPage.data[0]?.code || '';
+        this.pageTitle = resPage.data[0]?.name || '';
 
         const resGroup = await this.renderPageService.findGroup({
           module: this.moduleKey,
@@ -132,18 +136,28 @@ export class AitGroupViewComponent extends AitBaseComponent implements OnInit {
         conditions[e['item_id']] = prop;
       }
     });
-    const res = await this.renderPageService.findDataByCollection(
-      this.collection,
-      conditions
-    );
 
-    if (res.data.length > 0) {
-      const value = JSON.parse(res.data[0]['data'] || '[]');
-      this.viewForm.patchValue(value);
-
-      this.setupComponent(this.viewComponents);
+    if (this.find) {
+      const res = await this.find(conditions);
+      if (res.data.length > 0) {
+        const data = res.data[0];
+        this.viewForm.patchValue(data);
+        this.setupComponent(this.viewComponents);
+      } else {
+        this.navigateTo404();
+      }
     } else {
-      this.navigateTo404();
+      const res = await this.renderPageService.findDataByCollection(
+        this.collection,
+        conditions
+      );
+      if (res.data.length > 0) {
+        const value = JSON.parse(res.data[0]['data'] || '[]');
+        this.viewForm.patchValue(value);
+        this.setupComponent(this.viewComponents);
+      } else {
+        this.navigateTo404();
+      }
     }
   }
 
