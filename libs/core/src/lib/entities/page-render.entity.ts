@@ -109,6 +109,9 @@ export class ComponentSettingEntity {
   title: string;
 
   @Field(() => String, { nullable: true })
+  margin: string;
+
+  @Field(() => String, { nullable: true })
   guidance_icon: string;
 
   @Field(() => String, { nullable: true })
