@@ -23,7 +23,7 @@
                         >
                         </ait-input-file>
   
-                        <ait-autocomplete-master-data *ngIf="component.type === 'combobox'"
+                        <ait-autocomplete-master-data *ngIf="component.type === 'combobox' && component?.component_setting?.max_item === 1"
                             [collection]="component?.component_setting?.collection" [label]="component?.item_label"
                             [class]="component?.component_setting?.class"
                             [maxItem]="component?.component_setting?.max_item" [isReset]="isReset"
@@ -33,6 +33,19 @@
                                 ? [inputForm.controls[component?.item_id].value]
                                 : null
                             " [style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" 
+                            [id]="component?.item_id" [required]="component?.component_setting?.required ? component?.component_setting?.required : false"
+                            [isSubmit]="isSubmit" [allowNew]="component?.component_setting?.allow_new ? component?.component_setting?.allow_new : false" 
+                            [allowDelete]="component?.component_setting?.allow_delete ? component?.component_setting?.allow_delete : false">
+                        </ait-autocomplete-master-data>
+
+                        <ait-autocomplete-master-data *ngIf="component.type === 'combobox'  && component?.component_setting?.max_item !== 1"
+                            [collection]="component?.component_setting?.collection" [label]="component?.item_label"
+                            [class]="component?.component_setting?.class"
+                            [maxItem]="component?.component_setting?.max_item" [isReset]="isReset"
+                            [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
+                            (watchValue)="takeMasterValue($event?.value, component?.item_id)" [defaultValue]="
+                            inputForm.controls[component?.item_id].value" 
+                            [style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" 
                             [id]="component?.item_id" [required]="component?.component_setting?.required ? component?.component_setting?.required : false"
                             [isSubmit]="isSubmit" [allowNew]="component?.component_setting?.allow_new ? component?.component_setting?.allow_new : false" 
                             [allowDelete]="component?.component_setting?.allow_delete ? component?.component_setting?.allow_delete : false">
@@ -116,7 +129,7 @@
                         >
                         </ait-input-file>
   
-                        <ait-autocomplete-master-data *ngIf="component.type === 'combobox'"
+                        <ait-autocomplete-master-data *ngIf="component.type === 'combobox' && component?.component_setting?.max_item === 1"
                             [collection]="component?.component_setting?.collection" [label]="component?.item_label"
                             [class]="component?.component_setting?.class"
                             [maxItem]="component?.component_setting?.max_item" [isReset]="isReset"
@@ -125,7 +138,20 @@
                             inputForm.controls[component?.item_id].value
                                 ? [inputForm.controls[component?.item_id].value]
                                 : null
-                            "[style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" 
+                            " [style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" 
+                            [id]="component?.item_id" [required]="component?.component_setting?.required ? component?.component_setting?.required : false"
+                            [isSubmit]="isSubmit" [allowNew]="component?.component_setting?.allow_new ? component?.component_setting?.allow_new : false" 
+                            [allowDelete]="component?.component_setting?.allow_delete ? component?.component_setting?.allow_delete : false">
+                        </ait-autocomplete-master-data>
+
+                        <ait-autocomplete-master-data *ngIf="component.type === 'combobox'  && component?.component_setting?.max_item !== 1"
+                            [collection]="component?.component_setting?.collection" [label]="component?.item_label"
+                            [class]="component?.component_setting?.class"
+                            [maxItem]="component?.component_setting?.max_item" [isReset]="isReset"
+                            [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
+                            (watchValue)="takeMasterValue($event?.value, component?.item_id)" [defaultValue]="
+                            inputForm.controls[component?.item_id].value" 
+                            [style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" 
                             [id]="component?.item_id" [required]="component?.component_setting?.required ? component?.component_setting?.required : false"
                             [isSubmit]="isSubmit" [allowNew]="component?.component_setting?.allow_new ? component?.component_setting?.allow_new : false" 
                             [allowDelete]="component?.component_setting?.allow_delete ? component?.component_setting?.allow_delete : false">
