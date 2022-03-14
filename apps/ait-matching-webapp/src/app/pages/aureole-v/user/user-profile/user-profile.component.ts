@@ -68,6 +68,13 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   showEducation = false;
   showExperience = false;
   showCertificate = false;
+  isShowSkill = false;
+  isShowCourse = false;
+  isShowProject = false;
+  isShowLanguages = false;
+  isShowEducation = false;
+  isShowExperience = false;
+  isShowCertificate = false;
 
   avata: any;
   url_avatar = '';
@@ -102,6 +109,12 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     {
       title: '追加',
       icon: 'plus'
+    }
+  ];
+  actionBtnProfile = [
+    {
+      title: '追加',
+      icon: 'edit-outline'
     }
   ];
   skillUserName: any;
@@ -185,6 +198,15 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     } catch (e) {
     }
   }
+
+  nextPage(link: string, key?: string){
+    if(key){
+      this.router.navigate([`${link}/${key}`]);
+    }else{
+      this.router.navigate([`${link}`]);
+    }
+  }
+
   async getMaxSkill(){
     await this.userSkillsService.getMaxSkill({value: ['maxSkill']})
     .then((res) => {
@@ -509,26 +531,26 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     });
   }
 
-  openProjects(key?: string) {
-    this.dialogService.open(UserProjectComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-        project_key: key,
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-        this.callLoadingApp();
-        this.userProject = [];
-        this.timeProject = 0;
-        await this.getProjectByUserId();
-        setTimeout(() => {
-          this.cancelLoadingApp();
-        }, 1000)
-      }
-    });
-  }
+  // openProjects(key?: string) {
+  //   this.dialogService.open(UserProjectComponent, {
+  //     closeOnBackdropClick: false,
+  //     hasBackdrop: true,
+  //     autoFocus: false,
+  //     context: {
+  //       project_key: key,
+  //     },
+  //   }).onClose.subscribe(async (event) => {
+  //     if (event) {
+  //       this.callLoadingApp();
+  //       this.userProject = [];
+  //       this.timeProject = 0;
+  //       await this.getProjectByUserId();
+  //       setTimeout(() => {
+  //         this.cancelLoadingApp();
+  //       }, 1000)
+  //     }
+  //   });
+  // }
   openProjectsDetail(key?: string) {
     this.dialogService.open(UserProjectDetailComponent, {
       closeOnBackdropClick: false,
@@ -868,5 +890,11 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         this.countFriend -= 1;
       }      
     })
+  }
+  getExpan(data, val){
+    console.log(data);
+    console.log(this[val]);
+    this[val] = true;
+    console.log(this[val]);
   }
 }

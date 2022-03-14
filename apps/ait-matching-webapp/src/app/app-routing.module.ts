@@ -50,36 +50,70 @@ export const routes: Routes = [
   //   canActivate: [AitAuthGuardService],
   //   component: UserOnboardingDetailComponent
   // },
- 
   {
-    path: 'user-profile',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
-    component: UserProfileComponent
+    path: 'user-course',
+    canActivate: [AitAuthGuardService], 
+    component: UserCourseComponent
   },
   {
-    path: 'user-profile/:id',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    path: 'user-course/:id',
+    canActivate: [AitAuthGuardService], 
+    component: UserCourseComponent
+  },
+  {
+    path: 'user-certificate',
+    canActivate: [AitAuthGuardService], 
+    component: UserCertificateComponent
+  },
+  {
+    path: 'user-certificate/:id',
+    canActivate: [AitAuthGuardService], 
+    component: UserCertificateComponent
+  },
+  {
+    path: 'user-project',
+    canActivate: [AitAuthGuardService], 
+    component: UserProjectComponent
+  },
+  {
+    path: 'user-project/:id',
+    canActivate: [AitAuthGuardService], 
+    component: UserProjectComponent
+  },
+  {
+    path: 'user-reorder-skills',
+    canActivate: [AitAuthGuardService], 
+    component: UserReorderSkillsComponent
+  },
+  {
+    path: 'user-skills',
+    canActivate: [AitAuthGuardService], 
+    component: UserSkillsComponent
+  },
+  {
+    path: 'user-profile',
+    canActivate: [AitAuthGuardService],
     component: UserProfileComponent
   },
   {
     path: 'user-job-alert',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    canActivate: [AitAuthGuardService],
     component: UserJobAlertComponent
   },
   {
     path: 'user-job-alert/:id',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    canActivate: [AitAuthGuardService],
     component: UserJobAlertComponent
   },
   {
     path: 'user-job-alert-detail/:id',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    canActivate: [AitAuthGuardService],
     component: UserJobAlertDetailComponent
   },
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: localStorage.getItem('access_token') ? 'recommenced-user' : 'sign-in'
+    redirectTo: localStorage.getItem('access_token') ? 'user-project' : 'sign-in'
   },
 
 ];

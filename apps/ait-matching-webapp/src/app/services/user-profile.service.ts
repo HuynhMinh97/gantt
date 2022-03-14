@@ -34,27 +34,34 @@ export class UserProfileService extends AitBaseService {
     return await this.query('findProfile', {collection: 'user_profile',  condition    }, 
     {
       user_id: true,
-      avatar_url:true,
-      background_url: true,
       last_name: true,
       first_name: true,
-      title:{
-        _key: true,
-        value: true,
-      },
-      company_working:{
-        _key: true,
-        value: true,
-      },
-      province_city:{
-        _key: true,
-        value: true,
-      },
-      country_region:{
-        _key: true,
-        value: true,
-      },
+      phone_number: true,
+      romaji: true,
+      katakana: true,
+      bod: true,
       about: true,
+      gender: true,
+      // avatar_url:true,
+      // background_url: true,
+      
+      // title:{
+      //   _key: true,
+      //   value: true,
+      // },
+      // company_working:{
+      //   _key: true,
+      //   value: true,
+      // },
+      // province_city:{
+      //   _key: true,
+      //   value: true,
+      // },
+      // country_region:{
+      //   _key: true,
+      //   value: true,
+      // },
+      
     })
   }
 

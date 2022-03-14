@@ -33,6 +33,8 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
   isLoad = false;
   isSave = false;
   isChanged = false;
+  isReset = false;
+  isSubmit = false;
   sort_no = 0;
   maxSkill = 0;
   user_skills = {
@@ -135,7 +137,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
           }
           this.userSkills.controls['skills'].setValue(listSkills);
           this.companySkills = listSkills
-          this.userSkillsClone = this.userSkills.value;
+          this.userSkillsClone =  JSON.parse(JSON.stringify(this.userSkills.value));
           this.cancelLoadingApp();
         } else {
           this.userSkillsClone = this.userSkills.value;
@@ -145,43 +147,43 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
     })
   }
 
-  async saveAndContinue() {
-    if (this.userSkills.valid) {
-      this.callLoadingApp();
-      this.user_skills._from = 'sys_user/' + this.user_id;
-      this.user_skills.relationship = 'user_skill';
-      if (this.mode == 'EDIT') {
-        const _fromSkill = [
-          { _from: 'sys_user/' + this.user_id },
-        ];
-        this.userSkillsService.removeUserSkill(_fromSkill);
-      }
-      const listSkills = this.userSkills.value.skills;
-      listSkills.forEach(async (skill) => {
-        this.sort_no += 1;
-        this.user_skills.sort_no = this.sort_no;
-        this.user_skills._to = 'm_skill/' + skill._key;
-        await this.userSkillsService.saveSkills(this.user_skills)
-          .then((res) => {
-            if (res?.status === RESULT_STATUS.OK) {
-              this.isSave = true;
-              const message = this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
-              this.showToastr('', message);
-              this.isChanged = false;
-              this.cancelLoadingApp();
-            } else {
-              this.cancelLoadingApp();
-              this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-            }
-          }).catch(() => {
-            this.cancelLoadingApp();
-            this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-          });
-      });
-    } else {
-      this.cancelLoadingApp();
-    }
-  }
+  // async saveAndContinue() {
+  //   if (this.userSkills.valid) {
+  //     this.callLoadingApp();
+  //     this.user_skills._from = 'sys_user/' + this.user_id;
+  //     this.user_skills.relationship = 'user_skill';
+  //     if (this.mode == 'EDIT') {
+  //       const _fromSkill = [
+  //         { _from: 'sys_user/' + this.user_id },
+  //       ];
+  //       this.userSkillsService.removeUserSkill(_fromSkill);
+  //     }
+  //     const listSkills = this.userSkills.value.skills;
+  //     listSkills.forEach(async (skill) => {
+  //       this.sort_no += 1;
+  //       this.user_skills.sort_no = this.sort_no;
+  //       this.user_skills._to = 'm_skill/' + skill._key;
+  //       await this.userSkillsService.saveSkills(this.user_skills)
+  //         .then((res) => {
+  //           if (res?.status === RESULT_STATUS.OK) {
+  //             this.isSave = true;
+  //             const message = this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
+  //             this.showToastr('', message);
+  //             this.isChanged = false;
+  //             this.cancelLoadingApp();
+  //           } else {
+  //             this.cancelLoadingApp();
+  //             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+  //           }
+  //         }).catch(() => {
+  //           this.cancelLoadingApp();
+  //           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+  //         });
+  //     });
+  //   } else {
+  //     this.cancelLoadingApp();
+  //   }
+  // }
 
   updateTopSkill(){
     const topSkills = [];
@@ -205,28 +207,30 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
         const _fromSkill = [
           { _from: 'sys_user/' + this.user_id },
         ];
-        this.userSkillsService.removeUserSkill(_fromSkill);
+        await this.userSkillsService.removeUserSkill(_fromSkill);
       }
       const listSkills = this.userSkills.value.skills;
-      listSkills.forEach(async (skill) => {
+      let dataSave = 0;
+      for(const skill of listSkills) {   
         this.sort_no += 1;
         this.user_skills.sort_no = this.sort_no;
         this.user_skills._to = 'm_skill/' + skill._key;
         await this.userSkillsService.saveSkills(this.user_skills)
           .then((res) => {
             if (res?.status === RESULT_STATUS.OK) {
-              const message = this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
-              this.showToastr('', message);
-              this.closeDialog(true);
-            } else {
-              this.cancelLoadingApp();
-              this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+              dataSave ++;
             }
           }).catch(() => {
             this.cancelLoadingApp()
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           });;
-      });
+      }
+      if(dataSave == listSkills.length) {
+        const message = this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
+        this.showToastr('', message);
+        history.back();
+      }
+     
       this.updateTopSkill();
       this.cancelLoadingApp();
     } else {
@@ -284,6 +288,21 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
 
   closeDialog(event: boolean) {
     this.nbDialogRef.close(event);
+  }
+  clear(){
+    this.companySkills = [];
+    this.userSkills.reset();
+  }
+  async reset(){
+    this.isReset = true;
+    await this.clear();
+    setTimeout(() => {
+      this.isReset = false;
+      this.userSkills.setValue(this.userSkillsClone);
+      this.companySkills =  this.userSkills.controls['skills'].value;
+    }, 0);
+   
+   
   }
 
 }

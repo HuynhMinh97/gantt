@@ -119,7 +119,7 @@
         z-index: 1050 !important;
         height: 50px;
         background: nb-theme(color-basic-100);
-        // border-left: 3px solid rgba(51, 102, 255, 0.08);
+        border-left: 3px solid rgba(51, 102, 255, 0.08);
         border: 1px dashed #abc;
         font-weight: 600;
         font-size: 14px;
@@ -136,22 +136,21 @@
         }
   }
   .sticky {
-    margin-bottom: 30px;
-  .action-row {
-      height: 40px;
-      .block {
+    .action-row {
+        height: 40px;
+        .block {
+          justify-content: center;
+          align-items: center;
+          display: flex;
+        }
+        margin: 0 !important;
         justify-content: center;
         align-items: center;
+        padding: 0px !important;
         display: flex;
+        button {
+          width: 180px;
+        }
       }
-      margin: 0 !important;
-      justify-content: center;
-      align-items: center;
-      padding: 0px !important;
-      display: flex;
-      button {
-        width: 180px;
-      }
-    }
   }
  

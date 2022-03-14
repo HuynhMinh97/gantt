@@ -72,7 +72,7 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
     private userSkillsService: UserSkillsService,
     private translateService: AitTranslationService,
     public cartificateService: UserCerfiticateService,
-    private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
+    // private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
     layoutScrollService: NbLayoutScrollService,
     toastrService: NbToastrService,
     authService: AitAuthService,
@@ -100,12 +100,12 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
         this.dateFormat = setting['date_format_display'];
       }
     });
-
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationStart) {
-          this.closeDialog(false);
-      }
-    });
+    this.certificate_key = this.activeRouter.snapshot.paramMap.get('id');
+    // this.router.events.subscribe((event) => {
+    //   if (event instanceof NavigationStart) {
+    //       this.closeDialog(false);
+    //   }
+    // });
 
     this.certificate = this.formBuilder.group({
       _key: new FormControl(null),
@@ -490,6 +490,6 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
     return title;
   }
   closeDialog(event: boolean) {
-    this.nbDialogRef.close(event);
+    // this.nbDialogRef.close(event);
   }
 }

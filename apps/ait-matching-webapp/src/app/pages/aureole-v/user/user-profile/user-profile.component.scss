@@ -2,13 +2,22 @@
 .user_profile_wrapper{
   min-width: 880px;
   .content__card{
+    max-width: 1080px;
     position: relative;
     margin: auto;
-    width: 80%;
+    width: 100%;
+    .container_user{
+     padding: 0 20px 20px 20px;
+    }
     .reorder_skills{
       position: absolute;
-      top: 64px;
+      top: 57px;
       right: 222px;
+    }
+    .profile{
+      .input_inline{
+        margin-top: 15px;
+      }
     }
   }
   hr{

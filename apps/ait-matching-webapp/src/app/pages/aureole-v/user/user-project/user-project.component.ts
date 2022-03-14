@@ -101,7 +101,8 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     private userProjectService: UserProjectService,
     private translateService: AitTranslationService,
     private userProfileService: UserProfileService,
-    private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
+
+    // private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
     apollo: Apollo,
     env: AitEnvironmentService,
     userService: AitUserService,
@@ -133,6 +134,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
           this.closeDialog(false);
       }
     });
+    this.project_key = this.activeRouter.snapshot.paramMap.get('id');
 
     this.userProject = this.formBuilder.group({
       _key: new FormControl(null),
@@ -148,7 +150,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     });
   }
 
-  async ngOnInit() {
+  async ngOnInit() {    
     this.callLoadingApp();
     setTimeout(() => {
       this.isLoad = true;
@@ -558,7 +560,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
   }
 
   closeDialog(event: boolean) {
-    this.nbDialogRef.close(event);
+    // this.nbDialogRef.close(event);
   }
 
 }
