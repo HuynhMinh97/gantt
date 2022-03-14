@@ -189,12 +189,13 @@ export class AitAppUtils extends Utils {
   }
 
   static getParamsOnUrl = (isLast?: boolean, LastIndex?: number) => {
+    const a = location.pathname;
     if (isLast) {
-      const a = location.hash.split('/');
-      return a[a.length - (LastIndex || 1)]
+      return a.slice(LastIndex || 1);
     }
-    return location.hash.split('/');
+    return a.slice(1);
   }
+  
   static getArrayNotFalsy = (array: any[]) => array.filter(a => !!a);
   static deepCloneArray = (array: any[]) => [...array.map(a => ({ ...a }))];
   static getDif2Days(date1: string | Date | any, date2: string | Date | any) {

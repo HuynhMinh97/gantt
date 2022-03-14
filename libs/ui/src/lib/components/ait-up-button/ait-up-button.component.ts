@@ -70,7 +70,6 @@ export class AitUpButtonComponent {
           // This value is pulled out of the browser; and, may exist across
           // page refreshes.
 
-          const n: any = AitAppUtils.getParamsOnUrl(true);
           // this.isChangeColor = DarkScreen.includes(n);
           ;
 
