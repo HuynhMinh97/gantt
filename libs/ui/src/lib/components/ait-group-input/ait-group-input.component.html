@@ -1,175 +1,175 @@
 <div class="component__container">
-  <div class="main__container">
-      <ait-text-gradient [content]="pageTitle" [id]="'title'"></ait-text-gradient>
-      <ait-space></ait-space>
+    <div class="main__container">
+        <ait-text-gradient [content]="pageTitle" [id]="'title'"></ait-text-gradient>
+        <ait-space></ait-space>
 
-      <ait-card-content class="content__card" [disableHeader]="true" [transition]="false">
-          <div class="content">
-              <div class="left__side" *ngIf="leftSide.length > 0">
-                  <ng-container *ngFor="let component of leftSide">
-                      <ait-input-file *ngIf="component.type === 'file'"
-                          (watchValue)="takeFiles($event.value, component?.item_id)"
-                          [fileKeys]="inputForm.controls[component?.item_id].value"
-                          [maxFiles]="component?.component_setting?.max_file || 1"
-                          [hasStatus]="!!component?.component_setting?.has_status"
-                          [id]="component?.item_id" [fileTypes]="'jpg,png,jpeg'"
-                          [title]="component?.component_setting?.title || ''"
-                          [guidanceIcon]="component?.component_setting?.guidance_icon || ''"
-                          [guidance]="component?.component_setting?.guidance || ''"
-                          [isReset]="isResetFile"
-                          [isClear]="isClear"
-                          [isSubmit]="isSubmit"
-                          [clearError]="isClearErrors"
-                      >
-                      </ait-input-file>
+        <ait-card-content class="content__card" [disableHeader]="true" [transition]="false">
+            <div class="content">
+                <div class="left__side" *ngIf="leftSide.length > 0">
+                    <ng-container *ngFor="let component of leftSide">
+                        <ait-input-file *ngIf="component.type === 'file'"
+                            (watchValue)="takeFiles($event.value, component?.item_id)"
+                            [fileKeys]="inputForm.controls[component?.item_id].value"
+                            [maxFiles]="component?.component_setting?.max_file || 1"
+                            [hasStatus]="!!component?.component_setting?.has_status"
+                            [id]="component?.item_id" [fileTypes]="'jpg,png,jpeg'"
+                            [title]="component?.component_setting?.title || ''"
+                            [guidanceIcon]="component?.component_setting?.guidance_icon || ''"
+                            [guidance]="component?.component_setting?.guidance || ''"
+                            [isReset]="isResetFile"
+                            [isClear]="isClear"
+                            [isSubmit]="isSubmit"
+                            [clearError]="isClearErrors"
+                        >
+                        </ait-input-file>
 
-                      <ait-autocomplete-master-data *ngIf="component.type === 'combobox'"
-                          [collection]="component?.component_setting?.collection" [label]="component?.item_label"
-                          [class]="component?.component_setting?.class"
-                          [maxItem]="component?.component_setting?.max_item" [isReset]="isReset"
-                          [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
-                          (watchValue)="takeMasterValue($event?.value, component?.item_id)" [defaultValue]="
-                          inputForm.controls[component?.item_id].value
-                              ? [inputForm.controls[component?.item_id].value]
-                              : null
-                          " [style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" 
-                          [id]="component?.item_id" [required]="component?.component_setting?.required ? component?.component_setting?.required : false"
-                          [isSubmit]="isSubmit" [allowNew]="component?.component_setting?.allow_new ? component?.component_setting?.allow_new : false" 
-                          [allowDelete]="component?.component_setting?.allow_delete ? component?.component_setting?.allow_delete : false">
-                      </ait-autocomplete-master-data>
+                        <ait-autocomplete-master-data *ngIf="component.type === 'combobox'"
+                            [collection]="component?.component_setting?.collection" [label]="component?.item_label"
+                            [class]="component?.component_setting?.class"
+                            [maxItem]="component?.component_setting?.max_item" [isReset]="isReset"
+                            [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
+                            (watchValue)="takeMasterValue($event?.value, component?.item_id)" [defaultValue]="
+                            inputForm.controls[component?.item_id].value
+                                ? [inputForm.controls[component?.item_id].value]
+                                : null
+                            " [style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" 
+                            [id]="component?.item_id" [required]="component?.component_setting?.required ? component?.component_setting?.required : false"
+                            [isSubmit]="isSubmit" [allowNew]="component?.component_setting?.allow_new ? component?.component_setting?.allow_new : false" 
+                            [allowDelete]="component?.component_setting?.allow_delete ? component?.component_setting?.allow_delete : false">
+                        </ait-autocomplete-master-data>
 
-                      <ait-input-number *ngIf="component.type === 'number'">
+                        <ait-input-number *ngIf="component.type === 'number'">
 
-                      </ait-input-number>
+                        </ait-input-number>
 
-                      <ait-input-text *ngIf="component.type === 'text'" [length]="1000" [isReset]="isReset"
-                          [label]="component?.item_label" [placeholder]="component?.item_placeholder"
-                          [rows]="component?.component_setting?.rows ? component?.component_setting?.rows : 1"
-                          [width]="component?.component_setting?.width" [fullWidth]="true" [id]="component?.item_id"
-                          [defaultValue]="inputForm.controls[component?.item_id].value" [isSubmit]="isSubmit"
-                          (watchValue)="takeInputValue($event, component?.item_id)" [required]="true">
-                      </ait-input-text>
+                        <ait-input-text *ngIf="component.type === 'text'" [length]="1000" [isReset]="isReset"
+                            [label]="component?.item_label" [placeholder]="component?.item_placeholder"
+                            [rows]="component?.component_setting?.rows ? component?.component_setting?.rows : 1"
+                            [width]="component?.component_setting?.width" [fullWidth]="true" [id]="component?.item_id"
+                            [defaultValue]="inputForm.controls[component?.item_id].value" [isSubmit]="isSubmit"
+                            (watchValue)="takeInputValue($event, component?.item_id)" [required]="true">
+                        </ait-input-text>
 
-                      <ait-date-picker
-                          *ngIf="component.type === 'date' && component?.component_setting?.from_to !== true"
-                          [placeholder]="component?.item_placeholder" [id]="component?.item_id"
-                          [label]="component?.item_label" [style]="component?.component_setting?.width"
-                          [isReset]="isReset">
-                      </ait-date-picker>
+                        <ait-date-picker
+                            *ngIf="component.type === 'date' && component?.component_setting?.from_to !== true"
+                            [placeholder]="component?.item_placeholder" [id]="component?.item_id"
+                            [label]="component?.item_label" [style]="component?.component_setting?.width"
+                            [isReset]="isReset">
+                        </ait-date-picker>
 
-                      <div class="check-form" *ngIf="component.type === 'checkbox'" style="margin-top: 5px;">
-                          <nb-checkbox
-                            [id]="component?.item_id"
-                            [checked]="inputForm.controls[component?.item_id].value"
-                            (checkedChange)="toggle($event, component?.item_id)"
-                          >
-                          </nb-checkbox>
-                          <p class="pcontent">
-                              {{ getCheckBoxTitle(component?.component_setting?.title) }}
-                          </p>
-                      </div>
+                        <div class="check-form" *ngIf="component.type === 'checkbox'" style="margin-top: 5px;">
+                            <nb-checkbox
+                              [id]="component?.item_id"
+                              [checked]="inputForm.controls[component?.item_id].value"
+                              (checkedChange)="toggle($event, component?.item_id)"
+                            >
+                            </nb-checkbox>
+                            <p class="pcontent">
+                                {{ getCheckBoxTitle(component?.component_setting?.title) }}
+                            </p>
+                        </div>
 
-                  <ait-space [margin]="'7.25px'"></ait-space>
-              </ng-container>
-          </div>
-          <div class="right__side">
-              <ng-container *ngFor="let component of rightSide">
-                  <ait-input-file *ngIf="component.type === 'file'"
-                      (watchValue)="takeFiles($event.value, component?.item_id)"
-                      [fileKeys]="inputForm.controls[component?.item_id].value"
-                      [maxFiles]="component?.component_setting?.max_file || 1"
-                      [hasStatus]="!!component?.component_setting?.has_status"
-                      [id]="component?.item_id" [fileTypes]="'jpg,png,jpeg'"
-                      [title]="component?.component_setting?.title || ''"
-                      [guidanceIcon]="component?.component_setting?.guidance_icon || ''"
-                      [guidance]="component?.component_setting?.guidance || ''"
-                      [isReset]="isResetFile"
-                      [isClear]="isClear"
-                      [isSubmit]="isSubmit"
-                      [clearError]="isClearErrors"
-                  >
-                  </ait-input-file>
+                        <ait-space [margin]="'7.25px'"></ait-space>
+                    </ng-container>
+                </div>
+                <div class="right__side">
+                    <ng-container *ngFor="let component of rightSide">
+                        <ait-input-file *ngIf="component.type === 'file'"
+                            (watchValue)="takeFiles($event.value, component?.item_id)"
+                            [fileKeys]="inputForm.controls[component?.item_id].value"
+                            [maxFiles]="component?.component_setting?.max_file || 1"
+                            [hasStatus]="!!component?.component_setting?.has_status"
+                            [id]="component?.item_id" [fileTypes]="'jpg,png,jpeg'"
+                            [title]="component?.component_setting?.title || ''"
+                            [guidanceIcon]="component?.component_setting?.guidance_icon || ''"
+                            [guidance]="component?.component_setting?.guidance || ''"
+                            [isReset]="isResetFile"
+                            [isClear]="isClear"
+                            [isSubmit]="isSubmit"
+                            [clearError]="isClearErrors"
+                        >
+                        </ait-input-file>
 
-                  <ait-autocomplete-master-data *ngIf="component.type === 'combobox'"
-                      [collection]="component?.component_setting?.collection" [label]="component?.item_label"
-                      [class]="component?.component_setting?.class"
-                      [maxItem]="component?.component_setting?.max_item" [isReset]="isReset"
-                      [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
-                      (watchValue)="takeMasterValue($event?.value, component?.item_id)" [defaultValue]="
-                      inputForm.controls[component?.item_id].value
-                          ? [inputForm.controls[component?.item_id].value]
-                          : null
-                      "[style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" 
-                      [id]="component?.item_id" [required]="component?.component_setting?.required ? component?.component_setting?.required : false"
-                      [isSubmit]="isSubmit" [allowNew]="component?.component_setting?.allow_new ? component?.component_setting?.allow_new : false" 
-                      [allowDelete]="component?.component_setting?.allow_delete ? component?.component_setting?.allow_delete : false">
-                  </ait-autocomplete-master-data>
+                        <ait-autocomplete-master-data *ngIf="component.type === 'combobox'"
+                            [collection]="component?.component_setting?.collection" [label]="component?.item_label"
+                            [class]="component?.component_setting?.class"
+                            [maxItem]="component?.component_setting?.max_item" [isReset]="isReset"
+                            [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
+                            (watchValue)="takeMasterValue($event?.value, component?.item_id)" [defaultValue]="
+                            inputForm.controls[component?.item_id].value
+                                ? [inputForm.controls[component?.item_id].value]
+                                : null
+                            "[style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" 
+                            [id]="component?.item_id" [required]="component?.component_setting?.required ? component?.component_setting?.required : false"
+                            [isSubmit]="isSubmit" [allowNew]="component?.component_setting?.allow_new ? component?.component_setting?.allow_new : false" 
+                            [allowDelete]="component?.component_setting?.allow_delete ? component?.component_setting?.allow_delete : false">
+                        </ait-autocomplete-master-data>
 
-                  <ait-input-number *ngIf="component.type === 'number'">
+                        <ait-input-number *ngIf="component.type === 'number'">
 
-                  </ait-input-number>
+                        </ait-input-number>
 
-                  <ait-input-text *ngIf="component.type === 'text'" [length]="1000" [isReset]="isReset"
-                      [label]="component?.item_label" [placeholder]="component?.item_placeholder"
-                      [rows]="component?.component_setting?.rows ? component?.component_setting?.rows : 1"
-                      [width]="component?.component_setting?.width" [fullWidth]="true" [id]="component?.item_id"
-                      [defaultValue]="inputForm.controls[component?.item_id].value" [isSubmit]="isSubmit"
-                      (watchValue)="takeInputValue($event, component?.item_id)" [required]="true">
-                  </ait-input-text>
+                        <ait-input-text *ngIf="component.type === 'text'" [length]="1000" [isReset]="isReset"
+                            [label]="component?.item_label" [placeholder]="component?.item_placeholder"
+                            [rows]="component?.component_setting?.rows ? component?.component_setting?.rows : 1"
+                            [width]="component?.component_setting?.width" [fullWidth]="true" [id]="component?.item_id"
+                            [defaultValue]="inputForm.controls[component?.item_id].value" [isSubmit]="isSubmit"
+                            (watchValue)="takeInputValue($event, component?.item_id)" [required]="true">
+                        </ait-input-text>
 
-                  <ait-date-picker
-                      *ngIf="component.type === 'date' && component?.component_setting?.from_to !== true"
-                      [placeholder]="component?.item_placeholder" [id]="component?.item_id"
-                      [label]="component?.item_label" [style]="component?.component_setting?.width"
-                      [isReset]="isReset">
-                  </ait-date-picker>
+                        <ait-date-picker
+                            *ngIf="component.type === 'date' && component?.component_setting?.from_to !== true"
+                            [placeholder]="component?.item_placeholder" [id]="component?.item_id"
+                            [label]="component?.item_label" [style]="component?.component_setting?.width"
+                            [isReset]="isReset">
+                        </ait-date-picker>
 
-                  <div class="check-form" *ngIf="component.type === 'checkbox'" style="margin-top: 5px;">
-                      <nb-checkbox
-                        [id]="component?.item_id"
-                        [checked]="inputForm.controls[component?.item_id].value"
-                        (checkedChange)="toggle($event, component?.item_id)"
-                      >
-                      </nb-checkbox>
-                      <p class="pcontent">
-                          {{ getCheckBoxTitle(component?.component_setting?.title) }}
-                      </p>
-                  </div>
+                        <div class="check-form" *ngIf="component.type === 'checkbox'" style="margin-top: 5px;">
+                            <nb-checkbox
+                              [id]="component?.item_id"
+                              [checked]="inputForm.controls[component?.item_id].value"
+                              (checkedChange)="toggle($event, component?.item_id)"
+                            >
+                            </nb-checkbox>
+                            <p class="pcontent">
+                                {{ getCheckBoxTitle(component?.component_setting?.title) }}
+                            </p>
+                        </div>
 
-                  <ait-space [margin]="'7.25px'"></ait-space>
-              </ng-container>
-          </div>
-      </div>
-  </ait-card-content>
+                        <ait-space [margin]="'7.25px'"></ait-space>
+                    </ng-container>
+                </div>
+            </div>
+        </ait-card-content>
 
-  <div class="sticky">
-      <div class="action-row">
-          <div class="block">
-              <ait-button *ngIf="mode === 'EDIT'" [id]="'remove'" [width]="'200px'" [title]="'delete'"
-                  [isDefault]="true" (click)="remove()">
-              </ait-button>
+        <div class="sticky">
+            <div class="action-row">
+                <div class="block">
+                    <ait-button *ngIf="mode === 'EDIT'" [id]="'remove'" [width]="'200px'" [title]="'delete'"
+                        [isDefault]="true" (click)="remove()">
+                    </ait-button>
 
-              <ait-button *ngIf="mode === 'EDIT'" [id]="'copy'" [width]="'200px'" [title]="'copy'"
-                  [isDefault]="true">
-              </ait-button>
+                    <ait-button *ngIf="mode === 'EDIT'" [id]="'copy'" [width]="'200px'" [title]="'copy'"
+                        [isDefault]="true">
+                    </ait-button>
 
-              <ait-button [id]="'clear'" [width]="'200px'" [title]="'clear'" [isDefault]="true"
-                  (click)="clear()">
-              </ait-button>
+                    <ait-button [id]="'clear'" [width]="'200px'" [title]="'clear'" [isDefault]="true"
+                        (click)="clear()">
+                    </ait-button>
 
-              <ait-button *ngIf="mode === 'EDIT'" [id]="'reset'" [width]="'200px'" [title]="'reset'"
-                  [isDefault]="true" (click)="reset()">
-              </ait-button>
+                    <ait-button *ngIf="mode === 'EDIT'" [id]="'reset'" [width]="'200px'" [title]="'reset'"
+                        [isDefault]="true" (click)="reset()">
+                    </ait-button>
 
-              <ait-button *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'" [id]="'save'" [width]="'200px'"
-                  [title]="'save'" [isDefault]="true"(click)="onSave()">
-              </ait-button>
+                    <ait-button *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'" [id]="'save'" [width]="'200px'"
+                        [title]="'save'" [isDefault]="true"(click)="onSave()">
+                    </ait-button>
 
-              <ait-button *ngIf="!isChanged && mode === 'EDIT'" [id]="'disabled'" [width]="'200px'" [title]="'save'"
-                  [style]="'disabled'">
-              </ait-button>
-          </div>
-      </div>
-  </div>
-</div>
+                    <ait-button *ngIf="!isChanged && mode === 'EDIT'" [id]="'disabled'" [width]="'200px'" [title]="'save'"
+                        [style]="'disabled'">
+                    </ait-button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
