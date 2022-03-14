@@ -117,7 +117,7 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
           page: this.pageKey,
           type: 'input',
         });
-        
+
         if (resGroup.status === RESULT_STATUS.OK) {
           this.groupKey = resGroup.data[0]?.code || '';
           this.collection = resGroup.data[0]?.collection || '';
@@ -170,7 +170,6 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
       this.collection,
       conditions
     );
-    
     if (res.data.length > 0) {
       const value = JSON.parse(res.data[0]['data'] || '[]');
       this.inputForm.patchValue(value);
@@ -195,10 +194,6 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
       });
       leftSide = leftSide.sort((a, b) => a.row_no - b.row_no);
       rightSide = rightSide.sort((a, b) => a.row_no - b.row_no);
-
-      console.log(leftSide);
-      console.log(rightSide);
-      
 
       const leftSideIndex = leftSide[leftSide.length - 1]?.row_no;
       const rightSideIndex = rightSide[rightSide.length - 1]?.row_no;
@@ -248,7 +243,6 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
       }
     });
     this.inputForm = new FormGroup(group);
-    console.log(this.inputForm.value)
   }
 
   checkAllowSave() {
@@ -316,8 +310,6 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   }
 
   takeFiles(fileList: any[], form: string): void {
-    console.log(form);
-    
     if (isArrayFull(fileList)) {
       const data = [];
       fileList.forEach((file) => {
@@ -379,7 +371,6 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   }
 
   async onSave() {
-    console.log(this.inputForm.value);
     this.isSubmit = true;
     if (this.inputForm.valid) {
       this.callLoadingApp();
@@ -411,18 +402,20 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
           }
         } else {
           this.renderPageService
-          .saveRenderData(this.collection, [objSave])
-          .then((res) => {
-            if (res.status === RESULT_STATUS.OK) {
-              this.showToastr('', this.getMsg('I0005'));
-              setTimeout(() => {
-                history.back();
-              }, 1000);
-            } else {
-              this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-            }
-          })
-          .catch(() => this.showToastr('', this.getMsg('E0100'), KEYS.WARNING));
+            .saveRenderData(this.collection, [objSave])
+            .then((res) => {
+              if (res.status === RESULT_STATUS.OK) {
+                this.showToastr('', this.getMsg('I0005'));
+                setTimeout(() => {
+                  history.back();
+                }, 1000);
+              } else {
+                this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+              }
+            })
+            .catch(() =>
+              this.showToastr('', this.getMsg('E0100'), KEYS.WARNING)
+            );
         }
       } catch {
         this.cancelLoadingApp();
