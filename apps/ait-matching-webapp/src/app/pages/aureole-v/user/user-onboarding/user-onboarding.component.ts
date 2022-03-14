@@ -1,5 +1,5 @@
 import { UserOnboardingService } from './../../../../services/user-onboarding.service';
-import { Component, ElementRef, OnInit, Optional } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Optional } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -42,10 +42,10 @@ export class UserOnboardingComponent
   // Create form group
   userOnboardingInfo: FormGroup;
   userOnboardingInfoClone: any;
-
+  toggle = new EventEmitter();
   genderList: KeyValueCheckedDto[];
   defaultGender = {} as KeyValueDto;
-
+  basicInfomation = 'Basic Infomation'
   mode = MODE.NEW;
   skills: any;
   errorArr: any;
@@ -60,7 +60,7 @@ export class UserOnboardingComponent
   isClear = false;
   isChanged = false;
   isDisplay = false;
-
+  isExpan = false;
   resetUserInfo = {
     first_name: false,
     last_name: false,
@@ -203,7 +203,9 @@ export class UserOnboardingComponent
       this.userOnboardingInfo.addControl('skills', new FormControl(null));
     }
     // get key form parameter
-    // this.user_key = this.activeRouter.snapshot.paramMap.get('id');
+     this.user_key = this.activeRouter.snapshot.paramMap.get('id');
+     this._key = this.activeRouter.snapshot.paramMap.get('id');
+
     this.userOnbService
       .findSiteLanguageById(this.authService.getUserID())
       .then((r) => {
@@ -228,19 +230,6 @@ export class UserOnboardingComponent
     if (this.user_key) {
       this.mode = MODE.EDIT;
     }
-    await this.userProfileService.finProfileByUserId(this.user_key ? this.user_key : this.user_id)
-    .then((res) => {
-      if (res.status === RESULT_STATUS.OK && res.data.length > 0 ) {
-        const url = this.router.url;
-        const isUrl = url.indexOf('user-onboarding');
-        if(isUrl >= 0 ){
-          this.isDisplay = true;
-        }       
-      }
-    })
-    if(this.isDisplay){
-      this.router.navigate([`/404`]);
-    }else{
       if (this.user_key) {
         this.callLoadingApp();
         await this.userOnbService
@@ -261,7 +250,7 @@ export class UserOnboardingComponent
             }
           });
       } 
-    }
+    
 
     await this.getGenderList();
     this.setDefaultGenderValue();
@@ -281,6 +270,12 @@ export class UserOnboardingComponent
       }
     }
   }
+
+
+  toggleExpan = () => {
+    this.isExpan = !this.isExpan;
+    this.toggle.emit(this.isExpan);
+  };
 
   checkAllowSave() {
     const userInfo = { ...this.userOnboardingInfo.value };

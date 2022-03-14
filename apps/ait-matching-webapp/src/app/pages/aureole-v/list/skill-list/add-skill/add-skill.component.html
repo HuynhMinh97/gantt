@@ -1,0 +1,145 @@
+<div class="template__container">
+  <div class="main__container user__wrapper">
+    <ait-text-gradient
+    *ngIf="model == 'NEW'"
+      [content]="'add_skill'"
+      [id]="'skill'"
+    ></ait-text-gradient>
+    <ait-text-gradient
+    *ngIf="model == 'EDIT'"
+      [content]="'edit_skill'"
+      [id]="'skill'"
+    ></ait-text-gradient>
+    <ait-space></ait-space>
+    <div class="template__filter__container radius">
+      <div class="template__input__area">
+        <div class="content">
+          <div class="left__side">
+            <ait-space [margin]="'7.25px'"></ait-space>
+            <ng-container>
+              <ait-autocomplete-master-data
+                [id]="'category'"
+                [width]="'202px'"
+                [label]="'Category'"
+                [maxItem]="1"
+                [placeholder]="'select'"
+                [class]="'SKILL_CATEGORY'"
+                [isSubmit]="false"
+                (watchValue)="takeMasterValue($event?.value, 'category')"
+                [disableOutputDefault]="true"
+                [defaultValue]="[this.skill.controls['category'].value]"
+              ></ait-autocomplete-master-data>
+            </ng-container>
+            <ait-space [margin]="'7.25px'"></ait-space>
+            <ng-container>
+              <ait-input-text
+                [id]="'code'"
+                [label]="'Code'"
+                [height]="'40px'"
+                [required]="true"
+                [width]="'400px'"
+                [placeholder]="'Please input code'"
+                [isSubmit]="isSubmit"
+                (watchValue)="takeInputValue($event, 'code')"
+                [defaultValue]="skill.controls['code'].value"
+                [length]="400"
+              ></ait-input-text>
+            </ng-container>
+            <ait-space [margin]="'7.25px'"></ait-space>
+          </div>
+          <!-- end left -->
+          <div class="right__side">
+            <ait-space [margin]="'47px'"></ait-space>
+            <ng-container>
+              <ait-input-text
+                [id]="'name'"
+                [label]="'Name'"
+                [required]="true"
+                [height]="'40px'"
+                [width]="'400px'"
+                (watchValue)="takeInputValue($event, 'name')"
+                [placeholder]="'Please input name'"
+                [defaultValue]="skill.controls['name'].value"
+                [isSubmit]="isSubmit"
+                [length]="400"
+              ></ait-input-text>
+            </ng-container>
+            <ait-space [margin]="'7.25px'"></ait-space>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ait-space [margin]="'37px'"></ait-space>
+    <div class="sticky">
+      <div class="action-row">
+        <div class="block">
+          <!-- delete -->
+          <ait-button
+          *ngIf="model == 'EDIT'"
+            [id]="'delete'"
+            [width]="'150px'"
+            [height]="'40px'"
+            [title]="'delete'"
+            [isDefault]="true"
+            (click)="deleteByKey()"
+          >
+          </ait-button>
+          <!-- copy -->
+          <ait-button
+          *ngIf="model == 'EDIT'"
+            [id]="'copy'"
+            [width]="'150px'"
+            [height]="'40px'"
+            [title]="'copy'"
+            [isDefault]="true"
+            (click)="copy()"
+          >
+          </ait-button>
+          <!-- clear -->
+          <ait-button
+            [id]="'clear'"
+            [width]="'150px'"
+            [height]="'40px'"
+            [title]="'clear'"
+            [isDefault]="true"
+            (click)="clear()"
+          >
+          </ait-button>
+          <!-- reset -->
+          <ait-button
+          *ngIf="model == 'EDIT' || (model === 'NEW' && isCopy )"
+            [id]="'reset'"
+            [width]="'150px'"
+            [height]="'40px'"
+            [title]="'reset'"
+            [isDefault]="true"
+            (click)="reset()"
+          >
+          </ait-button>
+          <!-- save -->
+          <ait-button
+          *ngIf="isChanged || model == 'NEW'"
+            [id]="'save'"
+            [width]="'150px'"
+            [height]="'40px'"
+            [title]="'save'"
+            [isDefault]="true"
+            (click)="saveAPI()"
+          >
+          </ait-button>
+          <ait-button   
+          *ngIf="model === 'EDIT' && !isChanged"  
+          [id]="'save'"
+          [width]="'150px'"
+          [height]="'40px'"
+          [fontsize]="'14px'"
+          [title]="'save'"
+          [isDefault]="true"
+          [margin]="'0px'"
+          [style]="'disabled'"
+        ></ait-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

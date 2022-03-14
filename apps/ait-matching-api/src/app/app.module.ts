@@ -12,6 +12,12 @@ import { UserProjectResolver } from './user/user-project/user-project.resolver';
 import { ReorderSkillResolver } from './user/user-reorder-skills/reorder-skill.resolver';
 import { UserProfileResolver } from './user/user-profile/user-profile.resolver';
 import { UserJobAlertResolver } from './user/user-job-alert/user_job_alert.resolver';
+import { SkillListResolver } from './list/skillList/skill-List/skill_list.resolver';
+import { SkillRegisterResolver } from './list/skillList/add-skill/add-skill.resolver';
+import { ProjectListResolver } from './list/projectList/project-list.resolver';
+import { LanguageListResolver } from './list/language-list.ts/language-list.resolver';
+import { EducationListResolver } from './list/education-list/education-list.resolver';
+import { CertificateResolver } from './list/certificate-list/certificate-list.resolver';
 
 const RESOLVERS = [
   UserExperienceInfoResolver,
@@ -25,6 +31,12 @@ const RESOLVERS = [
   ReorderSkillResolver,
   UserProfileResolver,
   UserJobAlertResolver,
+  SkillListResolver,
+  SkillRegisterResolver,
+  ProjectListResolver,
+  LanguageListResolver,
+  EducationListResolver,
+  CertificateResolver,
   {
   provide: 'ENVIRONMENT',
   useValue: environment

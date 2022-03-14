@@ -1,0 +1,54 @@
+  <div class="template__container">
+    <div class="main__container user__wrapper">
+      <ait-text-gradient
+        [content]="'skill_detail'"
+        [id]="'skill'"
+      ></ait-text-gradient>
+      <ait-space></ait-space>
+      <div class="template__filter__container radius">
+        <div class="template__input__area">
+          <div class="content">
+            <div class="left__side">
+              <ait-space [margin]="'7.25px'"></ait-space>
+              <ng-container>
+                <ait-output-text
+                  [id]="'category'"
+                  [width]="'202px'"
+                  [label]="'category'"
+                  [height]="'40px'"
+                  [value]="skill?.category.value"
+                ></ait-output-text>
+              </ng-container>
+              <ait-space [margin]="'19px'"></ait-space>
+              <ng-container>
+                <ait-output-text
+                  [id]="'code'"
+                  [label]="'Code'"
+                  [height]="'40px'"
+                  [width]="'400px'"
+                  [value]="skill?.code"
+  
+                ></ait-output-text>
+              </ng-container>
+              <ait-space [margin]="'7.25px'"></ait-space>
+            </div>
+            <!-- end left -->
+            <div class="right__side">
+              <ait-space [margin]="'47px'"></ait-space>
+              <ng-container>
+                <ait-output-text
+                  [id]="'name'"
+                  [label]="'Name'"
+                  [height]="'40px'"
+                  [value]="skill?.name"
+                  [width]="'400px'"
+                ></ait-output-text>
+              </ng-container>
+              <ait-space [margin]="'7.25px'"></ait-space>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ait-space [margin]="'37px'"></ait-space>
+    </div>
+  </div>
