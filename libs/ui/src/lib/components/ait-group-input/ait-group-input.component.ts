@@ -440,4 +440,14 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   getCheckBoxTitle(title: string): string {
     return this.translateService.translate(title);
   }
+
+  getDefaultValue(form: string, maxItem: any): any {
+    if (maxItem === 1) {
+      return this.inputForm.controls[form].value
+      ? [this.inputForm.controls[form].value]
+      : null;
+    } else {
+      return this.inputForm.controls[form].value;
+    }
+  }
 }
