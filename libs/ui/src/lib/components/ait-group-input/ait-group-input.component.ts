@@ -117,7 +117,7 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
           page: this.pageKey,
           type: 'input',
         });
-        
+
         if (resGroup.status === RESULT_STATUS.OK) {
           this.groupKey = resGroup.data[0]?.code || '';
           this.collection = resGroup.data[0]?.collection || '';
@@ -170,7 +170,6 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
       this.collection,
       conditions
     );
-    
     if (res.data.length > 0) {
       const value = JSON.parse(res.data[0]['data'] || '[]');
       this.inputForm.patchValue(value);
@@ -183,19 +182,45 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   }
 
   setupComponent(components: any[]) {
-    const leftSide = [];
-    const rightSide = [];
-    components.forEach((component) => {
-      if (component.col_no === 1) {
-        leftSide.push(component);
-      } else {
-        rightSide.push(component);
+    try {
+      let leftSide = [];
+      let rightSide = [];
+      components.forEach((component) => {
+        if (component.col_no === 1) {
+          leftSide.push(component);
+        } else {
+          rightSide.push(component);
+        }
+      });
+      leftSide = leftSide.sort((a, b) => a.row_no - b.row_no);
+      rightSide = rightSide.sort((a, b) => a.row_no - b.row_no);
+
+      const leftSideIndex = leftSide[leftSide.length - 1]?.row_no;
+      const rightSideIndex = rightSide[rightSide.length - 1]?.row_no;
+      try {
+        [...Array(+leftSideIndex)].forEach((e, i) => {
+          const item = leftSide.find((m) => m.row_no == i + 1);
+          if (item) {
+            this.leftSide.push(item);
+          } else {
+            this.leftSide.push({ type: 'space' });
+          }
+        });
+
+        [...Array(+rightSideIndex)].forEach((e, i) => {
+          const item = rightSide.find((m) => m.row_no == i + 1);
+          if (item) {
+            this.rightSide.push(item);
+          } else {
+            this.rightSide.push({ type: 'space' });
+          }
+        });
+      } catch (e) {
+        console.error(e);
       }
-    });
-    this.leftSide = leftSide.sort((a, b) => a.row_no - b.row_no);
-    console.log(this.leftSide);
-    
-    this.rightSide = rightSide.sort((a, b) => a.row_no - b.row_no);
+    } catch {
+      this.cancelLoadingApp();
+    }
   }
 
   setupForm(components: any[]) {
@@ -218,7 +243,6 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
       }
     });
     this.inputForm = new FormGroup(group);
-    console.log(this.inputForm.value)
   }
 
   checkAllowSave() {
@@ -286,8 +310,6 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   }
 
   takeFiles(fileList: any[], form: string): void {
-    console.log(form);
-    
     if (isArrayFull(fileList)) {
       const data = [];
       fileList.forEach((file) => {
@@ -349,7 +371,6 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   }
 
   async onSave() {
-    console.log(this.inputForm.value);
     this.isSubmit = true;
     if (this.inputForm.valid) {
       this.callLoadingApp();
@@ -381,18 +402,20 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
           }
         } else {
           this.renderPageService
-          .saveRenderData(this.collection, [objSave])
-          .then((res) => {
-            if (res.status === RESULT_STATUS.OK) {
-              this.showToastr('', this.getMsg('I0005'));
-              setTimeout(() => {
-                history.back();
-              }, 1000);
-            } else {
-              this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-            }
-          })
-          .catch(() => this.showToastr('', this.getMsg('E0100'), KEYS.WARNING));
+            .saveRenderData(this.collection, [objSave])
+            .then((res) => {
+              if (res.status === RESULT_STATUS.OK) {
+                this.showToastr('', this.getMsg('I0005'));
+                setTimeout(() => {
+                  history.back();
+                }, 1000);
+              } else {
+                this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+              }
+            })
+            .catch(() =>
+              this.showToastr('', this.getMsg('E0100'), KEYS.WARNING)
+            );
         }
       } catch {
         this.cancelLoadingApp();
