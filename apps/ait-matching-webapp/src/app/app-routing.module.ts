@@ -1,26 +1,26 @@
-import { UserOnboardingComponent } from './pages/aureole-v/user/user-onboarding/user-onboarding.component';
-import { UserLanguageComponent } from './pages/aureole-v/user/user-language/user-language.component';
-import { UserEducationComponent } from './pages/aureole-v/user/user-education/user-education.component';
-import { UserExperienceComponent } from './pages/aureole-v/user/user-experience/user-experience.component';
+import { UserOnboardingComponent } from './pages/user/user-onboarding/user-onboarding.component';
+import { UserLanguageComponent } from './pages/user/user-language/user-language.component';
+import { UserEducationComponent } from './pages/user/user-education/user-education.component';
+import { UserExperienceComponent } from './pages/user/user-experience/user-experience.component';
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { AitAuthGuardService, AitAppUtils } from '@ait/ui';
-import { RecommencedComponent } from './pages/aureole-v/recommenced-user/recommenced-user.component';
-import { UserCourseComponent } from './pages/aureole-v/user/user-course/user-course.component';
-import { UserCertificateComponent } from './pages/aureole-v/user/user-certificate/user-certificate.component';
-import { UserSkillsComponent } from './pages/aureole-v/user/user-skills/user-skills.component';
-import { UserReorderSkillsComponent } from './pages/aureole-v/user/user-reorder-skills/user-reorder-skills.component';
-import { UserProfileComponent } from './pages/aureole-v/user/user-profile/user-profile.component';
-import { UserJobAlertComponent } from './pages/aureole-v/user/user-job-alert/user-job-alert.component';
-import { UserLanguageDetailComponent } from './pages/aureole-v/user/user-language-detail/user-language-detail.component';
-import { UserEducationDetailComponent } from './pages/aureole-v/user/user-education-detail/user-education-detail.component';
-import { UserCourseDetailComponent } from './pages/aureole-v/user/user-course-detail/user-course-detail.component';
-import { UserCertificateDetailComponent } from './pages/aureole-v/user/user-certificate-detail/user-certificate-detail.component';
-import { UserExperienceDetailComponent } from './pages/aureole-v/user/user-experience-detail/user-experience-detail.component';
-import { UserProjectDetailComponent } from './pages/aureole-v/user/user-project-detail/user-project-detail.component';
-import { UserOnboardingDetailComponent } from './pages/aureole-v/user/user-onboarding-detail/user-onboarding-detail.component';
-import { UserJobAlertDetailComponent } from './pages/aureole-v/user/user-job-alert-detail/user-job-alert-detail.component';
-import { UserProjectComponent } from './pages/aureole-v/user/user-project/user-project.component';
+import { RecommencedComponent } from './pages/recommenced-user/recommenced-user.component';
+import { UserCourseComponent } from './pages/user/user-course/user-course.component';
+import { UserCertificateComponent } from './pages/user/user-certificate/user-certificate.component';
+import { UserSkillsComponent } from './pages/user/user-skills/user-skills.component';
+import { UserReorderSkillsComponent } from './pages/user/user-reorder-skills/user-reorder-skills.component';
+import { UserProfileComponent } from './pages/user/user-profile/user-profile.component';
+import { UserJobAlertComponent } from './pages/user/user-job-alert/user-job-alert.component';
+import { UserLanguageDetailComponent } from './pages/user/user-language-detail/user-language-detail.component';
+import { UserEducationDetailComponent } from './pages/user/user-education-detail/user-education-detail.component';
+import { UserCourseDetailComponent } from './pages/user/user-course-detail/user-course-detail.component';
+import { UserCertificateDetailComponent } from './pages/user/user-certificate-detail/user-certificate-detail.component';
+import { UserExperienceDetailComponent } from './pages/user/user-experience-detail/user-experience-detail.component';
+import { UserProjectDetailComponent } from './pages/user/user-project-detail/user-project-detail.component';
+import { UserOnboardingDetailComponent } from './pages/user/user-onboarding-detail/user-onboarding-detail.component';
+import { UserJobAlertDetailComponent } from './pages/user/user-job-alert-detail/user-job-alert-detail.component';
+import { UserProjectComponent } from './pages/user/user-project/user-project.component';
 
 // Push your routes here one by one 🎉
 

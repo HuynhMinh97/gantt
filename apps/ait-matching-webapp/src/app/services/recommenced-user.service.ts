@@ -1,6 +1,6 @@
 import { AitBaseService } from '@ait/ui';
 import { Injectable } from '@angular/core';
-import { CompanyInfo } from '../pages/aureole-v/interface';
+import { CompanyInfo } from '../pages/interface';
 
 @Injectable({ providedIn: 'root' })
 export class RecommencedUserService extends AitBaseService {
