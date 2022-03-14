@@ -55,13 +55,13 @@
                             >
                             </ait-input-text>
         
-                            <ait-date-picker *ngIf="component.type === 'date' && component?.component_setting?.from_to !== true"
+                            <ait-datepicker *ngIf="component.type === 'date' && component?.component_setting?.from_to !== true"
                             [placeholder]="component?.item_placeholder" [id]="component?.item_id" [label]="component?.item_label"
                             [style]="component?.component_setting?.width" [isReset]="isReset"
                             [dateInput]="searchForm.controls[component?.item_id].value"
                             (watchValue)="takeDatePickerValue($event?.value, component?.item_id)"
                             >
-                            </ait-date-picker>
+                            </ait-datepicker>
 
                             <div class="check-form" *ngIf="component.type === 'checkbox'" style="margin-top: 5px;">
                                 <nb-checkbox
@@ -133,13 +133,13 @@
                             >
                             </ait-input-text>
         
-                            <ait-date-picker *ngIf="component.type === 'date' && component?.component_setting?.from_to !== true"
+                            <ait-datepicker *ngIf="component.type === 'date' && component?.component_setting?.from_to !== true"
                             [placeholder]="component?.item_placeholder" [id]="component?.item_id" [label]="component?.item_label"
                             [style]="component?.component_setting?.width" [isReset]="isReset"
                             [dateInput]="searchForm.controls[component?.item_id].value"
                             (watchValue)="takeDatePickerValue($event?.value, component?.item_id)"
                             >
-                            </ait-date-picker>
+                            </ait-datepicker>
 
                             <div class="check-form" *ngIf="component.type === 'checkbox'" style="margin-top: 5px;">
                                 <nb-checkbox

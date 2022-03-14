@@ -12,7 +12,7 @@
                             [fileKeys]="inputForm.controls[component?.item_id].value"
                             [maxFiles]="component?.component_setting?.max_file || 1"
                             [hasStatus]="!!component?.component_setting?.has_status"
-                            [id]="component?.item_id" [fileTypes]="'jpg,png,jpeg'"
+                            [id]="component?.item_id" [fileTypes]="component?.component_setting?.file_type || 'jpg,png,jpeg'"
                             [title]="component?.component_setting?.title || ''"
                             [guidanceIcon]="component?.component_setting?.guidance_icon || ''"
                             [guidance]="component?.component_setting?.guidance || ''"
@@ -36,6 +36,7 @@
                             [id]="component?.item_id" [required]="component?.component_setting?.required ? component?.component_setting?.required : false"
                             [isSubmit]="isSubmit" [allowNew]="component?.component_setting?.allow_new ? component?.component_setting?.allow_new : false" 
                             [allowDelete]="component?.component_setting?.allow_delete ? component?.component_setting?.allow_delete : false"
+                            [dataSource]="component?.component_setting?.data_source"
                             [guidance]="component?.component_setting?.guidance" [guidanceIcon]="component?.component_setting?.guidance_icon">
                         </ait-autocomplete-master-data>
 
@@ -50,6 +51,7 @@
                             [id]="component?.item_id" [required]="component?.component_setting?.required ? component?.component_setting?.required : false"
                             [isSubmit]="isSubmit" [allowNew]="component?.component_setting?.allow_new ? component?.component_setting?.allow_new : false" 
                             [allowDelete]="component?.component_setting?.allow_delete ? component?.component_setting?.allow_delete : false"
+                            [dataSource]="component?.component_setting?.data_source"
                             [guidance]="component?.component_setting?.guidance" [guidanceIcon]="component?.component_setting?.guidance_icon">
                         </ait-autocomplete-master-data>
   
@@ -65,12 +67,12 @@
                             (watchValue)="takeInputValue($event, component?.item_id)" [required]="true">
                         </ait-input-text>
   
-                        <ait-date-picker
+                        <ait-datepicker
                             *ngIf="component.type === 'date' && component?.component_setting?.from_to !== true"
                             [placeholder]="component?.item_placeholder" [id]="component?.item_id"
                             [label]="component?.item_label" [style]="component?.component_setting?.width"
                             [isReset]="isReset">
-                        </ait-date-picker>
+                        </ait-datepicker>
   
                         <div class="check-form" *ngIf="component.type === 'checkbox'" style="margin-top: 5px;">
                             <nb-checkbox
@@ -120,7 +122,7 @@
                             [fileKeys]="inputForm.controls[component?.item_id].value"
                             [maxFiles]="component?.component_setting?.max_file || 1"
                             [hasStatus]="!!component?.component_setting?.has_status"
-                            [id]="component?.item_id" [fileTypes]="'jpg,png,jpeg'"
+                            [id]="component?.item_id" [fileTypes]="component?.component_setting?.file_type || 'jpg,png,jpeg'"
                             [title]="component?.component_setting?.title || ''"
                             [guidanceIcon]="component?.component_setting?.guidance_icon || ''"
                             [guidance]="component?.component_setting?.guidance || ''"
@@ -144,6 +146,7 @@
                             [id]="component?.item_id" [required]="component?.component_setting?.required ? component?.component_setting?.required : false"
                             [isSubmit]="isSubmit" [allowNew]="component?.component_setting?.allow_new ? component?.component_setting?.allow_new : false" 
                             [allowDelete]="component?.component_setting?.allow_delete ? component?.component_setting?.allow_delete : false"
+                            [dataSource]="component?.component_setting?.data_source"
                             [guidance]="component?.component_setting?.guidance" [guidanceIcon]="component?.component_setting?.guidance_icon">
                         </ait-autocomplete-master-data>
 
@@ -158,6 +161,7 @@
                             [id]="component?.item_id" [required]="component?.component_setting?.required ? component?.component_setting?.required : false"
                             [isSubmit]="isSubmit" [allowNew]="component?.component_setting?.allow_new ? component?.component_setting?.allow_new : false" 
                             [allowDelete]="component?.component_setting?.allow_delete ? component?.component_setting?.allow_delete : false"
+                            [dataSource]="component?.component_setting?.data_source"
                             [guidance]="component?.component_setting?.guidance" [guidanceIcon]="component?.component_setting?.guidance_icon">
                         </ait-autocomplete-master-data>
   
@@ -173,12 +177,12 @@
                             (watchValue)="takeInputValue($event, component?.item_id)" [required]="true">
                         </ait-input-text>
   
-                        <ait-date-picker
+                        <datepicker
                             *ngIf="component.type === 'date' && component?.component_setting?.from_to !== true"
                             [placeholder]="component?.item_placeholder" [id]="component?.item_id"
                             [label]="component?.item_label" [style]="component?.component_setting?.width"
                             [isReset]="isReset">
-                        </ait-date-picker>
+                        </datepicker>
   
                         <div class="check-form" *ngIf="component.type === 'checkbox'" style="margin-top: 5px;">
                             <nb-checkbox
