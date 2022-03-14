@@ -1,5 +1,5 @@
 import { AitEnvironmentService, AitTranslationService, AppState, getCaption } from '@ait/ui';
-import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 
 @Component({
@@ -8,9 +8,15 @@ import { select, Store } from '@ngrx/store';
   templateUrl: './card-content.component.html',
   styleUrls: ['./card-content.component.scss']
 })
-export class CardContentProfileComponent  {
+export class CardContentProfileComponent implements OnChanges {
 
-  constructor(private envService: AitEnvironmentService, private store: Store<AppState>, private translate: AitTranslationService) {
+  constructor(
+    private envService: AitEnvironmentService, 
+    private store: Store<AppState>, 
+    private translate: AitTranslationService,
+    private translateService: AitTranslationService,
+    )
+    {
     store.pipe(select(getCaption)).subscribe(() => {
       this.buttonTitle = translate.translate(this.buttonTitle || '追加する');
     })
@@ -42,8 +48,8 @@ export class CardContentProfileComponent  {
   @Input() buttonTitle = '';
   @Input() classContainer: any;
   @Input() id;
-  @Input() idBtn = '';
-
+  
+  @Input() height = '0px';
   ID(element: string) {
     const idx = this.id && this.id !== '' ? this.id : Date.now();
     return idx + '_' + element;
@@ -71,5 +77,22 @@ export class CardContentProfileComponent  {
   handleClickBtnHeader = (event) => {
     event.stopPropagation();
     !this.tooltip && this.onClickButtonHeader.emit({ clicked: true });
+  }
+  ngOnChanges(changes: SimpleChanges) {
+    for (const key in changes) {
+      if (Object.prototype.hasOwnProperty.call(changes, key)) {
+        if (key === 'buttonTitle') {
+
+          this.store.pipe(select(getCaption)).subscribe((r) => {
+           
+              //
+              this.buttonTitle = this.translateService.translate(this.buttonTitle);
+
+            
+          })
+        }
+
+      }
+    }
   }
 }
