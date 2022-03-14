@@ -40,16 +40,16 @@ export class SaveUserExperienceInfoDto extends BaseDto {
     location?: string;
 
     @Field(() => Boolean, { nullable: true })
-    is_working?: boolean;
+    curent_work?: boolean;
 
     @Field(() => String, { nullable: true })
     employee_type?: string;
 
     @Field(() => Float, { nullable: true })
-    start_date_from?: number;
+    start_from?: number;
 
     @Field(() => Float, { nullable: true })
-    start_date_to?: number;
+    start_to?: number;
 
     @Field(() => String, { nullable: true })
     description?: string;

@@ -23,7 +23,7 @@ export class UserExperienceService extends AitBaseService {
       _key: true,
       value: true,
     },
-    is_working: true,
+    curent_work: true,
     start_date_from: true,
     start_date_to: true,
     description: true,
