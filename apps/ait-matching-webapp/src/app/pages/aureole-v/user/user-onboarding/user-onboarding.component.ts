@@ -1,12 +1,24 @@
 import { UserOnboardingService } from './../../../../services/user-onboarding.service';
-import { Component, ElementRef, EventEmitter, OnInit, Optional } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  OnInit,
+  Optional,
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  NavigationError,
+  NavigationStart,
+  Router,
+} from '@angular/router';
 import {
   NbDialogRef,
   NbDialogService,
@@ -28,7 +40,13 @@ import {
   MODE,
 } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
-import { isArrayFull, isObjectFull, KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
+import {
+  isArrayFull,
+  isObjectFull,
+  KEYS,
+  KeyValueDto,
+  RESULT_STATUS,
+} from '@ait/shared';
 import { KeyValueCheckedDto } from './interface';
 import { UserProfileService } from '../../../../services/user-profile.service';
 @Component({
@@ -45,7 +63,7 @@ export class UserOnboardingComponent
   toggle = new EventEmitter();
   genderList: KeyValueCheckedDto[];
   defaultGender = {} as KeyValueDto;
-  basicInfomation = 'Basic Infomation'
+  basicInfomation = 'Basic Infomation';
   mode = MODE.NEW;
   skills: any;
   errorArr: any;
@@ -151,7 +169,7 @@ export class UserOnboardingComponent
       layoutScrollService,
       toastrService
     );
-    
+
     store.pipe(select(getUserSetting)).subscribe((setting) => {
       if (isObjectFull(setting) && setting['date_format_display']) {
         this.dateFormat = setting['date_format_display'];
@@ -171,12 +189,8 @@ export class UserOnboardingComponent
         Validators.required,
         Validators.maxLength(200),
       ]),
-      katakana: new FormControl(null, [
-        Validators.maxLength(200)
-      ]),
-      romaji: new FormControl(null, [
-        Validators.maxLength(200)
-      ]),
+      katakana: new FormControl(null, [Validators.maxLength(200)]),
+      romaji: new FormControl(null, [Validators.maxLength(200)]),
       gender: new FormControl(null, [Validators.required]),
       bod: new FormControl(null, [Validators.required]),
       phone_number: new FormControl(null, [Validators.required]),
@@ -203,8 +217,8 @@ export class UserOnboardingComponent
       this.userOnboardingInfo.addControl('skills', new FormControl(null));
     }
     // get key form parameter
-     this.user_key = this.activeRouter.snapshot.paramMap.get('id');
-     this._key = this.activeRouter.snapshot.paramMap.get('id');
+    this.user_key = this.activeRouter.snapshot.paramMap.get('id');
+    this._key = this.activeRouter.snapshot.paramMap.get('id');
 
     this.userOnbService
       .findSiteLanguageById(this.authService.getUserID())
@@ -218,59 +232,60 @@ export class UserOnboardingComponent
       });
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
-          this.close(false);
+        this.close(false);
       }
     });
   }
 
-  async ngOnInit(): Promise<void> {    
+  async ngOnInit(): Promise<void> {
+    const curentUser_id = this.authService.getUserID();
     setTimeout(() => {
       this.isLoad = true;
     }, 500);
     if (this.user_key) {
       this.mode = MODE.EDIT;
     }
-      if (this.user_key) {
-        this.callLoadingApp();
-        await this.userOnbService
-          .findUserOnboardingByKey(this.user_key)
-          .then(async (r) => {
-            if (r.status === RESULT_STATUS.OK) {
-              let isUserExist = false;
-              this.dataCountry = r.data[0];
-              if (r.data.length > 0 && !this.dataCountry.del_flag) {
-                this.userOnboardingInfo.patchValue({ ...this.dataCountry });
-                this.userOnboardingInfoClone = this.userOnboardingInfo.value;
-                this.user_id_profile = this.dataCountry.user_id;
-                this._key = this.dataCountry._key;
-                isUserExist = true;
-              }
-              this.cancelLoadingApp();
-              !isUserExist && this.router.navigate([`/404`]);
+    if (this.user_key && this.user_key === curentUser_id) {
+      this.callLoadingApp();
+      await this.userOnbService
+        .findUserOnboardingByKey(this.user_key)
+        .then(async (r) => {
+          if (r.status === RESULT_STATUS.OK) {
+            let isUserExist = false;
+            this.dataCountry = r.data[0];
+            if (r.data.length > 0 && !this.dataCountry.del_flag) {
+              this.userOnboardingInfo.patchValue({ ...this.dataCountry });
+              this.userOnboardingInfoClone = this.userOnboardingInfo.value;
+              this.user_id_profile = this.dataCountry.user_id;
+              this._key = this.dataCountry._key;
+              isUserExist = true;
             }
-          });
-      } 
-    
+            this.cancelLoadingApp();
+            !isUserExist && this.router.navigate([`/404`]);
+          }
+        });
+      await this.getGenderList();
+      this.setDefaultGenderValue();
 
-    await this.getGenderList();
-    this.setDefaultGenderValue();
+      // Run when form value change
+      await this.userOnboardingInfo.valueChanges.subscribe((data) => {
+        this.checkAllowSave();
+      });
 
-    // Run when form value change
-    await this.userOnboardingInfo.valueChanges.subscribe((data) => {
-      this.checkAllowSave();
-    });
-
-    if (
-      this.mode == MODE.EDIT &&
-      this.user_id_profile != this.authService.getUserID()
-    ) {
-      this.mode = MODE.VIEW;
-      for (const index in this.userOnbInfo) {
-        this.userOnbInfo[index] = true;
+      if (
+        this.mode == MODE.EDIT &&
+        this.user_id_profile != this.authService.getUserID()
+      ) {
+        this.mode = MODE.VIEW;
+        for (const index in this.userOnbInfo) {
+          this.userOnbInfo[index] = true;
+        }
       }
+    } else {
+      this.cancelLoadingApp();
+      this.router.navigate([`/404`]);
     }
   }
-
 
   toggleExpan = () => {
     this.isExpan = !this.isExpan;
@@ -373,7 +388,7 @@ export class UserOnboardingComponent
       this.userOnboardingInfo.patchValue({
         ...this.userOnboardingInfoClone,
       });
-      this.dataCountry = { ...this.userOnboardingInfo.value }
+      this.dataCountry = { ...this.userOnboardingInfo.value };
     }
     this.showToastr('', this.getMsg('I0007'));
   }
@@ -382,12 +397,18 @@ export class UserOnboardingComponent
     const saveData = this.userOnboardingInfo.value;
     saveData.ward = saveData.ward ? saveData.ward?._key : null;
     saveData.title = saveData.title ? saveData.title?._key : null;
-    saveData.province_city = saveData.province_city ? saveData.province_city?._key : null;
+    saveData.province_city = saveData.province_city
+      ? saveData.province_city?._key
+      : null;
     saveData.gender = saveData.gender._key;
-    saveData.country_region = saveData.country_region ? saveData.country_region?._key : null;
+    saveData.country_region = saveData.country_region
+      ? saveData.country_region?._key
+      : null;
     saveData.district = saveData.district ? saveData.district?._key : null;
     saveData.industry = saveData.industry ? saveData.industry?._key : null;
-    saveData.company_working = saveData.company_working ? saveData.company_working?._key : null;
+    saveData.company_working = saveData.company_working
+      ? saveData.company_working?._key
+      : null;
     this.skills = saveData.skills;
     delete saveData.skills;
     if (this.mode === MODE.NEW) {
@@ -462,7 +483,7 @@ export class UserOnboardingComponent
         autoFocus: false,
         context: {
           title: this.getMsg('I0004'),
-          id:'delete-user-onboading',
+          id: 'delete-user-onboading',
         },
       })
       .onClose.subscribe(async (event) => {
@@ -496,9 +517,9 @@ export class UserOnboardingComponent
           hasBackdrop: true,
           autoFocus: false,
           context: {
-            style: {width: '90%'},
+            style: { width: '90%' },
             title: this.getMsg('I0006'),
-            id:'back-user-onboading',
+            id: 'back-user-onboading',
           },
         })
         .onClose.subscribe(async (event) => {
@@ -531,7 +552,7 @@ export class UserOnboardingComponent
             block: 'center',
           });
           break;
-        } catch { }
+        } catch {}
       }
     }
   }
@@ -591,9 +612,7 @@ export class UserOnboardingComponent
       this.userOnboardingInfo.patchValue(item);
     } else {
       this.userOnboardingInfo.patchValue(null);
-
     }
-
   }
 
   close(event: boolean) {

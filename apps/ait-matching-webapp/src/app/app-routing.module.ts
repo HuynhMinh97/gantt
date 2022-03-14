@@ -21,6 +21,7 @@ import { UserProjectDetailComponent } from './pages/aureole-v/user/user-project-
 import { UserOnboardingDetailComponent } from './pages/aureole-v/user/user-onboarding-detail/user-onboarding-detail.component';
 import { UserJobAlertDetailComponent } from './pages/aureole-v/user/user-job-alert-detail/user-job-alert-detail.component';
 import { UserProjectComponent } from './pages/aureole-v/user/user-project/user-project.component';
+import { ProjectListComponent } from './pages/aureole-v/list/project-list/project-list.component';
 
 // Push your routes here one by one 🎉
 
@@ -119,6 +120,11 @@ export const routes: Routes = [
     path: 'user-language',
     canActivate: [AitAuthGuardService],
     component: UserLanguageComponent
+  },
+  {
+    path: 'list-project',
+    canActivate: [AitAuthGuardService],
+    component: ProjectListComponent
   },
   {
     path: 'user-language/:id',
