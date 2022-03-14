@@ -1,6 +1,6 @@
 import { AitBaseService } from '@ait/ui';
 import { Injectable } from '@angular/core';
-import { ApiConfig, Enforcement } from '../pages/aureole-v/interface';
+import { ApiConfig, Enforcement } from '../pages/interface';
 
 @Injectable({ providedIn: 'root' })
 export class SyncApiConfigService extends AitBaseService {

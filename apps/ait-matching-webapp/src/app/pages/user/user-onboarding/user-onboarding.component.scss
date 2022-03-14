@@ -1,4 +1,4 @@
-@import './../../pages/user/user-project/user-project.component.scss';
+@import '../user-project/user-project.component.scss';
 
 .ait-label span {
   color: red !important;
@@ -30,9 +30,11 @@
       outline-color: #10529d;
     }
     .template__filter__container {
+      margin-top: 30px;
       min-height: 61px;
       width: 1180px;
       box-sizing: border-box;
+      padding: 10px;
       display: flex;
       flex-direction: column;
 
@@ -91,7 +93,18 @@
   }
 }
 
-
+.input_date {
+  width: 400px;
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+  span {
+    position: relative;
+    bottom: -25px;
+    font-size: 22px;
+    color: #8b8b8b;
+  }
+}
 
 .button_table{
     padding-top: 10px;
@@ -123,10 +136,12 @@
     }
 }
 .template__filter__container {
+  margin-top: 30px;
   min-height: 61px;
   width: 100%;
   
   box-sizing: border-box;
+  padding: 10px;
   display: flex;
   flex-direction: column;
 
@@ -147,7 +162,7 @@
   .template__input__area {
     margin-top: 15px;
     width: 100%;
-    margin-bottom: 15px;
+    margin-bottom: 35px;
     display: flex;
     flex-wrap: wrap;
     transition: 0.5s all ease;

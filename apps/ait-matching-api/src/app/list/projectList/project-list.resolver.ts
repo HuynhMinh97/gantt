@@ -1,4 +1,5 @@
 import { AitBaseService, AitCtxUser, SysUser } from '@ait/core';
+import { isArrayFull } from '@ait/shared';
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { ProjectListEntity } from './project-list.entity';
 import { ProjectListRequest } from './project-list.request';
@@ -86,6 +87,9 @@ export class ProjectListResolver extends AitBaseService {
       `;
 
     const result = await this.query(aqlQuery);
-    return result.data.join(', ');
+    if (isArrayFull(result)) {
+      return result.data.join(', ');
+    }
+    return null;
   }
 }
