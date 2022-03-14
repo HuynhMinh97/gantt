@@ -36,9 +36,7 @@ export class CardContentProfileComponent  {
   @Input() disableHeader = false;
   gradientString = 'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)';
   isShow = true;
-  @Input()
-  isOpen = true;
-  isDev = false;
+  @Input() isOpen = true;
   @Input()
   disableButton = false;
   @Input() buttonTitle = '';

@@ -35,7 +35,7 @@
           'font-size': '12px'
         }"
         [padding]="'25px 22px'"
-        [isOpen]="showSkill"
+        [isOpen]="true"
         [idBtn]="'openAddSkill'"
       >
         <div class="container-user-project">
@@ -171,7 +171,7 @@
           'font-size': '12px',
           'margin-top': '5px'
         }"
-        [isOpen]="showSkill"
+        [isOpen]="false"
         [idBtn]="'openAddSkill'"
         (onToggle)="getExpan($event,'isShowSkill')"
       >
@@ -226,7 +226,7 @@
           'font-size': '12px',
           'margin-top': '5px'
         }"
-        [isOpen]="showProject"
+        [isOpen]="false"
         [idBtn]="'openProjects'"
         [padding]="'13px 22px'"
       >
@@ -384,7 +384,7 @@
     <div class="experience">
       <card-content
         tabindex="2"
-        [isOpen]="showExperience"
+        [isOpen]="false"
         [id]="'experience_detail'"
         style="outline-color: #10529d"
         class="content_card"
@@ -558,7 +558,7 @@
           'font-size': '12px',
           'margin-top': '5px'
         }"
-        [isOpen]="showCertificate"
+        [isOpen]="false"
         [idBtn]="'openCertificate'"
         [padding]="'13px 22px'"
       >
@@ -645,7 +645,7 @@
     <!-- course -->
     <div class="course">
       <card-content
-        [isOpen]="showCourse"
+        [isOpen]="false"
         tabindex="2"
         [id]="'course_detail'"
         style="outline-color: #10529d"
@@ -752,7 +752,7 @@
     <div class="education">
       <card-content
         tabindex="2"
-        [isOpen]="showEducation"
+        [isOpen]="false"
         [id]="'education_detail'"
         style="outline-color: #10529d"
         class="content_card"
@@ -861,7 +861,7 @@
     <div class="languages">
       <card-content
         tabindex="2"
-        [isOpen]="showLanguages"
+        [isOpen]="false"
         [id]="'language_detail'"
         style="outline-color: #10529d"
         class="content_card"
