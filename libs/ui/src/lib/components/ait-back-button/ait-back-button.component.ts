@@ -59,10 +59,6 @@ export class AitBackButtonComponent {
           // CAUTION: This ID may not be part of the current page rendering.
           // This value is pulled out of the browser; and, may exist across
           // page refreshes.
-          const n = AitAppUtils.getParamsOnUrl();
-          const m = AitAppUtils.getParamsOnUrl(true);
-          const j = location.hash;
-
           // this.isHide =  j.includes('job') || m.length > 30;
           // this.isChangeColor =
           //   n.includes('sign') || n.includes('change-password') || n.includes('user-setting') || n.includes('sync-pe-api-setting') ||
