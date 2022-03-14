@@ -177,7 +177,7 @@
       >
         <div class="container_user" >
           <div *ngFor="let category of skillByCategory; let index = index; let first = first">
-            <div *ngIf="index <3 && !isShowSkill">
+            <!-- <div *ngIf="index <3 && !isShowSkill">
               <hr style="margin-top: 5px" *ngIf="!first" />
               <p class="title-skill">{{ category?.name }}</p>
               <ait-drag-scroll
@@ -187,8 +187,8 @@
                 [minWidth]="'100px'"
                 [isNormal]="false"
               ></ait-drag-scroll>
-            </div>           
-            <div *ngIf="index <100 && isShowSkill">
+            </div>            -->
+            <div>
               <hr style="margin-top: 5px" *ngIf="!first" />
               <p class="title-skill">{{ category?.name }}</p>
               <ait-drag-scroll
