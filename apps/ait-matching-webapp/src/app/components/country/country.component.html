@@ -1,50 +1,31 @@
-<div [ngStyle]="areaStyle">
-  <div [ngStyle]="elementStyle">
-    <ait-autocomplete-master-data
-      [class]="'COUNTRY'"
-      [label]="'coutry/region'"
-      [id]="'country'"
-      [maxItem]="1"
-      [required]="true"
-      [placeholder]="'viet nam'"
-      [disableOutputDefault]="true"
-      [isSubmit]="isSubmit"
-      [style]="masterStyle"
-      [isReset]="isReset.country_region"
-      [clearError]="isClear"
-      (watchValue)="takeMasterValue($event?.value, 'country_region')"
-      [defaultValue]="
-        dataForm.controls['country_region'].value
-          ? [dataForm.controls['country_region'].value]
-          : null
-      "
-    >
-    </ait-autocomplete-master-data>
-  </div>
-
-  <ait-space [margin]="'7.25px'"></ait-space>
-
-  <div [ngStyle]="elementStyle">
-    <ait-input-text
-      [length]="20"
-      [label]="'post code'"
-      [required]="true"
-      [id]="'postcode'"
-      [placeholder]="'70000'"
-      [width]="inputWidth"
-      [fullWidth]="true"
-      [isSubmit]="isSubmit"
-      [isReset]="isReset.postcode"
-      (watchValue)="takeInputValue($event)"
-      [defaultValue]="dataForm.controls['postcode'].value"
-    >
-    </ait-input-text>
-  </div>
-
-  <ait-space [margin]="'7.25px'"></ait-space>
-
-  <div [ngStyle]="elementStyle">
-    <ait-autocomplete-master-data
+<div class="template__filter__container">
+  <div class="template__input__area">
+    <div class="left__side">
+      <div style="padding-left: 10px">
+        <ait-space [margin]="'7.25px'"></ait-space>
+        <ait-autocomplete-master-data
+        [class]="'COUNTRY'"
+        [label]="'coutry/region'"
+        [id]="'country'"
+        [maxItem]="1"
+        [required]="true"
+        [placeholder]="'viet nam'"
+        [disableOutputDefault]="true"
+        [isSubmit]="isSubmit"
+        [style]="masterStyle"
+        [isReset]="isReset.country_region"
+        [clearError]="isClear"
+        (watchValue)="takeMasterValue($event?.value, 'country_region')"
+        [defaultValue]="
+          dataForm.controls['country_region'].value
+            ? [dataForm.controls['country_region'].value]
+            : null
+        "
+      >
+      </ait-autocomplete-master-data>
+      <ait-space [margin]="'7.25px'"></ait-space>
+      <div class="input_inline">
+        <ait-autocomplete-master-data
       [class]="'CITY'"
       [parentCode]="getParentCode('country_region')"
       [label]="'province/city'"
@@ -64,56 +45,75 @@
           : null
       "
     ></ait-autocomplete-master-data>
-  </div>
-
-  <ait-space [margin]="'7.25px'"></ait-space>
-
-  <div [ngStyle]="elementStyle">
-    <ait-autocomplete-master-data
-      [class]="'DISTRICT'"
-      [parentCode]="getParentCode('province_city')"
-      [label]="'dicstrict'"
-      [id]="'district'"
-      [maxItem]="1"
-      [required]="true"
-      [placeholder]="'District 1'"
-      [disableOutputDefault]="true"
-      [isSubmit]="isSubmit"
-      [style]="masterStyle"
-      [isReset]="isReset.district"
-      [clearError]="isClear"
-      (watchValue)="takeMasterValue($event?.value, 'district')"
-      [defaultValue]="
-        dataForm.controls['district'].value
-          ? [dataForm.controls['district'].value]
-          : null
-      "
-    ></ait-autocomplete-master-data>
-  </div>
-
-  <ait-space [margin]="'7.25px'"></ait-space>
-
-  <div [ngStyle]="elementStyle">
-    <ait-autocomplete-master-data
-      [class]="'WARD'"
-      [parentCode]="getParentCode('district')"
-      [label]="'ward'"
-      [id]="'ward'"
-      [maxItem]="1"
-      [required]="true"
-      [placeholder]="'Dakao'"
-      [disableOutputDefault]="true"
-      [isSubmit]="isSubmit"
-      [style]="masterStyle"
-      [isReset]="isReset.ward"
-      [clearError]="isClear"
-      (watchValue)="takeMasterValue($event?.value, 'ward')"
-      [defaultValue]="
-        dataForm.controls['ward'].value
-          ? [dataForm.controls['ward'].value]
-          : null
-      "
-    >
-    </ait-autocomplete-master-data>
+      </div>
+      <ait-space [margin]="'7.25px'"></ait-space>
+      <div class="input_inline">
+        <ait-autocomplete-master-data
+          [class]="'WARD'"
+          [parentCode]="getParentCode('district')"
+          [label]="'ward'"
+          [id]="'ward'"
+          [maxItem]="1"
+          [required]="true"
+          [placeholder]="'Dakao'"
+          [disableOutputDefault]="true"
+          [isSubmit]="isSubmit"
+          [style]="masterStyle"
+          [isReset]="isReset.ward"
+          [clearError]="isClear"
+          (watchValue)="takeMasterValue($event?.value, 'ward')"
+          [defaultValue]="
+            dataForm.controls['ward'].value
+              ? [dataForm.controls['ward'].value]
+              : null
+          "
+        >
+        </ait-autocomplete-master-data>
+      </div>
+      </div>
+    </div>
+    <div class="right__side">
+      <div style="padding-left: 20px">
+        <div class="input_inline">
+          <ait-space [margin]="'7.25px'"></ait-space>
+          <ait-input-text
+            [length]="20"
+            [label]="'post code'"
+            [id]="'postcode'"
+            [placeholder]="'70000'"
+            [width]="inputWidth"
+            [fullWidth]="true"
+            [isSubmit]="isSubmit"
+            [isReset]="isReset.postcode"
+            (watchValue)="takeInputValue($event)"
+            [defaultValue]="dataForm.controls['postcode'].value"
+          >
+          </ait-input-text>
+        </div>
+        <ait-space [margin]="'7.25px'"></ait-space>
+        <div class="input_inline">
+          <ait-autocomplete-master-data
+            [class]="'DISTRICT'"
+            [parentCode]="getParentCode('province_city')"
+            [label]="'dicstrict'"
+            [id]="'district'"
+            [maxItem]="1"
+            [required]="true"
+            [placeholder]="'District 1'"
+            [disableOutputDefault]="true"
+            [isSubmit]="isSubmit"
+            [style]="masterStyle"
+            [isReset]="isReset.district"
+            [clearError]="isClear"
+            (watchValue)="takeMasterValue($event?.value, 'district')"
+            [defaultValue]="
+              dataForm.controls['district'].value
+                ? [dataForm.controls['district'].value]
+                : null
+            "
+          ></ait-autocomplete-master-data>
+        </div>
+      </div>  
+    </div>
   </div>
 </div>

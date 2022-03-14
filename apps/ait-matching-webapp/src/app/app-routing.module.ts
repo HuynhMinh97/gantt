@@ -40,16 +40,16 @@ export const routes: Routes = [
     canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
     component: UserSkillsComponent
   },
-  // {
-  //   path: 'user-onboarding/:id',
-  //   canActivate: [AitAuthGuardService],
-  //   component: UserOnboardingComponent
-  // },
-  // {
-  //   path: 'user-onboarding-detail/:id',
-  //   canActivate: [AitAuthGuardService],
-  //   component: UserOnboardingDetailComponent
-  // },
+  {
+    path: 'user-onboarding/:id',
+    canActivate: [AitAuthGuardService],
+    component: UserOnboardingComponent
+  },
+  {
+    path: 'user-onboarding-detail/:id',
+    canActivate: [AitAuthGuardService],
+    component: UserOnboardingDetailComponent
+  },
   {
     path: 'user-course',
     canActivate: [AitAuthGuardService], 
@@ -94,6 +94,36 @@ export const routes: Routes = [
     path: 'user-profile',
     canActivate: [AitAuthGuardService],
     component: UserProfileComponent
+  },
+  {
+    path: 'user-experience',
+    canActivate: [AitAuthGuardService],
+    component: UserExperienceComponent
+  },
+  {
+    path: 'user-experience/:id',
+    canActivate: [AitAuthGuardService],
+    component: UserExperienceComponent
+  },
+  {
+    path: 'user-education',
+    canActivate: [AitAuthGuardService],
+    component: UserEducationComponent
+  },
+  {
+    path: 'user-education/:id',
+    canActivate: [AitAuthGuardService],
+    component: UserEducationComponent
+  },
+  {
+    path: 'user-language',
+    canActivate: [AitAuthGuardService],
+    component: UserLanguageComponent
+  },
+  {
+    path: 'user-language/:id',
+    canActivate: [AitAuthGuardService],
+    component: UserLanguageComponent
   },
   {
     path: 'user-job-alert',
