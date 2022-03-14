@@ -54,7 +54,12 @@ export class AitRenderPageService extends AitBaseService {
       allow_delete: true,
       has_status: true,
       guidance_icon: true,
-      guidance: true
+      guidance: true,
+      file_type: true,
+      data_source: {
+        _key: true,
+        value: true
+      }
     },
     search_setting: {
       operator: true,
