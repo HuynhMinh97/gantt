@@ -1,6 +1,7 @@
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { BaseEntity } from './base.entity';
+import { KeyValueEntity } from './key-value.entity';
 
 @ObjectType()
 export class ButtonEntity {
@@ -109,6 +110,12 @@ export class ComponentSettingEntity {
 
   @Field(() => String, { nullable: true })
   guidance_icon: string;
+
+  @Field(() => String, { nullable: true })
+  file_type: string;
+
+  @Field(() => [KeyValueEntity], { nullable: true })
+  data_source: KeyValueEntity[];
 
   @Field(() => String, { nullable: true })
   guidance: string;

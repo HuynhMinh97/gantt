@@ -2,6 +2,7 @@ import { Field, InputType, Int, OmitType } from '@nestjs/graphql';
 import { BaseDto } from './base.dto';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { ConditionDto } from './condition.dto';
+import { KeyValueDto } from './key-value.dto';
 @InputType()
 export class SysGroupDto extends BaseDto {
   @Field(() => String, { nullable: true })
@@ -69,6 +70,12 @@ export class ComponentSettingDto {
 
   @Field(() => String, { nullable: true })
   guidance_icon: string;
+
+  @Field(() => String, { nullable: true })
+  file_type: string;
+
+  @Field(() => [KeyValueDto], { nullable: true })
+  data_source: KeyValueDto[];
 
   @Field(() => String, { nullable: true })
   guidance: string;
