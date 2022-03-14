@@ -55,6 +55,7 @@ export class AitRenderPageService extends AitBaseService {
       has_status: true,
       guidance_icon: true,
       guidance: true,
+      margin: true,
       file_type: true,
       data_source: {
         _key: true,
