@@ -183,19 +183,49 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   }
 
   setupComponent(components: any[]) {
-    const leftSide = [];
-    const rightSide = [];
-    components.forEach((component) => {
-      if (component.col_no === 1) {
-        leftSide.push(component);
-      } else {
-        rightSide.push(component);
+    try {
+      let leftSide = [];
+      let rightSide = [];
+      components.forEach((component) => {
+        if (component.col_no === 1) {
+          leftSide.push(component);
+        } else {
+          rightSide.push(component);
+        }
+      });
+      leftSide = leftSide.sort((a, b) => a.row_no - b.row_no);
+      rightSide = rightSide.sort((a, b) => a.row_no - b.row_no);
+
+      console.log(leftSide);
+      console.log(rightSide);
+      
+
+      const leftSideIndex = leftSide[leftSide.length - 1]?.row_no;
+      const rightSideIndex = rightSide[rightSide.length - 1]?.row_no;
+      try {
+        [...Array(+leftSideIndex)].forEach((e, i) => {
+          const item = leftSide.find((m) => m.row_no == i + 1);
+          if (item) {
+            this.leftSide.push(item);
+          } else {
+            this.leftSide.push({ type: 'space' });
+          }
+        });
+
+        [...Array(+rightSideIndex)].forEach((e, i) => {
+          const item = rightSide.find((m) => m.row_no == i + 1);
+          if (item) {
+            this.rightSide.push(item);
+          } else {
+            this.rightSide.push({ type: 'space' });
+          }
+        });
+      } catch (e) {
+        console.error(e);
       }
-    });
-    this.leftSide = leftSide.sort((a, b) => a.row_no - b.row_no);
-    console.log(this.leftSide);
-    
-    this.rightSide = rightSide.sort((a, b) => a.row_no - b.row_no);
+    } catch {
+      this.cancelLoadingApp();
+    }
   }
 
   setupForm(components: any[]) {
