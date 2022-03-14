@@ -42,6 +42,7 @@ export class AitRenderPageService extends AitBaseService {
     component_setting: {
       collection: true,
       max_item: true,
+      max_file: true,
       width: true,
       required: true,
       from_to: true,
