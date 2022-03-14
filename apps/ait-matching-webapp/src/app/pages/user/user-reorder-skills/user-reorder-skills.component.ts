@@ -358,6 +358,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
   }
   reset(){
     this.reorderSkills = JSON.parse(JSON.stringify(this.reorderSkillsClone));
+    this.isChanged = false;
   }
   
 }

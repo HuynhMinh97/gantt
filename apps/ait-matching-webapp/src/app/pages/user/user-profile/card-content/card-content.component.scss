@@ -92,7 +92,6 @@
   height: auto;
   transition: 0.8s all ease-in-out;
   &.isClose {
-    height: 0;
     overflow: hidden;
     transition: 0.8s all ease-in-out;
   }
