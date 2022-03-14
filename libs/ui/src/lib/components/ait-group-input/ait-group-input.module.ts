@@ -16,6 +16,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NbCheckboxModule, NbIconModule, NbInputModule, NbSpinnerModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { AitInputFileModule } from '../ait-input-file/ait-input-file.module';
+import { AitDatepickerModule } from '../ait-datepicker/ait-datepicker.module';
 
 const AIT_MODULES = [
   AitCommonLayoutModule,
@@ -29,7 +30,8 @@ const AIT_MODULES = [
   AitTextGradientModule,
   AitInputTextModule,
   AitInputNumberModule,
-  AitInputFileModule
+  AitInputFileModule,
+  AitDatepickerModule
 ];
 
 @NgModule({
