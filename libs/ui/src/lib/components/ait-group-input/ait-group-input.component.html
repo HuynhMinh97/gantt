@@ -35,7 +35,8 @@
                             " [style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" 
                             [id]="component?.item_id" [required]="component?.component_setting?.required ? component?.component_setting?.required : false"
                             [isSubmit]="isSubmit" [allowNew]="component?.component_setting?.allow_new ? component?.component_setting?.allow_new : false" 
-                            [allowDelete]="component?.component_setting?.allow_delete ? component?.component_setting?.allow_delete : false">
+                            [allowDelete]="component?.component_setting?.allow_delete ? component?.component_setting?.allow_delete : false"
+                            [guidance]="component?.component_setting?.guidance" [guidanceIcon]="component?.component_setting?.guidance_icon">
                         </ait-autocomplete-master-data>
 
                         <ait-autocomplete-master-data *ngIf="component.type === 'combobox'  && component?.component_setting?.max_item !== 1"
@@ -48,7 +49,8 @@
                             [style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" 
                             [id]="component?.item_id" [required]="component?.component_setting?.required ? component?.component_setting?.required : false"
                             [isSubmit]="isSubmit" [allowNew]="component?.component_setting?.allow_new ? component?.component_setting?.allow_new : false" 
-                            [allowDelete]="component?.component_setting?.allow_delete ? component?.component_setting?.allow_delete : false">
+                            [allowDelete]="component?.component_setting?.allow_delete ? component?.component_setting?.allow_delete : false"
+                            [guidance]="component?.component_setting?.guidance" [guidanceIcon]="component?.component_setting?.guidance_icon">
                         </ait-autocomplete-master-data>
   
                         <ait-input-number *ngIf="component.type === 'number'">
@@ -141,7 +143,8 @@
                             " [style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" 
                             [id]="component?.item_id" [required]="component?.component_setting?.required ? component?.component_setting?.required : false"
                             [isSubmit]="isSubmit" [allowNew]="component?.component_setting?.allow_new ? component?.component_setting?.allow_new : false" 
-                            [allowDelete]="component?.component_setting?.allow_delete ? component?.component_setting?.allow_delete : false">
+                            [allowDelete]="component?.component_setting?.allow_delete ? component?.component_setting?.allow_delete : false"
+                            [guidance]="component?.component_setting?.guidance" [guidanceIcon]="component?.component_setting?.guidance_icon">
                         </ait-autocomplete-master-data>
 
                         <ait-autocomplete-master-data *ngIf="component.type === 'combobox'  && component?.component_setting?.max_item !== 1"
@@ -154,7 +157,8 @@
                             [style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" 
                             [id]="component?.item_id" [required]="component?.component_setting?.required ? component?.component_setting?.required : false"
                             [isSubmit]="isSubmit" [allowNew]="component?.component_setting?.allow_new ? component?.component_setting?.allow_new : false" 
-                            [allowDelete]="component?.component_setting?.allow_delete ? component?.component_setting?.allow_delete : false">
+                            [allowDelete]="component?.component_setting?.allow_delete ? component?.component_setting?.allow_delete : false"
+                            [guidance]="component?.component_setting?.guidance" [guidanceIcon]="component?.component_setting?.guidance_icon">
                         </ait-autocomplete-master-data>
   
                         <ait-input-number *ngIf="component.type === 'number'">
