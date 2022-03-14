@@ -50,7 +50,9 @@
                 text-transform: uppercase;
                 color: #ffffff;
                 font-size: 10px;
-                margin-left: 10px;
+                width: 100%;
+                justify-content: space-evenly;
+                margin-left: 2px;
               "
               >{{ buttonTitle }}</span
             >
@@ -75,7 +77,8 @@
       class="content"
       [ngStyle]="{
         'flex-direction': isColumn ? 'column' : 'row',
-        'align-items': isColumn || isStart ? 'flex-start' : 'center'
+        'align-items': isColumn || isStart ? 'flex-start' : 'center',
+        'height': isOpen ? 'auto' : height
       }"
       [ngClass]="isOpen ? null : 'isClose'"
     >
