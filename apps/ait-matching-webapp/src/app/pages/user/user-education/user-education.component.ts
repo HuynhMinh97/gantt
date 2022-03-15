@@ -30,10 +30,11 @@ import { MatchingUtils } from '../../../../app/@constants/utils/matching-utils';
   styleUrls: ['./user-education.component.scss'],
 })
 export class UserEducationComponent extends AitBaseComponent implements OnInit {
- 
+  userEducation: FormGroup;
   userEducation_key = '';
 
   constructor(
+    private formBuilder: FormBuilder,
     private userEducationService: UserEducationService,
     public activeRouter: ActivatedRoute,
     env: AitEnvironmentService,
@@ -53,7 +54,18 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
       toastrService
     );
 
-   
+    this.userEducation = this.formBuilder.group({
+      school: new FormControl(null, [Validators.required]),
+      field_of_study: new FormControl(null, [Validators.required]),
+      description: new FormControl(null, [Validators.required]),
+      degree: new FormControl(null, [Validators.required]),
+      grade: new FormControl(null, [Validators.required]),
+      file: new FormControl(null, [Validators.required]),
+      start_date_from: new FormControl(null, [Validators.required]),
+      start_date_to: new FormControl(null, [Validators.required]),
+      issue_date: new FormControl(null, [Validators.required]),
+    });
+
     this.setModulePage({
       module: 'add_education',
       page: 'add_education',
