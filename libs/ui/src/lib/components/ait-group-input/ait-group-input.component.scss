@@ -312,3 +312,13 @@
   background: #fff !important;
   border-color: #8f9bb3 !important;
 }
+
+@media only screen and (min-width: 1200px) {
+  :host ::ng-deep .main__container .card__content_container {
+    min-width: 1000px !important;
+  }
+}
+
+:host ::ng-deep .main__container .content__card {
+  width: auto !important;
+}
