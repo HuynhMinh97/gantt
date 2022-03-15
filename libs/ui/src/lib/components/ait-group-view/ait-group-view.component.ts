@@ -179,9 +179,9 @@ export class AitGroupViewComponent extends AitBaseComponent implements OnInit {
 
   getValue(item_id: string) {
     try {
-      return this.viewForm.controls[item_id].value || '';
+      return this.viewForm.controls[item_id].value || null;
     } catch {
-      return '';
+      return null;
     }
   }
 
