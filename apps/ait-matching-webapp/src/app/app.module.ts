@@ -7,7 +7,6 @@ import {
   AitAuthGuardService,
   AitAuthScreenService,
   AitChipModule,
-  AitGroupInputModule,
   AitTabsModule,
   AitUiModule,
   rootReducers,

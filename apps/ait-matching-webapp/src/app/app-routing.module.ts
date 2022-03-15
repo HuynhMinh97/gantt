@@ -146,7 +146,7 @@ export const routes: Routes = [
     component: UserJobAlertDetailComponent
   },
   {
-    path: '',
+    path: '**',
     pathMatch: 'full',
     redirectTo: localStorage.getItem('access_token') ? 'user-profile' : 'sign-in'
   },
