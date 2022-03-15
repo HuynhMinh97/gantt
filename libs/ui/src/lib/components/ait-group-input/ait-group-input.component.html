@@ -67,6 +67,7 @@
                             [rows]="component?.component_setting?.rows ? component?.component_setting?.rows : 1"
                             [width]="component?.component_setting?.width" [fullWidth]="true" [id]="component?.item_id"
                             [defaultValue]="inputForm.controls[component?.item_id].value" [isSubmit]="isSubmit"
+                            [guidance]="component?.component_setting?.guidance" [guidanceIcon]="component?.component_setting?.guidance_icon"
                             (watchValue)="takeInputValue($event, component?.item_id)" [required]="!!component?.component_setting?.required">
                         </ait-input-text>
   
@@ -180,6 +181,7 @@
                             [rows]="component?.component_setting?.rows ? component?.component_setting?.rows : 1"
                             [width]="component?.component_setting?.width" [fullWidth]="true" [id]="component?.item_id"
                             [defaultValue]="inputForm.controls[component?.item_id].value" [isSubmit]="isSubmit"
+                            [guidance]="component?.component_setting?.guidance" [guidanceIcon]="component?.component_setting?.guidance_icon"
                             (watchValue)="takeInputValue($event, component?.item_id)" [required]="!!component?.component_setting?.required">
                         </ait-input-text>
   
