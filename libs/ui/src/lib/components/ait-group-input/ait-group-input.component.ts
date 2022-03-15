@@ -379,7 +379,13 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
         const formValue = this.inputForm.value;
         for (const prop in formValue) {
           if (isObjectFull(formValue[prop])) {
-            objSave[prop] = formValue[prop][KEYS.KEY];
+            if (isArrayFull(formValue[prop])) {
+              const keyArray = [];
+              formValue[prop].forEach((e: KeyValueDto) => keyArray.push(e[KEYS.KEY]));
+              objSave[prop] = keyArray;
+            } else {
+              objSave[prop] = formValue[prop][KEYS.KEY];
+            }
           } else if (
             this.multiLang.includes(prop) &&
             typeof formValue[prop] === 'string'
