@@ -52,10 +52,16 @@ export class UserOnboardingInfoDto extends BaseDto {
     company_working?: ConditionDto;
 
     @Field(() => ConditionDto, { nullable: true })
-    title?: ConditionDto;
+    current_job_title?: ConditionDto;
+
+    @Field(() => ConditionDto, { nullable: true })
+    job_setting_title?: ConditionDto;
 
     @Field(() => ConditionDto, { nullable: true })
     industry?: ConditionDto;
+
+    @Field(() => ConditionDto, { nullable: true })
+    industry_working?: ConditionDto;
 
     @Field(() => String, { nullable: true })
     code?: string;
@@ -113,10 +119,16 @@ export class SaveUserOnboardingInfoDto extends BaseDto {
     company_working?: string;
 
     @Field(() => String, { nullable: true })
-    title?: string;
+    current_job_title?: string;
+
+    @Field(() => String, { nullable: true })
+    job_setting_title?: string;
 
     @Field(() => String, { nullable: true })
     industry?: string;
+
+    @Field(() => String, { nullable: true })
+    industry_working?: string;
 
     @Field(() => [String], { nullable: true })
     top_skills?: string[];

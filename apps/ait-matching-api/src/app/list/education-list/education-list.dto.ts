@@ -8,8 +8,6 @@ export class EducationListDto extends BaseDto  {
 
   @Field(() => String, { nullable: true })
   user_id: string;
-  
-  
 
   @Field(() => String, { nullable: true })
   degree: string;

@@ -13,7 +13,7 @@ import {
 
 import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SkillListService } from '../../../../../services/skill-list.service';
+import { SkillListService } from '../../../../services/skill-list.service';
 import dayjs from 'dayjs';
 
 import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
@@ -21,7 +21,7 @@ import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { SkillRegisterService } from '../../../../../services/add-skill.service';
+// import { SkillRegisterService } from '../../../../services/add-skill.service';
 
 @Component({
   selector: 'ait-skill-list-view',
@@ -90,7 +90,7 @@ export class SkillListViewComponent extends AitBaseComponent implements OnInit {
     public router: Router,
     private skillListService: SkillListService,
     private changeDetectorRef: ChangeDetectorRef,
-    private skillRegisterService: SkillRegisterService,
+    // private skillRegisterService: SkillRegisterService,
     private translateService: AitTranslationService,
     private dialogService: NbDialogService,
     private formBuilder: FormBuilder,
