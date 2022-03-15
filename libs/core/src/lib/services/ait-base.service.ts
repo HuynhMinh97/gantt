@@ -458,6 +458,7 @@ export class AitBaseService {
     //ref
     mapData.forEach((data) => {
       if (!attributes.includes(data.join_field)) {
+        console.log(data);
         if (data.attribute === 'code') {
           // console.log(data);
           // console.log(data.ref_collection);
