@@ -183,12 +183,12 @@
                             (watchValue)="takeInputValue($event, component?.item_id)" [required]="!!component?.component_setting?.required">
                         </ait-input-text>
   
-                        <ait-datepicker
+                        <datepicker
                             *ngIf="component.type === 'date' && component?.component_setting?.from_to !== true"
                             [placeholder]="component?.item_placeholder" [id]="component?.item_id"
-                            [label]="component?.item_label" [style]="{ width: '170px'}"
+                            [label]="component?.item_label" [style]="component?.component_setting?.width"
                             [isReset]="isReset" [required]="!!component?.component_setting?.required">
-                        </ait-datepicker>
+                        </datepicker>
   
                         <div class="check-form" *ngIf="component.type === 'checkbox'" style="margin-top: 5px;">
                             <nb-checkbox

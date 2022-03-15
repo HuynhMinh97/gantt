@@ -139,7 +139,6 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
               this.inputForm.addControl('_key', new FormControl(null));
               this.patchDataToForm(resSearch.data || []);
             }
-            
           }
         }
       }
@@ -216,7 +215,6 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
             this.rightSide.push({ type: 'space' });
           }
         });
-        console.log(leftSide);console.log(rightSide);
       } catch (e) {
         console.error(e);
       }
