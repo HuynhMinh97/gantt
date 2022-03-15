@@ -190,7 +190,7 @@ export const routes: Routes = [
     component: EducationListComponent
   },
   {
-    path: '',
+    path: '**',
     pathMatch: 'full',
     redirectTo: localStorage.getItem('access_token') ? 'user-profile' : 'sign-in'
   },
