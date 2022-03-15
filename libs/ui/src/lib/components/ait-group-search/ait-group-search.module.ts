@@ -14,8 +14,6 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { NB_MODULES } from '../../@theme/theme.module';
 import { AitButtonTableModule } from '../ait-button-setting-table/ait-button-setting-table.module';
 
-
-
 @NgModule({
   declarations: [AitGroupSearchComponent],
   imports: [
