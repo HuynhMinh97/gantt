@@ -287,202 +287,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     }
     return Array.from(new Set(data.map(d => d?._key).filter(x => !!x)));
   }
-  // chuan hoa data de save
-  dataSaveProject() {
-    const saveData = this.userProject.value;
-    saveData['user_id'] = this.authService.getUserID();
-    saveData['company_working'] = this.userProject.value?.company_working._key;
-    saveData['title'] = this.userProject.value?.title._key;
-    this.listSkills = saveData.skills;
-    delete saveData.skills;
-    return saveData;
-  }
 
-  async saveSkill(bizProjectKey: string) {
-    this.biz_project_skill._from = 'biz_project/' + bizProjectKey;
-    this.biz_project_skill.relationship = ' biz_project_skill';
-    if (this.mode == 'EDIT') {
-      const _fromSkill = [
-        { _from: 'biz_project/' + this.project_key },
-      ];
-      this.userProjectService.removeSkill(_fromSkill);
-    }
-    for(const skill of this.listSkills){
-      await this.userProjectService.findMSkillsByCode(skill._key)
-        .then(async (res) => {
-          this.sort_no += 1;
-          this.biz_project_skill.sort_no = this.sort_no;
-          this.biz_project_skill._to = 'm_skill/' + res.data[0]._key;
-          await this.userProjectService.saveSkills(this.biz_project_skill);
-        });
-    }
-  }
-
-  async saveUserProject(bizProjectKey: string) {
-    this.connection_user_project._from = 'sys_user/' + this.user_id;
-    this.connection_user_project._to = 'biz_project/' + bizProjectKey;
-    this.connection_user_project.relationship = 'user project';
-    this.connection_user_project.sort_no = this.sort_no + 1;
-    await this.userProjectService.saveConnectionUserProject(this.connection_user_project);
-  }
-
-  async saveContinue() {
-    this.isSubmit = true;
-    setTimeout(() => {
-      this.isSubmit = false;
-    }, 100);
-    if (this.userProject.valid && this.error.length == 0) {
-      this.callLoadingApp();
-      await this.userProjectService.saveBizProject(this.dataSaveProject())
-        .then(async (res) => {
-          if (res?.status === RESULT_STATUS.OK) {
-            const data = res.data[0];
-            await this.saveSkill(data._key);
-            await this.saveUserProject(data._key);
-            const message = this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
-            this.showToastr('', message);
-            await this.reset();
-            this.isSave = true;
-            this.cancelLoadingApp()
-          } else {
-            this.cancelLoadingApp()
-            this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-          }
-        }).catch(() => {
-          this.cancelLoadingApp()
-          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-        })
-    } else {
-      this.scrollIntoError();
-    }
-  }
-
-  async saveClose() {
-    this.isSubmit = true;
-    setTimeout(() => {
-      this.isSubmit = false;
-    }, 100);
-    if (this.userProject.valid && this.error.length == 0) {
-      this.callLoadingApp();
-      await this.userProjectService.saveBizProject(this.dataSaveProject())
-        .then(async (res) => {
-          if (res?.status === RESULT_STATUS.OK) {
-            const data = res.data[0];
-            await this.saveSkill(data._key);
-            await this.saveUserProject(data._key);
-            const message = this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
-            this.showToastr('', message);
-            this.cancelLoadingApp();
-            this.closeDialog(true);
-          } else {
-            this.cancelLoadingApp()
-            this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-          }
-        }).catch(() => {
-          this.cancelLoadingApp()
-          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-        })
-    } else {
-      this.scrollIntoError();
-    }
-  }
-
-  scrollIntoError() {
-    for (const key of Object.keys(this.userProject.controls)) {
-      if (this.userProject.controls[key].invalid) {
-        const invalidControl = this.element.nativeElement.querySelector(
-          `#${key}_input`
-        );
-        try {
-          invalidControl.scrollIntoView({
-            behavior: 'auto',
-            block: 'center',
-          });
-          break;
-        } catch { }
-      }
-    }
-
-      if (this.error.length > 0) {
-        const invalidControl = this.element.nativeElement.querySelector(
-          `span`
-        );
-        try {
-          invalidControl.scrollIntoView({
-            behavior: 'auto',
-            block: 'center',
-          });
-        } catch { }
-      }
-    
-  }
-
-  setHours(data: any) {
-    for (const prop in data) {
-      if (this.dateField.includes(prop)) {
-        if (data[prop]) {
-          data[prop] = new Date(data[prop]).setHours(0, 0, 0, 0);
-        }
-        if (data[prop]) {
-          data[prop] = new Date(data[prop]).setHours(0, 0, 0, 0);
-        }
-      }
-    }
-  }
-
-  async reset() {
-    this.isSubmit = false;
-    this.isChanged = false;
-    this.error = [];
-    this.userProject.reset();
-    for (const prop in this.resetUserProject) {
-      this.resetUserProject[prop] = true;
-      setTimeout(() => {
-        this.resetUserProject[prop] = false;
-      }, 100);
-    }
-    setTimeout(() => {
-      this.isReset = false;
-      this.userProject.controls['start_date_from'].setValue(this.dateNow);
-      this.userProject.controls['title'].setValue(this.titleName);
-      this.userProject.controls['company_working'].setValue(this.companyName);
-    }, 100);
-  }
-
-  async resetForm() {
-    try {
-      this.isSubmit = false;
-      this.isChanged = false;
-      if (this.mode === MODE.EDIT) {
-        this.error = [];
-        for (const index in this.resetUserProject) {
-          if (!this.userProject.controls[index].value) {
-            this.resetUserProject[index] = true;
-            this.isClear = true;
-            setTimeout(() => {
-              this.userProject[index] = false;
-              this.isClear = false;
-            }, 100);
-
-          }
-        }
-        this.isClearErrors.skills = true;
-        setTimeout(() => {
-          this.isClearErrors.skills = false;
-          this.userProject.patchValue({ ...this.userProjectClone });
-          this.showToastr('', this.getMsg('I0007'));
-        }, 100)
-      }
-      else {
-        await this.reset();
-        this.showToastr('', this.getMsg('I0007'));
-      }
-    } catch (e) {
-      console.log(e);
-
-    }
-
-  }
   async Delete() {
     this.dialogService
       .open(AitConfirmDialogComponent, {
@@ -563,4 +368,58 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     // this.nbDialogRef.close(event);
   }
 
+  dataSaveProject(data: any) {
+    const saveData = data
+    saveData['user_id'] = this.authService.getUserID();
+    this.listSkills = saveData.skills;
+    delete saveData.skills;
+    return saveData;
+  }
+
+  async saveSkill(bizProjectKey: string) {
+    this.biz_project_skill._from = 'biz_project/' + bizProjectKey;
+    this.biz_project_skill.relationship = ' biz_project_skill';
+    if (this.mode == 'EDIT') {
+      const _fromSkill = [
+        { _from: 'biz_project/' + this.project_key },
+      ];
+      this.userProjectService.removeSkill(_fromSkill);
+    }
+    for(const skill of this.listSkills){
+      await this.userProjectService.findMSkillsByCode(skill)
+        .then(async (res) => {
+          this.sort_no += 1;
+          this.biz_project_skill.sort_no = this.sort_no;
+          this.biz_project_skill._to = 'm_skill/' + res.data[0]._key;
+          await this.userProjectService.saveSkills(this.biz_project_skill);
+        });
+    }
+  }
+
+  async saveUserProject(bizProjectKey: string) {
+    this.connection_user_project._from = 'sys_user/' + this.user_id;
+    this.connection_user_project._to = 'biz_project/' + bizProjectKey;
+    this.connection_user_project.relationship = 'user project';
+    this.connection_user_project.sort_no = this.sort_no + 1;
+    await this.userProjectService.saveConnectionUserProject(this.connection_user_project);
+  }
+
+
+  public save = async (data = {}) => {
+    try {
+      return await this.userProjectService.saveBizProject(this.dataSaveProject(data))
+        .then(async (res) => {
+          if (res?.status === RESULT_STATUS.OK) {
+            const data = res.data[0];
+            await this.saveUserProject(data._key);
+            await this.saveSkill(data._key);
+            return res;
+          } 
+        })
+    } catch (error) {
+      console.log(error);
+      
+    }
+    
+  }
 }
