@@ -27,11 +27,19 @@ export class UserOnboardingService extends AitBaseService {
       _key: true,
       value: true,
     },
-    title: {
+    current_job_title: {
+      _key: true,
+      value: true,
+    },
+    job_setting_title: {
       _key: true,
       value: true,
     },
     industry: {
+      _key: true,
+      value: true,
+    },
+    industry_working: {
       _key: true,
       value: true,
     },
@@ -69,7 +77,7 @@ export class UserOnboardingService extends AitBaseService {
 
     const keyMasterArray = [
       {
-        att: 'title',
+        att: 'current_job_title',
         col: 'm_title',
       },
       {

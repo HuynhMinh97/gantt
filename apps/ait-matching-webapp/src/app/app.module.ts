@@ -9,6 +9,7 @@ import {
   AitChipModule,
   AitGroupInputModule,
   AitTabsModule,
+  AitTocMenuModule,
   AitUiModule,
   rootReducers,
 } from '@ait/ui';
@@ -64,8 +65,13 @@ import { UserOnboardingDetailComponent } from './pages/user/user-onboarding-deta
 import { UserJobAlertDetailComponent } from './pages/user/user-job-alert-detail/user-job-alert-detail.component';
 import { UserProjectComponent } from './pages/user/user-project/user-project.component';
 import { DragScrollComponent } from './pages/user/user-profile/drag-scroll/drag-scroll.component';
+import { ProjectListComponent } from './pages/list/project-list/project-list.component';
+import { LanguageListComponent } from './pages/list/language-list/language-list.component';
+import { EducationListComponent } from './pages/list/education-list/education-list.component';
+import { CertificateListComponent } from './pages/list/certificate-list/certificate-list.component';
+import { SkillListViewComponent } from './pages/list/skill-list/skill-list-view/skill-list-view.component';
 
-const AIT_UI_MODULES = [AitChipModule, AitTabsModule];
+const AIT_UI_MODULES = [AitChipModule, AitTabsModule, AitTocMenuModule];
 
 const AIT_UI_SERVICES = [AitAuthGuardService, AitAuthScreenService];
 
@@ -109,6 +115,11 @@ const PAGES = [
   UserOnboardingDetailComponent,
   CountryComponent,
   UserJobAlertDetailComponent,
+  ProjectListComponent,
+  LanguageListComponent,
+  EducationListComponent,
+  CertificateListComponent,
+  SkillListViewComponent,
 ];
 
 @NgModule({

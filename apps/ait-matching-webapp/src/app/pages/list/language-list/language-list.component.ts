@@ -1,4 +1,4 @@
-import { LanguageListService } from './../../../../services/language-list.service';
+import { LanguageListService } from './../../../services/language-list.service';
 import { AitAuthService, AitBaseComponent, AitEnvironmentService, AppState, getUserSetting } from '@ait/ui';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';

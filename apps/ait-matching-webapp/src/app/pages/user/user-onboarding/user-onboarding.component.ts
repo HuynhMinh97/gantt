@@ -77,9 +77,16 @@ export class UserOnboardingComponent
     address: false,
     floor_building: false,
     company_working: false,
-    title: false,
+    curent_job_title: false,
+    job_setting_title: false,
     industry: false,
-    skills: false,
+    industry_working: false,
+    curent_job_skills: false,
+    job_setting_skills: false,
+    location: false,
+    job_setting_level: false,
+    current_job_level: false,
+
   };
 
   userOnbInfo = {
@@ -195,13 +202,19 @@ export class UserOnboardingComponent
       ]),
       floor_building: new FormControl(null, [Validators.maxLength(500)]),
       company_working: new FormControl(null),
-      title: new FormControl(null),
+      current_job_title: new FormControl(null),
+      industry_working: new FormControl(null, [Validators.required]),
+      current_job_level: new FormControl(null),
       industry: new FormControl(null, [Validators.required]),
+      job_setting_title: new FormControl(null),
+      location: new FormControl(null),
+      job_setting_level: new FormControl(null),
+      current_job_skills: new FormControl(null),
+      job_setting_skills: new FormControl(null),
       _key: new FormControl(null),
+      
     });
-    if (this.mode === MODE.NEW) {
-      this.userOnboardingInfo.addControl('skills', new FormControl(null));
-    }
+    
     // get key form parameter
      this.user_key = this.activeRouter.snapshot.paramMap.get('id');
      this._key = this.activeRouter.snapshot.paramMap.get('id');
@@ -381,15 +394,19 @@ export class UserOnboardingComponent
   saveDataUserProfile() {
     const saveData = this.userOnboardingInfo.value;
     saveData.ward = saveData.ward ? saveData.ward?._key : null;
-    saveData.title = saveData.title ? saveData.title?._key : null;
+    saveData.current_job_title = saveData.current_job_title ? saveData.current_job_title?._key : null;
+    saveData.job_setting_title = saveData.job_setting_title ? saveData.job_setting_title?._key : null;
+    saveData.current_job_level = saveData.current_job_level ? saveData.current_job_level?._key : null;
+    saveData.job_setting_level = saveData.job_setting_level ? saveData.job_setting_level[0]?._key : null;
     saveData.province_city = saveData.province_city ? saveData.province_city?._key : null;
     saveData.gender = saveData.gender._key;
     saveData.country_region = saveData.country_region ? saveData.country_region?._key : null;
     saveData.district = saveData.district ? saveData.district?._key : null;
     saveData.industry = saveData.industry ? saveData.industry?._key : null;
+    saveData.industry_working = saveData.industry_working ? saveData.industry_working?._key : null;
     saveData.company_working = saveData.company_working ? saveData.company_working?._key : null;
-    this.skills = saveData.skills;
-    delete saveData.skills;
+    this.skills = saveData.current_job_skills;
+    delete saveData.current_job_skills;
     if (this.mode === MODE.NEW) {
       saveData['top_skills'] = [];
       saveData['user_id'] = this.user_id;

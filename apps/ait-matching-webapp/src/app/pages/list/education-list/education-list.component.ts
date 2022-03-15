@@ -1,4 +1,4 @@
-import { EducationListService } from './../../../../services/education-list.service';
+import { EducationListService } from './../../../services/education-list.service';
 import { isObjectFull, isString, OPERATOR, RESULT_STATUS } from '@ait/shared';
 import { AitAuthService, AitBaseComponent, AitEnvironmentService, AppState, getUserSetting } from '@ait/ui';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';

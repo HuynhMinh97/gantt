@@ -21,6 +21,11 @@ import { UserProjectDetailComponent } from './pages/user/user-project-detail/use
 import { UserOnboardingDetailComponent } from './pages/user/user-onboarding-detail/user-onboarding-detail.component';
 import { UserJobAlertDetailComponent } from './pages/user/user-job-alert-detail/user-job-alert-detail.component';
 import { UserProjectComponent } from './pages/user/user-project/user-project.component';
+import { ProjectListComponent } from './pages/list/project-list/project-list.component';
+import { SkillListViewComponent } from './pages/list/skill-list/skill-list-view/skill-list-view.component';
+import { CertificateListComponent } from './pages/list/certificate-list/certificate-list.component';
+import { EducationListComponent } from './pages/list/education-list/education-list.component';
+
 
 // Push your routes here one by one 🎉
 
@@ -111,6 +116,11 @@ export const routes: Routes = [
     component: UserExperienceComponent
   },
   {
+    path: 'user-experience-detail/:id',
+    canActivate: [AitAuthGuardService],
+    component: UserExperienceDetailComponent
+  },
+  {
     path: 'user-education',
     canActivate: [AitAuthGuardService],
     component: UserEducationComponent
@@ -121,9 +131,23 @@ export const routes: Routes = [
     component: UserEducationComponent
   },
   {
+    path: 'user-education-detail/:id',
+    canActivate: [AitAuthGuardService],
+    component: UserEducationDetailComponent
+  },
+  {
     path: 'user-language',
     canActivate: [AitAuthGuardService],
     component: UserLanguageComponent
+  },{
+    path: 'user-language-detail/:id',
+    canActivate: [AitAuthGuardService],
+    component: UserLanguageDetailComponent
+  },
+  {
+    path: 'list-project',
+    canActivate: [AitAuthGuardService],
+    component: ProjectListComponent
   },
   {
     path: 'user-language/:id',
@@ -144,6 +168,26 @@ export const routes: Routes = [
     path: 'user-job-alert-detail/:id',
     canActivate: [AitAuthGuardService],
     component: UserJobAlertDetailComponent
+  },
+  {
+    path: 'skill-list',
+    canActivate: [AitAuthGuardService], 
+    component: SkillListViewComponent
+  },
+  {
+    path: 'project-list',
+    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    component: ProjectListComponent
+  },
+  {
+    path: 'certificate-list',
+    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    component: CertificateListComponent
+  },
+  {
+    path: 'education-list',
+    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    component: EducationListComponent
   },
   {
     path: '',

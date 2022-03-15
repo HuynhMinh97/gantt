@@ -1,4 +1,4 @@
-import { CertificateListService } from './../../../../services/certificate-list.service';
+import { CertificateListService } from './../../../services/certificate-list.service';
 import { isObjectFull, isString, OPERATOR, RESULT_STATUS } from '@ait/shared';
 import {
   AitAuthService,

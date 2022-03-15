@@ -1,3 +1,4 @@
+import { routes } from './../../../app-routing.module';
 import { UserExperienceService } from './../../../services/user-experience.service';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 
@@ -7,7 +8,7 @@ import {
   FormControl,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   NbLayoutScrollService,
   NbToastrService,
@@ -34,6 +35,7 @@ export class UserExperienceComponent
   userExperience_key = '';
 
   constructor(
+    private router: Router,
     private userExperienceService: UserExperienceService,
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
@@ -66,6 +68,7 @@ export class UserExperienceComponent
   }
 
    ngOnInit(): void{
+     
     this.userExperience_key = this.activeRouter.snapshot.paramMap.get('id');
    this.callLoadingApp();
   

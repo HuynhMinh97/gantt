@@ -31,8 +31,10 @@ export interface UserOnboardingDto extends BaseDto {
   address: string;
   floor_building: string;
   company_working: KeyValueDto;
-  title: KeyValueDto;
+  job_setting_title: KeyValueDto;
+  current_job_title: KeyValueDto;
   industry: KeyValueDto;
+  industry_working:KeyValueDto;
   skills: string[];
 
 }
