@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  AitAppUtils,
   AitAuthService,
   AitBaseComponent,
   AitEnvironmentService,
@@ -41,10 +40,8 @@ export class AppComponent extends AitBaseComponent implements OnInit {
     this.initBaseComponent();
 
     setTimeout(() => {
-      const currentUrl = AitAppUtils.getParamsOnUrl(true);
-      console.log(currentUrl);
+      const currentUrl = location.hash.replace('#', '');
       const prevUrl = localStorage.getItem('prev_url');
-      console.log(prevUrl);
       if (currentUrl !== prevUrl) {
         this.router.navigateByUrl(prevUrl);
       }
@@ -55,10 +52,7 @@ export class AppComponent extends AitBaseComponent implements OnInit {
   }
 
   @HostListener('window:beforeunload', ['$event']) unloadHandler() {
-    console.log(1);
-    
-    const currentUrl = AitAppUtils.getParamsOnUrl(true);
-    console.log(currentUrl);
+    const currentUrl = location.hash.replace('#', '');
     localStorage.setItem('prev_url', currentUrl);
   }
 }
