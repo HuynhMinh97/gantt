@@ -101,6 +101,11 @@ export const routes: Routes = [
     component: UserProfileComponent
   },
   {
+    path: 'user-profile/:id',
+    canActivate: [AitAuthGuardService],
+    component: UserProfileComponent
+  },
+  {
     path: 'user-experience',
     canActivate: [AitAuthGuardService],
     component: UserExperienceComponent
