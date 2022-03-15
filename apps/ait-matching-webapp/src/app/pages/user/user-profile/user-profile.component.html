@@ -174,11 +174,11 @@
         [isOpen]="false"
         [idBtn]="'openAddSkill'"
         (onToggle)="getExpan($event,'isShowSkill')"
-        [height]="skillByCategory.length >=3 ? '270px' : 'auto'"
+        [height]="skillByCategory.length >=3 ? '0px' : 'auto'"
       >
         <div class="container_user" >
           <div *ngFor="let category of skillByCategory; let index = index; let first = first">
-            <!-- <div *ngIf="index <3 && !isShowSkill">
+            <div *ngIf="index <3 && !isShowSkill">
               <hr style="margin-top: 5px" *ngIf="!first" />
               <p class="title-skill">{{ category?.name }}</p>
               <ait-drag-scroll
@@ -188,8 +188,8 @@
                 [minWidth]="'100px'"
                 [isNormal]="false"
               ></ait-drag-scroll>
-            </div>            -->
-            <div>
+            </div>           
+            <div  *ngIf="isShowSkill">
               <hr style="margin-top: 5px" *ngIf="!first" />
               <p class="title-skill">{{ category?.name }}</p>
               <ait-drag-scroll

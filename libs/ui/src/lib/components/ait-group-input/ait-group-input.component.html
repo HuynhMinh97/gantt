@@ -1,12 +1,15 @@
 <div class="component__container">
     <div class="main__container">
         <ait-text-gradient [content]="pageTitle" [id]="'title'"></ait-text-gradient>
-        <ait-space></ait-space>
+        <ait-space [margin]="'5px'"></ait-space>
   
         <ait-card-content class="content__card" [disableHeader]="true" [transition]="false">
             <div class="content">
                 <div class="left__side" *ngIf="leftSide.length > 0">
                     <ng-container *ngFor="let component of leftSide">
+
+                        <div [ngStyle]="{margin: component?.component_setting?.margin || 0}"></div>
+
                         <ait-input-file *ngIf="component.type === 'file'"
                             (watchValue)="takeFiles($event.value, component?.item_id)"
                             [fileKeys]="inputForm.controls[component?.item_id].value"
@@ -33,9 +36,9 @@
                                 ? [inputForm.controls[component?.item_id].value]
                                 : null
                             " [style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" 
-                            [id]="component?.item_id" [required]="component?.component_setting?.required ? component?.component_setting?.required : false"
-                            [isSubmit]="isSubmit" [allowNew]="component?.component_setting?.allow_new ? component?.component_setting?.allow_new : false" 
-                            [allowDelete]="component?.component_setting?.allow_delete ? component?.component_setting?.allow_delete : false"
+                            [id]="component?.item_id" [required]="!!component?.component_setting?.required"
+                            [isSubmit]="isSubmit" [allowNew]="!!component?.component_setting?.allow_new" 
+                            [allowDelete]="!!component?.component_setting?.allow_delete"
                             [dataSource]="component?.component_setting?.data_source"
                             [guidance]="component?.component_setting?.guidance" [guidanceIcon]="component?.component_setting?.guidance_icon">
                         </ait-autocomplete-master-data>
@@ -48,9 +51,9 @@
                             (watchValue)="takeMasterValue($event?.value, component?.item_id)" [defaultValue]="
                             inputForm.controls[component?.item_id].value" 
                             [style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" 
-                            [id]="component?.item_id" [required]="component?.component_setting?.required ? component?.component_setting?.required : false"
-                            [isSubmit]="isSubmit" [allowNew]="component?.component_setting?.allow_new ? component?.component_setting?.allow_new : false" 
-                            [allowDelete]="component?.component_setting?.allow_delete ? component?.component_setting?.allow_delete : false"
+                            [id]="component?.item_id" [required]="!!component?.component_setting?.required"
+                            [isSubmit]="isSubmit" [allowNew]="!!component?.component_setting?.allow_new" 
+                            [allowDelete]="!!component?.component_setting?.allow_delete"
                             [dataSource]="component?.component_setting?.data_source"
                             [guidance]="component?.component_setting?.guidance" [guidanceIcon]="component?.component_setting?.guidance_icon">
                         </ait-autocomplete-master-data>
@@ -64,14 +67,14 @@
                             [rows]="component?.component_setting?.rows ? component?.component_setting?.rows : 1"
                             [width]="component?.component_setting?.width" [fullWidth]="true" [id]="component?.item_id"
                             [defaultValue]="inputForm.controls[component?.item_id].value" [isSubmit]="isSubmit"
-                            (watchValue)="takeInputValue($event, component?.item_id)" [required]="true">
+                            (watchValue)="takeInputValue($event, component?.item_id)" [required]="!!component?.component_setting?.required">
                         </ait-input-text>
   
                         <ait-datepicker
                             *ngIf="component.type === 'date' && component?.component_setting?.from_to !== true"
                             [placeholder]="component?.item_placeholder" [id]="component?.item_id"
                             [label]="component?.item_label" [style]="component?.component_setting?.width"
-                            [isReset]="isReset">
+                            [isReset]="isReset" [required]="!!component?.component_setting?.required">
                         </ait-datepicker>
   
                         <div class="check-form" *ngIf="component.type === 'checkbox'" style="margin-top: 5px;">
@@ -117,6 +120,9 @@
                 </div>
                 <div class="right__side">
                     <ng-container *ngFor="let component of rightSide">
+
+                        <div [ngStyle]="{margin: component?.component_setting?.margin || 0}"></div>
+
                         <ait-input-file *ngIf="component.type === 'file'"
                             (watchValue)="takeFiles($event.value, component?.item_id)"
                             [fileKeys]="inputForm.controls[component?.item_id].value"
@@ -143,9 +149,9 @@
                                 ? [inputForm.controls[component?.item_id].value]
                                 : null
                             " [style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" 
-                            [id]="component?.item_id" [required]="component?.component_setting?.required ? component?.component_setting?.required : false"
-                            [isSubmit]="isSubmit" [allowNew]="component?.component_setting?.allow_new ? component?.component_setting?.allow_new : false" 
-                            [allowDelete]="component?.component_setting?.allow_delete ? component?.component_setting?.allow_delete : false"
+                            [id]="component?.item_id" [required]="!!component?.component_setting?.required"
+                            [isSubmit]="isSubmit" [allowNew]="!!component?.component_setting?.allow_new" 
+                            [allowDelete]="!!component?.component_setting?.allow_delete"
                             [dataSource]="component?.component_setting?.data_source"
                             [guidance]="component?.component_setting?.guidance" [guidanceIcon]="component?.component_setting?.guidance_icon">
                         </ait-autocomplete-master-data>
@@ -158,9 +164,9 @@
                             (watchValue)="takeMasterValue($event?.value, component?.item_id)" [defaultValue]="
                             inputForm.controls[component?.item_id].value" 
                             [style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" 
-                            [id]="component?.item_id" [required]="component?.component_setting?.required ? component?.component_setting?.required : false"
-                            [isSubmit]="isSubmit" [allowNew]="component?.component_setting?.allow_new ? component?.component_setting?.allow_new : false" 
-                            [allowDelete]="component?.component_setting?.allow_delete ? component?.component_setting?.allow_delete : false"
+                            [id]="component?.item_id" [required]="!!component?.component_setting?.required"
+                            [isSubmit]="isSubmit" [allowNew]="!!component?.component_setting?.allow_new" 
+                            [allowDelete]="!!component?.component_setting?.allow_delete"
                             [dataSource]="component?.component_setting?.data_source"
                             [guidance]="component?.component_setting?.guidance" [guidanceIcon]="component?.component_setting?.guidance_icon">
                         </ait-autocomplete-master-data>
@@ -174,14 +180,14 @@
                             [rows]="component?.component_setting?.rows ? component?.component_setting?.rows : 1"
                             [width]="component?.component_setting?.width" [fullWidth]="true" [id]="component?.item_id"
                             [defaultValue]="inputForm.controls[component?.item_id].value" [isSubmit]="isSubmit"
-                            (watchValue)="takeInputValue($event, component?.item_id)" [required]="true">
+                            (watchValue)="takeInputValue($event, component?.item_id)" [required]="!!component?.component_setting?.required">
                         </ait-input-text>
   
                         <datepicker
                             *ngIf="component.type === 'date' && component?.component_setting?.from_to !== true"
                             [placeholder]="component?.item_placeholder" [id]="component?.item_id"
                             [label]="component?.item_label" [style]="component?.component_setting?.width"
-                            [isReset]="isReset">
+                            [isReset]="isReset" [required]="!!component?.component_setting?.required">
                         </datepicker>
   
                         <div class="check-form" *ngIf="component.type === 'checkbox'" style="margin-top: 5px;">
