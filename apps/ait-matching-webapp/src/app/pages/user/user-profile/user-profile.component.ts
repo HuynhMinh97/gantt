@@ -718,7 +718,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       hasBackdrop: true,
       autoFocus: false,
       context: {
-        user_key: key,
       },
     }).onClose.subscribe(async (event) => {
       if (event) {

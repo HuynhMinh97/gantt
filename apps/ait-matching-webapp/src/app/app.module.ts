@@ -9,6 +9,7 @@ import {
   AitChipModule,
   AitGroupInputModule,
   AitTabsModule,
+  AitTocMenuModule,
   AitUiModule,
   rootReducers,
 } from '@ait/ui';
@@ -70,7 +71,7 @@ import { EducationListComponent } from './pages/list/education-list/education-li
 import { CertificateListComponent } from './pages/list/certificate-list/certificate-list.component';
 import { SkillListViewComponent } from './pages/list/skill-list/skill-list-view/skill-list-view.component';
 
-const AIT_UI_MODULES = [AitChipModule, AitTabsModule];
+const AIT_UI_MODULES = [AitChipModule, AitTabsModule, AitTocMenuModule];
 
 const AIT_UI_SERVICES = [AitAuthGuardService, AitAuthScreenService];
 

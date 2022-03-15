@@ -19,6 +19,10 @@ export class UserEducationService extends AitBaseService {
     start_date_to: true,
     description: true,
     del_flag: true,
+    create_at: true,
+    change_at:true,
+    create_by: true,
+    change_by: true,
   };
 
   async findUserEducationByKey(_key?: string) {
@@ -31,6 +35,15 @@ export class UserEducationService extends AitBaseService {
       ref_collection: 'm_school',
       ref_attribute: 'code',
     };
+    if (!condition['create_by']) {
+      condition['create_by'] = {};
+    }
+
+    if (!condition['change_by']) {
+      condition['change_by'] = {};
+    }
+    condition['create_by']['type'] = 'matching';
+    condition['change_by']['type'] = 'matching';
 
     const returnFields = this.returnFields;
     const request = {};

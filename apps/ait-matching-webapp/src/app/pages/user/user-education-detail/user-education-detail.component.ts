@@ -1,32 +1,37 @@
-import { RESULT_STATUS } from '@ait/shared';
-import { AitAppUtils, AitAuthService, AitBaseComponent, AitEnvironmentService, AppState, getSettingLangTime } from '@ait/ui';
+import { UserEducationService } from './../../../services/user-education.service';
+import {
+  AitAuthService,
+  AitBaseComponent,
+  AitEnvironmentService,
+  AppState,
+  getUserSetting,
+} from '@ait/ui';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
-import { NbToastrService, NbLayoutScrollService, NbDialogRef } from '@nebular/theme';
+import { ActivatedRoute } from '@angular/router';
+import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
-import { UserEducationService } from './../../../services/user-education.service';
-import { UserEducationDto } from '../user-education/interface';
-import { MatchingUtils } from '../../../@constants/utils/matching-utils';
+import { isObjectFull, RESULT_STATUS } from '@ait/shared';
+import dayjs from 'dayjs';
 
 @Component({
-  selector: 'ait-user-education-detail',
+  selector: 'ait-certificate-detail',
   templateUrl: './user-education-detail.component.html',
-  styleUrls: ['./user-education-detail.component.scss']
+  styleUrls: ['./user-education-detail.component.scss'],
 })
-export class UserEducationDetailComponent extends AitBaseComponent implements OnInit {
+export class UserEducationDetailComponent
+  extends AitBaseComponent
+  implements OnInit {
+  _key: string;
+  dateFormat: string;
 
-  user_key: any = '';
-  stateUserEducation = {} as UserEducationDto;
-  dateFormat: any;
   constructor(
-    private router: Router,
-    private nbDialogRef: NbDialogRef<UserEducationDetailComponent>,
     public activeRouter: ActivatedRoute,
-    private userEduService: UserEducationService,
-    env: AitEnvironmentService,
+    private userEducationService: UserEducationService,
+
     store: Store<AppState>,
     apollo: Apollo,
+    env: AitEnvironmentService,
     authService: AitAuthService,
     toastrService: NbToastrService,
     layoutScrollService: NbLayoutScrollService
@@ -40,43 +45,41 @@ export class UserEducationDetailComponent extends AitBaseComponent implements On
       layoutScrollService,
       toastrService
     );
-    this.store.pipe(select(getSettingLangTime)).subscribe(setting => {
-      if (setting) {
-        const display = setting?.date_format_display;
-        this.dateFormat = MatchingUtils.getFormatYearMonth(display);
-      }
-    });
-    this.setModulePage({
-      module: 'user',
-      page: 'user_education',
-    });
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationStart) {
-          this.closeDialog(false);
+    store.pipe(select(getUserSetting)).subscribe((setting) => {
+      if (isObjectFull(setting) && setting['date_format_display']) {
+        this.dateFormat = setting['date_format_display'];
       }
     });
   }
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
+    this._key = this.activeRouter.snapshot.paramMap.get('id');
     this.callLoadingApp();
-    if (this.user_key) {
-      await this.userEduService
-        .findUserEducationByKey(this.user_key)
-        .then((r) => {
-          if (r.status === RESULT_STATUS.OK) {
-            const data = r.data[0];
-            this.stateUserEducation = data;
-          }
-        })
+  }
+  getDateFormat(time: number) {
+    if (!time) {
+      return '';
+    } else {
+      return dayjs(time).format(this.dateFormat.toUpperCase() + ' HH:mm');
     }
-    setTimeout(() => {
-      this.cancelLoadingApp();
-    }, 500);
   }
-  close(){
-    this.closeDialog(false);
-  }
-  closeDialog(event: boolean) {
-    this.nbDialogRef.close(event);
-  }
+
+  public find = async (condition: any ) => {
+    const result = await this.userEducationService
+      .findUserEducationByKey(condition._key);
+      const dataForm = {};
+      Object.keys(result.data).forEach((key) => {
+        const value = condition[key];
+        dataForm['data'][key] = value;
+      });
+      dataForm['errors'] = result.errors;
+      dataForm['message'] = result.message;
+      dataForm['numData'] = result.numData;
+      dataForm['numError'] = result.numError;
+      dataForm['status'] = result.status;
+      dataForm['data'] = result.data;
+
+      console.log(dataForm)
+      return dataForm;
+  };
 }

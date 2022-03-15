@@ -121,6 +121,11 @@ export const routes: Routes = [
     component: UserEducationComponent
   },
   {
+    path: 'user-education-detail/:id',
+    canActivate: [AitAuthGuardService],
+    component: UserEducationDetailComponent
+  },
+  {
     path: 'user-language',
     canActivate: [AitAuthGuardService],
     component: UserLanguageComponent
