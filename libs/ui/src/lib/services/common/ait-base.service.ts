@@ -288,7 +288,9 @@ export class AitBaseService implements OnDestroy {
     query.mutation[name]['__args'] = { request };
     // Parse to gql
     const gqlQuery = jsonToGraphQLQuery(query, { pretty: true });
-     console.log(gqlQuery)
+
+    console.log(gqlQuery)
+
     return this.apollo
       .mutate({
         mutation: gql`

@@ -43,6 +43,8 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   @Input() page: string;
   @Input() module: string;
   @Input() public save: (objSave: any) => Promise<any>;
+  @Input() public find: (objFind: any) => Promise<any>;
+  @Input() public delete: (objDelete: any) => Promise<any>;
   inputForm: FormGroup;
   moduleKey: string;
   groupKey: string;
@@ -56,6 +58,7 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   isResetFile = false;
   isClear = false;
   isClearErrors = false;
+  isCopy = false;
   cloneData: any;
   searchComponents: any;
   leftSide: any[] = [];
@@ -90,7 +93,9 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.setupData();
-    if (this._key) {
+    this.isCopy = !!localStorage.getItem('isCopy');
+    localStorage.setItem('isCopy', '');
+    if (this._key && !this.isCopy) {
       this.mode = MODE.EDIT;
     }
   }
@@ -136,7 +141,8 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
             this.setupForm(this.searchComponents);
             this.setupComponent(this.searchComponents);
             if (this._key) {
-              this.inputForm.addControl('_key', new FormControl(null));
+              !this.isCopy &&
+                this.inputForm.addControl('_key', new FormControl(null));
               this.patchDataToForm(resSearch.data || []);
             }
           }
@@ -156,7 +162,9 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   async patchDataToForm(data: any[]) {
     const conditions = {};
     this.cloneData = {};
-    conditions['_key'] = this._key;
+    if (!this.isCopy) {
+      conditions['_key'] = this._key;
+    }
     data.forEach((e) => {
       if (e['search_setting']) {
         const prop = Object.entries(e['search_setting']).reduce(
@@ -166,18 +174,27 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
         conditions[e['item_id']] = prop;
       }
     });
-    const res = await this.renderPageService.findDataByCollection(
-      this.collection,
-      conditions
-    );
-    if (res.data.length > 0) {
-      const value = JSON.parse(res.data[0]['data'] || '[]');
-      this.inputForm.patchValue(value);
+    if (this.find) {
+      const res = await this.find(conditions);
+      const data = res.data[0] as any;
+      this.inputForm.patchValue(data);
       (Object.keys(this.inputForm.controls) || []).forEach((name) => {
         this.cloneData[name] = this.inputForm.controls[name].value;
       });
     } else {
-      this.router.navigate([`/404`]);
+      const res = await this.renderPageService.findDataByCollection(
+        this.collection,
+        conditions
+      );
+      if (res.data.length > 0) {
+        const value = JSON.parse(res.data[0]['data'] || '[]');
+        this.inputForm.patchValue(value);
+        (Object.keys(this.inputForm.controls) || []).forEach((name) => {
+          this.cloneData[name] = this.inputForm.controls[name].value;
+        });
+      } else {
+        this.router.navigate([`/404`]);
+      }
     }
   }
 
@@ -234,7 +251,12 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
           group[component.item_id + '_from'] = new FormControl();
           group[component.item_id + '_to'] = new FormControl();
         } else {
-          group[component.item_id] = new FormControl(null, Validators.required);
+          const isRequired = !!component.component_setting?.required;
+          if (isRequired) {
+            group[component.item_id] = new FormControl(null, Validators.required);
+          } else {
+            group[component.item_id] = new FormControl(null);
+          }
         }
 
         if (component['component_setting']?.is_multi_language) {
@@ -322,6 +344,11 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
     }
   }
 
+  copy() {
+    localStorage.setItem('isCopy', 'true');
+    window.location.reload();
+  }
+
   reset() {
     this.inputForm.patchValue({ ...this.cloneData });
   }
@@ -345,16 +372,26 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   async onDelete() {
     this.callLoadingApp();
     try {
-      await this.renderPageService
-        .remove(this.collection, this._key)
-        .then((res) => {
-          if (res.status === RESULT_STATUS.OK) {
-            this.showToastr('', this.getMsg('I0003'));
-            history.back();
-          } else {
-            this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-          }
-        });
+      if (this.delete) {
+        const res = await this.delete(this._key);
+        if (res.status === RESULT_STATUS.OK) {
+          this.showToastr('', this.getMsg('I0003'));
+          history.back();
+        } else {
+          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+        }
+      } else {
+        await this.renderPageService
+          .remove(this.collection, this._key)
+          .then((res) => {
+            if (res.status === RESULT_STATUS.OK) {
+              this.showToastr('', this.getMsg('I0003'));
+              history.back();
+            } else {
+              this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+            }
+          });
+      }
     } catch {
       this.cancelLoadingApp();
     } finally {
@@ -377,11 +414,19 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
       try {
         const objSave = {};
         const formValue = this.inputForm.value;
+        this.isCopy && delete formValue[KEYS.KEY];
         for (const prop in formValue) {
           if (isObjectFull(formValue[prop])) {
             if (isArrayFull(formValue[prop])) {
               const keyArray = [];
-              formValue[prop].forEach((e: KeyValueDto) => keyArray.push(e[KEYS.KEY]));
+              formValue[prop].forEach((e: KeyValueDto | string) => {
+                if (typeof e === 'string') {
+                  keyArray.push(e);
+                } else {
+                  keyArray.push(e[KEYS.KEY])
+                }
+              }
+              );
               objSave[prop] = keyArray;
             } else {
               objSave[prop] = formValue[prop][KEYS.KEY];
@@ -450,8 +495,8 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   getDefaultValue(form: string, maxItem: any): any {
     if (maxItem === 1) {
       return this.inputForm.controls[form].value
-      ? [this.inputForm.controls[form].value]
-      : null;
+        ? [this.inputForm.controls[form].value]
+        : null;
     } else {
       return this.inputForm.controls[form].value;
     }

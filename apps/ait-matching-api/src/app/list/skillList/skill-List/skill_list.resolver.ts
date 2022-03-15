@@ -13,14 +13,6 @@ export class SkillListResolver extends AitBaseService {
     return this.find(request, user);
   }
 
-  @Mutation(() => SkillListResponse, { name: 'saveSkill' })
-  saveSkill(
-    @AitCtxUser() user: SysUser,
-    @Args('request', { type: () => SkillListRequest }) request: SkillListRequest
-  ) {
-    return this.save(request, user);
-  }
-
   @Mutation(() => SkillListResponse, { name: 'removeSkillByKey' })
   removeSkillByKey(
     @AitCtxUser() user: SysUser,
