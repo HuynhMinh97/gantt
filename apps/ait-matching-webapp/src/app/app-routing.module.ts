@@ -111,6 +111,11 @@ export const routes: Routes = [
     component: UserExperienceComponent
   },
   {
+    path: 'user-experience-detail/:id',
+    canActivate: [AitAuthGuardService],
+    component: UserExperienceDetailComponent
+  },
+  {
     path: 'user-education',
     canActivate: [AitAuthGuardService],
     component: UserEducationComponent

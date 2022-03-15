@@ -13,7 +13,7 @@ export class UserExperienceInfoEntity extends BaseEntity {
     location?: KeyValueEntity;
 
     @Field(() => Boolean, { nullable: true })
-    is_working?: boolean;
+    curent_work?: boolean;
 
     @Field(() => KeyValueEntity, { nullable: true })
     employee_type?: KeyValueEntity;

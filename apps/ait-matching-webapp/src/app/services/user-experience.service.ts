@@ -27,13 +27,26 @@ export class UserExperienceService extends AitBaseService {
     start_date_from: true,
     start_date_to: true,
     description: true,
-    del_flag: true
+    del_flag: true,
+    create_at: true,
+    create_by: true,
+    change_at: true,
+    change_by: true
   };
 
   async findUserExperienceByKey(_key?: string) {
     const condition: any = {
       _key: _key,
     };
+    if (!condition['create_by']) {
+      condition['create_by'] = {};
+    }
+
+    if (!condition['change_by']) {
+      condition['change_by'] = {};
+    }
+    condition['create_by']['type'] = 'matching';
+    condition['change_by']['type'] = 'matching';
     const specialFields = ['location', 'employee_type'];
 
     specialFields.forEach((item) => {

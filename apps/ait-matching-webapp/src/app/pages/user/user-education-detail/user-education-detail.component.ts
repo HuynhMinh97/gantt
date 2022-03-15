@@ -67,19 +67,31 @@ export class UserEducationDetailComponent
   public find = async (condition: any ) => {
     const result = await this.userEducationService
       .findUserEducationByKey(condition._key);
-      const dataForm = {};
-      Object.keys(result.data).forEach((key) => {
-        const value = condition[key];
-        dataForm['data'][key] = value;
+      const dataForm = {
+        data : []
+      };
+      
+      dataForm['data'][0]={};
+      Object.keys(result.data[0]).forEach((key) => {
+        if(key === 'school') {
+          const value = result.data[0][key].value;
+        dataForm['data'][0][key] = value;
+        } else {
+          if(key === 'change_at' || key === 'create_at') {
+            const value = result.data[0][key];
+            dataForm['data'][0][key] = this.getDateFormat(value);
+          }
+          else {
+            const value = result.data[0][key];
+            dataForm['data'][0][key] = value;
+          }
+        }
       });
       dataForm['errors'] = result.errors;
       dataForm['message'] = result.message;
       dataForm['numData'] = result.numData;
       dataForm['numError'] = result.numError;
       dataForm['status'] = result.status;
-      dataForm['data'] = result.data;
-
-      console.log(dataForm)
       return dataForm;
   };
 }
