@@ -31,7 +31,7 @@
                             [class]="component?.component_setting?.class"
                             [maxItem]="component?.component_setting?.max_item" [isReset]="isReset"
                             [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
-                            (watchValue)="takeMasterValue($event?.value, component?.item_id)" [defaultValue]="
+                            (watchValue)="takeMaster($event?.value, component?.item_id, 1)" [defaultValue]="
                             inputForm.controls[component?.item_id].value
                                 ? [inputForm.controls[component?.item_id].value]
                                 : null
@@ -48,7 +48,7 @@
                             [class]="component?.component_setting?.class"
                             [maxItem]="component?.component_setting?.max_item" [isReset]="isReset"
                             [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
-                            (watchValue)="takeMasterValue($event?.value, component?.item_id)" [defaultValue]="
+                            (watchValue)="takeMaster($event?.value, component?.item_id, 0)" [defaultValue]="
                             inputForm.controls[component?.item_id].value" 
                             [style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" 
                             [id]="component?.item_id" [required]="!!component?.component_setting?.required"
@@ -144,7 +144,7 @@
                             [class]="component?.component_setting?.class"
                             [maxItem]="component?.component_setting?.max_item" [isReset]="isReset"
                             [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
-                            (watchValue)="takeMasterValue($event?.value, component?.item_id)" [defaultValue]="
+                            (watchValue)="takeMaster($event?.value, component?.item_id, 1)" [defaultValue]="
                             inputForm.controls[component?.item_id].value
                                 ? [inputForm.controls[component?.item_id].value]
                                 : null
@@ -161,7 +161,7 @@
                             [class]="component?.component_setting?.class"
                             [maxItem]="component?.component_setting?.max_item" [isReset]="isReset"
                             [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
-                            (watchValue)="takeMasterValue($event?.value, component?.item_id)" [defaultValue]="
+                            (watchValue)="takeMaster($event?.value, component?.item_id, 0)" [defaultValue]="
                             inputForm.controls[component?.item_id].value" 
                             [style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" 
                             [id]="component?.item_id" [required]="!!component?.component_setting?.required"
