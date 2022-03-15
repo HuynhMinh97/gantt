@@ -31,7 +31,7 @@
                             [class]="component?.component_setting?.class"
                             [maxItem]="component?.component_setting?.max_item" [isReset]="isReset"
                             [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
-                            (watchValue)="takeMasterValue($event?.value, component?.item_id)" [defaultValue]="
+                            (watchValue)="takeMaster($event?.value, component?.item_id, 1)" [defaultValue]="
                             inputForm.controls[component?.item_id].value
                                 ? [inputForm.controls[component?.item_id].value]
                                 : null
@@ -48,7 +48,7 @@
                             [class]="component?.component_setting?.class"
                             [maxItem]="component?.component_setting?.max_item" [isReset]="isReset"
                             [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
-                            (watchValue)="takeMasterValue($event?.value, component?.item_id)" [defaultValue]="
+                            (watchValue)="takeMaster($event?.value, component?.item_id, 0)" [defaultValue]="
                             inputForm.controls[component?.item_id].value" 
                             [style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" 
                             [id]="component?.item_id" [required]="!!component?.component_setting?.required"
@@ -73,7 +73,7 @@
                         <ait-datepicker
                             *ngIf="component.type === 'date' && component?.component_setting?.from_to !== true"
                             [placeholder]="component?.item_placeholder" [id]="component?.item_id"
-                            [label]="component?.item_label" [style]="component?.component_setting?.width"
+                            [label]="component?.item_label" [style]="{ width: component?.component_setting?.width }"
                             [isReset]="isReset" [required]="!!component?.component_setting?.required">
                         </ait-datepicker>
   
@@ -144,7 +144,7 @@
                             [class]="component?.component_setting?.class"
                             [maxItem]="component?.component_setting?.max_item" [isReset]="isReset"
                             [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
-                            (watchValue)="takeMasterValue($event?.value, component?.item_id)" [defaultValue]="
+                            (watchValue)="takeMaster($event?.value, component?.item_id, 1)" [defaultValue]="
                             inputForm.controls[component?.item_id].value
                                 ? [inputForm.controls[component?.item_id].value]
                                 : null
@@ -161,7 +161,7 @@
                             [class]="component?.component_setting?.class"
                             [maxItem]="component?.component_setting?.max_item" [isReset]="isReset"
                             [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
-                            (watchValue)="takeMasterValue($event?.value, component?.item_id)" [defaultValue]="
+                            (watchValue)="takeMaster($event?.value, component?.item_id, 0)" [defaultValue]="
                             inputForm.controls[component?.item_id].value" 
                             [style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }" 
                             [id]="component?.item_id" [required]="!!component?.component_setting?.required"
@@ -183,12 +183,12 @@
                             (watchValue)="takeInputValue($event, component?.item_id)" [required]="!!component?.component_setting?.required">
                         </ait-input-text>
   
-                        <datepicker
+                        <ait-datepicker
                             *ngIf="component.type === 'date' && component?.component_setting?.from_to !== true"
                             [placeholder]="component?.item_placeholder" [id]="component?.item_id"
-                            [label]="component?.item_label" [style]="component?.component_setting?.width"
+                            [label]="component?.item_label" [style]="{ width: component?.component_setting?.width }"
                             [isReset]="isReset" [required]="!!component?.component_setting?.required">
-                        </datepicker>
+                        </ait-datepicker>
   
                         <div class="check-form" *ngIf="component.type === 'checkbox'" style="margin-top: 5px;">
                             <nb-checkbox
