@@ -243,27 +243,27 @@
         <div class="sticky">
             <div class="action-row">
                 <div class="block">
-                    <ait-button *ngIf="mode === 'EDIT'" [id]="'remove'" [width]="'200px'" [title]="'delete'"
+                    <ait-button *ngIf="mode === 'EDIT'" [id]="'remove'" [width]="'150px'" [title]="'delete'"
                         [isDefault]="true" (click)="remove()">
                     </ait-button>
   
-                    <ait-button *ngIf="mode === 'EDIT'" [id]="'copy'" [width]="'200px'" [title]="'copy'"
-                        [isDefault]="true">
+                    <ait-button *ngIf="mode === 'EDIT'" [id]="'copy'" [width]="'150px'" [title]="'copy'"
+                        [isDefault]="true" (click)="copy()">
                     </ait-button>
   
-                    <ait-button [id]="'clear'" [width]="'200px'" [title]="'clear'" [isDefault]="true"
+                    <ait-button [id]="'clear'" [width]="'150px'" [title]="'clear'" [isDefault]="true"
                         (click)="clear()">
                     </ait-button>
   
-                    <ait-button *ngIf="mode === 'EDIT'" [id]="'reset'" [width]="'200px'" [title]="'reset'"
+                    <ait-button *ngIf="mode === 'EDIT'" [id]="'reset'" [width]="'150px'" [title]="'reset'"
                         [isDefault]="true" (click)="reset()">
                     </ait-button>
   
-                    <ait-button *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'" [id]="'save'" [width]="'200px'"
+                    <ait-button *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'" [id]="'save'" [width]="'150px'"
                         [title]="'save'" [isDefault]="true"(click)="onSave()">
                     </ait-button>
   
-                    <ait-button *ngIf="!isChanged && mode === 'EDIT'" [id]="'disabled'" [width]="'200px'" [title]="'save'"
+                    <ait-button *ngIf="!isChanged && mode === 'EDIT'" [id]="'disabled'" [width]="'150px'" [title]="'save'"
                         [style]="'disabled'">
                     </ait-button>
                 </div>
