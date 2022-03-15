@@ -419,8 +419,13 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
           if (isObjectFull(formValue[prop])) {
             if (isArrayFull(formValue[prop])) {
               const keyArray = [];
-              formValue[prop].forEach((e: KeyValueDto) =>
-                keyArray.push(e[KEYS.KEY])
+              formValue[prop].forEach((e: KeyValueDto | string) => {
+                if (typeof e === 'string') {
+                  keyArray.push(e);
+                } else {
+                  keyArray.push(e[KEYS.KEY])
+                }
+              }
               );
               objSave[prop] = keyArray;
             } else {
