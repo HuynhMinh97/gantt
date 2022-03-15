@@ -377,9 +377,9 @@ export class AitAutoCompleteMasterDataComponent
           }
         }
 
-        if (key === 'dataSource') {
+        if (key === 'dataSource' && this.dataSource) {
           const dataMaster = this.dataSource;
-          const r = dataMaster.map((r) => ({
+          const r = (dataMaster || []).map((r) => ({
             code: r.code || r._key,
             value: r[this.targetValue] || r?.value,
             _key: r.code || r._key,
