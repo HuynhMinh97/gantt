@@ -563,4 +563,9 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     // this.nbDialogRef.close(event);
   }
 
+  public save = async (objSave = {}) => {
+    console.log(objSave);
+    
+  }
+
 }
