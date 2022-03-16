@@ -6,7 +6,7 @@ import { AitBaseService } from '@ait/ui';
   providedIn: 'root'
 })
 export class UserCourseService extends AitBaseService {
-  saveCourse = async (data: any[]) => {
+  saveCourse = async (data: any) => {
     return await this.mutation('saveCourse', 'user_course', data, { _key: true });
   }
   

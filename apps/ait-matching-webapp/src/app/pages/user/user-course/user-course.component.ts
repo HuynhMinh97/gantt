@@ -497,4 +497,20 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
     }
     return title;
   }
+
+  public save = async (data = {}) => {
+    try {
+      data['user_id']= this.user_id;
+      return await this.userCourseService.saveCourse(data)
+      .then(async (res) => {
+        if (res?.status === RESULT_STATUS.OK) {
+          return res;
+        }
+      })
+    } catch (error) {
+      console.log(error);
+      
+    }
+    
+  }
 }
