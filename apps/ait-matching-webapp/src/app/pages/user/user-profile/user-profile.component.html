@@ -1,3 +1,4 @@
+<ait-toc-menu [id]="'user_profile'"></ait-toc-menu>
 <div class="user_profile_wrapper" id="user_profile">
   <div class="content__card" *ngIf="isload">
     <div
@@ -14,15 +15,26 @@
         [fontsize]="'36px'"
       ></ait-text-gradient>
     </div>
+
+    <!-- <ait-card-content
+    tabindex="2"
+    [isOpen]="true"
+    [isStart]="true"
+    [id]="'user_profile'"
+    class="content"
+    [label]="'basic_infomation' | translate"
+    [disableHeader]="false"
+    padding="'10px'"
+  ></ait-card-content> -->
+  
     <!-- profile -->
     <div style="position: relative" class="profile">
       <card-content
         tabindex="2"
-        [id]="'company_detail'"
-        style="outline-color: #10529d"
+        [id]="'user_profile'"
         class="content_card"
-        style="display: flex; justify-content: center"
         [label]="'basic information' | translate"
+        style="display: flex; justify-content: center"
         [styleLabel]="{ 'font-size': '26px' }"
         (onClickButtonHeader)="nextPage('user-onboarding/', user_id)"
         [actionBtn]="isMyUserProfile ? actionBtnProfile : ''"
@@ -147,13 +159,13 @@
           [minWidth]="'120px'"
           [height]="'26px'"
           [title]="'reorder skills'"
-          [id]="'openReorderSkill'"
+          [id]="'reorder-skills'"
           [isDefault]="'true'"
         ></ait-button>
       </div>
       <card-content
         tabindex="2"
-        [id]="'company_detail'"
+        [id]="'user-profile'"
         style="outline-color: #10529d"
         class="content_card"
         style="display: flex; justify-content: center"
@@ -209,7 +221,7 @@
     <div class="project">
       <card-content
         tabindex="2"
-        [id]="'project_detail'"
+        [id]="'user-profile'"
         style="outline-color: #10529d"
         class="content_card"
         style="display: flex; justify-content: center"
@@ -386,7 +398,7 @@
       <card-content
         tabindex="2"
         [isOpen]="false"
-        [id]="'experience_detail'"
+        [id]="'user-profile'"
         style="outline-color: #10529d"
         class="content_card"
         style="display: flex; justify-content: center"
@@ -520,7 +532,7 @@
                     ></nb-icon>
                   </a>
                   <a
-                    (click)="openExperiencedetail(experience?._key)"
+                    (click)="nextPage('user-experience-detail', experience?._key)"
                     [id]="'experience-' + experience?._key"
                     *ngIf="!isMyUserProfile"
                   >
@@ -539,7 +551,7 @@
     <div class="certificate">
       <card-content
         tabindex="2"
-        [id]="'certificate_detail'"
+        [id]="'user-profile'"
         style="outline-color: #10529d"
         class="content_card"
         style="display: flex; justify-content: center"
@@ -648,7 +660,7 @@
       <card-content
         [isOpen]="false"
         tabindex="2"
-        [id]="'course_detail'"
+        [id]="'user-profile'"
         style="outline-color: #10529d"
         class="content_card"
         style="display: flex; justify-content: center"
@@ -754,7 +766,7 @@
       <card-content
         tabindex="2"
         [isOpen]="false"
-        [id]="'education_detail'"
+        [id]="'user-profile'"
         style="outline-color: #10529d"
         class="content_card"
         style="display: flex; justify-content: center"
@@ -832,7 +844,7 @@
                   style="top: 18px"
                 >
                   <a
-                    (click)="nextPage('user-education/', user_id)"
+                    (click)="nextPage('user-education/', education?._key)"
                     [id]="'education-' + education?._key"
                     *ngIf="isMyUserProfile"
                   >
@@ -843,7 +855,7 @@
                     ></nb-icon>
                   </a>
                   <a
-                    (click)="openEducationDetail(education?._key)"
+                    (click)="nextPage('user-education-detail/', education?._key)"
                     [id]="'education-' + education?._key"
                     *ngIf="!isMyUserProfile"
                   >
@@ -863,7 +875,7 @@
       <card-content
         tabindex="2"
         [isOpen]="false"
-        [id]="'language_detail'"
+        [id]="'user-profile'"
         style="outline-color: #10529d"
         class="content_card"
         style="display: flex; justify-content: center"
@@ -934,7 +946,7 @@
                     ></nb-icon>
                   </a>
                   <a
-                    (click)="openLanguageDetail(language?._key)"
+                    (click)="nextPage('user-language-detail/', language?._key)"
                     [id]="'language-' + language?._key"
                     *ngIf="!isMyUserProfile"
                   >

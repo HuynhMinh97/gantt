@@ -469,9 +469,14 @@ ul .timeline {
   border: 1px solid #aaaab1;
   box-sizing: border-box;
   border-radius: 16px;
-  padding: 8px;
+  // padding: 8px;
+  width: 40px;
+  height: 40px;
   border-radius: 49px;
   margin-right: 30px;
+  display: flex;
+  justify-content:center;
+  align-items: center;
 }
 .languagea-img {
   width: 50px;
