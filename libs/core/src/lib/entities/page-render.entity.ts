@@ -1,6 +1,7 @@
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { BaseEntity } from './base.entity';
+import { KeyValueEntity } from './key-value.entity';
 
 @ObjectType()
 export class ButtonEntity {
@@ -77,6 +78,9 @@ export class SysPageEntity extends SysGroupEntity {
   @Field(() => String, { nullable: true })
   type: string;
 
+  @Field(() => Boolean, { nullable: true })
+  allow_new: boolean;
+
   @Field(() => RouterEntity, { nullable: true })
   router: RouterEntity;
 
@@ -91,9 +95,36 @@ export class ComponentSettingEntity {
   
   @Field(() => Int, { nullable: true })
   max_item: number;
+
+  @Field(() => Int, { nullable: true })
+  max_file: number;
+
+  @Field(() => Int, { nullable: true })
+  rows: number;
   
   @Field(() => String, { nullable: true })
   width: string;
+
+  @Field(() => String, { nullable: true })
+  title: string;
+
+  @Field(() => String, { nullable: true })
+  margin: string;
+
+  @Field(() => String, { nullable: true })
+  guidance_icon: string;
+
+  @Field(() => String, { nullable: true })
+  file_type: string;
+
+  @Field(() => [KeyValueEntity], { nullable: true })
+  data_source: KeyValueEntity[];
+
+  @Field(() => String, { nullable: true })
+  guidance: string;
+
+  @Field(() => Boolean, { nullable: true })
+  has_status: boolean;
 
   @Field(() => Boolean, { nullable: true })
   required: boolean;
@@ -106,6 +137,12 @@ export class ComponentSettingEntity {
   
   @Field(() => String, { nullable: true })
   class: string;
+
+  @Field(() => Boolean, { nullable: true })
+  allow_new: boolean;
+
+  @Field(() => Boolean, { nullable: true })
+  allow_delete: boolean;
 }
 
 @ObjectType()

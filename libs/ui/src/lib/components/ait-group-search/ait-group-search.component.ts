@@ -40,8 +40,7 @@ import {
 import { AppState } from '../../state/selectors';
 import { AitTableCellComponent } from '../ait-table-cell/ait-table-cell.component';
 import { AitBaseComponent } from '../base.component';
-import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
-import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
+import { NgxCsvParser } from 'ngx-csv-parser';
 import { AitTableButtonComponent } from '../ait-table-button/ait-table-button.component';
 import { AitConfirmDialogComponent } from '../ait-confirm-dialog/ait-confirm-dialog.component';
 
@@ -85,6 +84,7 @@ export class AitGroupSearchComponent
   isChangeAtError = false;
   isValidPage = true;
   done = false;
+  allowNew = false;
   createAtErrorMessage = '';
   changeAtErrorMessage = '';
   pageDetail = '';
@@ -169,6 +169,7 @@ export class AitGroupSearchComponent
         this.moduleKey = resModule.data[0]?.code || '';
         this.pageKey = resPage.data[0]?.code || '';
         this.pageTitle = resPage.data[0]?.name || '';
+        this.allowNew = !!resPage.data[0]?.allow_new;
 
         this.pageRouter = resPage.data[0]?.router || null;
         this.pageButton = resPage.data[0]?.button || null;
@@ -194,6 +195,9 @@ export class AitGroupSearchComponent
             page: this.pageKey,
             group: this.groupKey,
           });
+
+          console.log(resResult);
+          
           if (
             resSearch.status === RESULT_STATUS.OK &&
             resSearch?.data?.length > 0
@@ -228,6 +232,12 @@ export class AitGroupSearchComponent
   navigateTo404() {
     this.cancelLoadingApp();
     this.router.navigate([`/404`]);
+  }
+
+  create() {
+    if (this.pageRouter) {
+      this.router.navigate([`${this.pageRouter?.input || ''}`]);
+    }
   }
 
   detail(data: any) {
@@ -323,7 +333,7 @@ export class AitGroupSearchComponent
           );
         },
       };
-      if(!diplay){
+      if (!diplay) {
         columns.forEach((col: any) => {
           const obj = {
             type: 'custom',
@@ -339,15 +349,15 @@ export class AitGroupSearchComponent
             },
           };
           this.hearder.push(col.name);
-          obj['title'] = col.title || '';
+          obj['title'] = this.translateService.translate(col.title || '');
           this.settings['columns'][col['name']] = obj;
           this.columnTable.push({ _key: col.name, value: col.title });
         });
         this.setupTable();
-      }else{
+      } else {
         // this.callLoadingApp();
         columns.forEach((col: any) => {
-          if(diplay.find(element => element._key == col.name)){
+          if (diplay.find(element => element._key == col.name)) {
             const obj = {
               type: 'custom',
               renderComponent: AitTableCellComponent,
@@ -365,7 +375,7 @@ export class AitGroupSearchComponent
             this.settings['columns'][col['name']] = obj;
           }
         });
-        if(diplay.length == 0){
+        if (diplay.length == 0) {
           delete this.settings['columns']['_key'];
           delete this.settings['selectMode'];
         }
@@ -381,6 +391,7 @@ export class AitGroupSearchComponent
       this.cancelLoadingApp();
     }
   }
+
   async setupTable() {
     try {
       const conditions = this.getSearchCondition();
@@ -389,7 +400,6 @@ export class AitGroupSearchComponent
         const data = res.data as any[];
         this.dataTable = data;
         this.source = new LocalDataSource(data);
-        console.log(this.source);
         this.done = true;
       } else {
         const res = await this.renderPageService.findAllDataByCollection(
@@ -725,5 +735,8 @@ export class AitGroupSearchComponent
     } catch {
     }
   }
-  
+
+  toggleCheckbox(checked: boolean, form: string): void {
+    this.searchForm.controls[form].setValue(checked);
+  }
 }

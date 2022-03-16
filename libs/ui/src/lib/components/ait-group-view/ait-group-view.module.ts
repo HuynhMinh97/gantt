@@ -13,6 +13,7 @@ import { AitButtonModule } from '../ait-button/ait-button.module';
 import { AitCardContentModule } from '../ait-card-content/ait-card-content.module';
 import { NB_MODULES } from '../../@theme/theme.module';
 import { AitOutputTextModule } from '../ait-output-text/ait-output-text.module';
+import { AitOutputFileModule } from '../ait-output-file/ait-output-file.module';
 
 
 
@@ -33,6 +34,7 @@ import { AitOutputTextModule } from '../ait-output-text/ait-output-text.module';
     AitButtonModule,
     AitCardContentModule,
     AitOutputTextModule,
+    AitOutputFileModule,
     ...NB_MODULES,
   ],
   exports: [

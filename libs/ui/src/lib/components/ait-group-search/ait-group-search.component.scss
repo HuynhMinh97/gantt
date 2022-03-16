@@ -259,3 +259,35 @@
     }
   }
 }
+
+.check-form {
+  display: flex;
+  margin-top: 0px;
+  label {
+      border: 2px solid white;
+      border-radius: 2px;
+  }
+  .pcontent {
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 24px;
+      color: #8f9bb3;
+      margin-left: 6px !important;
+      margin-bottom: 0px;
+  }
+}
+
+.check-form {
+  outline-color: #10529D !important;
+}
+
+
+:host ::ng-deep .check-form nb-checkbox.status-basic .custom-checkbox.checked {
+  background-color: #0B3F87 !important;
+  border-color: #082F71 !important;
+}
+
+:host ::ng-deep .check-form nb-checkbox.status-basic .custom-checkbox {
+  background: #fff !important;
+  border-color: #8f9bb3 !important;
+}

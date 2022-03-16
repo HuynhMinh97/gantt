@@ -2,6 +2,7 @@ import { Field, InputType, Int, OmitType } from '@nestjs/graphql';
 import { BaseDto } from './base.dto';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { ConditionDto } from './condition.dto';
+import { KeyValueDto } from './key-value.dto';
 @InputType()
 export class SysGroupDto extends BaseDto {
   @Field(() => String, { nullable: true })
@@ -42,6 +43,9 @@ export class SysPageDto extends SysModuleDto {
 
   @Field(() => String, { nullable: true })
   type: string;
+
+  @Field(() => Boolean, { nullable: true })
+  allow_new: boolean;
 }
 
 @InputType()
@@ -52,8 +56,35 @@ export class ComponentSettingDto {
   @Field(() => Int, { nullable: true })
   max_item: number;
 
+  @Field(() => Int, { nullable: true })
+  max_file: number;
+
+  @Field(() => Int, { nullable: true })
+  rows: number;
+
   @Field(() => String, { nullable: true })
   width: string;
+
+  @Field(() => String, { nullable: true })
+  title: string;
+
+  @Field(() => String, { nullable: true })
+  margin: string;
+
+  @Field(() => String, { nullable: true })
+  guidance_icon: string;
+
+  @Field(() => String, { nullable: true })
+  file_type: string;
+
+  @Field(() => [KeyValueDto], { nullable: true })
+  data_source: KeyValueDto[];
+
+  @Field(() => String, { nullable: true })
+  guidance: string;
+
+  @Field(() => Boolean, { nullable: true })
+  has_status: boolean;
 
   @Field(() => Boolean, { nullable: true })
   required: boolean;
@@ -63,6 +94,12 @@ export class ComponentSettingDto {
 
   @Field(() => Boolean, { nullable: true })
   is_multi_language: boolean;
+
+  @Field(() => Boolean, { nullable: true })
+  allow_new: boolean;
+
+  @Field(() => Boolean, { nullable: true })
+  allow_delete: boolean;
 }
 
 @InputType()

@@ -4,7 +4,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { NbSidebarService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
-import { APP_TITLE } from '../../../@constant';
+import { APP_HEADER, APP_TITLE } from '../../../@constant';
 import { AitBaseComponent } from '../../../components/base.component';
 import {
   AitAuthService,
@@ -60,6 +60,14 @@ export class AitCommonLayoutComponent extends AitBaseComponent {
       this.environment?.COMMON?.VERSION
     );
   };
+
+  getHeader = () => {
+    return (
+      this.translateService.translate(
+        this.environment?.COMMON?.HEADER || APP_HEADER
+      )
+    )
+  }
 
   navigateHome = () => this.router.navigateByUrl('');
 

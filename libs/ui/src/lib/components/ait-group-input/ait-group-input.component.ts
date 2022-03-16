@@ -42,6 +42,9 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   @Input() _key: string;
   @Input() page: string;
   @Input() module: string;
+  @Input() public save: (objSave: any) => Promise<any>;
+  @Input() public find: (objFind: any) => Promise<any>;
+  @Input() public delete: (objDelete: any) => Promise<any>;
   inputForm: FormGroup;
   moduleKey: string;
   groupKey: string;
@@ -52,11 +55,16 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   isSubmit = false;
   isChanged = false;
   isDialogOpen = false;
+  isResetFile = false;
+  isClear = false;
+  isClearErrors = false;
+  isCopy = false;
   cloneData: any;
   searchComponents: any;
   leftSide: any[] = [];
   rightSide: any[] = [];
   multiLang: string[] = [];
+  pageTitle = '';
   constructor(
     private renderPageService: AitRenderPageService,
     public router: Router,
@@ -85,7 +93,9 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.setupData();
-    if (this._key) {
+    this.isCopy = !!localStorage.getItem('isCopy');
+    localStorage.setItem('isCopy', '');
+    if (this._key && !this.isCopy) {
       this.mode = MODE.EDIT;
     }
   }
@@ -103,16 +113,18 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
         resModule.status === RESULT_STATUS.OK &&
         resPage.status === RESULT_STATUS.OK
       ) {
-        this.moduleKey = resModule.data[0]?._key || '';
-        this.pageKey = resPage.data[0]?._key || '';
+        this.moduleKey = resModule.data[0]?.code || '';
+        this.pageKey = resPage.data[0]?.code || '';
+        this.pageTitle = resPage.data[0]?.name || '';
 
         const resGroup = await this.renderPageService.findGroup({
           module: this.moduleKey,
           page: this.pageKey,
           type: 'input',
         });
+
         if (resGroup.status === RESULT_STATUS.OK) {
-          this.groupKey = resGroup.data[0]?._key || '';
+          this.groupKey = resGroup.data[0]?.code || '';
           this.collection = resGroup.data[0]?.collection || '';
 
           const resSearch = await this.renderPageService.findSysInput({
@@ -129,7 +141,8 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
             this.setupForm(this.searchComponents);
             this.setupComponent(this.searchComponents);
             if (this._key) {
-              this.inputForm.addControl('_key', new FormControl(null));
+              !this.isCopy &&
+                this.inputForm.addControl('_key', new FormControl(null));
               this.patchDataToForm(resSearch.data || []);
             }
           }
@@ -149,7 +162,9 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   async patchDataToForm(data: any[]) {
     const conditions = {};
     this.cloneData = {};
-    conditions['_key'] = this._key;
+    if (!this.isCopy) {
+      conditions['_key'] = this._key;
+    }
     data.forEach((e) => {
       if (e['search_setting']) {
         const prop = Object.entries(e['search_setting']).reduce(
@@ -159,33 +174,70 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
         conditions[e['item_id']] = prop;
       }
     });
-    const res = await this.renderPageService.findDataByCollection(
-      this.collection,
-      conditions
-    );
-    if (res.data.length > 0) {
-      const value = JSON.parse(res.data[0]['data'] || '[]');
-      this.inputForm.patchValue(value);
+    if (this.find) {
+      const res = await this.find(conditions);
+      const data = res.data[0] as any;
+      this.inputForm.patchValue(data);
       (Object.keys(this.inputForm.controls) || []).forEach((name) => {
         this.cloneData[name] = this.inputForm.controls[name].value;
       });
     } else {
-      this.router.navigate([`/404`]);
+      const res = await this.renderPageService.findDataByCollection(
+        this.collection,
+        conditions
+      );
+      if (res.data.length > 0) {
+        const value = JSON.parse(res.data[0]['data'] || '[]');
+        this.inputForm.patchValue(value);
+        (Object.keys(this.inputForm.controls) || []).forEach((name) => {
+          this.cloneData[name] = this.inputForm.controls[name].value;
+        });
+      } else {
+        this.router.navigate([`/404`]);
+      }
     }
   }
 
   setupComponent(components: any[]) {
-    const leftSide = [];
-    const rightSide = [];
-    components.forEach((component) => {
-      if (component.col_no === 1) {
-        leftSide.push(component);
-      } else {
-        rightSide.push(component);
+    try {
+      let leftSide = [];
+      let rightSide = [];
+      components.forEach((component) => {
+        if (component.col_no === 1) {
+          leftSide.push(component);
+        } else {
+          rightSide.push(component);
+        }
+      });
+      leftSide = leftSide.sort((a, b) => a.row_no - b.row_no);
+      rightSide = rightSide.sort((a, b) => a.row_no - b.row_no);
+
+      const leftSideIndex = leftSide[leftSide.length - 1]?.row_no;
+      const rightSideIndex = rightSide[rightSide.length - 1]?.row_no;
+      try {
+        [...Array(+leftSideIndex)].forEach((e, i) => {
+          const item = leftSide.find((m) => m.row_no == i + 1);
+          if (item) {
+            this.leftSide.push(item);
+          } else {
+            this.leftSide.push({ type: 'space' });
+          }
+        });
+
+        [...Array(+rightSideIndex)].forEach((e, i) => {
+          const item = rightSide.find((m) => m.row_no == i + 1);
+          if (item) {
+            this.rightSide.push(item);
+          } else {
+            this.rightSide.push({ type: 'space' });
+          }
+        });
+      } catch (e) {
+        console.error(e);
       }
-    });
-    this.leftSide = leftSide.sort((a, b) => a.row_no - b.row_no);
-    this.rightSide = rightSide.sort((a, b) => a.row_no - b.row_no);
+    } catch {
+      this.cancelLoadingApp();
+    }
   }
 
   setupForm(components: any[]) {
@@ -199,7 +251,12 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
           group[component.item_id + '_from'] = new FormControl();
           group[component.item_id + '_to'] = new FormControl();
         } else {
-          group[component.item_id] = new FormControl(null, Validators.required);
+          const isRequired = !!component.component_setting?.required;
+          if (isRequired) {
+            group[component.item_id] = new FormControl(null, Validators.required);
+          } else {
+            group[component.item_id] = new FormControl(null);
+          }
         }
 
         if (component['component_setting']?.is_multi_language) {
@@ -274,6 +331,24 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
     this.checkAllowSave();
   }
 
+  takeFiles(fileList: any[], form: string): void {
+    if (isArrayFull(fileList)) {
+      const data = [];
+      fileList.forEach((file) => {
+        data.push(file._key);
+      });
+      this.inputForm.controls[form].markAsDirty();
+      this.inputForm.controls[form].setValue(data);
+    } else {
+      this.inputForm.controls[form].setValue(null);
+    }
+  }
+
+  copy() {
+    localStorage.setItem('isCopy', 'true');
+    window.location.reload();
+  }
+
   reset() {
     this.inputForm.patchValue({ ...this.cloneData });
   }
@@ -297,16 +372,26 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   async onDelete() {
     this.callLoadingApp();
     try {
-      await this.renderPageService
-        .remove(this.collection, this._key)
-        .then((res) => {
-          if (res.status === RESULT_STATUS.OK) {
-            this.showToastr('', this.getMsg('I0003'));
-            history.back();
-          } else {
-            this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-          }
-        });
+      if (this.delete) {
+        const res = await this.delete(this._key);
+        if (res.status === RESULT_STATUS.OK) {
+          this.showToastr('', this.getMsg('I0003'));
+          history.back();
+        } else {
+          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+        }
+      } else {
+        await this.renderPageService
+          .remove(this.collection, this._key)
+          .then((res) => {
+            if (res.status === RESULT_STATUS.OK) {
+              this.showToastr('', this.getMsg('I0003'));
+              history.back();
+            } else {
+              this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+            }
+          });
+      }
     } catch {
       this.cancelLoadingApp();
     } finally {
@@ -322,16 +407,30 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
     }, 100);
   }
 
-  save() {
+  async onSave() {
     this.isSubmit = true;
     if (this.inputForm.valid) {
       this.callLoadingApp();
       try {
         const objSave = {};
         const formValue = this.inputForm.value;
+        this.isCopy && delete formValue[KEYS.KEY];
         for (const prop in formValue) {
           if (isObjectFull(formValue[prop])) {
-            objSave[prop] = formValue[prop][KEYS.KEY];
+            if (isArrayFull(formValue[prop])) {
+              const keyArray = [];
+              formValue[prop].forEach((e: KeyValueDto | string) => {
+                if (typeof e === 'string') {
+                  keyArray.push(e);
+                } else {
+                  keyArray.push(e[KEYS.KEY])
+                }
+              }
+              );
+              objSave[prop] = keyArray;
+            } else {
+              objSave[prop] = formValue[prop][KEYS.KEY];
+            }
           } else if (
             this.multiLang.includes(prop) &&
             typeof formValue[prop] === 'string'
@@ -341,19 +440,34 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
             objSave[prop] = formValue[prop];
           }
         }
-        this.renderPageService
-          .saveRenderData(this.collection, [objSave])
-          .then((res) => {
-            if (res.status === RESULT_STATUS.OK) {
-              this.showToastr('', this.getMsg('I0005'));
-              setTimeout(() => {
-                history.back();
-              }, 1000);
-            } else {
-              this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-            }
-          })
-          .catch(() => this.showToastr('', this.getMsg('E0100'), KEYS.WARNING));
+
+        if (this.save) {
+          const res = await this.save(objSave);
+          if (res.status === RESULT_STATUS.OK) {
+            this.showToastr('', this.getMsg('I0005'));
+            setTimeout(() => {
+              history.back();
+            }, 1000);
+          } else {
+            this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+          }
+        } else {
+          this.renderPageService
+            .saveRenderData(this.collection, [objSave])
+            .then((res) => {
+              if (res.status === RESULT_STATUS.OK) {
+                this.showToastr('', this.getMsg('I0005'));
+                setTimeout(() => {
+                  history.back();
+                }, 1000);
+              } else {
+                this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+              }
+            })
+            .catch(() =>
+              this.showToastr('', this.getMsg('E0100'), KEYS.WARNING)
+            );
+        }
       } catch {
         this.cancelLoadingApp();
       } finally {
@@ -368,5 +482,23 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
       en_US: text,
       vi_VN: text,
     };
+  }
+
+  toggle(checked: boolean, form: string): void {
+    this.inputForm.controls[form].setValue(checked);
+  }
+
+  getCheckBoxTitle(title: string): string {
+    return this.translateService.translate(title);
+  }
+
+  getDefaultValue(form: string, maxItem: any): any {
+    if (maxItem === 1) {
+      return this.inputForm.controls[form].value
+        ? [this.inputForm.controls[form].value]
+        : null;
+    } else {
+      return this.inputForm.controls[form].value;
+    }
   }
 }

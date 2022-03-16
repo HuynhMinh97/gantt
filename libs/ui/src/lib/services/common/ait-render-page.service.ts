@@ -27,7 +27,8 @@ export class AitRenderPageService extends AitBaseService {
       text: true,
       icon: true,
       tooltip: true
-    }
+    },
+    allow_new: true
   }
 
   searchField = {
@@ -41,11 +42,25 @@ export class AitRenderPageService extends AitBaseService {
     component_setting: {
       collection: true,
       max_item: true,
+      max_file: true,
       width: true,
       required: true,
       from_to: true,
       is_multi_language: true,
       class: true,
+      title: true,
+      rows: true,
+      allow_new: true,
+      allow_delete: true,
+      has_status: true,
+      guidance_icon: true,
+      guidance: true,
+      margin: true,
+      file_type: true,
+      data_source: {
+        _key: true,
+        value: true
+      }
     },
     search_setting: {
       operator: true,
