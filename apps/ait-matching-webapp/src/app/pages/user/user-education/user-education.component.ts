@@ -67,8 +67,8 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
     });
 
     this.setModulePage({
-      module: 'add_education',
-      page: 'add_education',
+      module: 'user',
+      page: 'user_education',
     });
   }
 

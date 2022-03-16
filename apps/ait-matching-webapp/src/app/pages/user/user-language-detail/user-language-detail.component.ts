@@ -31,6 +31,12 @@ export class UserLanguageDetailComponent extends AitBaseComponent implements OnI
       layoutScrollService,
       toastrService
     );
+
+    this.setModulePage({
+      module: 'user',
+      page: 'user_language',
+    });
+
    }
 
   ngOnInit(): void {

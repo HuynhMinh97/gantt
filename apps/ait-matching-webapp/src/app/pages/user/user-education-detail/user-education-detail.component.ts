@@ -50,6 +50,10 @@ export class UserEducationDetailComponent
         this.dateFormat = setting['date_format_display'];
       }
     });
+    this.setModulePage({
+      module: 'user',
+      page: 'user_education',
+    });
   }
 
   ngOnInit(): void {

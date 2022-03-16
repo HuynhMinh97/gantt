@@ -88,6 +88,10 @@ export class UserOnboardingService extends AitBaseService {
         att: 'industry',
         col: 'm_industry',
       },
+      {
+        att: 'industry_working',
+        col: 'm_industry',
+      },
     ];
 
     keyMasterArray.forEach((item) => {
