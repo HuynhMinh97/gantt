@@ -189,11 +189,11 @@ export class AitAppUtils extends Utils {
   }
 
   static getParamsOnUrl = (isLast?: boolean, LastIndex?: number) => {
-    const a = location.pathname;
     if (isLast) {
-      return a.slice(LastIndex || 1);
+      const a = location.hash.split('/');
+      return a[a.length - (LastIndex || 1)]
     }
-    return a.slice(1);
+    return location.hash.split('/');
   }
   
   static getArrayNotFalsy = (array: any[]) => array.filter(a => !!a);
