@@ -57,6 +57,12 @@ export class UserExperienceDetailComponent
         this.dateFormat = setting['date_format_display'];
       }
     });
+
+    this.setModulePage({
+      module: 'user',
+      page: 'user_experience',
+    });
+
   }
 
   ngOnInit(): void {
