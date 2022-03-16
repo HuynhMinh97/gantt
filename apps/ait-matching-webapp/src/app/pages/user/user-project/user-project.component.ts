@@ -312,11 +312,6 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
                 ];
                 this.userProjectService.removeSkill(_fromSkill);
                 this.userProjectService.removeUserProejct(_toUser);
-                this.userProfileService.onLoad.next(this.projectDataInput);
-                this.showToastr('', this.getMsg('I0003'));
-                this.closeDialog(true);
-              } else {
-                this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
               }
             });
           } else {
@@ -416,6 +411,52 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
             return res;
           } 
         })
+    } catch (error) {
+      console.log(error);
+      
+    }
+    
+  }
+  public find = async (data = {}) => {
+    try {
+      const dataFind = [];
+      if (this.mode === 'NEW') {
+        await this.inputProject();
+        this.userProject.controls['title'].setValue(this.titleName);
+        this.userProject.controls['start_date_from'].setValue(this.dateNow);
+        this.userProject.controls['company_working'].setValue(this.companyName);
+        console.log( this.userProject.value);
+        
+      } else {
+        await this.findBizProject();
+        await this.findSkills();
+        this.cancelLoadingApp();
+        console.log( this.userProject.value);
+      }
+      dataFind.push(this.userProject.value);
+      return {data: dataFind }
+    } catch (error) {
+      console.log(error);
+      
+    }
+    
+  }
+  public delete = async (data = '') => {
+    try {
+      return await this.userProjectService.remove(data).then((res) => {
+        if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
+          const _fromSkill = [
+            { _from: 'biz_project/' + this.project_key },
+          ];
+          const _toUser = [
+            { _to: 'biz_project/' + this.project_key },
+          ];
+          this.userProjectService.removeSkill(_fromSkill);
+          this.userProjectService.removeUserProejct(_toUser);
+          // this.userProfileService.onLoad.next(this.projectDataInput);
+          return res;
+        } 
+      });
     } catch (error) {
       console.log(error);
       

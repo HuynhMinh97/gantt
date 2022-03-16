@@ -492,4 +492,20 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
   closeDialog(event: boolean) {
     // this.nbDialogRef.close(event);
   }
+ 
+  public save = async (data = {}) => {
+    try {
+      data['user_id']= this.user_id;
+      return await this.cartificateService.saveUserCartificate(data)
+      .then(async (res) => {
+        if (res?.status === RESULT_STATUS.OK) {
+          return res;
+        }
+      })
+    } catch (error) {
+      console.log(error);
+      
+    }
+    
+  }
 }

@@ -7,7 +7,7 @@ import { AitBaseService } from '@ait/ui';
 export class UserCerfiticateService extends AitBaseService {
 
  
-  saveUserCartificate = async (data: any[]) => {
+  saveUserCartificate = async (data: any) => {
     return await this.mutation('saveUsercertificate', 'user_certificate_award', data, { _key: true });
   }
   findUserByKey = async (user_key : string) => {
