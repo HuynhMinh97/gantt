@@ -57,8 +57,13 @@ export const routes: Routes = [
   },
 ];
 
+const config: ExtraOptions = {
+  useHash: true,
+  relativeLinkResolution: 'legacy',
+};
+
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, config)],
   exports: [RouterModule],
 })
 export class AitAuthRoutingModule { }
