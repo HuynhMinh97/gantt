@@ -180,7 +180,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     this.getCourseByUserId();
     this.getEducationByUserId();
     this.getLanguageByUserId();
-    this.getImg();
+    // this.getImg();
   }
   async getMasterData() {
     try {
@@ -233,7 +233,12 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
             this.cancelLoadingApp();
           } else {
             this.cancelLoadingApp();
-            this.router.navigate([`/404`]);
+            if(this.mode == MODE.VIEW) {
+              this.router.navigate([`/404`]);
+            }else{
+              this.router.navigate([`user-onboarding`]);
+            }
+            
           }
           this.timeExperienceStr = this.dateDiffInYears(this.timeExperience);
         }
@@ -498,38 +503,38 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     }
   }
 
-  openOnboarding(key?: string) {
-    this.dialogService.open(UserOnboardingComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-        user_key: key,
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-        this.callLoadingApp();
-        this.DataUserProfile = null;
-        await this.getUserProfileByUserId();
-        setTimeout(() => {
-          this.cancelLoadingApp();
-        }, 300)
-      }
-    });
-  }
-  openOnboardingDetail(key?: string) {
-    this.dialogService.open(UserOnboardingDetailComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-        user_key: key,
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-      }
-    });
-  }
+  // openOnboarding(key?: string) {
+  //   this.dialogService.open(UserOnboardingComponent, {
+  //     closeOnBackdropClick: false,
+  //     hasBackdrop: true,
+  //     autoFocus: false,
+  //     context: {
+  //       user_key: key,
+  //     },
+  //   }).onClose.subscribe(async (event) => {
+  //     if (event) {
+  //       this.callLoadingApp();
+  //       this.DataUserProfile = null;
+  //       await this.getUserProfileByUserId();
+  //       setTimeout(() => {
+  //         this.cancelLoadingApp();
+  //       }, 300)
+  //     }
+  //   });
+  // }
+  // openOnboardingDetail(key?: string) {
+  //   this.dialogService.open(UserOnboardingDetailComponent, {
+  //     closeOnBackdropClick: false,
+  //     hasBackdrop: true,
+  //     autoFocus: false,
+  //     context: {
+  //       user_key: key,
+  //     },
+  //   }).onClose.subscribe(async (event) => {
+  //     if (event) {
+  //     }
+  //   });
+  // }
 
   // openProjects(key?: string) {
   //   this.dialogService.open(UserProjectComponent, {
@@ -551,229 +556,229 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   //     }
   //   });
   // }
-  openProjectsDetail(key?: string) {
-    this.dialogService.open(UserProjectDetailComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-        user_key: key,
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-      }
-    });
-  }
-  openAddSkill() {
-    this.dialogService.open(UserSkillsComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-        this.callLoadingApp();
-        this.skillByCategory = [];
-        this.getSkillByUserId();
-        setTimeout(() => {
-          this.cancelLoadingApp();
-        }, 500)
-      }
-    });
-  }
-  openReorderSkill() {
-    this.dialogService.open(UserReorderSkillsComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-        this.callLoadingApp();
-        this.skillByCategory = [];
-        this.getSkillByUserId();
-        setTimeout(() => {
-          this.cancelLoadingApp();
-        }, 500)
-      }
-    });
-  }
-  openExperience(key?: string) {
-    this.dialogService.open(UserExperienceComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-        this.callLoadingApp();
-        this.userExperience = [];
-        this.getExperiencByUserId();
-        setTimeout(() => {
-          this.cancelLoadingApp();
-        }, 1000)
-      }
-    });
-  }
-  openExperiencedetail(key?: string) {
-    this.dialogService.open(UserExperienceDetailComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-      }
-    });
-  }
-  openCertificate(key?: string) {
-    this.dialogService.open(UserCertificateComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-        certificate_key: key,
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-        this.callLoadingApp();
-        this.userCentificate = [];
-        this.getCentificateByUserId();
-        setTimeout(() => {
-          this.cancelLoadingApp();
-        }, 500)
-      }
-    });
-  }
-  openCertificateDetail(key?: string) {
-    this.dialogService.open(UserCertificateDetailComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-        user_key: key,
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {}
-    });
-  }
-  openCourse(key?: string) {
-    this.dialogService.open(UserCourseComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-        course_key: key,
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-        this.callLoadingApp();
-        this.userCourse = [];
-        this.getCourseByUserId();
-        setTimeout(() => {
-          this.cancelLoadingApp();
-        }, 500)
-      }
-    });
-  }
-  openCourseDetail(key?: string) {
-    this.dialogService.open(UserCourseDetailComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-        user_key: key,
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-      }
-    });
-  }
-  openEducation(key?: string) {
-    this.dialogService.open(UserEducationComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-        this.callLoadingApp();
-        this.userEducation = [];
-        this.getEducationByUserId();
-        setTimeout(() => {
-          this.cancelLoadingApp();
-        }, 500)
-      }
-    });
-  }
-  openEducationDetail(key?: string) {
-    this.dialogService.open(UserEducationDetailComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-      }
-    });
-  }
-  openLanguage(key?: string) {
-    this.dialogService.open(UserLanguageComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-        this.callLoadingApp();
-        this.userLanguage = [];
-        this.getLanguageByUserId();
-        setTimeout(() => {
-          this.cancelLoadingApp();
-        }, 500)
-      }
-    });
-  }
-  openLanguageDetail(key?: string) {
-    this.dialogService.open(UserLanguageDetailComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-      }
-    });
-  }
+  // openProjectsDetail(key?: string) {
+  //   this.dialogService.open(UserProjectDetailComponent, {
+  //     closeOnBackdropClick: false,
+  //     hasBackdrop: true,
+  //     autoFocus: false,
+  //     context: {
+  //       user_key: key,
+  //     },
+  //   }).onClose.subscribe(async (event) => {
+  //     if (event) {
+  //     }
+  //   });
+  // }
+  // openAddSkill() {
+  //   this.dialogService.open(UserSkillsComponent, {
+  //     closeOnBackdropClick: false,
+  //     hasBackdrop: true,
+  //     autoFocus: false,
+  //     context: {
+  //     },
+  //   }).onClose.subscribe(async (event) => {
+  //     if (event) {
+  //       this.callLoadingApp();
+  //       this.skillByCategory = [];
+  //       this.getSkillByUserId();
+  //       setTimeout(() => {
+  //         this.cancelLoadingApp();
+  //       }, 500)
+  //     }
+  //   });
+  // }
+  // openReorderSkill() {
+  //   this.dialogService.open(UserReorderSkillsComponent, {
+  //     closeOnBackdropClick: false,
+  //     hasBackdrop: true,
+  //     autoFocus: false,
+  //     context: {
+  //     },
+  //   }).onClose.subscribe(async (event) => {
+  //     if (event) {
+  //       this.callLoadingApp();
+  //       this.skillByCategory = [];
+  //       this.getSkillByUserId();
+  //       setTimeout(() => {
+  //         this.cancelLoadingApp();
+  //       }, 500)
+  //     }
+  //   });
+  // }
+  // openExperience(key?: string) {
+  //   this.dialogService.open(UserExperienceComponent, {
+  //     closeOnBackdropClick: false,
+  //     hasBackdrop: true,
+  //     autoFocus: false,
+  //     context: {
+  //     },
+  //   }).onClose.subscribe(async (event) => {
+  //     if (event) {
+  //       this.callLoadingApp();
+  //       this.userExperience = [];
+  //       this.getExperiencByUserId();
+  //       setTimeout(() => {
+  //         this.cancelLoadingApp();
+  //       }, 1000)
+  //     }
+  //   });
+  // }
+  // openExperiencedetail(key?: string) {
+  //   this.dialogService.open(UserExperienceDetailComponent, {
+  //     closeOnBackdropClick: false,
+  //     hasBackdrop: true,
+  //     autoFocus: false,
+  //     context: {
+  //     },
+  //   }).onClose.subscribe(async (event) => {
+  //     if (event) {
+  //     }
+  //   });
+  // }
+  // openCertificate(key?: string) {
+  //   this.dialogService.open(UserCertificateComponent, {
+  //     closeOnBackdropClick: false,
+  //     hasBackdrop: true,
+  //     autoFocus: false,
+  //     context: {
+  //       certificate_key: key,
+  //     },
+  //   }).onClose.subscribe(async (event) => {
+  //     if (event) {
+  //       this.callLoadingApp();
+  //       this.userCentificate = [];
+  //       this.getCentificateByUserId();
+  //       setTimeout(() => {
+  //         this.cancelLoadingApp();
+  //       }, 500)
+  //     }
+  //   });
+  // }
+  // openCertificateDetail(key?: string) {
+  //   this.dialogService.open(UserCertificateDetailComponent, {
+  //     closeOnBackdropClick: false,
+  //     hasBackdrop: true,
+  //     autoFocus: false,
+  //     context: {
+  //       user_key: key,
+  //     },
+  //   }).onClose.subscribe(async (event) => {
+  //     if (event) {}
+  //   });
+  // }
+  // openCourse(key?: string) {
+  //   this.dialogService.open(UserCourseComponent, {
+  //     closeOnBackdropClick: false,
+  //     hasBackdrop: true,
+  //     autoFocus: false,
+  //     context: {
+  //       course_key: key,
+  //     },
+  //   }).onClose.subscribe(async (event) => {
+  //     if (event) {
+  //       this.callLoadingApp();
+  //       this.userCourse = [];
+  //       this.getCourseByUserId();
+  //       setTimeout(() => {
+  //         this.cancelLoadingApp();
+  //       }, 500)
+  //     }
+  //   });
+  // }
+  // openCourseDetail(key?: string) {
+  //   this.dialogService.open(UserCourseDetailComponent, {
+  //     closeOnBackdropClick: false,
+  //     hasBackdrop: true,
+  //     autoFocus: false,
+  //     context: {
+  //       user_key: key,
+  //     },
+  //   }).onClose.subscribe(async (event) => {
+  //     if (event) {
+  //     }
+  //   });
+  // }
+  // openEducation(key?: string) {
+  //   this.dialogService.open(UserEducationComponent, {
+  //     closeOnBackdropClick: false,
+  //     hasBackdrop: true,
+  //     autoFocus: false,
+  //     context: {
+  //     },
+  //   }).onClose.subscribe(async (event) => {
+  //     if (event) {
+  //       this.callLoadingApp();
+  //       this.userEducation = [];
+  //       this.getEducationByUserId();
+  //       setTimeout(() => {
+  //         this.cancelLoadingApp();
+  //       }, 500)
+  //     }
+  //   });
+  // }
+  // openEducationDetail(key?: string) {
+  //   this.dialogService.open(UserEducationDetailComponent, {
+  //     closeOnBackdropClick: false,
+  //     hasBackdrop: true,
+  //     autoFocus: false,
+  //     context: {
+  //     },
+  //   }).onClose.subscribe(async (event) => {
+  //     if (event) {
+  //     }
+  //   });
+  // }
+  // openLanguage(key?: string) {
+  //   this.dialogService.open(UserLanguageComponent, {
+  //     closeOnBackdropClick: false,
+  //     hasBackdrop: true,
+  //     autoFocus: false,
+  //     context: {
+  //     },
+  //   }).onClose.subscribe(async (event) => {
+  //     if (event) {
+  //       this.callLoadingApp();
+  //       this.userLanguage = [];
+  //       this.getLanguageByUserId();
+  //       setTimeout(() => {
+  //         this.cancelLoadingApp();
+  //       }, 500)
+  //     }
+  //   });
+  // }
+  // openLanguageDetail(key?: string) {
+  //   this.dialogService.open(UserLanguageDetailComponent, {
+  //     closeOnBackdropClick: false,
+  //     hasBackdrop: true,
+  //     autoFocus: false,
+  //     context: {
+  //     },
+  //   }).onClose.subscribe(async (event) => {
+  //     if (event) {
+  //     }
+  //   });
+  // }
 
-  async getImg() {
-    await this.userProfileService.getFilesByFileKeys(this.url_avatar)
-      .then((res) => {
-        console.log(res);       
-      })
-  }
-  getImage = (file: any, isError = false) => {
-    if (!isError) {
-      return this.safelyURL(file.data_base64, file.file_type)
-    }
-    return 'https://d30y9cdsu7xlg0.cloudfront.net/png/47682-200.png';
-  }
-  safelyURL = (data, type) => this.santilizer.bypassSecurityTrustUrl(`data:${type};base64, ${data}`);
+  // async getImg() {
+  //   await this.userProfileService.getFilesByFileKeys(this.url_avatar)
+  //     .then((res) => {
+  //       console.log(res);       
+  //     })
+  // }
+  // getImage = (file: any, isError = false) => {
+  //   if (!isError) {
+  //     return this.safelyURL(file.data_base64, file.file_type)
+  //   }
+  //   return 'https://d30y9cdsu7xlg0.cloudfront.net/png/47682-200.png';
+  // }
+  // safelyURL = (data, type) => this.santilizer.bypassSecurityTrustUrl(`data:${type};base64, ${data}`);
   
-  isOpen = {
-    userInfo: true,
-    userTraining: true,
-    userJobQuery: true,
-    userCertificate: true,
-  };
+  // isOpen = {
+  //   userInfo: true,
+  //   userTraining: true,
+  //   userJobQuery: true,
+  //   userCertificate: true,
+  // };
 
   dateDiffInYears(month) {
     const monthStr = this.translateService.translate('my-profile.months');
