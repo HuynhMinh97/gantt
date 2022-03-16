@@ -13,13 +13,22 @@ import { AitExamplePageModule } from './pages/example/ait-example.module';
 import { environment } from '../environments/environment';
 import { NbMenuModule } from '@nebular/theme';
 import { RenderPageModule } from './pages/example/render-page/render-page.module';
-import { RouterModule } from '@angular/router';
+import { ExtraOptions, RouterModule } from '@angular/router';
 
 const AIT_UI_MODULES = [ AitGroupViewModule ];
 
 const AIT_UI_SERVICES = [];
 
 const STARTER_PAGES = [];
+
+// DO NOT DELETE
+const config: ExtraOptions = {
+  useHash: true,
+  relativeLinkResolution: 'legacy',
+};
+// DO NOT DELETE
+
+//*
 
 @NgModule({
   declarations: [AppComponent, ...STARTER_PAGES],
@@ -33,7 +42,7 @@ const STARTER_PAGES = [];
     AitExamplePageModule,
     RenderPageModule,
     AitAuthModule.forRoot(environment),
-    RouterModule,
+    RouterModule.forRoot([], config),
     StoreModule.forRoot(
       { ...rootReducers },
       {
