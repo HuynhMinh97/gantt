@@ -38,5 +38,21 @@ export class AppComponent extends AitBaseComponent implements OnInit {
 
   ngOnInit() {
     this.initBaseComponent();
+
+    setTimeout(() => {
+      const currentUrl = location.hash.replace('#', '');
+      const prevUrl = localStorage.getItem('prev_url');
+      if (currentUrl !== prevUrl) {
+        this.router.navigateByUrl(prevUrl);
+      }
+    }, 50);
+    setTimeout(() => {
+      this.isAppLoading = false;
+    }, 2000);
+  }
+
+  @HostListener('window:beforeunload', ['$event']) unloadHandler() {
+    const currentUrl = location.hash.replace('#', '');
+    localStorage.setItem('prev_url', currentUrl);
   }
 }

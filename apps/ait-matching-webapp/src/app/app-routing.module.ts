@@ -4,7 +4,7 @@ import { UserEducationComponent } from './pages/user/user-education/user-educati
 import { UserExperienceComponent } from './pages/user/user-experience/user-experience.component';
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { AitAuthGuardService, AitAppUtils } from '@ait/ui';
+import { AitAuthGuardService } from '@ait/ui';
 import { RecommencedComponent } from './pages/recommenced-user/recommenced-user.component';
 import { UserCourseComponent } from './pages/user/user-course/user-course.component';
 import { UserCertificateComponent } from './pages/user/user-certificate/user-certificate.component';
@@ -14,10 +14,7 @@ import { UserProfileComponent } from './pages/user/user-profile/user-profile.com
 import { UserJobAlertComponent } from './pages/user/user-job-alert/user-job-alert.component';
 import { UserLanguageDetailComponent } from './pages/user/user-language-detail/user-language-detail.component';
 import { UserEducationDetailComponent } from './pages/user/user-education-detail/user-education-detail.component';
-import { UserCourseDetailComponent } from './pages/user/user-course-detail/user-course-detail.component';
-import { UserCertificateDetailComponent } from './pages/user/user-certificate-detail/user-certificate-detail.component';
 import { UserExperienceDetailComponent } from './pages/user/user-experience-detail/user-experience-detail.component';
-import { UserProjectDetailComponent } from './pages/user/user-project-detail/user-project-detail.component';
 import { UserOnboardingDetailComponent } from './pages/user/user-onboarding-detail/user-onboarding-detail.component';
 import { UserJobAlertDetailComponent } from './pages/user/user-job-alert-detail/user-job-alert-detail.component';
 import { UserProjectComponent } from './pages/user/user-project/user-project.component';
@@ -203,4 +200,4 @@ export const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class AureoleRoutingModule { }
+export class AppRoutingModule { }

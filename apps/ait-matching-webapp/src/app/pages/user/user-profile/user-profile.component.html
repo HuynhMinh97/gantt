@@ -1,3 +1,4 @@
+<ait-toc-menu [id]="'user_profile'"></ait-toc-menu>
 <div class="user_profile_wrapper" id="user_profile">
   <div class="content__card" *ngIf="isload">
     <div
@@ -14,15 +15,26 @@
         [fontsize]="'36px'"
       ></ait-text-gradient>
     </div>
+
+    <!-- <ait-card-content
+    tabindex="2"
+    [isOpen]="true"
+    [isStart]="true"
+    [id]="'user_profile'"
+    class="content"
+    [label]="'basic_infomation' | translate"
+    [disableHeader]="false"
+    padding="'10px'"
+  ></ait-card-content> -->
+  
     <!-- profile -->
     <div style="position: relative" class="profile">
       <card-content
         tabindex="2"
-        [id]="'company_detail'"
-        style="outline-color: #10529d"
+        [id]="'user_profile'"
         class="content_card"
-        style="display: flex; justify-content: center"
         [label]="'basic information' | translate"
+        style="display: flex; justify-content: center"
         [styleLabel]="{ 'font-size': '26px' }"
         (onClickButtonHeader)="nextPage('user-onboarding/', user_id)"
         [actionBtn]="isMyUserProfile ? actionBtnProfile : ''"
@@ -147,13 +159,13 @@
           [minWidth]="'120px'"
           [height]="'26px'"
           [title]="'reorder skills'"
-          [id]="'openReorderSkill'"
+          [id]="'reorder-skills'"
           [isDefault]="'true'"
         ></ait-button>
       </div>
       <card-content
         tabindex="2"
-        [id]="'company_detail'"
+        [id]="'user-profile'"
         style="outline-color: #10529d"
         class="content_card"
         style="display: flex; justify-content: center"
@@ -174,10 +186,11 @@
         [isOpen]="false"
         [idBtn]="'openAddSkill'"
         (onToggle)="getExpan($event,'isShowSkill')"
-        [height]="skillByCategory.length >=3 ? '0px' : 'auto'"
+        [height]="isShowSkill ? '0px' : 'auto'"
       >
         <div class="container_user" >
           <div *ngFor="let category of skillByCategory; let index = index; let first = first">
+
             <div *ngIf="index <3 && !isShowSkill">
               <hr style="margin-top: 5px" *ngIf="!first" />
               <p class="title-skill">{{ category?.name }}</p>
@@ -188,7 +201,8 @@
                 [minWidth]="'100px'"
                 [isNormal]="false"
               ></ait-drag-scroll>
-            </div>           
+            </div>  
+
             <div  *ngIf="isShowSkill">
               <hr style="margin-top: 5px" *ngIf="!first" />
               <p class="title-skill">{{ category?.name }}</p>
@@ -209,7 +223,7 @@
     <div class="project">
       <card-content
         tabindex="2"
-        [id]="'project_detail'"
+        [id]="'user-profile'"
         style="outline-color: #10529d"
         class="content_card"
         style="display: flex; justify-content: center"
@@ -230,40 +244,13 @@
         [isOpen]="false"
         [idBtn]="'openProjects'"
         [padding]="'13px 22px'"
+        (onToggle)="getExpan($event,'isShowProject')"
+        [height]="isShowProject ? '0px' : heightProject"
       >
+        <div *ngIf="userProject.length == 0">
+          <p style="padding: 20px;">Chưa có dự án nào</p>
+        </div>
         <div class="container_user" *ngIf="userProject.length > 0">
-          <!-- <div *ngIf="userProject.length > 2">
-            <ul
-            *ngFor="
-              let listProject of userProject;
-              let index = index;
-              let firstcomp = first
-            "
-          >
-          <hr style="margin-top: 5px" *ngIf="!firstcomp" />
-            <li class="timeline-event">
-              <div class="timeline-block">
-                <div class="img-timeline-cmp">
-                  <img
-                    src="../../../../../assets/images/image.png"
-                    alt="project"
-                  />
-                </div>
-                <div class="timeline-info">
-                  <div>
-                    <p id="title-timeline">
-                      {{ listProject?.company_name }}
-                    </p>
-                    <div class="desc-info">
-                      <p>{{ dateDiffInYears(listProject?.working_time) }}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </li>
-            </ul>
-          </div> -->
-
           <ul
             *ngFor="
               let listProject of userProject;
@@ -386,7 +373,7 @@
       <card-content
         tabindex="2"
         [isOpen]="false"
-        [id]="'experience_detail'"
+        [id]="'user-profile'"
         style="outline-color: #10529d"
         class="content_card"
         style="display: flex; justify-content: center"
@@ -406,6 +393,8 @@
         }"
         [idBtn]="'openExperience'"
         [padding]="'13px 22px'"
+        (onToggle)="getExpan($event,'isShowExperience')"
+        [height]="isShowExperience ? '0px' : heightExperience"
       >
         <div class="container_user" *ngIf="userExperience.length > 0">
           <ul
@@ -467,7 +456,7 @@
                   <div>
                     <p id="title-timeline">{{ experience?.title.value }}</p>
                     <div class="desc-info">
-                      <p>{{ experience?.employee_type?.value }}</p>
+                      <p>{{ experience?.employee_type ? experience?.employee_type?.value : 'chưa xác định' }}</p>
                       <p *ngIf="!experience.start_date_to">
                         {{
                           experience?.start_date_from
@@ -520,7 +509,7 @@
                     ></nb-icon>
                   </a>
                   <a
-                    (click)="openExperiencedetail(experience?._key)"
+                    (click)="nextPage('user-experience-detail', experience?._key)"
                     [id]="'experience-' + experience?._key"
                     *ngIf="!isMyUserProfile"
                   >
@@ -539,7 +528,7 @@
     <div class="certificate">
       <card-content
         tabindex="2"
-        [id]="'certificate_detail'"
+        [id]="'user-profile'"
         style="outline-color: #10529d"
         class="content_card"
         style="display: flex; justify-content: center"
@@ -562,16 +551,19 @@
         [isOpen]="false"
         [idBtn]="'openCertificate'"
         [padding]="'13px 22px'"
+        (onToggle)="getExpan($event,'isShowCertificate')"
+        [height]="isShowCertificate ? '0px' : 'auto'"
       >
         <div class="container_user" *ngIf="userCentificate.length > 0">
           <ul
             *ngFor="
               let centificate of userCentificate;
-              let last = last;
-              let firstcomp = first
+              let index = index; let first = first
             "
           >
-            <li class="timeline-event">
+            
+            <li class="timeline-event" *ngIf="index <3 && !isShowCertificate">
+              <hr *ngIf="!first" />
               <div class="timeline-block">
                 <div class="img-timeline-cmp">
                   <img
@@ -637,8 +629,73 @@
                 </div>
               </div>
             </li>
+            <li class="timeline-event" *ngIf="isShowCertificate">
+              <hr *ngIf="!first" />
+              <div class="timeline-block">
+                <div class="img-timeline-cmp">
+                  <img
+                    src="../../../../../assets/images/image.png"
+                    alt="project"
+                  />
+                </div>
+                <div class="timeline-info">
+                  <div>
+                    <p id="title-timeline">
+                      {{ centificate?.name }}
+                    </p>
+                    <div class="desc-info">
+                      <p>
+                        {{ centificate?.issue_by }}
+                      </p>
+                      <p *ngIf="!centificate?.issue_date_to">
+                        {{
+                          centificate?.issue_date_from
+                            ? (centificate?.issue_date_from | date: dateFormat)
+                            : ('my-profile.unclear' | translate)
+                        }}
+                        - {{ 'my-profile.prevent' | translate }}
+                      </p>
 
-            <hr *ngIf="!last" />
+                      <p *ngIf="centificate?.issue_date_to">
+                        {{
+                          centificate?.issue_date_from
+                            ? (centificate?.issue_date_from | date: dateFormat)
+                            : ('my-profile.unclear' | translate)
+                        }}
+                        - {{ centificate?.issue_date_to | date: dateFormat }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  id="ic-edit"
+                  [nbTooltip]="
+                    isMyUserProfile
+                      ? ('my-profile.edit' | translate)
+                      : ('my-profile.view' | translate)
+                  "
+                >
+                  <a
+                    (click)="nextPage('user-certificate', centificate?._key)"
+                    [id]="'centificate-' + centificate?._key"
+                    *ngIf="isMyUserProfile"
+                  >
+                    <nb-icon
+                      nbSuffix
+                      icon="edit-2-outline"
+                      pack="eva"
+                    ></nb-icon>
+                  </a>
+                  <a
+                    (click)="openCertificateDetail(centificate?._key)"
+                    [id]="'centificate-' + centificate?._key"
+                    *ngIf="!isMyUserProfile"
+                  >
+                    <nb-icon nbSuffix icon="eye-outline" pack="eva"></nb-icon>
+                  </a>
+                </div>
+              </div>
+            </li>
           </ul>
         </div>
       </card-content>
@@ -648,7 +705,7 @@
       <card-content
         [isOpen]="false"
         tabindex="2"
-        [id]="'course_detail'"
+        [id]="'user-profile'"
         style="outline-color: #10529d"
         class="content_card"
         style="display: flex; justify-content: center"
@@ -668,16 +725,85 @@
         }"
         [idBtn]="'openCourse'"
         [padding]="'13px 22px'"
+        (onToggle)="getExpan($event,'isShowCourse')"
+        [height]="isShowCourse ? '0px' : 'auto'"
       >
         <div class="container_user" *ngIf="userCourse.length > 0">
           <ul
             *ngFor="
               let course of userCourse;
-              let last = last;
-              let firstcomp = first
+              let index = index; let first = first
             "
           >
-            <li class="timeline-event">
+          <li class="timeline-event" *ngIf="isShowCourse">
+            <hr *ngIf="!first" />
+            <div class="timeline-block">
+              <div class="img-timeline-cmp">
+                <img
+                  src="../../../../../assets/images/image.png"
+                  alt="project"
+                />
+              </div>
+              <div class="timeline-info">
+                <div>
+                  <p id="title-timeline">
+                    {{ course?.name }}
+                  </p>
+                  <div class="desc-info">
+                    <p>
+                      {{ course?.training_center }}
+                    </p>
+                    <p *ngIf="!course?.start_date_to">
+                      {{
+                        course?.start_date_from
+                          ? (course?.start_date_from | date: dateFormat)
+                          : ('my-profile.unclear' | translate)
+                      }}
+                      - {{ 'my-profile.prevent' | translate }}
+                    </p>
+
+                    <p *ngIf="course?.start_date_to">
+                      {{
+                        course?.start_date_from
+                          ? (course?.start_date_from | date: dateFormat)
+                          : ('my-profile.unclear' | translate)
+                      }}
+                      - {{ course?.start_date_to | date: dateFormat }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div
+                id="ic-edit"
+                [nbTooltip]="
+                  isMyUserProfile
+                    ? ('my-profile.edit' | translate)
+                    : ('my-profile.view' | translate)
+                "
+              >
+                <a
+                  (click)="nextPage('user-course', course?._key)"
+                  [id]="'course-' + course?._key"
+                  *ngIf="isMyUserProfile"
+                >
+                  <nb-icon
+                    nbSuffix
+                    icon="edit-2-outline"
+                    pack="eva"
+                  ></nb-icon>
+                </a>
+                <a
+                  (click)="openCourseDetail(course?._key)"
+                  [id]="'course-' + course?._key"
+                  *ngIf="!isMyUserProfile"
+                >
+                  <nb-icon nbSuffix icon="eye-outline" pack="eva"></nb-icon>
+                </a>
+              </div>
+            </div>
+          </li>
+            <li class="timeline-event" *ngIf="index < 3 && !isShowCourse">
+              <hr *ngIf="!first" />
               <div class="timeline-block">
                 <div class="img-timeline-cmp">
                   <img
@@ -743,8 +869,6 @@
                 </div>
               </div>
             </li>
-
-            <hr *ngIf="!last" />
           </ul>
         </div>
       </card-content>
@@ -754,7 +878,7 @@
       <card-content
         tabindex="2"
         [isOpen]="false"
-        [id]="'education_detail'"
+        [id]="'user-profile'"
         style="outline-color: #10529d"
         class="content_card"
         style="display: flex; justify-content: center"
@@ -774,6 +898,8 @@
         [content]="''"
         [idBtn]="'openEducation'"
         [padding]="'25px 22px'"
+        (onToggle)="getExpan($event,'isShowEducation')"
+        [height]="isShowEducation ? '0px' : 'auto'"
       >
         <div
           class="container_user"
@@ -782,11 +908,78 @@
           <ul
             *ngFor="
               let education of userEducation;
-              let last = last;
-              let firstcomp = first
+              let index = index; let first = first
             "
           >
-            <li class="timeline-event">
+          <li class="timeline-event" *ngIf="isShowEducation">
+            <hr *ngIf="!first" />
+            <div class="timeline-block">
+              <div class="img-timeline-cmp">
+                <img
+                  src="../../../../../assets/images/image.png"
+                  alt="project"
+                />
+              </div>
+              <div class="timeline-info">
+                <div>
+                  <p id="title-timeline">
+                    {{ education?.school }}
+                  </p>
+                  <div class="desc-info">
+                    <p style="text-decoration-line: underline">
+                      {{ education?.field_of_study }}
+                    </p>
+                    <p *ngIf="!education.start_date_to">
+                      {{
+                        education?.start_date_from
+                          ? (education?.start_date_from | date: monthFormat)
+                          : ('my-profile.unclear' | translate)
+                      }}
+                      - {{ 'my-profile.prevent' | translate }}
+                    </p>
+                    <p *ngIf="education.start_date_to">
+                      {{
+                        education?.start_date_from
+                          ? (education?.start_date_from | date: monthFormat)
+                          : ('my-profile.unclear' | translate)
+                      }}
+                      - {{ education?.start_date_to | date: monthFormat }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div
+                id="ic-edit"
+                [nbTooltip]="
+                  isMyUserProfile
+                    ? ('my-profile.edit' | translate)
+                    : ('my-profile.view' | translate)
+                "
+                style="top: 18px"
+              >
+                <a
+                  (click)="nextPage('user-education/', education?._key)"
+                  [id]="'education-' + education?._key"
+                  *ngIf="isMyUserProfile"
+                >
+                  <nb-icon
+                    nbSuffix
+                    icon="edit-2-outline"
+                    pack="eva"
+                  ></nb-icon>
+                </a>
+                <a
+                  (click)="nextPage('user-education-detail/', education?._key)"
+                  [id]="'education-' + education?._key"
+                  *ngIf="!isMyUserProfile"
+                >
+                  <nb-icon nbSuffix icon="eye-outline" pack="eva"></nb-icon>
+                </a>
+              </div>
+            </div>
+          </li>
+            <li class="timeline-event" *ngIf="index <3 && !isShowEducation">
+              <hr *ngIf="!first" />
               <div class="timeline-block">
                 <div class="img-timeline-cmp">
                   <img
@@ -832,7 +1025,7 @@
                   style="top: 18px"
                 >
                   <a
-                    (click)="nextPage('user-education/', user_id)"
+                    (click)="nextPage('user-education/', education?._key)"
                     [id]="'education-' + education?._key"
                     *ngIf="isMyUserProfile"
                   >
@@ -843,7 +1036,7 @@
                     ></nb-icon>
                   </a>
                   <a
-                    (click)="openEducationDetail(education?._key)"
+                    (click)="nextPage('user-education-detail/', education?._key)"
                     [id]="'education-' + education?._key"
                     *ngIf="!isMyUserProfile"
                   >
@@ -853,7 +1046,7 @@
               </div>
             </li>
 
-            <hr *ngIf="!last" />
+           
           </ul>
         </div>
       </card-content>
@@ -863,7 +1056,7 @@
       <card-content
         tabindex="2"
         [isOpen]="false"
-        [id]="'language_detail'"
+        [id]="'user-profile'"
         style="outline-color: #10529d"
         class="content_card"
         style="display: flex; justify-content: center"
@@ -883,16 +1076,70 @@
         }"
         [idBtn]="'openLanguage'"
         [padding]="'25px 22px'"
+        (onToggle)="getExpan($event,'isShowLanguages')"
+        [height]="isShowLanguages ? '0px' : 'auto'"
       >
         <div class="container_user" *ngIf="userLanguage.length > 0">
           <ul
             *ngFor="
               let language of userLanguage;
-              let last = last;
-              let firstcomp = first
+              let index = index; let first = first
             "
           >
-            <li class="timeline-event">
+          <li class="timeline-event" *ngIf="isShowLanguages" >
+            <hr *ngIf="!first" />
+            <div class="timeline-block">
+              <div class="img-timeline-cmp">
+                <img
+                  class="languagea-img"
+                  [src]="language.image"
+                  alt="project"
+                />
+              </div>
+              <div class="timeline-info">
+                <div>
+                  <p id="title-timeline">
+                    {{ language?.language }}
+                  </p>
+                  <div class="desc-info">
+                    <p style="text-decoration-line: underline">
+                      {{ language?.proficiency }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div
+                id="ic-edit"
+                [nbTooltip]="
+                  isMyUserProfile
+                    ? ('my-profile.edit' | translate)
+                    : ('my-profile.view' | translate)
+                "
+                style="top: 18px"
+              >
+                <a
+                  (click)="nextPage('user-language/', language?._key)"
+                  [id]="'language-' + language?._key"
+                  *ngIf="isMyUserProfile"
+                >
+                  <nb-icon
+                    nbSuffix
+                    icon="edit-2-outline"
+                    pack="eva"
+                  ></nb-icon>
+                </a>
+                <a
+                  (click)="nextPage('user-language-detail/', language?._key)"
+                  [id]="'language-' + language?._key"
+                  *ngIf="!isMyUserProfile"
+                >
+                  <nb-icon nbSuffix icon="eye-outline" pack="eva"></nb-icon>
+                </a>
+              </div>
+            </div>
+          </li>
+            <li class="timeline-event" *ngIf="index <3 && !isShowLanguages" >
+              <hr *ngIf="!first" />
               <div class="timeline-block">
                 <div class="img-timeline-cmp">
                   <img
@@ -934,7 +1181,7 @@
                     ></nb-icon>
                   </a>
                   <a
-                    (click)="openLanguageDetail(language?._key)"
+                    (click)="nextPage('user-language-detail/', language?._key)"
                     [id]="'language-' + language?._key"
                     *ngIf="!isMyUserProfile"
                   >
@@ -944,7 +1191,6 @@
               </div>
             </li>
 
-            <hr *ngIf="!last" />
           </ul>
         </div>
       </card-content>

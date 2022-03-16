@@ -19,7 +19,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
 import { aureoleRootReducers } from './state/rootReducers';
-import { AureoleRoutingModule } from './app-routing.module';
+import { AppRoutingModule } from './app-routing.module';
 import {
   NbButtonModule,
   NbIconModule,
@@ -142,7 +142,7 @@ const PAGES = [
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    AureoleRoutingModule,
+    AppRoutingModule,
     AitUiModule.forRoot(environment),
     AitAuthModule.forRoot(environment),
     StoreModule.forRoot(

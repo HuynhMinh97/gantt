@@ -33,22 +33,6 @@ import { UserCerfiticateService } from '../../../services/user-certificate.servi
 import { UserCourseService } from '../../../services/user-course.service';
 import { UserEducationService } from '../../../services/user-education.service';
 import { UserLanguageService } from '../../../services/user-language.service';
-import { UserCourseComponent } from '../user-course/user-course.component';
-import { UserSkillsComponent } from '../user-skills/user-skills.component';
-import { UserReorderSkillsComponent } from '../user-reorder-skills/user-reorder-skills.component';
-import { UserExperienceComponent } from '../user-experience/user-experience.component';
-import { UserCertificateComponent } from '../user-certificate/user-certificate.component';
-import { UserEducationComponent } from '../user-education/user-education.component';
-import { UserLanguageComponent } from '../user-language/user-language.component';
-import { UserOnboardingComponent } from '../user-onboarding/user-onboarding.component';
-import { UserProjectComponent } from '../user-project/user-project.component';
-import { UserProjectDetailComponent } from '../user-project-detail/user-project-detail.component';
-import { UserExperienceDetailComponent } from '../user-experience-detail/user-experience-detail.component';
-import { UserCertificateDetailComponent } from '../user-certificate-detail/user-certificate-detail.component';
-import { UserCourseDetailComponent } from '../user-course-detail/user-course-detail.component';
-import { UserEducationDetailComponent } from '../user-education-detail/user-education-detail.component';
-import { UserLanguageDetailComponent } from '../user-language-detail/user-language-detail.component';
-import { UserOnboardingDetailComponent } from '../user-onboarding-detail/user-onboarding-detail.component';
 import { MatchingUtils } from '../../../../../../../apps/ait-matching-webapp/src/app/@constants/utils/matching-utils';
 import { UserSkillsService } from '../../../services/user-skills.service';
 
@@ -61,13 +45,14 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   mode = '';
   profileId = '';
   skills = '';
-  showSkill = false;
-  showCourse = false;
-  showProject = false;
-  showLanguages = false;
-  showEducation = false;
-  showExperience = false;
-  showCertificate = false;
+  // showSkill = false;
+  // showCourse = false;
+  // showProject = false;
+  // showLanguages = false;
+  // showEducation = false;
+  // showExperience = false;
+  // showCertificate = false;
+
   isShowSkill = false;
   isShowCourse = false;
   isShowProject = false;
@@ -75,6 +60,10 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   isShowEducation = false;
   isShowExperience = false;
   isShowCertificate = false;
+
+  heightSkill = '';
+  heightProject = '';
+  heightExperience = '';
 
   avata: any;
   url_avatar = '';
@@ -180,7 +169,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     this.getCourseByUserId();
     this.getEducationByUserId();
     this.getLanguageByUserId();
-    this.getImg();
+    // this.getImg();
   }
   async getMasterData() {
     try {
@@ -233,7 +222,12 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
             this.cancelLoadingApp();
           } else {
             this.cancelLoadingApp();
-            this.router.navigate([`/404`]);
+            if(this.mode == MODE.VIEW) {
+              this.router.navigate([`/404`]);
+            }else{
+              this.router.navigate([`user-onboarding`]);
+            }
+            
           }
           this.timeExperienceStr = this.dateDiffInYears(this.timeExperience);
         }
@@ -252,9 +246,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     await this.reoderSkillsService.findReorder(from).then(async (res) => {
       if (res.status === RESULT_STATUS.OK) {
         const data = res.data;
-        if (data.length > 0) {
-          this.showSkill = true;
-        }
         this.countSkill =  data.length ;
         const top5 = {} as OrderSkill;
         top5.name = this.translateService.translate('top 5');
@@ -326,7 +317,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
               }
             });
           });
-          this.showProject = this.userProject.length > 0 ? true : false;
+          this.getHieghtProject();
         }, 1000);
       })
   }
@@ -362,12 +353,10 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
                 }
               });
             });
-            this.showExperience = this.userExperience.length > 0 ? true : false;
             this.timeExperienceStr = this.dateDiffInYears(this.timeExperience);
-            // this.cancelLoadingApp();
+            this.getHieghtExperience();
           }, 1000);   
         }else{
-          // this.cancelLoadingApp();
         }
       })
       
@@ -378,7 +367,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       .then((res) => {
         const data = res.data;
         this.countCentificate = data.length;
-        this.showCertificate = data.length > 0 ? true : false;
         for (const element of data) {
           const centificate = {} as CertificateDto;
           let datefrom = element.issue_date_from;
@@ -403,7 +391,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       .then((res) => {
         const data = res.data;
         this.countCourse = data.length;
-        this.showCourse = data.length > 0 ? true : false;
         for (const element of data) {
           const course = {} as CourseDto;
           let datefrom = element.start_date_from;
@@ -427,7 +414,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     this.userEducationService.findUserEducationByUserId(this.profileId)
       .then((res) => {
         const data = res.data;
-        this.showEducation = data.length > 0 ? true : false;
         for (const element of data) {
           const education = {} as EducationDto;
           let datefrom = element.start_date_from;
@@ -452,7 +438,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     this.userLanguageService.findUserLanguageByUserId(this.profileId)
       .then((res) => {
         const data = res.data;
-        this.showLanguages = data.length > 0 ? true : false;
         for (const element of data) {
           const language = {} as LanguageDto;
           let datefrom = element.start_date_from;
@@ -497,283 +482,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       }
     }
   }
-
-  openOnboarding(key?: string) {
-    this.dialogService.open(UserOnboardingComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-        user_key: key,
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-        this.callLoadingApp();
-        this.DataUserProfile = null;
-        await this.getUserProfileByUserId();
-        setTimeout(() => {
-          this.cancelLoadingApp();
-        }, 300)
-      }
-    });
-  }
-  openOnboardingDetail(key?: string) {
-    this.dialogService.open(UserOnboardingDetailComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-        user_key: key,
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-      }
-    });
-  }
-
-  // openProjects(key?: string) {
-  //   this.dialogService.open(UserProjectComponent, {
-  //     closeOnBackdropClick: false,
-  //     hasBackdrop: true,
-  //     autoFocus: false,
-  //     context: {
-  //       project_key: key,
-  //     },
-  //   }).onClose.subscribe(async (event) => {
-  //     if (event) {
-  //       this.callLoadingApp();
-  //       this.userProject = [];
-  //       this.timeProject = 0;
-  //       await this.getProjectByUserId();
-  //       setTimeout(() => {
-  //         this.cancelLoadingApp();
-  //       }, 1000)
-  //     }
-  //   });
-  // }
-  openProjectsDetail(key?: string) {
-    this.dialogService.open(UserProjectDetailComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-        user_key: key,
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-      }
-    });
-  }
-  openAddSkill() {
-    this.dialogService.open(UserSkillsComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-        this.callLoadingApp();
-        this.skillByCategory = [];
-        this.getSkillByUserId();
-        setTimeout(() => {
-          this.cancelLoadingApp();
-        }, 500)
-      }
-    });
-  }
-  openReorderSkill() {
-    this.dialogService.open(UserReorderSkillsComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-        this.callLoadingApp();
-        this.skillByCategory = [];
-        this.getSkillByUserId();
-        setTimeout(() => {
-          this.cancelLoadingApp();
-        }, 500)
-      }
-    });
-  }
-  openExperience(key?: string) {
-    this.dialogService.open(UserExperienceComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-        this.callLoadingApp();
-        this.userExperience = [];
-        this.getExperiencByUserId();
-        setTimeout(() => {
-          this.cancelLoadingApp();
-        }, 1000)
-      }
-    });
-  }
-  openExperiencedetail(key?: string) {
-    this.dialogService.open(UserExperienceDetailComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-      }
-    });
-  }
-  openCertificate(key?: string) {
-    this.dialogService.open(UserCertificateComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-        certificate_key: key,
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-        this.callLoadingApp();
-        this.userCentificate = [];
-        this.getCentificateByUserId();
-        setTimeout(() => {
-          this.cancelLoadingApp();
-        }, 500)
-      }
-    });
-  }
-  openCertificateDetail(key?: string) {
-    this.dialogService.open(UserCertificateDetailComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-        user_key: key,
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {}
-    });
-  }
-  openCourse(key?: string) {
-    this.dialogService.open(UserCourseComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-        course_key: key,
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-        this.callLoadingApp();
-        this.userCourse = [];
-        this.getCourseByUserId();
-        setTimeout(() => {
-          this.cancelLoadingApp();
-        }, 500)
-      }
-    });
-  }
-  openCourseDetail(key?: string) {
-    this.dialogService.open(UserCourseDetailComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-        user_key: key,
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-      }
-    });
-  }
-  openEducation(key?: string) {
-    this.dialogService.open(UserEducationComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-        this.callLoadingApp();
-        this.userEducation = [];
-        this.getEducationByUserId();
-        setTimeout(() => {
-          this.cancelLoadingApp();
-        }, 500)
-      }
-    });
-  }
-  openEducationDetail(key?: string) {
-    this.dialogService.open(UserEducationDetailComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-      }
-    });
-  }
-  openLanguage(key?: string) {
-    this.dialogService.open(UserLanguageComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-        this.callLoadingApp();
-        this.userLanguage = [];
-        this.getLanguageByUserId();
-        setTimeout(() => {
-          this.cancelLoadingApp();
-        }, 500)
-      }
-    });
-  }
-  openLanguageDetail(key?: string) {
-    this.dialogService.open(UserLanguageDetailComponent, {
-      closeOnBackdropClick: false,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-      },
-    }).onClose.subscribe(async (event) => {
-      if (event) {
-      }
-    });
-  }
-
-  async getImg() {
-    await this.userProfileService.getFilesByFileKeys(this.url_avatar)
-      .then((res) => {
-        console.log(res);       
-      })
-  }
-  getImage = (file: any, isError = false) => {
-    if (!isError) {
-      return this.safelyURL(file.data_base64, file.file_type)
-    }
-    return 'https://d30y9cdsu7xlg0.cloudfront.net/png/47682-200.png';
-  }
-  safelyURL = (data, type) => this.santilizer.bypassSecurityTrustUrl(`data:${type};base64, ${data}`);
-  
-  isOpen = {
-    userInfo: true,
-    userTraining: true,
-    userJobQuery: true,
-    userCertificate: true,
-  };
 
   dateDiffInYears(month) {
     const monthStr = this.translateService.translate('my-profile.months');
@@ -886,9 +594,24 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     })
   }
   getExpan(data, val){
-    console.log(data);
-    console.log(this[val]);
     this[val] = true;
-    console.log(this[val]);
+  }
+  getHieghtProject(){
+    if(this.userProject[0]?.data_project.length >=2 && !this.isShowProject){
+      this.heightProject = '320px'
+    }else if(this.userProject[0]?.data_project.length ==1 && !this.isShowProject){
+      this.heightProject = '200px'
+    }else{
+      this.heightProject = '0px'
+    }
+  }
+  getHieghtExperience(){
+    if(this.userExperience[0]?.data_project.length >=2 && !this.isShowExperience){
+      this.heightExperience = '320px'
+    }else if(this.userExperience[0]?.data_project.length ==1 && !this.isShowExperience){
+      this.heightExperience = '200px'
+    }else{
+      this.heightExperience = '0px'
+    }
   }
 }
