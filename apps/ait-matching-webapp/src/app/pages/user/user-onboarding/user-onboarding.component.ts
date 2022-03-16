@@ -1,12 +1,24 @@
 import { UserOnboardingService } from './../../../services/user-onboarding.service';
-import { Component, ElementRef, EventEmitter, OnInit, Optional } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  OnInit,
+  Optional,
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  NavigationError,
+  NavigationStart,
+  Router,
+} from '@angular/router';
 import {
   NbDialogRef,
   NbDialogService,
@@ -28,9 +40,16 @@ import {
   MODE,
 } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
-import { isArrayFull, isObjectFull, KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
+import {
+  isArrayFull,
+  isObjectFull,
+  KEYS,
+  KeyValueDto,
+  RESULT_STATUS,
+} from '@ait/shared';
 import { KeyValueCheckedDto } from './interface';
 import { UserProfileService } from '../../../services/user-profile.service';
+import { UserSkillsService } from '../../../services/user-skills.service';
 @Component({
   selector: 'ait-user-onboarding',
   templateUrl: './user-onboarding.component.html',
@@ -41,17 +60,22 @@ export class UserOnboardingComponent
   implements OnInit {
   // Create form group
   userOnboardingInfo: FormGroup;
+  userJobSettingInfo: FormGroup;
+  userJobSettingInfoClone: any;
   userOnboardingInfoClone: any;
   toggle = new EventEmitter();
   genderList: KeyValueCheckedDto[];
   defaultGender = {} as KeyValueDto;
-  basicInfomation = 'Basic Infomation'
+  basicInfomation = 'Basic Infomation';
   mode = MODE.NEW;
-  skills: any;
+  current_job_skills: any;
+  job_setting_skills: any;
+
   errorArr: any;
   cityCode: any;
   countryCode: any;
   districtCode: any;
+  companySkills = [];
   dateFormat = '';
   sort_no = 0;
   isReset = false;
@@ -86,7 +110,6 @@ export class UserOnboardingComponent
     location: false,
     job_setting_level: false,
     current_job_level: false,
-
   };
 
   userOnbInfo = {
@@ -117,7 +140,7 @@ export class UserOnboardingComponent
     district: false,
     ward: false,
   };
-
+  jobSettingInfo: any;
   user_skill = {
     _from: '',
     _to: '',
@@ -138,6 +161,7 @@ export class UserOnboardingComponent
     private dialogService: NbDialogService,
     private navigation: AitNavigationService,
     private userOnbService: UserOnboardingService,
+    private userSkillsService: UserSkillsService,
     private userProfileService: UserProfileService,
     private translateService: AitTranslationService,
     private masterDataService: AitMasterDataService,
@@ -158,7 +182,7 @@ export class UserOnboardingComponent
       layoutScrollService,
       toastrService
     );
-    
+
     store.pipe(select(getUserSetting)).subscribe((setting) => {
       if (isObjectFull(setting) && setting['date_format_display']) {
         this.dateFormat = setting['date_format_display'];
@@ -169,6 +193,8 @@ export class UserOnboardingComponent
       module: 'user',
       page: 'user_onboarding',
     });
+   
+
     this.userOnboardingInfo = this.formBuilder.group({
       first_name: new FormControl(null, [
         Validators.required,
@@ -178,12 +204,8 @@ export class UserOnboardingComponent
         Validators.required,
         Validators.maxLength(200),
       ]),
-      katakana: new FormControl(null, [
-        Validators.maxLength(200)
-      ]),
-      romaji: new FormControl(null, [
-        Validators.maxLength(200)
-      ]),
+      katakana: new FormControl(null, [Validators.maxLength(200)]),
+      romaji: new FormControl(null, [Validators.maxLength(200)]),
       gender: new FormControl(null, [Validators.required]),
       bod: new FormControl(null, [Validators.required]),
       phone_number: new FormControl(null, [Validators.required]),
@@ -205,19 +227,25 @@ export class UserOnboardingComponent
       current_job_title: new FormControl(null),
       industry_working: new FormControl(null, [Validators.required]),
       current_job_level: new FormControl(null),
-      industry: new FormControl(null, [Validators.required]),
+      industry: new FormControl(null, [
+        Validators.required,
+        Validators.maxLength(50),
+      ]),
       job_setting_title: new FormControl(null),
       location: new FormControl(null),
       job_setting_level: new FormControl(null),
-      current_job_skills: new FormControl(null),
-      job_setting_skills: new FormControl(null),
+      current_job_skills: new FormControl(null, Validators.maxLength(50)),
+      job_setting_skills: new FormControl(null, Validators.maxLength(50)),
       _key: new FormControl(null),
-      
     });
+
     
+
+    
+
     // get key form parameter
-     this.user_key = this.activeRouter.snapshot.paramMap.get('id');
-     this._key = this.activeRouter.snapshot.paramMap.get('id');
+    this.user_key = this.activeRouter.snapshot.paramMap.get('id');
+    this._key = this.activeRouter.snapshot.paramMap.get('id');
 
     this.userOnbService
       .findSiteLanguageById(this.authService.getUserID())
@@ -231,40 +259,41 @@ export class UserOnboardingComponent
       });
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
-          this.close(false);
+        this.close(false);
       }
     });
   }
 
-  async ngOnInit(): Promise<void> {    
+  async ngOnInit(): Promise<void> {
     setTimeout(() => {
       this.isLoad = true;
     }, 500);
     if (this.user_key) {
       this.mode = MODE.EDIT;
     }
-      if (this.user_key) {
-        this.callLoadingApp();
-        await this.userOnbService
-          .findUserOnboardingByKey(this.user_key)
-          .then(async (r) => {
-            if (r.status === RESULT_STATUS.OK) {
-              let isUserExist = false;
-              this.dataCountry = r.data[0];
-              if (r.data.length > 0 && !this.dataCountry.del_flag) {
-                this.userOnboardingInfo.patchValue({ ...this.dataCountry });
-                this.userOnboardingInfoClone = this.userOnboardingInfo.value;
-                this.user_id_profile = this.dataCountry.user_id;
-                this._key = this.dataCountry._key;
-                isUserExist = true;
-              }
-              this.cancelLoadingApp();
-              !isUserExist && this.router.navigate([`/404`]);
-            }
-          });
-      } 
-    
+    if (this.user_key) {
+      this.callLoadingApp();
+      await this.userOnbService
+        .findUserOnboardingByKey(this.user_key)
+        .then(async (r) => {
+          if (r.status === RESULT_STATUS.OK) {
+            let isUserExist = false;
+            this.dataCountry = r.data[0];
+            if (r.data.length > 0 && !this.dataCountry.del_flag) {
+              this.userOnboardingInfo.patchValue({ ...this.dataCountry });
+              this.userOnboardingInfoClone = this.userOnboardingInfo.value;
+              this.userJobSettingInfoClone = this.userOnboardingInfo.value;
 
+              this.user_id_profile = this.dataCountry.user_id;
+              this._key = this.dataCountry._key;
+              isUserExist = true;
+            }
+            this.cancelLoadingApp();
+            !isUserExist && this.router.navigate([`/404`]);
+          }
+        });
+      await this.findSkills();
+    }
     await this.getGenderList();
     this.setDefaultGenderValue();
 
@@ -283,7 +312,6 @@ export class UserOnboardingComponent
       }
     }
   }
-
 
   toggleExpan = () => {
     this.isExpan = !this.isExpan;
@@ -350,6 +378,32 @@ export class UserOnboardingComponent
     }
   }
 
+  async findSkills() {
+    const from = 'sys_user/' + this.user_id;
+    await this.userSkillsService.findSkill(from).then((res) => {
+      if (res.status === RESULT_STATUS.OK) {
+        if (res.data.length > 0) {
+          this.mode = MODE.EDIT;
+          const listSkills = [];
+          for (const item of res.data) {
+            listSkills.push(item.skills);
+          }
+          this.userOnboardingInfo.controls['current_job_skills'].setValue(
+            listSkills
+          );
+          this.companySkills = listSkills;
+          this.userOnboardingInfoClone = JSON.parse(
+            JSON.stringify(this.userOnboardingInfo.value)
+          );
+          this.cancelLoadingApp();
+        } else {
+          this.userOnboardingInfoClone = this.userOnboardingInfo.value;
+          this.cancelLoadingApp();
+        }
+      }
+    });
+  }
+
   resetForm() {
     if (this.mode === MODE.NEW) {
       for (const index in this.resetUserInfo) {
@@ -386,7 +440,7 @@ export class UserOnboardingComponent
       this.userOnboardingInfo.patchValue({
         ...this.userOnboardingInfoClone,
       });
-      this.dataCountry = { ...this.userOnboardingInfo.value }
+      this.dataCountry = { ...this.userOnboardingInfo.value };
     }
     this.showToastr('', this.getMsg('I0007'));
   }
@@ -394,19 +448,36 @@ export class UserOnboardingComponent
   saveDataUserProfile() {
     const saveData = this.userOnboardingInfo.value;
     saveData.ward = saveData.ward ? saveData.ward?._key : null;
-    saveData.current_job_title = saveData.current_job_title ? saveData.current_job_title?._key : null;
-    saveData.job_setting_title = saveData.job_setting_title ? saveData.job_setting_title?._key : null;
-    saveData.current_job_level = saveData.current_job_level ? saveData.current_job_level?._key : null;
-    saveData.job_setting_level = saveData.job_setting_level ? saveData.job_setting_level[0]?._key : null;
-    saveData.province_city = saveData.province_city ? saveData.province_city?._key : null;
+    saveData.current_job_title = saveData.current_job_title
+      ? saveData.current_job_title?._key
+      : null;
+    saveData.current_job_level = saveData.current_job_level
+      ? saveData.current_job_level?._key
+      : null;
+    saveData.province_city = saveData.province_city
+      ? saveData.province_city?._key
+      : null;
     saveData.gender = saveData.gender._key;
-    saveData.country_region = saveData.country_region ? saveData.country_region?._key : null;
+    saveData.country_region = saveData.country_region
+      ? saveData.country_region?._key
+      : null;
     saveData.district = saveData.district ? saveData.district?._key : null;
-    saveData.industry = saveData.industry ? saveData.industry?._key : null;
-    saveData.industry_working = saveData.industry_working ? saveData.industry_working?._key : null;
-    saveData.company_working = saveData.company_working ? saveData.company_working?._key : null;
-    this.skills = saveData.current_job_skills;
+    saveData.industry_working = saveData.industry_working
+      ? saveData.industry_working?._key
+      : null;
+    saveData.company_working = saveData.company_working
+      ? saveData.company_working?._key
+      : null;
+    this.current_job_skills = saveData.current_job_skills;
+    delete saveData.industry;
     delete saveData.current_job_skills;
+    delete saveData.location;
+    delete saveData.available_time_from;
+    delete saveData.available_time_to;
+    delete saveData.job_setting_level;
+    delete saveData.job_setting_level;
+    delete saveData.job_setting_title;
+    delete saveData.job_setting_skills;
     if (this.mode === MODE.NEW) {
       saveData['top_skills'] = [];
       saveData['user_id'] = this.user_id;
@@ -417,12 +488,36 @@ export class UserOnboardingComponent
     return saveData;
   }
 
+  saveJobSettingData() {
+    const saveData = this.userJobSettingInfoClone.value;
+    this.job_setting_skills = saveData.job_setting_skills;
+    saveData.industry = saveData.industry ? saveData.industry?._key : null;
+    saveData.location = saveData.location ? saveData.industry?._key : null;
+    saveData.available_time_from = saveData.available_time_from
+      ? saveData.available_time_from?.value
+      : null;
+    saveData.available_time_to = saveData.available_time_from
+      ? saveData.available_time_to?.value
+      : null;
+    saveData.job_setting_level = saveData.job_setting_level
+      ? saveData.job_setting_level[0]?._key
+      : null;
+    saveData.job_setting_title = saveData.job_setting_title
+      ? saveData.job_setting_title?._key
+      : null;
+    return saveData;
+  }
+
+  async saveJobSetting() {
+    await this.userOnbService.saveJobSetting(this.saveJobSettingData());
+  }
+
   async saveDataUserSkill() {
     if (this.mode === MODE.NEW) {
       this.user_skill._from = 'sys_user/' + this.authService.getUserID();
-      this.user_skill.relationship = 'user_skill';
+      this.user_skill.relationship = 'biz_user_skill';
       const skills = [];
-      for (const item of this.skills) {
+      for (const item of this.current_job_skills) {
         await this.userOnbService.findSkillsByCode(item._key).then((res) => {
           skills.push(res.data[0]._key);
         });
@@ -448,6 +543,7 @@ export class UserOnboardingComponent
         .then((res) => {
           if (res?.status === RESULT_STATUS.OK) {
             this.saveDataUserSkill();
+            this.saveJobSetting();
             const message =
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
@@ -479,7 +575,7 @@ export class UserOnboardingComponent
         autoFocus: false,
         context: {
           title: this.getMsg('I0004'),
-          id:'delete-user-onboading',
+          id: 'delete-user-onboading',
         },
       })
       .onClose.subscribe(async (event) => {
@@ -513,9 +609,9 @@ export class UserOnboardingComponent
           hasBackdrop: true,
           autoFocus: false,
           context: {
-            style: {width: '90%'},
+            style: { width: '90%' },
             title: this.getMsg('I0006'),
-            id:'back-user-onboading',
+            id: 'back-user-onboading',
           },
         })
         .onClose.subscribe(async (event) => {
@@ -548,7 +644,7 @@ export class UserOnboardingComponent
             block: 'center',
           });
           break;
-        } catch { }
+        } catch {}
       }
     }
   }
@@ -608,9 +704,7 @@ export class UserOnboardingComponent
       this.userOnboardingInfo.patchValue(item);
     } else {
       this.userOnboardingInfo.patchValue(null);
-
     }
-
   }
 
   close(event: boolean) {
