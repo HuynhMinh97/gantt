@@ -1,0 +1,42 @@
+<div [ngClass]="classContainer">
+  <ait-label [label]="label" *ngIf="label" [id]="id"></ait-label>
+  <div class="display__files" style="margin-top: 8px" tabindex="{{tabIndex}}">
+    <div class="card__display">
+      <div class="info">
+        <p class="count" [id]="ID('input_file')">{{ numberOfFilesI18 }}： {{ files.length }}</p>
+        <p *ngFor="let file of files" class="file_line">
+          <nb-icon icon="attach-2-outline" style="font-size: 15px"></nb-icon>
+          <a
+            style="
+              text-decoration: underline;
+              color: royalblue;
+              cursor: pointer;
+            "
+            [href]="
+              sanitize(
+                prefixHref('application/octet-stream') + file.data_base64
+              )
+            "
+            download="{{ file.name }}"
+            >{{ file.name }}
+            <span>( {{ numberFixed(file.size / 1024) }} KB)</span>
+          </a>
+          <!-- <span>  </span> -->
+        </p>
+        <!-- </div> -->
+      </div>
+    </div>
+
+    <div class="caption" *ngIf="guidance">
+      <div class="icon" *ngIf="guidanceIcon">
+        <nb-icon [icon]="guidanceIcon"></nb-icon>
+      </div>
+      <div class="info">
+        <p style="word-break: break-word; color: #8f9bb3; font-size: 12px" [id]="ID('note')">
+          {{ getCaption() }}
+        </p>
+      </div>
+    </div>
+  </div>
+  <!-- <img [src]="'data:image/jpg;base64,' + base64" /> -->
+</div>

@@ -1,0 +1,39 @@
+<div class="component__container">
+  <div class="main__container">
+    <ait-text-gradient [content]="pageTitle" [id]="'title'"></ait-text-gradient>
+    <ait-space></ait-space>
+
+    <ait-card-content class="content__card" [disableHeader]="true" [transition]="false">
+      <div class="content">
+        <div class="left__side" *ngIf="leftSide.length > 0">
+
+          <div [ngStyle]="{margin: component?.component_setting?.margin || 0}"></div>
+
+          <ng-container *ngFor="let component of leftSide">
+            <ait-output-text *ngIf="component.type !== 'file'" [label]="component?.item_label"
+              style="margin-bottom: 16px; width: 100%" [width]="component?.component_setting?.width || '200px'"
+              [value]="component?.value" [id]="component?.item_id"></ait-output-text>
+            <ait-output-file *ngIf="component.type === 'file'" [label]="component?.item_label"
+              [fileKeys]="component?.value" [guidanceIcon]="component?.component_setting?.guidance_icon || ''"
+              [guidance]="component?.component_setting?.guidance || ''"></ait-output-file>
+            <ait-space [margin]="'7.25px'"></ait-space>
+          </ng-container>
+        </div>
+        <div class="right__side" *ngIf="rightSide.length > 0">
+
+          <div [ngStyle]="{margin: component?.component_setting?.margin || 0}"></div>
+
+          <ng-container *ngFor="let component of rightSide">
+            <ait-output-text [label]="component?.item_label" style="margin-bottom: 16px; width: 100%"
+              [width]="component?.component_setting?.width || '200px'" [value]="component?.value"
+              [id]="component?.item_id"></ait-output-text>
+              <ait-output-file *ngIf="component.type === 'file'" [label]="component?.item_label"
+              [fileKeys]="component?.value" [guidanceIcon]="component?.component_setting?.guidance_icon || ''"
+              [guidance]="component?.component_setting?.guidance || ''"></ait-output-file>
+            <ait-space [margin]="'7.25px'"></ait-space>
+          </ng-container>
+        </div>
+      </div>
+    </ait-card-content>
+  </div>
+</div>

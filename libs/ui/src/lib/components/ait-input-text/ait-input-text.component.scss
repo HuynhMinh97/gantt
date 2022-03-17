@@ -1,0 +1,82 @@
+@import "../../@theme/styles/themes.scss";
+.ait-text-input {
+  max-width: 400px;
+
+  textarea {
+    &.isError {
+      border-color: nb-theme(color-danger-500) !important;
+    }
+    &.isSuccess {
+      border: 1px solid nb-theme(color-success-500) !important;
+    }
+    &.hasBorder {
+      border: 1px solid rgb(228, 233, 242) !important;
+    }
+  }
+  input {
+    &.isError {
+      border-color: nb-theme(color-danger-500) !important;
+    }
+    &.isSuccess {
+      border: 1px solid nb-theme(color-success-500) !important;
+    }
+    &.hasBorder {
+      border: 1px solid rgb(228, 233, 242) !important;
+    }
+    &.disable {
+      color :gray !important;
+    }
+  }
+  ::placeholder {
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #8f9bb3;
+    opacity: 1; /* Firefox */
+  }
+
+  :-ms-input-placeholder {
+    /* Internet Explorer 10-11 */
+    color: #8f9bb3;
+  }
+
+  ::-ms-input-placeholder {
+    /* Microsoft Edge */
+    color: #8f9bb3;
+  }
+}
+.caption {
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  .icon {
+    width: 25px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .info {
+    flex-grow: 1;
+    height: 100%;
+  }
+}
+
+.input_area {
+  background: nb-theme(color-basic-200);
+  border: 1px solid nb-theme(color-basic-600);
+  &.focus {
+    border: 1px solid #10529d;
+  }
+}
+.inputPass{
+  position: relative;
+  nb-icon{
+    height: 24px;
+    width: 24px;
+    color: #8f9bb3;
+    cursor: pointer;
+    margin-right: 3px;
+    position: absolute;
+    top: 9px;
+    right: 5px;
+  }
+}

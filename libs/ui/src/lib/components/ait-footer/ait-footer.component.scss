@@ -1,0 +1,112 @@
+@import "../../@theme/styles/themes.scss";
+@import "~@nebular/theme/styles/global/breakpoints";
+@import "~bootstrap/scss/mixins/breakpoints";
+
+@include nb-install-component() {
+  // width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  p {
+    padding-bottom: 5px;
+  }
+
+  .socials {
+    font-size: 2rem;
+
+    a {
+      padding: 0.4rem;
+      color: nb-theme(text-hint-color);
+      transition: color ease-out 0.1s;
+
+      &:hover {
+        color: nb-theme(text-basic-color);
+      }
+    }
+  }
+  .footer__home__home {
+    height: 100px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background-color: nb-theme(background-footer);
+    .img {
+      height: 60px;
+      object-fit: cover;
+      width: 60px;
+    }
+    .content__foot {
+      width: 35%;
+      .img {
+        cursor: pointer;
+      }
+    }
+    p {
+      padding-bottom: 0 !important;
+    }
+    .logo__home {
+      height: 50px;
+      width: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .links__home {
+      display: flex;
+      p {
+        margin: 0;
+        a {
+          font-weight: normal;
+          font-size: 16px;
+          text-decoration-line: underline;
+          color: nb-theme(color-primary-500);
+          margin-left: 20px;
+          cursor: pointer;
+        }
+      }
+    }
+    .copyright__home {
+      font-weight: normal;
+      font-size: 16px;
+      color: nb-theme(color-primary-500);
+      cursor: pointer;
+      margin: 0;
+      a {
+        text-decoration: none;
+      }
+      p {
+        cursor: pointer;
+      }
+    }
+  }
+
+  @include media-breakpoint-down(is) {
+    .socials {
+      font-size: 1.5rem;
+    }
+  }
+
+  @media only screen and (max-width: 540px) {
+   .footer__home__home {
+     flex-direction: column;
+     .links__home {
+       display: none;
+     }
+     .copyright__home {
+       display: none;
+     }
+   }
+  }
+
+  @media only screen and (min-width: 1024px) and (max-width: 1025px) {
+    .footer__home__home {
+      .img {
+        transform: scale(0.6);
+      }
+      .links__home,
+      .copyright__home {
+        transform: scale(0.7);
+      }
+    }
+  }
+}

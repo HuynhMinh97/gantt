@@ -1,0 +1,4 @@
+<div class="text_control" [ngStyle]="style">
+    <span *ngIf="!isLink" nbTooltip="{{text}}" nbTooltipPlacement="top-end">{{text}}</span>
+    <span (click)="navigateToJobList()" class="link" *ngIf="isLink">{{text}}</span>
+</div>

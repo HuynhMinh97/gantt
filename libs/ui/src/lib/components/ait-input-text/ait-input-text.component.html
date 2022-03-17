@@ -1,0 +1,228 @@
+<div [ngClass]="classContainer">
+  <ait-label
+    [label]="label"
+    [required]="required"
+    *ngIf="label"
+    [styleText]="styleLabel"
+    [id]="id"
+  ></ait-label>
+
+  <nb-form-field
+    class="ait-text-input"
+    style="margin-top: 8px; max-width: 100%"
+  >
+    <nb-icon
+      nbPrefix
+      *ngIf="iconName && nbPrefix"
+      icon="{{ iconName }}"
+      pack="eva"
+    ></nb-icon>
+    <nb-icon
+      nbSuffix
+      *ngIf="iconName && !nbPrefix"
+      icon="{{ iconName }}"
+      pack="eva"
+    ></nb-icon>
+    <textarea
+      class="input_area"
+      nbInput
+      autocomplete="doNotAutoComplete"
+      [status]="status"
+      [fieldSize]="fieldSize"
+      [shape]="shape"
+      [fullWidth]="fullWidth"
+      [placeholder]="getPlaceholder()"
+      [rows]="rows"
+      [cols]="cols"
+      [style.width]="width"
+      type="text"
+      (input)="onChange($event.target.value)"
+      [formControl]="inputCtrl"
+      [class.isError]="isError"
+      style="max-width: 100% !important; resize: none"
+      *ngIf="rows !== 1 && readonly"
+      [maxLength]="length"
+      [disabled]="readonly"
+      [readOnly]="readonly"
+      id="{{ ID('textarea') }}"
+      (focus)="focusInput()"
+      (blur)="this.isFocus = false"
+      [class.focus]="getFocus()"
+      tabindex="{{ tabIndex }}"
+    ></textarea>
+
+    <textarea
+      class="input_area"
+      autocomplete="doNotAutoComplete"
+      nbInput
+      [status]="status"
+      [fieldSize]="fieldSize"
+      [shape]="shape"
+      [fullWidth]="fullWidth"
+      [placeholder]="getPlaceholder()"
+      [rows]="rows"
+      type="text"
+      [style.width]="width"
+      (input)="onChange($event.target.value)"
+      [formControl]="inputCtrl"
+      [class.isError]="isError"
+      style="resize: none; max-width: 100% !important"
+      *ngIf="rows !== 1 && !readonly"
+      [maxLength]="length"
+      id="{{ ID('textarea') }}"
+      (focusout)="focusout()"
+      [style.width]="width"
+      [style.height]="height"
+      (focus)="focusInput()"
+      (blur)="this.isFocus = false"
+      [class.focus]="getFocus()"
+      tabindex="{{ tabIndex }}"
+    ></textarea>
+
+    <input
+      class="input_area"
+      autocomplete="doNotAutoComplete"
+      nbInput
+      [status]="status"
+      [fieldSize]="fieldSize"
+      [disabled]="readonly"
+      [readOnly]="readonly"
+      [shape]="shape"
+      [placeholder]="getPlaceholder()"
+      [maxLength]="length"
+      *ngIf="rows === 1 && readonly && type === 'text'"
+      type="text"
+      [class.disable]="readonly"
+      [style.width]="width"
+      [style.height]="height"
+      (input)="onChange($event.target.value)"
+      [formControl]="inputCtrl"
+      [class.isError]="isError"
+      (focus)="focusInput()"
+      (blur)="this.isFocus = false"
+      [class.focus]="getFocus()"
+      style="width: 100%; max-width: 100%; padding-left: 10px"
+      id="{{ ID('input') }}"
+      tabindex="{{ tabIndex }}"
+    />
+
+    <input
+      class="input_area"
+      autocomplete="doNotAutoComplete"
+      nbInput
+      [status]="status"
+      [fieldSize]="fieldSize"
+      [shape]="shape"
+      [placeholder]="getPlaceholder()"
+      [maxLength]="length"
+      *ngIf="rows === 1 && !readonly && type === 'text'"
+      type="text"
+      [style.width]="width"
+      [style.height]="height"
+      (input)="onChange($event.target.value)"
+      [formControl]="inputCtrl"
+      [class.isError]="isError"
+      (focusout)="focusout()"
+      (focus)="focusInput()"
+      [class.focus]="getFocus()"
+      (blur)="this.isFocus = false"
+      style="width: 100%; max-width: 100%; padding-left: 10px"
+      id="{{ ID('input') }}"
+      tabindex="{{ tabIndex }}"
+    />
+
+    <div class="inputPass" [style.width]="width">
+      <input
+        class="input_area"
+        autocomplete="doNotAutoComplete"
+        nbInput
+        [status]="status"
+        [fieldSize]="fieldSize"
+        [shape]="shape"
+        [placeholder]="getPlaceholder()"
+        [maxLength]="length"
+        *ngIf="rows === 1 && !readonly && type ==='password'"
+        [type]="isShowPass ? 'text' : 'password'"
+        [style.width]="width"
+        [style.height]="height"
+        (input)="onChange($event.target.value)"
+        [formControl]="inputCtrl"
+        [class.isError]="isError"
+        (focusout)="focusout()"
+        (focus)="focusInput()"
+        [class.focus]="getFocus()"
+        (blur)="this.isFocus = false"
+        style="width: 100%; max-width: 100%; padding-left: 10px"
+        id="{{ ID('input') }}"
+        tabindex="{{ tabIndex }}"
+        autocomplete="new-password"
+      />
+
+      <nb-icon
+        *ngIf="rows === 1 && !readonly && type ==='password'"
+        icon="{{ isShowPass ? 'eye' : 'eye-off' }}"
+        (click)="toggleShowPass()"
+      ></nb-icon>
+    </div>
+
+    <div class="inputPass" [style.width]="width">
+      <input
+        class="input_area"
+        autocomplete="doNotAutoComplete"
+        nbInput
+        [status]="status"
+        [fieldSize]="fieldSize"
+        [disabled]="readonly"
+        [readOnly]="readonly"
+        [shape]="shape"
+        [placeholder]="getPlaceholder()"
+        [maxLength]="length"
+        *ngIf="rows === 1 && readonly && type === 'password'"
+        type="password"
+        [class.disable]="readonly"
+        [style.width]="width"
+        [style.height]="height"
+        (input)="onChange($event.target.value)"
+        [formControl]="inputCtrl"
+        [class.isError]="isError"
+        (focus)="focusInput()"
+        (blur)="this.isFocus = false"
+        [class.focus]="getFocus()"
+        style="width: 100%; max-width: 100%; padding-left: 10px"
+        id="{{ ID('input') }}"
+        tabindex="{{ tabIndex }}"
+        autocomplete="new-password"
+      />
+
+      <nb-icon
+      *ngIf="rows === 1 && readonly && type === 'password'"
+        icon="{{ isShowPass ? 'eye' : 'eye-off' }}"
+      ></nb-icon>
+    </div>
+
+  </nb-form-field>
+  <div class="caption" *ngIf="guidance">
+    <div class="icon" *ngIf="guidanceIcon">
+      <nb-icon [icon]="guidanceIcon"></nb-icon>
+    </div>
+    <div class="info">
+      <p
+        style="
+          word-break: break-word;
+          color: #8f9bb3;
+          font-size: 12px;
+          margin-bottom: 0;
+          white-space: pre-line;
+        "
+        id="{{ ID('caption') }}"
+      >
+        {{ getCaption() }}
+      </p>
+    </div>
+  </div>
+  <ait-error-message
+    [id]="id"
+    [errors]="messagesError()"
+    [style]="styleMessage"
+  ></ait-error-message>
+</div>
