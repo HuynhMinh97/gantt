@@ -432,6 +432,7 @@
                         'industry'
                       )
                     "
+                    [defaultValue]="userJobSettingInfo.controls['industry'].value"
                   ></ait-autocomplete-master-data>
                 </div>
               </ng-container>
@@ -501,7 +502,7 @@
                         'job_setting_skills'
                       )
                     "
-                    [defaultValue]=""
+                    [defaultValue]="userJobSettingInfo.controls['job_setting_skills'].value"
                   ></ait-autocomplete-master-data>
                 </div>
               </ng-container>
@@ -542,12 +543,12 @@
                     [id]="'start_date_from'"
                     [style]="{ width: '180px' }"
                     [isReset]="true"
-                    [defaultValue]=""
+                    [defaultValue]="userJobSettingInfo.controls['available_time_from'].value"
                     (watchValue)="
                       takeDatePickerValue(
                         $event?.value,
                         'userJobSettingInfo',
-                        'start_date_from'
+                        'available_time_from'
                       )
                     "
                     [isSubmit]="isSubmit"
@@ -566,10 +567,10 @@
                       takeDatePickerValue(
                         $event?.value,
                         'userJobSettingInfo',
-                        'start_date_to'
+                        'available_time_to'
                       )
                     "
-                    [defaultValue]=""
+                    [defaultValue]="userJobSettingInfo.controls['available_time_to'].value"
                     [isReset]="true"
                     [isSubmit]="isSubmit"
                   ></ait-datepicker>

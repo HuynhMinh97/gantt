@@ -94,7 +94,7 @@ export class UserOnboardingComponent
     job_setting_level: false,
     available_time_to: false,
     available_time_from: false,
-  }
+  };
   resetUserInfo = {
     first_name: false,
     last_name: false,
@@ -223,7 +223,6 @@ export class UserOnboardingComponent
       available_time_from: new FormControl(null),
       available_time_to: new FormControl(null),
       _key: new FormControl(null),
-
     });
 
     this.userOnboardingInfo = this.formBuilder.group({
@@ -294,7 +293,7 @@ export class UserOnboardingComponent
       this.callLoadingApp();
       await this.userOnbService.findJobSetting(this.user_key).then((r) => {
         if (r.status === RESULT_STATUS.OK) {
-          this.jobSettingData = r.data[0]
+          this.jobSettingData = r.data[0];
           this.userJobSettingInfo.patchValue({ ...this.jobSettingData });
           this.userJobSettingInfoClone = this.userJobSettingInfo.value;
         }
@@ -326,10 +325,10 @@ export class UserOnboardingComponent
     await this.userOnboardingInfo.valueChanges.subscribe((data) => {
       this.checkAllowSave();
     });
- 
+
     await this.userJobSettingInfo.valueChanges.subscribe((data) => {
       this.checkAllowSaveJobSetting();
-    })
+    });
 
     if (
       this.mode == MODE.EDIT &&
@@ -346,18 +345,21 @@ export class UserOnboardingComponent
     this.isExpan = !this.isExpan;
     this.toggle.emit(this.isExpan);
   };
- checkAllowSaveJobSetting() {
-  const jocSettingInfo = { ...this.userJobSettingInfo.value };
-  const jocSettingInfoClone = { ...this.userJobSettingInfoClone };
-  this.isChanged = !AitAppUtils.isObjectEqual(
-    { ...jocSettingInfo },
-    { ...jocSettingInfoClone }
-  )
- }
+  checkAllowSaveJobSetting() {
+    const jocSettingInfo = { ...this.userJobSettingInfo.value };
+    const jocSettingInfoClone = { ...this.userJobSettingInfoClone };
+    this.isChanged = !AitAppUtils.isObjectEqual(
+      { ...jocSettingInfo },
+      { ...jocSettingInfoClone }
+    );
+  }
   checkAllowSave() {
     const userInfo = { ...this.userOnboardingInfo.value };
     const userInfoClone = { ...this.userOnboardingInfoClone };
-    this.isChanged = !AitAppUtils.isObjectEqual({ ...userInfo }, { ...userInfoClone })
+    this.isChanged = !AitAppUtils.isObjectEqual(
+      { ...userInfo },
+      { ...userInfoClone }
+    );
   }
 
   getTitleByMode() {
@@ -450,7 +452,7 @@ export class UserOnboardingComponent
           this.resetJobSettingInfo[index] = false;
         }, 100);
       }
-      
+
       this.userOnboardingInfo.reset();
       setTimeout(() => {
         this.userOnboardingInfo.controls['gender'].setValue({
@@ -470,7 +472,7 @@ export class UserOnboardingComponent
           setTimeout(() => {
             this.resetUserInfo[index] = false;
           }, 100);
-        };
+        }
       }
       for (const index in this.resetJobSettingInfo) {
         if (!this.userJobSettingInfo.controls[index].value) {
@@ -478,9 +480,9 @@ export class UserOnboardingComponent
           setTimeout(() => {
             this.resetJobSettingInfo[index] = false;
           }, 100);
-        };
+        }
       }
-      
+
       this.isClear = true;
       setTimeout(() => {
         this.isClear = false;
@@ -488,8 +490,8 @@ export class UserOnboardingComponent
       this.userOnboardingInfo.patchValue({
         ...this.userOnboardingInfoClone,
       });
-      this.userJobSettingInfo.patchValue({ ...this.userJobSettingInfoClone});
-      this.jobSettingData = { ...this.userJobSettingInfo.value};
+      this.userJobSettingInfo.patchValue({ ...this.userJobSettingInfoClone });
+      this.jobSettingData = { ...this.userJobSettingInfo.value };
       this.dataCountry = { ...this.userOnboardingInfo.value };
     }
     this.showToastr('', this.getMsg('I0007'));
@@ -497,13 +499,27 @@ export class UserOnboardingComponent
 
   saveDataJobSetting() {
     const saveData = this.userJobSettingInfo.value;
+    const skills = saveData.job_setting_skills;
+    const arrSkills = [];
+    skills.forEach((sk) => {
+      const skill = sk._key;
+      arrSkills.push(skill);
+    });
+    saveData.job_setting_skills = arrSkills;
     saveData.location = saveData.location ? saveData.location._key : null;
     saveData.job_setting_title = saveData.job_setting_title
       ? saveData.job_setting_title._key
       : null;
-     
-    saveData.industry = saveData.industry ? saveData.industry : null;
-    saveData.job_setting_skills = saveData.job_setting_skills ? saveData.job_setting_skills : null;
+    const industrys = saveData.industry;
+    const arrIndustrys = [];
+    industrys.forEach((ind) => {
+      const indus = ind._key;
+      arrIndustrys.push(indus);
+    });
+    saveData.industry = arrIndustrys;
+    saveData.job_setting_skills = saveData.job_setting_skills
+      ? saveData.job_setting_skills
+      : null;
     saveData.job_setting_level = saveData.job_setting_level
       ? saveData.job_setting_level._key
       : null;
@@ -599,10 +615,6 @@ export class UserOnboardingComponent
             this.cancelLoadingApp();
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
-        })
-        .catch(() => {
-          this.cancelLoadingApp();
-          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         });
     } else {
       this.scrollIntoError();
@@ -703,7 +715,7 @@ export class UserOnboardingComponent
     }
   }
 
-  takeMasterValueJobSetting(value: any, target: string) : void {
+  takeMasterValueJobSetting(value: any, target: string): void {
     if (isObjectFull(value)) {
       this.userJobSettingInfo.controls[target].markAsDirty();
       this.userJobSettingInfo.controls[target].setValue(value?.value[0]);

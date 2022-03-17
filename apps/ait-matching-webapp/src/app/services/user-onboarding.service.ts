@@ -173,6 +173,10 @@ export class UserOnboardingService extends AitBaseService {
         att: 'industry',
         col: 'm_industry',
       },
+      {
+        att: 'job_setting_skills',
+        col: 'm_skill',
+      },
       
     ];
 
@@ -189,11 +193,15 @@ export class UserOnboardingService extends AitBaseService {
         _key: true,
         value: true,
       },
-      industry: {
+      job_setting_title: {
         _key: true,
         value: true,
       },
-      job_setting_title: {
+      job_setting_skills: {
+        _key: true,
+        value: true,
+      },
+      industry: {
         _key: true,
         value: true,
       },
@@ -201,6 +209,9 @@ export class UserOnboardingService extends AitBaseService {
         _key: true,
         value: true,
       },
+      available_time_to: true,
+      available_time_from: true,
+
     };
     const request = {};
     request['collection'] = 'biz_job_setting';

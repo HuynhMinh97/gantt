@@ -61,6 +61,9 @@ export class UserOnboardingInfoDto extends BaseDto {
     industry?: ConditionDto;
 
     @Field(() => ConditionDto, { nullable: true })
+    job_setting_skills?: ConditionDto
+
+    @Field(() => ConditionDto, { nullable: true })
     industry_working?: ConditionDto;
 
     @Field(() => ConditionDto, { nullable: true })
@@ -101,14 +104,14 @@ export class JobSettingInfoDto extends BaseDto {
 }
 @InputType()
 export class SaveJobSettingInfoDto extends BaseDto {
-    @Field(() => [KeyValueDto], { nullable: true })
-    job_setting_skills?: KeyValueDto[];
+    @Field(() => [String], { nullable: true })
+    job_setting_skills?: string[];
 
     @Field(() => String, { nullable: true })
     job_setting_title?: string;
 
-    @Field(() => [KeyValueDto], { nullable: true })
-    industry?: KeyValueDto[];
+    @Field(() => [String], { nullable: true })
+    industry?: string[];
 
     @Field(() => String, { nullable: true })
     location?: string;
