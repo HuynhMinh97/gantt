@@ -19,8 +19,6 @@ export class UserCertificateDetailComponent extends AitBaseComponent implements 
   user_key: any = '';
   stateUserCertificate = {} as UserProjectDto;
   constructor(
-    private router: Router,
-    private nbDialogRef: NbDialogRef<UserCertificateDetailComponent>,
     public activeRouter: ActivatedRoute,
     public certificateService: UserCerfiticateService,
     env: AitEnvironmentService,
@@ -44,17 +42,10 @@ export class UserCertificateDetailComponent extends AitBaseComponent implements 
       module: 'user',
       page: 'user_cerfiticate',
     });
-
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationStart) {
-        this.closeDialog(false);
-      }
-    });
-
+    this.user_key = this.activeRouter.snapshot.paramMap.get('id');
   }
 
   async ngOnInit(): Promise<void> {
-    this.callLoadingApp();
     if (this.user_key) {
       await this.certificateService
         .findUserByKey(this.user_key)
@@ -65,15 +56,7 @@ export class UserCertificateDetailComponent extends AitBaseComponent implements 
           }
         })
     }
-    setTimeout(() => {
-      this.cancelLoadingApp();
-    }, 500);
   }
-  close() {
-    this.closeDialog(false);
-  }
-  closeDialog(event: boolean) {
-    this.nbDialogRef.close(event);
-  }
+  
 
 }
