@@ -150,6 +150,12 @@ export class SysSearchConditionDto extends BaseDto {
   item_label: string;
 
   @Field(() => String, { nullable: true })
+  item_label_from: string;
+
+  @Field(() => String, { nullable: true })
+  item_label_to: string;
+
+  @Field(() => String, { nullable: true })
   item_placeholder: string;
 
   @Field(() => String, { nullable: true })
