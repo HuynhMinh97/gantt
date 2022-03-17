@@ -4,9 +4,8 @@
     <ait-text-gradient
       [content]="'Basic Information'"
       [id]="'basic_infomation'"
+      [fontsize]="'36px'"
     ></ait-text-gradient>
-
-    <ait-space></ait-space>
 
     <div class="template__filter__container">
       <div class="template__input__area">
@@ -309,7 +308,7 @@
                     [placeholder]="'Technical Manager'"
                     [collection]="'m_title'"
                     [disableOutputDefault]="true"
-                    [isReset]="resetUserInfo.curent_job_title"
+                    [isReset]="resetUserInfo.current_job_title"
                     (watchValue)="takeMasterValue($event, 'current_job_title')"
                     [defaultValue]="[
                       userOnboardingInfo.controls['current_job_title'].value
@@ -319,7 +318,7 @@
               </ng-container>
               <ait-space [margin]="'7.25px'"></ait-space>
               <ng-container>
-                <div *ngIf="mode === 'EDIT'" class="input_inline">
+                <div class="input_inline">
                   <ait-autocomplete-master-data
                     [id]="'current_job_skills'"
                     [width]="'400px'"
@@ -331,7 +330,7 @@
                     [placeholder]="'fill name and enter to add your skills'"
                     [collection]="'m_skill'"
                     [disableOutputDefault]="true"
-                    [isReset]="resetUserInfo.curent_job_skills"
+                    [isReset]="resetUserInfo.current_job_skills"
                     (watchValue)="
                       takeMasterValues(
                         $event?.value,
@@ -363,7 +362,7 @@
                     [placeholder]="'Computer Software'"
                     [collection]="'m_industry'"
                     [disableOutputDefault]="true"
-                    [isReset]="resetUserInfo.industry"
+                    [isReset]="resetJobSettingInfo.industry"
                     (watchValue)="takeMasterValue($event, 'industry_working')"
                     [defaultValue]="[
                       userOnboardingInfo.controls['industry_working'].value
@@ -425,11 +424,11 @@
                     [placeholder]="'Computer Software'"
                     [collection]="'m_industry'"
                     [disableOutputDefault]="true"
-                    [isReset]="resetUserInfo.industry"
+                    [isReset]="resetJobSettingInfo.industry"
                     (watchValue)="
                       takeMasterValues(
                         $event?.value,
-                        'userOnboardingInfo',
+                        'userJobSettingInfo',
                         'industry'
                       )
                     "
@@ -449,10 +448,10 @@
                     [placeholder]="'Technical Manager'"
                     [collection]="'m_title'"
                     [disableOutputDefault]="true"
-                    [isReset]="resetUserInfo.job_setting_title"
-                    (watchValue)="takeMasterValue($event, 'job_setting_title')"
+                    [isReset]="resetJobSettingInfo.job_setting_title"
+                    (watchValue)="takeMasterValueJobSetting($event, 'job_setting_title')"
                     [defaultValue]="[
-                      userOnboardingInfo.controls['job_setting_title'].value
+                    userJobSettingInfo.controls['job_setting_title'].value
                     ]"
                   ></ait-autocomplete-master-data>
                 </div>
@@ -461,29 +460,22 @@
               <ng-container>
                 <div class="input_inline">
                   <ait-autocomplete-master-data
+                  [width]="'400px'"
                     [id]="'location'"
-                    [width]="'400px'"
                     [label]="'location'"
-                    [maxItem]="1"
-                    [required]="true"
                     [isSubmit]="isSubmit"
                     [allowNew]="true"
-                    [disableOutputDefault]="true"
+                    [maxItem]="1"
                     [placeholder]="'please select location'"
                     [collection]="'sys_master_data'"
                     [class]="'CITY'"
                     [disableOutputDefault]="true"
-                    [isReset]="resetUserInfo.location"
-                    (watchValue)="
-                      takeMasterValues(
-                        $event?.value,
-                        'userOnboardingInfo',
-                        'location'
-                      )
-                    "
+                    [isReset]="resetJobSettingInfo.location"
+                    (watchValue)="takeMasterValueJobSetting($event, 'location')"
                     [defaultValue]="[
-                      userOnboardingInfo.controls['location'].value
+                    userJobSettingInfo.controls['location'].value
                     ]"
+                    
                   ></ait-autocomplete-master-data>
                 </div>
               </ng-container>
@@ -501,11 +493,11 @@
                     [placeholder]="'fill name and enter to add your skills'"
                     [collection]="'m_skill'"
                     [disableOutputDefault]="true"
-                    [isReset]="resetUserInfo.job_setting_skills"
+                    [isReset]="resetJobSettingInfo.job_setting_skills"
                     (watchValue)="
                       takeMasterValues(
                         $event?.value,
-                        'userOnboardingInfo',
+                        'userJobSettingInfo',
                         'job_setting_skills'
                       )
                     "
@@ -522,28 +514,21 @@
               <ng-container>
                 <div class="input_inline">
                   <ait-autocomplete-master-data
+                  [width]="'400px'"
                     [id]="'job_setting_level'"
-                    [width]="'400px'"
                     [label]="'level'"
-                    [required]="true"
                     [isSubmit]="isSubmit"
                     [allowNew]="true"
                     [maxItem]="1"
-                    [class]="'EMP_LEVEL'"
-                    [placeholder]="'Please select level'"
+                    [placeholder]="'please select level'"
                     [collection]="'sys_master_data'"
+                    [class]="'EMP_LEVEL'"
                     [disableOutputDefault]="true"
-                    [isReset]="resetUserInfo.job_setting_level"
-                    (watchValue)="
-                      takeMasterValues(
-                        $event?.value,
-                        'userOnboardingInfo',
-                        'job_setting_level'
-                      )
-                    "
+                    [isReset]="resetJobSettingInfo.job_setting_level"
+                    (watchValue)="takeMasterValueJobSetting($event, 'job_setting_level')"
                     [defaultValue]="[
-                    userOnboardingInfo.controls['job_setting_level'].value
-                  ]"
+                    userJobSettingInfo.controls['job_setting_level'].value
+                    ]"
                   ></ait-autocomplete-master-data>
                 </div>
               </ng-container>
@@ -561,7 +546,7 @@
                     (watchValue)="
                       takeDatePickerValue(
                         $event?.value,
-                        'userOnboardingInfo',
+                        'userJobSettingInfo',
                         'start_date_from'
                       )
                     "
@@ -580,7 +565,7 @@
                     (watchValue)="
                       takeDatePickerValue(
                         $event?.value,
-                        'userOnboardingInfo',
+                        'userJobSettingInfo',
                         'start_date_to'
                       )
                     "

@@ -70,7 +70,7 @@ export class UserOnboardingComponent
   mode = MODE.NEW;
   current_job_skills: any;
   job_setting_skills: any;
-
+  job_setting_industry: any[];
   errorArr: any;
   cityCode: any;
   countryCode: any;
@@ -85,6 +85,16 @@ export class UserOnboardingComponent
   isChanged = false;
   isDisplay = false;
   isExpan = false;
+
+  resetJobSettingInfo = {
+    job_setting_title: false,
+    industry: false,
+    job_setting_skills: false,
+    location: false,
+    job_setting_level: false,
+    available_time_to: false,
+    available_time_from: false,
+  }
   resetUserInfo = {
     first_name: false,
     last_name: false,
@@ -101,14 +111,9 @@ export class UserOnboardingComponent
     address: false,
     floor_building: false,
     company_working: false,
-    curent_job_title: false,
-    job_setting_title: false,
-    industry: false,
+    current_job_title: false,
     industry_working: false,
-    curent_job_skills: false,
-    job_setting_skills: false,
-    location: false,
-    job_setting_level: false,
+    current_job_skills: false,
     current_job_level: false,
   };
 
@@ -147,11 +152,24 @@ export class UserOnboardingComponent
     relationship: '',
     sort_no: 0,
   };
+  JobSettingData: any;
+  JobSettingAttributes = [
+    'current_job_skills',
+    'job_setting_title',
+    'job_setting_level',
+  ];
+  JobSettingDateAttrubutes = [
+    'available_time_from',
+    'available_time_to',
+    'location',
+    'job_setting_skills',
+  ];
 
   user_key = '';
   _key = '';
   user_id_profile = '';
   dataCountry: any;
+  jobSettingData: any;
   isLoad = false;
   constructor(
     private router: Router,
@@ -193,7 +211,20 @@ export class UserOnboardingComponent
       module: 'user',
       page: 'user_onboarding',
     });
-   
+    this.userJobSettingInfo = this.formBuilder.group({
+      job_setting_title: new FormControl(null),
+      industry: new FormControl(null, [
+        Validators.required,
+        Validators.maxLength(50),
+      ]),
+      location: new FormControl(null),
+      job_setting_skills: new FormControl(null, Validators.maxLength(50)),
+      job_setting_level: new FormControl(null),
+      available_time_from: new FormControl(null),
+      available_time_to: new FormControl(null),
+      _key: new FormControl(null),
+
+    });
 
     this.userOnboardingInfo = this.formBuilder.group({
       first_name: new FormControl(null, [
@@ -227,21 +258,9 @@ export class UserOnboardingComponent
       current_job_title: new FormControl(null),
       industry_working: new FormControl(null, [Validators.required]),
       current_job_level: new FormControl(null),
-      industry: new FormControl(null, [
-        Validators.required,
-        Validators.maxLength(50),
-      ]),
-      job_setting_title: new FormControl(null),
-      location: new FormControl(null),
-      job_setting_level: new FormControl(null),
       current_job_skills: new FormControl(null, Validators.maxLength(50)),
-      job_setting_skills: new FormControl(null, Validators.maxLength(50)),
       _key: new FormControl(null),
     });
-
-    
-
-    
 
     // get key form parameter
     this.user_key = this.activeRouter.snapshot.paramMap.get('id');
@@ -273,6 +292,14 @@ export class UserOnboardingComponent
     }
     if (this.user_key) {
       this.callLoadingApp();
+      await this.userOnbService.findJobSetting(this.user_key).then((r) => {
+        if (r.status === RESULT_STATUS.OK) {
+          this.jobSettingData = r.data[0]
+          this.userJobSettingInfo.patchValue({ ...this.jobSettingData });
+          this.userJobSettingInfoClone = this.userJobSettingInfo.value;
+        }
+      });
+
       await this.userOnbService
         .findUserOnboardingByKey(this.user_key)
         .then(async (r) => {
@@ -282,8 +309,6 @@ export class UserOnboardingComponent
             if (r.data.length > 0 && !this.dataCountry.del_flag) {
               this.userOnboardingInfo.patchValue({ ...this.dataCountry });
               this.userOnboardingInfoClone = this.userOnboardingInfo.value;
-              this.userJobSettingInfoClone = this.userOnboardingInfo.value;
-
               this.user_id_profile = this.dataCountry.user_id;
               this._key = this.dataCountry._key;
               isUserExist = true;
@@ -301,6 +326,10 @@ export class UserOnboardingComponent
     await this.userOnboardingInfo.valueChanges.subscribe((data) => {
       this.checkAllowSave();
     });
+ 
+    await this.userJobSettingInfo.valueChanges.subscribe((data) => {
+      this.checkAllowSaveJobSetting();
+    })
 
     if (
       this.mode == MODE.EDIT &&
@@ -317,15 +346,18 @@ export class UserOnboardingComponent
     this.isExpan = !this.isExpan;
     this.toggle.emit(this.isExpan);
   };
-
+ checkAllowSaveJobSetting() {
+  const jocSettingInfo = { ...this.userJobSettingInfo.value };
+  const jocSettingInfoClone = { ...this.userJobSettingInfoClone };
+  this.isChanged = !AitAppUtils.isObjectEqual(
+    { ...jocSettingInfo },
+    { ...jocSettingInfoClone }
+  )
+ }
   checkAllowSave() {
     const userInfo = { ...this.userOnboardingInfo.value };
     const userInfoClone = { ...this.userOnboardingInfoClone };
-
-    this.isChanged = !AitAppUtils.isObjectEqual(
-      { ...userInfo },
-      { ...userInfoClone }
-    );
+    this.isChanged = !AitAppUtils.isObjectEqual({ ...userInfo }, { ...userInfoClone })
   }
 
   getTitleByMode() {
@@ -412,6 +444,13 @@ export class UserOnboardingComponent
           this.resetUserInfo[index] = false;
         }, 100);
       }
+      for (const index in this.resetJobSettingInfo) {
+        this.resetJobSettingInfo[index] = true;
+        setTimeout(() => {
+          this.resetJobSettingInfo[index] = false;
+        }, 100);
+      }
+      
       this.userOnboardingInfo.reset();
       setTimeout(() => {
         this.userOnboardingInfo.controls['gender'].setValue({
@@ -431,8 +470,17 @@ export class UserOnboardingComponent
           setTimeout(() => {
             this.resetUserInfo[index] = false;
           }, 100);
-        }
+        };
       }
+      for (const index in this.resetJobSettingInfo) {
+        if (!this.userJobSettingInfo.controls[index].value) {
+          this.resetJobSettingInfo[index] = true;
+          setTimeout(() => {
+            this.resetJobSettingInfo[index] = false;
+          }, 100);
+        };
+      }
+      
       this.isClear = true;
       setTimeout(() => {
         this.isClear = false;
@@ -440,9 +488,33 @@ export class UserOnboardingComponent
       this.userOnboardingInfo.patchValue({
         ...this.userOnboardingInfoClone,
       });
+      this.userJobSettingInfo.patchValue({ ...this.userJobSettingInfoClone});
+      this.jobSettingData = { ...this.userJobSettingInfo.value};
       this.dataCountry = { ...this.userOnboardingInfo.value };
     }
     this.showToastr('', this.getMsg('I0007'));
+  }
+
+  saveDataJobSetting() {
+    const saveData = this.userJobSettingInfo.value;
+    saveData.location = saveData.location ? saveData.location._key : null;
+    saveData.job_setting_title = saveData.job_setting_title
+      ? saveData.job_setting_title._key
+      : null;
+     
+    saveData.industry = saveData.industry ? saveData.industry : null;
+    saveData.job_setting_skills = saveData.job_setting_skills ? saveData.job_setting_skills : null;
+    saveData.job_setting_level = saveData.job_setting_level
+      ? saveData.job_setting_level._key
+      : null;
+    saveData.available_time_to = saveData.available_time_to
+      ? saveData.available_time_to
+      : null;
+    saveData.available_time_from = saveData.available_time_from
+      ? saveData.available_time_from
+      : null;
+    saveData.user_id = this.user_id;
+    return saveData;
   }
 
   saveDataUserProfile() {
@@ -469,47 +541,17 @@ export class UserOnboardingComponent
       ? saveData.company_working?._key
       : null;
     this.current_job_skills = saveData.current_job_skills;
-    delete saveData.industry;
     delete saveData.current_job_skills;
-    delete saveData.location;
-    delete saveData.available_time_from;
-    delete saveData.available_time_to;
-    delete saveData.job_setting_level;
-    delete saveData.job_setting_level;
-    delete saveData.job_setting_title;
-    delete saveData.job_setting_skills;
     if (this.mode === MODE.NEW) {
-      saveData['top_skills'] = [];
       saveData['user_id'] = this.user_id;
     } else {
-      // this.userOnboardingInfo.get('skills').setErrors(null);
       saveData['user_id'] = this.authService.getUserID();
     }
     return saveData;
   }
 
-  saveJobSettingData() {
-    const saveData = this.userJobSettingInfoClone.value;
-    this.job_setting_skills = saveData.job_setting_skills;
-    saveData.industry = saveData.industry ? saveData.industry?._key : null;
-    saveData.location = saveData.location ? saveData.industry?._key : null;
-    saveData.available_time_from = saveData.available_time_from
-      ? saveData.available_time_from?.value
-      : null;
-    saveData.available_time_to = saveData.available_time_from
-      ? saveData.available_time_to?.value
-      : null;
-    saveData.job_setting_level = saveData.job_setting_level
-      ? saveData.job_setting_level[0]?._key
-      : null;
-    saveData.job_setting_title = saveData.job_setting_title
-      ? saveData.job_setting_title?._key
-      : null;
-    return saveData;
-  }
-
   async saveJobSetting() {
-    await this.userOnbService.saveJobSetting(this.saveJobSettingData());
+    await this.userOnbService.saveJobSetting(this.saveDataJobSetting());
   }
 
   async saveDataUserSkill() {
@@ -536,7 +578,7 @@ export class UserOnboardingComponent
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
-    if (this.userOnboardingInfo.valid) {
+    if (this.userOnboardingInfo.valid && this.userJobSettingInfo.valid) {
       this.callLoadingApp();
       this.userOnbService
         .save(this.saveDataUserProfile())
@@ -658,6 +700,13 @@ export class UserOnboardingComponent
       });
     } else {
       this.userOnboardingInfo.controls['gender'].setValue(null);
+    }
+  }
+
+  takeMasterValueJobSetting(value: any, target: string) : void {
+    if (isObjectFull(value)) {
+      this.userJobSettingInfo.controls[target].markAsDirty();
+      this.userJobSettingInfo.controls[target].setValue(value?.value[0]);
     }
   }
 

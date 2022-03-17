@@ -184,6 +184,7 @@ export class UserOnboardingService extends AitBaseService {
       };
     });
     const returnFields = {
+      _key: true,
       location: {
         _key: true,
         value: true,
@@ -259,10 +260,10 @@ export class UserOnboardingService extends AitBaseService {
   
 
   async saveUserSkills(data: any[]) {
-    const returnField = { _key: true };
+    const returnField = { _key: true, del_flag: true };
     return await this.mutation(
       'saveUserSkill',
-      'user_skill',
+      'biz_user_skill',
       data,
       returnField
     );

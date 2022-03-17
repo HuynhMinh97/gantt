@@ -46,10 +46,10 @@ export class SaveUserExperienceInfoDto extends BaseDto {
     employee_type?: string;
 
     @Field(() => Float, { nullable: true })
-    start_from?: number;
+    start_date_from?: number;
 
     @Field(() => Float, { nullable: true })
-    start_to?: number;
+    start_date_to?: number;
 
     @Field(() => String, { nullable: true })
     description?: string;
