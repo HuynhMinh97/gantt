@@ -33,7 +33,7 @@ export class AitTocMenuComponent implements AfterViewInit {
           return it
         });
       }
-    }, 1000);
+    }, 1500);
     
   }
 
