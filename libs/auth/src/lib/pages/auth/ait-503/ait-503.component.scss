@@ -1,0 +1,18 @@
+.container__503 {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: column;
+  background-image: url('../../../../assets/images/503.svg');
+  background-repeat: no-repeat;
+  background-position: top;
+  .message {
+    color: #10529D;
+    cursor: pointer;
+  }
+  h1 {
+    font-size: 70px;
+  }
+}
