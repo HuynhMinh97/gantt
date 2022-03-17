@@ -23,6 +23,7 @@ import { SkillListViewComponent } from './pages/list/skill-list/skill-list-view/
 import { CertificateListComponent } from './pages/list/certificate-list/certificate-list.component';
 import { EducationListComponent } from './pages/list/education-list/education-list.component';
 import { UserCertificateDetailComponent } from './pages/user/user-certificate-detail/user-certificate-detail.component';
+import { UserProjectDetailComponent } from './pages/user/user-project-detail/user-project-detail.component';
 
 
 // Push your routes here one by one 🎉
@@ -87,6 +88,11 @@ export const routes: Routes = [
     path: 'user-project/:id',
     canActivate: [AitAuthGuardService], 
     component: UserProjectComponent
+  },
+  {
+    path: 'user-project-detail/:id',
+    canActivate: [AitAuthGuardService], 
+    component: UserProjectDetailComponent
   },
   {
     path: 'user-reorder-skills',

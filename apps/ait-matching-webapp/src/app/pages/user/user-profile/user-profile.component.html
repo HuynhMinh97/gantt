@@ -59,7 +59,7 @@
                 <ait-output-text
                   [label]="'katakana'"
                   [width]="'200px'"
-                  [value]="'Thuan'"
+                  [value]="DataUserProfile?.katakana"
                   [id]="'katakana'"
                 ></ait-output-text>
               </div>
@@ -67,7 +67,7 @@
                 <ait-output-text
                   [label]="'born on date'"
                   [width]="'200px'"
-                  [value]="'Thuan'"
+                  [value]="DataUserProfile?.bod | date: dateFormat"
                   [id]="'born on date'"
                 ></ait-output-text>
               </div>
@@ -342,7 +342,7 @@
                     ></nb-icon>
                   </a>
                   <a
-                    (click)="openProjectsDetail(project?._key)"
+                    (click)="nextPage('user-project-detail', project?._key)"
                     [id]="'project-' + project?._key"
                     *ngIf="!isMyUserProfile"
                   >
