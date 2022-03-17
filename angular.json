@@ -269,6 +269,7 @@
                 }
             }
         },
+<<<<<<< HEAD
         "ait-webapp-starter": {
             "projectType": "application",
             "root": "apps/ait-webapp-starter",
@@ -556,5 +557,22 @@
                 }
             }
         }
+=======
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/ait-api-starter/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/ait-api-starter"],
+          "options": {
+            "jestConfig": "apps/ait-api-starter/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+>>>>>>> upstream/master
     }
 }
