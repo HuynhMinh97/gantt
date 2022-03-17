@@ -24,6 +24,7 @@ import { CertificateListComponent } from './pages/list/certificate-list/certific
 import { EducationListComponent } from './pages/list/education-list/education-list.component';
 import { UserCertificateDetailComponent } from './pages/user/user-certificate-detail/user-certificate-detail.component';
 import { UserProjectDetailComponent } from './pages/user/user-project-detail/user-project-detail.component';
+import { UserCourseDetailComponent } from './pages/user/user-course-detail/user-course-detail.component';
 
 
 // Push your routes here one by one 🎉
@@ -63,6 +64,11 @@ export const routes: Routes = [
     path: 'user-course/:id',
     canActivate: [AitAuthGuardService], 
     component: UserCourseComponent
+  },
+  {
+    path: 'user-course-detail/:id',
+    canActivate: [AitAuthGuardService], 
+    component: UserCourseDetailComponent
   },
   {
     path: 'user-certificate',
