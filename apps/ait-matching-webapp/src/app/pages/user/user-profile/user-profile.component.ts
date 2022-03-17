@@ -67,7 +67,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
 
   avata: any;
   url_avatar = '';
-  DataUserProfile: ProfileDto;
+  DataUserProfile = {};
   url_background = '';
 
   topSkills = [];
