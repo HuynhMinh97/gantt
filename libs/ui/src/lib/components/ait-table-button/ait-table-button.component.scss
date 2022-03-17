@@ -1,0 +1,27 @@
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+button.mat-menu-item {
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+button:focus {
+  outline: none;
+}
+.menu_icon {
+  button + button {
+  margin-left: 10px;
+  }
+  width: 32px;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  cursor: pointer;
+}
+.mat-menu-content:not(:empty) {
+  padding: 0 !important;
+}
+
+.icon_text {
+  padding-left: 10px;
+  text-transform: capitalize;
+}

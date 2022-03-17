@@ -1,0 +1,25 @@
+<div class="form-container" style="margin: auto; text-align: center;" [ngStyle]="style">
+  <div class="title" [id]="ID('dialog_title')">
+    <p>{{ title }}</p>
+  </div>
+  <div class="button-group">
+    <ait-button
+      [id]="ID('dialog_title_left')"
+      [title]="btn_left || 'c_b002' | translate"
+      [background]="'transparent'"
+      [style]="'normal'"
+      [color]="'#FFFFFF'"
+      (click)="closeDialog(false)"
+    >
+    </ait-button>
+    <ait-button
+      [id]="ID('dialog_title_right')"
+      [title]="btn_right || 'c_b001' | translate"
+      [background]="'#FFFFFF'"
+      [style]="'active'"
+      [color]="'#000000'"
+      (click)="closeDialog(true)"
+    >
+    </ait-button>
+  </div>
+</div>

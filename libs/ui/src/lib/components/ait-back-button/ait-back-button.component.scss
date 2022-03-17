@@ -1,0 +1,19 @@
+@import '../../@theme/styles/themes.scss';
+
+.button__fab__container {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  position: fixed;
+  bottom: 30px;
+  right: 80px;
+  background: nb-theme(background-gradient-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 555;
+  &:hover {
+    transform: scale(1.1);
+  }
+}
