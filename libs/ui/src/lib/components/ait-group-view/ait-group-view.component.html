@@ -12,7 +12,8 @@
           <ng-container *ngFor="let component of leftSide">
             <ait-output-text *ngIf="component.type !== 'file'" [label]="component?.item_label"
               style="margin-bottom: 16px; width: 100%" [width]="component?.component_setting?.width || '200px'"
-              [value]="component?.value" [id]="component?.item_id"></ait-output-text>
+              [rows]="component?.component_setting?.rows || 1" [value]="component?.value"
+              [valueArray]="component?.valueArray" [id]="component?.item_id"></ait-output-text>
             <ait-output-file *ngIf="component.type === 'file'" [label]="component?.item_label"
               [fileKeys]="component?.value" [guidanceIcon]="component?.component_setting?.guidance_icon || ''"
               [guidance]="component?.component_setting?.guidance || ''"></ait-output-file>
@@ -24,10 +25,11 @@
           <div [ngStyle]="{margin: component?.component_setting?.margin || 0}"></div>
 
           <ng-container *ngFor="let component of rightSide">
-            <ait-output-text [label]="component?.item_label" style="margin-bottom: 16px; width: 100%"
-              [width]="component?.component_setting?.width || '200px'" [value]="component?.value"
-              [id]="component?.item_id"></ait-output-text>
-              <ait-output-file *ngIf="component.type === 'file'" [label]="component?.item_label"
+            <ait-output-text *ngIf="component.type !== 'file'" [label]="component?.item_label"
+              style="margin-bottom: 16px; width: 100%" [width]="component?.component_setting?.width || '200px'"
+              [rows]="component?.component_setting?.rows || 1" [value]="component?.value"
+              [valueArray]="component?.valueArray" [id]="component?.item_id"></ait-output-text>
+            <ait-output-file *ngIf="component.type === 'file'" [label]="component?.item_label"
               [fileKeys]="component?.value" [guidanceIcon]="component?.component_setting?.guidance_icon || ''"
               [guidance]="component?.component_setting?.guidance || ''"></ait-output-file>
             <ait-space [margin]="'7.25px'"></ait-space>
