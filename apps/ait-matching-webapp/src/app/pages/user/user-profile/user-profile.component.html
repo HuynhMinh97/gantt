@@ -1,4 +1,4 @@
-<ait-toc-menu [id]="'user_profile'"></ait-toc-menu>
+<ait-toc-menu [id]="'継続する'"></ait-toc-menu>
 <div class="user_profile_wrapper" id="user_profile">
   <div class="content__card" *ngIf="isload">
     <div
@@ -15,23 +15,12 @@
         [fontsize]="'36px'"
       ></ait-text-gradient>
     </div>
-
-    <!-- <ait-card-content
-    tabindex="2"
-    [isOpen]="true"
-    [isStart]="true"
-    [id]="'user_profile'"
-    class="content"
-    [label]="'basic_infomation' | translate"
-    [disableHeader]="false"
-    padding="'10px'"
-  ></ait-card-content> -->
   
     <!-- profile -->
     <div style="position: relative" class="profile">
       <card-content
         tabindex="2"
-        [id]="'user_profile'"
+        [id]="'継続する'"
         class="content_card"
         [label]="'basic information' | translate"
         style="display: flex; justify-content: center"
@@ -165,7 +154,7 @@
       </div>
       <card-content
         tabindex="2"
-        [id]="'user-profile'"
+        [id]="'継続する'"
         style="outline-color: #10529d"
         class="content_card"
         style="display: flex; justify-content: center"
@@ -223,7 +212,7 @@
     <div class="project">
       <card-content
         tabindex="2"
-        [id]="'user-profile'"
+        [id]="'継続する'"
         style="outline-color: #10529d"
         class="content_card"
         style="display: flex; justify-content: center"
@@ -373,11 +362,11 @@
       <card-content
         tabindex="2"
         [isOpen]="false"
-        [id]="'user-profile'"
+        [id]="'継続する'"
         style="outline-color: #10529d"
         class="content_card"
         style="display: flex; justify-content: center"
-        [label]="'experiencer' | translate"
+        [label]="'experiences' | translate"
         [styleLabel]="{ 'font-size': '26px' }"
         [styleText]="{ 'font-size': '15px' }"
         (onClickButtonHeader)="nextPage('user-experience')"
@@ -528,11 +517,11 @@
     <div class="certificate">
       <card-content
         tabindex="2"
-        [id]="'user-profile'"
+        [id]="'継続する'"
         style="outline-color: #10529d"
         class="content_card"
         style="display: flex; justify-content: center"
-        [label]="'CERTIFICATES'"
+        [label]="'certificates' | translate"
         [styleLabel]="{ 'font-size': '26px' }"
         [styleText]="{ 'font-size': '15px' }"
         (onClickButtonHeader)="nextPage('user-certificate')"
@@ -573,13 +562,13 @@
                 </div>
                 <div class="timeline-info">
                   <div>
-                    <p id="title-timeline">
+                     <p id="title-timeline">
                       {{ centificate?.name }}
                     </p>
                     <div class="desc-info">
-                      <p>
+                     <p>
                         {{ centificate?.issue_by }}
-                      </p>
+                      </p> 
                       <p *ngIf="!centificate?.issue_date_to">
                         {{
                           centificate?.issue_date_from
@@ -596,7 +585,7 @@
                             : ('my-profile.unclear' | translate)
                         }}
                         - {{ centificate?.issue_date_to | date: dateFormat }}
-                      </p>
+                      </p> 
                     </div>
                   </div>
                 </div>
@@ -620,7 +609,7 @@
                     ></nb-icon>
                   </a>
                   <a
-                    (click)="openCertificateDetail(centificate?._key)"
+                    (click)="nextPage('user-certificate-detail', centificate?._key)"
                     [id]="'centificate-' + centificate?._key"
                     *ngIf="!isMyUserProfile"
                   >
@@ -687,7 +676,7 @@
                     ></nb-icon>
                   </a>
                   <a
-                    (click)="openCertificateDetail(centificate?._key)"
+                    (click)="nextPage('user-certificate-detail', centificate?._key)"
                     [id]="'centificate-' + centificate?._key"
                     *ngIf="!isMyUserProfile"
                   >
@@ -705,7 +694,7 @@
       <card-content
         [isOpen]="false"
         tabindex="2"
-        [id]="'user-profile'"
+        [id]="'継続する'"
         style="outline-color: #10529d"
         class="content_card"
         style="display: flex; justify-content: center"
@@ -878,11 +867,11 @@
       <card-content
         tabindex="2"
         [isOpen]="false"
-        [id]="'user-profile'"
+        [id]="'継続する'"
         style="outline-color: #10529d"
         class="content_card"
         style="display: flex; justify-content: center"
-        [label]="'educations'"
+        [label]="'educations' | translate"
         [styleLabel]="{ 'font-size': '26px' }"
         [styleText]="{ 'font-size': '15px' }"
         (onClickButtonHeader)="nextPage('user-education')"
@@ -1056,7 +1045,7 @@
       <card-content
         tabindex="2"
         [isOpen]="false"
-        [id]="'user-profile'"
+        [id]="'継続する'"
         style="outline-color: #10529d"
         class="content_card"
         style="display: flex; justify-content: center"
