@@ -18,8 +18,6 @@ export class UserCourseDetailComponent extends AitBaseComponent implements OnIni
   user_key: any = '';
   stateUserCourse = {} as UserCourseDto;
   constructor(
-    private router: Router,
-    private nbDialogRef: NbDialogRef<UserCourseDetailComponent>,
     public activeRouter: ActivatedRoute,
     public userCourseService: UserCourseService,
     env: AitEnvironmentService,
@@ -38,16 +36,12 @@ export class UserCourseDetailComponent extends AitBaseComponent implements OnIni
       layoutScrollService,
       toastrService
     );
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationStart) {
-          this.closeDialog(false);
-      }
-    });
 
     this.setModulePage({
       module: 'user',
       page: 'user_course',
     });
+    this.user_key = this.activeRouter.snapshot.paramMap.get('id');
   }
 
   async ngOnInit(): Promise<void> {
@@ -63,14 +57,6 @@ export class UserCourseDetailComponent extends AitBaseComponent implements OnIni
           }
         })
     }
-    setTimeout(() => {
-      this.cancelLoadingApp();
-    }, 500);
   }
-  close(){
-    this.closeDialog(false);
-  }
-  closeDialog(event: boolean) {
-    this.nbDialogRef.close(event);
-  }
+ 
 }
