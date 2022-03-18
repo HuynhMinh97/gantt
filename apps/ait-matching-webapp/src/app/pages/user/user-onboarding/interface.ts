@@ -36,15 +36,19 @@ export interface UserOnboardingDto extends BaseDto {
   industry_working:KeyValueDto;
   current_job_skills: string[];
   current_job_level: KeyValueDto;
+  skills: string;
 }
 
 export interface JobSettingDto extends BaseDto {
   job_setting_title: KeyValueDto;
   industry: KeyValueDto;
   location: KeyValueDto;
+  skills: string;
+  industryList: string;
   job_setting_skills: string[];
   job_setting_level: KeyValueDto;
   available_time_from: number;
   available_time_to: number;
+  available_time : string;
 }
 

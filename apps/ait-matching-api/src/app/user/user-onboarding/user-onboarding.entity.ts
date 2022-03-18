@@ -1,6 +1,12 @@
 import { Field, Float, ObjectType } from '@nestjs/graphql';
 import { BaseEntity, KeyValueEntity } from '@ait/core';
 
+
+@ObjectType()
+export class CurrentJobSkillsEntity{
+    @Field(() => [KeyValueEntity], { nullable: true })
+    current_job_skills?: KeyValueEntity[];
+}
 @ObjectType()
 export class UserOnboardingInfoEntity extends BaseEntity {
     @Field(() => String, { nullable: true })

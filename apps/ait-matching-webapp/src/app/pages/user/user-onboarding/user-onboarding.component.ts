@@ -414,30 +414,17 @@ export class UserOnboardingComponent
 
   async findSkills() {
     const from = 'sys_user/' + this.user_id;
-    await this.userOnbService.findUserSkills(from).then((res) => {
-      if (res.status === RESULT_STATUS.OK) {
-        if (res.data.length > 0) {
-          this.mode = MODE.EDIT;
-          const listSkills = [];
-          for (const item of res.data) {
-            listSkills.push(item.skills);
-          }
-          this.userOnboardingInfo.controls['current_job_skills'].setValue(
-            listSkills
-          );
-          this.companySkills = listSkills;
-          this.userOnboardingInfoClone = JSON.parse(
-            JSON.stringify(this.userOnboardingInfo.value)
-          );
-          this.cancelLoadingApp();
-        } else {
-          this.userOnboardingInfoClone = this.userOnboardingInfo.value;
-          this.cancelLoadingApp();
-        }
-      }
-    });
+    await this.userOnbService.findSkillsByFrom(from)
+    .then(async(res) => {
+      const listSkills = [];
+      for (const skill of res.data) {
+        listSkills.push(skill?.skills);
+      }    
+        this.userOnboardingInfo.controls['current_job_skills'].setValue([...listSkills]);
+        this.userOnboardingInfoClone = this.userOnboardingInfo.value; 
+    });    
   }
-
+  
   resetForm() {
     if (this.mode === MODE.NEW) {
       for (const index in this.resetUserInfo) {

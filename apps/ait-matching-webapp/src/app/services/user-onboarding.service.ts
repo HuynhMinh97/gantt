@@ -136,11 +136,6 @@ export class UserOnboardingService extends AitBaseService {
       _key: _id,
       del_flag: false,
     };
-    condition['current_job_skills'] = {
-      attribute: 'current_job_skills',
-      ref_collection: 'm_skill',
-      ref_attribute: 'code',
-    };
     const returnFields = {
       current_job_skills:{
         _key: true,
@@ -148,9 +143,22 @@ export class UserOnboardingService extends AitBaseService {
       }
     };
     const request = {};
-    request['collection'] = 'biz_user_skill';
     request['condition'] = condition;
-    return await this.query('findCurrentJobSkill', request, returnFields);
+    return await this.query('findCurrentJobSkill+', request, returnFields);
+  }
+
+  async findSkillsByFrom(_from?: string) {
+    const condition = {
+      _from: _from,
+      del_flag: false,
+    }
+    return await this.query('findMSkillByFrom', { collection: 'biz_user_skill', condition },
+      {
+        skills: {
+          _key: true,
+          value: true
+        },
+      })
   }
   
 
