@@ -1,4 +1,4 @@
-import { BaseDto, ConditionDto } from '@ait/core';
+import { BaseDto, ConditionDto, KeyValueDto } from '@ait/core';
 import { InputType, Field, Float } from '@nestjs/graphql';
 
 @InputType()
@@ -61,13 +61,73 @@ export class UserOnboardingInfoDto extends BaseDto {
     industry?: ConditionDto;
 
     @Field(() => ConditionDto, { nullable: true })
+    job_setting_skills?: ConditionDto
+
+    @Field(() => ConditionDto, { nullable: true })
     industry_working?: ConditionDto;
+
+    @Field(() => ConditionDto, { nullable: true })
+    location?: ConditionDto;
+
+    @Field(() => ConditionDto, { nullable: true })
+    job_setting_level?: ConditionDto;
+
+    @Field(() => ConditionDto, { nullable: true })
+    current_job_level?: ConditionDto;
+
+    @Field(() => ConditionDto, { nullable: true })
+    current_job_skills?: ConditionDto;
 
     @Field(() => String, { nullable: true })
     code?: string;
 
 }
+@InputType()
+export class JobSettingInfoDto extends BaseDto {
+    @Field(() => [String], { nullable: true })
+    job_setting_skills?: string[];
 
+    @Field(() => ConditionDto, { nullable: true })
+    job_setting_title?: ConditionDto;
+
+    @Field(() => ConditionDto, { nullable: true })
+    industry?: ConditionDto;
+
+    @Field(() => ConditionDto, { nullable: true })
+    location?: ConditionDto;
+
+    @Field(() => ConditionDto, { nullable: true })
+    job_setting_level?: ConditionDto;
+
+    @Field(() => Float, { nullable: true })
+    available_time_from?: number;
+
+    @Field(() => Float, { nullable: true })
+    available_time_to?: number;
+}
+@InputType()
+export class SaveJobSettingInfoDto extends BaseDto {
+    @Field(() => [String], { nullable: true })
+    job_setting_skills?: string[];
+
+    @Field(() => String, { nullable: true })
+    job_setting_title?: string;
+
+    @Field(() => [String], { nullable: true })
+    industry?: string[];
+
+    @Field(() => String, { nullable: true })
+    location?: string;
+
+    @Field(() => String, { nullable: true })
+    job_setting_level?: string;
+
+    @Field(() => Float, { nullable: true })
+    available_time_from?: number;
+
+    @Field(() => Float, { nullable: true })
+    available_time_to?: number;
+}
 @InputType()
 export class SaveUserOnboardingInfoDto extends BaseDto {
     @Field(() => String, { nullable: true })
@@ -122,16 +182,10 @@ export class SaveUserOnboardingInfoDto extends BaseDto {
     current_job_title?: string;
 
     @Field(() => String, { nullable: true })
-    job_setting_title?: string;
-
-    @Field(() => String, { nullable: true })
-    industry?: string;
+    current_job_level?: string;
 
     @Field(() => String, { nullable: true })
     industry_working?: string;
 
-    @Field(() => [String], { nullable: true })
-    top_skills?: string[];
-
-
+   
 }

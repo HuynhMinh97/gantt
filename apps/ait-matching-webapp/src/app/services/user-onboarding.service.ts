@@ -47,6 +47,18 @@ export class UserOnboardingService extends AitBaseService {
       _key: true,
       value: true,
     },
+    current_job_level: {
+      _key: true,
+      value: true,
+    }, 
+    job_setting_level: {
+      _key: true,
+      value: true,
+    },
+    location: {
+      _key: true,
+      value: true,
+    },
     first_name: true,
     last_name: true,
     katakana: true,
@@ -58,6 +70,8 @@ export class UserOnboardingService extends AitBaseService {
     address: true,
     floor_building: true,
     del_flag: true,
+    available_time_from: true,
+    available_time_to: true,
   };
 
   async findUserOnboardingByKey(_key?: string) {
@@ -65,7 +79,8 @@ export class UserOnboardingService extends AitBaseService {
       user_id: _key,
     };
 
-    const specialFields = ['gender', 'country_region', 'province_city', 'district', 'ward'];
+    const specialFields = ['gender','country_region','province_city','district','ward'];
+    const fildesOfMasteData = ['location','current_job_level']
 
     specialFields.forEach((item) => {
       condition[item] = {
@@ -75,6 +90,13 @@ export class UserOnboardingService extends AitBaseService {
       };
     });
 
+    fildesOfMasteData.forEach((item) => {
+      condition[item] = {
+        attribute: item,
+        ref_collection: 'sys_master_data',
+        ref_attribute: 'code',
+      };
+    });
     const keyMasterArray = [
       {
         att: 'current_job_title',
@@ -111,17 +133,106 @@ export class UserOnboardingService extends AitBaseService {
 
   async findUserSkills(_id?: string) {
     const condition: any = {
-      _from: _id,
+      _key: _id,
+      del_flag: false,
     };
     const returnFields = {
-      _to: true,
-      sort_no: true,
+      current_job_skills:{
+        _key: true,
+        value: true,
+      }
     };
     const request = {};
-    request['collection'] = 'user_skill';
     request['condition'] = condition;
-    return await this.query('findUserSkill', request, returnFields);
+    return await this.query('findCurrentJobSkill+', request, returnFields);
   }
+
+  async findSkillsByFrom(_from?: string) {
+    const condition = {
+      _from: _from,
+      del_flag: false,
+    }
+    return await this.query('findMSkillByFrom', { collection: 'biz_user_skill', condition },
+      {
+        skills: {
+          _key: true,
+          value: true
+        },
+      })
+  }
+  
+
+  async findJobSetting(_id?: string) {
+    const condition: any = {
+      user_id: _id,
+    };
+
+    const fildesOfMasteData = ['location','job_setting_level']
+
+    fildesOfMasteData.forEach((item) => {
+      condition[item] = {
+        attribute: item,
+        ref_collection: 'sys_master_data',
+        ref_attribute: 'code',
+      };
+    });
+    const keyMasterArray = [
+      
+      {
+        att: 'job_setting_title',
+        col: 'm_title',
+      },
+      {
+        att: 'industry',
+        col: 'm_industry',
+      },
+      {
+        att: 'job_setting_skills',
+        col: 'm_skill',
+      },
+      
+    ];
+
+    keyMasterArray.forEach((item) => {
+      condition[item.att] = {
+        attribute: item.att,
+        ref_collection: item.col,
+        ref_attribute: 'code',
+      };
+    });
+    const returnFields = {
+      _key: true,
+      location: {
+        _key: true,
+        value: true,
+      },
+      job_setting_title: {
+        _key: true,
+        value: true,
+      },
+      job_setting_skills: {
+        _key: true,
+        value: true,
+      },
+      industry: {
+        _key: true,
+        value: true,
+      },
+      job_setting_level: {
+        _key: true,
+        value: true,
+      },
+      available_time_to: true,
+      available_time_from: true,
+
+    };
+    const request = {};
+    request['collection'] = 'biz_job_setting';
+    request['condition'] = condition;
+    return await this.query('findJobSettingInfo', request, returnFields);
+  }
+
+  
 
   async findMSkills(_id?: string) {
     const condition: any = {
@@ -159,11 +270,24 @@ export class UserOnboardingService extends AitBaseService {
     );
   }
 
-  async saveUserSkills(data: any[]) {
+  async saveJobSetting(data: any[]) {
     const returnField = { _key: true };
     return await this.mutation(
+      'saveUserJobSettingInfo',
+      'biz_job_setting',
+      data,
+      returnField
+    );
+  }
+
+
+  
+
+  async saveUserSkills(data: any[]) {
+    const returnField = { _key: true, del_flag: true };
+    return await this.mutation(
       'saveUserSkill',
-      'user_skill',
+      'biz_user_skill',
       data,
       returnField
     );

@@ -1,6 +1,12 @@
 import { Field, Float, ObjectType } from '@nestjs/graphql';
 import { BaseEntity, KeyValueEntity } from '@ait/core';
 
+
+@ObjectType()
+export class CurrentJobSkillsEntity{
+    @Field(() => [KeyValueEntity], { nullable: true })
+    current_job_skills?: KeyValueEntity[];
+}
 @ObjectType()
 export class UserOnboardingInfoEntity extends BaseEntity {
     @Field(() => String, { nullable: true })
@@ -52,15 +58,35 @@ export class UserOnboardingInfoEntity extends BaseEntity {
     company_working?: KeyValueEntity;
 
     @Field(() => KeyValueEntity, { nullable: true })
-    job_setting_title?: KeyValueEntity;
-
-    @Field(() => KeyValueEntity, { nullable: true })
     current_job_title?: KeyValueEntity;
 
+    @Field(() => [KeyValueEntity], { nullable: true })
+    industry?: KeyValueEntity[];
+
+    @Field(() => [KeyValueEntity], { nullable: true })
+    job_setting_skills?: KeyValueEntity[];
+
+    @Field(() => [KeyValueEntity], { nullable: true })
+    current_job_skills?: KeyValueEntity[];
+
     @Field(() => KeyValueEntity, { nullable: true })
-    industry?: KeyValueEntity;
+    current_job_level: KeyValueEntity;
 
     @Field(() => KeyValueEntity, { nullable: true })
     industry_working?: KeyValueEntity;
 
+    @Field(() => KeyValueEntity, { nullable: true })
+    job_setting_title?: KeyValueEntity;
+
+    @Field(() => KeyValueEntity, { nullable: true })
+    job_setting_level?: KeyValueEntity;
+
+    @Field(() => KeyValueEntity, { nullable: true })
+    location?: KeyValueEntity;
+
+    @Field(() => Float, { nullable: true })
+    available_time_to?: number;
+
+    @Field(() => Float, { nullable: true })
+    available_time_from?: number;
 }

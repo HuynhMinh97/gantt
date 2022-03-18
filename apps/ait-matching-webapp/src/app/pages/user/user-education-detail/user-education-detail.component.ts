@@ -24,6 +24,8 @@ export class UserEducationDetailComponent
   implements OnInit {
   _key: string;
   dateFormat: string;
+  startDateFrom: string;
+  startDateto: string;
 
   constructor(
     public activeRouter: ActivatedRoute,
@@ -68,34 +70,51 @@ export class UserEducationDetailComponent
     }
   }
 
-  public find = async (condition: any ) => {
-    const result = await this.userEducationService
-      .findUserEducationByKey(condition._key);
-      const dataForm = {
-        data : []
-      };
-      
-      dataForm['data'][0]={};
-      Object.keys(result.data[0]).forEach((key) => {
-        if(key === 'school') {
-          const value = result.data[0][key].value;
+  public find = async (condition: any) => {
+    const result = await this.userEducationService.findUserEducationByKey(
+      condition._key
+    );
+    const dataForm = {
+      data: [],
+    };
+
+    dataForm['data'][0] = {};
+    Object.keys(result.data[0]).forEach((key) => {
+      if (key === 'school') {
+        const value = result.data[0][key].value;
         dataForm['data'][0][key] = value;
+      } else {
+        if (key === 'change_at' || key === 'create_at') {
+          const value = result.data[0][key];
+          dataForm['data'][0][key] = this.getDateFormat(value);
         } else {
-          if(key === 'change_at' || key === 'create_at') {
+          if (key === 'start_date_from' || key === 'start_date_to') {
             const value = result.data[0][key];
-            dataForm['data'][0][key] = this.getDateFormat(value);
-          }
-          else {
+            if(value){
+              if(key.includes('_from')) {
+                this.startDateFrom = this.getDateFormat(value).substring(0,9);
+              } else {
+                this.startDateto = this.getDateFormat(value).substring(0,9);
+              }
+            }
+          } else {
             const value = result.data[0][key];
             dataForm['data'][0][key] = value;
           }
         }
-      });
-      dataForm['errors'] = result.errors;
-      dataForm['message'] = result.message;
-      dataForm['numData'] = result.numData;
-      dataForm['numError'] = result.numError;
-      dataForm['status'] = result.status;
-      return dataForm;
+      }
+    });
+    if (this.startDateto && this.startDateFrom) {
+      dataForm['data'][0]['start_date'] = this.startDateFrom + ' ~ ' + this.startDateto
+    } else {
+      dataForm['data'][0]['start_date'] = this.startDateFrom
+    }
+    
+    dataForm['errors'] = result.errors;
+    dataForm['message'] = result.message;
+    dataForm['numData'] = result.numData;
+    dataForm['numError'] = result.numError;
+    dataForm['status'] = result.status;
+    return dataForm;
   };
 }

@@ -1,1 +1,201 @@
-@import '../user-education-detail/user-education-detail.component.scss';
+@import '../user-project/user-project.component.scss';
+
+.ait-label span {
+  color: red !important;
+}
+#menu_item_basic_infomation {
+  padding-left: 0px !important;
+}
+.template__container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f9f9f9;
+  .main__container {
+    width: 100vmax !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100%;
+    margin: 10px;
+    padding: 100px;
+    padding-top: 30px;
+    padding-bottom: 0px;
+    .radius {
+      border: 1px solid #e0eeff;
+      border-radius: 10px;
+      outline-color: #10529d;
+    }
+    .template__filter__container {
+      margin-top: -30px;
+      min-height: 61px;
+      width: 1180px;
+      box-sizing: border-box;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+
+      .template__header__filter {
+        height: 50px;
+        border-bottom: 2px solid #8f9bb3;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        .icon__expan {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+        }
+      }
+      .template__input__area {
+        margin-top: 15px;
+        width: 100%;
+        margin-bottom: 35px;
+        display: flex;
+        flex-wrap: wrap;
+        display: flex;
+        justify-content: center;
+        transition: 0.5s all ease;
+        .left__side,
+        .right__side {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+        }
+        .bottom__side {
+          display: flex;
+          width: 100%;
+          margin-top: 40px;
+          align-items: center;
+          justify-content: flex-end;
+        }
+        .content {
+          display: flex;
+          flex-wrap: wrap;
+          width: 100%;
+          padding: 0 40px;
+        }
+        .center_span {
+          margin: 35px 15px 0px 15px;
+          font-size: 18px;
+          font-weight: 800;
+          color: #c5cee0;
+          width: 27px;
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+
+.input_date {
+  width: 400px;
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+  span {
+    position: relative;
+    bottom: -25px;
+    font-size: 22px;
+    color: #8b8b8b;
+  }
+}
+
+.button_table {
+  padding-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  button {
+    outline: none;
+    border: none;
+    background-color: #ffffff;
+    padding: 5px;
+  }
+  i {
+    background: linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 1.3rem !important;
+    margin: 0px 10px 10px 10px;
+  }
+  .button_right {
+    display: flex;
+    position: relative;
+    .setting_table {
+      position: absolute;
+      top: -13px;
+      right: 50px;
+    }
+  }
+}
+.template__filter__container {
+  margin-top: 30px;
+  min-height: 61px;
+  width: 100%;
+
+  box-sizing: border-box;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+
+  .template__header__filter {
+    height: 50px;
+    border-bottom: 2px solid #8f9bb3;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    .icon__expan {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+  }
+  .template__input__area {
+    margin-top: 15px;
+    width: 100%;
+    margin-bottom: 35px;
+    display: flex;
+    flex-wrap: wrap;
+    transition: 0.5s all ease;
+    .left__side,
+    .right__side {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .bottom__side {
+      display: flex;
+      width: 100%;
+      margin-top: 40px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .content {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      padding: 0 40px;
+    }
+    .center_span {
+      margin: 35px 15px 0px 15px;
+      font-size: 18px;
+      font-weight: 800;
+      color: #c5cee0;
+      width: 27px;
+      text-align: center;
+    }
+  }
+}
+
+.text_overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
