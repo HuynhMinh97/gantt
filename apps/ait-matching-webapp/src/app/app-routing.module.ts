@@ -25,6 +25,7 @@ import { EducationListComponent } from './pages/list/education-list/education-li
 import { UserCertificateDetailComponent } from './pages/user/user-certificate-detail/user-certificate-detail.component';
 import { UserProjectDetailComponent } from './pages/user/user-project-detail/user-project-detail.component';
 import { UserCourseDetailComponent } from './pages/user/user-course-detail/user-course-detail.component';
+import { LanguageListComponent } from './pages/list/language-list/language-list.component';
 
 
 // Push your routes here one by one 🎉
@@ -160,11 +161,6 @@ export const routes: Routes = [
     component: UserLanguageDetailComponent
   },
   {
-    path: 'list-project',
-    canActivate: [AitAuthGuardService],
-    component: ProjectListComponent
-  },
-  {
     path: 'user-language/:id',
     canActivate: [AitAuthGuardService],
     component: UserLanguageComponent
@@ -188,6 +184,11 @@ export const routes: Routes = [
     path: 'skill-list',
     canActivate: [AitAuthGuardService], 
     component: SkillListViewComponent
+  },
+  {
+    path: 'language-list',
+    canActivate: [AitAuthGuardService], 
+    component: LanguageListComponent
   },
   {
     path: 'project-list',

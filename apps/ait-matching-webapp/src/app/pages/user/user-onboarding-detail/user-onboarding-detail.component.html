@@ -10,6 +10,7 @@
     <div class="template__filter__container">
       <div class="template__input__area">
         <ait-card-content
+          [styleDivider]="{'margin-left':'10px'}"
           [styleLabel]="{ 'font-size': '26px' }"
           tabindex="2"
           [isOpen]="true"
@@ -143,6 +144,7 @@
           </div>
         </ait-card-content>
         <ait-card-content
+          [styleDivider]="{'margin-left':'10px'}"
           [styleLabel]="{ 'font-size': '26px' }"
           tabindex="2"
           [isOpen]="true"
@@ -235,6 +237,7 @@
           </div>
         </ait-card-content>
         <ait-card-content
+          [styleDivider]="{'margin-left':'10px'}"
           [styleLabel]="{ 'font-size': '26px' }"
           tabindex="2"
           [isOpen]="true"
@@ -314,7 +317,14 @@
           </div>
         </ait-card-content>
         <ait-card-content
+          [styleDivider]="{'margin-left':'10px'}"
           [styleLabel]="{ 'font-size': '26px' }"
+          [content]="'This setting is used to find the best job for you'"
+          [styleContent]="{
+            color: '#8F9BB3',
+            'font-size': '12px',
+            'margin-left':'10px'
+          }"
           tabindex="2"
           [isOpen]="true"
           [isStart]="true"

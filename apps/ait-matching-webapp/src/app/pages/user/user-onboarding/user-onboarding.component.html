@@ -10,6 +10,8 @@
     <div class="template__filter__container">
       <div class="template__input__area">
         <ait-card-content
+          [styleDivider]="{'margin-left':'10px'}"
+          [styleLabel]="{ 'font-size': '26px' }"
           tabindex="2"
           [isOpen]="true"
           [isStart]="true"
@@ -198,6 +200,8 @@
           </div>
         </ait-card-content>
         <ait-card-content
+          [styleDivider]="{'margin-left':'10px'}"
+          [styleLabel]="{ 'font-size': '26px' }"
           tabindex="2"
           [isOpen]="true"
           [isStart]="true"
@@ -264,6 +268,8 @@
           </div>
         </ait-card-content>
         <ait-card-content
+          [styleDivider]="{'margin-left':'10px'}"
+          [styleLabel]="{ 'font-size': '26px' }"
           tabindex="2"
           [isOpen]="true"
           [isStart]="true"
@@ -281,7 +287,7 @@
                   <ait-autocomplete-master-data
                     [width]="'400px'"
                     [id]="'company_working'"
-                    [label]="'company working'"
+                    [label]="'company_working'"
                     [isSubmit]="isSubmit"
                     [allowNew]="true"
                     [maxItem]="1"
@@ -400,6 +406,14 @@
           </div>
         </ait-card-content>
         <ait-card-content
+          [styleDivider]="{'margin-left':'10px'}"
+          [styleLabel]="{ 'font-size': '26px'}"
+          [content]="'This setting is used to find the best job for you'"
+          [styleContent]="{
+            color: '#8F9BB3',
+            'font-size': '12px',
+            'margin-left':'10px'
+          }"
           tabindex="2"
           [isOpen]="true"
           [isStart]="true"
@@ -487,7 +501,7 @@
                   <ait-autocomplete-master-data
                     [id]="'job_setting_skills'"
                     [width]="'400px'"
-                    [label]="'skills (max 10)'"
+                    [label]="'skills'"
                     [required]="true"
                     [isSubmit]="isSubmit"
                     [allowNew]="true"
@@ -575,6 +589,13 @@
                     [isReset]="true"
                     [isSubmit]="isSubmit"
                   ></ait-datepicker>
+                </div>
+                <div [style.width]="'420px'">
+                  <ait-error-message
+                    *ngIf="available_time_error"
+                    [errors]="availableTimeErrorMessage"
+                  >
+                  </ait-error-message>
                 </div>
               </ng-container>
               <ait-space [margin]="'7.25px'"></ait-space>
