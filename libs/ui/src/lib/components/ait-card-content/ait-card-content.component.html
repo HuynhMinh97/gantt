@@ -34,6 +34,9 @@
         >
           {{ LABEL }}
         </div>
+        <div [ngStyle]="styleContent" >
+          {{content}}
+        </div>
       </div>
 
       <div style="display: flex; position: relative">
@@ -73,7 +76,7 @@
         ></nb-icon>
       </div>
     </div>
-    <div class="divider" *ngIf="!disableHeader"></div>
+    <div class="divider" *ngIf="!disableHeader" [ngStyle]="styleDivider" ></div>
     <div
       class="content"
       [ngStyle]="{
