@@ -139,6 +139,7 @@ export class AitGroupViewComponent extends AitBaseComponent implements OnInit {
     });
 
     if (this.find) {
+      debugger
       const res = await this.find(conditions);
       if (res.data.length > 0) {
         const data = res.data[0];
