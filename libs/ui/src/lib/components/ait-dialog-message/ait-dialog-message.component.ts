@@ -1,13 +1,13 @@
-import { Component, Input, OnInit} from '@angular/core';
-import { NbDialogRef, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
-import { LocalDataSource } from 'ng2-smart-table';
-import { AitAuthService, AitEnvironmentService, AitTranslationService } from '../../services';
 import { AppState } from '../../state/selectors';
-import { AitConfirmDialogComponent } from '../ait-confirm-dialog/ait-confirm-dialog.component';
-import { AitTableCellComponent } from '../ait-table-cell/ait-table-cell.component';
+import { LocalDataSource } from 'ng2-smart-table';
 import { AitBaseComponent } from '../base.component';
+import { Component, Input, OnInit} from '@angular/core';
+import { AitTableCellComponent } from '../ait-table-cell/ait-table-cell.component';
+import { NbDialogRef, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
+import { AitAuthService, AitEnvironmentService, AitTranslationService } from '../../services';
+import { AitConfirmDialogComponent } from '../ait-confirm-dialog/ait-confirm-dialog.component';
 
 @Component({
   selector: 'ait-ait-message-error',
