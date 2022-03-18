@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
-import { RESULT_STATUS } from '@ait/shared';
+import { RESULT_STATUS, isArrayFull } from '@ait/shared';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -166,10 +166,19 @@ export class AitGroupViewComponent extends AitBaseComponent implements OnInit {
     const rightSide = [];
     components.forEach((component) => {
       if (component.type !== 'hidden') {
+        const value = this.getValue(component.item_id);
         if (component.col_no === 1) {
-          leftSide.push({...component, value: this.getValue(component.item_id)});
+          if (isArrayFull(value) && component.type !== 'file') {
+            leftSide.push({...component, valueArray: value});
+          } else {
+            leftSide.push({...component, value});
+          }
         } else {
-          rightSide.push({...component, value: this.getValue(component.item_id)});
+          if (isArrayFull(value) && component.type !== 'file') {
+            rightSide.push({...component, valueArray: value});
+          } else {
+            rightSide.push({...component, value});
+          }
         }
       }
     });

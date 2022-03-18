@@ -66,6 +66,9 @@ export class ComponentSettingDto {
   width: string;
 
   @Field(() => String, { nullable: true })
+  height: string;
+
+  @Field(() => String, { nullable: true })
   title: string;
 
   @Field(() => String, { nullable: true })
