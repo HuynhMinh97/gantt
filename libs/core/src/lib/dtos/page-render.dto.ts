@@ -66,6 +66,9 @@ export class ComponentSettingDto {
   width: string;
 
   @Field(() => String, { nullable: true })
+  height: string;
+
+  @Field(() => String, { nullable: true })
   title: string;
 
   @Field(() => String, { nullable: true })
@@ -148,6 +151,12 @@ export class SysSearchConditionDto extends BaseDto {
 
   @Field(() => String, { nullable: true })
   item_label: string;
+
+  @Field(() => String, { nullable: true })
+  item_label_from: string;
+
+  @Field(() => String, { nullable: true })
+  item_label_to: string;
 
   @Field(() => String, { nullable: true })
   item_placeholder: string;

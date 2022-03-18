@@ -37,6 +37,8 @@ export class AitRenderPageService extends AitBaseService {
     col_no: true,
     item_id: true,
     item_label: true,
+    item_label_from: true,
+    item_label_to: true,
     item_placeholder: true,
     type: true,
     component_setting: {
@@ -44,6 +46,7 @@ export class AitRenderPageService extends AitBaseService {
       max_item: true,
       max_file: true,
       width: true,
+      height: true,
       required: true,
       from_to: true,
       is_multi_language: true,

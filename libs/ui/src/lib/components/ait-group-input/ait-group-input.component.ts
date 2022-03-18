@@ -61,6 +61,8 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   isCopy = false;
   cloneData: any;
   searchComponents: any;
+  dateErrorObject = {};
+  dateErrorMessage = {};
   leftSide: any[] = [];
   rightSide: any[] = [];
   multiLang: string[] = [];
@@ -162,9 +164,7 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   async patchDataToForm(data: any[]) {
     const conditions = {};
     this.cloneData = {};
-    if (!this.isCopy) {
-      conditions['_key'] = this._key;
-    }
+    conditions['_key'] = this._key;
     data.forEach((e) => {
       if (e['search_setting']) {
         const prop = Object.entries(e['search_setting']).reduce(
@@ -188,6 +188,9 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
       );
       if (res.data.length > 0) {
         const value = JSON.parse(res.data[0]['data'] || '[]');
+        if (this.isCopy && value['key']) {
+          delete value._key;
+        }
         this.inputForm.patchValue(value);
         (Object.keys(this.inputForm.controls) || []).forEach((name) => {
           this.cloneData[name] = this.inputForm.controls[name].value;
@@ -250,10 +253,29 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
         ) {
           group[component.item_id + '_from'] = new FormControl();
           group[component.item_id + '_to'] = new FormControl();
+          this.dateErrorObject[component.item_id] = false;
+          setTimeout(() => {
+            this.dateErrorMessage[component.item_id] = this.getMsg('E0004')
+              .replace(
+                '{0}',
+                `${this.translateService.translate(
+                  component.item_label_from || component.item_label
+                )} ${component.item_label_from ? '' : 'from'}`
+              )
+              .replace(
+                '{1}',
+                `${this.translateService.translate(
+                  component.item_label_to || component.item_label
+                )} ${component.item_label_to ? '' : 'to'}`
+              );
+          }, 200);
         } else {
           const isRequired = !!component.component_setting?.required;
           if (isRequired) {
-            group[component.item_id] = new FormControl(null, Validators.required);
+            group[component.item_id] = new FormControl(
+              null,
+              Validators.required
+            );
           } else {
             group[component.item_id] = new FormControl(null);
           }
@@ -319,7 +341,12 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
     this.checkAllowSave();
   }
 
-  takeDatePickerValue(value: number, form: string): void {
+  takeDatePickerValue(
+    value: number,
+    form: string,
+    isFromTo = false,
+    origin = ''
+  ): void {
     if (value) {
       const data = value as number;
       value = new Date(data).setHours(0, 0, 0, 0);
@@ -329,6 +356,22 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
       this.inputForm.controls[form].setValue(null);
     }
     this.checkAllowSave();
+    if (isFromTo) {
+      this.checkDateError(origin);
+    }
+  }
+
+  checkDateError(origin: string) {
+    const valueFrom = this.inputForm.controls[origin + '_from'].value;
+    const valueTo = this.inputForm.controls[origin + '_to'].value;
+
+    if (!valueFrom || !valueTo) {
+      this.dateErrorObject[origin] = false;
+    } else if (valueFrom > valueTo) {
+      this.dateErrorObject[origin] = true;
+    } else {
+      this.dateErrorObject[origin] = false;
+    }
   }
 
   takeFiles(fileList: any[], form: string): void {
@@ -351,6 +394,9 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
 
   reset() {
     this.inputForm.patchValue({ ...this.cloneData });
+    for (const prop in this.dateErrorObject) {
+      this.dateErrorObject[prop] = false;
+    }
   }
 
   remove() {
@@ -402,14 +448,29 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   clear() {
     this.inputForm.reset();
     this.isReset = true;
+    for (const prop in this.dateErrorObject) {
+      this.dateErrorObject[prop] = false;
+    }
     setTimeout(() => {
       this.isReset = false;
     }, 100);
   }
 
+  isDateValid(): boolean {
+    let checked = true;
+    for (const prop in this.dateErrorObject) {
+      if (this.dateErrorObject[prop]) {
+        checked = false;
+        break;
+      }
+    }
+    return checked;
+  }
+
   async onSave() {
     this.isSubmit = true;
-    if (this.inputForm.valid) {
+    const isDateValid = this.isDateValid();
+    if (this.inputForm.valid && isDateValid) {
       this.callLoadingApp();
       try {
         const objSave = {};
@@ -423,10 +484,9 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
                 if (typeof e === 'string') {
                   keyArray.push(e);
                 } else {
-                  keyArray.push(e[KEYS.KEY])
+                  keyArray.push(e[KEYS.KEY]);
                 }
-              }
-              );
+              });
               objSave[prop] = keyArray;
             } else {
               objSave[prop] = formValue[prop][KEYS.KEY];

@@ -1,15 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
-import { RESULT_STATUS } from '@ait/shared';
+import { RESULT_STATUS, isArrayFull } from '@ait/shared';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
+import {
+  NbLayoutScrollService,
+  NbToastrService,
+} from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { AitEnvironmentService } from '../../services/ait-environment.service';
 import { AitAuthService } from '../../services/common/ait-auth.service';
-import { AitMasterDataService } from '../../services/common/ait-master-data.service';
 import { AitRenderPageService } from '../../services/common/ait-render-page.service';
 import { AitSaveTempService } from '../../services/common/ait-save-temp.service';
 import { AitUserService } from '../../services/common/ait-user.service';
@@ -19,7 +21,7 @@ import { AitBaseComponent } from '../base.component';
 @Component({
   selector: 'ait-group-view',
   templateUrl: './ait-group-view.component.html',
-  styleUrls: ['./ait-group-view.component.scss']
+  styleUrls: ['./ait-group-view.component.scss'],
 })
 export class AitGroupViewComponent extends AitBaseComponent implements OnInit {
   viewForm: FormGroup;
@@ -42,7 +44,6 @@ export class AitGroupViewComponent extends AitBaseComponent implements OnInit {
     private renderPageService: AitRenderPageService,
     public router: Router,
     public store: Store<AppState>,
-    private dialogService: NbDialogService,
     authService: AitAuthService,
     userService: AitUserService,
     toastrService: NbToastrService,
@@ -50,7 +51,6 @@ export class AitGroupViewComponent extends AitBaseComponent implements OnInit {
     layoutScrollService: NbLayoutScrollService,
     apollo: Apollo,
     saveTempService: AitSaveTempService,
-    private masterDataService: AitMasterDataService
   ) {
     super(
       store,
@@ -88,7 +88,7 @@ export class AitGroupViewComponent extends AitBaseComponent implements OnInit {
         const resGroup = await this.renderPageService.findGroup({
           module: this.moduleKey,
           page: this.pageKey,
-          type: 'view'
+          type: 'view',
         });
         if (resGroup.status === RESULT_STATUS.OK) {
           this.groupKey = resGroup.data[0]?.code || '';
@@ -106,7 +106,7 @@ export class AitGroupViewComponent extends AitBaseComponent implements OnInit {
           ) {
             this.viewComponents = resView.data;
             this.setupForm(this.viewComponents);
-            
+
             if (this._key) {
               this.viewForm.addControl('_key', new FormControl(null));
               this.patchDataToForm(resView.data || []);
@@ -123,6 +123,7 @@ export class AitGroupViewComponent extends AitBaseComponent implements OnInit {
       this.cancelLoadingApp();
     }
   }
+
   async patchDataToForm(data: any[]) {
     const conditions = {};
     this.cloneData = {};
@@ -162,19 +163,59 @@ export class AitGroupViewComponent extends AitBaseComponent implements OnInit {
   }
 
   setupComponent(components: any[]) {
-    const leftSide = [];
-    const rightSide = [];
-    components.forEach((component) => {
-      if (component.type !== 'hidden') {
-        if (component.col_no === 1) {
-          leftSide.push({...component, value: this.getValue(component.item_id)});
-        } else {
-          rightSide.push({...component, value: this.getValue(component.item_id)});
+    try {
+      let leftSide = [];
+      let rightSide = [];
+
+      components.forEach((component) => {
+        if (component.type !== 'hidden') {
+          const value = this.getValue(component.item_id);
+          if (component.col_no === 1) {
+            if (isArrayFull(value) && component.type !== 'file') {
+              leftSide.push({ ...component, valueArray: value });
+            } else {
+              leftSide.push({ ...component, value });
+            }
+          } else {
+            if (isArrayFull(value) && component.type !== 'file') {
+              rightSide.push({ ...component, valueArray: value });
+            } else {
+              rightSide.push({ ...component, value });
+            }
+          }
         }
+      });
+
+      leftSide = leftSide.sort((a, b) => a.row_no - b.row_no);
+      rightSide = rightSide.sort((a, b) => a.row_no - b.row_no);
+
+      const leftSideIndex = leftSide[leftSide.length - 1]?.row_no;
+      const rightSideIndex = rightSide[rightSide.length - 1]?.row_no;
+
+      try {
+        [...Array(+leftSideIndex)].forEach((e, i) => {
+          const item = leftSide.find((m) => m.row_no == i + 1);
+          if (item) {
+            this.leftSide.push(item);
+          } else {
+            this.leftSide.push({ type: 'space' });
+          }
+        });
+
+        [...Array(+rightSideIndex)].forEach((e, i) => {
+          const item = rightSide.find((m) => m.row_no == i + 1);
+          if (item) {
+            this.rightSide.push(item);
+          } else {
+            this.rightSide.push({ type: 'space' });
+          }
+        });
+      } catch (e) {
+        console.error(e);
       }
-    });
-    this.leftSide = leftSide.sort((a, b) => a.row_no - b.row_no);
-    this.rightSide = rightSide.sort((a, b) => a.row_no - b.row_no);
+    } catch {
+      this.cancelLoadingApp();
+    }
   }
 
   getValue(item_id: string) {
@@ -206,6 +247,7 @@ export class AitGroupViewComponent extends AitBaseComponent implements OnInit {
     });
     this.viewForm = new FormGroup(group);
   }
+
   navigateTo404() {
     this.cancelLoadingApp();
     this.router.navigate([`/404`]);

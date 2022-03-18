@@ -22,8 +22,6 @@ export class UserProjectDetailComponent extends AitBaseComponent implements OnIn
   dateFormat: any;
 
   constructor(
-    private router: Router,
-    private nbDialogRef: NbDialogRef<UserProjectDetailComponent>,
     public activeRouter: ActivatedRoute,
     private userProjectService: UserProjectService,
     env: AitEnvironmentService,
@@ -53,11 +51,8 @@ export class UserProjectDetailComponent extends AitBaseComponent implements OnIn
       page: 'user_project',
     });
 
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationStart) {
-          this.closeDialog(false);
-      }
-    });
+    this.user_key = this.activeRouter.snapshot.paramMap.get('id');
+
   }
 
   async ngOnInit(): Promise<void> {
@@ -85,12 +80,6 @@ export class UserProjectDetailComponent extends AitBaseComponent implements OnIn
     setTimeout(() => {
       this.cancelLoadingApp();
     }, 500);
-  }
-  close(){
-    this.closeDialog(false);
-  }
-  closeDialog(event: boolean) {
-    this.nbDialogRef.close(event);
   }
 
 }
