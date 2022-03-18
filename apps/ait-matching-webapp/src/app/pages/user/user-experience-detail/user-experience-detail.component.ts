@@ -28,10 +28,10 @@ export class UserExperienceDetailComponent
   dateAtributes = [
     'create_at',
     'change_at',
-    'start_date_from',
-    'start_date_to',
   ];
 
+  startDateFrom: string;
+  startDateto: string;
   constructor(
     public activeRouter: ActivatedRoute,
     private userExperienceService: UserExperienceService,
@@ -95,11 +95,28 @@ export class UserExperienceDetailComponent
             dataForm['data'][0][key] = this.getDateFormat(value);
           }
           else {
-            const value = result.data[0][key];
-            dataForm['data'][0][key] = value;
+            if (key === 'start_date_from' || key === 'start_date_to') {
+              
+              const value = result.data[0][key];
+              if (value) {
+                if(key.includes('_from')) {
+                  this.startDateFrom = this.getDateFormat(value).substring(0,9);
+                } else {
+                  this.startDateto = this.getDateFormat(value).substring(0,9);
+                }
+              }
+            } else {
+              const value = result.data[0][key];
+              dataForm['data'][0][key] = value;
+            }
           }
         }
       });
+      if (this.startDateto && this.startDateFrom) {
+        dataForm['data'][0]['start_date'] = this.startDateFrom + ' ~ ' + this.startDateto
+      } else {
+        dataForm['data'][0]['start_date'] = this.startDateFrom
+      }
       dataForm['errors'] = result.errors;
       dataForm['message'] = result.message;
       dataForm['numData'] = result.numData;

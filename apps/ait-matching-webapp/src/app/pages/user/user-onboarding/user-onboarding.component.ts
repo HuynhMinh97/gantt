@@ -75,6 +75,8 @@ export class UserOnboardingComponent
   cityCode: any;
   countryCode: any;
   districtCode: any;
+  dateErrorObject = {};
+  availableTimeErrorMessage = [];
   companySkills = [];
   dateFormat = '';
   sort_no = 0;
@@ -85,7 +87,7 @@ export class UserOnboardingComponent
   isChanged = false;
   isDisplay = false;
   isExpan = false;
-
+  available_time_error=false;
   resetJobSettingInfo = {
     job_setting_title: false,
     industry: false,
@@ -412,6 +414,7 @@ export class UserOnboardingComponent
     }
   }
 
+  // get skill current job
   async findSkills() {
     const from = 'sys_user/' + this.user_id;
     await this.userOnbService.findSkillsByFrom(from)
@@ -483,7 +486,30 @@ export class UserOnboardingComponent
     }
     this.showToastr('', this.getMsg('I0007'));
   }
+  
+  checkDateError() {
+    const name = 'available_time_error' ;
+    const valueFrom = this.userJobSettingInfo.controls['available_time_from'].value;
+    const valueTo = this.userJobSettingInfo.controls['available_time_to'].value;
 
+    if (!valueFrom || !valueTo) {
+      this[name] = false;
+    } else if (valueFrom > valueTo) {
+      this[name] = true;
+    } else {
+      this[name] = false;
+    }
+    this.getError();
+  }
+
+  getError() {
+    const msg = this.getMsg('E0004');
+    const availableTimeErr = (msg || '')
+      .replace('{0}', this.translateService.translate('available_time_to'))
+      .replace('{1}', this.translateService.translate('available_time_to_from'));
+    this.availableTimeErrorMessage = [];
+    this.availableTimeErrorMessage.push(availableTimeErr);
+  }
   saveDataJobSetting() {
     const saveData = this.userJobSettingInfo.value;
     const skills = saveData.job_setting_skills;
@@ -581,7 +607,7 @@ export class UserOnboardingComponent
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
-    if (this.userOnboardingInfo.valid && this.userJobSettingInfo.valid) {
+    if (this.userOnboardingInfo.valid && this.userJobSettingInfo.valid && !this.available_time_error) {
       this.callLoadingApp();
       this.userOnbService
         .save(this.saveDataUserProfile())
@@ -604,6 +630,7 @@ export class UserOnboardingComponent
           }
         });
     } else {
+      this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
       this.scrollIntoError();
     }
   }
@@ -725,13 +752,14 @@ export class UserOnboardingComponent
     }
   }
 
-  takeDatePickerValue(value: number, group: string, form: string) {
+  takeDatePickerValue(value: number, group: string, form: string, origin= '') {
     if (value) {
       const data = value as number;
       value = new Date(data).setHours(0, 0, 0, 0);
       this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(value);
     }
+    this.checkDateError();
   }
   // Take values form components and assign to form
   takeMasterValues(value: KeyValueDto[], group: string, form: string): void {

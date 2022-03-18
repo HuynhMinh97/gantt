@@ -1,4 +1,4 @@
-
+<ait-toc-menu [id]="'メニュー'"></ait-toc-menu>
 <div class="template__container">
   <div class="main__container user__wrapper">
     <ait-text-gradient
@@ -10,6 +10,7 @@
     <div class="template__filter__container">
       <div class="template__input__area">
         <ait-card-content
+          [styleLabel]="{ 'font-size': '26px' }"
           tabindex="2"
           [isOpen]="true"
           [isStart]="true"
@@ -25,7 +26,7 @@
               <ng-container>
                 <div class="input_inline">
                   <ait-output-text
-                    [label]="'FIRST NAME'"
+                    [label]="'fist name'"
                     [width]="'200px'"
                     [value]="stateUserOnboarding.first_name"
                     [id]="'first_name'"
@@ -37,7 +38,7 @@
                 <div class="input_inline" *ngIf="lang === 'ja_JP'">
                   <ait-output-text
                     *ngIf="lang === 'ja_JP'"
-                    [label]="'KATAKANA'"
+                    [label]="'katakana'"
                     [id]="'katakana'"
                     [width]="'200px'"
                     [value]="stateUserOnboarding.katakana"
@@ -106,7 +107,7 @@
                 <div class="input_inline" *ngIf="lang === 'ja_JP'">
                   <ait-output-text
                     *ngIf="lang === 'ja_JP'"
-                    [label]="'ROMAJI'"
+                    [label]="'romaji'"
                     [width]="'200px'"
                     [value]="stateUserOnboarding.romaji"
                     [id]="'romaji'"
@@ -142,6 +143,7 @@
           </div>
         </ait-card-content>
         <ait-card-content
+          [styleLabel]="{ 'font-size': '26px' }"
           tabindex="2"
           [isOpen]="true"
           [isStart]="true"
@@ -156,7 +158,7 @@
               <ng-container>
                 <div class="input_inline">
                   <ait-output-text
-                    [label]="'Country/Region'"
+                    [label]="'coutry_region'"
                     [id]="'country_region'"
                     [width]="'200px'"
                     [value]="stateUserOnboarding.country_region?.value"
@@ -164,13 +166,13 @@
                 </div>
                 <div class="input_inline">
                   <ait-output-text
-                    [label]="'Province/City'"
+                    [label]="'province/city'"
                     [id]="'province_city'"
                     [width]="'200px'"
                     [value]="stateUserOnboarding.province_city?.value"
                   ></ait-output-text>
                 </div>
-                
+
                 <div class="input_inline">
                   <ait-output-text
                     [label]="'Ward'"
@@ -187,11 +189,11 @@
                     [value]="stateUserOnboarding.address"
                   ></ait-output-text>
                 </div>
-                
+
                 <div class="input_inline">
                   <ait-output-text
-                    [label]="'COMPANY WORKING'"
-                    [id]="'company_working'"
+                    [label]="'company_working'"
+                    [id]="'company working'"
                     [width]="'200px'"
                     [value]="stateUserOnboarding.company_working?.value"
                   ></ait-output-text>
@@ -213,27 +215,27 @@
                 </div>
                 <div class="input_inline">
                   <ait-output-text
-                    [label]="'District'"
+                    [label]="'district'"
                     [id]="'district'"
                     [width]="'200px'"
                     [value]="stateUserOnboarding.district?.value"
                   ></ait-output-text>
                 </div>
-                  <div class="input_inline">
-                    <ait-output-text
-                      [label]="'Floor/Building'"
-                      [id]="'FLOOR/BUILDING'"
-                      [width]="'200px'"
-                      [value]="stateUserOnboarding.floor_building"
-                    ></ait-output-text>
-                  </div>
-                
+                <div class="input_inline">
+                  <ait-output-text
+                    [label]="'Floor/Building'"
+                    [id]="'FLOOR/BUILDING'"
+                    [width]="'200px'"
+                    [value]="stateUserOnboarding.floor_building"
+                  ></ait-output-text>
+                </div>
               </ng-container>
               <ait-space [margin]="'7.25px'"></ait-space>
             </div>
           </div>
         </ait-card-content>
         <ait-card-content
+          [styleLabel]="{ 'font-size': '26px' }"
           tabindex="2"
           [isOpen]="true"
           [isStart]="true"
@@ -271,7 +273,7 @@
               <ng-container>
                 <div class="input_inline">
                   <ait-output-text
-                    [label]="'current_job_skills'"
+                    [label]="'skills'"
                     [id]="'district'"
                     [width]="'400px'"
                     [value]="stateUserOnboarding.skills"
@@ -300,7 +302,7 @@
               <ng-container>
                 <div class="input_inline">
                   <ait-output-text
-                    [label]="'current_job_level'"
+                    [label]="'your_level'"
                     [id]="'district'"
                     [width]="'200px'"
                     [value]="stateUserOnboarding.current_job_level?.value"
@@ -312,6 +314,7 @@
           </div>
         </ait-card-content>
         <ait-card-content
+          [styleLabel]="{ 'font-size': '26px' }"
           tabindex="2"
           [isOpen]="true"
           [isStart]="true"
@@ -332,14 +335,14 @@
                     [width]="'400px'"
                     [value]="jobSettingInfo.industryList"
                   >
-                </ait-output-text>
+                  </ait-output-text>
                 </div>
               </ng-container>
               <ait-space [margin]="'7.25px'"></ait-space>
               <ng-container>
                 <div class="input_inline">
                   <ait-output-text
-                    [label]="'job_setting_title'"
+                    [label]="'title'"
                     [id]="'job_setting_title'"
                     [width]="'400px'"
                     [value]="jobSettingInfo.job_setting_title?.value"
@@ -361,7 +364,7 @@
               <ng-container>
                 <div class="input_inline">
                   <ait-output-text
-                    [label]="'job_setting_skills'"
+                    [label]="'skills'"
                     [id]="'job_setting_skills'"
                     [width]="'400px'"
                     [value]="jobSettingInfo.skills"
@@ -388,10 +391,11 @@
               <ng-container>
                 <div class="input_date">
                   <ait-output-text
-                    [label]="'available time '"
-                    [id]="'available_time'"
-                    [width]="'200px'"
-                    [value]="jobSettingInfo.available_time"
+                  [label]="'available time'"
+                  [id]="'available_time'"
+                  [width]="'213px'"
+                  [value]="jobSettingInfo.available_time"
+                    
                   ></ait-output-text>
                 </div>
               </ng-container>
@@ -404,4 +408,3 @@
     <ait-space [margin]="'37px'"></ait-space>
   </div>
 </div>
-
