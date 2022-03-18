@@ -11,11 +11,10 @@ import { AitConfirmDialogComponent } from '../ait-confirm-dialog/ait-confirm-dia
 
 @Component({
   selector: 'ait-ait-message-error',
-  templateUrl: './ait-dialog-messsge.component.html',
-  styleUrls: ['./ait-dialog-messsge.component.scss']
+  templateUrl: './ait-dialog-message.component.html',
+  styleUrls: ['./ait-dialog-message.component.scss']
 })
 export class AitDialogMesssgeComponent extends AitBaseComponent implements OnInit {
-
   @Input() listDataError: any = [];
   @Input() style = {};
   done = false;
