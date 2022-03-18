@@ -18,23 +18,23 @@ export class AitTocMenuComponent implements AfterViewInit {
 
 
   ngAfterViewInit() {
-    const doc = document.getElementsByClassName(this.id + '_menu_toc_item');
-    if (this.items.length === 0) {
-      this.items = Array.from(doc).map((m) => {
-        return {
-          id: m.id,
-          title: m.innerHTML
-        }
-      });
-      const ids = Array.from(new Set(this.items.map(x => x?.title)));
-      this.items = ids.map(x => {
-        const it = this.items.find(d => d.title === x);
-        return it
-      });
-
-
-
-    }
+    setTimeout(() => {
+      const doc = document.getElementsByClassName(this.id + '_menu_toc_item');
+      if (this.items.length === 0) {
+        this.items = Array.from(doc).map((m) => {
+          return {
+            id: m.id,
+            title: m.innerHTML
+          }
+        });
+        const ids = Array.from(new Set(this.items.map(x => x?.title)));
+        this.items = ids.map(x => {
+          const it = this.items.find(d => d.title === x);
+          return it
+        });
+      }
+    }, 1500);
+    
   }
 
   goToElemet = (id: string) => {

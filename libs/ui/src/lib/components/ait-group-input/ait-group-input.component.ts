@@ -164,9 +164,7 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   async patchDataToForm(data: any[]) {
     const conditions = {};
     this.cloneData = {};
-    if (!this.isCopy) {
-      conditions['_key'] = this._key;
-    }
+    conditions['_key'] = this._key;
     data.forEach((e) => {
       if (e['search_setting']) {
         const prop = Object.entries(e['search_setting']).reduce(
@@ -190,6 +188,9 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
       );
       if (res.data.length > 0) {
         const value = JSON.parse(res.data[0]['data'] || '[]');
+        if (this.isCopy && value['key']) {
+          delete value._key;
+        }
         this.inputForm.patchValue(value);
         (Object.keys(this.inputForm.controls) || []).forEach((name) => {
           this.cloneData[name] = this.inputForm.controls[name].value;
