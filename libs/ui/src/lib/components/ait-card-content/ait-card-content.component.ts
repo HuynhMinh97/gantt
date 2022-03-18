@@ -40,7 +40,11 @@ export class AitCardContentComponent {
   @Input() buttonTitle = '';
   @Input() classContainer: any;
   @Input() id;
+
+  @Input() content = '';
   @Input() styleLabel = {};
+  @Input() styleContent = {};
+  @Input() styleDivider = {};
 
   ID(element: string) {
     const idx = this.id && this.id !== '' ? this.id : Date.now();
