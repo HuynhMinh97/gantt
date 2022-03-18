@@ -196,8 +196,6 @@ export class AitGroupSearchComponent
             group: this.groupKey,
           });
 
-          console.log(resResult);
-          
           if (
             resSearch.status === RESULT_STATUS.OK &&
             resSearch?.data?.length > 0
@@ -255,7 +253,7 @@ export class AitGroupSearchComponent
 
   edit(data: any) {
     if (this.pageRouter) {
-      this.router.navigate([`${this.pageRouter?.input || ''}`+ `/${data}`]);
+      this.router.navigate([`${this.pageRouter?.input || ''}` + `/${data}`]);
     }
   }
 
@@ -293,9 +291,8 @@ export class AitGroupSearchComponent
     }
   }
 
-  setupSetting(tableComponents: any[],  diplay?: KeyValueDto[]) {
+  setupSetting(tableComponents: any[], diplay?: KeyValueDto[]) {
     try {
-      console.log(tableComponents);
       const data = tableComponents[0];
       const columns = data['columns'] || [];
       const settings = data['settings'] || {};
@@ -357,7 +354,7 @@ export class AitGroupSearchComponent
       } else {
         // this.callLoadingApp();
         columns.forEach((col: any) => {
-          if (diplay.find(element => element._key == col.name)) {
+          if (diplay.find((element) => element._key == col.name)) {
             const obj = {
               type: 'custom',
               renderComponent: AitTableCellComponent,
@@ -379,13 +376,12 @@ export class AitGroupSearchComponent
           delete this.settings['columns']['_key'];
           delete this.settings['selectMode'];
         }
-        console.log(this.settings);
-        
+
         this.done = false;
-        setTimeout(() =>{
+        setTimeout(() => {
           this.done = true;
           this.cancelLoadingApp();
-        },200)
+        }, 200);
       }
     } catch {
       this.cancelLoadingApp();
@@ -396,7 +392,7 @@ export class AitGroupSearchComponent
     try {
       const conditions = this.getSearchCondition();
       if (this.find) {
-        const res = await this.find(conditions);        
+        const res = await this.find(conditions);
         const data = res.data as any[];
         this.dataTable = data;
         this.source = new LocalDataSource(data);
@@ -684,44 +680,43 @@ export class AitGroupSearchComponent
     }
   }
 
-  settingColumnTable(value: KeyValueDto[]){
-    console.log(value);
-    
+  settingColumnTable(value: KeyValueDto[]) {
     const data = [];
     value.forEach((file) => {
       data.push(file);
     });
-    this.setupSetting(this.tableComponents,data);
+    this.setupSetting(this.tableComponents, data);
   }
 
   exportCsv() {
     this.nameFileCsv = this.collection;
     let data = [];
-    if(this.selectedItems.length > 0){
+    if (this.selectedItems.length > 0) {
       data = this.selectedItems;
-    }else {
+    } else {
       data = this.dataTable;
     }
     return data;
-  } 
+  }
 
-  deleteAll(isDelete){
-    if(isDelete){
+  deleteAll(isDelete) {
+    if (isDelete) {
       this.dialogService
-      .open(AitConfirmDialogComponent, {
-        context: {
-          title: this.translateService.translate('このデータを削除しますか。'),
-        },
-      })
-      .onClose.subscribe(async (event) => {
-        if (event) {
-          for(const item of this.selectedItems){
-            console.log(item._key);
-            this.onDelete(item._key);
+        .open(AitConfirmDialogComponent, {
+          context: {
+            title: this.translateService.translate(
+              'このデータを削除しますか。'
+            ),
+          },
+        })
+        .onClose.subscribe(async (event) => {
+          if (event) {
+            for (const item of this.selectedItems) {
+              this.onDelete(item._key);
+            }
+            this.selectedItems = [];
           }
-          this.selectedItems = [];
-        }
-      });
+        });
     }
   }
   focusToTable() {
@@ -732,8 +727,7 @@ export class AitGroupSearchComponent
           block: 'center',
         });
       }, 0);
-    } catch {
-    }
+    } catch {}
   }
 
   toggleCheckbox(checked: boolean, form: string): void {
