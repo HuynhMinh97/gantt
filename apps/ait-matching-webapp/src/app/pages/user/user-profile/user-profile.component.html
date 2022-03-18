@@ -782,7 +782,7 @@
                   ></nb-icon>
                 </a>
                 <a
-                  (click)="openCourseDetail(course?._key)"
+                  (click)="nextPage('user-course-detail', course?._key)"
                   [id]="'course-' + course?._key"
                   *ngIf="!isMyUserProfile"
                 >
@@ -849,7 +849,7 @@
                     ></nb-icon>
                   </a>
                   <a
-                    (click)="openCourseDetail(course?._key)"
+                    (click)="nextPage('user-course-detail', course?._key)"
                     [id]="'course-' + course?._key"
                     *ngIf="!isMyUserProfile"
                   >
