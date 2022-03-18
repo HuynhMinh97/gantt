@@ -1,3 +1,4 @@
+import { PERMISSIONS } from '@ait/shared';
 import {
   AitAuthService,
   AitBaseComponent,
@@ -9,7 +10,7 @@ import {
   AppState,
   TabView,
 } from '@ait/ui';
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NbComponentStatus, NbDialogService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
@@ -39,7 +40,10 @@ export class AitUiComponent extends AitBaseComponent {
       module: 'example',
     });
     this.testTranslate = translateService.translate(this.testTranslate);
-    console.log(router)
+    const isHavingPermission = this.checkPermission(PERMISSIONS.READ);
+    if (!isHavingPermission) {
+      this.router.navigate([`/403`]);
+    }
   }
 
   date = Date.now();

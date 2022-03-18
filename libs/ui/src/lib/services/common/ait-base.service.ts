@@ -217,6 +217,8 @@ export class AitBaseService implements OnDestroy {
     request['company'] = this.company || localStorage.comp || SYSTEM_COMPANY;
     request['lang'] = localStorage.lang || this.currentLang;
     request['user_id'] = this.user_id;
+    request['module'] = this.module || '';
+    request['page'] = this.page || '';
     const collection = request['collection'];
 
     // Setup gql json

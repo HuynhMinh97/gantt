@@ -20,8 +20,8 @@
           </ng-container>
         </div>
         <div class="right__side" *ngIf="rightSide.length > 0">
-          <div [ngStyle]="{margin: component?.component_setting?.margin || 0}"></div>
           <ng-container *ngFor="let component of rightSide">
+            <div [ngStyle]="{margin: component?.component_setting?.margin || 0}"></div>
             <ait-output-text *ngIf="component.type !== 'file' && component.type !== 'space'"
               [label]="component?.item_label" style="margin-bottom: 16px; width: 100%"
               [width]="component?.component_setting?.width || '200px'" [rows]="component?.component_setting?.rows || 1"
