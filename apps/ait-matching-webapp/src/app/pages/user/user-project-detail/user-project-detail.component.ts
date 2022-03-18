@@ -1,4 +1,4 @@
-import { RESULT_STATUS } from '@ait/shared';
+import { isObjectFull, RESULT_STATUS } from '@ait/shared';
 import { AitBaseComponent, AitEnvironmentService, AppState, AitAuthService, AitAppUtils, getSettingLangTime } from '@ait/ui';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
@@ -20,6 +20,7 @@ export class UserProjectDetailComponent extends AitBaseComponent implements OnIn
   stateUserSkill: any;
   stateUserProject = {} as UserProjectDto;
   dateFormat: any;
+  datas:any[] = [];
 
   constructor(
     public activeRouter: ActivatedRoute,
@@ -56,30 +57,57 @@ export class UserProjectDetailComponent extends AitBaseComponent implements OnIn
   }
 
   async ngOnInit(): Promise<void> {
-    this.callLoadingApp();
-    if (this.user_key) {
-      await this.userProjectService
-        .find(this.user_key)
-        .then((r) => {
-          if (r.status === RESULT_STATUS.OK) {
-            const data = r.data[0];
-            this.stateUserProject = data;
+    // this.callLoadingApp();
+    // if (this.user_key) {
+    //   await this.userProjectService
+    //     .find(this.user_key)
+    //     .then((r) => {
+    //       if (r.status === RESULT_STATUS.OK) {
+    //         const data = r.data[0];
+    //         this.stateUserProject = data;
 
-          }
-        });
-      const from = 'biz_project/' + this.user_key;
-      await this.userProjectService.findSkillsByFrom(from)
-        .then(async (res) => {
-          const listSkills = [];
-          for (const skill of res.data) {
-            listSkills.push(skill?.skills.value);
-          }
-          this.stateUserSkill = listSkills;
-        })
+    //       }
+    //     });
+    //   const from = 'biz_project/' + this.user_key;
+    //   await this.userProjectService.findSkillsByFrom(from)
+    //     .then(async (res) => {
+    //       const listSkills = [];
+    //       for (const skill of res.data) {
+    //         listSkills.push(skill?.skills.value);
+    //       }
+    //       this.stateUserSkill = listSkills;
+    //     })
+    // }
+    // setTimeout(() => {
+    //   this.cancelLoadingApp();
+    // }, 500);
+  }
+
+  public find = async (key = {}) => {
+    if(isObjectFull(key)){
+      await this.userProjectService
+      .find(this.user_key)
+      .then((r) => {
+        if (r.status === RESULT_STATUS.OK) {
+          const data = r.data[0];
+          this.stateUserProject =  JSON.parse(JSON.stringify(data));
+
+        }
+      });
+    const from = 'biz_project/' + this.user_key;
+    await this.userProjectService.findSkillsByFrom(from)
+      .then(async (res) => {
+        console.log(res.data);
+        const listSkills = res.data.map(m => m?.skills.value);
+        console.log(listSkills);
+        
+        this.stateUserProject['skills'] = listSkills;
+      })
     }
-    setTimeout(() => {
-      this.cancelLoadingApp();
-    }, 500);
+
+    this.datas.push( this.stateUserProject);
+   
+    return {data : this.datas};
   }
 
 }
