@@ -22,6 +22,20 @@ export class UserOnboardingInfoResolver extends AitBaseService {
     return this.find(request, user);
   }
 
+  @Query(() => UserOnboardingInfoResponse, { name: 'findCurrentJobSkill' })
+  async findCurrentJobSkill(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => UserJobSettingRequest }) request: UserJobSettingRequest) {
+      const _from = request.condition?._key;
+      const lang = request.lang;
+      const aqlQuery = `
+        FOR v IN 1..1 OUTBOUND "${_from}" biz_user_skill
+        RETURN v.name.${lang}
+      `;
+      const skills = await this.query(aqlQuery);
+    return skills.data;
+  }
+
   @Query(() => UserOnboardingInfoResponse, { name: 'findSkillOnboarding' })
   findSkillOnboarding(
     @AitCtxUser() user: SysUser,

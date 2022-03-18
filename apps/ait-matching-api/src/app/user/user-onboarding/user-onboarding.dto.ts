@@ -75,6 +75,9 @@ export class UserOnboardingInfoDto extends BaseDto {
     @Field(() => ConditionDto, { nullable: true })
     current_job_level?: ConditionDto;
 
+    @Field(() => ConditionDto, { nullable: true })
+    current_job_skills?: ConditionDto;
+
     @Field(() => String, { nullable: true })
     code?: string;
 

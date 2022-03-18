@@ -414,7 +414,7 @@ export class UserOnboardingComponent
 
   async findSkills() {
     const from = 'sys_user/' + this.user_id;
-    await this.userSkillsService.findSkill(from).then((res) => {
+    await this.userOnbService.findUserSkills(from).then((res) => {
       if (res.status === RESULT_STATUS.OK) {
         if (res.data.length > 0) {
           this.mode = MODE.EDIT;
@@ -474,14 +474,6 @@ export class UserOnboardingComponent
           }, 100);
         }
       }
-      for (const index in this.resetJobSettingInfo) {
-        if (!this.userJobSettingInfo.controls[index].value) {
-          this.resetJobSettingInfo[index] = true;
-          setTimeout(() => {
-            this.resetJobSettingInfo[index] = false;
-          }, 100);
-        }
-      }
 
       this.isClear = true;
       setTimeout(() => {
@@ -490,6 +482,14 @@ export class UserOnboardingComponent
       this.userOnboardingInfo.patchValue({
         ...this.userOnboardingInfoClone,
       });
+      for (const index in this.resetJobSettingInfo) {
+        if (!this.userJobSettingInfo.controls[index].value) {
+          this.resetJobSettingInfo[index] = true;
+          setTimeout(() => {
+            this.resetJobSettingInfo[index] = false;
+          }, 100);
+        }
+      }
       this.userJobSettingInfo.patchValue({ ...this.userJobSettingInfoClone });
       this.jobSettingData = { ...this.userJobSettingInfo.value };
       this.dataCountry = { ...this.userOnboardingInfo.value };
@@ -571,7 +571,7 @@ export class UserOnboardingComponent
   }
 
   async saveDataUserSkill() {
-    if (this.mode === MODE.NEW) {
+    
       this.user_skill._from = 'sys_user/' + this.authService.getUserID();
       this.user_skill.relationship = 'biz_user_skill';
       const skills = [];
@@ -586,7 +586,7 @@ export class UserOnboardingComponent
         this.user_skill._to = 'm_skill/' + skill;
         await this.userOnbService.saveUserSkills([this.user_skill]);
       });
-    }
+    
   }
 
   save() {
@@ -607,7 +607,7 @@ export class UserOnboardingComponent
             this.showToastr('', message);
             this.cancelLoadingApp();
             if (this.user_key) {
-              this.close(true);
+              this.router.navigate([`user-profile`]);
             } else {
               this.router.navigate([`user-job-alert`]);
             }
@@ -770,5 +770,28 @@ export class UserOnboardingComponent
 
   close(event: boolean) {
     this.nbDialogRef.close(event);
+  }
+
+  clear() {
+    this.userOnboardingInfo.reset();
+    this.userJobSettingInfo.reset();
+    for (const index in this.resetUserInfo) {
+      this.resetUserInfo[index] = true;
+      setTimeout(() => {
+        this.resetUserInfo[index] = false;
+      }, 100);
+    }
+    for (const index in this.resetJobSettingInfo) {
+      this.resetJobSettingInfo[index] = true;
+      setTimeout(() => {
+        this.resetJobSettingInfo[index] = false;
+      }, 100);
+    }
+    for (const index in this.isResetCountry) {
+      this.isResetCountry[index] = true;
+      setTimeout(() => {
+        this.isResetCountry[index] = false;
+      }, 50);
+    }
   }
 }

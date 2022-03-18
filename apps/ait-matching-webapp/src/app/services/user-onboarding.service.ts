@@ -80,7 +80,7 @@ export class UserOnboardingService extends AitBaseService {
     };
 
     const specialFields = ['gender','country_region','province_city','district','ward'];
-    const fildesOfMasteData = ['location','current_job_level','job_setting_level']
+    const fildesOfMasteData = ['location','current_job_level']
 
     specialFields.forEach((item) => {
       condition[item] = {
@@ -100,10 +100,6 @@ export class UserOnboardingService extends AitBaseService {
     const keyMasterArray = [
       {
         att: 'current_job_title',
-        col: 'm_title',
-      },
-      {
-        att: 'job_setting_title',
         col: 'm_title',
       },
       {
@@ -137,17 +133,26 @@ export class UserOnboardingService extends AitBaseService {
 
   async findUserSkills(_id?: string) {
     const condition: any = {
-      _from: _id,
+      _key: _id,
+      del_flag: false,
+    };
+    condition['current_job_skills'] = {
+      attribute: 'current_job_skills',
+      ref_collection: 'm_skill',
+      ref_attribute: 'code',
     };
     const returnFields = {
-      _to: true,
-      sort_no: true,
+      current_job_skills:{
+        _key: true,
+        value: true,
+      }
     };
     const request = {};
-    request['collection'] = 'user_skill';
+    request['collection'] = 'biz_user_skill';
     request['condition'] = condition;
-    return await this.query('findUserSkill', request, returnFields);
+    return await this.query('findCurrentJobSkill', request, returnFields);
   }
+  
 
   async findJobSetting(_id?: string) {
     const condition: any = {

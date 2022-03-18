@@ -1,3 +1,4 @@
+import { Int } from '@nestjs/graphql';
 import { BaseDto, KeyValueDto } from '@ait/shared';
 
 export interface KeyValueCheckedDto {
@@ -31,10 +32,19 @@ export interface UserOnboardingDto extends BaseDto {
   address: string;
   floor_building: string;
   company_working: KeyValueDto;
-  job_setting_title: KeyValueDto;
   current_job_title: KeyValueDto;
-  industry: KeyValueDto;
   industry_working:KeyValueDto;
-  skills: string[];
-
+  current_job_skills: string[];
+  current_job_level: KeyValueDto;
 }
+
+export interface JobSettingDto extends BaseDto {
+  job_setting_title: KeyValueDto;
+  industry: KeyValueDto;
+  location: KeyValueDto;
+  job_setting_skills: string[];
+  job_setting_level: KeyValueDto;
+  available_time_from: number;
+  available_time_to: number;
+}
+

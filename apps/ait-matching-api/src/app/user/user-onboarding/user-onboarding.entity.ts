@@ -60,6 +60,9 @@ export class UserOnboardingInfoEntity extends BaseEntity {
     @Field(() => [KeyValueEntity], { nullable: true })
     job_setting_skills?: KeyValueEntity[];
 
+    @Field(() => [KeyValueEntity], { nullable: true })
+    current_job_skills?: KeyValueEntity[];
+
     @Field(() => KeyValueEntity, { nullable: true })
     current_job_level: KeyValueEntity;
 

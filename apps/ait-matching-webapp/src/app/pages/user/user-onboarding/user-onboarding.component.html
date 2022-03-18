@@ -1,8 +1,8 @@
-<ait-toc-menu [id]="'user-onboarding'"></ait-toc-menu>
+<ait-toc-menu [id]="'メニュー'"></ait-toc-menu>
 <div class="template__container">
   <div class="main__container user__wrapper">
     <ait-text-gradient
-      [content]="'Basic Information'"
+      [content]="'basic_infomation'"
       [id]="'basic_infomation'"
       [fontsize]="'36px'"
     ></ait-text-gradient>
@@ -13,7 +13,7 @@
           tabindex="2"
           [isOpen]="true"
           [isStart]="true"
-          [id]="'user-onboarding'"
+          [id]="'メニュー'"
           class="content"
           [label]="'basic_infomation' | translate"
           [disableHeader]="false"
@@ -62,22 +62,23 @@
               <ng-container>
                 <div class="input_inline">
                   <ait-datepicker
-                    [id]="'bod'"
-                    [label]="'born on date'"
-                    [required]="true"
-                    [isSubmit]="isSubmit"
-                    [style]="{ width: '170px' }"
-                    [isReset]="resetUserInfo.bod"
-                    [format]="dateFormat"
-                    [placeholder]="'01/01/1985'"
-                    (watchValue)="
-                      takeDatePickerValue(
-                        $event?.value,
-                        'userOnboardingInfo',
-                        'bod'
-                      )
-                    "
-                    [dateInput]="userOnboardingInfo.controls['bod'].value"
+                  [required]="false"
+                  [format]="dateFormat"
+                  [label]="'born on date'"
+                  [placeholder]="'01/01/1985'"
+                  [id]="'bod'"
+                  [style]="{ width: '180px' }"
+                  [isReset]="true"
+                  [isSubmit]="isSubmit"
+                  (watchValue)="
+                    takeDatePickerValue(
+                      $event?.value,
+                      'userOnboardingInfo',
+                      'bod'
+                    )
+                  "
+                  [defaultValue]="userOnboardingInfo.controls['bod'].value"
+                  
                   ></ait-datepicker>
                 </div>
               </ng-container>
@@ -200,9 +201,9 @@
           tabindex="2"
           [isOpen]="true"
           [isStart]="true"
-          [id]="'user-onboarding'"
+          [id]="'メニュー'"
           class="content"
-          [label]="'address_header' | translate"
+          [label]="'address' | translate"
           [disableHeader]="false"
           padding="'10px'"
         >
@@ -266,9 +267,9 @@
           tabindex="2"
           [isOpen]="true"
           [isStart]="true"
-          [id]="'user-onboarding'"
+          [id]="'メニュー'"
           class="content"
-          [label]="'Current_Job_Information' | translate"
+          [label]="'current_job_information' | translate"
           [disableHeader]="false"
           padding="'10px'"
         >
@@ -338,7 +339,7 @@
                         'current_job_skills'
                       )
                     "
-                    [defaultValue]="companySkills"
+                    [defaultValue]="userOnboardingInfo.controls['current_job_skills'].value"
                   ></ait-autocomplete-master-data>
                 </div>
               </ng-container>
@@ -402,9 +403,9 @@
           tabindex="2"
           [isOpen]="true"
           [isStart]="true"
-          [id]="'user-onboarding'"
+          [id]="'メニュー'"
           class="content"
-          [label]="'Job Setting' | translate"
+          [label]="'job_setting' | translate"
           [disableHeader]="false"
           padding="'10px'"
         >
@@ -592,19 +593,8 @@
             [title]="'クリア'"
             [width]="'150px'"
             [isDefault]="true"
-            (click)="back()"
+            (click)="clear()"
           ></ait-button>
-
-          <!-- <ait-button
-            *ngIf="mode === 'EDIT'"
-            [id]="'delete'"
-            [width]="'150px'"
-            [title]="'消去'"
-            [isDefault]="true"
-            (click)="onDelete()"
-          >
-          </ait-button> -->
-
           <ait-button
             *ngIf="mode === 'EDIT'"
             [id]="'reset'"

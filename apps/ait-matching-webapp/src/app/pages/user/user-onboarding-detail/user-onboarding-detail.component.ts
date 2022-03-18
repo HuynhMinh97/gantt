@@ -1,10 +1,13 @@
+import { JobSettingDto } from './../user-onboarding/interface';
 import { RESULT_STATUS } from '@ait/shared';
 import { AitAppUtils, AitAuthService, AitBaseComponent, AitEnvironmentService, AppState } from '@ait/ui';
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { NbToastrService, NbLayoutScrollService, NbDialogRef } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
+import { UserSkillsService } from '../../../services/user-skills.service';
 import { UserOnboardingDto } from '../user-onboarding/interface';
 import { UserOnboardingService } from './../../../services/user-onboarding.service';
 
@@ -17,9 +20,14 @@ import { UserOnboardingService } from './../../../services/user-onboarding.servi
 export class UserOnboardingDetailComponent extends AitBaseComponent implements OnInit {
   user_key: any = '';
   stateUserOnboarding = {} as UserOnboardingDto;
+  jobSettingInfo = {} as JobSettingDto;
+  dataCountry: any;
+
+
   constructor(
+    private formBuilder: FormBuilder,
+    private userSkillsService: UserSkillsService,
     private router: Router,
-    private nbDialogRef: NbDialogRef<UserOnboardingDetailComponent>,
     public activeRouter: ActivatedRoute,
     private userOnbService: UserOnboardingService,
     env: AitEnvironmentService,
@@ -44,33 +52,33 @@ export class UserOnboardingDetailComponent extends AitBaseComponent implements O
       page: 'user_onboarding',
     });
 
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationStart) {
-          this.closeDialog(false);
-      }
-    });
+   
+    
   }
 
   async ngOnInit(): Promise<void> {
     this.callLoadingApp();
-    if (this.user_key) {
-      await this.userOnbService
-        .findUserOnboardingByKey(this.user_key)
-        .then((r) => {
-          if (r.status === RESULT_STATUS.OK) {
-            const data = r.data[0];
-            this.stateUserOnboarding = data;
-          }
-        })
-    }
+    this.callLoadingApp();
+    await this.userOnbService.findJobSetting(this.user_key).then((r) => {
+      if (r.status === RESULT_STATUS.OK) {
+        const jobSettingData = r.data[0];
+        this.jobSettingInfo = jobSettingData;
+      }
+    });
+
+    await this.userOnbService
+      .findUserOnboardingByKey(this.user_key)
+      .then(async (r) => {
+        if (r.status === RESULT_STATUS.OK) {
+          const data = r.data[0];
+         this.stateUserOnboarding = data;
+        }
+      });
+    
     setTimeout(() => {
       this.cancelLoadingApp();
     },500);
   }
-  close(){
-    this.closeDialog(false);
-  }
-  closeDialog(event: boolean) {
-    this.nbDialogRef.close(event);
-  }
+ 
+  
 }

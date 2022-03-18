@@ -1,184 +1,415 @@
-<ait-template-popup [width]="800" [isLoading]="true" [isPage]="false">
-  <div class="user__wrapper">
+<ait-toc-menu [id]="'メニュー'"></ait-toc-menu>
+<div class="template__container">
+  <div class="main__container user__wrapper">
     <ait-text-gradient
-      [content]="'Basic information detail'"
-      [id]="'onboarding-detail'"
+      [content]="'basic_infomation'"
+      [id]="'basic_infomation'"
+      [fontsize]="'36px'"
     ></ait-text-gradient>
-    <div class="content__card">
-      <div class="form">
-        <div class="input_inline">
-          <ait-output-text
-            [label]="'FIRST NAME'"
-            [width]="'400px'"
-            [value]="stateUserOnboarding.first_name"
-            [id]="'first_name'"
-          ></ait-output-text>
-        </div>
-        <div class="input_inline">
-          <ait-output-text
-            [label]="'LAST NAME'"
-            [id]="'last_name'"
-            [width]="'400px'"
-            [value]="stateUserOnboarding.last_name"
-          ></ait-output-text>
-        </div>
-        <div class="input_inline" *ngIf="lang === 'ja_JP'">
-          <ait-output-text
-            *ngIf="lang === 'ja_JP'"
-            [label]="'KATAKANA'"
-            [id]="'katakana'"
-            [width]="'400px'"
-            [value]="stateUserOnboarding.katakana"
-          ></ait-output-text>
-        </div>
-        <div class="input_inline" *ngIf="lang === 'ja_JP'">
-          <ait-output-text
-            *ngIf="lang === 'ja_JP'"
-            [label]="'ROMAJI'"
-            [width]="'400px'"
-            [value]="stateUserOnboarding.romaji"
-            [id]="'romaji'"
-          ></ait-output-text>
-        </div>
-        <div class="input_inline">
-          <ait-output-text
-            [label]="'GENDER'"
-            [width]="'400px'"
-            [value]="stateUserOnboarding.gender?.value"
-            [id]="'gender'"
-          ></ait-output-text>
-        </div>
-        <div class="start-date">
-          <ait-datepicker
-            [label]="'BORN ON DATE'"
-            [id]="'bod'"
-            [disable]="true"
-            [styleInput]="{
-              color: '#8f9bb3',
-              width: '180px',
-              background: '#ffffff'
-            }"
-            [defaultValue]="stateUserOnboarding.bod"
-          ></ait-datepicker>
-        </div>
-        <div class="input_inline">
-          <ait-output-text
-            [label]="'PHONE NUMBER'"
-            [id]="'phone_number'"
-            [width]="'400px'"
-            [value]="stateUserOnboarding.phone_number"
-          ></ait-output-text>
-        </div>
-        <div class="textarea_inline">
-          <ait-label [label]="'ABOUT'" [id]="'about'"></ait-label>
 
-          <textarea
-            nbInput
-            style="
-              width: 400px;
-              color: #8f9bb3;
-              min-height: 131px;
-              margin-top: 10px;
-              background-color: transparent;
-              resize: none;
-            "
-            readonly
-            disabled
-            fullWidth
-            [value]="stateUserOnboarding.about || ''"
-            class="textarea"
-            [id]="'about'"
-          >
-          </textarea>
-        </div>
-        <div class="input_inline">
-          <ait-output-text
-            [label]="'COUNTRY/REGION'"
-            [id]="'country_region'"
-            [width]="'400px'"
-            [value]="stateUserOnboarding.country_region?.value"
-          ></ait-output-text>
-        </div>
-        <div class="input_inline">
-          <ait-output-text
-            [label]="'PROVINCE/CITY'"
-            [id]="'province_city'"
-            [width]="'400px'"
-            [value]="stateUserOnboarding.province_city?.value"
-          ></ait-output-text>
-        </div>
-        <div class="input_inline">
-          <ait-output-text
-            [label]="'DISTRICT'"
-            [id]="'district'"
-            [width]="'400px'"
-            [value]="stateUserOnboarding.district?.value"
-          ></ait-output-text>
-        </div>
-        <div class="input_inline">
-          <ait-output-text
-            [label]="'WARD'"
-            [id]="'ward'"
-            [width]="'400px'"
-            [value]="stateUserOnboarding.ward?.value"
-          ></ait-output-text>
-        </div>
-        <div class="input_inline">
-          <ait-output-text
-            [label]="'ADDRESS'"
-            [id]="'address'"
-            [width]="'400px'"
-            [value]="stateUserOnboarding.address"
-          ></ait-output-text>
-        </div>
-        <div class="input_inline">
-          <ait-output-text
-            [label]="'ADDRESS'"
-            [id]="'FLOOR/BUILDING'"
-            [width]="'400px'"
-            [value]="stateUserOnboarding.floor_building"
-          ></ait-output-text>
-        </div>
-        <div class="input_inline">
-          <ait-output-text
-            [label]="'COMPANY WORKING'"
-            [id]="'company_working'"
-            [width]="'400px'"
-            [value]="stateUserOnboarding.company_working?.value"
-          ></ait-output-text>
-        </div>
-        <div class="input_inline">
-          <ait-output-text
-            [label]="'TITLE'"
-            [id]="'title'"
-            [width]="'400px'"
-            [value]="stateUserOnboarding.current_job_title?.value"
-          ></ait-output-text>
-        </div>
-        <div class="input_inline">
-          <ait-output-text
-            [label]="'INDUSTRY'"
-            [id]="'industry'"
-            [width]="'400px'"
-            [value]="stateUserOnboarding.industry?.value"
-          ></ait-output-text>
-        </div>
+    <div class="template__filter__container">
+      <div class="template__input__area">
+        <ait-card-content
+          tabindex="2"
+          [isOpen]="true"
+          [isStart]="true"
+          [id]="'メニュー'"
+          class="content"
+          [label]="'basic_infomation' | translate"
+          [disableHeader]="false"
+          padding="'10px'"
+        >
+          <div class="left__side">
+            <div style="padding-left: 10px">
+              <ait-space [margin]="'7.25px'"></ait-space>
+              <ng-container>
+                <div class="input_inline">
+                  <ait-output-text
+                    [label]="'FIRST NAME'"
+                    [width]="'400px'"
+                    [value]="stateUserOnboarding.first_name"
+                    [id]="'first_name'"
+                  ></ait-output-text>
+                </div>
+              </ng-container>
+              <ait-space [margin]="'7.25px'"></ait-space>
+              <ng-container>
+                <div class="input_inline" *ngIf="lang === 'ja_JP'">
+                  <ait-output-text
+                    *ngIf="lang === 'ja_JP'"
+                    [label]="'KATAKANA'"
+                    [id]="'katakana'"
+                    [width]="'400px'"
+                    [value]="stateUserOnboarding.katakana"
+                  ></ait-output-text>
+                </div>
+              </ng-container>
+              <ait-space [margin]="'7.25px'"></ait-space>
+              <ng-container>
+                <div class="start-date">
+                  <ait-datepicker
+                    [label]="'BORN ON DATE'"
+                    [id]="'bod'"
+                    [disable]="true"
+                    [styleInput]="{
+                      color: '#8f9bb3',
+                      width: '180px',
+                      background: '#ffffff'
+                    }"
+                    [defaultValue]="stateUserOnboarding.bod"
+                  ></ait-datepicker>
+                </div>
+              </ng-container>
+              <ait-space [margin]="'7.25px'"></ait-space>
+              <ng-container>
+                <div class="textarea_inline">
+                  <ait-label [label]="'ABOUT'" [id]="'about'"></ait-label>
+                  <textarea
+                    nbInput
+                    style="
+                      width: 400px;
+                      color: #8f9bb3;
+                      min-height: 131px;
+                      margin-top: 10px;
+                      background-color: transparent;
+                      resize: none;
+                    "
+                    readonly
+                    disabled
+                    fullWidth
+                    [value]="stateUserOnboarding.about || ''"
+                    class="textarea"
+                    [id]="'about'"
+                  >
+                  </textarea>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+          <!-- end left -->
+          <div class="right__side">
+            <div style="padding-left: 20px">
+              <ait-space [margin]="'7.25px'"></ait-space>
+              <ng-container>
+                <div class="input_inline">
+                  <ait-output-text
+                    [label]="'LAST NAME'"
+                    [id]="'last_name'"
+                    [width]="'400px'"
+                    [value]="stateUserOnboarding.last_name"
+                  ></ait-output-text>
+                </div>
+              </ng-container>
+              <ait-space [margin]="'7.25px'"></ait-space>
+
+              <ng-container>
+                <div class="input_inline" *ngIf="lang === 'ja_JP'">
+                  <ait-output-text
+                    *ngIf="lang === 'ja_JP'"
+                    [label]="'ROMAJI'"
+                    [width]="'400px'"
+                    [value]="stateUserOnboarding.romaji"
+                    [id]="'romaji'"
+                  ></ait-output-text>
+                </div>
+              </ng-container>
+              <ait-space [margin]="'7.25px'"></ait-space>
+
+              <ng-container>
+                <div class="input_inline">
+                  <ait-output-text
+                    [label]="'GENDER'"
+                    [width]="'400px'"
+                    [value]="stateUserOnboarding.gender?.value"
+                    [id]="'gender'"
+                  ></ait-output-text>
+                </div>
+              </ng-container>
+              <ait-space [margin]="'7.25px'"></ait-space>
+
+              <ng-container>
+                <div class="input_inline">
+                  <ait-output-text
+                    [label]="'PHONE NUMBER'"
+                    [id]="'phone_number'"
+                    [width]="'400px'"
+                    [value]="stateUserOnboarding.phone_number"
+                  ></ait-output-text>
+                </div>
+              </ng-container>
+              <ait-space [margin]="'7.25px'"></ait-space>
+            </div>
+          </div>
+        </ait-card-content>
+        <ait-card-content
+          tabindex="2"
+          [isOpen]="true"
+          [isStart]="true"
+          [id]="'メニュー'"
+          class="content"
+          [label]="'address' | translate"
+          [disableHeader]="false"
+          padding="'10px'"
+        >
+          <div class="left__side">
+            <div style="padding-left: 10px">
+              <ng-container>
+                <div class="input_inline">
+                  <ait-output-text
+                    [label]="'Country/Region'"
+                    [id]="'country_region'"
+                    [width]="'400px'"
+                    [value]="stateUserOnboarding.country_region?.value"
+                  ></ait-output-text>
+                </div>
+                <div class="input_inline">
+                  <ait-output-text
+                    [label]="'Province/City'"
+                    [id]="'province_city'"
+                    [width]="'400px'"
+                    [value]="stateUserOnboarding.province_city?.value"
+                  ></ait-output-text>
+                </div>
+                
+                <div class="input_inline">
+                  <ait-output-text
+                    [label]="'Ward'"
+                    [id]="'ward'"
+                    [width]="'400px'"
+                    [value]="stateUserOnboarding.ward?.value"
+                  ></ait-output-text>
+                </div>
+                <div class="input_inline">
+                  <ait-output-text
+                    [label]="'Address'"
+                    [id]="'address'"
+                    [width]="'400px'"
+                    [value]="stateUserOnboarding.address"
+                  ></ait-output-text>
+                </div>
+                
+                <div class="input_inline">
+                  <ait-output-text
+                    [label]="'COMPANY WORKING'"
+                    [id]="'company_working'"
+                    [width]="'400px'"
+                    [value]="stateUserOnboarding.company_working?.value"
+                  ></ait-output-text>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+          <!-- end left -->
+          <div class="right__side">
+            <div style="padding-left: 20px">
+              <ng-container>
+                <div class="input_inline">
+                  <ait-output-text
+                    [label]="'postcode'"
+                    [id]="'postcode'"
+                    [width]="'400px'"
+                    [value]="stateUserOnboarding.district?.value"
+                  ></ait-output-text>
+                </div>
+                <div class="input_inline">
+                  <ait-output-text
+                    [label]="'District'"
+                    [id]="'district'"
+                    [width]="'400px'"
+                    [value]="stateUserOnboarding.district?.value"
+                  ></ait-output-text>
+                </div>
+                  <div class="input_inline">
+                    <ait-output-text
+                      [label]="'Floor/Building'"
+                      [id]="'FLOOR/BUILDING'"
+                      [width]="'400px'"
+                      [value]="stateUserOnboarding.floor_building"
+                    ></ait-output-text>
+                  </div>
+                
+              </ng-container>
+              <ait-space [margin]="'7.25px'"></ait-space>
+            </div>
+          </div>
+        </ait-card-content>
+        <ait-card-content
+          tabindex="2"
+          [isOpen]="true"
+          [isStart]="true"
+          [id]="'メニュー'"
+          class="content"
+          [label]="'current_job_information' | translate"
+          [disableHeader]="false"
+          padding="'10px'"
+        >
+          <div class="left__side">
+            <div style="padding-left: 10px">
+              <ait-space [margin]="'7.25px'"></ait-space>
+              <ng-container>
+                <div class="input_inline">
+                  <ait-output-text
+                    [label]="'company_working'"
+                    [id]="'district'"
+                    [width]="'400px'"
+                    [value]="stateUserOnboarding.company_working?.value"
+                  ></ait-output-text>
+                </div>
+              </ng-container>
+              <ait-space [margin]="'7.25px'"></ait-space>
+              <ng-container>
+                <div class="input_inline">
+                  <ait-output-text
+                    [label]="'your_title'"
+                    [id]="'district'"
+                    [width]="'400px'"
+                    [value]="stateUserOnboarding.current_job_title?.value"
+                  ></ait-output-text>
+                </div>
+              </ng-container>
+              <ait-space [margin]="'7.25px'"></ait-space>
+              <ng-container>
+                <div class="input_inline">
+                  <ait-output-text
+                    [label]="'current_job_skills'"
+                    [id]="'district'"
+                    [width]="'400px'"
+                    [value]="stateUserOnboarding.current_job_skills"
+                  ></ait-output-text>
+                </div>
+              </ng-container>
+              <ait-space [margin]="'7.25px'"></ait-space>
+            </div>
+          </div>
+          <!-- end left -->
+          <div class="right__side">
+            <div style="padding-left: 20px">
+              <ait-space [margin]="'7.25px'"></ait-space>
+              <ng-container>
+                <div class="input_inline">
+                  <ait-output-text
+                    [label]="'industry_working'"
+                    [id]="'district'"
+                    [width]="'400px'"
+                    [value]="stateUserOnboarding.industry_working?.value"
+                  ></ait-output-text>
+                </div>
+              </ng-container>
+              <ait-space [margin]="'7.25px'"></ait-space>
+
+              <ng-container>
+                <div class="input_inline">
+                  <ait-output-text
+                    [label]="'current_job_level'"
+                    [id]="'district'"
+                    [width]="'400px'"
+                    [value]="stateUserOnboarding.current_job_level?.value"
+                  ></ait-output-text>
+                </div>
+              </ng-container>
+              <ait-space [margin]="'7.25px'"></ait-space>
+            </div>
+          </div>
+        </ait-card-content>
+        <ait-card-content
+          tabindex="2"
+          [isOpen]="true"
+          [isStart]="true"
+          [id]="'メニュー'"
+          class="content"
+          [label]="'job_setting' | translate"
+          [disableHeader]="false"
+          padding="'10px'"
+        >
+          <div class="left__side">
+            <div style="padding-left: 10px">
+              <ait-space [margin]="'7.25px'"></ait-space>
+              <ng-container>
+                <div class="input_inline">
+                  <ait-output-text
+                    [label]="'industry'"
+                    [id]="'district'"
+                    [width]="'400px'"
+                    [value]="jobSettingInfo.industry?.value"
+                  >
+                </ait-output-text>
+                </div>
+              </ng-container>
+              <ait-space [margin]="'7.25px'"></ait-space>
+              <ng-container>
+                <div class="input_inline">
+                  <ait-output-text
+                    [label]="'job_setting_title'"
+                    [id]="'job_setting_title'"
+                    [width]="'400px'"
+                    [value]="jobSettingInfo.job_setting_title?.value"
+                  ></ait-output-text>
+                </div>
+              </ng-container>
+              <ait-space [margin]="'7.25px'"></ait-space>
+              <ng-container>
+                <div class="input_inline">
+                  <ait-output-text
+                    [label]="'location'"
+                    [id]="'location'"
+                    [width]="'400px'"
+                    [value]="jobSettingInfo.location?.value"
+                  ></ait-output-text>
+                </div>
+              </ng-container>
+              <ait-space [margin]="'7.25px'"></ait-space>
+              <ng-container>
+                <div class="input_inline">
+                  <ait-output-text
+                    [label]="'job_setting_skills'"
+                    [id]="'job_setting_skills'"
+                    [width]="'400px'"
+                    [value]="jobSettingInfo.job_setting_skills"
+                  ></ait-output-text>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+          <!-- end left -->
+          <div class="right__side">
+            <div style="padding-left: 20px">
+              <ait-space [margin]="'62px'"></ait-space>
+              <ng-container>
+                <div class="input_inline">
+                  <ait-output-text
+                    [label]="'job_setting_level'"
+                    [id]="'job_setting_level'"
+                    [width]="'400px'"
+                    [value]="jobSettingInfo.job_setting_level?.value"
+                  ></ait-output-text>
+                </div>
+              </ng-container>
+              <ait-space [margin]="'7.25px'"></ait-space>
+              <ng-container>
+                <div class="input_date">
+                  <ait-output-text
+                    [label]="'available time from'"
+                    [id]="'available_time_from'"
+                    [width]="'400px'"
+                    [value]="jobSettingInfo.available_time_from"
+                  ></ait-output-text>
+                  <span style="position: relative; bottom: -30px">~</span>
+
+                  <ait-output-text
+                    [label]="'available time to'"
+                    [id]="'available_time_to'"
+                    [width]="'400px'"
+                    [value]="jobSettingInfo.available_time_to"
+                  ></ait-output-text>
+                </div>
+              </ng-container>
+              <ait-space [margin]="'7.25px'"></ait-space>
+            </div>
+          </div>
+        </ait-card-content>
       </div>
     </div>
-    <div class="sticky">
-      <div class="action-row">
-        <div class="block">
-          <ait-button
-            [id]="'close'"
-            (click)="close()"
-            [width]="'150px'"
-            [title]="'close'"
-            [background]="
-              'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-            "
-          ></ait-button>
-        </div>
-      </div>
-    </div>
+    <ait-space [margin]="'37px'"></ait-space>
   </div>
-</ait-template-popup>
+</div>
+
