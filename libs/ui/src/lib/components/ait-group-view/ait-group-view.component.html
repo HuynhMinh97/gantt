@@ -5,7 +5,6 @@
     <ait-card-content class="content__card" [disableHeader]="true" [transition]="false">
       <div class="content">
         <div class="left__side" *ngIf="leftSide.length > 0">
-          <div [ngStyle]="{margin: component?.component_setting?.margin || 0}"></div>
           <ng-container *ngFor="let component of leftSide">
             <div [ngStyle]="{margin: component?.component_setting?.margin || 0}"></div>
             <ait-output-text *ngIf="component.type !== 'file' && component.type !== 'space'"
