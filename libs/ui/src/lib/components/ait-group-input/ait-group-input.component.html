@@ -2,12 +2,10 @@
     <div class="main__container">
         <ait-text-gradient [content]="pageTitle" [id]="'title'"></ait-text-gradient>
         <ait-space [margin]="'5px'"></ait-space>
-
         <ait-card-content class="content__card" [disableHeader]="true" [transition]="false">
             <div class="content">
                 <div class="left__side" *ngIf="leftSide.length > 0">
                     <ng-container *ngFor="let component of leftSide">
-
                         <div [ngStyle]="{margin: component?.component_setting?.margin || 0}"></div>
 
                         <ait-input-file *ngIf="component.type === 'file'"

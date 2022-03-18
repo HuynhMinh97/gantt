@@ -372,8 +372,6 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
     } else {
       this.dateErrorObject[origin] = false;
     }
-
-    console.log(this.dateErrorObject);
   }
 
   takeFiles(fileList: any[], form: string): void {
