@@ -1,30 +1,13 @@
-<<<<<<< HEAD:libs/ui/src/lib/components/ait-dialog-messsge/ait-dialog-messsge.component.ts
-import { 
-  AitAuthService, 
-  AitBaseComponent, 
-  AitConfirmDialogComponent, 
-  AitEnvironmentService, 
-  AitTableCellComponent, 
-  AitTranslationService, 
-  AppState 
-} from '@ait/ui';
-import { Component, Input, OnInit} from '@angular/core';
-import { NbDialogRef, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
-=======
->>>>>>> upstream/master:libs/ui/src/lib/components/ait-dialog-message/ait-dialog-message.component.ts
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { AppState } from '../../state/selectors';
 import { LocalDataSource } from 'ng2-smart-table';
-<<<<<<< HEAD:libs/ui/src/lib/components/ait-dialog-messsge/ait-dialog-messsge.component.ts
-=======
 import { AitBaseComponent } from '../base.component';
 import { Component, Input, OnInit} from '@angular/core';
 import { AitTableCellComponent } from '../ait-table-cell/ait-table-cell.component';
 import { NbDialogRef, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { AitAuthService, AitEnvironmentService, AitTranslationService } from '../../services';
 import { AitConfirmDialogComponent } from '../ait-confirm-dialog/ait-confirm-dialog.component';
->>>>>>> upstream/master:libs/ui/src/lib/components/ait-dialog-message/ait-dialog-message.component.ts
 
 @Component({
   selector: 'ait-ait-message-error',
