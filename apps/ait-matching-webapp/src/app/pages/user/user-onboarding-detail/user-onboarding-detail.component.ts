@@ -81,53 +81,56 @@ export class UserOnboardingDetailComponent
 
   async ngOnInit(): Promise<void> {
     this.callLoadingApp();
-    this.callLoadingApp();
     await this.userOnbService.findJobSetting(this.user_key).then((r) => {
-      if (r.status === RESULT_STATUS.OK) {
+      if (r.status === RESULT_STATUS.OK ) {
         const jobSettingData = r.data[0];
-        Object.keys(jobSettingData).forEach((key) => {
-          if (key === 'job_setting_skills' || key === 'industry') {
-            const arr = [];
-            const obj = jobSettingData[key];
-            obj.forEach((item) => {
-              arr.push(item.value);
-            });
-            const list = arr.join(', ');
-            if (key.includes('job_setting_skills'))
-            {
-              this.jobSettingInfo['skills'] = list;
+        if (jobSettingData !== undefined) {
+          Object.keys(jobSettingData).forEach((key) => {
+            if (key === 'job_setting_skills' || key === 'industry') {
+              const arr = [];
+              const obj = jobSettingData[key];
+              obj.forEach((item) => {
+                arr.push(item.value);
+              });
+              const list = arr.join(', ');
+              if (key.includes('job_setting_skills')) {
+                this.jobSettingInfo['skills'] = list;
+              } else {
+                this.jobSettingInfo['industryList'] = list;
+              }
             } else {
-              this.jobSettingInfo['industryList'] = list;
+              const value = jobSettingData[key];
+              this.jobSettingInfo[key] = value;
             }
+          });
+          // this.jobSettingInfo = jobSettingData;
+          const timeFrom = this.jobSettingInfo.available_time_from;
+          const timeTo = this.jobSettingInfo.available_time_to;
+          if (timeFrom != null && timeTo != null) {
+            const availebleTime =
+              this.getDateFormat(timeFrom) + ' ~ ' + this.getDateFormat(timeTo);
+            this.jobSettingInfo['available_time'] = availebleTime;
           } else {
-            const value = jobSettingData[key];
-            this.jobSettingInfo[key] = value;
+            this.jobSettingInfo.available_time = null;
           }
-        });
-        // this.jobSettingInfo = jobSettingData;
-        const timeFrom = this.jobSettingInfo.available_time_from;
-        const timeTo = this.jobSettingInfo.available_time_to;
-        if (timeFrom != null && timeTo != null) {
-          const availebleTime =
-            this.getDateFormat(timeFrom) + ' ~ ' + this.getDateFormat(timeTo);
-          this.jobSettingInfo['available_time'] = availebleTime;
-        } else {
-          this.jobSettingInfo.available_time = null;
         }
-      }
+        else {
+           this.findSkills();
+           this.userOnbService
+            .findUserOnboardingByKey(this.user_key)
+            .then(async (r) => {
+              if (r.status === RESULT_STATUS.OK) {
+                const data = r.data[0];
+                Object.keys(data).forEach((key) => {
+                  const value = data[key];
+                  this.stateUserOnboarding[key] = value;
+                });
+              }
+            });
+        }
+      } 
     });
-    await this.findSkills();
-    await this.userOnbService
-      .findUserOnboardingByKey(this.user_key)
-      .then(async (r) => {
-        if (r.status === RESULT_STATUS.OK) {
-          const data = r.data[0];
-          Object.keys(data).forEach((key) => {
-              const value = data[key];
-              this.stateUserOnboarding[key] = value;
-          })
-        }
-      });
+    
     setTimeout(() => {
       this.cancelLoadingApp();
     }, 500);
@@ -142,19 +145,17 @@ export class UserOnboardingDetailComponent
 
   async findSkills() {
     const from = 'sys_user/' + this.user_key;
-    await this.userOnbService.findSkillsByFrom(from)
-    .then(async(res) => {
+    await this.userOnbService.findSkillsByFrom(from).then(async (res) => {
       const listSkills = [];
       for (const skill of res.data) {
         listSkills.push(skill?.skills);
-      }  
-        const arr = [];
-        listSkills.forEach((item) => {
-          arr.push(item.value);
-        });
-        const list = arr.join(', ');
-        this.stateUserOnboarding['skills'] = list;
-      
-    });    
+      }
+      const arr = [];
+      listSkills.forEach((item) => {
+        arr.push(item.value);
+      });
+      const list = arr.join(', ');
+      this.stateUserOnboarding['skills'] = list;
+    });
   }
 }
