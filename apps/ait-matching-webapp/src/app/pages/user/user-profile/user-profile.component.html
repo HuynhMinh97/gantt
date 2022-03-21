@@ -135,6 +135,7 @@
         </div>
       </card-content>
     </div>
+
     <!-- skills -->
     <div style="position: relative" class="skills">
       <div class="reorder_skills" style="z-index: 100" *ngIf="isMyUserProfile">
@@ -143,10 +144,8 @@
           [iconName]="'menu-outline'"
           [color]="'#fff'"
           [styleText]="{ 'font-size': '10px' }"
-          [styleBtn]="{ width: '120px', 'min-width': '100px' }"
-          [width]="'120px'"
-          [minWidth]="'120px'"
-          [height]="'26px'"
+          [styleBtn]="{ width: '140px', 'min-width': '100px', 'height': '26px'}"
+          [styleIcon]="{'font-size': '10px'}"
           [title]="'reorder skills'"
           [id]="'reorder-skills'"
           [isDefault]="'true'"
@@ -207,7 +206,6 @@
         </div>
       </card-content>
     </div>
-
     <!-- project -->
     <div class="project">
       <card-content
@@ -236,8 +234,8 @@
         (onToggle)="getExpan($event,'isShowProject')"
         [height]="isShowProject ? '0px' : heightProject"
       >
-        <div *ngIf="userProject.length == 0">
-          <p style="padding: 20px;">Chưa có dự án nào</p>
+        <div class="container_user" *ngIf="userProject.length == 0">
+          <p class="data_empty">{{'データがありません。' | translate}}</p>
         </div>
         <div class="container_user" *ngIf="userProject.length > 0">
           <ul
@@ -337,7 +335,7 @@
                   >
                     <nb-icon
                       nbSuffix
-                      icon="edit-2-outline"
+                      icon="edit-outline"
                       pack="eva"
                     ></nb-icon>
                   </a>
@@ -385,6 +383,9 @@
         (onToggle)="getExpan($event,'isShowExperience')"
         [height]="isShowExperience ? '0px' : heightExperience"
       >
+        <div class="container_user" *ngIf="userExperience.length == 0">
+          <p class="data_empty">{{'データがありません。' | translate}}</p>
+        </div>
         <div class="container_user" *ngIf="userExperience.length > 0">
           <ul
             *ngFor="
@@ -493,7 +494,7 @@
                   >
                     <nb-icon
                       nbSuffix
-                      icon="edit-2-outline"
+                      icon="edit-outline"
                       pack="eva"
                     ></nb-icon>
                   </a>
@@ -543,6 +544,9 @@
         (onToggle)="getExpan($event,'isShowCertificate')"
         [height]="isShowCertificate ? '0px' : 'auto'"
       >
+        <div class="container_user" *ngIf="userCentificate.length == 0">
+          <p class="data_empty">{{'データがありません。' | translate}}</p>
+        </div>
         <div class="container_user" *ngIf="userCentificate.length > 0">
           <ul
             *ngFor="
@@ -604,7 +608,7 @@
                   >
                     <nb-icon
                       nbSuffix
-                      icon="edit-2-outline"
+                      icon="edit-outline"
                       pack="eva"
                     ></nb-icon>
                   </a>
@@ -671,7 +675,7 @@
                   >
                     <nb-icon
                       nbSuffix
-                      icon="edit-2-outline"
+                      icon="edit-outline"
                       pack="eva"
                     ></nb-icon>
                   </a>
@@ -717,6 +721,9 @@
         (onToggle)="getExpan($event,'isShowCourse')"
         [height]="isShowCourse ? '0px' : 'auto'"
       >
+        <div class="container_user" *ngIf="userCourse.length == 0">
+          <p class="data_empty">{{'データがありません。' | translate}}</p>
+        </div>
         <div class="container_user" *ngIf="userCourse.length > 0">
           <ul
             *ngFor="
@@ -777,7 +784,7 @@
                 >
                   <nb-icon
                     nbSuffix
-                    icon="edit-2-outline"
+                    icon="edit-outline"
                     pack="eva"
                   ></nb-icon>
                 </a>
@@ -844,7 +851,7 @@
                   >
                     <nb-icon
                       nbSuffix
-                      icon="edit-2-outline"
+                      icon="edit-outline"
                       pack="eva"
                     ></nb-icon>
                   </a>
@@ -854,6 +861,7 @@
                     *ngIf="!isMyUserProfile"
                   >
                     <nb-icon nbSuffix icon="eye-outline" pack="eva"></nb-icon>
+                    <!-- <nb-icon icon="eye" pack="font-awesome" [options]="{ animation: { type: 'zoom' } }></nb-icon> -->
                   </a>
                 </div>
               </div>
@@ -890,6 +898,9 @@
         (onToggle)="getExpan($event,'isShowEducation')"
         [height]="isShowEducation ? '0px' : 'auto'"
       >
+      <div class="container_user" *ngIf="userEducation.length == 0">
+        <p class="data_empty">{{'データがありません。' | translate}}</p>
+      </div>
         <div
           class="container_user"
           *ngIf="userEducation.length > 0"
@@ -944,7 +955,7 @@
                     ? ('my-profile.edit' | translate)
                     : ('my-profile.view' | translate)
                 "
-                style="top: 18px"
+                style="top: 28px !important"
               >
                 <a
                   (click)="nextPage('user-education/', education?._key)"
@@ -953,7 +964,7 @@
                 >
                   <nb-icon
                     nbSuffix
-                    icon="edit-2-outline"
+                    icon="edit-outline"
                     pack="eva"
                   ></nb-icon>
                 </a>
@@ -1020,7 +1031,7 @@
                   >
                     <nb-icon
                       nbSuffix
-                      icon="edit-2-outline"
+                      icon="edit-outline"
                       pack="eva"
                     ></nb-icon>
                   </a>
@@ -1067,7 +1078,10 @@
         [padding]="'25px 22px'"
         (onToggle)="getExpan($event,'isShowLanguages')"
         [height]="isShowLanguages ? '0px' : 'auto'"
-      >
+        >
+        <div class="container_user" *ngIf="userLanguage.length == 0">
+          <p class="data_empty">{{'データがありません。' | translate}}</p>
+        </div>
         <div class="container_user" *ngIf="userLanguage.length > 0">
           <ul
             *ngFor="
@@ -1113,7 +1127,7 @@
                 >
                   <nb-icon
                     nbSuffix
-                    icon="edit-2-outline"
+                    icon="edit-outline"
                     pack="eva"
                   ></nb-icon>
                 </a>
@@ -1165,7 +1179,7 @@
                   >
                     <nb-icon
                       nbSuffix
-                      icon="edit-2-outline"
+                      icon="edit-outline"
                       pack="eva"
                     ></nb-icon>
                   </a>
