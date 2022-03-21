@@ -58,10 +58,10 @@ export class UserOnboardingInfoDto extends BaseDto {
     job_setting_title?: ConditionDto;
 
     @Field(() => ConditionDto, { nullable: true })
-    industry?: ConditionDto;
+    job_setting_skills?: ConditionDto
 
     @Field(() => ConditionDto, { nullable: true })
-    job_setting_skills?: ConditionDto
+    industry?: ConditionDto;
 
     @Field(() => ConditionDto, { nullable: true })
     industry_working?: ConditionDto;
