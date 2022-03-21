@@ -45,13 +45,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   mode = '';
   profileId = '';
   skills = '';
-  // showSkill = false;
-  // showCourse = false;
-  // showProject = false;
-  // showLanguages = false;
-  // showEducation = false;
-  // showExperience = false;
-  // showCertificate = false;
 
   isShowSkill = false;
   isShowCourse = false;
@@ -157,19 +150,22 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    await this.getMasterData();
-    await this.getMaxSkill();
-    this.getFriends();
-    this.getCountFriends();
-    this.getUserProfileByUserId();
-    this.getSkillByUserId();
-    this.getProjectByUserId();
-    this.getExperiencByUserId()
-    this.getCentificateByUserId();
-    this.getCourseByUserId();
-    this.getEducationByUserId();
-    this.getLanguageByUserId();
-    // this.getImg();
+    try {
+      await this.getMasterData();
+      await this.getMaxSkill();
+      this.getFriends();
+      this.getCountFriends();
+      this.getUserProfileByUserId();
+      this.getSkillByUserId();
+      this.getProjectByUserId();
+      this.getExperiencByUserId()
+      this.getCentificateByUserId();
+      this.getCourseByUserId();
+      this.getEducationByUserId();
+      this.getLanguageByUserId();     
+    } catch (e) {
+      this.cancelLoadingApp();
+    }
   }
   async getMasterData() {
     try {
@@ -292,33 +288,35 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     this.timeProject = 0;
     await this.userProjectService.getProjectByUserId(this.profileId)
       .then(async (res) => {
-        const company_values = Array.from(new Set(res.data.map(m => m?.company_working?.value))).filter(f => !!f);
-        const companyUserProjects = this.groupBy(res.data, p => p.company_working?.value);
-
-        const datacompany = company_values.map(element => {
-          let timeworkingInfo = 0;         
-          companyUserProjects.get(element).forEach(e => {
-            timeworkingInfo += this.dateDiffInMonths(e.start_date_from, e.start_date_to);
-          });
-          this.timeProject += timeworkingInfo;
-          return {
-            company_name: element,
-            data_project: companyUserProjects.get(element),
-            working_time: timeworkingInfo,
-          }
-        });
-        setTimeout(() => {
-          this.userProject = datacompany;
-          this.userProject.forEach(element => {
-            element.data_project.forEach((item , index)=> {
-              if(!item?.start_date_to){
-                element.data_project.unshift(item);
-                element.data_project.splice(index + 1,1);
-              }
+        if(res.status == RESULT_STATUS.OK && res.data.length > 0 ){
+          const company_values = Array.from(new Set(res.data.map(m => m?.company_working?.value))).filter(f => !!f);
+          const companyUserProjects = this.groupBy(res.data, p => p.company_working?.value);
+  
+          const datacompany = company_values.map(element => {
+            let timeworkingInfo = 0;         
+            companyUserProjects.get(element).forEach(e => {
+              timeworkingInfo += this.dateDiffInMonths(e.start_date_from, e.start_date_to);
             });
+            this.timeProject += timeworkingInfo;
+            return {
+              company_name: element,
+              data_project: companyUserProjects.get(element),
+              working_time: timeworkingInfo,
+            }
           });
-          this.getHieghtProject();
-        }, 1000);
+          setTimeout(() => {
+            this.userProject = datacompany;
+            this.userProject.forEach(element => {
+              element.data_project.forEach((item , index)=> {
+                if(!item?.start_date_to){
+                  element.data_project.unshift(item);
+                  element.data_project.splice(index + 1,1);
+                }
+              });
+            });
+            this.getHieghtProject();
+          }, 1000);
+        }
       })
   }
 
