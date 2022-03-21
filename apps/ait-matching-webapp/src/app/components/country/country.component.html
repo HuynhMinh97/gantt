@@ -4,72 +4,72 @@
       <div style="padding-left: 10px">
         <ait-space [margin]="'7.25px'"></ait-space>
         <ait-autocomplete-master-data
-        [class]="'COUNTRY'"
-        [label]="'country_region'"
-        [id]="'country'"
-        [maxItem]="1"
-        [required]="true"
-        [placeholder]="'Please select country/region'"
-        [disableOutputDefault]="true"
-        [isSubmit]="isSubmit"
-        [style]="masterStyle"
-        [isReset]="isReset.country_region"
-        [clearError]="isClear"
-        (watchValue)="takeMasterValue($event?.value, 'country_region')"
-        [defaultValue]="
-          dataForm.controls['country_region'].value
-            ? [dataForm.controls['country_region'].value]
-            : null
-        "
-      >
-      </ait-autocomplete-master-data>
-      <ait-space [margin]="'7.25px'"></ait-space>
-      <div class="input_inline">
-        <ait-autocomplete-master-data
-      [class]="'CITY'"
-      [parentCode]="getParentCode('country_region')"
-      [label]="'province_city'"
-      [id]="'city'"
-      [required]="true"
-      [maxItem]="1"
-      [placeholder]="'Please select province/city'"
-      [disableOutputDefault]="true"
-      [isSubmit]="isSubmit"
-      [style]="masterStyle"
-      [isReset]="isReset.province_city"
-      [clearError]="isClear"
-      (watchValue)="takeMasterValue($event?.value, 'province_city')"
-      [defaultValue]="
-        dataForm.controls['province_city'].value
-          ? [dataForm.controls['province_city'].value]
-          : null
-      "
-    ></ait-autocomplete-master-data>
-      </div>
-      <ait-space [margin]="'7.25px'"></ait-space>
-      <div class="input_inline">
-        <ait-autocomplete-master-data
-          [class]="'WARD'"
-          [parentCode]="getParentCode('district')"
-          [label]="'ward'"
-          [id]="'ward'"
+          [class]="'COUNTRY'"
+          [label]="'country_region'"
+          [id]="'country'"
           [maxItem]="1"
           [required]="true"
-          [placeholder]="'Please select ward'"
+          [placeholder]="'Please select country/region'"
           [disableOutputDefault]="true"
           [isSubmit]="isSubmit"
           [style]="masterStyle"
-          [isReset]="isReset.ward"
+          [isReset]="isReset.country_region"
           [clearError]="isClear"
-          (watchValue)="takeMasterValue($event?.value, 'ward')"
+          (watchValue)="takeMasterValue($event?.value, 'country_region')"
           [defaultValue]="
-            dataForm.controls['ward'].value
-              ? [dataForm.controls['ward'].value]
+            dataForm.controls['country_region'].value
+              ? [dataForm.controls['country_region'].value]
               : null
           "
         >
         </ait-autocomplete-master-data>
-      </div>
+        <ait-space [margin]="'7.25px'"></ait-space>
+        <div class="input_inline">
+          <ait-autocomplete-master-data
+            [class]="'CITY'"
+            [parentCode]="getParentCode('country_region')"
+            [label]="'province_city'"
+            [id]="'city'"
+            [required]="true"
+            [maxItem]="1"
+            [placeholder]="'Please select province/city'"
+            [disableOutputDefault]="true"
+            [isSubmit]="isSubmit"
+            [style]="masterStyle"
+            [isReset]="isReset.province_city"
+            [clearError]="isClear"
+            (watchValue)="takeMasterValue($event?.value, 'province_city')"
+            [defaultValue]="
+              dataForm.controls['province_city'].value
+                ? [dataForm.controls['province_city'].value]
+                : null
+            "
+          ></ait-autocomplete-master-data>
+        </div>
+        <ait-space [margin]="'7.25px'"></ait-space>
+        <div class="input_inline">
+          <ait-autocomplete-master-data
+            [class]="'WARD'"
+            [parentCode]="getParentCode('district')"
+            [label]="'ward'"
+            [id]="'ward'"
+            [maxItem]="1"
+            [required]="true"
+            [placeholder]="'Please select ward'"
+            [disableOutputDefault]="true"
+            [isSubmit]="isSubmit"
+            [style]="masterStyle"
+            [isReset]="isReset.ward"
+            [clearError]="isClear"
+            (watchValue)="takeMasterValue($event?.value, 'ward')"
+            [defaultValue]="
+              dataForm.controls['ward'].value
+                ? [dataForm.controls['ward'].value]
+                : null
+            "
+          >
+          </ait-autocomplete-master-data>
+        </div>
       </div>
     </div>
     <div class="right__side">
@@ -113,7 +113,7 @@
             "
           ></ait-autocomplete-master-data>
         </div>
-      </div>  
+      </div>
     </div>
   </div>
 </div>
