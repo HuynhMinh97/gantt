@@ -326,6 +326,9 @@ export class UserOnboardingComponent
       await this.findSkills();
     }
     await this.getGenderList();
+    setTimeout(() => {
+      this.cancelLoadingApp();
+    }, 500);
     this.setDefaultGenderValue();
 
     // Run when form value change
