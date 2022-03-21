@@ -27,7 +27,7 @@
               <ng-container>
                 <div class="input_inline">
                   <ait-output-text
-                    [label]="'fist name'"
+                    [label]="'first name'"
                     [width]="'200px'"
                     [value]="stateUserOnboarding.first_name"
                     [id]="'first_name'"
@@ -50,7 +50,7 @@
               <ng-container>
                 <div class="start-date">
                   <ait-datepicker
-                    [label]="'BORN ON DATE'"
+                    [label]="'born on date'"
                     [id]="'bod'"
                     [disable]="true"
                     [styleInput]="{
@@ -95,7 +95,7 @@
               <ng-container>
                 <div class="input_inline">
                   <ait-output-text
-                    [label]="'LAST NAME'"
+                    [label]="'last name'"
                     [id]="'last_name'"
                     [width]="'200px'"
                     [value]="stateUserOnboarding.last_name"
@@ -120,7 +120,7 @@
               <ng-container>
                 <div class="input_inline">
                   <ait-output-text
-                    [label]="'GENDER'"
+                    [label]="'gender'"
                     [width]="'200px'"
                     [value]="stateUserOnboarding.gender?.value"
                     [id]="'gender'"
@@ -132,7 +132,7 @@
               <ng-container>
                 <div class="input_inline">
                   <ait-output-text
-                    [label]="'PHONE NUMBER'"
+                    [label]="'phone number'"
                     [id]="'phone_number'"
                     [width]="'200px'"
                     [value]="stateUserOnboarding.phone_number"
@@ -151,30 +151,32 @@
           [isStart]="true"
           [id]="'メニュー'"
           class="content"
-          [label]="'address' | translate"
+          [label]="'adress' | translate"
           [disableHeader]="false"
           padding="'10px'"
         >
           <div class="left__side">
             <div style="padding-left: 10px">
               <ng-container>
+                <ait-space [margin]="'7.25px'"></ait-space>
                 <div class="input_inline">
                   <ait-output-text
-                    [label]="'coutry_region'"
+                    [label]="'country_region'"
                     [id]="'country_region'"
                     [width]="'200px'"
                     [value]="stateUserOnboarding.country_region?.value"
                   ></ait-output-text>
                 </div>
+                <ait-space [margin]="'7.25px'"></ait-space>
                 <div class="input_inline">
                   <ait-output-text
-                    [label]="'province/city'"
+                    [label]="'province_city'"
                     [id]="'province_city'"
                     [width]="'200px'"
                     [value]="stateUserOnboarding.province_city?.value"
                   ></ait-output-text>
                 </div>
-
+                <ait-space [margin]="'7.25px'"></ait-space>
                 <div class="input_inline">
                   <ait-output-text
                     [label]="'Ward'"
@@ -183,6 +185,7 @@
                     [value]="stateUserOnboarding.ward?.value"
                   ></ait-output-text>
                 </div>
+                <ait-space [margin]="'7.25px'"></ait-space>
                 <div class="input_inline">
                   <ait-output-text
                     [label]="'Address'"

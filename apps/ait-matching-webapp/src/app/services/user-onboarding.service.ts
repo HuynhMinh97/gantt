@@ -35,10 +35,6 @@ export class UserOnboardingService extends AitBaseService {
       _key: true,
       value: true,
     },
-    industry: {
-      _key: true,
-      value: true,
-    },
     industry_working: {
       _key: true,
       value: true,

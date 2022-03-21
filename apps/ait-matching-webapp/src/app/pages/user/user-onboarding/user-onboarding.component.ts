@@ -299,8 +299,10 @@ export class UserOnboardingComponent
           this.userJobSettingInfo.patchValue({ ...this.jobSettingData });
           this.userJobSettingInfoClone = this.userJobSettingInfo.value;
         }
+        else {
+          this.callLoadingApp();
+        }
       });
-
       await this.userOnbService
         .findUserOnboardingByKey(this.user_key)
         .then(async (r) => {
@@ -316,6 +318,9 @@ export class UserOnboardingComponent
             }
             this.cancelLoadingApp();
             !isUserExist && this.router.navigate([`/404`]);
+          }
+          else {
+            this.callLoadingApp();
           }
         });
       await this.findSkills();
