@@ -194,15 +194,6 @@
                     [value]="stateUserOnboarding.address"
                   ></ait-output-text>
                 </div>
-
-                <div class="input_inline">
-                  <ait-output-text
-                    [label]="'company_working'"
-                    [id]="'company working'"
-                    [width]="'200px'"
-                    [value]="stateUserOnboarding.company_working?.value"
-                  ></ait-output-text>
-                </div>
               </ng-container>
             </div>
           </div>
@@ -210,6 +201,7 @@
           <div class="right__side">
             <div style="padding-left: 20px">
               <ng-container>
+                <ait-space [margin]="'7.25px'"></ait-space>
                 <div class="input_inline">
                   <ait-output-text
                     [label]="'postcode'"
@@ -218,6 +210,7 @@
                     [value]="stateUserOnboarding.district?.value"
                   ></ait-output-text>
                 </div>
+                <ait-space [margin]="'7.25px'"></ait-space>
                 <div class="input_inline">
                   <ait-output-text
                     [label]="'district'"
@@ -226,6 +219,7 @@
                     [value]="stateUserOnboarding.district?.value"
                   ></ait-output-text>
                 </div>
+                <ait-space [margin]="'35px'"></ait-space>
                 <div class="input_inline">
                   <ait-output-text
                     [label]="'Floor/Building'"
@@ -322,7 +316,7 @@
         <ait-card-content
           [styleDivider]="{'margin-left':'10px'}"
           [styleLabel]="{ 'font-size': '26px' }"
-          [content]="'This setting is used to find the best job for you'"
+          [content]="'this_setting_is_used_to_find_the_best_job_for_you' | translate"
           [styleContent]="{
             color: '#8F9BB3',
             'font-size': '12px',
@@ -389,7 +383,7 @@
           <!-- end left -->
           <div class="right__side">
             <div style="padding-left: 20px">
-              <ait-space [margin]="'7.25px'"></ait-space>
+              <ait-space [margin]="'35px'"></ait-space>
               <ng-container>
                 <div class="input_inline">
                   <ait-output-text
