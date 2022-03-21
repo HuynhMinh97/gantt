@@ -11,8 +11,9 @@ import { select, Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import _ from 'lodash';
 import {
-  isObjectFull,
+  isArrayFull,
   KEYS,
+  PERMISSIONS,
   RESULT_STATUS,
   SysSaveTemp,
   SYSTEM_COMPANY,
@@ -690,6 +691,8 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
   // set module and page for each screen and get caption base on theme
   setModulePage = (data: BaseInitData) => {
+    console.log(data);
+    
     const { module, page } = data;
     this.getPermission(page, module).then();
     this.store.dispatch(new SetModulePage({ page, module }));
@@ -881,38 +884,52 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     }
   }
 
-  public checkPermission(permission: 'READ' | 'CREATE' | 'UPDATE' | 'DELETE') {
-    return this.currentPermission.includes(permission);
+  public async checkPermission(permission: PERMISSIONS) {
+    console.log(this.page, this.module);
+    
+    if (isArrayFull(this.currentPermission)) {
+      return this.currentPermission.includes(permission);
+    } else {
+      await this.getPermission(this.page, this.module).then();
+      console.log(this.currentPermission.includes(permission));
+      return this.currentPermission.includes(permission);
+    }
   }
 
   public async getPermission(page: string, module: string) {
-    // try {
-    //   const page_key = await this.getKey(page, 'page');
-    //   const module_key = await this.getKey(module, 'module');
-    //   const result: any = await this.apollo
-    //     .query({
-    //       query: gql`query{
-    //       findPermission(request : {
-    //         page_key : "${page_key}",
-    //         module_key: "${module_key}",
-    //         user_key: "${this.user_id}"
-    //       }) {
-    //         page
-    //         module
-    //         permission
-    //         user_id
-    //       }
-    //     }`,
-    //     })
-    //     .toPromise();
+    try {
+      const pageKey = await this.getKey(page, 'page');
+      const moduleKey = await this.getKey(module, 'module');
+      console.log(pageKey, moduleKey);
+      
+      if (!pageKey || !moduleKey) return;
+      
+      const result: any = await this.apollo
+        .query({
+          query: gql`query{
+          findPermission(request : {
+            page_key : "${pageKey}",
+            module_key: "${moduleKey}",
+            user_key: "${this.user_id}"
+          }) {
+            page
+            module
+            permission
+            user_id
+          }
+        }`,
+        })
+        .toPromise();
 
-    //   const p = result.data?.findPermission;
-    //   this.currentPermission = p?.permission;
-    //   return p;
-    // } catch (e) {
-    //   console.log(e);
-    //   return null;
-    // }
+      const p = result.data?.findPermission;
+      console.log(p);
+      
+      this.currentPermission = p?.permission;
+      return p;
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
   }
 
   // get message erros when form invalid
