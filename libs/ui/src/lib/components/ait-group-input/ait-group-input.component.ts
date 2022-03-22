@@ -6,6 +6,8 @@ import {
   isObjectFull,
   KEYS,
   KeyValueDto,
+  PAGE_TYPE,
+  PERMISSIONS,
   RESULT_STATUS,
 } from '@ait/shared';
 import { Component, Input, OnInit } from '@angular/core';
@@ -42,6 +44,7 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   @Input() _key: string;
   @Input() page: string;
   @Input() module: string;
+  @Input() content: string;
   @Input() public save: (objSave: any) => Promise<any>;
   @Input() public find: (objFind: any) => Promise<any>;
   @Input() public delete: (objDelete: any) => Promise<any>;
@@ -60,6 +63,7 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   isClear = false;
   isClearErrors = false;
   isCopy = false;
+  isAllowDelete = false;
   cloneData: any;
   searchComponents: any;
   dateErrorObject = {};
@@ -92,6 +96,13 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
       toastrService,
       saveTempService
     );
+    setTimeout(() => {
+      this.setModulePage({
+        page: this.page,
+        module: this.module,
+        type: this._key ? PAGE_TYPE.EDIT : PAGE_TYPE.NEW
+      });
+    }, 0);
   }
 
   async ngOnInit(): Promise<void> {

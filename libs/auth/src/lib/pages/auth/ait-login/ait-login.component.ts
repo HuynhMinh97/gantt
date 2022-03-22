@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/member-ordering */
-import { APP_SECRET_KEY, RESULT_STATUS } from '@ait/shared';
+import { APP_SECRET_KEY, PAGE_TYPE, RESULT_STATUS } from '@ait/shared';
 import {
   AitAuthService,
   AitBaseComponent,
@@ -37,7 +37,7 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
   passwordLabel = '003';
 
   constructor(
-    private router: Router,
+    router: Router,
     apollo: Apollo,
     authService: AitAuthService,
     store: Store<AppState>,
@@ -46,10 +46,11 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
     userService: AitUserService,
     private envService: AitEnvironmentService
   ) {
-    super(store, authService, apollo, userService, envService);
+    super(store, authService, apollo, userService, envService, null, null, null, router);
     this.setModulePage({
       page: PAGES.SIGNIN,
       module: MODULES.AUTH,
+      type: PAGE_TYPE.VIEW
     });
 
     store.pipe(select(getCaption)).subscribe((c) => {
