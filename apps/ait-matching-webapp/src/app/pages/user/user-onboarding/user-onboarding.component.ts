@@ -266,7 +266,7 @@ export class UserOnboardingComponent
     // get key form parameter
     this.user_key = this.activeRouter.snapshot.paramMap.get('id');
     this._key = this.activeRouter.snapshot.paramMap.get('id');
-
+    this.user_id_profile = this.authService.getUserID();
     this.userOnbService
       .findSiteLanguageById(this.authService.getUserID())
       .then((r) => {
@@ -292,38 +292,44 @@ export class UserOnboardingComponent
       this.mode = MODE.EDIT;
     }
     if (this.user_key) {
-      this.callLoadingApp();
-      await this.userOnbService.findJobSetting(this.user_key).then((r) => {
-        if (r.status === RESULT_STATUS.OK) {
-          this.jobSettingData = r.data[0];
-          this.userJobSettingInfo.patchValue({ ...this.jobSettingData });
-          this.userJobSettingInfoClone = this.userJobSettingInfo.value;
-        }
-        else {
-          this.callLoadingApp();
-        }
-      });
-      await this.userOnbService
-        .findUserOnboardingByKey(this.user_key)
-        .then(async (r) => {
+      if (this.user_key !== this.user_id_profile){
+        this.callLoadingApp()
+        this.router.navigate([`user-onboarding-detail/${this.user_key}`]);
+      }
+      else {
+        this.callLoadingApp();
+        await this.userOnbService.findJobSetting(this.user_key).then((r) => {
           if (r.status === RESULT_STATUS.OK) {
-            let isUserExist = false;
-            this.dataCountry = r.data[0];
-            if (r.data.length > 0 && !this.dataCountry.del_flag) {
-              this.userOnboardingInfo.patchValue({ ...this.dataCountry });
-              this.userOnboardingInfoClone = this.userOnboardingInfo.value;
-              this.user_id_profile = this.dataCountry.user_id;
-              this._key = this.dataCountry._key;
-              isUserExist = true;
-            }
-            this.cancelLoadingApp();
-            !isUserExist && this.router.navigate([`/404`]);
+            this.jobSettingData = r.data[0];
+            this.userJobSettingInfo.patchValue({ ...this.jobSettingData });
+            this.userJobSettingInfoClone = this.userJobSettingInfo.value;
           }
           else {
             this.callLoadingApp();
           }
         });
-      await this.findSkills();
+        await this.userOnbService
+          .findUserOnboardingByKey(this.user_key)
+          .then(async (r) => {
+            if (r.status === RESULT_STATUS.OK) {
+              let isUserExist = false;
+              this.dataCountry = r.data[0];
+              if (r.data.length > 0 && !this.dataCountry.del_flag) {
+                this.userOnboardingInfo.patchValue({ ...this.dataCountry });
+                this.userOnboardingInfoClone = this.userOnboardingInfo.value;
+                this.user_id_profile = this.dataCountry.user_id;
+                this._key = this.dataCountry._key;
+                isUserExist = true;
+              }
+              this.cancelLoadingApp();
+              !isUserExist && this.router.navigate([`/404`]);
+            }
+            else {
+              this.callLoadingApp();
+            }
+          });
+        await this.findSkills();
+      }
     }
     await this.getGenderList();
     setTimeout(() => {
@@ -615,6 +621,7 @@ export class UserOnboardingComponent
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
+   
     if (this.userOnboardingInfo.valid && this.userJobSettingInfo.valid && !this.available_time_error) {
       this.callLoadingApp();
       this.userOnbService
