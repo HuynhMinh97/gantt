@@ -34,7 +34,7 @@ import {
 import { AureoleVCardComponent } from './pages/recommenced-user/components/card/card.component';
 import { ContentRowComponent } from './pages/recommenced-user/components/content/content.component';
 import { CardSkeletonComponent } from './pages/recommenced-user/components/card-skeleton/card-skeleton.component';
-import { RecommencedComponent } from './pages/recommenced-user/recommenced-user.component';
+import { RecommencedUserComponent } from './pages/recommenced-user/recommenced-user.component';
 import { SyncApiConfigService } from './services/sync_api_config.service';
 import { SyncPEService } from './services/sync_pe_history.service';
 import { ReactionService } from './services/reaction.service';
@@ -93,7 +93,7 @@ const AUREOLE_V_COMPONENTS = [
 ];
 
 const PAGES = [
-  RecommencedComponent,
+  RecommencedUserComponent,
   UserExperienceComponent,
   UserEducationComponent,
   UserLanguageComponent,

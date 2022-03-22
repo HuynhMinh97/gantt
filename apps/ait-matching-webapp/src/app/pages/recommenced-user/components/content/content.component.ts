@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Component, Input } from '@angular/core';
 @Component({
   selector: 'ait-content-row',
   template: `
@@ -23,13 +23,8 @@ import { Component, Input, OnInit } from '@angular/core';
   ],
 })
 
-export class ContentRowComponent implements OnInit {
+export class ContentRowComponent {
   rowData: any;
   columnData: any;
-  @Input() data;
-  constructor() { }
-
-  ngOnInit() {
-    // // console.log(this.rowData, this.columnData);
-  }
+  @Input() data: any;
 }

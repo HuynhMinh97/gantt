@@ -5,7 +5,7 @@ import { UserExperienceComponent } from './pages/user/user-experience/user-exper
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { AitAuthGuardService } from '@ait/ui';
-import { RecommencedComponent } from './pages/recommenced-user/recommenced-user.component';
+import { RecommencedUserComponent } from './pages/recommenced-user/recommenced-user.component';
 import { UserCourseComponent } from './pages/user/user-course/user-course.component';
 import { UserCertificateComponent } from './pages/user/user-certificate/user-certificate.component';
 import { UserSkillsComponent } from './pages/user/user-skills/user-skills.component';
@@ -33,9 +33,9 @@ import { RecommencedJobComponent } from './pages/recommenced/recommenced-job/rec
 
 export const routes: Routes = [
   {
-    path: 'recommenced-user',
+    path: 'test',
     canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
-    component: RecommencedComponent
+    component: RecommencedUserComponent
   }, 
   {
     path: 'user-jobs',
