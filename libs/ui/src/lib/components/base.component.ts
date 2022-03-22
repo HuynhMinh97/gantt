@@ -870,7 +870,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
           query: gql`query {
           findSystem(request : {
             collection : "sys_${type}",
-            company: "d3415d06-601b-42c4-9ede-f5d9ff2bcac3",
+            company: "${this.company || this.env?.COMMON?.COMPANY_DEFAULT}",
               lang: "ja_JP",
             condition: {
               code : {
