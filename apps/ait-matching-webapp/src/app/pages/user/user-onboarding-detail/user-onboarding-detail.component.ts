@@ -41,7 +41,8 @@ export class UserOnboardingDetailComponent
   jobSettingInfo = {} as JobSettingDto;
   dataCountry: any;
   dateFormat: string;
-
+  fromFormat = '';
+  toFormat = '';
   constructor(
     private formBuilder: FormBuilder,
     private userSkillsService: UserSkillsService,
@@ -82,7 +83,7 @@ export class UserOnboardingDetailComponent
   async ngOnInit(): Promise<void> {
     this.callLoadingApp();
     await this.userOnbService.findJobSetting(this.user_key).then((r) => {
-      if (r.status === RESULT_STATUS.OK ) {
+      if (r.status === RESULT_STATUS.OK) {
         const jobSettingData = r.data[0];
         if (jobSettingData !== undefined) {
           Object.keys(jobSettingData).forEach((key) => {
@@ -106,35 +107,34 @@ export class UserOnboardingDetailComponent
           // this.jobSettingInfo = jobSettingData;
           const timeFrom = this.jobSettingInfo.available_time_from;
           const timeTo = this.jobSettingInfo.available_time_to;
-          if (timeFrom != null && timeTo != null) {
-            const availebleTime =
-              this.getDateFormat(timeFrom) + ' ~ ' + this.getDateFormat(timeTo);
-            this.jobSettingInfo['available_time'] = availebleTime;
-          } else {
-            this.jobSettingInfo.available_time = null;
-          }
+
+          this.fromFormat = timeFrom ? this.getDateFormat(timeFrom) : null;
+          this.toFormat = timeTo ? this.getDateFormat(timeTo) : null;
+          this.jobSettingInfo['available_time'] = timeFrom
+            ? timeTo
+              ? this.fromFormat + ' ~ ' + this.toFormat
+              : this.fromFormat
+            : null;
         }
-        else {
-           this.findSkills();
-           this.userOnbService
-            .findUserOnboardingByKey(this.user_key)
-            .then(async (r) => {
-              if (r.status === RESULT_STATUS.OK) {
-                const data = r.data[0];
-                Object.keys(data).forEach((key) => {
-                  const value = data[key];
-                  this.stateUserOnboarding[key] = value;
-                });
-              }
-            });
-        }
-      } 
+        this.findSkills();
+        this.userOnbService
+          .findUserOnboardingByKey(this.user_key)
+          .then(async (r) => {
+            if (r.status === RESULT_STATUS.OK) {
+              const data = r.data[0];
+              Object.keys(data).forEach((key) => {
+                const value = data[key];
+                this.stateUserOnboarding[key] = value;
+              });
+            }
+          });
+      }
     });
-    
     setTimeout(() => {
       this.cancelLoadingApp();
     }, 500);
   }
+
   getDateFormat(time: number) {
     if (!time) {
       return '';
