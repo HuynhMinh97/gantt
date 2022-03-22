@@ -8,16 +8,28 @@ import { GqlAuthGuard } from '../guards/gql-auth.guard';
 import { AitJwtStrategy } from './ait-jwt.strategy';
 import { AitDatabaseModule } from '../services/arangodb/ait-database.module';
 import { AitBaseService } from '../services/ait-base.service';
+import { RolesGuard } from '../guards/roles.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
     JwtModule.register({
       secret: SECRET_KEY,
-      signOptions: { expiresIn: '3600000s' }
+      signOptions: { expiresIn: '3600000s' },
     }),
   ],
-  providers: [AuthResolver, AuthService, AitJwtStrategy, GqlAuthGuard, AitBaseService],
-  exports: [ GraphQLModule, JwtModule],
+  providers: [
+    AuthResolver,
+    AuthService,
+    AitJwtStrategy,
+    GqlAuthGuard,
+    AitBaseService,
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
+  exports: [GraphQLModule, JwtModule],
 })
 export class AitAuthModule {
   static forRoot(environment): DynamicModule {
@@ -33,9 +45,9 @@ export class AitAuthModule {
       providers: [
         {
           provide: 'ENVIRONMENT',
-          useValue: environment
-        }
+          useValue: environment,
+        },
       ],
-    }
+    };
   }
 }
