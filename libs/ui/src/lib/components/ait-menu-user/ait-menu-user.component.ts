@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { isArrayFull } from '@ait/shared';
 import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import {
@@ -40,6 +42,8 @@ export class AitMenuUserComponent extends AitBaseComponent implements OnInit {
   currentLang = 'ja_JP';
   userInfo: any = {};
   openSubMenu = false;
+  isDefault = true;
+  isHavingUserProfile = false;
   tabSelect = '';
   constructor(
     private eRef: ElementRef,
@@ -93,6 +97,19 @@ export class AitMenuUserComponent extends AitBaseComponent implements OnInit {
     store.pipe(select(getEmail)).subscribe((u) => {
       this.title = u;
     });
+
+    const environment: any = envService;
+    if (isArrayFull(environment?.MENU)) {
+      this.menus = environment.MENU;
+      this.isDefault = false;
+    }
+
+    const config = this.router?.config as any[];
+    const index = config.findIndex(c => c.path === 'user-profile');
+    if (index !== -1)
+    {
+      this.isHavingUserProfile = true;
+    }
   }
 
   isUserLogined = () => this.authService.isLogined();
@@ -118,6 +135,7 @@ export class AitMenuUserComponent extends AitBaseComponent implements OnInit {
   ngOnInit() {
     this.setupMenu();
   }
+
   navigate = (link) => {
     if (link) {
       this.router.navigateByUrl(link);
@@ -133,6 +151,7 @@ export class AitMenuUserComponent extends AitBaseComponent implements OnInit {
   };
 
   naviagteToLogin = () => this.router.navigateByUrl('/sign-in');
+  
   navigateToMangeJobs = () => this.router.navigateByUrl('/');
 
   openUserSetting() {
@@ -145,7 +164,9 @@ export class AitMenuUserComponent extends AitBaseComponent implements OnInit {
 
   setupMenu = () => {
     this.store.pipe(select(getCaption)).subscribe(() => {
-      this.menus = this.layoutSerive.MENU_USER;
+      if (this.isDefault) {
+        this.menus = this.layoutSerive.MENU_USER;
+      }
     });
   };
 
