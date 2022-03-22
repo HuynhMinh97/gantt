@@ -4,6 +4,7 @@ import {
   COLLECTIONS,
   DB_CONNECTION_TOKEN,
   hasLength,
+  isArrayFull,
   isNil,
   isNumber,
   isObjectFull,
@@ -23,7 +24,7 @@ import { AitUtils } from '../utils/ait-utils';
 
 export enum TYPE {
   AUREOLE_V = 'aureole_v',
-  MATCHING = 'matching'
+  MATCHING = 'matching',
 }
 @Injectable()
 export class AitBaseService {
@@ -41,10 +42,11 @@ export class AitBaseService {
   filterAfter = [];
 
   async getPermission(request: any, user?: SysUser): Promise<PermissionOutput> {
+    const defaultRoles = this.env?.APP?.DEFAULT_PERMISSIONS || [];
     const { page_key, user_key, module_key } = request;
     const page_id = 'sys_page/' + page_key;
     const user_id = 'sys_user/' + user_key;
-
+    
     const aqlStr = `
     LET role_list = (
       FOR v, e, p IN 1..1 INBOUND "${page_id}" sys_role_page
@@ -71,21 +73,20 @@ export class AitBaseService {
     } catch (error) {
       return error;
     }
-
+    
     // merge permissions
     let permissions = [];
     resData.forEach((item) => {
       permissions = [...permissions, ...item?.permission];
     });
-
+    
     // distince permisssions
     permissions = Array.from(new Set(permissions));
     const dto = new PermissionOutput();
     dto.user_id = user_key;
     dto.page = page_key;
     dto.module = module_key;
-    dto.permission = permissions;
-
+    dto.permission = isArrayFull(permissions) ? permissions: defaultRoles;
     return dto;
   }
 
@@ -246,7 +247,7 @@ export class AitBaseService {
       COLLECTIONS.MASTER_DATA,
       COLLECTIONS.COMPANY,
       COLLECTIONS.CAPTION,
-      COLLECTIONS.M_SKILL
+      COLLECTIONS.M_SKILL,
     ];
     const mapData = [];
     const joinData = [];
@@ -335,7 +336,8 @@ export class AitBaseService {
             (prop === KEYS.CREATE_BY || prop === KEYS.CHANGE_BY)
           ) {
             this.mappingUser.push({ type: prop, value: data.value ?? '' });
-            this.type = (data.type === TYPE.MATCHING ? TYPE.MATCHING: TYPE.AUREOLE_V); 
+            this.type =
+              data.type === TYPE.MATCHING ? TYPE.MATCHING : TYPE.AUREOLE_V;
           }
           if (
             data.attribute &&
@@ -423,7 +425,7 @@ export class AitBaseService {
     if (!hasName) {
       aqlStr += ` name:  data.name.${lang} ? data.name.${lang} : data.name, \r\n`;
     }
-    
+
     // attribute
     if (attributes.length > 0) {
       aqlStr += `\r\n ${attributes[0]}, `;
@@ -458,11 +460,6 @@ export class AitBaseService {
     //ref
     mapData.forEach((data) => {
       if (!attributes.includes(data.join_field)) {
-        console.log(data);
-        if (data.attribute === 'code') {
-          // console.log(data);
-          // console.log(data.ref_collection);
-        }
         const ref_condition = data.ref_condition;
 
         aqlStr += ` \r\n ${data.attribute} : ( `;

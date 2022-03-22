@@ -167,10 +167,19 @@ export enum DATA_TYPE {
 }
 
 export enum PERMISSIONS {
-  CREATE = 'CREATE',
-  UPDATE = 'UPDATE',
-  DELETE = 'DELETE',
-  READ = 'READ'
+  FULL_CONTROLL = 'FULL_CONTROLL',
+  READ = 'READ',
+  WRITE = 'WRITE',
+  EDIT = 'EDIT',
+  DELETE = 'DELETE'
+}
+
+export enum PAGE_TYPE {
+  SEARCH = 'SEARCH',
+  NEW = 'NEW',
+  EDIT = 'EDIT',
+  VIEW = 'VIEW',
+  MATCHING = 'MATCHING'
 }
 
 export enum GRAPHQL {
@@ -248,4 +257,10 @@ export enum OPERATOR {
 export enum ORDER_BY {
   ASC = 'ASC',
   DESC = 'DESC',
+}
+
+export enum Role {
+  ADMIN = 'admin',
+  USER = 'user',
+  CUSTOM = 'custom'
 }

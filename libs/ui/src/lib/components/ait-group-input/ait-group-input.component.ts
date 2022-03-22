@@ -6,6 +6,8 @@ import {
   isObjectFull,
   KEYS,
   KeyValueDto,
+  PAGE_TYPE,
+  PERMISSIONS,
   RESULT_STATUS,
 } from '@ait/shared';
 import { Component, Input, OnInit } from '@angular/core';
@@ -42,9 +44,11 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   @Input() _key: string;
   @Input() page: string;
   @Input() module: string;
+  @Input() content: string;
   @Input() public save: (objSave: any) => Promise<any>;
   @Input() public find: (objFind: any) => Promise<any>;
   @Input() public delete: (objDelete: any) => Promise<any>;
+  @Input() public default: (objDelete: any) => Promise<any>;
   inputForm: FormGroup;
   moduleKey: string;
   groupKey: string;
@@ -59,6 +63,7 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   isClear = false;
   isClearErrors = false;
   isCopy = false;
+  isAllowDelete = false;
   cloneData: any;
   searchComponents: any;
   dateErrorObject = {};
@@ -91,6 +96,13 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
       toastrService,
       saveTempService
     );
+    setTimeout(() => {
+      this.setModulePage({
+        page: this.page,
+        module: this.module,
+        type: this._key ? PAGE_TYPE.EDIT : PAGE_TYPE.NEW
+      });
+    }, 0);
   }
 
   async ngOnInit(): Promise<void> {
@@ -146,6 +158,8 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
               !this.isCopy &&
                 this.inputForm.addControl('_key', new FormControl(null));
               this.patchDataToForm(resSearch.data || []);
+            } else if (this.default) {
+              this.patchDefaultDataToForm(resSearch.data || []);
             }
           }
         }
@@ -159,6 +173,26 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
         this.cancelLoadingApp();
       }, 100);
     }
+  }
+
+  async patchDefaultDataToForm(data: any[]) {
+    const conditions = {};
+    this.cloneData = {};
+    data.forEach((e) => {
+      if (e['search_setting']) {
+        const prop = Object.entries(e['search_setting']).reduce(
+          (a, [k, v]) => (v == null ? a : ((a[k] = v), a)),
+          {}
+        );
+        conditions[e['item_id']] = prop;
+      }
+    });
+
+    const defaultValue = await this.default(conditions);
+    this.inputForm.patchValue(defaultValue);
+    (Object.keys(this.inputForm.controls) || []).forEach((name) => {
+      this.cloneData[name] = this.inputForm.controls[name].value;
+    });
   }
 
   async patchDataToForm(data: any[]) {
