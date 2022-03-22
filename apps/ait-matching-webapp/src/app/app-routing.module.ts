@@ -26,6 +26,7 @@ import { UserCertificateDetailComponent } from './pages/user/user-certificate-de
 import { UserProjectDetailComponent } from './pages/user/user-project-detail/user-project-detail.component';
 import { UserCourseDetailComponent } from './pages/user/user-course-detail/user-course-detail.component';
 import { LanguageListComponent } from './pages/list/language-list/language-list.component';
+import { RecommencedJobComponent } from './pages/recommenced/recommenced-job/recommenced-job.component';
 
 
 // Push your routes here one by one 🎉
@@ -36,6 +37,11 @@ export const routes: Routes = [
     canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
     component: RecommencedComponent
   }, 
+  {
+    path: 'user-jobs',
+    canActivate: [AitAuthGuardService],
+    component: RecommencedJobComponent
+  },
   {
     path: 'user-onboarding',
     canActivate: [AitAuthGuardService],
