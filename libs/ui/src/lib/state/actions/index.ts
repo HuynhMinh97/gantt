@@ -56,7 +56,6 @@ export class SHOWSNACKBAR implements Action {
       const trService = new AitTranslationService(store);
       store.pipe(select(getCaption)).subscribe(() => {
         this.err = trService.getMsg('E0100');
-        // console.log(this.err)
         if (this.err && this.err !== 'E0100') {
           this.payload = _payload;
           snackbar.danger('Error', this.err, {
@@ -166,8 +165,8 @@ export class GetCurrencySymbol implements Action {
 
 export class SetModulePage implements Action {
   readonly type = ActionTypes.Set_module_page;
-  public payload: { page: string, module: string };
-  constructor(_payload: { page: string, module: string }) {
+  public payload: { page: string, module: string, type: string };
+  constructor(_payload: { page: string, module: string, type: string }) {
     this.payload = _payload;
   }
 }

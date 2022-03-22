@@ -8,6 +8,7 @@ export const environment = {
     API_PREFIX: '/rest-api/v1',
     GRAPHQL_PREFIX: '/api/v1',
     HOST_DOMAIN: 'http://192.168.136.17',
+    DEFAULT_PERMISSIONS: ['READ'],
   },
   API_CORE: {
     HOST: 'http://192.168.136.17:4002',
