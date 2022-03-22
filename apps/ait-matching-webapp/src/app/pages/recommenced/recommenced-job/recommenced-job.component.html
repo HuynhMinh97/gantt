@@ -1,1 +1,250 @@
-<div>thuan </div>
+<div class="aureolev__container">
+    <div class="main__container">
+        <div class="aureolev__search__container" tabindex="1" style="outline-color: #10529d">
+            <div class="aureolev__input__container" tabindex="2" style="outline-color: #10529d">
+                <div class="icon__look__up" tabindex="3" style="outline-color: #10529d">
+                    <img src="../../../../assets/images/search.svg" alt="" srcset="" />
+                </div>
+                <ait-chip [title]="currentSearch?.value" *ngIf="!isObjectEmpty(currentSearch)" [icon]="'close-outline'"
+                    (action)="removeSearch(false, true)" [is18n]="false" (click)="handleClickChipInput($event)"
+                    tabindex="4" style="outline-color: #10529d"></ait-chip>
+                <input #inputSearch type="text" [placeholder]="getPlaceHolder()" autofocus
+                    [formControl]="inputControlMaster" (input)="handleInput(inputSearch.value)" tabindex="5"
+                    style="outline-color: #10529d" />
+            </div>
+            <button style="border: none; outline-color: #10529d" tabindex="6" class="aureole__button__search"
+                (click)="handleClickButton()">
+                <div class="icon__look__up">
+                    <img style="height: 18px; width: 18px; margin: 7px" src="../../../../assets/images/white_search.svg"
+                        alt="" srcset="" />
+                </div>
+                <p class="empty">
+                    {{ getTitleSearchBtn() }}
+                </p>
+            </button>
+        </div>
+        <div tabindex="7" class="aureolev__search__suggestion" *ngIf="dataSuggest.length === 0 && messageSearch"
+            style="padding: 0px; padding-left: 15px; outline-color: #10529d">
+            <p style="width: 100%; margin-top: 10px; color: #000">
+                {{ messageSearch | aureoleTranslate }}
+            </p>
+        </div>
+        <div class="aureolev__search__suggestion" *ngIf="dataSuggest.length !== 0" tabindex="8">
+            <ait-chip [title]="highlightName(com.value)" *ngFor="let com of dataSuggest"
+                (onClickChip)="addCompany(com); inputSearch.value = ''; isExpan = false"></ait-chip>
+        </div>
+        <div class="aureolev__filter_container" *ngIf="!isObjectEmpty(currentSearch) && !isSearchButton"
+            style="outline-color: #10529d" tabindex="9">
+            <div class="aureolev__header__filter" (click)="ToggleExpan1()"
+                [ngStyle]="!isExpan1 ? { border: 'none' } : null">
+                <p class="aureole__title__filter">
+                    {{ getTitle('003') }}
+                </p>
+                <div class="icon__expan" (click)="ToggleExpan1()">
+                    <nb-icon (click)="ToggleExpan1()" icon="arrow-ios-upward-outline" *ngIf="isExpan1"></nb-icon>
+                    <nb-icon (click)="ToggleExpan1()" icon="arrow-ios-downward-outline" *ngIf="!isExpan1"></nb-icon>
+                </div>
+            </div>
+            <div class="aureolev__input__area" [ngStyle]="{
+          height: isExpan1 ? 'auto' : '0px',
+          'margin-bottom': isExpan1 ? null : '0px',
+          'margin-top': isExpan1 ? null : '0px'
+        }">
+                <div class="content" style="display: flex; flex-wrap: wrap; width: 100%">
+                    <div class="left__side" [class.visibled]="!isExpan1">
+                        <ait-output-text [label]="'005'" [tabIndex]="10" [value]="companySelect[0]?.address"
+                            style="margin-bottom: 16px" [id]="'address'"></ait-output-text>
+                        <ait-output-text [label]="'006'" [tabIndex]="11" [value]="companySelect[0]?.occupation"
+                            style="margin-bottom: 16px" [id]="'occupation'"></ait-output-text>
+                        <ait-output-text [label]="'007'" [tabIndex]="13" [value]="companySelect[0]?.phone"
+                            [id]="'phone'"></ait-output-text>
+                    </div>
+                    <div class="right__side" [class.visibled]="!isExpan1">
+                        <ait-output-text [label]="'008'" [value]="companySelect[0]?.work"
+                            style="margin-bottom: 16px; visibility: hidden" [id]="'work'"></ait-output-text>
+                        <ait-output-text [label]="'008'" [tabIndex]="12" [value]="companySelect[0]?.work"
+                            style="margin-bottom: 16px" [id]="'work'"></ait-output-text>
+                        <ait-output-text [label]="'009'" [tabIndex]="14" [value]="companySelect[0]?.fax" [id]="'fax'">
+                        </ait-output-text>
+                    </div>
+                </div>
+                <div style="
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: flex-end;
+          ">
+                    <div class="button__view__company" [class.isDisabled]="!isShowViewBtn" *ngIf="isExpan1"
+                        (click)="handleClickViewMore()" style="outline-color: #10529d" tabindex="15">
+                        <span style="font-size: 12px">{{ getTitle('004') }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="margin: 10px"></div>
+        <div class="aureolev__filter_container" style="outline-color: #10529d" tabindex="16">
+            <div class="aureolev__header__filter" (click)="ToggleExpan()"
+                [ngStyle]="!isExpan ? { border: 'none' } : null">
+                <p class="aureole__title__filter">
+                    {{ getTitle('010') }}
+                </p>
+                <div class="icon__expan" (click)="ToggleExpan()">
+                    <nb-icon icon="arrow-ios-upward-outline" *ngIf="isExpan" (click)="ToggleExpan()"></nb-icon>
+                    <nb-icon icon="arrow-ios-downward-outline" *ngIf="!isExpan" (click)="ToggleExpan()"></nb-icon>
+                </div>
+            </div>
+            <div class="aureolev__input__area" [ngStyle]="{
+          height: isExpan ? 'auto' : '0px',
+          'margin-bottom': isExpan ? null : '0px',
+          'margin-top': isExpan ? null : '0px'
+        }">
+                <div class="left__side" [class.visibled]="!isExpan">
+                    <!-- //remark -->
+                    <div class="input__group" style="outline-color: #10529d">
+                        <ait-label [label]="'011'" [id]="'input_remark'"></ait-label>
+
+                        <input id="input_remark" type="text" nbInput fullWidth style="
+                background: #f7f9fc;
+                color: #000;
+                width: 100%;
+                margin-top: 8px;
+                outline-color: #10529d;
+              " tabindex="17" [placeholder]="getTitle('012')" [value]="filterCommonAppended?.remark || ''"
+                            class="input__filter" (input)="filterRemark($event.target.value)" />
+                    </div>
+
+                    <div class="input__group">
+                        <ait-autocomplete-master-data [tabIndex]="19" [label]="'希望の分野'" [style]="{
+                width: '100%',
+                background: 'transparent',
+                'margin-top': '8px'
+              }" [class]="'JOB_BUSINESS'" [icon]="'search-outline'" [placeholder]="getTitle('014')"
+                            [defaultValue]="
+                filterCommonAppended?.business
+                  ? [{ _key: filterCommonAppended?.business }]
+                  : null
+              " (watchValue)="filterByCondition($event, 'business')" [id]="'business'"></ait-autocomplete-master-data>
+                    </div>
+
+                    <div class="input__group">
+                        <ait-autocomplete-master-data [label]="'015'" [style]="{
+                width: '100%',
+                background: 'transparent',
+                'margin-top': '8px'
+              }" [tabIndex]="22" [class]="'GENDER'" [defaultValue]="
+                filterCommonAppended?.gender
+                  ? [{ _key: filterCommonAppended?.gender }]
+                  : null
+              " [icon]="'search-outline'" [placeholder]="getTitle('014')"
+                            (watchValue)="filterByCondition($event, 'gender')" [id]="'gender'"></ait-autocomplete-master-data>
+                    </div>
+                </div>
+                <div class="right__side" [class.visibled]="!isExpan">
+                    <div class="input__group">
+                        <ait-autocomplete-master-data [label]="'016'" [tabIndex]="18" [style]="{
+                width: '100%',
+                background: 'transparent',
+                'margin-top': '8px'
+              }" [class]="'PREFECTURE'" [icon]="'search-outline'" [placeholder]="getTitle('014')"
+                            [defaultValue]="
+                filterCommonAppended?.prefecture
+                  ? [{ _key: filterCommonAppended?.prefecture }]
+                  : null
+              " (watchValue)="filterByCondition($event, 'prefecture')" [id]="'prefecture'"></ait-autocomplete-master-data>
+                    </div>
+
+                    <div class="input__group">
+                        <ait-label [label]="'017'" [id]="'salary'"></ait-label>
+
+                        <div style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+              ">
+                            <ait-input-number [tabIndex]="20" [widthInput]="'100%'" [placeholder]="'0'"
+                                (watchValue)="filterBySalary($event, 'salary1')" [styleInput]="{
+                  background: 'transparent'
+                }" [isReset]="isResetSalaryFrom" [defaultValue]="
+                  filterCommonAppended?.salary1
+                    ? filterCommonAppended?.salary1
+                    : null
+                " [id]="'salary1'"></ait-input-number>
+                            <div style="margin: 15px">～</div>
+                            <ait-input-number [id]="'salary2'" [widthInput]="'100%'" [tabIndex]="21"
+                                [placeholder]="'999,999,999,999'" (watchValue)="filterBySalary($event, 'salary2')"
+                                [styleInput]="{
+                  background: 'transparent'
+                }" [isReset]="isResetSalaryTo" [defaultValue]="
+                  filterCommonAppended?.salary2
+                    ? filterCommonAppended?.salary2
+                    : null
+                "></ait-input-number>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="aureolev__matching__result" tabindex="23" style="outline-color: #10529d">
+            <div class="aureolev__matching__header">
+                <p>{{ getTitle('018') }}</p>
+                <div class="actionGroup" tabindex="24" style="outline-color: #10529d">
+                    <ait-tabs *ngIf="!disableTab" [tabIndex]="25" [tabs]="tabs" [disabled]="cardSkeleton.length !== 0"
+                        (onTabSelect)="getTabSelect($event)"></ait-tabs>
+                </div>
+            </div>
+            <div class="divider"></div>
+
+            <div class="list__card" tabindex="{{ 24 + tabs.length }}" style="outline-color: #10529d">
+                <div class="what" style="display: flex; flex-direction: row; flex-wrap: wrap"
+                    *ngIf="currentTab !== 'R'">
+                    <p *ngIf="cardSkeleton.length === 0 && dataFilterSave.length === 0">
+                        {{ textDataNullSave | aureoleTranslate }}
+                    </p>
+
+                    <ait-aureolev-card *ngFor="let card of dataFilterSave; let i = index" [card]="card"
+                        tabindex="{{ 30 + i + 1 }}" style="outline-color: #10529d" [addressSearch]="addressSearch"
+                        [company_key]="company_key" (actionSaveEvent)="handleSyncData($event)">
+                    </ait-aureolev-card>
+                    <ait-card-skeleton *ngFor="let card of cardSkeleton"></ait-card-skeleton>
+                </div>
+
+                <div class="what" style="display: flex; flex-direction: row; flex-wrap: wrap"
+                    *ngIf="currentTab === 'R'">
+                    <p *ngIf="cardSkeleton.length === 0 && dataFilter.length === 0">
+                        {{ textDataNull | aureoleTranslate }}
+                    </p>
+
+                    <!-- <div
+        style="flex: 1; width: 100%; display: flex; flex-wrap: wrap"
+        *ngIf="cardSkeleton.length === 0"
+      >
+
+      </div> -->
+                    <ait-aureolev-card *ngFor="let card of dataFilter; let ix = index" [card]="card"
+                        [addressSearch]="addressSearch" [company_key]="company_key" tabindex="{{ 30 + ix + 1 }}"
+                        style="outline-color: #10529d" (actionSaveEvent)="handleSyncData($event)">
+                    </ait-aureolev-card>
+
+                    <ait-card-skeleton *ngFor="let card of cardSkeleton"></ait-card-skeleton>
+                </div>
+            </div>
+            <!-- <div class="list__card__loading" *ngIf="isLoading"></div> -->
+            <div class="spinner__loading" style="min-height: 50px; margin: 20px; background: transparent"
+                *ngIf="spinnerLoading" [nbSpinner]="spinnerLoading" [nbSpinnerStatus]="'primary'"></div>
+            <div class="spinner__loading" style="min-height: 50px; margin: 20px; background: transparent"
+                *ngIf="!textDataNull && !textDataNullSave">
+                {{ textDataEnd | aureoleTranslate }}
+                <!-- </div> -->
+            </div>
+        </div>
+        <!-- Scroll to top button -->
+        <!-- <button
+      (click)="goTop()"
+      class="btnScrollTop"
+      *ngIf="round > 0 && dataFilterDf.length !== 0"
+    >
+      <nb-icon icon="arrow-upward-outline" style="color: #fff"></nb-icon>
+    </button> -->
+    </div>
+</div>

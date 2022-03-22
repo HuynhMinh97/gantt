@@ -39,7 +39,7 @@ export const routes: Routes = [
   }, 
   {
     path: 'user-jobs',
-    canActivate: [AitAuthGuardService],
+    // canActivate: [AitAuthGuardService],
     component: RecommencedJobComponent
   },
   {
