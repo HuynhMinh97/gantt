@@ -14,7 +14,7 @@ import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Component, ElementRef, OnInit } from '@angular/core';
-import { isArrayFull, isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
+import { isArrayFull, isObjectFull, KEYS, PAGE_TYPE, RESULT_STATUS } from '@ait/shared';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NbToastrService, NbLayoutScrollService, NbDialogService, NbDialogRef } from '@nebular/theme';
 import { UserCerfiticateService } from '../../../services/user-certificate.service';
@@ -62,9 +62,9 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
   dateFormat = '';
   selectFile = '';
   certificate_key = '';
-
+  type = PAGE_TYPE.NEW;
   constructor(
-    private router: Router,
+    router: Router,
     private element: ElementRef,
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
@@ -87,12 +87,23 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
       null,
       env,
       layoutScrollService,
-      toastrService
+      toastrService,
+      null,
+      router
     );
     this.user_id = this.authService.getUserID();
+    this.certificate_key = this.activeRouter.snapshot.paramMap.get('id');
+
+    if(this.certificate_key){
+      this.type = PAGE_TYPE.EDIT
+    }else{
+      this.type = PAGE_TYPE.NEW
+    }
+    
     this.setModulePage({
       module: 'user',
       page: 'user_cerfiticate',
+      type: this.type
     });
     
     store.pipe(select(getUserSetting)).subscribe((setting) => {
@@ -100,7 +111,7 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
         this.dateFormat = setting['date_format_display'];
       }
     });
-    this.certificate_key = this.activeRouter.snapshot.paramMap.get('id');
+    
     // this.router.events.subscribe((event) => {
     //   if (event instanceof NavigationStart) {
     //       this.closeDialog(false);

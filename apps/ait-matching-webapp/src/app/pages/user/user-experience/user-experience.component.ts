@@ -35,7 +35,7 @@ export class UserExperienceComponent
   userExperience_key = '';
 
   constructor(
-    private router: Router,
+    router: Router,
     private userExperienceService: UserExperienceService,
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
@@ -53,7 +53,9 @@ export class UserExperienceComponent
       null,
       env,
       layoutScrollService,
-      toastrService
+      toastrService,
+      null,
+      router
     );
 
    
