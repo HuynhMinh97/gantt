@@ -46,7 +46,7 @@ export class UserOnboardingDetailComponent
   constructor(
     private formBuilder: FormBuilder,
     private userSkillsService: UserSkillsService,
-    private router: Router,
+    router: Router,
     public activeRouter: ActivatedRoute,
     private userOnbService: UserOnboardingService,
     env: AitEnvironmentService,
@@ -63,7 +63,9 @@ export class UserOnboardingDetailComponent
       null,
       env,
       layoutScrollService,
-      toastrService
+      toastrService,
+      null,
+      router
     );
 
     this.setModulePage({

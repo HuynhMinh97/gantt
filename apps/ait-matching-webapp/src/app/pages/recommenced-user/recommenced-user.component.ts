@@ -65,11 +65,11 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
     private formBuilder: FormBuilder,
     store: Store<AppState>,
     authService: AitAuthService,
-    private router: Router,
+    router: Router,
     env: AitEnvironmentService,
     apollo: Apollo
   ) {
-    super(store, authService, apollo, null, env, layoutScrollService);
+    super(store, authService, apollo, null, env, layoutScrollService,null, null, router);
 
     this.userSkills = this.formBuilder.group({
       skills: new FormControl(null, [Validators.required, Validators.maxLength(50)]),

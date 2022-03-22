@@ -47,7 +47,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
   constructor(store: Store<AppState>,
     private userJobAlertService : UserJobAlertService,
     private userProfileService: UserProfileService,
-    private router: Router,
+    router: Router,
     authService: AitAuthService,
     apollo: Apollo,
     private element: ElementRef,
@@ -59,7 +59,7 @@ export class UserJobAlertComponent extends AitBaseComponent implements OnInit {
     private dialogService: NbDialogService,
     private translateService: AitTranslationService,
   ) {
-    super(store, authService, apollo, null, env, layoutScrollService, toastrService);
+    super(store, authService, apollo, null, env, layoutScrollService, toastrService, null, router);
 
     store.pipe(select(getUserSetting)).subscribe((setting) => {
       if (isObjectFull(setting) && setting['date_format_display']) {

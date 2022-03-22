@@ -30,9 +30,9 @@ export class AppComponent extends AitBaseComponent implements OnInit {
     _env: AitEnvironmentService,
     layoutService: AitLayoutService,
     apollo: Apollo,
-    private router: Router
+    router: Router
   ) {
-    super(store, authService, apollo, userService, _env);
+    super(store, authService, apollo, userService, _env, null, null, null, router);
     layoutService.menuUserInput = MENU_ITEMS;
   }
 

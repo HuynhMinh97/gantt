@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/member-ordering */
-import { isArrayFull, isObjectFull, RESULT_STATUS } from '@ait/shared';
+import { isArrayFull, isObjectFull, PAGE_TYPE, RESULT_STATUS } from '@ait/shared';
 import {
   AitAuthService,
   AitBaseComponent,
@@ -113,7 +113,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     private dialogService: NbDialogService,
     public activeRouter: ActivatedRoute,
     private translateService: AitTranslationService,
-    private router: Router,
+    router: Router,
     private santilizer: DomSanitizer,
     store: Store<AppState>,
     authService: AitAuthService,
@@ -122,7 +122,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     layoutScrollService: NbLayoutScrollService,
     toastrService: NbToastrService,
   ) {
-    super(store, authService, apollo, null, env, layoutScrollService, toastrService);
+    super(store, authService, apollo, null, env, layoutScrollService, toastrService,null, router);
     store.pipe(select(getUserSetting)).subscribe((setting) => {
       if (isObjectFull(setting) && setting['date_format_display']) {
         this.dateFormat = setting['date_format_display'];
@@ -137,6 +137,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     this.setModulePage({
       module: 'user',
       page: 'user_profiles',
+      type: PAGE_TYPE.NEW,
     });
     this.profileId = this.activeRouter.snapshot.paramMap.get('id');
     if (this.profileId && this.profileId != this.user_id) {

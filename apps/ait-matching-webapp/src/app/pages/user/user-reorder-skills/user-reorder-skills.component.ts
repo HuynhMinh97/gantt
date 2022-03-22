@@ -38,7 +38,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
     private dialogService: NbDialogService,
     public activeRouter: ActivatedRoute,
     private element: ElementRef,
-    private router: Router,
+    router: Router,
     apollo: Apollo,
     store: Store<AppState>,
     env: AitEnvironmentService,
@@ -46,7 +46,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
     toastrService: NbToastrService,
     layoutScrollService: NbLayoutScrollService,
   ) {
-    super(store, authService, apollo, null, env, layoutScrollService, toastrService);
+    super(store, authService, apollo, null, env, layoutScrollService, toastrService,null,router);
     this.setModulePage({
       module: 'user',
       page: 'user_skills',

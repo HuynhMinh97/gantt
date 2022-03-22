@@ -174,7 +174,7 @@ export class UserOnboardingComponent
   jobSettingData: any;
   isLoad = false;
   constructor(
-    private router: Router,
+    router: Router,
     private element: ElementRef,
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
@@ -200,7 +200,9 @@ export class UserOnboardingComponent
       null,
       env,
       layoutScrollService,
-      toastrService
+      toastrService,
+      null,
+      router
     );
 
     store.pipe(select(getUserSetting)).subscribe((setting) => {
