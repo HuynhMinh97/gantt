@@ -4,6 +4,7 @@ import {
   COLLECTIONS,
   DB_CONNECTION_TOKEN,
   hasLength,
+  isArrayFull,
   isNil,
   isNumber,
   isObjectFull,
@@ -41,10 +42,11 @@ export class AitBaseService {
   filterAfter = [];
 
   async getPermission(request: any, user?: SysUser): Promise<PermissionOutput> {
+    const defaultRoles = this.env?.APP?.DEFAULT_PERMISSIONS || [];
     const { page_key, user_key, module_key } = request;
     const page_id = 'sys_page/' + page_key;
     const user_id = 'sys_user/' + user_key;
-
+    
     const aqlStr = `
     LET role_list = (
       FOR v, e, p IN 1..1 INBOUND "${page_id}" sys_role_page
@@ -84,8 +86,7 @@ export class AitBaseService {
     dto.user_id = user_key;
     dto.page = page_key;
     dto.module = module_key;
-    dto.permission = permissions;
-    
+    dto.permission = isArrayFull(permissions) ? permissions: defaultRoles;
     return dto;
   }
 
@@ -459,11 +460,6 @@ export class AitBaseService {
     //ref
     mapData.forEach((data) => {
       if (!attributes.includes(data.join_field)) {
-        console.log(data);
-        if (data.attribute === 'code') {
-          // console.log(data);
-          // console.log(data.ref_collection);
-        }
         const ref_condition = data.ref_condition;
 
         aqlStr += ` \r\n ${data.attribute} : ( `;

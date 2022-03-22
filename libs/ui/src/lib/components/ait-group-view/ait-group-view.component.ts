@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
-import { RESULT_STATUS, isArrayFull } from '@ait/shared';
+import { RESULT_STATUS, isArrayFull, PAGE_TYPE } from '@ait/shared';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -62,6 +62,14 @@ export class AitGroupViewComponent extends AitBaseComponent implements OnInit {
       toastrService,
       saveTempService
     );
+
+    setTimeout(() => {
+      this.setModulePage({
+        page: this.page,
+        module: this.module,
+        type: this._key ? PAGE_TYPE.EDIT : PAGE_TYPE.VIEW
+      });
+    }, 0);
   }
 
   ngOnInit(): void {

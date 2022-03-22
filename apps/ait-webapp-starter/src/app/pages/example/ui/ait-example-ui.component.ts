@@ -1,4 +1,4 @@
-import { PERMISSIONS } from '@ait/shared';
+import { PAGE_TYPE } from '@ait/shared';
 import {
   AitAuthService,
   AitBaseComponent,
@@ -6,7 +6,6 @@ import {
   AitEnvironmentService,
   AitTranslationService,
   AitUserService,
-  AitUserSettingService,
   AppState,
   TabView,
 } from '@ait/ui';
@@ -22,28 +21,33 @@ import { Apollo } from 'apollo-angular';
   styleUrls: ['./ait-example-ui.component.scss'],
 })
 export class AitUiComponent extends AitBaseComponent {
-
   constructor(
     private translateService: AitTranslationService,
     store: Store<AppState>,
     auhtService: AitAuthService,
     userService: AitUserService,
     envService: AitEnvironmentService,
-    private router: Router,
-    private testService: AitUserSettingService,
+    router: Router,
     private dialogService: NbDialogService,
-    apollo: Apollo,
+    apollo: Apollo
   ) {
-    super(store, auhtService, apollo, userService, envService);
+    super(
+      store,
+      auhtService,
+      apollo,
+      userService,
+      envService,
+      null,
+      null,
+      null,
+      router
+    );
     this.setModulePage({
       page: 'example',
       module: 'example',
+      type: PAGE_TYPE.VIEW,
     });
     this.testTranslate = translateService.translate(this.testTranslate);
-    const isHavingPermission = this.checkPermission(PERMISSIONS.READ);
-    if (!isHavingPermission) {
-      this.router.navigate([`/403`]);
-    }
   }
 
   date = Date.now();
@@ -151,102 +155,103 @@ export class AitUiComponent extends AitBaseComponent {
   ];
 
   confirmDialog = (title: string) => {
-    this.dialogService.open(AitConfirmDialogComponent, {
-      closeOnBackdropClick: true,
-      hasBackdrop: true,
-      autoFocus: false,
-    }).onClose.subscribe(r => {
-      console.log(r)
-    })
-  }
+    this.dialogService
+      .open(AitConfirmDialogComponent, {
+        closeOnBackdropClick: true,
+        hasBackdrop: true,
+        autoFocus: false,
+      })
+      .onClose.subscribe((r) => {
+        console.log(r);
+      });
+  };
 
   ///methods
 
   getValueTextInput = (value) => {
-    console.log(value)
-    this.result.text_input = value
-  }
+    console.log(value);
+    this.result.text_input = value;
+  };
 
   getValueNumberInput = (value) => {
     console.log(value);
-    this.result.number_input = value
-  }
+    this.result.number_input = value;
+  };
 
   getValueDatePicker = (value) => {
-    console.log(value)
-    this.result.date_picker = value
-  }
+    console.log(value);
+    this.result.date_picker = value;
+  };
 
   resetAll = () => {
-
     this.result.resetAll = true;
     setTimeout(() => {
       this.result.resetAll = false;
-    }, 50)
-  }
-
+    }, 50);
+  };
 
   getValueMasterData = (value) => {
-    console.log(value)
-    this.result.master_data = value
-  }
+    console.log(value);
+    this.result.master_data = value;
+  };
 
   subMitTextInput = () => {
     this.result.submit_text_input = true;
-  }
+  };
 
   subMitTextNumber = () => {
     this.result.submit_text_number = true;
-  }
+  };
 
   subMitDatepicker = () => {
     this.result.submit_datepicker = true;
-  }
+  };
 
   subMitMaster = () => {
     this.result.submit_master = true;
-  }
-
+  };
 
   subMitMasterData1 = () => {
     this.result.master1 = true;
-  }
+  };
   subMitMasterData2 = () => {
     this.result.master2 = true;
-  }
+  };
 
   subMitFile = () => {
     this.result.file = true;
     setTimeout(() => {
       this.result.file = false;
-
-    }, 100)
-  }
-
+    }, 100);
+  };
 
   ngOnInit() {
     // console.log(this.page, this.module, this.user_id, this.company);
     const condition = {
-      user_id: '462dde78-bdfa-4e25-82d5-763e9bfd5016'
-    }
+      user_id: '462dde78-bdfa-4e25-82d5-763e9bfd5016',
+    };
 
-    const sData = [{
-      company: 'd3415d06-601b-42c4-9ede-f5d9ff2bcac3',
-      change_at: 1609459200000,
-      change_by: 'admin',
-      create_at: 1609459200000,
-      create_by: 'admin',
-      date_format_display: 'TEST_DATE_FORMAT_DISPLAY_01',
-      date_format_input: 'TEST_DATE_FORMAT_INPUT_01',
-      number_format: 'TEST_NUMBER_FORMAT_01',
-      site_language: 'ja_JP',
-      timezone: '9',
-      user_id: 'b9a08907-2da5-391c-c0c8-4f92937a05c9'
-    }];
+    const sData = [
+      {
+        company: 'd3415d06-601b-42c4-9ede-f5d9ff2bcac3',
+        change_at: 1609459200000,
+        change_by: 'admin',
+        create_at: 1609459200000,
+        create_by: 'admin',
+        date_format_display: 'TEST_DATE_FORMAT_DISPLAY_01',
+        date_format_input: 'TEST_DATE_FORMAT_INPUT_01',
+        number_format: 'TEST_NUMBER_FORMAT_01',
+        site_language: 'ja_JP',
+        timezone: '9',
+        user_id: 'b9a08907-2da5-391c-c0c8-4f92937a05c9',
+      },
+    ];
 
-    const dData = [{
-      _key: '7f8c8cac-0f92-483a-039a-905e024bacba'
-    }]
+    const dData = [
+      {
+        _key: '7f8c8cac-0f92-483a-039a-905e024bacba',
+      },
+    ];
 
     // this.testService.find(condition).then(data => console.log(data));
     // this.testService.save(sData).then(data => console.log(data));
@@ -257,11 +262,11 @@ export class AitUiComponent extends AitBaseComponent {
     console.log('hello from home component');
   };
 
-  getErrors = (value) => this.errors = [...this.errors, value];
+  getErrors = (value) => (this.errors = [...this.errors, value]);
   removeSearch = (value) => {
-    console.log(value)
-    this.errors = this.errors.filter(f => f !== value);
-  }
+    console.log(value);
+    this.errors = this.errors.filter((f) => f !== value);
+  };
 
   getValueInput(status: string, value: string) {
     console.log(status, value);
@@ -308,5 +313,7 @@ export class AitUiComponent extends AitBaseComponent {
   };
 
   // data(e) {console.log()}
-  dd(e) {console.log(e)}
+  dd(e) {
+    console.log(e);
+  }
 }

@@ -13,6 +13,7 @@ import _ from 'lodash';
 import {
   isArrayFull,
   KEYS,
+  PAGE_TYPE,
   PERMISSIONS,
   RESULT_STATUS,
   SysSaveTemp,
@@ -52,10 +53,12 @@ import localeJpp from '@angular/common/locales/ja';
 import { AitSaveTempService } from '../services/common/ait-save-temp.service';
 import { MODE } from '../@constant';
 import jwt_decode from 'jwt-decode';
+import { Router } from '@angular/router';
 
 export interface BaseInitData {
   module: string;
   page: string;
+  type?: string;
 }
 
 @Component({
@@ -67,6 +70,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
   public lang = 'ja_JP';
   public page: string;
   public sup = new Subscription();
+  public type = '';
   public title = 'PM';
   public company = '';
   public user_id = '';
@@ -77,9 +81,9 @@ export class AitBaseComponent implements OnInit, OnDestroy {
   public pageInfo = null;
   public allMessages;
   public isLoading = false;
+  public isAllowDelete = false;
   public env: any;
   public dataUserSetting = [];
-  private isRefreshToken = false;
   public currentPermission = [];
 
   constructor(
@@ -90,7 +94,8 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     _env: AitEnvironmentService,
     public layoutScrollService?: NbLayoutScrollService,
     public toastrService?: NbToastrService,
-    public saveTempService?: AitSaveTempService
+    public saveTempService?: AitSaveTempService,
+    public router?: Router
   ) {
     this.user_id = AitAppUtils.getUserId();
     const userId = this.authService.getUserID();
@@ -691,13 +696,14 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
   // set module and page for each screen and get caption base on theme
   setModulePage = (data: BaseInitData) => {
-    console.log(data);
-    
-    const { module, page } = data;
-    this.getPermission(page, module).then();
-    this.store.dispatch(new SetModulePage({ page, module }));
+    const { module, page, type } = data;
+    this.getPermission(page, module).then((r) => {
+      this.checkPermission();
+    });
+    this.store.dispatch(new SetModulePage({ page, module, type }));
     this.module = module;
     this.page = page;
+    this.type = type;
     this.getCaption(data.page, data.module).then((r: any) => {
       const result = r?.data?.findSystem;
       if (result) {
@@ -706,13 +712,14 @@ export class AitBaseComponent implements OnInit, OnDestroy {
             new GetCaptionByPages({
               page: data.page,
               module: data.module,
+              type: data.type,
               data: result.data,
             })
           );
         }
       }
     });
-
+    
     // Coding here for calling api to request caption or master data for module and page 🚀🚀🚀
   };
 
@@ -884,24 +891,51 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     }
   }
 
-  public async checkPermission(permission: PERMISSIONS) {
-    console.log(this.page, this.module);
-    
+  // public async checkPermission(permission: PERMISSIONS) {
+  //   if (isArrayFull(this.currentPermission)) {
+  //     return this.currentPermission.includes(permission);
+  //   } else {
+  //     await this.getPermission(this.page, this.module).then();
+  //     return this.currentPermission.includes(permission);
+  //   }
+  // }
+
+  async checkPermission() {
+    const isHavingAllPermission = this.currentPermission.includes(PERMISSIONS.FULL_CONTROLL);
+    if (isHavingAllPermission) return;
     if (isArrayFull(this.currentPermission)) {
-      return this.currentPermission.includes(permission);
+      switch (this.type) {
+        case PAGE_TYPE.NEW: {
+          const isHavingPermission = this.currentPermission.includes(PERMISSIONS.WRITE);
+          if (!isHavingPermission) this.navigateTo403();
+          break;
+        }
+        case PAGE_TYPE.EDIT: {
+          const isHavingPermission = this.currentPermission.includes(PERMISSIONS.EDIT);
+          if (!isHavingPermission) this.navigateTo403();
+          this.isAllowDelete = this.currentPermission.includes(PERMISSIONS.DELETE);
+          break;
+        }
+          default: {
+            const isHavingPermission = this.currentPermission.includes(PERMISSIONS.READ);
+            if (!isHavingPermission) this.navigateTo403();
+            break;
+          }
+      }
     } else {
-      await this.getPermission(this.page, this.module).then();
-      console.log(this.currentPermission.includes(permission));
-      return this.currentPermission.includes(permission);
+      this.navigateTo403();
     }
+  }
+
+  navigateTo403() {
+    this.router.navigate([`/403`]);
   }
 
   public async getPermission(page: string, module: string) {
     try {
       const pageKey = await this.getKey(page, 'page');
       const moduleKey = await this.getKey(module, 'module');
-      console.log(pageKey, moduleKey);
-      
+
       if (!pageKey || !moduleKey) return;
       
       const result: any = await this.apollo
@@ -921,13 +955,10 @@ export class AitBaseComponent implements OnInit, OnDestroy {
         })
         .toPromise();
 
-      const p = result.data?.findPermission;
-      console.log(p);
-      
-      this.currentPermission = p?.permission;
-      return p;
+      const data = result.data?.findPermission;
+      this.currentPermission = data?.permission;
+      return data;
     } catch (e) {
-      console.log(e);
       return null;
     }
   }
