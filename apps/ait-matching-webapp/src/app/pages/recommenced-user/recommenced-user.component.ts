@@ -15,6 +15,7 @@ import {
   AitMasterDataService,
   AitTranslationService,
   AppState,
+  TabView,
 } from '@ait/ui';
 import { RecommencedUserService } from '../../services/recommenced-user.service';
 import { ReactionService } from '../../services/reaction.service';
@@ -32,9 +33,10 @@ export enum StorageKey {
   styleUrls: ['./recommenced-user.component.scss'],
   templateUrl: './recommenced-user.component.html',
 })
-export class RecommencedComponent extends AitBaseComponent implements OnInit {
+export class RecommencedUserComponent extends AitBaseComponent implements OnInit {
   i18nRecomenced = 'common.aureole-v.recommenced-user';
   isNavigate = false;
+  isSearchButton = false;
   currentKeyword = {};
   currentCondition = {};
   master_data_fields = [
@@ -44,6 +46,8 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
     'residence_status',
     'work',
   ];
+  messageSearch = '';
+
   Skills = [
     { _key: 'phython', value: 'python' },
     { _key: 'angular', value: 'angular' },
@@ -128,6 +132,22 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
   textDataNullSave = '';
   dataSuggestAll = [];
   isExpan = false;
+  isResetSalaryFrom = false;
+  isResetSalaryTo = false;
+  disableTab = false;
+  tabs: TabView[] = [
+    {
+      title: 't_019',
+      tabIcon: 'star',
+      type: 'R',
+    },
+    {
+      title: 't_020',
+      tabIcon: 'bookmark',
+      type: 'S',
+    },
+  ];
+  
   currentTab = 'R';
   employeeData = [];
   dataFilter = [];
@@ -835,4 +855,35 @@ export class RecommencedComponent extends AitBaseComponent implements OnInit {
     }
 
   }
+
+  handleClickButton = () => {
+    const target = this.currentSearch;
+    // this.removeSearch(true);
+    this.addCompany(target);
+  };
+
+  getTitleSearchBtn = () => this.translateService.translate('002');
+  getTitle = (name: string) => this.translateService.translate(name);
+
+  filterByCondition = (val: any, type: string) => {
+    const value = val?.value || [];
+    const target = this.getValueFromMaster(value);
+    this.filterCommon = { ...this.filterCommon, [type]: target };
+    this.filterMain();
+  };
+
+  getValueFromMaster(value: any[]) {
+    if (value.length === 0) {
+      return [];
+    } else {
+      const result = [];
+      (value || []).forEach((e) => {
+        if (e?._key) {
+          result.push(e?._key);
+        }
+      });
+      return result;
+    }
+  }
+
 }
