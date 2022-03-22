@@ -170,7 +170,16 @@ export enum PERMISSIONS {
   FULL_CONTROLL = 'FULL_CONTROLL',
   READ = 'READ',
   WRITE = 'WRITE',
-  MODIFY = 'MODIFY'
+  EDIT = 'EDIT',
+  DELETE = 'DELETE'
+}
+
+export enum PAGE_TYPE {
+  SEARCH = 'SEARCH',
+  NEW = 'NEW',
+  EDIT = 'EDIT',
+  VIEW = 'VIEW',
+  MATCHING = 'MATCHING'
 }
 
 export enum GRAPHQL {
