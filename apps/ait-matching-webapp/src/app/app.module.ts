@@ -69,6 +69,8 @@ import { LanguageListComponent } from './pages/list/language-list/language-list.
 import { EducationListComponent } from './pages/list/education-list/education-list.component';
 import { CertificateListComponent } from './pages/list/certificate-list/certificate-list.component';
 import { SkillListViewComponent } from './pages/list/skill-list/skill-list-view/skill-list-view.component';
+import { MyProjectQueriesComponent } from './pages/my-project-queries/my-project-queries.component';
+import { AddRoleComponent } from './pages/group-role/add-role/add-role.component';
 
 const AIT_UI_MODULES = [AitChipModule, AitTabsModule, AitTocMenuModule];
 
@@ -127,6 +129,8 @@ const PAGES = [
     ...AUREOLE_V_COMPONENTS,
     ...PAGES,
     DragScrollComponent,
+    MyProjectQueriesComponent,
+    AddRoleComponent,
 
   ],
   imports: [

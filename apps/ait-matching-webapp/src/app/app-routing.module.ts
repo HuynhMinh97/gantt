@@ -26,6 +26,8 @@ import { UserCertificateDetailComponent } from './pages/user/user-certificate-de
 import { UserProjectDetailComponent } from './pages/user/user-project-detail/user-project-detail.component';
 import { UserCourseDetailComponent } from './pages/user/user-course-detail/user-course-detail.component';
 import { LanguageListComponent } from './pages/list/language-list/language-list.component';
+import { MyProjectQueriesComponent } from './pages/my-project-queries/my-project-queries.component';
+import { AddRoleComponent } from './pages/group-role/add-role/add-role.component';
 
 
 // Push your routes here one by one 🎉
@@ -205,6 +207,18 @@ export const routes: Routes = [
     canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
     component: EducationListComponent
   },
+  {
+    path: 'my-project-queries',
+    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    component: MyProjectQueriesComponent
+  },
+  {
+    path: 'add-role',
+    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    component: AddRoleComponent
+  },
+  
+  
   {
     path: '',
     pathMatch: 'full',

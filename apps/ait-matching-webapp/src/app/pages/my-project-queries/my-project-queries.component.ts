@@ -17,16 +17,16 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
-import { ProjectListService } from '../../../services/project-list.service';
+import { ProjectListService } from '../../services/project-list.service';
 import dayjs from 'dayjs';
 import { LocalDataSource } from 'ng2-smart-table';
 
 @Component({
   selector: 'ait-project-list',
-  templateUrl: './project-list.component.html',
-  styleUrls: ['./project-list.component.scss'],
+  templateUrl: './my-project-queries.component.html',
+  styleUrls: ['./my-project-queries.component.scss'],
 })
-export class ProjectListComponent extends AitBaseComponent implements OnInit {
+export class MyProjectQueriesComponent extends AitBaseComponent implements OnInit {
   @ViewChild('area') area: ElementRef;
 
   source: LocalDataSource;
@@ -43,7 +43,6 @@ export class ProjectListComponent extends AitBaseComponent implements OnInit {
     'change_at_to',
   ];
   userAttribute = ['create_by', 'change_by'];
-  comboboxSearch = ['company_working', 'title'];
 
   constructor(
     private projectListService: ProjectListService,
@@ -69,15 +68,7 @@ export class ProjectListComponent extends AitBaseComponent implements OnInit {
     this.searchProject = this.formBuilder.group({
       username: new FormControl(null),
       name: new FormControl(null),
-      company_working: new FormControl(null),
-      title: new FormControl(null),
-      skills: new FormControl(null),
-      // 業務内容
-      description: new FormControl(null),
-      achievement: new FormControl(null),
-      responsibility: new FormControl(null),
-      start_date_from: new FormControl(null),
-      start_date_to: new FormControl(null),
+      category: new FormControl(null),
       // 登録者
       create_by: new FormControl(null),
       // 最終更新者
@@ -97,8 +88,8 @@ export class ProjectListComponent extends AitBaseComponent implements OnInit {
     });
 
     this.setModulePage({
-      module: 'project_list',
-      page: 'project_list',
+      module: '',
+      page: '',
     });
   }
   ngOnInit(): void {
@@ -151,15 +142,6 @@ export class ProjectListComponent extends AitBaseComponent implements OnInit {
               }
               object[key]['value'] = value;
             } catch (e) {}
-          } else if (this.comboboxSearch.includes(key)) {
-            try {
-              if (!object[key]) {
-                object[key] = { operator: OPERATOR.LIKE };
-              }
-              object[key]['value'] = value._key;
-              const isStr = isString(value);
-              object[key]['operator'] = isStr ? OPERATOR.LIKE : OPERATOR.IN;
-            } catch (e) {}
           } else {
             const isStr = isString(value);
             object[key] = {
@@ -176,35 +158,17 @@ export class ProjectListComponent extends AitBaseComponent implements OnInit {
 
       if (isObjectFull(object)) {
         const data = await this.getData(object);
-        if (this.searchProject.controls['skills'].value) {
-          const listSkillSearch = []
-          const skillSearch = this.searchProject.controls['skills'].value;
-          skillSearch.forEach(item => {
-            listSkillSearch.push(item._key)
-          })
-          const dataAfterSearch = data;
-          data.forEach((item,index ) => {
-            listSkillSearch.forEach((skill) => {
-              if (!item.skill.includes(skill)) {
-                delete dataAfterSearch[index];
-              }
-            });
-          });
-          this.focusToTable();
-          return { data: dataAfterSearch };
-        } else {
-          this.focusToTable();
-          return { data: data };
-        }
+        this.focusToTable();
+        return { data: data };
       } else {
         const data = await this.getData();
         this.focusToTable();
         return { data: data };
       }
     } else {
-      const datas = await this.getData();
+      const data = await this.getData();
       this.focusToTable();
-      return { data: datas };
+      return { data: data };
     }
   };
 
@@ -237,23 +201,14 @@ export class ProjectListComponent extends AitBaseComponent implements OnInit {
         if (data.length > 0) {
           data.forEach((element) => {
             const dataFormat = {};
-            dataFormat['employeeName'] =
-              element.first_name + ' ' + element.last_name;
-            dataFormat['projectName'] = element?.name;
+            dataFormat['name'] = element?.name;
             dataFormat['_key'] = element?._key;
-            dataFormat['skill'] = element?.skills;
-            dataFormat['description'] = element?.description;
-            dataFormat['responsibility'] = element?.responsibility;
-            dataFormat['achievement'] = element?.achievement;
-            dataFormat['company'] = element?.company_working.value;
-            dataFormat['title'] = element?.title.value;
+            dataFormat['code'] = element?.code;
+            dataFormat['category'] = element?.category?.value;
             dataFormat['create_by'] = element?.create_by;
             dataFormat['change_by'] = element?.change_by;
             dataFormat['create_at'] = this.getDateFormat(element?.create_at);
             dataFormat['change_at'] = this.getDateFormat(element?.change_at);
-            dataFormat['start_date'] = this.getDateFormat(
-              element?.start_date_from
-            );
             dataSearch.push(dataFormat);
           });
         }
@@ -262,4 +217,6 @@ export class ProjectListComponent extends AitBaseComponent implements OnInit {
     this.source = new LocalDataSource(dataSearch);
     return dataSearch;
   }
+
+ 
 }
