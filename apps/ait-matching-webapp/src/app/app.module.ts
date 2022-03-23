@@ -71,6 +71,8 @@ import { CertificateListComponent } from './pages/list/certificate-list/certific
 import { SkillListViewComponent } from './pages/list/skill-list/skill-list-view/skill-list-view.component';
 import { MyProjectQueriesComponent } from './pages/my-project-queries/my-project-queries.component';
 import { AddRoleComponent } from './pages/group-role/add-role/add-role.component';
+import { GroupRoleRegisterComponent } from './pages/group-role/group-role-register/group-role-register.component';
+import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 const AIT_UI_MODULES = [AitChipModule, AitTabsModule, AitTocMenuModule];
 
@@ -131,9 +133,11 @@ const PAGES = [
     DragScrollComponent,
     MyProjectQueriesComponent,
     AddRoleComponent,
+    GroupRoleRegisterComponent,
 
   ],
   imports: [
+    Ng2SmartTableModule,
     NbTooltipModule,
     NbButtonModule,
     NbEvaIconsModule,

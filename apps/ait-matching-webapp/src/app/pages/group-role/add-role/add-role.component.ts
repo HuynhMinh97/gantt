@@ -19,6 +19,7 @@ export class AddRoleComponent extends AitBaseComponent implements OnInit {
 
   roleForm: FormGroup;
 
+  groupRole = null;
   mode = MODE.NEW;
   isExist = false;
   isReset = false;
@@ -77,6 +78,8 @@ export class AddRoleComponent extends AitBaseComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    this.groupRole = this.groupRoleRegisterService.groupRole
+    this.name =  this.groupRole.name;
     await this.getEmployee();
   }
 
@@ -114,7 +117,6 @@ export class AddRoleComponent extends AitBaseComponent implements OnInit {
     else {
       this.getFormValidationErrors();
     }
-    console.log( this.roleForm.value)
   }
 
   takeInputValue(value: string, form: string): void {

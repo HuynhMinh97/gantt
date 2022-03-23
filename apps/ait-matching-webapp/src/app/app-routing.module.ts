@@ -1,3 +1,4 @@
+import { GroupRoleRegisterComponent } from './pages/group-role/group-role-register/group-role-register.component';
 import { UserOnboardingComponent } from './pages/user/user-onboarding/user-onboarding.component';
 import { UserLanguageComponent } from './pages/user/user-language/user-language.component';
 import { UserEducationComponent } from './pages/user/user-education/user-education.component';
@@ -216,6 +217,11 @@ export const routes: Routes = [
     path: 'add-role',
     canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
     component: AddRoleComponent
+  },
+  {
+    path: 'group-role-register',
+    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    component: GroupRoleRegisterComponent
   },
   
   

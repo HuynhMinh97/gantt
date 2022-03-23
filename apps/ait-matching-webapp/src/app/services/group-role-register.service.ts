@@ -6,5 +6,6 @@ import { Injectable } from '@angular/core';
 })
 export class GroupRoleRegisterService extends AitBaseService {
   public roleDataSave = null;
+  public groupRole = null;
   
 }

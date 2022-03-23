@@ -587,6 +587,7 @@ export class UserOnboardingComponent
     delete saveData.current_job_skills;
     if (this.mode === MODE.NEW) {
       saveData['user_id'] = this.user_id;
+      saveData['top_skills'] = [];
     } else {
       saveData['user_id'] = this.authService.getUserID();
     }
