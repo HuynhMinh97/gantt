@@ -1,11 +1,10 @@
 import { GroupRoleRegisterService } from './../../../services/group-role-register.service';
 import { AddRoleService } from './../../../services/add-role.service';
 import { Store } from '@ngrx/store';
-import { AitEnvironmentService } from './../../../../../../../libs/ui/src/lib/services/ait-environment.service';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { AitAuthService, AitBaseComponent, AppState, MODE } from '@ait/ui';
+import { AitAuthService, AitBaseComponent, AppState, MODE, AitEnvironmentService } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
 import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { isObjectFull, KeyValueDto, PERMISSIONS, RESULT_STATUS } from '@ait/shared';
@@ -50,6 +49,7 @@ export class AddRoleComponent extends AitBaseComponent implements OnInit {
     private formBuilder: FormBuilder,
     private addRoleService: AddRoleService,
     private groupRoleRegisterService : GroupRoleRegisterService,
+    
     env: AitEnvironmentService,
     store: Store<AppState>,
     apollo: Apollo,

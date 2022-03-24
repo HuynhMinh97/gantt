@@ -1,4 +1,5 @@
 import { Router } from '@angular/router';
+
 import { GroupRoleRegisterService } from './../../../services/group-role-register.service';
 import {
   AitAuthService,
@@ -26,6 +27,7 @@ import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
+import { isArrayFull, isObjectFull } from '@ait/shared';
 
 @Component({
   selector: 'ait-group-role-register',
@@ -56,16 +58,16 @@ export class GroupRoleRegisterComponent
   isToggleTable = false;
   isChangedTable = false;
   dataSettingTable: any[] = [];
-  columns = []
+  columns = [];
   columnExport = [
     'name',
     'module',
     'page',
     'employee',
     'permission',
-    'create_by', 
-    'create_at', 
-    'change_by', 
+    'create_by',
+    'create_at',
+    'change_by',
     'change_at',
   ];
 
@@ -109,7 +111,7 @@ export class GroupRoleRegisterComponent
         title: 'Page',
         filter: true,
       },
-       employee: {
+      employee: {
         title: 'Employee',
         filter: true,
       },
@@ -141,7 +143,6 @@ export class GroupRoleRegisterComponent
     private groupRoleRegisterService: GroupRoleRegisterService,
     public router: Router,
 
-
     env: AitEnvironmentService,
     store: Store<AppState>,
     apollo: Apollo,
@@ -165,20 +166,22 @@ export class GroupRoleRegisterComponent
     });
   }
   async ngOnInit(): Promise<void> {
-    setTimeout(() =>{
+    setTimeout(() => {
       this.done = true;
       this.settingTable = this.settings;
       for (const item in this.settingTable.columns) {
         if (item != '_key') {
-          this.columns.push({ _key: item, value: this.settingTable.columns[item]['title'] })
+          this.columns.push({
+            _key: item,
+            value: this.settingTable.columns[item]['title'],
+          });
         }
       }
       this.dataSettingTable = JSON.parse(JSON.stringify(this.columns));
       console.log(this.settingTable);
       this.cancelLoadingApp();
       this.settingDataTable();
-    }, 700)
-
+    }, 700);
   }
 
   toggleTableExpan = () => {
@@ -208,10 +211,9 @@ export class GroupRoleRegisterComponent
   edit(data?: any) {
     console.log('1');
   }
-  async deleteInTable(data?: any, load?: boolean) { 
+  async deleteInTable(data?: any, load?: boolean) {
     console.log('1');
   }
-
 
   getColumns(data) {
     const columns = [];
@@ -222,57 +224,54 @@ export class GroupRoleRegisterComponent
       columns: {
         _key: {
           title: '',
-        filter: false,
-        type: 'custom',
-        renderComponent: AitTableButtonComponent,
-        onComponentInitFunction: (instance: any) => {
-          instance?.detailEvent.subscribe((data: string) =>
-            this.detail(data)
-          );
-          instance?.copyEvent.subscribe((data: string) =>
-            this.coppy(data)
-          );
-          instance?.editEvent.subscribe((data: string) =>
-            this.edit(data)
-          );
-          instance?.deleteEvent.subscribe((data: string) =>
-            this.deleteInTable(data, true)
-          );
+          filter: false,
+          type: 'custom',
+          renderComponent: AitTableButtonComponent,
+          onComponentInitFunction: (instance: any) => {
+            instance?.detailEvent.subscribe((data: string) =>
+              this.detail(data)
+            );
+            instance?.copyEvent.subscribe((data: string) => this.coppy(data));
+            instance?.editEvent.subscribe((data: string) => this.edit(data));
+            instance?.deleteEvent.subscribe((data: string) =>
+              this.deleteInTable(data, true)
+            );
+          },
         },
-        },
-      }
+      },
     };
 
     for (const column of data) {
-      if(column._key == 'dimension'){
-        const  dimension = {
+      if (column._key == 'dimension') {
+        const dimension = {
           title: 'Dimension',
           filter: true,
           type: 'custom',
           renderComponent: AitTableCellComponent,
           valuePrepareFunction: (value: string) => {
-  
             const obj = {
               text: value,
               type: 'array',
               style: {
-                width: 200
-              }
-            }
+                width: 200,
+              },
+            };
             return obj;
           },
-        }
+        };
         this.settingTable.columns[column._key] = dimension;
         columns.push(column._key);
-      }else{
-        this.settingTable.columns[column._key] = { title: column.value , filter: true};
+      } else {
+        this.settingTable.columns[column._key] = {
+          title: column.value,
+          filter: true,
+        };
         columns.push(column._key);
       }
-      
     }
     this.columnExport = columns;
     this.done = true;
-    if (data.length == 0) {    
+    if (data.length == 0) {
       this.done = false;
     }
   }
@@ -284,27 +283,39 @@ export class GroupRoleRegisterComponent
     }, 100);
     if (this.roleRegis.valid) {
       this.groupRoleRegisterService.groupRole = this.roleRegis.value;
+      this.groupRoleRegisterService.groupRoleList = this.source;
       this.router.navigate([`add-role`]);
     } else {
     }
   }
 
-  settingDataTable(){
+  settingDataTable() {
     const data = this.groupRoleRegisterService.roleDataSave;
-   
+    const source =  this.groupRoleRegisterService.groupRoleList
+    
     this.roleRegisterDataTable = [];
-      const roleTable = {};
-      roleTable['name'] = data?.name;
-      roleTable['module'] = data?.module?.value;
-      roleTable['_key'] = data?.names;
-      roleTable['page'] = data?.page?.value;
-      roleTable['employee'] = data?.employee?.value;
-      roleTable['permission'] = data?.permission?.value;
-      this.roleRegisterDataTable.push(roleTable);
-  
+    if (isObjectFull(source))
+    {
+      if (isObjectFull(data)) {
+        const roleTable = {};
+        roleTable['name'] = data?.name;
+        roleTable['module'] = data?.module?.value;
+        roleTable['_key'] = data?.names;
+        roleTable['page'] = data?.page?.value;
+        roleTable['employee'] = data?.employee?.value;
+        roleTable['permission'] = data?.permission?.value;
+        source.data.push(roleTable);
+      }
+      this.roleRegisterDataTable = source.data
+    }
+    
+    if ( !isObjectFull(this.roleRegisterDataTable[0]))
+    {
+      this.roleRegisterDataTable.shift();
+    }
     this.cancelLoadingApp();
     this.source = new LocalDataSource(this.roleRegisterDataTable);
-    console.log(this.source)
+  
   }
 
   // async deleteAllInTable(data) {
@@ -320,7 +331,7 @@ export class GroupRoleRegisterComponent
   //         })
   //       }
   //       if(search >=0){
-  //         this.actorRegisterService.actorData['attribute'].splice(search, 1); 
+  //         this.actorRegisterService.actorData['attribute'].splice(search, 1);
   //       }
   //     }
   //     this.isChangedTable = ! await this.checkAllowAttributeList();
