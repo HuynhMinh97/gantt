@@ -1,0 +1,267 @@
+<ait-template-page
+  [pageTitle]="'group data list'"
+  [searchTitle]="'search'"
+  [tableTitle]="'result'"
+  [isTableExpan]="isTableExpan"
+  [isExpan]="isExpan"
+>
+  <div topArea style="width: 100%">
+    <div style="width: 100%; display: flex; justify-content: flex-end">
+      <ait-button
+        [id]="'new'"
+        [width]="'150px'"
+        [height]="'32px'"
+        [title]="'new'"
+        [isDefault]="true"
+        (click)="new()"
+      >
+      </ait-button>
+    </div>
+  </div>
+  <div leftArea1>
+    <ng-container>
+        <ait-input-text
+          [id]="'name'"
+          [height]="'40px'"
+          [width]="'400px'"
+          [rows]="1"
+          [label]="'name'"
+          [required]="false"
+          [placeholder]="'please input keyword'"
+          (watchValue)="takeInputValue($event, 'name')"
+          [isReset]="isReset"
+          [isSubmit]="isSubmit"
+          [length]="4000"
+        ></ait-input-text>
+      </ng-container>
+      <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
+      <ait-input-text
+        [id]="'epmloyee_name'"
+        [height]="'40px'"
+        [width]="'400px'"
+        [rows]="1"
+        [label]="'epmloyee_name'"
+        [required]="false"
+        [placeholder]="'please input keyword'"
+        (watchValue)="takeInputValue($event, 'epmloyee_name')"
+        [isReset]="isReset"
+        [isSubmit]="isSubmit"
+        [length]="4000"
+      ></ait-input-text>
+    </ng-container>
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
+      <ait-input-text
+        [id]="'create_by'"
+        [height]="'40px'"
+        [width]="'400px'"
+        [rows]="1"
+        [label]="'create by'"
+        [required]="false"
+        [placeholder]="'admin'"
+        [length]="4000"
+        (watchValue)="takeInputValue($event, 'create_by')"
+        [isReset]="isReset"
+        [isSubmit]="isSubmit"
+      ></ait-input-text>
+    </ng-container>
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
+      <div style="display: flex">
+        <!-- create_at_from -->
+        <ait-datepicker
+          [placeholder]="'yyyyy/MM/dd'"
+          [id]="'_from'"
+          [label]="'create at'"
+          [style]="{ width: '170px' }"
+          [isReset]="isReset"
+          (watchValue)="
+            takeDatePickerValue(
+              $event.value,
+              'searchDBConnection',
+              'create_at_from'
+            )
+          "
+        ></ait-datepicker>
+
+        <span class="center_span">~</span>
+        <!-- create_at_to -->
+        <ait-datepicker
+          [placeholder]="'yyyyy/MM/dd'"
+          [id]="'_from'"
+          [label]="''"
+          [style]="{ width: '170px' }"
+          [isReset]="isReset"
+          (watchValue)="
+            takeDatePickerValue(
+              $event.value,
+              'searchDBConnection',
+              'create_at_to'
+            )
+          "
+        ></ait-datepicker>
+      </div>
+      <div [style.width]="'420px'">
+        <ait-error-message
+          *ngIf="isCreateAtError"
+          [errors]="createAtErrorMessage"
+        >
+        </ait-error-message>
+      </div>
+    </ng-container>
+  </div>
+  <!-- end left -->
+  <div rightArea1>
+    <ait-space [margin]="'39px'"></ait-space>
+
+    <ng-container>
+      <ait-autocomplete-master-data
+        [id]="'permission'"
+        [width]="'200px'"
+        [label]="'permission'"
+        [required]="false"
+        [maxItem]="1"
+        [class]="'TYPE_ENGINE'"
+        [placeholder]="'All'"
+        [disableOutputDefault]="true"
+        (watchValue)="takeMasterValue($event?.value, 'permission')"
+        [isSubmit]="isSubmit"
+        [isReset]="isReset"
+      >
+      </ait-autocomplete-master-data>
+    </ng-container>
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
+      <ait-input-text
+        [id]="'change_by'"
+        [height]="'40px'"
+        [width]="'400px'"
+        [rows]="1"
+        [label]="'change by'"
+        [required]="false"
+        [placeholder]="'admin'"
+        [length]="4000"
+        (watchValue)="takeInputValue($event, 'change_by')"
+        [isReset]="isReset"
+        [isSubmit]="isSubmit"
+      ></ait-input-text>
+    </ng-container>
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
+      <div style="display: flex">
+        <!-- create_at_from -->
+        <ait-datepicker
+          [placeholder]="'yyyyy/MM/dd'"
+          [id]="'_from'"
+          [label]="'Change At'"
+          [style]="{ width: '170px' }"
+          [isReset]="isReset"
+          (watchValue)="
+            takeDatePickerValue(
+              $event.value,
+              'searchDBConnection',
+              'change_at_from'
+            )
+          "
+        ></ait-datepicker>
+
+        <span class="center_span">~</span>
+        <!-- create_at_to -->
+        <ait-datepicker
+          [placeholder]="'yyyyy/MM/dd'"
+          [id]="'_from'"
+          [label]="''"
+          [style]="{ width: '170px' }"
+          [isReset]="isReset"
+          (watchValue)="
+            takeDatePickerValue(
+              $event.value,
+              'searchDBConnection',
+              'change_at_to'
+            )
+          "
+        ></ait-datepicker>
+      </div>
+      <div [style.width]="'420px'">
+        <ait-error-message
+          *ngIf="isChangeAtError"
+          [errors]="changeAtErrorMessage"
+        >
+        </ait-error-message>
+      </div>
+    </ng-container>
+  </div>
+
+  <div buttonArea1>
+    <div class="bottom__side">
+      <!-- reset -->
+      <ait-button
+        [id]="'reset'"
+        [width]="'150px'"
+        [height]="'32px'"
+        [title]="'clear'"
+        [isDefault]="true"
+      >
+      </ait-button>
+      <!-- search -->
+      <ait-button
+        [id]="'search'"
+        [width]="'150px'"
+        [height]="'32px'"
+        [title]="'search'"
+        [isDefault]="true"
+      >
+      </ait-button>
+    </div>
+  </div>
+
+  <div tableArea>
+    <ait-button-setting-table
+      [id]="'data_connection'"
+      [dataSource]="columns"
+      [defaultValue]="this.dataSettingTable"
+      [dataExportAll]="dataTable"
+      [columnExport]="columnExport"
+      [fileName]="'data_connection'"
+    ></ait-button-setting-table>
+
+    <div class="table__area" #area>
+      <ng2-smart-table
+        [settings]="settingTable"
+        [source]="source"
+        (userRowSelect)="onUserRowSelect($event)"
+        #table
+        *ngIf="done"
+      ></ng2-smart-table>
+    </div>
+
+    <div
+      *ngIf="totalRows > 0 && done"
+      [ngClass]="isValidPage ? 'per_page' : 'per_page2'"
+    >
+      <nb-select
+        placeholder="Select Showcase"
+        [(selected)]="perPage"
+        (selectedChange)="changePage()"
+      >
+        <nb-option value="10">10{{'case' | translate}}</nb-option>
+        <nb-option value="20">20{{'case' | translate}}</nb-option>
+        <nb-option value="30">30{{'case' | translate}}</nb-option>
+        <nb-option value="50">50{{'case' | translate}}</nb-option>
+        <nb-option value="100">100{{'case' | translate}}</nb-option>
+      </nb-select>
+    </div>
+
+    <div
+      class="num_page"
+      *ngIf="pageDetail && totalRows > 0 && done"
+      [ngStyle]="{
+        left: isValidPage ? left + 'px' : '0px',
+        'margin-top': isValidPage ? '-62px' : '10px'
+      }"
+    >
+      {{ pageDetail }}
+    </div>
+  </div>
+</ait-template-page>

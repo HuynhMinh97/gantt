@@ -48,6 +48,7 @@ export class GroupRoleRegisterComponent
   pageDetail = '';
   done = false;
 
+  groupName = '';
   isExpan = false;
   isExist = false;
   isReset = false;
@@ -166,6 +167,8 @@ export class GroupRoleRegisterComponent
     });
   }
   async ngOnInit(): Promise<void> {
+    
+    this.groupName = this.groupRoleRegisterService.name;
     setTimeout(() => {
       this.done = true;
       this.settingTable = this.settings;
@@ -182,6 +185,7 @@ export class GroupRoleRegisterComponent
       this.cancelLoadingApp();
       this.settingDataTable();
     }, 700);
+    console.log(this.groupName);
   }
 
   toggleTableExpan = () => {

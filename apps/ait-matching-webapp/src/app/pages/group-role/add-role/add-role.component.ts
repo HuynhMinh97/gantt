@@ -27,23 +27,7 @@ export class AddRoleComponent extends AitBaseComponent implements OnInit {
   isCoppy = false;
   name: string;
   employeeList : any[]=[] 
-
-  permission = [
-    {
-      _key: PERMISSIONS.CREATE,
-      value: PERMISSIONS.CREATE
-    },
-    {
-      _key: PERMISSIONS.READ,
-      value: PERMISSIONS.READ
-    },{
-      _key: PERMISSIONS.UPDATE,
-      value: PERMISSIONS.UPDATE
-    },{
-      _key: PERMISSIONS.DELETE,
-      value: PERMISSIONS.DELETE
-    },
-  ]
+  
   constructor(
     public router: Router,
     private formBuilder: FormBuilder,
