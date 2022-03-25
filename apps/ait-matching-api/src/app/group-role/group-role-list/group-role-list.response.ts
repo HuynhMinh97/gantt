@@ -1,11 +1,11 @@
 import { RESULT_STATUS, Utils } from "@ait/shared";
 import { Field, Int, ObjectType } from "@nestjs/graphql";
-import { GroupDataListEntity } from "./group-data-list.entity";
+import { GroupRoleListEntity } from "./group-role-list.entity";
 
 @ObjectType()
-export class GroupDataListResponse {
-    @Field(() => [GroupDataListEntity], { nullable: true })
-    data?: GroupDataListEntity[];
+export class GroupRoleListResponse {
+    @Field(() => [GroupRoleListEntity], { nullable: true })
+    data?: GroupRoleListEntity[];
     
     @Field(() => String, { nullable: true })
     errors?: string;
@@ -22,7 +22,7 @@ export class GroupDataListResponse {
     @Field(() => Int, { nullable: true })
     numError?: number = 0;
 
-    constructor(status: number, result: GroupDataListEntity[], message: string) {
+    constructor(status: number, result: GroupRoleListEntity[], message: string) {
         this.status = status;
         switch (status) {
           case RESULT_STATUS.OK:

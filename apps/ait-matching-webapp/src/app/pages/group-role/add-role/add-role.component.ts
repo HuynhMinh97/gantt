@@ -56,7 +56,7 @@ export class AddRoleComponent extends AitBaseComponent implements OnInit {
       remark: new FormControl(null),
       module: new FormControl(null, [Validators.required]),
       page: new FormControl(null, [Validators.required]),
-      employee: new FormControl(null, [Validators.required]),
+      employee_name: new FormControl(null, [Validators.required]),
       permission: new FormControl(null, [Validators.required]),
     })
   }
@@ -95,7 +95,10 @@ export class AddRoleComponent extends AitBaseComponent implements OnInit {
       this.isSubmit = false;
     }, 100);
     if (this.roleForm.valid){
-      this.groupRoleRegisterService.roleDataSave = this.roleForm.value;
+      let saveRoleInfo = {};
+      saveRoleInfo = this.roleForm.value
+      saveRoleInfo['groupName'] = this.name;
+      this.groupRoleRegisterService.roleDataSave = saveRoleInfo;
       history.back();
     }
     else {

@@ -32,6 +32,8 @@ export class GroupDataListService extends AitBaseService {
         condition,
       },
       {
+        userId: true,
+        _key: true,
         name: true,
         page: true,
         module: true,
@@ -44,4 +46,6 @@ export class GroupDataListService extends AitBaseService {
       }
     );
   }
+
+  
 }

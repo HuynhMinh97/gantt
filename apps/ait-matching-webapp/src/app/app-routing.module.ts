@@ -1,4 +1,4 @@
-import { GroupDataListComponent } from './pages/group-role/group-data-list/group-data-list.component';
+import { GroupRoleListComponent } from './pages/group-role/group-role-list/group-role-list.component';
 import { GroupRoleRegisterComponent } from './pages/group-role/group-role-register/group-role-register.component';
 import { UserOnboardingComponent } from './pages/user/user-onboarding/user-onboarding.component';
 import { UserLanguageComponent } from './pages/user/user-language/user-language.component';
@@ -225,9 +225,9 @@ export const routes: Routes = [
     component: GroupRoleRegisterComponent
   },
   {
-    path: 'group-data-list',
+    path: 'group-role-list',
     canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
-    component: GroupDataListComponent
+    component: GroupRoleListComponent
   },
   
   {

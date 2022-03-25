@@ -1,4 +1,4 @@
-import { GroupDataListResolver } from './group-role/group-data-list/group-data-list.resolver';
+import { GroupRoleListResolver } from './group-role/group-role-list/group-role-list.resolver';
 import { UserSkillResolver } from './user/user-skill/user-skill.resolver';
 import { UserOnboardingInfoResolver } from './user/user-onboarding/user-onboarding.resolver';
 import { UserLanguageInfoResolver } from './user/user-language/user-language.resolver';
@@ -40,7 +40,7 @@ const RESOLVERS = [
   EducationListResolver,
   CertificateResolver,
   GetEmployeeResolver,
-  GroupDataListResolver,
+  GroupRoleListResolver,
   {
   provide: 'ENVIRONMENT',
   useValue: environment

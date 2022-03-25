@@ -28,10 +28,10 @@ import { GroupRoleRegisterService } from '../../../services/group-role-register.
 
 @Component({
   selector: 'ait-group-data-list',
-  templateUrl: './group-data-list.component.html',
-  styleUrls: ['./group-data-list.component.scss'],
+  templateUrl: './group-role-list.component.html',
+  styleUrls: ['./group-role-list.component.scss'],
 })
-export class GroupDataListComponent extends AitBaseComponent implements OnInit {
+export class GroupRoleListComponent extends AitBaseComponent implements OnInit {
   @ViewChild('Container', { static: false }) Container: ElementRef;
   @ViewChild('table') table: Ng2SmartTableComponent;
   @ViewChild('area') area: ElementRef;
@@ -66,14 +66,6 @@ export class GroupDataListComponent extends AitBaseComponent implements OnInit {
       },
       employee_name: {
         title: 'Employee Name',
-        filter: true,
-      },
-      module: {
-        title: 'Module',
-        filter: true,
-      },
-      page: {
-        title: 'Page',
         filter: true,
       },
       permission: {
@@ -207,17 +199,15 @@ export class GroupDataListComponent extends AitBaseComponent implements OnInit {
   }
 
   async getDataTable() {
+    this.groupRoleRegisterService.name = undefined;
     this.groupDataTable = [];
      await this.groupDataListService.getGroupDataList().then((res) => {
-      
         const listRole = res.data;
         console.log(listRole)
         listRole.forEach((role) => {
           const roleTable = {};
         roleTable['name'] = role?.name;
-        roleTable['module'] = role?.module;
-        roleTable['_key'] = role?.names;
-        roleTable['page'] = role?.page;
+        roleTable['_key'] = role?.userId;
         roleTable['employee_name'] = role?.employee_name;
         roleTable['permission'] = role?.permission;
         roleTable['create_at'] = this.getDateFormat(role?.create_at);
@@ -284,6 +274,74 @@ export class GroupDataListComponent extends AitBaseComponent implements OnInit {
   detail(data) {
     this.router.navigate([`db-connection-view/${data}`]);
   }
+
+  onUserRowSelect(event: any) {
+    if (event.data === null) {
+      this.selectedItems = event.selected.length
+        ? this.selectedItems.concat(event.selected)
+        : [];
+    } else {
+      if (event.isSelected) {
+        this.selectedItems = this.selectedItems.concat(event.selected);
+      } else {
+        const index = this.selectedItems.indexOf(event.data);
+        if (index !== -1) {
+          this.selectedItems.splice(index, 1);
+        }
+      }
+    }
+    const UtilArray = [];
+    this.selectedItems = this.selectedItems.concat(event.selected);
+    this.selectedItems.forEach((item) => {
+      if (UtilArray.findIndex((i) => i._key == item._key) === -1) {
+        UtilArray.push(item);
+      }
+    });
+    this.selectedItems = UtilArray;
+  }
+
+  settingColumns(data) {
+    this.dataSettingTable = data;
+    const columns = [];
+    this.settingTable = {
+      actions: false,
+      selectMode: 'multi',
+      noDataMessage: '',
+      columns: {
+        _key: {
+          title: '',
+          filter: false,
+          type: 'custom',
+          renderComponent: AitTableButtonComponent,
+          onComponentInitFunction: (instance: any) => {
+            instance?.detailEvent.subscribe((data: string) =>
+              this.detail(data)
+            );
+            instance?.copyEvent.subscribe((data: string) =>
+              this.copy(data)
+            );
+            instance?.editEvent.subscribe((data: string) =>
+              this.edit(data)
+            );
+            instance?.deleteEvent.subscribe((data: string) =>
+              this.delete(data)
+            );
+          },
+        },
+      }
+    };
+
+    for (const column of data) {
+      this.settingTable.columns[column._key] = { title: column.value, filter: true };
+      columns.push(column._key);
+    }
+    this.columnExport = columns;
+    this.done = true;
+    if (data.length == 0) {
+      this.done = false;
+    }
+  }
+
 
   takeInputValue(value: string, form: string): void {
     if (value) {

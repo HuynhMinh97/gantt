@@ -5,6 +5,7 @@ import {
   AitAuthService,
   AitBaseComponent,
   AitEnvironmentService,
+  AitRenderPageService,
   AitTableButtonComponent,
   AitTableCellComponent,
   AppState,
@@ -27,7 +28,7 @@ import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
-import { isArrayFull, isObjectFull } from '@ait/shared';
+import { isArrayFull, isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
 
 @Component({
   selector: 'ait-group-role-register',
@@ -48,6 +49,7 @@ export class GroupRoleRegisterComponent
   pageDetail = '';
   done = false;
 
+  employeeId = '';
   groupName = '';
   isExpan = false;
   isExist = false;
@@ -72,10 +74,17 @@ export class GroupRoleRegisterComponent
     'change_at',
   ];
 
+  sys_role_page = {
+    _from: '',
+    _to: '',
+    module: '',
+  };
+
   roleRegis: FormGroup;
   settingTable: any;
   selectedItems: any[] = [];
   roleRegisterDataTable: any[] = [];
+  saveRoleData = [];
 
   settings = {
     actions: false,
@@ -112,7 +121,7 @@ export class GroupRoleRegisterComponent
         title: 'Page',
         filter: true,
       },
-      employee: {
+      employee_name: {
         title: 'Employee',
         filter: true,
       },
@@ -141,6 +150,7 @@ export class GroupRoleRegisterComponent
 
   constructor(
     private formBuilder: FormBuilder,
+    private renderPageService: AitRenderPageService,
     private groupRoleRegisterService: GroupRoleRegisterService,
     public router: Router,
 
@@ -167,8 +177,14 @@ export class GroupRoleRegisterComponent
     });
   }
   async ngOnInit(): Promise<void> {
-    
-    this.groupName = this.groupRoleRegisterService.name;
+    this.employeeId = this.groupRoleRegisterService.name;
+    if (this.employeeId !== undefined) 
+    {
+      this.mode = MODE.EDIT;
+    }
+    else {
+      this.mode = MODE.NEW;
+    }
     setTimeout(() => {
       this.done = true;
       this.settingTable = this.settings;
@@ -185,7 +201,10 @@ export class GroupRoleRegisterComponent
       this.cancelLoadingApp();
       this.settingDataTable();
     }, 700);
-    console.log(this.groupName);
+    const listSaveRole = this.groupRoleRegisterService.groupSaveRole;
+    if (isObjectFull(listSaveRole)){
+      this.saveRoleData = listSaveRole;
+    }
   }
 
   toggleTableExpan = () => {
@@ -288,58 +307,157 @@ export class GroupRoleRegisterComponent
     if (this.roleRegis.valid) {
       this.groupRoleRegisterService.groupRole = this.roleRegis.value;
       this.groupRoleRegisterService.groupRoleList = this.source;
+      if (isObjectFull(this.saveRoleData))
+      {
+        this.groupRoleRegisterService.groupSaveRole = this.saveRoleData;
+      }
+      
       this.router.navigate([`add-role`]);
     } else {
     }
   }
 
-  settingDataTable() {
-    const data = this.groupRoleRegisterService.roleDataSave;
-    const source =  this.groupRoleRegisterService.groupRoleList
-    
-    this.roleRegisterDataTable = [];
-    if (isObjectFull(source))
-    {
-      if (isObjectFull(data)) {
-        const roleTable = {};
-        roleTable['name'] = data?.name;
-        roleTable['module'] = data?.module?.value;
-        roleTable['_key'] = data?.names;
-        roleTable['page'] = data?.page?.value;
-        roleTable['employee'] = data?.employee?.value;
-        roleTable['permission'] = data?.permission?.value;
-        source.data.push(roleTable);
-      }
-      this.roleRegisterDataTable = source.data
+  async getRoleList() {
+    const arr = [];
+    const roleList = await this.groupRoleRegisterService.getGroupRoleList(
+      this.employeeId
+    );
+    for (const role of roleList.data) {
+      console.log(role);
+      const dataTable = {};
+      dataTable['name'] = role?.name;
+      dataTable['module'] = role?.module;
+      dataTable['create_at'] = role?.create_at;
+      dataTable['create_by'] = role?.create_by;
+      dataTable['change_by'] = role?.change_by;
+      dataTable['change_at'] = role?.change_at;
+      dataTable['page'] = role?.page;
+      dataTable['employee_name'] = role?.employee_name;
+      dataTable['permission'] = role?.permission;
+      arr.push(dataTable);
     }
-    
-    if ( !isObjectFull(this.roleRegisterDataTable[0]))
-    {
-      this.roleRegisterDataTable.shift();
+    return arr;
+  }
+
+  async settingDataTable() {
+    const data = this.groupRoleRegisterService.roleDataSave;
+    const permissions = [];
+    const employee = [];
+    const source = this.groupRoleRegisterService.groupRoleList;
+    this.roleRegisterDataTable = [];
+    if (isObjectFull(source)) {
+      if (isObjectFull(data)) {
+        
+        Object.keys(data.permission).forEach((key) => {
+          const value = data.permission[key]._key;
+          permissions.push(value);
+        });
+        Object.keys(data.employee_name).forEach((key) => {
+          const value = data.employee_name[key].value;
+          employee.push(value);
+        });
+        employee.forEach((emp) => {
+          const roleTable = {};
+          roleTable['groupName'] = data?.groupName;
+          roleTable['name'] = data?.name;
+          roleTable['module'] = data?.module?.value;
+          roleTable['module_key'] = data?.module?._key;
+          roleTable['page_key'] = data?.page?._key;
+          roleTable['page'] = data?.page?.value;
+          roleTable['employee_name'] = emp;
+          roleTable['permission'] = permissions.join(', ');
+          this.saveRoleData.push(roleTable);
+          this.roleRegisterDataTable.push(roleTable);
+        })
+        
+      }
+      source.data.forEach((data) => {
+        this.roleRegisterDataTable.push(data);
+      })
+      
+    } else {
+      if (this.mode === MODE.EDIT) {
+        this.roleRegisterDataTable = await this.getRoleList();
+      } else {
+       
+        Object.keys(data.permission).forEach((key) => {
+          const value = data.permission[key]._key;
+          permissions.push(value);
+        });
+        Object.keys(data.employee_name).forEach((key) => {
+          const value = data.employee_name[key].value;
+          employee.push(value);
+        });
+        employee.forEach((emp) => {
+          const roleTable = {};
+          roleTable['name'] = data?.name;
+          roleTable['groupName'] = data?.groupName;
+          roleTable['module'] = data?.module?.value;
+          roleTable['module_key'] = data?.module?._key;
+          roleTable['page_key'] = data?.page?._key;
+          roleTable['page'] = data?.page?.value;
+          roleTable['employee_name'] = emp;
+          roleTable['permission'] = permissions.join(', ');
+          this.saveRoleData.push(roleTable);
+          this.roleRegisterDataTable.push(roleTable);
+        })
+      }
     }
     this.cancelLoadingApp();
     this.source = new LocalDataSource(this.roleRegisterDataTable);
-  
   }
 
-  // async deleteAllInTable(data) {
-  //   if (this.selectedItems.length > 0 && data) {
-  //     const attributes = this.actorRegisterService.actorData['attribute'];
-  //     for(const itemDelete of this.selectedItems){
-  //       let search = -1;
-  //       if(attributes.length > 0){
-  //         attributes.forEach((attribute, index) => {
-  //           if(attribute.names == itemDelete?._key){
-  //             search = index;
-  //           }
-  //         })
-  //       }
-  //       if(search >=0){
-  //         this.actorRegisterService.actorData['attribute'].splice(search, 1);
-  //       }
-  //     }
-  //     this.isChangedTable = ! await this.checkAllowAttributeList();
-  //     this.settingDataTable();
-  //   }
-  // }
+  async saveGroupRole() {
+    let groupRoleKey = '';
+    for (const role of this.saveRoleData){
+      const groupRole = {
+        name: role.groupName,
+      }
+      const resModule = await this.renderPageService.findModule({
+        code: role.module_key,
+      });
+      const resPage = await this.renderPageService.findPage({
+        code: role.page_key,
+      });
+      await this.groupRoleRegisterService.saveRoleName(groupRole).then(async (res) => {
+        if (res?.status === RESULT_STATUS.OK) {
+          groupRoleKey = res?.data[0]._key;
+          await this.saveRolePage(groupRoleKey,resModule.data[0]._key,resPage.data[0]._key)
+          const message =
+            this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
+          this.showToastr('', message);
+          this.cancelLoadingApp();
+        } else {
+          this.cancelLoadingApp();
+          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+        }
+      });
+    }
+  }
+
+  async saveRolePage(role_key: string, module_key: string, page_key: string) {
+    const sys_role_page = {
+      _from: 'sys_role/' + role_key,
+      _to: 'sys_page/' + page_key,
+      module: module_key
+    }
+    await this.groupRoleRegisterService.saveRolePage(sys_role_page);
+    
+    // if ( this.keyEdit) {
+    //   const _fromSkill = [
+    //     { _from: 'biz_project/' + this.project_key },
+    //   ];
+    //   this.userProjectService.removeSkill(_fromSkill);
+    // }
+    // for(const skill of this.listSkills){
+    //   await this.userProjectService.findMSkillsByCode(skill)
+    //     .then(async (res) => {
+    //       this.sort_no += 1;
+    //       this.biz_project_skill.sort_no = this.sort_no;
+    //       this.biz_project_skill._to = 'm_skill/' + res.data[0]._key;
+    //       await this.userProjectService.saveSkills(this.biz_project_skill);
+    //     });
+    // }
+  }
+  
 }

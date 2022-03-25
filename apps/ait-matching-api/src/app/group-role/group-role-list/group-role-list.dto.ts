@@ -2,7 +2,7 @@ import { BaseDto, ChangeByDto, ConditionDto, CreateByDto } from '@ait/core';
 import { Field, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
-export class GroupDataListDto extends BaseDto {
+export class GroupRoleListDto extends BaseDto {
   @Field(() => String, { nullable: true })
   first_name?: string;
 
@@ -17,6 +17,12 @@ export class GroupDataListDto extends BaseDto {
 
   @Field(() => String, { nullable: true })
   page?: string;
+
+  @Field(() => String, { nullable: true })
+  _from?: string;
+
+  @Field(() => String, { nullable: true })
+  _to?: string;
 
   @Field(() => String, { nullable: true })
   permission?: string;
@@ -35,7 +41,7 @@ export class GroupDataListDto extends BaseDto {
 }
 
 @InputType()
-export class SearchGroupDataListDto {
+export class SearchGroupRoleListDto {
     @Field(() => Boolean, { nullable: true })
     del_flag?: boolean;
 
@@ -65,4 +71,7 @@ export class SearchGroupDataListDto {
 
   @Field(() => ConditionDto, { nullable: true })
   change_by: ConditionDto;
+
+  @Field(() => String, { nullable: true })
+  user_id: string;
 }

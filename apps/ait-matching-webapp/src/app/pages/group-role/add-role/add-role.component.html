@@ -79,22 +79,17 @@
     <ng-container>
       <ait-autocomplete-master-data
       *ngIf="employeeList.length > 0"
-        [id]="'employee'"
+        [id]="'employee_name'"
         [width]="'400px'"
         [label]="'employee'"
         [required]="true"
-        [maxItem]="1"
+        [maxItem]="1000"
         [isReset]="isReset"
         [isSubmit]="isSubmit"
         [placeholder]="'please select employee'"
         [dataSource]="employeeList"
         [disableOutputDefault]="true"
-        (watchValue)="takeMasterValue($event.value, 'employee')"
-        [defaultValue]="
-        roleForm?.controls['employee']?.value
-            ? [roleForm?.controls['employee']?.value]
-            : null
-        "
+        (watchValue)="takeMasterValues($event.value, 'employee_name')"
         [isSubmit]="isSubmit"
       >
       </ait-autocomplete-master-data>
@@ -217,7 +212,7 @@
         [id]="'save'"
         [width]="'150px'"
         [height]="'40px'"
-        [title]="'save'"
+        [title]="'Add'"
         [isDefault]="true"
         (click)="add()"
       >

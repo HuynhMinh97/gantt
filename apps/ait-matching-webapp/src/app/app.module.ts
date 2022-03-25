@@ -73,7 +73,7 @@ import { MyProjectQueriesComponent } from './pages/my-project-queries/my-project
 import { AddRoleComponent } from './pages/group-role/add-role/add-role.component';
 import { GroupRoleRegisterComponent } from './pages/group-role/group-role-register/group-role-register.component';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
-import { GroupDataListComponent } from './pages/group-role/group-data-list/group-data-list.component';
+import { GroupRoleListComponent } from './pages/group-role/group-role-list/group-role-list.component';
 
 const AIT_UI_MODULES = [AitChipModule, AitTabsModule, AitTocMenuModule];
 
@@ -135,7 +135,7 @@ const PAGES = [
     MyProjectQueriesComponent,
     AddRoleComponent,
     GroupRoleRegisterComponent,
-    GroupDataListComponent,
+    GroupRoleListComponent,
 
   ],
   imports: [

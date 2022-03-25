@@ -3,7 +3,7 @@ import { Field, Int, ObjectType } from "@nestjs/graphql";
 
 
 @ObjectType()
-export class GroupDataListEntity extends BaseEntity {
+export class GroupRoleListEntity extends BaseEntity {
     @Field(() => String, { nullable: true })
     module?: string;
 
@@ -24,4 +24,7 @@ export class GroupDataListEntity extends BaseEntity {
 
     @Field(() => String, { nullable: true })
     employee_name?: string;
+
+    @Field(() => String, { nullable: true })
+    userId?: string;
 }
