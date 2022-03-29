@@ -16,6 +16,12 @@ export class GroupRoleListDto extends BaseDto {
   module?: string;
 
   @Field(() => String, { nullable: true })
+  remark?: string;
+
+  @Field(() => String, { nullable: true })
+  child_name?: string;
+
+  @Field(() => String, { nullable: true })
   page?: string;
 
   @Field(() => String, { nullable: true })
@@ -24,8 +30,8 @@ export class GroupRoleListDto extends BaseDto {
   @Field(() => String, { nullable: true })
   _to?: string;
 
-  @Field(() => String, { nullable: true })
-  permission?: string;
+  @Field(() => [String], { nullable: true })
+  permission?: string[];
 
   @Field(() => String, { nullable: true })
   create_at: number;
@@ -73,5 +79,17 @@ export class SearchGroupRoleListDto {
   change_by: ConditionDto;
 
   @Field(() => String, { nullable: true })
+  role_name: string;
+
+  @Field(() => String, { nullable: true })
+  role_key: string;
+
+  @Field(() => String, { nullable: true })
+  _from: string;
+
+  @Field(() => String, { nullable: true })
   user_id: string;
+
+  @Field(() => String, { nullable: true })
+  module: string;
 }

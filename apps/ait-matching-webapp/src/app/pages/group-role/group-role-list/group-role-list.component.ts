@@ -1,4 +1,11 @@
-import { isArrayFull, isObjectFull, KeyValueDto, RESULT_STATUS } from '@ait/shared';
+import {
+  isArrayFull,
+  isObjectFull,
+  isString,
+  KeyValueDto,
+  OPERATOR,
+  RESULT_STATUS,
+} from '@ait/shared';
 import {
   AitAuthService,
   AitBaseComponent,
@@ -133,6 +140,8 @@ export class GroupRoleListComponent extends AitBaseComponent implements OnInit {
     'change_at_to',
   ];
   userAttribute = ['create_by', 'change_by'];
+  comboboxSearch = ['permission',];
+
   set = {};
   countPage = 0;
   constructor(
@@ -180,55 +189,145 @@ export class GroupRoleListComponent extends AitBaseComponent implements OnInit {
     });
   }
 
- async ngOnInit(): Promise<void> {
-    setTimeout(() => {
-      this.done = true;
-      this.settingTable = this.settings;
-      for (const item in this.settingTable.columns) {
-        if (item != '_key') {
-          this.columns.push({
-            _key: item,
-            value: this.settingTable.columns[item]['title'],
-          });
-        }
-      }
-      this.dataSettingTable = JSON.parse(JSON.stringify(this.columns));
-      this.cancelLoadingApp();
-    }, 700);
+  async ngOnInit(): Promise<void> {
+    this.cancelLoadingApp();
     await this.getDataTable();
+    this.done = true;
+    this.settingTable = this.settings;
+    for (const item in this.settingTable.columns) {
+      if (item != '_key') {
+        this.columns.push({
+          _key: item,
+          value: this.settingTable.columns[item]['title'],
+        });
+      }
+    }
+    this.dataSettingTable = JSON.parse(JSON.stringify(this.columns));
   }
 
-  async getDataTable() {
+  getOperator(key: string) {
+    if (
+      key === 'create_at_from' ||
+      key === 'change_at_from' 
+    ) {
+      return OPERATOR.GREATER_OR_EQUAL;
+    } else {
+      return OPERATOR.LESS_OR_EQUAL;
+    }
+  }
+
+  focusToTable() {
+    try {
+      setTimeout(() => {
+        this.area.nativeElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }, 0);
+    } catch {}
+  }
+
+  async getDataTable(obj?: any) {
     this.groupRoleRegisterService.name = undefined;
     this.groupDataTable = [];
-     await this.groupDataListService.getGroupDataList().then((res) => {
-        const listRole = res.data;
-        console.log(listRole)
-        listRole.forEach((role) => {
-          const roleTable = {};
+    await this.groupDataListService.getGroupDataList(obj).then((res) => {
+      const listRole = res.data;
+      listRole.forEach((role) => {
+        const roleTable = {};
         roleTable['name'] = role?.name;
-        roleTable['_key'] = role?.userId;
+        roleTable['_key'] = role?._key;
         roleTable['employee_name'] = role?.employee_name;
         roleTable['permission'] = role?.permission;
         roleTable['create_at'] = this.getDateFormat(role?.create_at);
         roleTable['create_by'] = role?.create_by;
         roleTable['change_by'] = role?.change_by;
         roleTable['change_at'] = this.getDateFormat(role?.change_at);
-        this.groupDataTable.push(roleTable);
-        })
-      
+        if (roleTable['name']!==undefined) {
+          this.groupDataTable.push(roleTable);
+        }
+      });
     });
     this.cancelLoadingApp();
     this.source = new LocalDataSource(this.groupDataTable);
-    
+  }
+
+  async search() {
+    const obj = this.searchRole.value;
+    if (this.searchRole.valid) {
+      const object = {};
+      Object.keys(this.searchRole.controls).forEach((key) => {
+        const value = this.searchRole.controls[key].value;
+        if (value) {
+          if (this.dateAtributes.includes(key)) {
+              object[key] = {
+                target: key.slice(0, 9) || '',
+                operator: this.getOperator(key),
+                valueAsNumber: value,
+              };
+          } else {
+            if (this.userAttribute.includes(key)) {
+              try {
+                if (!object[key]) {
+                  object[key] = { operator: OPERATOR.LIKE };
+                }
+                object[key]['value'] = value;
+              } catch (e) {}
+            } else if (this.comboboxSearch.includes(key)) {
+              try {
+                if (!object[key]) {
+                  object[key] = { operator: OPERATOR.LIKE };
+                }
+                object[key]['value'] = this.getArrayKeys(value);
+                const isStr = isString(value);
+                object[key]['operator'] = isStr ? OPERATOR.LIKE : OPERATOR.IN;
+              } catch (e) {}
+            } else {
+              const isStr = isString(value);
+              object[key] = {
+                operator: isStr ? OPERATOR.LIKE : OPERATOR.IN,
+              };
+              if (isStr) {
+                object[key]['valueAsString'] = value;
+              }
+              
+            }
+          }
+        }
+      });
+      if (isObjectFull(object)) {
+        await this.getDataTable(object);
+        this.focusToTable();
+      } else {
+        await this.getDataTable();
+        this.focusToTable();
+      }
+    } else {
+      await this.getDataTable();
+      this.focusToTable();
+    }
+  };
+
+  getArrayKeys(values: KeyValueDto | KeyValueDto[]) {
+    const isArray = Array.isArray(values);
+    const result = [];
+    if (isArray) {
+      ((values as KeyValueDto[]) || []).forEach((item) => {
+        result.push(item._key);
+      });
+      return result;
+    } else {
+      result.push((values as KeyValueDto)._key);
+      return result;
+    }
   }
 
   new() {
+    this.groupRoleRegisterService.groupSaveRole = [];
     this.router.navigate([`group-role-register`]);
   }
 
   delete(data) {
-    console.log('1')
+    console.log('1');
     // let checkUse = null;
     // if (this.listDbConnectionInDimension.length > 0) {
     //   checkUse = this.listDbConnectionInDimension.find(actor => actor === data);
@@ -262,7 +361,7 @@ export class GroupRoleListComponent extends AitBaseComponent implements OnInit {
   }
 
   edit(data) {
-    this.groupRoleRegisterService.name = data
+    this.groupRoleRegisterService.name = data;
     this.router.navigate([`group-role-register`]);
   }
 
@@ -317,22 +416,21 @@ export class GroupRoleListComponent extends AitBaseComponent implements OnInit {
             instance?.detailEvent.subscribe((data: string) =>
               this.detail(data)
             );
-            instance?.copyEvent.subscribe((data: string) =>
-              this.copy(data)
-            );
-            instance?.editEvent.subscribe((data: string) =>
-              this.edit(data)
-            );
+            instance?.copyEvent.subscribe((data: string) => this.copy(data));
+            instance?.editEvent.subscribe((data: string) => this.edit(data));
             instance?.deleteEvent.subscribe((data: string) =>
               this.delete(data)
             );
           },
         },
-      }
+      },
     };
 
     for (const column of data) {
-      this.settingTable.columns[column._key] = { title: column.value, filter: true };
+      this.settingTable.columns[column._key] = {
+        title: column.value,
+        filter: true,
+      };
       columns.push(column._key);
     }
     this.columnExport = columns;
@@ -341,7 +439,6 @@ export class GroupRoleListComponent extends AitBaseComponent implements OnInit {
       this.done = false;
     }
   }
-
 
   takeInputValue(value: string, form: string): void {
     if (value) {
@@ -360,6 +457,17 @@ export class GroupRoleListComponent extends AitBaseComponent implements OnInit {
       );
     } else {
       this.searchRole.controls[form].setValue(null);
+    }
+  }
+
+  takeMasterValues(value: KeyValueDto[], form: string): void {
+    if (value !== []) {
+      if (isObjectFull(value)) {
+        this.searchRole.controls[form].markAsDirty();
+        this.searchRole.controls[form].setValue(value);
+      } else {
+        this.searchRole.controls[form].setValue(null);
+      }
     }
   }
 
@@ -400,20 +508,20 @@ export class GroupRoleListComponent extends AitBaseComponent implements OnInit {
     const createAtError = (msg || '')
       .replace(
         '{0}',
-        this.translateService.translate('connection_create_at_to')
+        this.translateService.translate('create_at_to')
       )
       .replace(
         '{1}',
-        this.translateService.translate('connection_create_at_from')
+        this.translateService.translate('create_at_from')
       );
     const changeAtError = (msg || '')
       .replace(
         '{0}',
-        this.translateService.translate('connection_change_at_to')
+        this.translateService.translate('change_at_to')
       )
       .replace(
         '{1}',
-        this.translateService.translate('connection_change_at_from')
+        this.translateService.translate('change_at_from')
       );
 
     this.changeAtErrorMessage = [];
@@ -429,5 +537,14 @@ export class GroupRoleListComponent extends AitBaseComponent implements OnInit {
       return dayjs(time).format(this.dateFormat.toUpperCase() + ' HH:mm');
     }
   }
- 
+
+
+  clear(){
+    this.isReset = true;
+    setTimeout(() => {
+      this.isReset = false;
+    }, 100);
+    this.searchRole.reset();
+    
+  }
 }

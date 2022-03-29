@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class AddRoleService extends AitBaseService {
+  public roleInfo = null;
   async getEmployee() {
     const condition = {
       del_flag: false

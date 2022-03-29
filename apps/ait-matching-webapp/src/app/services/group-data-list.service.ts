@@ -8,25 +8,20 @@ export class GroupDataListService extends AitBaseService {
 
   async getGroupDataList(condition = {}) {
     
-    // if (!condition['school']){
-    //   condition['school'] = {}
-    // }
-    // condition['school']['attribute'] = 'school';
-    // condition['school']['ref_collection'] = 'm_school';
-    // condition['school']['ref_attribute'] = 'code';
+   
 
-    // if (!condition['create_by']) {
-    //   condition['create_by'] = {};
-    // }
+    if (!condition['create_by']) {
+      condition['create_by'] = {};
+    }
 
-    // if (!condition['change_by']) {
-    //   condition['change_by'] = {};
-    // }
-    // condition['create_by']['type'] = 'matching';
-    // condition['change_by']['type'] = 'matching';
+    if (!condition['change_by']) {
+      condition['change_by'] = {};
+    }
+    condition['create_by']['type'] = 'matching';
+    condition['change_by']['type'] = 'matching';
 
     return await this.query(
-      'getAllRole',
+      'searchRole',
       {
         collection: 'sys_role',
         condition,

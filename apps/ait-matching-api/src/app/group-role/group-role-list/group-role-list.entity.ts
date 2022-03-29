@@ -17,6 +17,12 @@ export class GroupRoleListEntity extends BaseEntity {
     name?: string;
 
     @Field(() => String, { nullable: true })
+    remark?: string;
+
+    @Field(() => String, { nullable: true })
+    child_name?: string;
+
+    @Field(() => String, { nullable: true })
     first_name?: string;
   
     @Field(() => String, { nullable: true })

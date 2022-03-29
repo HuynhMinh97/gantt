@@ -37,14 +37,14 @@
       <ait-space [margin]="'7.25px'"></ait-space>
     <ng-container>
       <ait-input-text
-        [id]="'epmloyee_name'"
+        [id]="'employee_name'"
         [height]="'40px'"
         [width]="'400px'"
         [rows]="1"
-        [label]="'epmloyee_name'"
+        [label]="'employee_name'"
         [required]="false"
         [placeholder]="'please input keyword'"
-        (watchValue)="takeInputValue($event, 'epmloyee_name')"
+        (watchValue)="takeInputValue($event, 'employee_name')"
         [isReset]="isReset"
         [isSubmit]="isSubmit"
         [length]="4000"
@@ -72,14 +72,14 @@
         <!-- create_at_from -->
         <ait-datepicker
           [placeholder]="'yyyyy/MM/dd'"
-          [id]="'_from'"
+          [id]="'create_at_from'"
           [label]="'create at'"
           [style]="{ width: '170px' }"
           [isReset]="isReset"
           (watchValue)="
             takeDatePickerValue(
               $event.value,
-              'searchDBConnection',
+              'searchRole',
               'create_at_from'
             )
           "
@@ -89,14 +89,14 @@
         <!-- create_at_to -->
         <ait-datepicker
           [placeholder]="'yyyyy/MM/dd'"
-          [id]="'_from'"
+          [id]="'create_at_to'"
           [label]="''"
           [style]="{ width: '170px' }"
           [isReset]="isReset"
           (watchValue)="
             takeDatePickerValue(
               $event.value,
-              'searchDBConnection',
+              'searchRole',
               'create_at_to'
             )
           "
@@ -121,11 +121,12 @@
         [width]="'200px'"
         [label]="'permission'"
         [required]="false"
-        [maxItem]="1"
-        [class]="'TYPE_ENGINE'"
+        [maxItem]="10"
+        [class]="'ROLE_PERMISSION'"
+        [collection]="'sys_master_data'"
         [placeholder]="'All'"
         [disableOutputDefault]="true"
-        (watchValue)="takeMasterValue($event?.value, 'permission')"
+        (watchValue)="takeMasterValues($event?.value, 'permission')"
         [isSubmit]="isSubmit"
         [isReset]="isReset"
       >
@@ -153,14 +154,14 @@
         <!-- create_at_from -->
         <ait-datepicker
           [placeholder]="'yyyyy/MM/dd'"
-          [id]="'_from'"
+          [id]="'change_at_from'"
           [label]="'Change At'"
           [style]="{ width: '170px' }"
           [isReset]="isReset"
           (watchValue)="
             takeDatePickerValue(
               $event.value,
-              'searchDBConnection',
+              'searchRole',
               'change_at_from'
             )
           "
@@ -170,14 +171,14 @@
         <!-- create_at_to -->
         <ait-datepicker
           [placeholder]="'yyyyy/MM/dd'"
-          [id]="'_from'"
+          [id]="'change_at_to'"
           [label]="''"
           [style]="{ width: '170px' }"
           [isReset]="isReset"
           (watchValue)="
             takeDatePickerValue(
               $event.value,
-              'searchDBConnection',
+              'searchRole',
               'change_at_to'
             )
           "
@@ -202,6 +203,7 @@
         [height]="'32px'"
         [title]="'clear'"
         [isDefault]="true"
+        (click)="clear()"
       >
       </ait-button>
       <!-- search -->
@@ -211,6 +213,7 @@
         [height]="'32px'"
         [title]="'search'"
         [isDefault]="true"
+        (click)="search()"
       >
       </ait-button>
     </div>

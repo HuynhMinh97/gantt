@@ -50,6 +50,7 @@ import {
 import { KeyValueCheckedDto } from './interface';
 import { UserProfileService } from '../../../services/user-profile.service';
 import { UserSkillsService } from '../../../services/user-skills.service';
+import { UserProjectService } from '../../../services/user-project.service';
 @Component({
   selector: 'ait-user-onboarding',
   templateUrl: './user-onboarding.component.html',
@@ -87,7 +88,7 @@ export class UserOnboardingComponent
   isChanged = false;
   isDisplay = false;
   isExpan = false;
-  available_time_error=false;
+  available_time_error = false;
   resetJobSettingInfo = {
     job_setting_title: false,
     industry: false,
@@ -180,6 +181,7 @@ export class UserOnboardingComponent
     public activeRouter: ActivatedRoute,
     private dialogService: NbDialogService,
     private navigation: AitNavigationService,
+    private userProjectService: UserProjectService,
     private userOnbService: UserOnboardingService,
     private userSkillsService: UserSkillsService,
     private userProfileService: UserProfileService,
@@ -292,19 +294,17 @@ export class UserOnboardingComponent
       this.mode = MODE.EDIT;
     }
     if (this.user_key) {
-      if (this.user_key !== this.user_id_profile){
-        this.callLoadingApp()
+      if (this.user_key !== this.user_id_profile) {
+        this.callLoadingApp();
         this.router.navigate([`user-onboarding-detail/${this.user_key}`]);
-      }
-      else {
+      } else {
         this.callLoadingApp();
         await this.userOnbService.findJobSetting(this.user_key).then((r) => {
           if (r.status === RESULT_STATUS.OK) {
             this.jobSettingData = r.data[0];
             this.userJobSettingInfo.patchValue({ ...this.jobSettingData });
             this.userJobSettingInfoClone = this.userJobSettingInfo.value;
-          }
-          else {
+          } else {
             this.callLoadingApp();
           }
         });
@@ -323,8 +323,7 @@ export class UserOnboardingComponent
               }
               this.cancelLoadingApp();
               !isUserExist && this.router.navigate([`/404`]);
-            }
-            else {
+            } else {
               this.callLoadingApp();
             }
           });
@@ -431,17 +430,18 @@ export class UserOnboardingComponent
   // get skill current job
   async findSkills() {
     const from = 'sys_user/' + this.user_id;
-    await this.userOnbService.findSkillsByFrom(from)
-    .then(async(res) => {
+    await this.userOnbService.findSkillsByFrom(from).then(async (res) => {
       const listSkills = [];
       for (const skill of res.data) {
         listSkills.push(skill?.skills);
-      }    
-        this.userOnboardingInfo.controls['current_job_skills'].setValue([...listSkills]);
-        this.userOnboardingInfoClone = this.userOnboardingInfo.value; 
-    });    
+      }
+      this.userOnboardingInfo.controls['current_job_skills'].setValue([
+        ...listSkills,
+      ]);
+      this.userOnboardingInfoClone = this.userOnboardingInfo.value;
+    });
   }
-  
+
   resetForm() {
     if (this.mode === MODE.NEW) {
       for (const index in this.resetUserInfo) {
@@ -500,10 +500,11 @@ export class UserOnboardingComponent
     }
     this.showToastr('', this.getMsg('I0007'));
   }
-  
+
   checkDateError() {
-    const name = 'available_time_error' ;
-    const valueFrom = this.userJobSettingInfo.controls['available_time_from'].value;
+    const name = 'available_time_error';
+    const valueFrom = this.userJobSettingInfo.controls['available_time_from']
+      .value;
     const valueTo = this.userJobSettingInfo.controls['available_time_to'].value;
 
     if (!valueFrom || !valueTo) {
@@ -520,18 +521,28 @@ export class UserOnboardingComponent
     const msg = this.getMsg('E0004');
     const availableTimeErr = (msg || '')
       .replace('{0}', this.translateService.translate('available_time_to'))
-      .replace('{1}', this.translateService.translate('available_time_to_from'));
+      .replace(
+        '{1}',
+        this.translateService.translate('available_time_to_from')
+      );
     this.availableTimeErrorMessage = [];
     this.availableTimeErrorMessage.push(availableTimeErr);
   }
-  saveDataJobSetting() {
+  async saveDataJobSetting() {
     const saveData = this.userJobSettingInfo.value;
     const skills = saveData.job_setting_skills;
     const arrSkills = [];
-    skills.forEach((sk) => {
-      const skill = sk._key;
-      arrSkills.push(skill);
-    });
+    for (const skill of skills) {
+      const skill_key = await this.userProjectService.findMSkillsByCode(
+        skill._key
+      );
+      arrSkills.push(skill_key.data[0]._key);
+    }
+    // skills.forEach((sk) => {
+
+    //   const skill = sk._key;
+    //   arrSkills.push(skill);
+    // });
     saveData.job_setting_skills = arrSkills;
     saveData.location = saveData.location ? saveData.location._key : null;
     saveData.job_setting_title = saveData.job_setting_title
@@ -595,26 +606,25 @@ export class UserOnboardingComponent
   }
 
   async saveJobSetting() {
-    await this.userOnbService.saveJobSetting(this.saveDataJobSetting());
+    const jobSettingInfo = await this.saveDataJobSetting()
+    await this.userOnbService.saveJobSetting(jobSettingInfo);
   }
 
   async saveDataUserSkill() {
-    
-      this.user_skill._from = 'sys_user/' + this.authService.getUserID();
-      this.user_skill.relationship = 'biz_user_skill';
-      const skills = [];
-      for (const item of this.current_job_skills) {
-        await this.userOnbService.findSkillsByCode(item._key).then((res) => {
-          skills.push(res.data[0]._key);
-        });
-      }
-      skills.forEach(async (skill) => {
-        this.sort_no += 1;
-        this.user_skill.sort_no = this.sort_no;
-        this.user_skill._to = 'm_skill/' + skill;
-        await this.userOnbService.saveUserSkills([this.user_skill]);
+    this.user_skill._from = 'sys_user/' + this.authService.getUserID();
+    this.user_skill.relationship = 'biz_user_skill';
+    const skills = [];
+    for (const item of this.current_job_skills) {
+      await this.userOnbService.findSkillsByCode(item._key).then((res) => {
+        skills.push(res.data[0]._key);
       });
-    
+    }
+    skills.forEach(async (skill) => {
+      this.sort_no += 1;
+      this.user_skill.sort_no = this.sort_no;
+      this.user_skill._to = 'm_skill/' + skill;
+      await this.userOnbService.saveUserSkills([this.user_skill]);
+    });
   }
 
   save() {
@@ -622,29 +632,31 @@ export class UserOnboardingComponent
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
-   
-    if (this.userOnboardingInfo.valid && this.userJobSettingInfo.valid && !this.available_time_error) {
+
+    if (
+      this.userOnboardingInfo.valid &&
+      this.userJobSettingInfo.valid &&
+      !this.available_time_error
+    ) {
       this.callLoadingApp();
-      this.userOnbService
-        .save(this.saveDataUserProfile())
-        .then((res) => {
-          if (res?.status === RESULT_STATUS.OK) {
-            this.saveDataUserSkill();
-            this.saveJobSetting();
-            const message =
-              this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
-            this.showToastr('', message);
-            this.cancelLoadingApp();
-            if (this.user_key) {
-              this.router.navigate([`user-profile`]);
-            } else {
-              this.router.navigate([`user-job-alert`]);
-            }
+      this.userOnbService.save(this.saveDataUserProfile()).then((res) => {
+        if (res?.status === RESULT_STATUS.OK) {
+          this.saveDataUserSkill();
+          this.saveJobSetting();
+          const message =
+            this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
+          this.showToastr('', message);
+          this.cancelLoadingApp();
+          if (this.user_key) {
+            this.router.navigate([`user-profile`]);
           } else {
-            this.cancelLoadingApp();
-            this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+            this.router.navigate([`user-job-alert`]);
           }
-        });
+        } else {
+          this.cancelLoadingApp();
+          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+        }
+      });
     } else {
       this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
       this.scrollIntoError();
@@ -768,7 +780,7 @@ export class UserOnboardingComponent
     }
   }
 
-  takeDatePickerValue(value: number, group: string, form: string, origin= '') {
+  takeDatePickerValue(value: number, group: string, form: string, origin = '') {
     if (value) {
       const data = value as number;
       value = new Date(data).setHours(0, 0, 0, 0);

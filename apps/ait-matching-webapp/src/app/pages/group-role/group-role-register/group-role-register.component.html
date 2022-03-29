@@ -21,7 +21,7 @@
                 [isSubmit]="isSubmit"
                 [length]="4000"
                 (watchValue)="takeInputValue($event, 'name')"
-                [defaultValue]="groupName['name']"
+                [defaultValue]="groupName"
               ></ait-input-text>
               <div>
                 <ait-error-message
@@ -44,8 +44,10 @@
                 [required]="false"
                 [placeholder]="'please input remark'"
                 [length]="4000"
+                (watchValue)="takeInputValue($event, 'remark')"
                 [isReset]="isReset"
                 [isSubmit]="isSubmit"
+                [defaultValue]="remark"
               ></ait-input-text>
             </ng-container>
           </div>
@@ -106,12 +108,12 @@
           [ngStyle]="{ display: isTableExpan ? 'block' : 'none' }"
         >
         <ait-button-setting-table
-          [id]="'actor'"
+          [id]="'roel'"
           [dataSource]="columns"
          
        
           [columnExport]="columnExport"
-          [fileName]="'Actor'"
+          [fileName]="'Role'"
         ></ait-button-setting-table>
 
           <div class="table__area" #area>
@@ -196,7 +198,7 @@
       >
       </ait-button>
       <ait-button
-      
+      *ngIf="mode === 'NEW' || (mode === 'EDIT' && isChangedTable )"
         [id]="'save'"
         [width]="'150px'"
         [height]="'40px'"
@@ -206,7 +208,7 @@
       >
       </ait-button>
       <ait-button   
-       
+      *ngIf="mode === 'EDIT'  && !isChangedTable"
         [id]="'save'"
         [width]="'150px'"
         [height]="'40px'"
