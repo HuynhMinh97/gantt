@@ -29,6 +29,7 @@ export class AitCardContentComponent {
   @Input() padding = '';
   @Input() tooltip = '';
   @Input() actionBtn = [];
+  @Input() widthBtn = 'auto';
   @Input() disableHeader = false;
   gradientString = 'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)';
   isShow = true;
@@ -41,10 +42,11 @@ export class AitCardContentComponent {
   @Input() classContainer: any;
   @Input() id;
 
-  @Input() content = '';
+  @Input() summary = '';
+  @Input() styleSummary = {};
   @Input() styleLabel = {};
-  @Input() styleContent = {};
   @Input() styleDivider = {};
+  @Input() styleContent = {};
 
   ID(element: string) {
     const idx = this.id && this.id !== '' ? this.id : Date.now();
