@@ -225,8 +225,8 @@ Cypress.Commands.add('login', (email, password) => {
   cy.clearCookies();
   cy.clearLocalStorage();
   cy.visit(Cypress.env('host') + Cypress.env('sign_in'));
-  cy.get('#email').type(email);
-  cy.get('#password').type(password);
+  cy.get('#email_input').type(email);
+  cy.get('#password_input').type(password);
   // .type('{enter}');
   cy.get('.button__submit').click();
   // cy.url().should('eq', Cypress.env('host') + Cypress.env('recommenced_url'));

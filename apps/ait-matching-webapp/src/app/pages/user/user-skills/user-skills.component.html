@@ -13,7 +13,7 @@
         <div class="input_inline">
           <ait-autocomplete-master
             [id]="'skills'"
-            [label]="'skills (max 50)'"
+            [label]="'skills(max 50)'"
             [required]="true"
             [collection]="'m_skill'"
             [maxItem]="maxSkill"
@@ -38,9 +38,7 @@
             nbSpinnerStatus="primary"
             [tabIndex]="40"
             (click)="clear()"
-            [background]="
-              'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-            "
+            [isDefault]="true"
           ></ait-button>
 
           <ait-button
@@ -51,27 +49,23 @@
             nbSpinnerStatus="primary"
             [tabIndex]="40"
             (click)="reset()"
-            [background]="
-              'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-            "
+            [isDefault]="true"
           ></ait-button>
 
           <ait-button
             *ngIf="isChanged"
-            [id]="'saveClose'"
+            [id]="'save'"
             [width]="'150px'"
-            [title]="'save and close'"
+            [title]="'save'"
             (click)="saveAndClose()"
-            [background]="
-              'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
-            "
+            [isDefault]="true"
           ></ait-button>
 
           <ait-button
             *ngIf="!isChanged"
             [id]="'disabled'"
             [width]="'150px'"
-            [title]="'save and close'"
+            [title]="'save'"
             [style]="'disabled'"
           ></ait-button>
         </div>

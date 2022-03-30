@@ -1,5 +1,4 @@
-@import "../../../../styles/themes.scss";
-
+@import '../../../../styles/themes.scss';
 
 #input_remark {
   border: 1px solid nb-theme(color-basic-600);
@@ -7,6 +6,7 @@
     border: 1px solid #10529d;
   }
 }
+
 .aureolev__container {
   width: 100%;
   height: 100%;
@@ -107,7 +107,7 @@
         p {
           margin: 0;
           font-weight: bold;
-          font-size: 0.80vmax;
+          font-size: 0.8vmax;
           text-transform: uppercase;
           color: #ffffff;
         }
@@ -376,10 +376,6 @@
       }
     }
   }
-  .aureolev__filter_container {
-    .right__side {
-    }
-  }
 }
 
 @media only screen and (max-width: 540px) {
@@ -438,6 +434,3 @@
     }
   }
 }
-// ::ng-deep ait-autocomplete-master-data .input__container {
-//   width: 500px !important;
-// }
