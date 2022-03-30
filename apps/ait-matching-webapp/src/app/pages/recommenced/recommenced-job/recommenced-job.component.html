@@ -1,1 +1,178 @@
-<div>thuan </div>
+<div class="aureolev__container">
+  <div class="main__container">
+    <div
+      class="aureolev__search__container"
+      tabindex="1"
+      style="outline-color: #10529d"
+    >
+      <div
+        class="aureolev__input__container"
+        tabindex="2"
+        style="outline-color: #10529d"
+      >
+        <div class="icon__look__up" tabindex="3" style="outline-color: #10529d">
+          <nb-icon icon="search-outline" style="color: #10529d"></nb-icon>
+          <img src="../../../../assets/images/search.svg" alt="" srcset="" />
+        </div>
+        <ait-chip
+          [title]="currentSearch?.value"
+          *ngIf="!isObjectEmpty(currentSearch)"
+          [icon]="'close-outline'"
+          (action)="removeSearch(false, true)"
+          [tooltip]="currentSearch?.name"
+          tabindex="4"
+          (click)="handleClickChipInput($event)"
+        ></ait-chip>
+        <!-- <input
+          #inputSearch
+          type="text"
+          [placeholder]="('実習生情報' | translate) || ''"
+          autofocus [formControl]="inputControlMaster"
+          autofocus
+          [formControl]="inputControlMaster"
+          (input)="handleInput(inputSearch.value)"
+          tabindex="5"
+          style="outline-color: #10529d"
+        /> -->
+        <input
+          #inputSearch
+          type="text"
+          [placeholder]="(getPlaceHolder() | translate) || ''"
+          autofocus
+          [formControl]="inputControlMaster"
+          (input)="handleInput(inputSearch.value)"
+          tabindex="5"
+        />
+      </div>
+      <ait-button
+        [id]="'cancel'"
+        [width]="'150px'"
+        [title]="'search'"
+        [isDefault]="true"
+        nbSpinnerStatus="primary"
+        [tabIndex]="40"
+        [isDefault]="true"
+        [iconName]="'search-outline'"
+        [color]="'#fff'"
+        [styleText]="{ 'font-size': '14px' }"
+        [styleBtn]="{ width: '120px', 'min-width': '100px', height: '40px' }"
+        [styleIcon]="{ 'font-size': '10px' }"
+        (click)="handleClickButton()"
+      ></ait-button>
+    </div>
+    <div
+      tabindex="7"
+      class="aureolev__search__suggestion"
+      *ngIf="dataSuggest.length === 0 && messageSearch"
+      style="padding: 0px; padding-left: 15px; outline-color: #10529d"
+    >
+      <p style="width: 100%; margin-top: 10px; color: #000">
+        {{ messageSearch | aureoleTranslate }}
+      </p>
+    </div>
+    <div
+      class="aureolev__search__suggestion"
+      *ngIf="dataSuggest.length !== 0"
+      tabindex="8"
+    >
+      <ait-chip
+        [title]="highlightName(com.value)"
+        *ngFor="let com of dataSuggest"
+        (onClickChip)="addCompany(com); inputSearch.value = ''; isExpan = false"
+      ></ait-chip>
+    </div>
+
+    <!-- carts -->
+    <div
+    class="aureolev__matching__result"
+    tabindex="23"
+    style="outline-color: #10529d"
+  >
+    <div class="aureolev__matching__header">
+      <p>{{ 'あなたへのおすすめ' | translate }}</p>
+      <div class="actionGroup">
+        <ait-tabs
+          *ngIf="!disableTab"
+          [tabIndex]="25"
+          [tabs]="tabs"
+          [disabled]="cardSkeleton.length !== 0"
+          (onTabSelect)="getTabSelect($event)"
+        ></ait-tabs>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div
+      class="list__card"
+      tabindex="{{ 24 + tabs.length }}"
+      style="outline-color: #10529d"
+    >
+      <div
+        class="what"
+        style="display: flex; flex-direction: row; flex-wrap: wrap"
+        *ngIf="currentTab !== 'R'"
+      >
+        <p *ngIf="cardSkeleton.length === 0 && dataFilterSave.length === 0">
+          {{ textDataNullSave | translate }}
+        </p>
+
+        <ait-aureolev-card
+          *ngFor="let card of dataFilterSave; let i = index"
+          [card]="card"
+          [isJob]="true"
+          tabindex="{{ 30 + i + 1 }}"
+          style="outline-color: #10529d"
+          [addressSearch]="addressSearch"
+          [user_key]="user_request_key"
+          (actionSaveEvent)="handleSyncData($event)"
+        >
+        </ait-aureolev-card>
+        <ait-card-skeleton
+          *ngFor="let card of cardSkeleton"
+        ></ait-card-skeleton>
+      </div>
+
+      <div
+        class="what"
+        style="display: flex; flex-direction: row; flex-wrap: wrap"
+        *ngIf="currentTab === 'R'"
+      >
+        <p *ngIf="cardSkeleton.length === 0 && dataFilter.length === 0">
+          {{ textDataNull | translate }}
+        </p>
+
+        <ait-aureolev-card
+          *ngFor="let card of dataFilter; let ix = index"
+          [card]="card"
+          tabindex="{{ 30 + ix + 1 }}"
+          style="outline-color: #10529d"
+          [addressSearch]="addressSearch"
+          [user_key]="user_request_key"
+          (actionSaveEvent)="handleSyncData($event)"
+          [isJob]="true"
+        >
+        </ait-aureolev-card>
+
+        <ait-card-skeleton
+          *ngFor="let card of cardSkeleton"
+        ></ait-card-skeleton>
+      </div>
+    </div>
+    
+    <div
+      class="spinner__loading"
+      style="min-height: 50px; margin: 20px; background: transparent"
+      *ngIf="spinnerLoading"
+      [nbSpinner]="spinnerLoading"
+      [nbSpinnerStatus]="'primary'"
+    ></div>
+    <div
+      class="spinner__loading"
+      style="min-height: 50px; margin: 20px; background: transparent"
+      *ngIf="!textDataNull && !textDataNullSave"
+    >
+      {{ textDataEnd | translate }}
+    </div>
+  </div>
+    <!-- end cart -->
+  </div>
+</div>

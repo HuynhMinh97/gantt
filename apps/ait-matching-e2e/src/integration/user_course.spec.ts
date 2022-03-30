@@ -123,7 +123,7 @@ export class UserCourse {
       cy.getValueMaster('training_center', data.training_center);
       cy.textareaValue('description', data.description);
       cy.getValueInput('course_number', data.course_number);
-      // cy.getValueDate('start_date_from', data.start_date_from);
+      cy.getValueDate('start_date_from', data.start_date_from);
       // cy.getValueDate('start_date_to', data.start_date_to);
     });
   }

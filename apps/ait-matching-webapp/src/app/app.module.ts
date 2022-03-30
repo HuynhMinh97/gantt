@@ -120,6 +120,8 @@ const PAGES = [
   EducationListComponent,
   CertificateListComponent,
   SkillListViewComponent,
+  DragScrollComponent,
+  RecommencedJobComponent,
 ];
 
 @NgModule({
@@ -127,8 +129,7 @@ const PAGES = [
     AppComponent,
     ...AUREOLE_V_COMPONENTS,
     ...PAGES,
-    DragScrollComponent,
-    RecommencedJobComponent,
+   
 
   ],
   imports: [

@@ -1,5 +1,5 @@
 /* eslint-disable @angular-eslint/no-output-on-prefix */
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { AitEnvironmentService, AitTranslationService } from '../../services';
 import { AppState, getCaption } from '../../state/selectors';
@@ -9,11 +9,11 @@ import { AppState, getCaption } from '../../state/selectors';
   templateUrl: './ait-card-content.component.html',
   styleUrls: ['./ait-card-content.component.scss'],
 })
-export class AitCardContentComponent {
+export class AitCardContentComponent  implements OnChanges {
   constructor(
     private envService: AitEnvironmentService,
     private store: Store<AppState>,
-    private translate: AitTranslationService
+    private translate: AitTranslationService,
   ) {
     store.pipe(select(getCaption)).subscribe(() => {
       this.buttonTitle = translate.translate(this.buttonTitle || '追加する');
@@ -29,6 +29,7 @@ export class AitCardContentComponent {
   @Input() padding = '';
   @Input() tooltip = '';
   @Input() actionBtn = [];
+  @Input() widthBtn = 'auto';
   @Input() disableHeader = false;
   gradientString = 'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)';
   isShow = true;
@@ -41,10 +42,11 @@ export class AitCardContentComponent {
   @Input() classContainer: any;
   @Input() id;
 
-  @Input() content = '';
+  @Input() summary = '';
+  @Input() styleSummary = {};
   @Input() styleLabel = {};
-  @Input() styleContent = {};
   @Input() styleDivider = {};
+  @Input() styleContent = {};
 
   ID(element: string) {
     const idx = this.id && this.id !== '' ? this.id : Date.now();
@@ -69,4 +71,18 @@ export class AitCardContentComponent {
   handleClickBtnHeader = () => {
     !this.tooltip && this.onClickButtonHeader.emit({ clicked: true });
   };
+
+  ngOnChanges(changes: SimpleChanges) {
+    for (const key in changes) {
+      if (Object.prototype.hasOwnProperty.call(changes, key)) {
+        if (key === 'buttonTitle') {
+          this.store.pipe(select(getCaption)).subscribe((r) => {
+              this.buttonTitle = this.translate.translate(this.buttonTitle);           
+          })
+        }
+
+      }
+    }
+  }
+
 }
