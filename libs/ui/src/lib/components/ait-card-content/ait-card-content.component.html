@@ -34,8 +34,8 @@
         >
           {{ LABEL }}
         </div>
-        <div [ngStyle]="styleContent" >
-          {{content}}
+        <div [ngStyle]="styleSummary">
+          {{ summary }}
         </div>
       </div>
 
@@ -47,16 +47,21 @@
           (click)="handleClickBtnHeader()"
           [nbTooltip]="tooltip"
           [nbTooltipTrigger]="tooltip ? 'hover' : 'noop'"
+          [style.width]="widthBtn"
         >
           <span style="display: flex">
             <nb-icon style="color: #fff" [icon]="actionBtn[0].icon"></nb-icon>
             <span
               class="text"
               style="
-                text-transform: uppercase;
+                 text-transform: uppercase;
                 color: #ffffff;
                 font-size: 10px;
-                margin-left: 10px;
+                width: 100%;
+                justify-content: space-evenly;
+                margin-left: 2px;
+                font-family: Open Sans, sans-serif;
+                font-weight: bold;
               "
               >{{ buttonTitle }}</span
             >
@@ -76,7 +81,7 @@
         ></nb-icon>
       </div>
     </div>
-    <div class="divider" *ngIf="!disableHeader" [ngStyle]="styleDivider" ></div>
+    <div class="divider" *ngIf="!disableHeader" [ngStyle]="styleDivider"></div>
     <div
       class="content"
       [ngStyle]="{
