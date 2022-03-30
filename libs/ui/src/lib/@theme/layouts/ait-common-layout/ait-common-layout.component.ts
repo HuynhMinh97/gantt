@@ -34,7 +34,7 @@ export class AitCommonLayoutComponent extends AitBaseComponent {
   isExcludeScreen = () => this.excludeHeaderScreens.includes(this.currentPath);
 
   constructor(
-    private router: Router,
+    router: Router,
     private sidebarService: NbSidebarService,
     env: AitEnvironmentService,
     private translateService: AitTranslationService,
@@ -43,7 +43,7 @@ export class AitCommonLayoutComponent extends AitBaseComponent {
     apollo: Apollo,
     userService: AitUserService
   ) {
-    super(store, authService, apollo, userService, env);
+    super(store, authService, apollo, userService, env, null, null, null, router);
     this.environment = this.env;
     router.events.subscribe((e) => {
       if (e instanceof NavigationEnd) {

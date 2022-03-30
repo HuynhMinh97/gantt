@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { RESULT_STATUS } from '@ait/shared';
+import { PAGE_TYPE, RESULT_STATUS } from '@ait/shared';
 import {
   AitAuthService,
   AitBaseComponent,
   AitEnvironmentService,
   AitTranslationService,
   AppState,
-  getCaption,
   MODULES,
   PAGES,
   PASSWORD_LENGTH,
@@ -15,7 +14,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NbToastrService } from '@nebular/theme';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 
 @Component({
@@ -44,7 +43,7 @@ export class AitChangePwdComponent extends AitBaseComponent implements OnInit {
 
   @ViewChild('oldpassword') oldpassword: ElementRef;
   constructor(
-    private router: Router,
+    router: Router,
     private translateService: AitTranslationService,
     authService: AitAuthService,
     toastrService: NbToastrService,
@@ -52,10 +51,11 @@ export class AitChangePwdComponent extends AitBaseComponent implements OnInit {
     envService: AitEnvironmentService,
     apollo: Apollo
   ) {
-    super(store, authService, apollo, null, envService, null, toastrService);
+    super(store, authService, apollo, null, envService, null, toastrService, null, router);
     this.setModulePage({
       page: PAGES.CHANGE_PASSWORD,
-      module: MODULES.AUTH
+      module: MODULES.AUTH,
+      type: PAGE_TYPE.VIEW
     })
     this.old_passwordCtrl = new FormControl('');
     this.new_passwordCtrl = new FormControl('');

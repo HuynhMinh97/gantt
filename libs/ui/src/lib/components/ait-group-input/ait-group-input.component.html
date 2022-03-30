@@ -1,6 +1,6 @@
 <div class="component__container">
     <div class="main__container">
-        <ait-text-gradient [content]="pageTitle" [id]="'title'"></ait-text-gradient>
+        <ait-text-gradient [content]="content || pageTitle" [id]="'title'"></ait-text-gradient>
         <ait-space [margin]="'5px'"></ait-space>
         <ait-card-content class="content__card" [disableHeader]="true" [transition]="false">
             <div class="content">
@@ -245,7 +245,7 @@
         <div class="sticky">
             <div class="action-row">
                 <div class="block">
-                    <ait-button *ngIf="mode === 'EDIT'" [id]="'remove'" [width]="'150px'" [title]="'delete'"
+                    <ait-button *ngIf="mode === 'EDIT' && isAllowDelete" [id]="'remove'" [width]="'150px'" [title]="'delete'"
                         [isDefault]="true" (click)="remove()">
                     </ait-button>
 
