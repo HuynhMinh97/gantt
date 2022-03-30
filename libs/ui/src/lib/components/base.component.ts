@@ -698,7 +698,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
   setModulePage = (data: BaseInitData) => {
     const { module, page, type } = data;
     this.getPermission(page, module).then((r) => {
-      this.checkPermission();
+      // this.checkPermission();
     });
     this.store.dispatch(new SetModulePage({ page, module, type }));
     this.module = module;
