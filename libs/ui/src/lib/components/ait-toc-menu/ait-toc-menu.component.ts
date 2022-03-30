@@ -8,7 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class AitTocMenuComponent implements AfterViewInit {
   @Input() items = [];
-  isOpen = true;
+  @Input() isOpen = false;
   @Input() tabIndex;
   item_ids = [];
   @Input() id;
