@@ -27,8 +27,8 @@
         [length]="4000"
         (watchValue)="takeInputValue($event, 'name')"
         [defaultValue]="
-          roleForm?.controls['names']?.value
-            ? roleForm?.controls['names']?.value
+          roleForm?.controls['name'].value
+            ? roleForm?.controls['name'].value
             : null
         "
       ></ait-input-text>
@@ -91,6 +91,11 @@
         [disableOutputDefault]="true"
         (watchValue)="takeMasterValues($event.value, 'employee_name')"
         [isSubmit]="isSubmit"
+        [defaultValue]="
+        roleForm?.controls['employee_name']?.value
+            ? [roleForm?.controls['employee_name']?.value]
+            : null
+        "
       >
       </ait-autocomplete-master-data>
       <div>
@@ -120,8 +125,8 @@
                 [isSubmit]="isSubmit"
                 (watchValue)="takeInputValue($event, 'remark')"
                 [defaultValue]="
-                  roleForm?.controls['remark']?.value
-                    ? roleForm?.controls['remark']?.value
+                  roleForm?.controls['remark'].value
+                    ? roleForm?.controls['remark'].value
                     : null
                 "
               ></ait-input-text>
@@ -141,6 +146,11 @@
                 [defaultValue]=""
                 [isSubmit]="isSubmit"
                 [isReset]="isReset"
+                [defaultValue]="
+                roleForm?.controls['page']?.value
+                    ? [roleForm?.controls['page']?.value]
+                    : null
+                "
               >
               </ait-autocomplete-master-data>
             </ng-container>
@@ -160,6 +170,8 @@
                 [defaultValue]=""
                 [isSubmit]="isSubmit"
                 [isReset]="isReset"
+                [defaultValue]="
+                roleForm?.controls['permission']?.value"
               >
               </ait-autocomplete-master-data>
             </ng-container>
@@ -207,13 +219,23 @@
       >
       </ait-button>
       <ait-button
-        *ngIf="mode === 'NEW' || (mode === 'EDIT' && isChanged)"
+        *ngIf="mode === 'NEW'"
         [id]="'save'"
         [width]="'150px'"
         [height]="'40px'"
         [title]="'Add'"
         [isDefault]="true"
         (click)="add()"
+      >
+      </ait-button>
+      <ait-button
+        *ngIf="mode === 'EDIT' && isChanged"
+        [id]="'save'"
+        [width]="'150px'"
+        [height]="'40px'"
+        [title]="'Save'"
+        [isDefault]="true"
+        (click)="save()"
       >
       </ait-button>
       <ait-button

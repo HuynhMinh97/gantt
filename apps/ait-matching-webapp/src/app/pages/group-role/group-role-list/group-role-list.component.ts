@@ -228,14 +228,14 @@ export class GroupRoleListComponent extends AitBaseComponent implements OnInit {
   }
 
   async getDataTable(obj?: any) {
-    this.groupRoleRegisterService.name = undefined;
+    this.groupRoleRegisterService.role_key = undefined;
     this.groupDataTable = [];
     await this.groupDataListService.getGroupDataList(obj).then((res) => {
       const listRole = res.data;
       listRole.forEach((role) => {
         const roleTable = {};
         roleTable['name'] = role?.name;
-        roleTable['_key'] = role?._key;
+        roleTable['_key'] = role?._key + '/' + role?.userId;
         roleTable['employee_name'] = role?.employee_name;
         roleTable['permission'] = role?.permission;
         roleTable['create_at'] = this.getDateFormat(role?.create_at);
@@ -361,7 +361,9 @@ export class GroupRoleListComponent extends AitBaseComponent implements OnInit {
   }
 
   edit(data) {
-    this.groupRoleRegisterService.name = data;
+    this.groupRoleRegisterService.role_key = data;
+    this.groupRoleRegisterService.roleDataSave = [];
+    this.groupRoleRegisterService.groupRoleList = [];
     this.router.navigate([`group-role-register`]);
   }
 

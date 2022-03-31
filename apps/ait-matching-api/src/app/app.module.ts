@@ -19,7 +19,7 @@ import { ProjectListResolver } from './list/projectList/project-list.resolver';
 import { LanguageListResolver } from './list/language-list.ts/language-list.resolver';
 import { EducationListResolver } from './list/education-list/education-list.resolver';
 import { CertificateResolver } from './list/certificate-list/certificate-list.resolver';
-import { GetEmployeeResolver } from './group-role/add-role/getEmployee.resolver';
+import { GetEmployeeResolver } from './group-role/add-role/add-role.resolver';
 
 const RESOLVERS = [
   UserExperienceInfoResolver,

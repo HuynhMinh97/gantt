@@ -30,8 +30,6 @@ export class GroupDataListService extends AitBaseService {
         userId: true,
         _key: true,
         name: true,
-        page: true,
-        module: true,
         employee_name: true,
         permission:true ,
         create_by: true,

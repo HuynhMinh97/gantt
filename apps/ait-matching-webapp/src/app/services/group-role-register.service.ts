@@ -5,23 +5,18 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class GroupRoleRegisterService extends AitBaseService {
-  public name: string;
+  public role_key: string;
   public roleDataSave = null;
   public groupRole = null;
   public groupRoleList = null;
   public groupSaveRole = null;
 
-  async getGroupRoleList(role_key: string) {
+  async getGroupRoleList(role_key: string, employee_key: string) {
     const condition = {
       role_key: role_key,
+      employee_key: employee_key
     };
-    // if (!condition['school']){
-    //   condition['school'] = {}
-    // }
-    // condition['school']['attribute'] = 'school';
-    // condition['school']['ref_collection'] = 'm_school';
-    // condition['school']['ref_attribute'] = 'code';
-
+    
     if (!condition['create_by']) {
       condition['create_by'] = {};
     }
@@ -40,6 +35,7 @@ export class GroupRoleRegisterService extends AitBaseService {
       },
       {
         userId: true,
+        roleUser_key: true,
         _key: true,
         name: true,
         child_name: true,
@@ -70,19 +66,12 @@ export class GroupRoleRegisterService extends AitBaseService {
     );
   }
 
-  async findRolePage(_from: string, module_key: string) {
-    const condition = {
-      _from: _from,
-      module: module_key
+  async removeRolePage(data: any) {
+    const returnField = {
+      _key: true,
     };
-    return await this.query(
-      'findRolePage',
-      {
-        collection: 'sys_role_page',
-        condition,
-      },
-      { _key: true }
-    );
+    return await this.mutation(
+      'removeRolePage', 'sys_role_page', [data], returnField);
   }
 
   async saveRoleName(data: any) {

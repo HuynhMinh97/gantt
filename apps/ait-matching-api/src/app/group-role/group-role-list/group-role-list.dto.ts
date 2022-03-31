@@ -85,6 +85,9 @@ export class SearchGroupRoleListDto {
   role_key: string;
 
   @Field(() => String, { nullable: true })
+  employee_key: string;
+
+  @Field(() => String, { nullable: true })
   _from: string;
 
   @Field(() => String, { nullable: true })

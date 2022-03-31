@@ -182,10 +182,6 @@ export class UserOnboardingService extends AitBaseService {
         att: 'industry',
         col: 'm_industry',
       },
-      {
-        att: 'job_setting_skills',
-        col: 'm_skill',
-      },
       
     ];
 
@@ -196,6 +192,11 @@ export class UserOnboardingService extends AitBaseService {
         ref_attribute: 'code',
       };
     });
+    condition['job_setting_skills'] = {
+      attribute: 'job_setting_skills',
+      ref_collection:'m_skill', 
+      ref_attribute: '_key'
+    }
     const returnFields = {
       _key: true,
       location: {
