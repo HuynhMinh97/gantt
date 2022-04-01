@@ -40,7 +40,6 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
   user_skills = {
     _from: '',
     _to: '',
-    relationship: '',
     sort_no: 0,
     level: 1
   };
@@ -167,7 +166,6 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
     if (this.userSkills.valid ) {
       this.callLoadingApp();
       this.user_skills._from = 'sys_user/' + this.user_id;
-      this.user_skills.relationship = 'user_skill';
       if (this.mode == 'EDIT') {
         const _fromSkill = [
           { _from: 'sys_user/' + this.user_id },
