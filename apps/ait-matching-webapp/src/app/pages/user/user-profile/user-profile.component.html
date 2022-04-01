@@ -242,7 +242,7 @@
       </ait-card-content>
     </div>
     <!-- project -->
-    <div class="project">
+    <div id="project">
       <ait-card-content
         tabindex="2"
         [id]="'継続する'"
@@ -502,7 +502,7 @@
               [title]="'view more'"
               [id]="'reorder-skills'"
               [isDefault]="'true'"
-              (click)="getDown('isShowProject', true)"
+              (click)="getDown('isShowProject', true, 'project')"
             ></ait-button>
 
             <ait-button
@@ -519,7 +519,7 @@
               [title]="'view less'"
               [id]="'reorder-skills'"
               [isDefault]="'true'"
-              (click)="getDown('isShowProject', false)"
+              (click)="getDown('isShowProject', false, '継続する_menu_toc_item_Projects')"
             ></ait-button>
           </div>
         </div>

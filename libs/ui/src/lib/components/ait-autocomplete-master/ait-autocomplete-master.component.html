@@ -174,6 +174,9 @@
         (action)="removeItems(chip)"
         [icon]="'close-outline'"
         [id]="ID('selected_chip')"
+        [isEvaluate]="isEvaluate"
+        (watchValue)="clickStar($event, chip._key)"
+        [level]="chip.level || 1"
       ></ait-chip>
     </div>
   </div>

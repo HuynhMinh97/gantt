@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 /* eslint-disable @angular-eslint/no-output-on-prefix */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
@@ -117,6 +118,7 @@ export class AitAutoCompleteMasterComponent
   messageSearch = '';
   @Input() inputDefault = '';
   @Input() isClear;
+  @Input() isEvaluate = false;
 
   isFocus = false;
 
@@ -344,6 +346,7 @@ export class AitAutoCompleteMasterComponent
           value: this.selectItems.map((m) => ({
             _key: m?._key,
             value: m?.value,
+            level: m?.level || 1,
           })),
         });
       } catch {
@@ -352,6 +355,7 @@ export class AitAutoCompleteMasterComponent
           value: this.selectItems.map((m) => ({
             _key: m?._key,
             value: m?.value,
+            level: m?.level || 1,
           })),
         });
       }
@@ -435,8 +439,14 @@ export class AitAutoCompleteMasterComponent
         this.includeNotActive
       )
       .then((r) => {
-        if (r?.status === RESULT_STATUS.OK) {
+        if (r?.status === RESULT_STATUS.OK) {                   
           const result = r.data.map((m) => ({ ...m, value: m?.name }));
+          for(let i of result){
+            const isValidate = this.defaultValue.find(d => d._key == i.name);
+            if(isValidate){
+              i['level']= isValidate.level;
+            }
+          }
           this.selectItems = [...(result || []), ...this.storeDataDraft];
         }
       });
@@ -571,6 +581,7 @@ export class AitAutoCompleteMasterComponent
         value: this.selectItems.map((m) => ({
           _key: m?._key,
           value: m?.value,
+          level: m?.level || 1,
         })),
       });
     } else {
@@ -589,6 +600,7 @@ export class AitAutoCompleteMasterComponent
           value: this.selectItems.map((m) => ({
             _key: m?._key,
             value: m?.value,
+            level: m?.level || 1,
           })),
         });
       }
@@ -626,6 +638,7 @@ export class AitAutoCompleteMasterComponent
             value: this.selectItems.map((m) => ({
               _key: m?._key,
               value: m?.value,
+              level: m?.level || 1,
             })),
           });
         } else {
@@ -636,6 +649,7 @@ export class AitAutoCompleteMasterComponent
             value: this.selectItems.map((m) => ({
               _key: m?._key,
               value: m?.value,
+              level: m?.level || 1,
             })),
           });
         }
@@ -696,5 +710,19 @@ export class AitAutoCompleteMasterComponent
     } else {
       return false;
     }
+  }
+  clickStar(val , _key){
+    for(let index in this.selectItems){
+      if(this.selectItems[index]._key == _key){
+        this.selectItems[index].level = val;        
+      }
+    }
+    this.watchValue.emit({
+      value: this.selectItems.map((m) => ({
+        _key: m?._key,
+        value: m?.value,
+        level: m?.level || 1,
+      })),
+    });
   }
 }

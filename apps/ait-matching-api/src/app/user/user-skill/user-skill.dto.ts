@@ -16,6 +16,9 @@ export class UserSkillDto extends BaseDto {
   @Field(() => Float, { nullable: true })
   sort_no?: number;
 
+  @Field(() => Float, { nullable: true })
+  level?: number;
+
   @Field(() => ConditionDto, { nullable: true })
   skills?: ConditionDto;
 }

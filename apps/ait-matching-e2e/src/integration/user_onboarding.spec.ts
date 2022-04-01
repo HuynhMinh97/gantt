@@ -3,9 +3,8 @@ describe('Navigate user onboarding', () => {
     cy.login('lacnt', '12345678');
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(3000);
-    cy.visit(Cypress.env('host') + Cypress.env('/user-onboarding/10222095'));
-    cy.url().should('eq', Cypress.env('host') + '');
-    // cy.url().should('eq', Cypress.env('host') + Cypress.env('user_onboarding'));
+    cy.visit(Cypress.env('host') + Cypress.env('user_onboarding'));
+    cy.url().should('eq', Cypress.env('host') + Cypress.env('user_onboarding'));
     checkUIUserOnboarding();
     // checkDataComboboxOnboarding();
     // resetFormUserOnboarding();
