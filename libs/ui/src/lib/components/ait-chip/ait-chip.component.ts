@@ -27,6 +27,10 @@ export class AitChipComponent implements OnChanges {
   @Input() colorText = '#10529D';
   @Input() is18n = true;
   @Input() id;
+  @Input() level = 1;
+  @Input() isEvaluate = false;
+  @Output() watchValue = new EventEmitter();
+  STAR = [1,2,3,4,5]
   ID(element: string) {
     const idx = this.id && this.id !== '' ? this.id : Date.now();
     return element + '_' + idx;
@@ -55,4 +59,9 @@ export class AitChipComponent implements OnChanges {
   }
 
   onClickChipEvent = () => this.onClickChip.emit({ isClickChip: true });
+
+  clickStar(val){
+    this.level = val + 1;
+    this.watchValue.emit(val + 1);
+  }
 }
