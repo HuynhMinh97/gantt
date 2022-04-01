@@ -42,6 +42,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
     _to: '',
     relationship: '',
     sort_no: 0,
+    level: 1
   };
   topSkills: any[];
   constructor(
@@ -132,11 +133,11 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
     await this.userSkillsService.findSkill(from).then((res) => {
       if (res.status === RESULT_STATUS.OK) {
         if (res.data.length > 0) {
+          console.log(res.data);
+          
           this.mode = MODE.EDIT;
-          const listSkills = []
-          for (const item of res.data) {
-            listSkills.push(item.skills)
-          }
+          let listSkills = []
+          listSkills = res.data.map(m => ({_key: m?.skills?._key, value: m?.skills?.value , level: m?.level}) )
           this.userSkills.controls['skills'].setValue(listSkills);
           this.companySkills = listSkills
           this.userSkillsClone =  JSON.parse(JSON.stringify(this.userSkills.value));
@@ -148,44 +149,6 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
       }
     })
   }
-
-  // async saveAndContinue() {
-  //   if (this.userSkills.valid) {
-  //     this.callLoadingApp();
-  //     this.user_skills._from = 'sys_user/' + this.user_id;
-  //     this.user_skills.relationship = 'user_skill';
-  //     if (this.mode == 'EDIT') {
-  //       const _fromSkill = [
-  //         { _from: 'sys_user/' + this.user_id },
-  //       ];
-  //       this.userSkillsService.removeUserSkill(_fromSkill);
-  //     }
-  //     const listSkills = this.userSkills.value.skills;
-  //     listSkills.forEach(async (skill) => {
-  //       this.sort_no += 1;
-  //       this.user_skills.sort_no = this.sort_no;
-  //       this.user_skills._to = 'm_skill/' + skill._key;
-  //       await this.userSkillsService.saveSkills(this.user_skills)
-  //         .then((res) => {
-  //           if (res?.status === RESULT_STATUS.OK) {
-  //             this.isSave = true;
-  //             const message = this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
-  //             this.showToastr('', message);
-  //             this.isChanged = false;
-  //             this.cancelLoadingApp();
-  //           } else {
-  //             this.cancelLoadingApp();
-  //             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-  //           }
-  //         }).catch(() => {
-  //           this.cancelLoadingApp();
-  //           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-  //         });
-  //     });
-  //   } else {
-  //     this.cancelLoadingApp();
-  //   }
-  // }
 
   updateTopSkill(){
     const topSkills = [];
@@ -217,6 +180,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
         this.sort_no += 1;
         this.user_skills.sort_no = this.sort_no;
         this.user_skills._to = 'm_skill/' + skill._key;
+        this.user_skills.level = skill.level;
         await this.userSkillsService.saveSkills(this.user_skills)
           .then((res) => {
             if (res?.status === RESULT_STATUS.OK) {

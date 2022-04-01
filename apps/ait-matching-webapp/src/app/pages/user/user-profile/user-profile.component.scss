@@ -532,5 +532,16 @@ ul .timeline {
 nb-icon {
   font-size: 1.5rem;
 }
-
+.hidden {
+  visibility: hidden;
+  opacity: 0;
+  height: 0;
+  transition: height 10s linear;
+}
+.show {
+  visibility: visible;
+  opacity: 1;
+  height:auto;
+  transition: height 10s linear;
+}
   
