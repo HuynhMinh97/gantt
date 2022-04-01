@@ -116,7 +116,7 @@ export class UserOnboardingService extends AitBaseService {
       condition[item.att] = {
         attribute: item.att,
         ref_collection: item.col,
-        ref_attribute: 'code',
+        ref_attribute: '_key',
       };
     });
 
@@ -189,7 +189,7 @@ export class UserOnboardingService extends AitBaseService {
       condition[item.att] = {
         attribute: item.att,
         ref_collection: item.col,
-        ref_attribute: 'code',
+        ref_attribute: '_key',
       };
     });
     condition['job_setting_skills'] = {

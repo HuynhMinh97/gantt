@@ -175,7 +175,7 @@ export class UserOnboardingComponent
   jobSettingData: any;
   isLoad = false;
   constructor(
-    private router: Router,
+    router: Router,
     private element: ElementRef,
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
@@ -202,7 +202,9 @@ export class UserOnboardingComponent
       null,
       env,
       layoutScrollService,
-      toastrService
+      toastrService,
+      null,
+      router
     );
 
     store.pipe(select(getUserSetting)).subscribe((setting) => {
@@ -238,8 +240,8 @@ export class UserOnboardingComponent
         Validators.required,
         Validators.maxLength(200),
       ]),
-      katakana: new FormControl(null, [Validators.maxLength(200)]),
-      romaji: new FormControl(null, [Validators.maxLength(200)]),
+      katakana: new FormControl(null),
+      romaji: new FormControl(null),
       gender: new FormControl(null, [Validators.required]),
       bod: new FormControl(null, [Validators.required]),
       phone_number: new FormControl(null, [Validators.required]),
@@ -538,11 +540,7 @@ export class UserOnboardingComponent
       );
       arrSkills.push(skill_key.data[0]._key);
     }
-    // skills.forEach((sk) => {
-
-    //   const skill = sk._key;
-    //   arrSkills.push(skill);
-    // });
+    
     saveData.job_setting_skills = arrSkills;
     saveData.location = saveData.location ? saveData.location._key : null;
     saveData.job_setting_title = saveData.job_setting_title
@@ -628,6 +626,7 @@ export class UserOnboardingComponent
   }
 
   save() {
+    
     this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;

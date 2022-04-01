@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/member-ordering */
-import { isArrayFull, isObjectFull, RESULT_STATUS } from '@ait/shared';
+import { isArrayFull, isObjectFull, PAGE_TYPE, RESULT_STATUS } from '@ait/shared';
 import {
   AitAuthService,
   AitBaseComponent,
@@ -23,7 +23,6 @@ import {
   EducationDto,
   LanguageDto,
   OrderSkill,
-  ProfileDto,
 } from './user-profile';
 import { UserProfileService } from '../../../services/user-profile.service';
 import { UserProjectService } from '../../../services/user-project.service';
@@ -35,11 +34,10 @@ import { UserEducationService } from '../../../services/user-education.service';
 import { UserLanguageService } from '../../../services/user-language.service';
 import { MatchingUtils } from '../../../../../../../apps/ait-matching-webapp/src/app/@constants/utils/matching-utils';
 import { UserSkillsService } from '../../../services/user-skills.service';
-
 @Component({
   selector: 'ait-user-profile',
   templateUrl: './user-profile.component.html',
-  styleUrls: ['./user-profile.component.scss']
+  styleUrls: ['./user-profile.component.scss'],
 })
 export class UserProfileComponent extends AitBaseComponent implements OnInit {
   mode = '';
@@ -113,7 +111,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     private dialogService: NbDialogService,
     public activeRouter: ActivatedRoute,
     private translateService: AitTranslationService,
-    private router: Router,
+    router: Router,
     private santilizer: DomSanitizer,
     store: Store<AppState>,
     authService: AitAuthService,
@@ -122,7 +120,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     layoutScrollService: NbLayoutScrollService,
     toastrService: NbToastrService,
   ) {
-    super(store, authService, apollo, null, env, layoutScrollService, toastrService);
+    super(store, authService, apollo, null, env, layoutScrollService, toastrService,null, router);
     store.pipe(select(getUserSetting)).subscribe((setting) => {
       if (isObjectFull(setting) && setting['date_format_display']) {
         this.dateFormat = setting['date_format_display'];
@@ -137,6 +135,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     this.setModulePage({
       module: 'user',
       page: 'user_profiles',
+      type: PAGE_TYPE.NEW,
     });
     this.profileId = this.activeRouter.snapshot.paramMap.get('id');
     if (this.profileId && this.profileId != this.user_id) {
@@ -388,6 +387,8 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     this.userCourseService.findCourseByUserId(this.profileId)
       .then((res) => {
         const data = res.data;
+        console.log(data);
+        
         this.countCourse = data.length;
         for (const element of data) {
           const course = {} as CourseDto;
@@ -611,5 +612,8 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     }else{
       this.heightExperience = '0px'
     }
+  }
+  getDown(val,data){
+    this[val] = data;
   }
 }

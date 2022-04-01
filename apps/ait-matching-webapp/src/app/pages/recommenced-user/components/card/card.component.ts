@@ -2,10 +2,13 @@ import { RESULT_STATUS } from '@ait/shared';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, Sanitizer, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import { AitBinaryDataService, AitCurrencySymbolService, AitDateFormatService, AitTranslationService, AppState, getEmpId } from '@ait/ui';
+// eslint-disable-next-line max-len
+import { AitAppUtils, AitBinaryDataService, AitCurrencySymbolService, AitDateFormatService, AitTranslationService, AppState, getEmpId } from '@ait/ui';
 import { COLOR, FIELD, fields } from '../../../interface';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { ReactionService } from 'apps/ait-matching-webapp/src/app/services/reaction.service';
 import { DomSanitizer } from '@angular/platform-browser';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { AitNumberFormatPipe } from 'libs/ui/src/lib/@theme/pipes/ait-number-format.pipe';
 
 export const color = {
@@ -32,6 +35,8 @@ export class AureoleVCardComponent implements OnInit, OnChanges {
   @Input() addressSearch = '';
   @Input() company_key = '';
   @Output() actionSaveEvent = new EventEmitter();
+  @Input() tabIndex;
+  @Input() isJob = false;
   fieldDate = ['生年月日'];
   avatarURL = 'https://ui-avatars.com/api/?name=';
   avatar = ''
@@ -40,6 +45,7 @@ export class AureoleVCardComponent implements OnInit, OnChanges {
   originUrl = location.origin + this.binaryService.downloadUrl;
   master_data_fields = ['gender', 'occupation', 'prefecture', 'residence_status', 'work'];
   key_avatar = ''
+  comma: any;
 
   // testImage(URL) {
   //   // console.log(this.avatar, this.card.name)
@@ -68,7 +74,7 @@ export class AureoleVCardComponent implements OnInit, OnChanges {
     return this.card?.name ? this.avatarURL + this.card?.name.replace(' ', '+') : this.avatarURL + '';
   }
 
-
+  getFieldName = (name) => this.translateService.translate(name);
   getContent(data) {
     if (this.master_data_fields.includes(data?.field)) {
       if(data?.value?.value) {
@@ -180,6 +186,7 @@ export class AureoleVCardComponent implements OnInit, OnChanges {
 
 
   actionButtonSave = (user_key: string) => {
+    debugger
     if (!this.card.is_saved) {
       this.reactionService.saveCompanyUser([{
         company_id: this.company_key,
@@ -208,6 +215,17 @@ export class AureoleVCardComponent implements OnInit, OnChanges {
       });
     }
 
+   
 
   }
+
+  getValueArray = (data: any[]) => {
+    const source = AitAppUtils.getUniqueArray(data, 'value');
+    if (source && source.length !== 0) {
+      const target = source.map(d => d?.value).filter(v => v);
+      return target.join(`${this.comma} `);
+    }
+    return null;
+  }
+
 }

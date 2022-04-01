@@ -34,7 +34,7 @@ import {
 import { AureoleVCardComponent } from './pages/recommenced-user/components/card/card.component';
 import { ContentRowComponent } from './pages/recommenced-user/components/content/content.component';
 import { CardSkeletonComponent } from './pages/recommenced-user/components/card-skeleton/card-skeleton.component';
-import { RecommencedComponent } from './pages/recommenced-user/recommenced-user.component';
+import { RecommencedUserComponent } from './pages/recommenced-user/recommenced-user.component';
 import { SyncApiConfigService } from './services/sync_api_config.service';
 import { SyncPEService } from './services/sync_pe_history.service';
 import { ReactionService } from './services/reaction.service';
@@ -52,7 +52,6 @@ import { CommonModule } from '@angular/common';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { UserJobAlertComponent } from './pages/user/user-job-alert/user-job-alert.component';
 import { UserReorderSkillsComponent } from './pages/user/user-reorder-skills/user-reorder-skills.component';
-import { CardContentProfileComponent } from './pages/user/user-profile/card-content/card-content.component';
 import { CountryComponent } from './components/country/country.component';
 import { UserLanguageDetailComponent } from './pages/user/user-language-detail/user-language-detail.component';
 import { UserEducationDetailComponent } from './pages/user/user-education-detail/user-education-detail.component';
@@ -74,6 +73,7 @@ import { AddRoleComponent } from './pages/group-role/add-role/add-role.component
 import { GroupRoleRegisterComponent } from './pages/group-role/group-role-register/group-role-register.component';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { GroupRoleListComponent } from './pages/group-role/group-role-list/group-role-list.component';
+import { RecommencedJobComponent } from './pages/recommenced/recommenced-job/recommenced-job.component';
 
 const AIT_UI_MODULES = [AitChipModule, AitTabsModule, AitTocMenuModule];
 
@@ -97,7 +97,7 @@ const AUREOLE_V_COMPONENTS = [
 ];
 
 const PAGES = [
-  RecommencedComponent,
+  RecommencedUserComponent,
   UserExperienceComponent,
   UserEducationComponent,
   UserLanguageComponent,
@@ -109,7 +109,6 @@ const PAGES = [
   UserReorderSkillsComponent,
   UserProfileComponent,
   UserJobAlertComponent,
-  CardContentProfileComponent,
   UserLanguageDetailComponent,
   UserEducationDetailComponent,
   UserCourseDetailComponent,
@@ -124,6 +123,8 @@ const PAGES = [
   EducationListComponent,
   CertificateListComponent,
   SkillListViewComponent,
+  DragScrollComponent,
+  RecommencedJobComponent,
 ];
 
 @NgModule({
@@ -136,6 +137,7 @@ const PAGES = [
     AddRoleComponent,
     GroupRoleRegisterComponent,
     GroupRoleListComponent,
+   
 
   ],
   imports: [

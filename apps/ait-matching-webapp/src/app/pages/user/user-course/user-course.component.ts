@@ -72,7 +72,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
   };
 
   constructor(
-    private router: Router,
+    router: Router,
     private element: ElementRef,
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
@@ -88,7 +88,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
     store: Store<AppState>,
     apollo: Apollo
   ) {
-    super(store, authService, apollo, null, env, layoutScrollService, toastrService);
+    super(store, authService, apollo, null, env, layoutScrollService, toastrService, null, router);
     this.user_id = this.authService.getUserID();
     this.setModulePage({
       module: 'user',

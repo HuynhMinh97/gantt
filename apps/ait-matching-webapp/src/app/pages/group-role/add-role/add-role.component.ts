@@ -17,6 +17,7 @@ import {
   MODE,
   AitEnvironmentService,
   AitAppUtils,
+  AitRenderPageService,
 } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
 import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
@@ -55,6 +56,8 @@ export class AddRoleComponent extends AitBaseComponent implements OnInit {
     private formBuilder: FormBuilder,
     private addRoleService: AddRoleService,
     private groupRoleRegisterService: GroupRoleRegisterService,
+    private renderPageService: AitRenderPageService,
+
 
     env: AitEnvironmentService,
     store: Store<AppState>,
@@ -74,6 +77,7 @@ export class AddRoleComponent extends AitBaseComponent implements OnInit {
     );
 
     this.roleForm = this.formBuilder.group({
+      role_key: new FormControl(null),
       _key: new FormControl(null),
       name: new FormControl(null, [Validators.required]),
       remark: new FormControl(null),
@@ -143,18 +147,21 @@ export class AddRoleComponent extends AitBaseComponent implements OnInit {
       saveRoleInfo = this.roleForm.value;
       saveRoleInfo['groupName'] = this.name;
       saveRoleInfo['remarkGroup'] = this.remark;
-      const _from = [
-        { _from: 'sys_user/' + saveRoleInfo['_key'] },
-      ];
-      await this.addRoleService.removeRoleUser(_from)
+      await this.addRoleService.removeRoleUser(saveRoleInfo['_key']);
+      const resModule = await this.renderPageService.findModule({
+        code: saveRoleInfo['module']._key,
+      });
+      const resPage = await this.renderPageService.findPage({
+        code: saveRoleInfo['page']._key,
+      });
       await this.saveRoleUser(
-        saveRoleInfo['_key'],
+        saveRoleInfo['role_key'],
         saveRoleInfo['permission'],
         saveRoleInfo['employee_name']._key,
         saveRoleInfo['name'],
         saveRoleInfo['remark'],
-        saveRoleInfo['module']._key,
-        saveRoleInfo['page']._key
+        resModule.data[0]._key,
+        resPage.data[0]._key,
       ).then((res) => {
         if (res?.status === RESULT_STATUS.OK) {
           const message =
@@ -176,13 +183,18 @@ export class AddRoleComponent extends AitBaseComponent implements OnInit {
     name: string,
     remark: string,
     module_key: string,
-    page_key: string
+    page_key: string,
   ) {
-    const permissionArr = permission.split(', ');
+    const permissions = [];
+    Object.keys(permission).forEach((key) => {
+      const value = permission[key]._key;
+      permissions.push(value);
+    });
+     
     const sys_role_page = {
       _from: 'sys_role/' + role_key,
       _to: 'sys_user/' + user_key,
-      permission: permissionArr,
+      permission: permissions,
       name: name,
       remark: remark,
       module: module_key,

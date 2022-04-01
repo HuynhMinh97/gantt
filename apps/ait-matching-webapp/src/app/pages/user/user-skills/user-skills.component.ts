@@ -45,7 +45,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
   };
   topSkills: any[];
   constructor(
-    private router: Router,
+    router: Router,
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
     private dialogService: NbDialogService,
@@ -67,7 +67,9 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
       null,
       env,
       layoutScrollService,
-      toastrService
+      toastrService,
+      null,
+      router,
     );
 
     this.setModulePage({

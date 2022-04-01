@@ -91,11 +91,7 @@
         [disableOutputDefault]="true"
         (watchValue)="takeMasterValues($event.value, 'employee_name')"
         [isSubmit]="isSubmit"
-        [defaultValue]="
-        roleForm?.controls['employee_name']?.value
-            ? [roleForm?.controls['employee_name']?.value]
-            : null
-        "
+        [defaultValue]="roleForm?.controls['employee_name']?.value"
       >
       </ait-autocomplete-master-data>
       <div>

@@ -41,6 +41,7 @@ export class AddRoleService extends AitBaseService {
         condition
       },
       {
+        role_key: true,
         _key: true,
         remark: true,
         name: true,
@@ -65,14 +66,16 @@ export class AddRoleService extends AitBaseService {
     );
   }
 
-  async removeRoleUser(data: any[]) {
+  async removeRoleUser(_key: string) {
     const returnFields = { _key: true };
+    const data = {_key};
     return await this.mutation(
       'removeRoleUser',
       'sys_role_user',
-      data,
+      [data],
       returnFields
     );
   }
+  
   
 }

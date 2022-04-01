@@ -22,6 +22,9 @@ export class RoleUserInfoEntity extends BaseEntity {
     name?: string;
 
     @Field(() => String, { nullable: true })
+    role_key?: string;
+
+    @Field(() => String, { nullable: true })
     group_name?: string;
 
     @Field(() => KeyValueEntity, { nullable: true })

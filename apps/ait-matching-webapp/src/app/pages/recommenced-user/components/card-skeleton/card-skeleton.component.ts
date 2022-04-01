@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'ait-card-skeleton',
@@ -6,8 +6,5 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./card-skeleton.component.scss']
 })
 
-export class CardSkeletonComponent implements OnInit {
-  constructor() { }
-
-  ngOnInit() { }
+export class CardSkeletonComponent {
 }

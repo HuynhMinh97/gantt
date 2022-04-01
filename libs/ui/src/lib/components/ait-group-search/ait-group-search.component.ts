@@ -5,6 +5,7 @@ import {
   isObjectFull,
   KEYS,
   KeyValueDto,
+  PAGE_TYPE,
   RESULT_STATUS,
 } from '@ait/shared';
 import {
@@ -124,6 +125,13 @@ export class AitGroupSearchComponent
       toastrService,
       saveTempService
     );
+    setTimeout(() => {
+      this.setModulePage({
+        page: this.page,
+        module: this.module,
+        type: PAGE_TYPE.SEARCH,
+      });
+    }, 0);
   }
 
   ngDoCheck() {

@@ -85,7 +85,8 @@ export class GetEmployeeResolver extends AitBaseService {
     });
     const roleUserInfo = [];
     roleUserInfo.push({
-      _key: roleKey,
+      role_key:roleKey,
+      _key: listData['_key'] ,
       name: listData['name'],
       remark: listData['remark'],
       module: module.data[0],
@@ -102,20 +103,14 @@ export class GetEmployeeResolver extends AitBaseService {
     return response;
   }
 
+ 
+
   @Mutation(() => GroupRoleListResponse, { name: 'removeRoleUser' })
-  async removeRoleUser(
+  removeRoleUser(
     @AitCtxUser() user: SysUser,
-    @Args('request', { type: () => GroupRoleListRequest })
-    request: GroupRoleListRequest
+    @Args('request', { type: () => GroupRoleListRequest }) request: GroupRoleListRequest
   ) {
-    const from =  request?.condition?.role_key;
-    const aqlQuery = `
-        FOR data IN sys_role_user
-        FILTER data._from == ${from}
-        UPDATE data WITH { del_flag: true } IN sys_role_user
-        RETURN data
-      `;
-    return await this.query(aqlQuery);
+    return this.remove(request, user);
   }
 
   async getModule(_key: any) {

@@ -228,10 +228,10 @@
                     [width]="'400px'"
                     [required]="true"
                     [label]="'ADDRESS'"
-                    [placeholder]="'please input adress'"
+                    [placeholder]="'please input address'"
                     [isReset]="resetUserInfo.address"
                     [isSubmit]="isSubmit"
-                    (watchValue)="takeInputValue($event, 'adress')"
+                    (watchValue)="takeInputValue($event, 'address')"
                     [defaultValue]="
                       userOnboardingInfo?.controls['address']?.value
                     "
@@ -409,8 +409,8 @@
         <ait-card-content
           [styleDivider]="{'margin-left':'10px'}"
           [styleLabel]="{ 'font-size': '26px'}"
-          [content]="'this_setting_is_used_to_find_the_best_job_for_you' | translate"
-          [styleContent]="{
+          [summary]="'this_setting_is_used_to_find_the_best_job_for_you' | translate"
+          [styleSummary]="{
             color: '#8F9BB3',
             'font-size': '12px',
             'margin-left':'10px'

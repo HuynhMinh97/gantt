@@ -225,6 +225,7 @@ export class GroupRoleListResolver extends AitBaseService {
     @Args('request', { type: () => GroupRoleListRequest })
     request: GroupRoleListRequest
   ) {
+    console.log(request);
     return this.save(request, user);
   }
 

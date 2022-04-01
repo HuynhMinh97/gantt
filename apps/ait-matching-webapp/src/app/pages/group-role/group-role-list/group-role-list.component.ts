@@ -108,7 +108,6 @@ export class GroupRoleListComponent extends AitBaseComponent implements OnInit {
   dataTable: any[] = [];
   settingDataTable: any;
   dateFormat: string;
-  type: boolean;
   isTableExpan = true;
   isSetting = false;
   isSubmit = false;
