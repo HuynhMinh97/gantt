@@ -6,12 +6,14 @@ import { UserProjectResponse } from './user-project.response';
 
 @Resolver()
 export class UserProjectResolver extends AitBaseService {
-    collection = 'biz-project';
+    collection = 'user-project';
     @Query(() => UserProjectResponse, { name: 'findUserProject' })
     async findJobInfo(
         @AitCtxUser() user: SysUser,
         @Args('request', { type: () => UserProjectRequest }) request: UserProjectRequest
     ) { 
+        console.log(request);
+        
         const result = await this.find(request, user);
         return result;
     }
@@ -78,9 +80,9 @@ export class UserProjectResolver extends AitBaseService {
         const from = JSON.stringify(request.data[0]._from);
         if (user_id) {
         const aqlQuery = `
-        FOR data IN biz_project_skill
+        FOR data IN user_project_skill
         FILTER data._from == ${from}
-        UPDATE data WITH { del_flag: true } IN biz_project_skill
+        UPDATE data WITH { del_flag: true } IN user_project_skill
         RETURN data
         `;
 

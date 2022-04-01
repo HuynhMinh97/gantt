@@ -82,7 +82,7 @@ export class UserCerfiticateService extends AitBaseService {
       condition[item.att] = {
         attribute: item.att,
         ref_collection: item.col,
-        ref_attribute: 'code'
+        ref_attribute: '_key'
       };
     });
     return await this.query('findUsercertificate', {collection: 'user_certificate_award',  condition    }, 

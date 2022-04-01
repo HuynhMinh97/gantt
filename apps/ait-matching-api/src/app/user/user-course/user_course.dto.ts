@@ -29,8 +29,8 @@ export class SaveCourseDto extends BaseDto {
 }
 @InputType()
 export class CourseDto extends BaseDto {
-  @Field(() => String, { nullable: true })
-  name?: string;
+  @Field(() => ConditionDto, { nullable: true })
+  name?: ConditionDto;
 
   @Field(() => Boolean, { nullable: true })
   is_online?: boolean;

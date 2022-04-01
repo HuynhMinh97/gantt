@@ -146,128 +146,47 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     });
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   async ngOnInit() {    
-    this.callLoadingApp();
-    setTimeout(() => {
-      this.isLoad = true;
-    }, 500);
-    if (this.project_key) {
-      this.mode = MODE.EDIT;
+    // this.callLoadingApp();
+    // setTimeout(() => {
+    //   this.isLoad = true;
+    // }, 500);
+    // if (this.project_key) {
+    //   this.mode = MODE.EDIT;
+    // }
+    // if (this.mode === 'NEW') {
+    //   await this.inputProject();
+    //   this.userProject.controls['title'].setValue(this.titleName);
+    //   this.userProject.controls['start_date_from'].setValue(this.dateNow);
+    //   this.userProject.controls['company_working'].setValue(this.companyName);
+    //   this.userProjectClone = this.userProject.value;
+    //   this.cancelLoadingApp();
+    // } else {
+    //   await this.findBizProject();
+    //   await this.findSkills();
+    //   this.cancelLoadingApp();
+    // }
+  }
+
+  public find = async (data = {}) => {
+    try {
+      const dataFind = [];     
+      await this.findUserProjectByKey();
+      await this.findSkillsByFrom();
+      dataFind.push(this.userProject.value);
+      console.log(dataFind);
+      
+      return {data: dataFind }
+    } catch (error) {
+     
     }
-    if (this.mode === 'NEW') {
-      await this.inputProject();
-      this.userProject.controls['title'].setValue(this.titleName);
-      this.userProject.controls['start_date_from'].setValue(this.dateNow);
-      this.userProject.controls['company_working'].setValue(this.companyName);
-      this.userProjectClone = this.userProject.value;
-      this.cancelLoadingApp();
-    } else {
-      await this.findBizProject();
-      await this.findSkills();
-      this.cancelLoadingApp();
-    }
+    
   }
 
-  
-
-  async findBizProject() {
-    const res = await this.userProjectService.find(this.project_key);
-    const data = res.data[0];    
-    if (res.data.length > 0) {
-      this.userProject.patchValue({ ...data });
-      this.userProjectClone = this.userProject.value;
-      this.companyName = this.userProject.value.company_working;
-      this.titleName = this.userProject.value.title;
-      if (data.user_id != this.user_id) {
-        this.mode = MODE.VIEW;
-      }
-    } else {
-      this.router.navigate([`/404`]);
-    }
-  }
-
-  async findSkills() {
-    const from = 'biz_project/' + this.project_key;
-    await this.userProjectService.findSkillsByFrom(from)
-    .then(async(res) => {
-      const listSkills = [];
-      for (const skill of res.data) {
-        listSkills.push(skill?.skills);
-      }    
-        this.userProject.controls['skills'].setValue([...listSkills]);
-        this.userProjectClone = this.userProject.value; 
-    });    
-  }
-
-  async inputProject() {
-    await this.userProjectService
-      .findKeyDefault(this.user_id)
-      .then((res) => {
-        this.titleName = res.data[0].title;
-        this.companyName = res.data[0].company_working;
-      });
-  }
- 
-  getArrayData = (data: any[]) => {
-    if (!data || data.length === 0) {
-      return []
-    }
-    return Array.from(new Set(data.map(d => d?._key).filter(x => !!x)));
-  }
-
-  
-
-  getTitleByMode() {
-    let title = '';
-    if (this.mode === MODE.EDIT) {
-      title = this.translateService.translate('edit project')
-    }
-    if (this.mode === MODE.NEW) {
-      title = this.translateService.translate('add project')
-    }
-    return title;
-  }
-
-  
-  dataSaveProject(data: any) {
-    this.keyEdit = data?._key;
-    const saveData = data
-    saveData['user_id'] = this.authService.getUserID();
-    this.listSkills = saveData.skills;
-    delete saveData.skills;
-    return saveData;
-  }
-
-  async saveSkill(bizProjectKey: string) {
-    this.biz_project_skill._from = 'biz_project/' + bizProjectKey;
-    this.biz_project_skill.relationship = ' biz_project_skill';
-    if ( this.keyEdit) {
-      const _fromSkill = [
-        { _from: 'biz_project/' + this.project_key },
-      ];
-      this.userProjectService.removeSkill(_fromSkill);
-    }
-    for(const skill of this.listSkills){
-      await this.userProjectService.findMSkillsByCode(skill)
-        .then(async (res) => {
-          this.sort_no += 1;
-          this.biz_project_skill.sort_no = this.sort_no;
-          this.biz_project_skill._to = 'm_skill/' + res.data[0]._key;
-          await this.userProjectService.saveSkills(this.biz_project_skill);
-        });
-    }
-  }
-
-  async saveUserProject(bizProjectKey: string) {
-    this.connection_user_project._from = 'sys_user/' + this.user_id;
-    this.connection_user_project._to = 'biz_project/' + bizProjectKey;
-    this.connection_user_project.relationship = 'user project';
-    this.connection_user_project.sort_no = this.sort_no + 1;
-    await this.userProjectService.saveConnectionUserProject(this.connection_user_project);
-  }
-
-
-  public save = async (data = {}) => {
+  public save = async (data = {}) => { 
+    console.log(data);
+    
     try {
       return await this.userProjectService.saveBizProject(this.dataSaveProject(data))
         .then(async (res) => {
@@ -284,31 +203,13 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     }
     
   }
-  public find = async (data = {}) => {
-    try {
-      const dataFind = [];
-      if (this.mode === 'NEW') {
-        await this.inputProject();
-        this.userProject.controls['title'].setValue(this.titleName);
-        this.userProject.controls['start_date_from'].setValue(this.dateNow);
-        this.userProject.controls['company_working'].setValue(this.companyName);        
-      } else {
-        await this.findBizProject();
-        await this.findSkills();
-      }
-      dataFind.push(this.userProject.value);
-      return {data: dataFind }
-    } catch (error) {
-     
-    }
-    
-  }
+ 
   public delete = async (data = '') => {
     try {
       return await this.userProjectService.remove(data).then((res) => {
         if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
           const _fromSkill = [
-            { _from: 'biz_project/' + this.project_key },
+            { _from: 'user_project/' + this.project_key },
           ];
           const _toUser = [
             { _to: 'biz_project/' + this.project_key },
@@ -325,4 +226,97 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     }
     
   }
+  
+  async findUserProjectByKey() {
+    const res = await this.userProjectService.find(this.project_key);
+    const data = res.data[0];    
+    if (res.data.length > 0) {
+      this.userProject.patchValue({ ...data });
+      this.userProjectClone = this.userProject.value;
+      this.companyName = this.userProject.value.company_working;
+      this.titleName = this.userProject.value.title;
+      if (data.user_id != this.user_id) {
+        this.mode = MODE.VIEW;
+      }
+    } else {
+      this.router.navigate([`/404`]);
+    }
+  }
+
+  async findSkillsByFrom() {
+    const from = 'user_project/' + this.project_key;
+    await this.userProjectService.findSkillsByFrom(from)
+    .then(async(res) => {
+      const listSkills = [];
+      for (const skill of res.data) {
+        listSkills.push(skill?.skills);
+      }    
+        this.userProject.controls['skills'].setValue([...listSkills]);
+        this.userProjectClone = this.userProject.value; 
+    });    
+  }
+
+  // async inputProject() {
+  //   await this.userProjectService
+  //     .findKeyDefault(this.user_id)
+  //     .then((res) => {
+  //       this.titleName = res.data[0].title;
+  //       this.companyName = res.data[0].company_working;
+  //     });
+  // }
+ 
+  getArrayData = (data: any[]) => {
+    if (!data || data.length === 0) {
+      return []
+    }
+    return Array.from(new Set(data.map(d => d?._key).filter(x => !!x)));
+  }
+
+  
+
+  // getTitleByMode() {
+  //   let title = '';
+  //   if (this.mode === MODE.EDIT) {
+  //     title = this.translateService.translate('edit project')
+  //   }
+  //   if (this.mode === MODE.NEW) {
+  //     title = this.translateService.translate('add project')
+  //   }
+  //   return title;
+  // }
+
+  
+  dataSaveProject(data: any) {
+    this.keyEdit = data?._key;
+    const saveData = data
+    saveData['user_id'] = this.authService.getUserID();
+    this.listSkills = JSON.parse(JSON.stringify(saveData.skills));
+    delete saveData.skills;
+    return saveData;
+  }
+
+  async saveSkill(bizProjectKey: string) {
+    this.biz_project_skill._from = 'user_project/' + bizProjectKey;
+    if ( this.keyEdit) {
+      const _fromSkill = [
+        { _from: 'user_project/' + this.project_key },
+      ];
+      this.userProjectService.removeSkill(_fromSkill);
+    }
+    for(const skill of this.listSkills){
+      this.sort_no += 1;
+      this.biz_project_skill.sort_no = this.sort_no;
+      this.biz_project_skill._to = 'm_skill/' + skill;
+      await this.userProjectService.saveSkills(this.biz_project_skill);
+    }
+  }
+
+  async saveUserProject(bizProjectKey: string) {
+    this.connection_user_project._from = 'sys_user/' + this.user_id;
+    this.connection_user_project._to = 'user_project/' + bizProjectKey;
+    this.connection_user_project.relationship = 'user project';
+    this.connection_user_project.sort_no = this.sort_no + 1;
+    await this.userProjectService.saveConnectionUserProject(this.connection_user_project);
+  }
+
 }
