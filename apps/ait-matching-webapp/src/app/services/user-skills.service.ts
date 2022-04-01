@@ -1,5 +1,6 @@
 import { AitBaseService } from '@ait/ui';
 import { Injectable } from '@angular/core';
+import { level } from 'winston';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +30,8 @@ export class UserSkillsService extends AitBaseService{
       skills:{
         _key: true,
         value: true,
-      }
+      },
+      level: true,
     })
   }
 

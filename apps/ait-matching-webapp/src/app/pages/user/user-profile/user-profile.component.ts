@@ -613,7 +613,16 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       this.heightExperience = '0px'
     }
   }
-  getDown(val,data){
+  getDown(val, data, name?: string){
     this[val] = data;
+    const element = document.getElementById(name);
+    console.log(element);
+    if(data){
+      console.log('end');   
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }else{
+      console.log('start');
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 }
