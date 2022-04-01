@@ -5,6 +5,7 @@
   border: 0.6px solid nb-theme(color-primary-500);
   margin: 2px;
   height: 25px;
+  min-width: 120px;
   // display: flex;
   // overflow: hidden !important;
   // width: 90px;
@@ -57,3 +58,24 @@
     }
   }
 }
+.chip1{
+  position: relative;
+}
+.star_list{
+  position: absolute;
+  display: none;
+  .star{
+    display: flex;
+    justify-content: center;
+    color: #dad7cd;
+  }
+  nb-icon{
+    font-size: 1rem;
+  }
+}
+  .chip1:hover .star_list {
+    display: block;
+  }
+  .chip1:hover .chip2 {
+    visibility: hidden;
+  }
