@@ -142,10 +142,6 @@ export const DarkScreen = [
   'sign-in',
   'sign-up',
   'reset-password',
-  'user-setting',
-  'new',
-  'job',
-  'company-basic-info',
   'change-password',
 ];
 
