@@ -50,8 +50,6 @@ export class AitBaseService implements OnDestroy {
       this.company = company;
       this.page = page;
       this.module = module;
-
-      //  console.log(this.company)
     });
   }
 
@@ -138,17 +136,6 @@ export class AitBaseService implements OnDestroy {
     refresh_token: localStorage.getItem('refresh_token')
   }).toPromise();
 
-  // checkToken2 = async () => {
-  //   const name = GRAPHQL.VALIDATE_TOKEN;
-  //   const returnField = {
-  //     timeLog: true,
-  //     token_valid: true
-  //   }
-  //   const result = await this.mutation(name, returnField, []);
-  //   // console.log(result);
-  //   return result?.data?.validateToken;
-  // }
-
   get(apiSufix: string): Observable<any> {
     return this.http.post<any>(this.baseURL + apiSufix, {
       // Chỗ này là bao gồm condition và data, tùy vào yêu cầu của api để sử dụng
@@ -195,10 +182,7 @@ export class AitBaseService implements OnDestroy {
       if (errorMessage.errorDetail.status >= 500) {
         this.store.dispatch(new SHOWSNACKBAR('', this.snackbar, this.store))
       }
-
       // TODO: better job of transforming error for user consumption
-      // // console.log(errorMessage);
-
       // Let the app keep running by returning an empty result.
       return of(result as T);
     };

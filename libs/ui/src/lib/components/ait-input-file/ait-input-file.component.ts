@@ -256,7 +256,6 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
   checkMaxSize = (file: any[]) => {
     // File nhận vào định dạng theo kiểu bytes
-    // console.log(this.fileRequest[0]?.size, this.convertMb2B(this.maxSize));
     return this.fileRequest.length > 0 ? this.fileRequest[0]?.size <= this.convertMb2B(this.maxSize) : true;
   }
   checkMaxFile = () => {
@@ -279,7 +278,6 @@ export class AitInputFileComponent implements OnInit, OnChanges {
       },
       'user_setting'
     );
-    // console.log(res)
     if (res?.status === RESULT_STATUS.OK) {
       const settingByCode = res?.data[0];
 
@@ -309,7 +307,6 @@ export class AitInputFileComponent implements OnInit, OnChanges {
       class: true,
       name: true
     });
-    // console.log(rest)
     if (rest?.status === RESULT_STATUS.OK) {
       const settings = rest.data;
       this.settings = settings.map((s: any) => ({ ...s, value: s?.name }));
@@ -335,10 +332,6 @@ export class AitInputFileComponent implements OnInit, OnChanges {
             this.maxFiles = vMaxUpload;
           }
         }
-        // if (!this.fileTypes) {
-        //   this.fileTypes = this.getValueByCode('FILE_TYPE_SUPPORT')?.value;
-        // }
-        // console.log(this.maxSize, this.maxFiles);
       }
     }
   }
@@ -504,8 +497,6 @@ export class AitInputFileComponent implements OnInit, OnChanges {
 
   checkCommon = () => {
     this.messageErrorFileSp = '';
-    // console.log('Max upload', this.maxFiles, this.checkMaxFile(), this.getFileMaxUpload());
-    // console.log('Max size', this.maxSize, this.checkMaxSize(this.fileRequest), this.getMaxSizeFile());
     if (!this.checkMaxFile() && this.getFileMaxUpload().toString()) {
       this.messageErrorFileSp =
         this.translateService.getMsg('E0155').replace('{0}', this.getFileMaxUpload().toString());
