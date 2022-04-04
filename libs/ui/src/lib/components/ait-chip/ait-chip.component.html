@@ -2,7 +2,7 @@
   nbButton
   shape="round"
   size="small"
-  [ngStyle]="{ background: background, color: colorText, 'max-width': '365px' }"
+  [ngStyle]="{ background: background, color: colorText, 'max-width': maxWidth }"
   [ngClass]="isChipInCard ? 'chipInCard' : 'chip'"
   [nbTooltip]="title"
   (click)="onClickChipEvent()"
