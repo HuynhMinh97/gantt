@@ -278,7 +278,6 @@ export class AitChangePwdComponent extends AitBaseComponent implements OnInit {
             this.isLoading = false;
           }
         }).catch(e => {
-          console.log(e)
           this.isLoading = false;
         })
     }

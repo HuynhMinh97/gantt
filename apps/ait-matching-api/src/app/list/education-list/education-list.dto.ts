@@ -1,11 +1,9 @@
-import { ConditionDto } from './../../../../../../libs/core/src/lib/dtos/condition.dto';
-import { BaseDto, ChangeByDto, CreateByDto } from "@ait/core";
+import { BaseDto, ChangeByDto, ConditionDto, CreateByDto } from "@ait/core";
 import { Field, InputType } from "@nestjs/graphql";
 
 
 @InputType()
 export class EducationListDto extends BaseDto  {
-
   @Field(() => String, { nullable: true })
   user_id: string;
 

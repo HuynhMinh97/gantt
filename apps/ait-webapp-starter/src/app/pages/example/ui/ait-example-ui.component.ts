@@ -161,25 +161,22 @@ export class AitUiComponent extends AitBaseComponent {
         hasBackdrop: true,
         autoFocus: false,
       })
-      .onClose.subscribe((r) => {
-        console.log(r);
-      });
+      .onClose.subscribe();
   };
 
-  ///methods
+  action() {
+    throw new Error('Method not implemented.');
+  }
 
   getValueTextInput = (value) => {
-    console.log(value);
     this.result.text_input = value;
   };
 
   getValueNumberInput = (value) => {
-    console.log(value);
     this.result.number_input = value;
   };
 
   getValueDatePicker = (value) => {
-    console.log(value);
     this.result.date_picker = value;
   };
 
@@ -191,7 +188,6 @@ export class AitUiComponent extends AitBaseComponent {
   };
 
   getValueMasterData = (value) => {
-    console.log(value);
     this.result.master_data = value;
   };
 
@@ -226,7 +222,6 @@ export class AitUiComponent extends AitBaseComponent {
   };
 
   ngOnInit() {
-    // console.log(this.page, this.module, this.user_id, this.company);
     const condition = {
       user_id: '462dde78-bdfa-4e25-82d5-763e9bfd5016',
     };
@@ -246,35 +241,15 @@ export class AitUiComponent extends AitBaseComponent {
         user_id: 'b9a08907-2da5-391c-c0c8-4f92937a05c9',
       },
     ];
-
-    const dData = [
-      {
-        _key: '7f8c8cac-0f92-483a-039a-905e024bacba',
-      },
-    ];
-
-    // this.testService.find(condition).then(data => console.log(data));
-    // this.testService.save(sData).then(data => console.log(data));
-    // this.testService.remove(dData).then(data => console.log(data));
   }
-
-  action = () => {
-    console.log('hello from home component');
-  };
 
   getErrors = (value) => (this.errors = [...this.errors, value]);
   removeSearch = (value) => {
-    console.log(value);
     this.errors = this.errors.filter((f) => f !== value);
   };
 
   getValueInput(status: string, value: string) {
-    console.log(status, value);
     this.result[status] = value;
-  }
-
-  handleOnchange(value: string, label: string) {
-    console.log(value, label);
   }
 
   getDate = (date) => {
@@ -294,7 +269,6 @@ export class AitUiComponent extends AitBaseComponent {
   };
 
   getTextArea = (value) => {
-    console.log(value);
     this.result.textarea = value;
   };
 
@@ -311,9 +285,4 @@ export class AitUiComponent extends AitBaseComponent {
   getValueMasterOne = (value) => {
     this.result.masterOne = value;
   };
-
-  // data(e) {console.log()}
-  dd(e) {
-    console.log(e);
-  }
 }
