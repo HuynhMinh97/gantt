@@ -11,6 +11,7 @@
   [id]="ID('chip')"
 >
   <span
+    [ngClass]="isEvaluate ? 'chip1' : ''"
     style="
       text-transform: initial;
       display: flex;
@@ -18,8 +19,29 @@
       justify-content: center;
     "
   >
-    <span [id]="ID('chip_title')" [innerHTML]="title"></span>
-  </span>
-  <nb-icon [id]="ID('chip_icon')" *ngIf="icon" [icon]="icon" (click)="iconAction()"></nb-icon>
-</button>
+    <span
+      [ngClass]="isEvaluate ? 'chip2' : ''"
+      [id]="ID('chip_title')"
+      [innerHTML]="title"
+    ></span>
 
+    <div class="star_list" *ngIf="isEvaluate">
+      <div class="star">
+        <nb-icon
+          *ngFor="let item of countAllStar; let index = index"
+          nbSuffix
+          icon="star"
+          pack="eva"
+          [ngStyle]="{color: index < level ? '#ffdf00' : '#dad7cd'}"
+          (click)="clickStar(index)"
+        ></nb-icon>
+      </div>
+    </div>
+  </span>
+  <nb-icon
+    [id]="ID('chip_icon')"
+    *ngIf="isHaveIcon && icon"
+    [icon]="icon"
+    (click)="iconAction()"
+  ></nb-icon>
+</button>

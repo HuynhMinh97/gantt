@@ -29,7 +29,8 @@ export class AitCommonLayoutComponent extends AitBaseComponent {
   hasSidebar = false;
   gradientString = 'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)';
   environment: any;
-
+  @Input() isTitle = true;
+  @Input() hearder = 'AIT FRAMEWORK';
   isExcludeScreen = () => this.excludeHeaderScreens.includes(this.currentPath);
 
   constructor(
@@ -64,7 +65,7 @@ export class AitCommonLayoutComponent extends AitBaseComponent {
   getHeader = () => {
     return (
       this.translateService.translate(
-        this.environment?.COMMON?.HEADER || APP_HEADER
+        this.environment?.COMMON?.HEADER || this.hearder
       )
     )
   }
