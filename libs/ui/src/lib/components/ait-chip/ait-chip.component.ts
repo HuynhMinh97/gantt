@@ -19,6 +19,7 @@ export class AitChipComponent implements OnChanges {
   @Input() styles: any = {};
   @Input() title = 'default';
   @Input() isTooltip = false;
+  @Input() isHaveIcon = true;
   @Input() icon = '';
   @Input() status = 'primary'
   @Output() action = new EventEmitter();
