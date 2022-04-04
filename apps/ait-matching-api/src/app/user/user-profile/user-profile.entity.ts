@@ -34,6 +34,9 @@ export class UserProfileEntity extends BaseEntity {
   @Field(() => [KeyValueEntity], { nullable: true })
   top_skills?: KeyValueEntity[];
 
+  @Field(() => [String], { nullable: true })
+  skills?: string[];
+
   @Field(() => String, { nullable: true })
   category?: string;
 
@@ -66,4 +69,7 @@ export class UserProfileEntity extends BaseEntity {
 
   @Field(() => String, { nullable: true })
   phone_number?: string;
+
+  @Field(() => Boolean, { nullable: true })
+  is_saved?: boolean;
 }

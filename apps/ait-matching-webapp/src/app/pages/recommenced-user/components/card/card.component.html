@@ -5,30 +5,19 @@
   <div class="info__card" (click)="navigateProfile(cardH.user_id)">
     <div style="display: flex; width: 100%; align-items: center">
       <div style="width: 50px; height: 50px; margin: 5px">
-        <img
-          [src]="avatar"
-          alt=""
-          loading="lazy"
-          srcset=""
-          (error)="imageNotFound($event)"
-          class="avatar empty"
-          [ngStyle]="{ border: '2px solid ' + colorCard }"
-          style="object-fit: cover"
-        />
+        <img [src]="avatar" alt="" loading="lazy" srcset="" (error)="imageNotFound()" class="avatar empty"
+          [ngStyle]="{ border: '2px solid ' + colorCard }" style="object-fit: cover" />
       </div>
 
       <div class="info">
         <div style="display: flex; width: 100%; flex-direction: column">
-          <p class="name empty">{{ cardH?.name_kana }}</p>
-          <p class="dept empty" [nbTooltip]="cardH?.work?.value">
-            {{ cardH?.work?.value }}
+          <p class="name empty">{{ cardH?.last_name + cardH?.first_name }}</p>
+          <p class="dept empty" [nbTooltip]="cardH?.company_working.value">
+            {{ cardH?.company_working.value }}
           </p>
         </div>
       </div>
     </div>
-    <!-- <div class="words__for__project" *ngIf="isSE">
-      <p>Project will be start from 2021/01 to 2021/10</p>
-    </div> -->
   </div>
   <div class="divider__card">
     <div class="stamp" *ngIf="card?.stamp === 1">
@@ -52,84 +41,35 @@
   </div>
   <!-- <mat-chip-list> -->
   <div class="list__skills" (click)="navigateProfile(cardH.user_id)">
-    <div class="content" *ngIf="!isJob">
-      <p *ngIf="card?.name">
-        ・ {{ getFieldName('実習生名') }} ： {{ card?.name }}
-      </p>
-      <p *ngIf="card?.gender?.value">
-        ・ {{ getFieldName('性別') }} ： {{ card?.gender?.value }}
-      </p>
-      <p *ngIf="getDate(card?.dob)">
-        ・ {{ getFieldName('生年月日') }} ： {{ getDate(card?.dob) }}
-      </p>
-      <p *ngIf="card?.residence_status?.value">
-        ・ {{ getFieldName('在留資格') }} ：
-        {{ card?.residence_status?.value }}
-      </p>
-      <p *ngIf="card?.desired_occupation?.value">
-        ・ {{ getFieldName('職種●実習生情報●') }} ：
-        {{ card?.desired_occupation?.value }}
-      </p>
-      <p *ngIf="card?.desired_salary">
-        ・ {{ getFieldName('現在の給料') }} ：
-        {{ getNumberValue(card?.desired_salary) }}
-      </p>
-      <p *ngIf="getValueArray(card?.business)">
-        ・ {{ getFieldName('希望の職種（分野）') }} ：
-        {{ getValueArray(card?.business) }}
-      </p>
-    </div>
-    <div class="content" *ngIf="isJob">
-      <p *ngIf="getValueArray(card?.prefecture)">
-        ・ {{ getFieldName('勤務地') }} ：
-        {{ getValueArray(card?.prefecture) }}
-      </p>
-      <p *ngIf="card?.company_business?.value">
-        ・ {{ getFieldName('分野') }} ：
-        {{ card?.company_business?.value }}
-      </p>
-      <p *ngIf="getValueArray(card?.job_business)">
-        ・ {{ getFieldName('職種・分野') }} ：
-        {{ getValueArray(card?.job_business) }}
-      </p>
-      <p *ngIf="card?.salary">
-        ・ {{ getFieldName('給与(総額)') }} ：
-        {{ getNumberValue(card?.salary) }}
-      </p>
-      <p *ngIf="card?.description">
-        ・ {{ getFieldName('業務内容') }} ：
-        {{ card?.description }}
-      </p>
+    <div class="content">
+      <ait-chip *ngFor="let p of cardH.skills" [title]="p" [icon]="'close-outline'" [is18n]="false" [isHaveIcon]="false"
+        tabindex="4" style="outline-color: #10529d"></ait-chip>
     </div>
   </div>
   <!-- </mat-chip-list> -->
   <div class="action__card">
-    <div
-      class="items"
-      [ngStyle]="{
+    <div class="items" [ngStyle]="{
         background: backgroundCard,
         display: 'flex',
         'align-items': 'center'
-      }"
-      (click)="actionButtonSave(card?._key)"
-      nbTooltip="{{
-        card.is_saved ? getFieldName('t_020') : getFieldName('c_2001')
-      }}"
-    >
-      <nb-icon
-        icon="{{ card.is_saved ? 'bookmark' : 'bookmark-outline' }}"
-        [ngStyle]="{ color: '#fff' }"
-      ></nb-icon>
-      <p
-        style="
+      }" (click)="actionButtonSave(); card.is_saved = !card.is_saved" nbTooltip="{{
+        card.is_saved
+          ? ('saved' | translate)
+          : ('save' | translate)
+      }}">
+      <nb-icon icon="{{ card.is_saved ? 'bookmark' : 'bookmark-outline' }}" [ngStyle]="{ color: '#fff' }"></nb-icon>
+      <p style="
           font-weight: bold;
           font-size: 10px;
           text-transform: uppercase;
           color: #ffffff;
           margin: 0;
-        "
-      >
-      {{ card.is_saved ? getFieldName('t_020') : getFieldName('c_2001') }}
+        ">
+        {{
+        card.is_saved
+        ? ('saved' | translate)
+        : ('save' | translate)
+        }}
       </p>
     </div>
   </div>

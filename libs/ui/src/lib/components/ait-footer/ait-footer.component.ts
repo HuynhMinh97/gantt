@@ -20,7 +20,6 @@ export class AitFooterComponent {
     private env : AitEnvironmentService
   ) {
     store.pipe(select(getCaption)).subscribe(c => {
-      // console.log(c)
       this.homeLabel = this.getI18nLabel('c_1001');
     })
   }

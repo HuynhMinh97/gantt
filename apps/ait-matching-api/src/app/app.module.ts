@@ -18,6 +18,8 @@ import { ProjectListResolver } from './list/projectList/project-list.resolver';
 import { LanguageListResolver } from './list/language-list.ts/language-list.resolver';
 import { EducationListResolver } from './list/education-list/education-list.resolver';
 import { CertificateResolver } from './list/certificate-list/certificate-list.resolver';
+import { SearchConditionResolver } from './search-condition/search-condition.resolver';
+import { SaveRecommendUserResolver } from './save-recommend-user/save-recommend-user.resolver';
 
 const RESOLVERS = [
   UserExperienceInfoResolver,
@@ -37,6 +39,8 @@ const RESOLVERS = [
   LanguageListResolver,
   EducationListResolver,
   CertificateResolver,
+  SearchConditionResolver,
+  SaveRecommendUserResolver,
   {
   provide: 'ENVIRONMENT',
   useValue: environment
