@@ -421,7 +421,7 @@ export class AitAutoCompleteMasterComponent
   getDefaultValueByLang = async (keys: string[]) => {
     const condition =
       this.maxItem > 1
-        ? { code: { value: keys } }
+        ? { _key: { value: keys } }
         : {
             _key: keys[0],
           };
@@ -430,7 +430,7 @@ export class AitAutoCompleteMasterComponent
       name: true,
     };
 
-    this.masterDataService
+    await this.masterDataService
       .find(
         condition,
         returnFields,
