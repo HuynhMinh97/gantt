@@ -53,14 +53,8 @@ export class AitButtonTableComponent implements OnInit,OnChanges {
     setTimeout(() => {
       this.dataCsv = JSON.parse(JSON.stringify(this.dataExport));
     }, 1000);
-    this.menuService.onItemClick().subscribe((event) => {
-      if (event.item.title === 'Logout') {
-        console.log('logout clicked');
-      }
-    });
+    this.menuService.onItemClick().subscribe();
   }
-
-  
 
   ngOnChanges(changes: SimpleChanges) {
     this.toolTipDelete = this.translateService.translate('delete_selected_item');
@@ -146,17 +140,17 @@ export class AitButtonTableComponent implements OnInit,OnChanges {
   async settingColumnTable(val: any[]) {   
     if(this.sortNo == 0 && isObjectFull(val)){
       this.columns = val;     
-      await this.arrange(this.columns);
+      this.arrange(this.columns);
       this.sortNo++;
     }else if(this.sortNo > 0){
       this.columns = val;     
-      await this.arrange(this.columns);
+      this.arrange(this.columns);
     }
   }
 
   async settingArrangeTable(val: any[]){
     this.positionAll = val;
-    await this.arrange(this.columns);
+    this.arrange(this.columns);
   }
 
   arrange(val: any[]){
@@ -170,15 +164,12 @@ export class AitButtonTableComponent implements OnInit,OnChanges {
         }
       }
       this.watchValue.emit({value: this.position});  
-    }else{
+    } else {
       this.watchValue.emit({value: val}); 
     }
-    
   }
 
   deletAll(checkType: boolean){
-    console.log(checkType);
     this.typeDelete.emit({value: checkType});
   }
-
 }
