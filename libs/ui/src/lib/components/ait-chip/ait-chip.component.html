@@ -2,11 +2,11 @@
   nbButton
   shape="round"
   size="small"
-  [ngStyle]="{ background: background, color: colorText, 'max-width': '100%' }"
+  [ngStyle]="{ background: background, color: colorText, 'max-width': '365px' }"
   [ngClass]="isChipInCard ? 'chipInCard' : 'chip'"
-  [nbTooltip]="tooltip"
+  [nbTooltip]="title"
   (click)="onClickChipEvent()"
-  [nbTooltipTrigger]="tooltip ? 'hover' : 'noop'"
+  [nbTooltipTrigger]="isTooltip ? 'hover' : 'noop'"
   *ngIf="title"
   [id]="ID('chip')"
 >
@@ -28,7 +28,7 @@
     <div class="star_list" *ngIf="isEvaluate">
       <div class="star">
         <nb-icon
-          *ngFor="let item of countAllStar; let index = index"
+          *ngFor="let item of STAR; let index = index"
           nbSuffix
           icon="star"
           pack="eva"
