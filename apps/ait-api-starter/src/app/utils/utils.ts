@@ -78,7 +78,6 @@ export class CommonUtils {
   // Allow only images
   static imageFileFilter = (req, file, callback) => {
     const name = file.originalname.split('{_}')[2];
-    // // // console.log(name,file)
     if (!name.match(/\.(jpg|jpeg|png|gif|doc|docx|xls|xlsx|json|csv|pdf)$/)) {
       return callback(
         new HttpException(
