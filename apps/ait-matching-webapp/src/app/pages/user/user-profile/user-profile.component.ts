@@ -152,8 +152,8 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     try {
       await this.getMasterData();
       await this.getMaxSkill();
-      this.getFriends();
-      this.getCountFriends();
+      // this.getFriends();
+      // this.getCountFriends();
       this.getUserProfileByUserId();
       this.getSkillByUserId();
       this.getProjectByUserId();

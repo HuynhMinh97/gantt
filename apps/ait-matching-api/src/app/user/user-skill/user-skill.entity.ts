@@ -10,9 +10,6 @@ export class UserSkillEntity extends BaseEntity {
   @Field(() => String, { nullable: true })
   _to?: string;
 
-  @Field(() => String, { nullable: true })
-  relationship?: string;
-
   @Field(() => Float, { nullable: true })
   sort_no?: number;
 

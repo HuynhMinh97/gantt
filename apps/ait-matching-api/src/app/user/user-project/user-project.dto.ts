@@ -6,8 +6,8 @@ export class UserProjectDto extends BaseDto {
     @Field(() => ConditionDto, { nullable: true })
     skills?: ConditionDto;
 
-    @Field(() => String, { nullable: true })
-    name?: string;
+    @Field(() => ConditionDto, { nullable: true })
+    name?: ConditionDto;
 
     @Field(() => Float, { nullable: true })
     start_date_from?: number;

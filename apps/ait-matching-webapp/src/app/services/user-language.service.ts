@@ -83,7 +83,7 @@ export class UserLanguageService extends AitBaseService {
       condition[item] = {
         attribute: item,
         ref_collection: 'sys_master_data',
-        ref_attribute: 'code',
+        ref_attribute: '_key',
       };
     });
 

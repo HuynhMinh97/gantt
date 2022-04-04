@@ -40,7 +40,6 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
   user_skills = {
     _from: '',
     _to: '',
-    relationship: '',
     sort_no: 0,
     level: 1
   };
@@ -133,13 +132,13 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
     await this.userSkillsService.findSkill(from).then((res) => {
       if (res.status === RESULT_STATUS.OK) {
         if (res.data.length > 0) {
-          console.log(res.data);
-          
           this.mode = MODE.EDIT;
           let listSkills = []
           listSkills = res.data.map(m => ({_key: m?.skills?._key, value: m?.skills?.value , level: m?.level}) )
           this.userSkills.controls['skills'].setValue(listSkills);
-          this.companySkills = listSkills
+          this.companySkills = listSkills;
+          console.log(this.companySkills);
+          
           this.userSkillsClone =  JSON.parse(JSON.stringify(this.userSkills.value));
           this.cancelLoadingApp();
         } else {
@@ -167,7 +166,6 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
     if (this.userSkills.valid ) {
       this.callLoadingApp();
       this.user_skills._from = 'sys_user/' + this.user_id;
-      this.user_skills.relationship = 'user_skill';
       if (this.mode == 'EDIT') {
         const _fromSkill = [
           { _from: 'sys_user/' + this.user_id },
