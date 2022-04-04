@@ -3,8 +3,8 @@ import { ObjectType, Int, Field, Float } from '@nestjs/graphql';
 
 @ObjectType()
 export class CourseEntity extends BaseEntity {
-  @Field(() => String, { nullable: true })
-  name?: string;
+  @Field(() => KeyValueEntity, { nullable: true })
+  name?: KeyValueEntity;
 
   @Field(() => Boolean, { nullable: true })
   is_online?: boolean;

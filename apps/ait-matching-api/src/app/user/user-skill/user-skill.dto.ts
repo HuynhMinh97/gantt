@@ -10,9 +10,6 @@ export class UserSkillDto extends BaseDto {
   @Field(() => String, { nullable: true })
   _to?: string;
 
-  @Field(() => String, { nullable: true })
-  relationship?: string;
-
   @Field(() => Float, { nullable: true })
   sort_no?: number;
 

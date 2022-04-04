@@ -21,7 +21,7 @@ export class UserSkillResolver extends AitBaseService {
       const aqlQuery = `
           FOR v,e, p IN 1..1 OUTBOUND "${from}" ${collection}
           FILTER  e.del_flag != true
-          let skill = {_key: v.code, value:  v.name.${lang} ? v.name.${lang} : v.name}
+          let skill = {_key: v._key, value:  v.name.${lang} ? v.name.${lang} : v.name}
           RETURN {_key: v._key, skills:skill, level: e.level} 
       `;
       const result = await this.query(aqlQuery);
