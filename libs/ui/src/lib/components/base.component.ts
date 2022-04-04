@@ -697,9 +697,9 @@ export class AitBaseComponent implements OnInit, OnDestroy {
   // set module and page for each screen and get caption base on theme
   setModulePage = (data: BaseInitData) => {
     const { module, page, type } = data;
-    this.getPermission(page, module).then((r) => {
-      this.checkPermission();
-    });
+    // this.getPermission(page, module).then((r) => {
+      // this.checkPermission();
+    // });
     this.store.dispatch(new SetModulePage({ page, module, type }));
     this.module = module;
     this.page = page;

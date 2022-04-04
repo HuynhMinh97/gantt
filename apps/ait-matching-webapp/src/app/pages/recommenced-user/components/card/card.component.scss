@@ -2,7 +2,6 @@
 .card__items {
   height: 300px;
   width: 215px;
-  // flex:1;
   margin: 10px;
   background: nb-theme(color-basic-100);
   border-radius: 10px;
@@ -27,7 +26,6 @@
       height: 100%;
       background: nb-theme(highly-recommended);
       border-radius: 0px;
-      // transform: matrix(1, 0, 0, -1, 0, 0);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -45,7 +43,6 @@
     height: 15px;
     width: 100%;
     background-color: nb-theme(highly-recommended);
-    // border-radius: 10px 10px 0px 0px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -71,7 +68,7 @@
     flex-direction: column;
     padding-bottom: 5px;
     &:hover {
-      opacity: 0.6;
+      // opacity: 0.6;
     }
     .words__for__project {
       width: 100%;
@@ -83,9 +80,6 @@
         letter-spacing: 0.0015em;
         margin: 0;
         font-weight: 400;
-
-        /* Dark Grey */
-
         color: nb-theme(menu-text-color);
       }
     }
@@ -157,8 +151,9 @@
     margin-right: 5px;
   }
   .list__skills {
+    margin-bottom: 25px;
     &:hover {
-      opacity: 0.6;
+      // opacity: 0.6;
     }
     cursor: pointer;
     width: 100%;
@@ -170,6 +165,7 @@
     overflow-x: hidden;
     padding: 10px;
     .content {
+      width: 100%;
       p {
         color: #222b45;
         font-size: 12px;
