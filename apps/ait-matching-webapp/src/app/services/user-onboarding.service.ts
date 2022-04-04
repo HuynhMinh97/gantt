@@ -59,7 +59,7 @@ export class UserOnboardingService extends AitBaseService {
     last_name: true,
     katakana: true,
     romaji: true,
-    bod: true,
+    dob: true,
     phone_number: true,
     about: true,
     postcode: true,
@@ -288,7 +288,15 @@ export class UserOnboardingService extends AitBaseService {
   }
 
 
-  
+  async removeBizUserSkill(data: any[]) {
+    const returnFields = { _key: true };
+    return await this.mutation(
+      'removeBizUserSkill',
+      'biz_user_skill',
+      data,
+      returnFields
+    );
+  }
 
   async saveUserSkills(data: any[]) {
     const returnField = { _key: true, del_flag: true };

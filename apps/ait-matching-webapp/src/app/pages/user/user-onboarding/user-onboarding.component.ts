@@ -79,6 +79,7 @@ export class UserOnboardingComponent
   dateErrorObject = {};
   availableTimeErrorMessage = [];
   companySkills = [];
+  jobSettingSkills = [];
   dateFormat = '';
   sort_no = 0;
   maxSkillJobSetting = 10;
@@ -106,7 +107,7 @@ export class UserOnboardingComponent
     last_name: false,
     katakana: false,
     romaji: false,
-    bod: false,
+    dob: false,
     phone_number: false,
     about: false,
     country_region: false,
@@ -129,7 +130,7 @@ export class UserOnboardingComponent
     katakana: false,
     romaji: false,
     gender: false,
-    bod: false,
+    dob: false,
     phone_number: false,
     about: false,
     country_region: false,
@@ -155,7 +156,6 @@ export class UserOnboardingComponent
   user_skill = {
     _from: '',
     _to: '',
-    relationship: '',
     sort_no: 0,
   };
   JobSettingData: any;
@@ -246,7 +246,7 @@ export class UserOnboardingComponent
       katakana: new FormControl(null),
       romaji: new FormControl(null),
       gender: new FormControl(null, [Validators.required]),
-      bod: new FormControl(null, [Validators.required]),
+      dob: new FormControl(null, [Validators.required]),
       phone_number: new FormControl(null, [Validators.required]),
       about: new FormControl(null),
       country_region: new FormControl(null, [Validators.required]),
@@ -335,14 +335,16 @@ export class UserOnboardingComponent
           });
         await this.findSkills();
       }
+      
+     
     }
     await this.getGenderList();
+    console.log(this.genderList);
     setTimeout(() => {
       this.cancelLoadingApp();
     }, 500);
     this.setDefaultGenderValue();
 
-    // Run when form value change
     await this.userOnboardingInfo.valueChanges.subscribe((data) => {
       this.checkAllowSave();
     });
@@ -360,6 +362,7 @@ export class UserOnboardingComponent
         this.userOnbInfo[index] = true;
       }
     }
+    
   }
 
   toggleExpan = () => {
@@ -406,7 +409,7 @@ export class UserOnboardingComponent
     if (genderObj) {
       this.genderList = this.genderList.map((gender) =>
         Object.assign({}, gender, {
-          checked: gender.code === genderObj._key ? true : false,
+          checked: gender._key === genderObj._key ? true : false,
         })
       );
       const gender = this.genderList.find((gender) => gender.checked === true);
@@ -441,17 +444,15 @@ export class UserOnboardingComponent
       for (const skill of res.data) {
         listSkills.push(skill?.skills);
       }
-      
+
       this.userOnboardingInfo.controls['current_job_skills'].setValue([
         ...listSkills,
       ]);
-      this.companySkills = listSkills
+      this.companySkills = listSkills;
       this.userOnboardingInfoClone = this.userOnboardingInfo.value;
       this.cancelLoadingApp();
-      
     });
   }
-
 
   // async findSkills() {
   //   const from = 'sys_user/' + this.user_id;
@@ -459,7 +460,7 @@ export class UserOnboardingComponent
   //     if (res.status === RESULT_STATUS.OK) {
   //       if (res.data.length > 0) {
   //         console.log(res.data);
-          
+
   //         this.mode = MODE.EDIT;
   //         let listSkills = []
   //         listSkills = res.data.map(m => ({_key: m?.skills?._key, value: m?.skills?.value , level: m?.level}) )
@@ -474,8 +475,6 @@ export class UserOnboardingComponent
   //     }
   //   })
   // }
-
-
 
   resetForm() {
     if (this.mode === MODE.NEW) {
@@ -564,17 +563,14 @@ export class UserOnboardingComponent
     this.availableTimeErrorMessage.push(availableTimeErr);
   }
   async saveDataJobSetting() {
-    
     const saveData = this.userJobSettingInfo.value;
     const skills = saveData.job_setting_skills;
     const arrSkills = [];
     for (const skill of skills) {
-      const skill_key = await this.userOnbService.findSkillsByCode(
-        skill._key
-      );
+      const skill_key = await this.userOnbService.findSkillsByCode(skill._key);
       arrSkills.push(skill_key.data[0]._key);
     }
-    
+
     saveData.job_setting_skills = arrSkills;
     saveData.location = saveData.location ? saveData.location._key : null;
     saveData.job_setting_title = saveData.job_setting_title
@@ -626,7 +622,7 @@ export class UserOnboardingComponent
     saveData.company_working = saveData.company_working
       ? saveData.company_working?._key
       : null;
-      
+
     this.current_job_skills = saveData.current_job_skills;
     delete saveData.current_job_skills;
     if (this.mode === MODE.NEW) {
@@ -639,44 +635,49 @@ export class UserOnboardingComponent
   }
 
   async saveJobSetting() {
-    
-    const jobSettingInfo = await this.saveDataJobSetting()
+    const jobSettingInfo = await this.saveDataJobSetting();
     await this.userOnbService.saveJobSetting(jobSettingInfo);
   }
 
   async saveDataUserSkill() {
-    debugger
     this.user_skill._from = 'sys_user/' + this.authService.getUserID();
-    this.user_skill.relationship = 'biz_user_skill';
     const skills = [];
     for (const item of this.current_job_skills) {
       await this.userOnbService.findSkillsByCode(item._key).then((res) => {
-        skills.push(res.data[0]._key);
+        if (res) {
+          skills.push(res.data[0]._key);
+        }
       });
     }
-    
+    if (this.mode == 'EDIT') {
+      const _fromSkill = [
+        { _from: 'sys_user/' + this.user_id },
+      ];
+      await this.userOnbService.removeBizUserSkill(_fromSkill);
+    }
+
     skills.forEach(async (skill) => {
       this.sort_no += 1;
       this.user_skill.sort_no = this.sort_no;
       this.user_skill._to = 'm_skill/' + skill;
       await this.userOnbService.saveUserSkills([this.user_skill]);
     });
+    this.cancelLoadingApp();
   }
 
-  save() {
-    
+  async save() {
     this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
 
     if (
-      this.userOnboardingInfo.valid &&
-      this.userJobSettingInfo.valid &&
+      (this.userOnboardingInfo.valid || this.isChanged) &&
+      (this.userJobSettingInfo.valid || this.isChanged) &&
       !this.available_time_error
     ) {
       this.callLoadingApp();
-      this.userOnbService.save(this.saveDataUserProfile()).then((res) => {
+      await this.userOnbService.save(this.saveDataUserProfile()).then((res) => {
         if (res?.status === RESULT_STATUS.OK) {
           this.saveDataUserSkill();
           this.saveJobSetting();
@@ -848,7 +849,6 @@ export class UserOnboardingComponent
     }
   }
 
-
   takeMasterValueSkillJobSetting(val: any, form: string): void {
     if (val.value.length > 0) {
       if (isObjectFull(val)) {
@@ -858,7 +858,8 @@ export class UserOnboardingComponent
         });
         this.userJobSettingInfo.controls[form].markAsDirty();
         this.userJobSettingInfo.controls[form].setValue(data);
-      }else{
+        this.isChanged = true;
+      } else {
         const msg = this.getMsg('E0022').replace('{0}');
         this.showToastr('', msg, KEYS.WARNING);
       }
@@ -877,7 +878,8 @@ export class UserOnboardingComponent
         });
         this.userOnboardingInfo.controls[form].markAsDirty();
         this.userOnboardingInfo.controls[form].setValue(data);
-      }else{
+        this.isChanged = true;
+      } else {
         const msg = this.getMsg('E0022').replace('{0}');
         this.showToastr('', msg, KEYS.WARNING);
       }

@@ -25,7 +25,7 @@ export class UserOnboardingInfoEntity extends BaseEntity {
     gender?: KeyValueEntity;
 
     @Field(() => Float, { nullable: true })
-    bod?: number;
+    dob?: number;
 
     @Field(() => String, { nullable: true })
     phone_number?: string;

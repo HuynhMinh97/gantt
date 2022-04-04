@@ -149,7 +149,7 @@ export class SaveUserOnboardingInfoDto extends BaseDto {
     gender?: string;
 
     @Field(() => Float, { nullable: true })
-    bod?: number;
+    dob?: number;
 
     @Field(() => String, { nullable: true })
     phone_number?: string;

@@ -68,7 +68,7 @@
                     [format]="dateFormat"
                     [label]="'born on date'"
                     [placeholder]="'yyyyy/MM/dd'"
-                    [id]="'bod'"
+                    [id]="'dob'"
                     [style]="{ width: '180px', height: '40px' }"
                     [isReset]="true"
                     [isSubmit]="isSubmit"
@@ -76,10 +76,10 @@
                       takeDatePickerValue(
                         $event?.value,
                         'userOnboardingInfo',
-                        'bod'
+                        'dob'
                       )
                     "
-                    [defaultValue]="userOnboardingInfo?.controls['bod']?.value"
+                    [defaultValue]="userOnboardingInfo?.controls['dob']?.value"
                   ></ait-datepicker>
                 </div>
               </ng-container>
@@ -165,7 +165,7 @@
                         [value]="option"
                         [checked]="
                           userOnboardingInfo?.controls['gender']?.value
-                            ? userOnboardingInfo?.controls['gender']?.value
+                            ? userOnboardingInfo?.controls['gender']?.value.value
                                 ?._key == option.code
                             : isDefault
                         "
@@ -173,12 +173,13 @@
                       >
                         {{ option.name }}
                       </nb-radio>
+                    
                     </nb-radio-group>
                   </div>
                 </div>
               </ng-container>
               <ait-space [margin]="'7.25px'"></ait-space>
-
+              
               <ng-container>
                 <div class="input_inline">
                   <ait-input-text
@@ -521,7 +522,9 @@
                         'job_setting_skills'
                       )
                     "
-                    [defaultValue]="companySkills"
+                    [defaultValue]="
+                      userJobSettingInfo?.controls['job_setting_skills']?.value
+                    "
                     [isReset]="isReset"
                     [isSubmit]="isSubmit"
                     [isEvaluate]="true"

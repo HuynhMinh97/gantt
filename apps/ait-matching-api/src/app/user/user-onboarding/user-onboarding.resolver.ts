@@ -10,6 +10,9 @@ import {
   UserOnboardingInfoRequest,
 } from './user-onboarding.request';
 import { CurrentJobSkillsEntity } from './user-onboarding.entity';
+import { UserSkillResponse } from '../user-skill/user-skill.response';
+import { UserSkillRequest } from '../user-skill/user-skill.request';
+import { RESULT_STATUS } from '@ait/shared';
 
 @Resolver()
 export class UserOnboardingInfoResolver extends AitBaseService {
@@ -22,6 +25,7 @@ export class UserOnboardingInfoResolver extends AitBaseService {
     request: UserOnboardingInfoRequest
   ) {
     const data = await this.find(request, user);
+    console.log(data);
     return await this.find(request, user);
   }
 
@@ -34,40 +38,7 @@ export class UserOnboardingInfoResolver extends AitBaseService {
     return this.find(request, user);
   }
 
-  // @Query(() => CurrentJobSkillsResponse, { name: 'findCurrentJobSkill' })
-  // async findCurrentJobSkill(
-  //   @AitCtxUser() user: SysUser,
-  //   @Args('request', { type: () => UserJobSettingRequest })
-  //   request: UserJobSettingRequest
-  // ) {
-  //   const _from = request.condition?._key;
-  //   const lang = request.lang;
-  //   const aqlQuery = `
-  //       FOR v IN 1..1 OUTBOUND "${_from}" biz_user_skill
-  //       RETURN v._id
-  //     `;
-  //   const skills = await this.query(aqlQuery);
-  //   const currentSkills = skills.data;
-  //   const rq = { ...request };
-  //   rq['collection'] = 'm_skill';
-  //   delete rq.condition;
-  //   const res = await this.find(rq);
-  //   const skillList = res.data || [];
-  //   const arr = []
-  //   currentSkills.forEach((data) => {
-  //     const ski = {}
-  //     const skill = skillList.find((sk) => sk._id === data);
-  //     ski['_key'] = skill.code; ski['value'] = skill.name
-  //    arr.push(ski)
-  //   });
-  //   const response = new CurrentJobSkillsResponse(
-  //     200,
-  //     arr as CurrentJobSkillsEntity[],
-  //     ''
-  //   );
-  //   console.log(response);
-  //   return response;
-  // }
+  
 
   @Query(() => UserOnboardingInfoResponse, { name: 'findSkillOnboarding' })
   async findSkillOnboarding(
@@ -126,5 +97,29 @@ export class UserOnboardingInfoResolver extends AitBaseService {
     request: UserOnboardingInfoRequest
   ) {
     return this.remove(request, user);
+  }
+
+
+  @Mutation(() => UserSkillResponse, { name: 'removeBizUserSkill' })
+  async removeBizUserSkill(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => UserSkillRequest }) request: UserSkillRequest
+  ) {
+    //return this.remove(request, user);
+    const user_id = request.user_id;
+    const from = JSON.stringify(request.data[0]._from);
+    if (user_id) {
+      const aqlQuery = `
+        FOR data IN biz_user_skill
+        FILTER data._from == ${from}
+        UPDATE data WITH { del_flag: true } IN biz_user_skill
+        RETURN data
+      `;
+      console.log(aqlQuery);
+      
+      return await this.query(aqlQuery);
+    } else {
+      return new UserSkillResponse(RESULT_STATUS.ERROR, [], 'error');
+    }
   }
 }

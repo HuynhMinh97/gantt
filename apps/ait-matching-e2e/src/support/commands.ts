@@ -300,7 +300,7 @@ Cypress.Commands.add('masterData', (classMaster, parent_code?) => {
   query += classMaster ? `class: {value: ["${classMaster}"]}}, ` : '';
   query += `     
         company: "${Cypress.env('company')}", 
-        lang: "${Cypress.env('lang')}", 
+        lang: "'en_US'", 
         user_id: "${Cypress.env('user_id')}"}) 
          {
       data {
@@ -338,7 +338,7 @@ Cypress.Commands.add('search', (url, keyword?, name?) => {
       company: `${Cypress.env('company')}`,
       condition,
       user_id: `${Cypress.env('user_id')}`,
-      lang: `${Cypress.env('lang')}`
+      lang: `'en_US'`
     }
   }).then(response => {
     return response.body
@@ -397,7 +397,7 @@ Cypress.Commands.add('getCountFile', (id, value) => {
     query {  findBinaryData(request: {collection: "sys_binary_data",
         condition: {_key: {value: ${JSON.stringify(value)}}, del_flag: false}, 
         company: "${Cypress.env('company')}", 
-        lang: "${Cypress.env('lang')}", 
+        lang: "'en_US'", 
         user_id: "${Cypress.env('user_id')}"})
       {data {     
         _key      
