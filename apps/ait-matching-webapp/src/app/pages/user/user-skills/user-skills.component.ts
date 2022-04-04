@@ -1,3 +1,4 @@
+import { level } from 'winston';
 import {
   MODE,
   AppState,
@@ -89,26 +90,69 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.callLoadingApp();
-    setTimeout(() => {
-      this.isLoad = true;
-    }, 300);
-    await this.getMaxSkill();
-    await this.findSkills();
-    await this.findTopSkills();
-    this.userSkills.valueChanges.subscribe((data) => {
-      this.checkAllowSave();
-    });
+    try {
+      this.callLoadingApp();
+      setTimeout(() => {
+        this.isLoad = true;
+      }, 300);
+      await this.getMaxSkill();
+      await this.findSkills();
+      await this.findTopSkills();
+      this.userSkills.valueChanges.subscribe((data) => {
+        this.checkAllowSave();
+      });
+    } catch (error) {
+      
+    }
+   
   }
  
   checkAllowSave() {
     const userSkill = { ...this.userSkills.value };
     const userSkillClone = { ...this.userSkillsClone };
-    const isChangedUserInfo = AitAppUtils.isObjectEqual(
+    const isChangedUserInfo =  AitAppUtils.isObjectEqual(
       { ...userSkill },
       { ...userSkillClone }
     );
     this.isChanged = !(isChangedUserInfo);
+    if(!this.isChanged){
+      this.isChanged = this.checkChangeSkill(this.userSkills.value.skills, this.userSkillsClone.skills);
+    }
+  }
+
+  checkChangeSkill = (obj1: any, clone: any) => {
+    const obj2 = { ...clone };
+    for (const prop in obj1){
+      for (const prop in obj2){
+        if(obj1[prop]._key == obj2[prop]._key && obj1[prop].level != obj2[prop].level){
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  checkChange = (obj1: any, clone: any) => {
+    const obj2 = { ...clone };
+    let checked = true;
+    for (const prop in obj1) {
+      if(obj1[prop].length != obj2[prop].length){
+        checked = false;
+        return checked;
+      }else{
+        const skillInfoClone = { ...obj1[prop] };
+        const skillInfo = { ...obj2[prop]};
+        const isChangedUserInfo = AitAppUtils.isObjectEqual(
+          { ...skillInfoClone },
+          { ...skillInfo }
+        );
+        checked = isChangedUserInfo;          
+        if(!checked){
+          return checked;
+        }       
+      }     
+    }
+    return checked;
   }
 
   async getMaxSkill(){
