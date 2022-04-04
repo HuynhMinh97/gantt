@@ -1,16 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'ait-ui',
   template: ``,
   styleUrls: ['./ait-ui.component.scss']
 })
-export class AitUiComponent implements OnInit {
-  constructor() {
-    console.log('ui init')
-  }
+export class AitUiComponent {
 
-  ngOnInit() {
-    console.log('z')
-  }
 }

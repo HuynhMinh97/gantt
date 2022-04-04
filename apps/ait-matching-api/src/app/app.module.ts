@@ -20,6 +20,8 @@ import { LanguageListResolver } from './list/language-list.ts/language-list.reso
 import { EducationListResolver } from './list/education-list/education-list.resolver';
 import { CertificateResolver } from './list/certificate-list/certificate-list.resolver';
 import { GetEmployeeResolver } from './group-role/add-role/add-role.resolver';
+import { SearchConditionResolver } from './search-condition/search-condition.resolver';
+import { SaveRecommendUserResolver } from './save-recommend-user/save-recommend-user.resolver';
 
 const RESOLVERS = [
   UserExperienceInfoResolver,
@@ -41,6 +43,8 @@ const RESOLVERS = [
   CertificateResolver,
   GetEmployeeResolver,
   GroupRoleListResolver,
+  SearchConditionResolver,
+  SaveRecommendUserResolver,
   {
   provide: 'ENVIRONMENT',
   useValue: environment

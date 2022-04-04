@@ -223,15 +223,7 @@ export class AitUiModule {
     else {
 
       // create error link
-      const errorLink = onError(({ graphQLErrors, networkError }) => {
-        // if (graphQLErrors)
-        //   graphQLErrors.map(({ message, locations, path }) =>
-        //     console.log(
-        //       `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-        //     ),
-        //   );
-        // if (networkError) console.log(networkError);
-      });
+      const errorLink = onError(({ graphQLErrors, networkError }) => {});
 
       const http = this.httpLink.create({
         uri, headers: new HttpHeaders({

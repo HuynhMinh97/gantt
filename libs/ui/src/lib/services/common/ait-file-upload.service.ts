@@ -62,8 +62,6 @@ export class AitFileUploaderService extends AitBaseService {
 
 
   removeFile = async (_keys: any[]) => {
-    console.log(_keys)
-
     return await this.mutation('removeBinaryData', 'sys_binary_data', _keys, {
       _key: true,
       name: true,
@@ -72,10 +70,6 @@ export class AitFileUploaderService extends AitBaseService {
       file_type: true
     });
   }
-
-  // getSystemSetting = async (company : string) => {
-  //   return await this.mutation('findSystem','user_setting',)
-  // }
 
   async getFilesByFileKeys(file_key: string | string[]) {
 

@@ -38,7 +38,6 @@ export class AitBinaryDataService extends AitBaseService {
         });
         return result;
       } catch (error) {
-        console.log(error);
         return null;
       }
     }

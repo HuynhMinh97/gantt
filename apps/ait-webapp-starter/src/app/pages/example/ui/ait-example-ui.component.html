@@ -15,7 +15,6 @@
           [label]="'autocomplete master data'" [placeholder]="'one'" [guidance]="'c_2003'" [guidanceIcon]="'star'"
           [class]="'RESIDENCE_STATUS'" (onError)="result.error_data2 = $event.isValid"
           (watchValue)="result.multi_data = $event" [isSubmit]="result.master2" [allowNew]="true" [allowDragDrop]="true"
-          (onDragDrop)="dd($event)"
           [errorMessages]="errors" [isReset]="result.resetAll" [required]="true" [allowDelete]="true">
         </ait-autocomplete-master-data>
   </div>
