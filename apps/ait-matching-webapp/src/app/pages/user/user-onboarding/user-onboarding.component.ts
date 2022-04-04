@@ -305,6 +305,7 @@ export class UserOnboardingComponent
           if (r.status === RESULT_STATUS.OK) {
             this.jobSettingData = r.data[0];
             this.userJobSettingInfo.patchValue({ ...this.jobSettingData });
+            console.log(this.userJobSettingInfo);
             this.userJobSettingInfoClone = this.userJobSettingInfo.value;
           } else {
             this.callLoadingApp();
@@ -319,6 +320,8 @@ export class UserOnboardingComponent
               if (r.data.length > 0 && !this.dataCountry.del_flag) {
                 this.userOnboardingInfo.patchValue({ ...this.dataCountry });
                 this.userOnboardingInfoClone = this.userOnboardingInfo.value;
+            console.log(this.userOnboardingInfo);
+
                 this.user_id_profile = this.dataCountry.user_id;
                 this._key = this.dataCountry._key;
                 isUserExist = true;
@@ -440,9 +443,37 @@ export class UserOnboardingComponent
       this.userOnboardingInfo.controls['current_job_skills'].setValue([
         ...listSkills,
       ]);
+      this.companySkills = listSkills
       this.userOnboardingInfoClone = this.userOnboardingInfo.value;
+      this.cancelLoadingApp();
+      console.log(this.companySkills)
     });
   }
+
+
+  // async findSkills() {
+  //   const from = 'sys_user/' + this.user_id;
+  //   await this.userSkillsService.findSkill(from).then((res) => {
+  //     if (res.status === RESULT_STATUS.OK) {
+  //       if (res.data.length > 0) {
+  //         console.log(res.data);
+          
+  //         this.mode = MODE.EDIT;
+  //         let listSkills = []
+  //         listSkills = res.data.map(m => ({_key: m?.skills?._key, value: m?.skills?.value , level: m?.level}) )
+  //         this.userSkills.controls['skills'].setValue(listSkills);
+  //         this.companySkills = listSkills
+  //         this.userSkillsClone =  JSON.parse(JSON.stringify(this.userSkills.value));
+  //         this.cancelLoadingApp();
+  //       } else {
+  //         this.userSkillsClone = this.userSkills.value;
+  //         this.cancelLoadingApp();
+  //       }
+  //     }
+  //   })
+  // }
+
+
 
   resetForm() {
     if (this.mode === MODE.NEW) {
@@ -531,11 +562,12 @@ export class UserOnboardingComponent
     this.availableTimeErrorMessage.push(availableTimeErr);
   }
   async saveDataJobSetting() {
+    
     const saveData = this.userJobSettingInfo.value;
     const skills = saveData.job_setting_skills;
     const arrSkills = [];
     for (const skill of skills) {
-      const skill_key = await this.userProjectService.findMSkillsByCode(
+      const skill_key = await this.userOnbService.findMSkillsByCode(
         skill._key
       );
       arrSkills.push(skill_key.data[0]._key);
@@ -604,6 +636,7 @@ export class UserOnboardingComponent
   }
 
   async saveJobSetting() {
+    
     const jobSettingInfo = await this.saveDataJobSetting()
     await this.userOnbService.saveJobSetting(jobSettingInfo);
   }
@@ -613,7 +646,7 @@ export class UserOnboardingComponent
     this.user_skill.relationship = 'biz_user_skill';
     const skills = [];
     for (const item of this.current_job_skills) {
-      await this.userOnbService.findSkillsByCode(item._key).then((res) => {
+      await this.userOnbService.findMSkillsByCode(item._key).then((res) => {
         skills.push(res.data[0]._key);
       });
     }
@@ -807,6 +840,45 @@ export class UserOnboardingComponent
       this.userOnboardingInfo.patchValue(item);
     } else {
       this.userOnboardingInfo.patchValue(null);
+    }
+  }
+
+
+  takeMasterValueSkillJobSetting(val: any, form: string): void {
+    if (val.value.length > 0) {
+      if (isObjectFull(val)) {
+        const data = [];
+        val.value.forEach((item) => {
+          data.push(item);
+        });
+        this.userJobSettingInfo.controls[form].markAsDirty();
+        this.userJobSettingInfo.controls[form].setValue(data);
+      }else{
+        const msg = this.getMsg('E0022').replace('{0}');
+        this.showToastr('', msg, KEYS.WARNING);
+      }
+    } else {
+      this.userJobSettingInfo.controls[form].markAsDirty();
+      this.userJobSettingInfo.controls[form].setValue(null);
+    }
+  }
+
+  takeMasterValueSkillCurrentJob(val: any, form: string): void {
+    if (val.value.length > 0) {
+      if (isObjectFull(val)) {
+        const data = [];
+        val.value.forEach((item) => {
+          data.push(item);
+        });
+        this.userOnboardingInfo.controls[form].markAsDirty();
+        this.userOnboardingInfo.controls[form].setValue(data);
+      }else{
+        const msg = this.getMsg('E0022').replace('{0}');
+        this.showToastr('', msg, KEYS.WARNING);
+      }
+    } else {
+      this.userOnboardingInfo.controls[form].markAsDirty();
+      this.userOnboardingInfo.controls[form].setValue(null);
     }
   }
 

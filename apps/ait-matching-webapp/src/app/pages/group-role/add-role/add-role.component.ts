@@ -18,9 +18,10 @@ import {
   AitEnvironmentService,
   AitAppUtils,
   AitRenderPageService,
+  AitConfirmDialogComponent,
 } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
-import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
+import { NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import {
   isObjectFull,
   KEYS,
@@ -56,8 +57,7 @@ export class AddRoleComponent extends AitBaseComponent implements OnInit {
     private formBuilder: FormBuilder,
     private addRoleService: AddRoleService,
     private groupRoleRegisterService: GroupRoleRegisterService,
-    private renderPageService: AitRenderPageService,
-
+    private dialogService: NbDialogService,
 
     env: AitEnvironmentService,
     store: Store<AppState>,
@@ -121,6 +121,7 @@ export class AddRoleComponent extends AitBaseComponent implements OnInit {
 
     this.roleForm.patchValue({ ...result.data[0] });
     this.roleFormClone = this.roleForm.value;
+    console.log(this.roleForm);
   }
 
   checkAllowSave() {
@@ -140,33 +141,33 @@ export class AddRoleComponent extends AitBaseComponent implements OnInit {
     this.roleForm.reset();
   }
 
-  async save() {
 
+  
+
+  async save() {
     if (this.roleForm.valid) {
       let saveRoleInfo = {};
       saveRoleInfo = this.roleForm.value;
       saveRoleInfo['groupName'] = this.name;
       saveRoleInfo['remarkGroup'] = this.remark;
       await this.addRoleService.removeRoleUser(saveRoleInfo['_key']);
-      const resModule = await this.renderPageService.findModule({
-        code: saveRoleInfo['module']._key,
-      });
-      const resPage = await this.renderPageService.findPage({
-        code: saveRoleInfo['page']._key,
-      });
+
       await this.saveRoleUser(
         saveRoleInfo['role_key'],
         saveRoleInfo['permission'],
         saveRoleInfo['employee_name']._key,
         saveRoleInfo['name'],
         saveRoleInfo['remark'],
-        resModule.data[0]._key,
-        resPage.data[0]._key,
+        saveRoleInfo['module']._key,
+        saveRoleInfo['page']._key
       ).then((res) => {
         if (res?.status === RESULT_STATUS.OK) {
           const message =
             this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
           this.showToastr('', message);
+          this.groupRoleRegisterService.role_key =
+            saveRoleInfo['role_key'] + '/' + saveRoleInfo['employee_name']._key;
+            this.router.navigate([`group-role-register`])
           this.cancelLoadingApp();
         } else {
           this.cancelLoadingApp();
@@ -183,14 +184,14 @@ export class AddRoleComponent extends AitBaseComponent implements OnInit {
     name: string,
     remark: string,
     module_key: string,
-    page_key: string,
+    page_key: string
   ) {
     const permissions = [];
     Object.keys(permission).forEach((key) => {
       const value = permission[key]._key;
       permissions.push(value);
     });
-     
+
     const sys_role_page = {
       _from: 'sys_role/' + role_key,
       _to: 'sys_user/' + user_key,
@@ -202,8 +203,6 @@ export class AddRoleComponent extends AitBaseComponent implements OnInit {
     };
     return await this.groupRoleRegisterService.saveRoleUser(sys_role_page);
   }
-
-
 
   add() {
     this.isSubmit = true;

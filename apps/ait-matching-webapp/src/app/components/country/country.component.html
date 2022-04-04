@@ -4,10 +4,12 @@
       <div style="padding-left: 10px">
         <ait-space [margin]="'7.25px'"></ait-space>
         <ait-autocomplete-master-data
-          [class]="'COUNTRY'"
+          [class]="'ADDRESS'"
           [label]="'country_region'"
           [id]="'country'"
+          [collection]="'sys_master_data'"
           [maxItem]="1"
+          [parentCode]="'ADDRESS'"
           [required]="true"
           [placeholder]="'Please select country/region'"
           [disableOutputDefault]="true"
@@ -26,9 +28,10 @@
         <ait-space [margin]="'7.25px'"></ait-space>
         <div class="input_inline">
           <ait-autocomplete-master-data
-            [class]="'CITY'"
+            [class]="'ADDRESS'"
             [parentCode]="getParentCode('country_region')"
             [label]="'province_city'"
+            [collection]="'sys_master_data'"
             [id]="'city'"
             [required]="true"
             [maxItem]="1"
@@ -48,8 +51,8 @@
         </div>
         <ait-space [margin]="'7.25px'"></ait-space>
         <div class="input_inline">
-          <ait-autocomplete-master-data
-            [class]="'WARD'"
+           <ait-autocomplete-master-data
+            [class]="'ADDRESS'"
             [parentCode]="getParentCode('district')"
             [label]="'ward'"
             [id]="'ward'"
@@ -68,7 +71,7 @@
                 : null
             "
           >
-          </ait-autocomplete-master-data>
+          </ait-autocomplete-master-data> 
         </div>
       </div>
     </div>
@@ -93,7 +96,7 @@
         <ait-space [margin]="'7.25px'"></ait-space>
         <div class="input_inline">
           <ait-autocomplete-master-data
-            [class]="'DISTRICT'"
+            [class]="'ADDRESS'"
             [parentCode]="getParentCode('province_city')"
             [label]="'district'"
             [id]="'district'"
@@ -111,7 +114,7 @@
                 ? [dataForm.controls['district'].value]
                 : null
             "
-          ></ait-autocomplete-master-data>
+          ></ait-autocomplete-master-data> 
         </div>
       </div>
     </div>

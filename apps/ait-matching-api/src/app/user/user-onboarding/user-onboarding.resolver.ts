@@ -16,12 +16,14 @@ export class UserOnboardingInfoResolver extends AitBaseService {
   collection = 'user_profile';
 
   @Query(() => UserOnboardingInfoResponse, { name: 'findUserOnboardingInfo' })
-  findUserOnboardingInfo(
+  async findUserOnboardingInfo(
     @AitCtxUser() user: SysUser,
     @Args('request', { type: () => UserOnboardingInfoRequest })
     request: UserOnboardingInfoRequest
   ) {
-    return this.find(request, user);
+    const data = await this.find(request, user);
+    console.log(data.data[0]);
+    return await this.find(request, user);
   }
 
   @Query(() => UserOnboardingInfoResponse, { name: 'findJobSettingInfo' })
@@ -75,6 +77,23 @@ export class UserOnboardingInfoResolver extends AitBaseService {
     request: UserOnboardingInfoRequest
   ) {
     return this.find(request, user);
+  }
+
+  @Query(() => UserOnboardingInfoResponse, { name: 'getParentCode' })
+  async getParentCode(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => UserOnboardingInfoRequest })
+    request: UserOnboardingInfoRequest
+  ) {
+      const parentKey = request.condition?._key as string;
+      const aqlQuery = `
+          FOR v IN sys_master_data
+          FILTER  v._key == ${parentKey}
+          RETURN v.code 
+      `;
+      const result = await this.query(aqlQuery);
+      console.log(result);
+      return await this.query(aqlQuery);
   }
 
   @Mutation(() => UserOnboardingInfoResponse, {

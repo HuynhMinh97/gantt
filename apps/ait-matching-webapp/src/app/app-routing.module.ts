@@ -202,37 +202,37 @@ export const routes: Routes = [
   },
   {
     path: 'project-list',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    canActivate: [AitAuthGuardService],
     component: ProjectListComponent
   },
   {
     path: 'certificate-list',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    canActivate: [AitAuthGuardService], 
     component: CertificateListComponent
   },
   {
     path: 'education-list',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    canActivate: [AitAuthGuardService], 
     component: EducationListComponent
   },
   {
     path: 'my-project-queries',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    canActivate: [AitAuthGuardService], 
     component: MyProjectQueriesComponent
   },
   {
-    path: 'add-role',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    path: 'role',
+    canActivate: [AitAuthGuardService], 
     component: AddRoleComponent
   },
   {
-    path: 'group-role-register',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    path: 'group-role',
+    canActivate: [AitAuthGuardService], 
     component: GroupRoleRegisterComponent
   },
   {
     path: 'group-role-list',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    canActivate: [AitAuthGuardService], 
     component: GroupRoleListComponent
   },
   

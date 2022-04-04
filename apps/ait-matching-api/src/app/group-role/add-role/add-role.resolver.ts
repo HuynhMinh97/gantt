@@ -75,6 +75,7 @@ export class GetEmployeeResolver extends AitBaseService {
     const module = await this.getModule(listData['module']);
     const page = await this.getPage(listData['page']);
     const permissionObj = await this.findPermission(lang);
+    console.log(permissionObj);
     const permissionArr = [];
     permissionObj.data.forEach((permission) => {
       listData['permission'].forEach((per) => {
@@ -117,7 +118,7 @@ export class GetEmployeeResolver extends AitBaseService {
     const aqlQuery = `
     for v in sys_module
     filter v._key == "${_key}"
-    return {_key:v.code, value: v.name}
+    return {_key:v._key, value: v.name}
       `;
     return await this.query(aqlQuery);
   }
@@ -126,7 +127,7 @@ export class GetEmployeeResolver extends AitBaseService {
     const aqlQuery = `
     for v in sys_page
     filter v._key == "${_key}"
-    return {_key:v.code, value: v.name}
+    return {_key:v._key, value: v.name}
       `;
     return await this.query(aqlQuery);
   }
@@ -135,7 +136,7 @@ export class GetEmployeeResolver extends AitBaseService {
     const aqlQuery = `
     for v in sys_master_data
     filter v.class == "ROLE_PERMISSION"
-    return {_key:v.code, value: v.name.${lang}}`;
+    return {_key:v._key, value: v.name.${lang}}`;
     return await this.query(aqlQuery);
   }
 }

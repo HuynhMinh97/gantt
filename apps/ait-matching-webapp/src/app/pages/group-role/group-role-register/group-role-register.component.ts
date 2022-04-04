@@ -4,6 +4,7 @@ import { GroupRoleRegisterService } from './../../../services/group-role-registe
 import {
   AitAuthService,
   AitBaseComponent,
+  AitConfirmDialogComponent,
   AitEnvironmentService,
   AitRenderPageService,
   AitTableButtonComponent,
@@ -420,13 +421,13 @@ export class GroupRoleRegisterComponent
       }
     }
     this.cancelLoadingApp();
+    
     setTimeout(() => {
       this.source = new LocalDataSource(this.roleRegisterDataTable);
     }, 700);
   }
 
   async saveGroupRole() {
-    
     const groupRoleInfo = this.roleRegis.value;
     const groupRole = {
       name: groupRoleInfo.name,
@@ -434,12 +435,7 @@ export class GroupRoleRegisterComponent
     };
     let groupRoleKey = '';
     for (const role of this.saveRoleData) {
-      const resModule = await this.renderPageService.findModule({
-        code: role.module_key,
-      });
-      const resPage = await this.renderPageService.findPage({
-        code: role.page_key,
-      });
+     
       const existRole = await this.groupRoleRegisterService.findRole(
         role.groupName
       );
@@ -455,8 +451,8 @@ export class GroupRoleRegisterComponent
                 role.employee__key,
                 role.name,
                 role.remark,
-                resModule.data[0]._key,
-                resPage.data[0]._key
+                role.module_key,
+                role.page_key
               ).then((res) => {
                 if (res?.status === RESULT_STATUS.OK) {
                   const message =
@@ -483,8 +479,8 @@ export class GroupRoleRegisterComponent
           role.employee__key,
           role.name,
           role.remark,
-          resModule.data[0]._key,
-          resPage.data[0]._key
+          role.module_key,
+          role.page_key
         ).then((res) => {
           if (res?.status === RESULT_STATUS.OK) {
             const message =
@@ -523,6 +519,35 @@ export class GroupRoleRegisterComponent
     };
     return await this.groupRoleRegisterService.saveRoleUser(sys_role_page);
   }
+
+
+  // async delete(){
+    
+  //   const data = this.roleRegisterDataTable;
+    
+  //     this.dialogService.open(AitConfirmDialogComponent, {
+  //       closeOnBackdropClick: true,
+  //       hasBackdrop: true,
+  //       autoFocus: false,
+  //       context: {
+  //         title: this.getMsg('I0004'),
+  //       },
+  //     })
+  //       .onClose.subscribe(async (event) => {
+  //         if (event) {
+  //           await this.addRoleService.removeRoleUser(key)
+  //             .then((res) => {
+  //               if (res.status === RESULT_STATUS.OK) {
+  //                 this.showToastr('', this.getMsg('I0003'));
+  //                 this.router.navigate([`db-connection-list`]);
+  //               } else {
+  //                 this.showToastr('', this.getMsg('E0050'), KEYS.WARNING);
+  //               }
+  
+  //             })
+  //         }
+  //       });
+  // }
 
   getDateFormat(time: number) {
     if (!time) {
