@@ -1,5 +1,6 @@
 export const SYSTEM_COMPANY = '000000000000000000000000000000000000';
 export const SYSTEM_USER = '000000000000000000000000000000000000';
+export const SYSTEM_LANG = 'en_US';
 export const STRING_EMPTY = '';
 export const STRING_SPACE = ' ';
 export const APP_SECRET_KEY = '123456$#@$^@1ERF';
