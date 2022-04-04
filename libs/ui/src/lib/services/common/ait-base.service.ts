@@ -9,7 +9,7 @@ import { tap, catchError, map } from 'rxjs/operators';
 import { SHOWSNACKBAR } from '../../state/actions';
 import { NbToastrService } from '@nebular/theme';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { COLLECTIONS, MessageModel, SYSTEM_COMPANY } from '@ait/shared';
+import { COLLECTIONS, MessageModel, SYSTEM_COMPANY, SYSTEM_LANG } from '@ait/shared';
 import { AitEnvironmentService } from '../ait-environment.service';
 import { AitAppUtils } from '../../utils/ait-utils';
 import { Apollo, gql } from 'apollo-angular';
@@ -215,7 +215,7 @@ export class AitBaseService implements OnDestroy {
     // Request to graphql query
     const MASTER_COLLECTION = [COLLECTIONS.MASTER_DATA, COLLECTIONS.CAPTION, COLLECTIONS.MESSAGE];
     request['company'] = this.company || localStorage.comp || SYSTEM_COMPANY;
-    request['lang'] = localStorage.lang || this.currentLang;
+    request['lang'] = localStorage.lang || this.currentLang || this.env?.COMMON?.LANG_DEFAULT || SYSTEM_LANG;
     request['user_id'] = this.user_id;
     request['module'] = this.module || '';
     request['page'] = this.page || '';

@@ -40,7 +40,7 @@
   </span>
   <nb-icon
     [id]="ID('chip_icon')"
-    *ngIf="icon"
+    *ngIf="isHaveIcon && icon"
     [icon]="icon"
     (click)="iconAction()"
   ></nb-icon>
