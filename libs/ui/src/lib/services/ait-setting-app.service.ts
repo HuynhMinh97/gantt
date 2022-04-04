@@ -51,7 +51,6 @@ export class AitSettingAppService {
           );
         }
       } catch (error) {
-        console.log(error);
       }
     }
   }

@@ -184,7 +184,6 @@ export class AitSignUpComponent extends AitBaseComponent implements OnInit {
             });
           }
         }).catch(e => {
-          console.log(e);
           this.isLoading = false;
           this.showToastr(
             this.translateService.translate(
