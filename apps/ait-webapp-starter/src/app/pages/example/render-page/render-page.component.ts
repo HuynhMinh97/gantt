@@ -20,7 +20,6 @@ export class RenderPageComponent implements OnInit {
   }
   
   ngOnInit(): void {
-    console.log(this.page);
   }
 
   public callBack = async (condition = {}) => {

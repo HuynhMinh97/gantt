@@ -18,7 +18,6 @@ export class AitButtonGroupComponent implements OnChanges {
 
         if (key === 'buttons') {
           const element = changes[key].currentValue;
-          // console.log(element)
           this.btnCtrl = element;
         }
 
