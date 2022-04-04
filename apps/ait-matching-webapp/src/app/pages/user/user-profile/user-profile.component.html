@@ -1,4 +1,4 @@
-<ait-toc-menu [id]="'継続する'"></ait-toc-menu>
+<ait-toc-menu [id]="'継続する'" [isOpen]="false"></ait-toc-menu>
 <div class="user_profile_wrapper" id="user_profile">
   <div class="content__card" *ngIf="isload">
     <div
@@ -15,16 +15,16 @@
         [fontsize]="'36px'"
       ></ait-text-gradient>
     </div>
-  
+
     <!-- profile -->
     <div style="position: relative" class="profile">
-      <card-content
+      <ait-card-content
         tabindex="2"
         [id]="'継続する'"
         class="content_card"
         [label]="'basic information' | translate"
         style="display: flex; justify-content: center"
-        [styleLabel]="{ 'font-size': '26px' }"
+        [styleLabel]="{ 'font-size': '26px','padding' : '15px 0px 7px 0px'}"
         (onClickButtonHeader)="nextPage('user-onboarding/', user_id)"
         [actionBtn]="isMyUserProfile ? actionBtnProfile : ''"
         [buttonTitle]="'edit_profile'"
@@ -35,13 +35,13 @@
           color: '#8F9BB3',
           'font-size': '12px'
         }"
-        [padding]="'25px 22px'"
+        [padding]="'0'"
         [isOpen]="true"
         [idBtn]="'openAddSkill'"
       >
         <div class="container-user-project">
           <div
-            style="display: flex; flex-wrap: wrap; width: 100%; padding: 20px"
+            style="display: flex; flex-wrap: wrap; width: 100%"
           >
             <div
               class="left"
@@ -52,7 +52,7 @@
                   [label]="'first name'"
                   [width]="'200px'"
                   [value]="DataUserProfile?.first_name"
-                  [id]="'first name'"
+                  [id]="'first_name'"
                 ></ait-output-text>
               </div>
               <div class="input_inline">
@@ -68,7 +68,7 @@
                   [label]="'born on date'"
                   [width]="'200px'"
                   [value]="DataUserProfile?.bod | date: dateFormat"
-                  [id]="'born on date'"
+                  [id]="'born_on_date'"
                 ></ait-output-text>
               </div>
               <div class="input_inline">
@@ -103,7 +103,7 @@
                   [label]="'last name'"
                   [width]="'200px'"
                   [value]="DataUserProfile?.last_name"
-                  [id]="'last name'"
+                  [id]="'last_name'"
                 ></ait-output-text>
               </div>
               <div class="input_inline">
@@ -127,13 +127,13 @@
                   [label]="'phone number'"
                   [width]="'200px'"
                   [value]="DataUserProfile?.phone_number || ''"
-                  [id]="'name'"
+                  [id]="'phone_number'"
                 ></ait-output-text>
               </div>
             </div>
           </div>
         </div>
-      </card-content>
+      </ait-card-content>
     </div>
 
     <!-- skills -->
@@ -144,42 +144,43 @@
           [iconName]="'menu-outline'"
           [color]="'#fff'"
           [styleText]="{ 'font-size': '10px' }"
-          [styleBtn]="{ width: '140px', 'min-width': '100px', 'height': '26px'}"
-          [styleIcon]="{'font-size': '10px'}"
+          [styleBtn]="{ width: '140px', 'min-width': '100px', height: '26px' }"
+          [styleIcon]="{ 'font-size': '10px' }"
           [title]="'reorder skills'"
           [id]="'reorder-skills'"
           [isDefault]="'true'"
         ></ait-button>
       </div>
-      <card-content
+      <ait-card-content
         tabindex="2"
-        [id]="'継続する'"
-        style="outline-color: #10529d"
-        class="content_card"
         style="display: flex; justify-content: center"
+        [id]="'継続する'"
         [label]="'skills' | translate"
-        [styleLabel]="{ 'font-size': '26px' }"
+        [styleLabel]="{ 'font-size': '26px' ,'padding' : '15px 0px 7px 0px'}"
         (onClickButtonHeader)="nextPage('user-skills')"
         [actionBtn]="isMyUserProfile ? actionBtn : ''"
         [buttonTitle]="'add skills'"
         [disableHeader]="false"
         [widthBtn]="'120px'"
-        [content]="getCounter('my-profile.has-skill', countSkill)"
-        [padding]="'13px 22px'"
-        [styleContent]="{
+        [summary]="getCounter('my-profile.has-skill', countSkill)"
+        [padding]="'0'"
+        [styleSummary]="{
           color: '#8F9BB3',
           'font-size': '12px',
           'margin-top': '5px'
         }"
-        [isOpen]="false"
+        [isOpen]="true"
         [idBtn]="'openAddSkill'"
-        (onToggle)="getExpan($event,'isShowSkill')"
-        [height]="isShowSkill ? '0px' : 'auto'"
       >
-        <div class="container_user" >
-          <div *ngFor="let category of skillByCategory; let index = index; let first = first">
-
-            <div *ngIf="index <3 && !isShowSkill">
+        <div class="container_user">
+          <div
+            *ngFor="
+              let category of skillByCategory;
+              let index = index;
+              let first = first
+            "
+          >
+            <div *ngIf="index < 3 && !isShowSkill">
               <hr style="margin-top: 5px" *ngIf="!first" />
               <p class="title-skill">{{ category?.name }}</p>
               <ait-drag-scroll
@@ -189,9 +190,9 @@
                 [minWidth]="'100px'"
                 [isNormal]="false"
               ></ait-drag-scroll>
-            </div>  
+            </div>
 
-            <div  *ngIf="isShowSkill">
+            <div *ngIf="isShowSkill">
               <hr style="margin-top: 5px" *ngIf="!first" />
               <p class="title-skill">{{ category?.name }}</p>
               <ait-drag-scroll
@@ -201,44 +202,181 @@
                 [minWidth]="'100px'"
                 [isNormal]="false"
               ></ait-drag-scroll>
-            </div>           
+            </div>
+          </div>
+          <div class="icon_down_up">
+            <ait-button
+              *ngIf="!isShowSkill"
+              [iconName]="'arrowhead-down-outline'"
+              [color]="'#fff'"
+              [styleText]="{ 'font-size': '10px' }"
+              [styleBtn]="{
+                width: '115px',
+                'min-width': '100px',
+                height: '24px'
+              }"
+              [styleIcon]="{ 'font-size': '8px' }"
+              [title]="'view more'"
+              [id]="'reorder-skills'"
+              [isDefault]="'true'"
+              (click)="getDown('isShowSkill', true)"
+            ></ait-button>
+
+            <ait-button
+              *ngIf="isShowSkill"
+              [iconName]="'arrowhead-up-outline'"
+              [color]="'#fff'"
+              [styleText]="{ 'font-size': '10px' }"
+              [styleBtn]="{
+                width: '110px',
+                'min-width': '100px',
+                height: '24px'
+              }"
+              [title]="'view less'"
+              [id]="'reorder-skills'"
+              [isDefault]="'true'"
+              (click)="getDown('isShowSkill', false)"
+            ></ait-button>
           </div>
         </div>
-      </card-content>
+      </ait-card-content>
     </div>
     <!-- project -->
-    <div class="project">
-      <card-content
+    <div id="project">
+      <ait-card-content
         tabindex="2"
         [id]="'継続する'"
-        style="outline-color: #10529d"
-        class="content_card"
         style="display: flex; justify-content: center"
         [label]="'projects' | translate"
-        [styleLabel]="{ 'font-size': '26px' }"
-        [styleText]="{ 'font-size': '15px' }"
+        [styleLabel]="{ 'font-size': '26px','padding' : '15px 0px 7px 0px' }"
         (onClickButtonHeader)="nextPage('user-project')"
         [actionBtn]="isMyUserProfile ? actionBtn : ''"
         [buttonTitle]="'add projects'"
         [disableHeader]="false"
         [widthBtn]="'120px'"
-        [content]="getCounter('my-profile.project-time', timeProject * 22 * 8)"
-        [styleContent]="{
+        [summary]="getCounter('my-profile.project-time', timeProject * 22 * 8)"
+        [styleSummary]="{
           color: '#8F9BB3',
           'font-size': '12px',
           'margin-top': '5px'
         }"
-        [isOpen]="false"
+        [isOpen]="true"
         [idBtn]="'openProjects'"
-        [padding]="'13px 22px'"
-        (onToggle)="getExpan($event,'isShowProject')"
-        [height]="isShowProject ? '0px' : heightProject"
+        [padding]="'0'"
+        (onToggle)="getExpan($event, 'isShowProject')"
       >
         <div class="container_user" *ngIf="userProject.length == 0">
-          <p class="data_empty">{{'データがありません。' | translate}}</p>
+          <p class="data_empty">{{ 'データがありません。' | translate }}</p>
         </div>
         <div class="container_user" *ngIf="userProject.length > 0">
-          <ul
+          <div *ngIf="!isShowProject">
+            <ul>
+            <li class="timeline-event">
+              <div class="timeline-block">
+                <div class="img-timeline-cmp">
+                  <img
+                    src="../../../../../assets/images/image.png"
+                    alt="project"
+                  />
+                </div>
+                <div class="timeline-info">
+                  <div>
+                    <p id="title-timeline">
+                      {{ userProject[0]?.company_name }}
+                    </p>
+                    <div class="desc-info">
+                      <p>{{ dateDiffInYears(userProject[0]?.working_time) }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li
+              class="timeline-event"
+              *ngFor="
+                let project of userProject[0]?.data_project;
+                let last = last;
+                let first = first;
+                let index = index;
+              "
+            > 
+              <div class="devline" *ngIf="!last && index < 2"></div>
+              <div class="timeline-block" *ngIf="index < 2">
+                <div class="img-timeline">
+                  <img
+                    src="../../../../../assets/images/Icon.svg"
+                    alt="project"
+                    *ngIf="
+                      project?.start_date_to && project?.start_date_to < today
+                    "
+                  />
+                  <img
+                    src="../../../../../assets/images/IconEdit.svg"
+                    alt="projectcurrent"
+                    *ngIf="
+                      !project?.start_date_to || project?.start_date_to >= today
+                    "
+                  />
+                </div>
+                <div class="timeline-info">
+                  <div>
+                    <p id="title-timeline">{{ project?.name?.value }}</p>
+                    <div class="desc-info">
+                      <p>{{ project?.title.value }}</p>
+                      <p *ngIf="!project.start_date_to">
+                        {{ project?.start_date_from | date: monthFormat }} -
+                        {{ 'my-profile.prevent' | translate }}:
+                        {{
+                          dateDiffInYears(
+                            dateDiffInMonths(project?.start_date_from, null)
+                          )
+                        }}
+                      </p>
+                      <p *ngIf="project.start_date_to">
+                        {{ project?.start_date_from | date: monthFormat }} -
+                        {{ project?.start_date_to | date: monthFormat }}:
+                        {{
+                          dateDiffInYears(
+                            dateDiffInMonths(
+                              project?.start_date_from,
+                              project?.start_date_to
+                            )
+                          )
+                        }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  id="ic-edit"
+                  [nbTooltip]="
+                    isMyUserProfile
+                      ? ('my-profile.edit' | translate)
+                      : ('my-profile.view' | translate)
+                  "
+                >
+                  <a
+                    (click)="nextPage('user-project', project?._key)"
+                    [id]="'project-' + project?._key"
+                    *ngIf="isMyUserProfile"
+                  >
+                    <nb-icon nbSuffix icon="edit-outline" pack="eva"></nb-icon>
+                  </a>
+                  <a
+                    (click)="nextPage('user-project-detail', project?._key)"
+                    [id]="'project-' + project?._key"
+                    *ngIf="!isMyUserProfile"
+                  >
+                    <nb-icon nbSuffix icon="eye-outline" pack="eva"></nb-icon>
+                  </a>
+                </div>
+              </div>
+    
+            </li>
+          </ul>
+          </div>
+          <div *ngIf="isShowProject">
+            <ul
             *ngFor="
               let listProject of userProject;
               let last = last;
@@ -293,7 +431,7 @@
                 </div>
                 <div class="timeline-info">
                   <div>
-                    <p id="title-timeline">{{ project.name }}</p>
+                    <p id="title-timeline">{{ project?.name?.value}}</p>
                     <div class="desc-info">
                       <p>{{ project?.title.value }}</p>
                       <p *ngIf="!project.start_date_to">
@@ -333,11 +471,7 @@
                     [id]="'project-' + project?._key"
                     *ngIf="isMyUserProfile"
                   >
-                    <nb-icon
-                      nbSuffix
-                      icon="edit-outline"
-                      pack="eva"
-                    ></nb-icon>
+                    <nb-icon nbSuffix icon="edit-outline" pack="eva"></nb-icon>
                   </a>
                   <a
                     (click)="nextPage('user-project-detail', project?._key)"
@@ -352,210 +486,426 @@
             </li>
             <hr *ngIf="!last" />
           </ul>
+          </div>
+          <div class="icon_down_up">
+            <ait-button
+              *ngIf="!isShowProject"
+              [iconName]="'arrowhead-down-outline'"
+              [color]="'#fff'"
+              [styleText]="{ 'font-size': '10px' }"
+              [styleBtn]="{
+                width: '115px',
+                'min-width': '100px',
+                height: '24px'
+              }"
+              [styleIcon]="{ 'font-size': '8px' }"
+              [title]="'view more'"
+              [id]="'reorder-skills'"
+              [isDefault]="'true'"
+              (click)="getDown('isShowProject', true, 'project')"
+            ></ait-button>
+
+            <ait-button
+              *ngIf="isShowProject"
+              [iconName]="'arrowhead-up-outline'"
+              [color]="'#fff'"
+              [styleText]="{ 'font-size': '10px' }"
+              [styleBtn]="{
+                width: '110px',
+                'min-width': '100px',
+                height: '24px'
+              }"
+              [styleIcon]="{ 'font-size': '10px' }"
+              [title]="'view less'"
+              [id]="'reorder-skills'"
+              [isDefault]="'true'"
+              (click)="getDown('isShowProject', false, '継続する_menu_toc_item_Projects')"
+            ></ait-button>
+          </div>
         </div>
-      </card-content>
+      </ait-card-content>
     </div>
-    <!-- EXPERIENCE -->
+    <!-- experience -->
     <div class="experience">
-      <card-content
-        tabindex="2"
-        [isOpen]="false"
-        [id]="'継続する'"
-        style="outline-color: #10529d"
-        class="content_card"
+      <ait-card-content
         style="display: flex; justify-content: center"
+        [isOpen]="true"
+        [id]="'継続する'"
         [label]="'experiences' | translate"
-        [styleLabel]="{ 'font-size': '26px' }"
-        [styleText]="{ 'font-size': '15px' }"
+        [styleLabel]="{ 'font-size': '26px','padding' : '15px 0px 7px 0px' }"
         (onClickButtonHeader)="nextPage('user-experience')"
         [actionBtn]="isMyUserProfile ? actionBtn : ''"
         [buttonTitle]="'add experiencer'"
         [disableHeader]="false"
         [widthBtn]="'120px'"
-        [content]="getCounter('my-profile.experience-time', timeExperienceStr)"
-        [styleContent]="{
+        [summary]="getCounter('my-profile.experience-time', timeExperienceStr)"
+        [styleSummary]="{
           color: '#8F9BB3',
           'font-size': '12px',
           'margin-top': '5px'
         }"
         [idBtn]="'openExperience'"
-        [padding]="'13px 22px'"
-        (onToggle)="getExpan($event,'isShowExperience')"
-        [height]="isShowExperience ? '0px' : heightExperience"
+        [padding]="'0'"
+        (onToggle)="getExpan($event, 'isShowExperience')"
       >
         <div class="container_user" *ngIf="userExperience.length == 0">
-          <p class="data_empty">{{'データがありません。' | translate}}</p>
+          <p class="data_empty">{{ 'データがありません。' | translate }}</p>
         </div>
         <div class="container_user" *ngIf="userExperience.length > 0">
-          <ul
-            *ngFor="
-              let listSxperience of userExperience;
-              let last = last;
-              let firstcomp = first
-            "
-          >
-            <li class="timeline-event">
-              <div class="timeline-block">
-                <div class="img-timeline-cmp">
-                  <img
-                    src="../../../../../assets/images/image.png"
-                    alt="project"
-                  />
-                </div>
-                <div class="timeline-info">
-                  <div>
-                    <p id="title-timeline">
-                      {{ listSxperience?.company_name }}
-                    </p>
-                    <div class="desc-info">
-                      <p>{{ dateDiffInYears(listSxperience?.working_time) }}</p>
+          <div *ngIf="!isShowExperience">
+            <ul>
+              <li class="timeline-event">
+                <div class="timeline-block">
+                  <div class="img-timeline-cmp">
+                    <img
+                      src="../../../../../assets/images/image.png"
+                      alt="project"
+                    />
+                  </div>
+                  <div class="timeline-info">
+                    <div>
+                      <p id="title-timeline">
+                        {{ userExperience[0]?.company_name }}
+                      </p>
+                      <div class="desc-info">
+                        <p>
+                          {{ dateDiffInYears(userExperience[0]?.working_time) }}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="devline"></div>
-            </li>
-            <li
-              class="timeline-event"
+                <!-- <div class="devline"></div> -->
+              </li>
+              <li
+                class="timeline-event"
+                *ngFor="
+                  let experience of userExperience[0]?.data_project;
+                  let last = last;
+                  let first = first;
+                  let index = index
+                "
+              >
+                <div class="devline" *ngIf=" !last && index < 2"></div>
+                <div class="timeline-block" *ngIf="index < 2">
+                  <div class="img-timeline">
+                    <img
+                      src="../../../../../assets/images/Icon.svg"
+                      alt="project"
+                      *ngIf="
+                        experience?.start_date_to &&
+                        experience?.start_date_to < today
+                      "
+                    />
+                    <img
+                      src="../../../../../assets/images/IconEdit.svg"
+                      alt="projectcurrent"
+                      *ngIf="
+                        !experience?.start_date_to ||
+                        experience?.start_date_to >= today
+                      "
+                    />
+                  </div>
+                  <div class="timeline-info">
+                    <div>
+                      <p id="title-timeline">{{ experience?.title.value }}</p>
+                      <div class="desc-info">
+                        <p>
+                          {{
+                            experience?.employee_type
+                              ? experience?.employee_type?.value
+                              : 'chưa xác định'
+                          }}
+                        </p>
+                        <p *ngIf="!experience.start_date_to">
+                          {{
+                            experience?.start_date_from
+                              ? (experience?.start_date_from
+                                | date: monthFormat)
+                              : ('my-profile.unclear' | translate)
+                          }}
+                          - {{ 'my-profile.prevent' | translate }}:
+                          {{
+                            dateDiffInYears(
+                              dateDiffInMonths(
+                                experience?.start_date_from,
+                                null
+                              )
+                            )
+                          }}
+                        </p>
+                        <p *ngIf="experience.start_date_to">
+                          {{
+                            experience?.start_date_from
+                              ? (experience?.start_date_from
+                                | date: monthFormat)
+                              : ('my-profile.unclear' | translate)
+                          }}
+                          - {{ experience?.start_date_to | date: monthFormat }}:
+                          {{
+                            dateDiffInYears(
+                              dateDiffInMonths(
+                                experience?.start_date_from,
+                                experience?.start_date_to
+                              )
+                            )
+                          }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    id="ic-edit"
+                    [nbTooltip]="
+                      isMyUserProfile
+                        ? ('my-profile.edit' | translate)
+                        : ('my-profile.view' | translate)
+                    "
+                  >
+                    <a
+                      (click)="nextPage('user-experience', experience?._key)"
+                      [id]="'experience-' + experience?._key"
+                      *ngIf="isMyUserProfile"
+                    >
+                      <nb-icon
+                        nbSuffix
+                        icon="edit-outline"
+                        pack="eva"
+                      ></nb-icon>
+                    </a>
+                    <a
+                      (click)="
+                        nextPage('user-experience-detail', experience?._key)
+                      "
+                      [id]="'experience-' + experience?._key"
+                      *ngIf="!isMyUserProfile"
+                    >
+                      <nb-icon nbSuffix icon="eye-outline" pack="eva"></nb-icon>
+                    </a>
+                  </div>
+                </div>
+                <!-- <div class="devline" *ngIf="!last"></div> -->
+              </li>
+            </ul>
+          </div>
+          <div *ngIf="isShowExperience">
+            <ul
               *ngFor="
-                let experience of listSxperience?.data_project;
+                let listSxperience of userExperience;
                 let last = last;
-                let firstproj = first
+                let firstcomp = first
               "
             >
-              <div class="timeline-block">
-                <div class="img-timeline">
-                  <img
-                    src="../../../../../assets/images/Icon.svg"
-                    alt="project"
-                    *ngIf="
-                      experience?.start_date_to &&
-                      experience?.start_date_to < today
-                    "
-                  />
-                  <img
-                    src="../../../../../assets/images/IconEdit.svg"
-                    alt="projectcurrent"
-                    *ngIf="
-                      !experience?.start_date_to ||
-                      experience?.start_date_to >= today
-                    "
-                  />
-                </div>
-                <div class="timeline-info">
-                  <div>
-                    <p id="title-timeline">{{ experience?.title.value }}</p>
-                    <div class="desc-info">
-                      <p>{{ experience?.employee_type ? experience?.employee_type?.value : 'chưa xác định' }}</p>
-                      <p *ngIf="!experience.start_date_to">
-                        {{
-                          experience?.start_date_from
-                            ? (experience?.start_date_from | date: monthFormat)
-                            : ('my-profile.unclear' | translate)
-                        }}
-                        - {{ 'my-profile.prevent' | translate }}:
-                        {{
-                          dateDiffInYears(
-                            dateDiffInMonths(experience?.start_date_from, null)
-                          )
-                        }}
+              <li class="timeline-event">
+                <div class="timeline-block">
+                  <div class="img-timeline-cmp">
+                    <img
+                      src="../../../../../assets/images/image.png"
+                      alt="project"
+                    />
+                  </div>
+                  <div class="timeline-info">
+                    <div>
+                      <p id="title-timeline">
+                        {{ listSxperience?.company_name }}
                       </p>
-                      <p *ngIf="experience.start_date_to">
-                        {{
-                          experience?.start_date_from
-                            ? (experience?.start_date_from | date: monthFormat)
-                            : ('my-profile.unclear' | translate)
-                        }}
-                        - {{ experience?.start_date_to | date: monthFormat }}:
-                        {{
-                          dateDiffInYears(
-                            dateDiffInMonths(
-                              experience?.start_date_from,
-                              experience?.start_date_to
-                            )
-                          )
-                        }}
-                      </p>
+                      <div class="desc-info">
+                        <p>
+                          {{ dateDiffInYears(listSxperience?.working_time) }}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div
-                  id="ic-edit"
-                  [nbTooltip]="
-                    isMyUserProfile
-                      ? ('my-profile.edit' | translate)
-                      : ('my-profile.view' | translate)
-                  "
-                >
-                  <a
-                    (click)="nextPage('user-experience', experience?._key)"
-                    [id]="'experience-' + experience?._key"
-                    *ngIf="isMyUserProfile"
+                <div class="devline"></div>
+              </li>
+              <li
+                class="timeline-event"
+                *ngFor="
+                  let experience of listSxperience?.data_project;
+                  let last = last;
+                  let firstproj = first
+                "
+              >
+                <div class="timeline-block">
+                  <div class="img-timeline">
+                    <img
+                      src="../../../../../assets/images/Icon.svg"
+                      alt="project"
+                      *ngIf="
+                        experience?.start_date_to &&
+                        experience?.start_date_to < today
+                      "
+                    />
+                    <img
+                      src="../../../../../assets/images/IconEdit.svg"
+                      alt="projectcurrent"
+                      *ngIf="
+                        !experience?.start_date_to ||
+                        experience?.start_date_to >= today
+                      "
+                    />
+                  </div>
+                  <div class="timeline-info">
+                    <div>
+                      <p id="title-timeline">{{ experience?.title.value }}</p>
+                      <div class="desc-info">
+                        <p>
+                          {{
+                            experience?.employee_type
+                              ? experience?.employee_type?.value
+                              : 'chưa xác định'
+                          }}
+                        </p>
+                        <p *ngIf="!experience.start_date_to">
+                          {{
+                            experience?.start_date_from
+                              ? (experience?.start_date_from
+                                | date: monthFormat)
+                              : ('my-profile.unclear' | translate)
+                          }}
+                          - {{ 'my-profile.prevent' | translate }}:
+                          {{
+                            dateDiffInYears(
+                              dateDiffInMonths(
+                                experience?.start_date_from,
+                                null
+                              )
+                            )
+                          }}
+                        </p>
+                        <p *ngIf="experience.start_date_to">
+                          {{
+                            experience?.start_date_from
+                              ? (experience?.start_date_from
+                                | date: monthFormat)
+                              : ('my-profile.unclear' | translate)
+                          }}
+                          - {{ experience?.start_date_to | date: monthFormat }}:
+                          {{
+                            dateDiffInYears(
+                              dateDiffInMonths(
+                                experience?.start_date_from,
+                                experience?.start_date_to
+                              )
+                            )
+                          }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    id="ic-edit"
+                    [nbTooltip]="
+                      isMyUserProfile
+                        ? ('my-profile.edit' | translate)
+                        : ('my-profile.view' | translate)
+                    "
                   >
-                    <nb-icon
-                      nbSuffix
-                      icon="edit-outline"
-                      pack="eva"
-                    ></nb-icon>
-                  </a>
-                  <a
-                    (click)="nextPage('user-experience-detail', experience?._key)"
-                    [id]="'experience-' + experience?._key"
-                    *ngIf="!isMyUserProfile"
-                  >
-                    <nb-icon nbSuffix icon="eye-outline" pack="eva"></nb-icon>
-                  </a>
+                    <a
+                      (click)="nextPage('user-experience', experience?._key)"
+                      [id]="'experience-' + experience?._key"
+                      *ngIf="isMyUserProfile"
+                    >
+                      <nb-icon
+                        nbSuffix
+                        icon="edit-outline"
+                        pack="eva"
+                      ></nb-icon>
+                    </a>
+                    <a
+                      (click)="
+                        nextPage('user-experience-detail', experience?._key)
+                      "
+                      [id]="'experience-' + experience?._key"
+                      *ngIf="!isMyUserProfile"
+                    >
+                      <nb-icon nbSuffix icon="eye-outline" pack="eva"></nb-icon>
+                    </a>
+                  </div>
                 </div>
-              </div>
-              <div class="devline" *ngIf="!last"></div>
-            </li>
-            <hr *ngIf="!last" />
-          </ul>
+                <div class="devline" *ngIf="!last"></div>
+              </li>
+              <hr *ngIf="!last" />
+            </ul>
+          </div>
+          <div class="icon_down_up">
+            <ait-button
+              *ngIf="!isShowExperience"
+              [iconName]="'arrowhead-down-outline'"
+              [color]="'#fff'"
+              [styleText]="{ 'font-size': '10px' }"
+              [styleBtn]="{
+                width: '115px',
+                'min-width': '100px',
+                height: '24px'
+              }"
+              [styleIcon]="{ 'font-size': '8px' }"
+              [title]="'view more'"
+              [id]="'reorder-skills'"
+              [isDefault]="'true'"
+              (click)="getDown('isShowExperience', true)"
+            ></ait-button>
+
+            <ait-button
+              *ngIf="isShowExperience"
+              [iconName]="'arrowhead-up-outline'"
+              [color]="'#fff'"
+              [styleText]="{ 'font-size': '10px' }"
+              [styleBtn]="{
+                width: '110px',
+                'min-width': '100px',
+                height: '24px'
+              }"
+              [styleIcon]="{ 'font-size': '10px' }"
+              [title]="'view less'"
+              [id]="'reorder-skills'"
+              [isDefault]="'true'"
+              (click)="getDown('isShowExperience', false)"
+            ></ait-button>
+          </div>
         </div>
-      </card-content>
+      </ait-card-content>
     </div>
-    <!-- CERTIFICATES -->
+    <!-- certificate -->
     <div class="certificate">
-      <card-content
+      <ait-card-content
         tabindex="2"
         [id]="'継続する'"
-        style="outline-color: #10529d"
         class="content_card"
         style="display: flex; justify-content: center"
         [label]="'certificates' | translate"
-        [styleLabel]="{ 'font-size': '26px' }"
+        [styleLabel]="{ 'font-size': '26px','padding' : '15px 0px 7px 0px' }"
         [styleText]="{ 'font-size': '15px' }"
         (onClickButtonHeader)="nextPage('user-certificate')"
         [actionBtn]="isMyUserProfile ? actionBtn : ''"
         [buttonTitle]="'add certificate'"
         [disableHeader]="false"
         [widthBtn]="'120px'"
-        [content]="
+        [summary]="
           getCounter('my-profile.certificates-count', countCentificate)
         "
-        [styleContent]="{
+        [styleSummary]="{
           color: '#8F9BB3',
           'font-size': '12px',
           'margin-top': '5px'
         }"
-        [isOpen]="false"
+        [isOpen]="true"
         [idBtn]="'openCertificate'"
-        [padding]="'13px 22px'"
-        (onToggle)="getExpan($event,'isShowCertificate')"
-        [height]="isShowCertificate ? '0px' : 'auto'"
+        [padding]="'0'"
       >
         <div class="container_user" *ngIf="userCentificate.length == 0">
-          <p class="data_empty">{{'データがありません。' | translate}}</p>
+          <p class="data_empty">{{ 'データがありません。' | translate }}</p>
         </div>
         <div class="container_user" *ngIf="userCentificate.length > 0">
           <ul
             *ngFor="
               let centificate of userCentificate;
-              let index = index; let first = first
+              let index = index;
+              let first = first
             "
           >
-            
-            <li class="timeline-event" *ngIf="index <3 && !isShowCertificate">
+            <li class="timeline-event" *ngIf="index < 3 && !isShowCertificate">
               <hr *ngIf="!first" />
               <div class="timeline-block">
                 <div class="img-timeline-cmp">
@@ -566,13 +916,13 @@
                 </div>
                 <div class="timeline-info">
                   <div>
-                     <p id="title-timeline">
+                    <p id="title-timeline">
                       {{ centificate?.name }}
                     </p>
                     <div class="desc-info">
-                     <p>
+                      <p>
                         {{ centificate?.issue_by }}
-                      </p> 
+                      </p>
                       <p *ngIf="!centificate?.issue_date_to">
                         {{
                           centificate?.issue_date_from
@@ -589,7 +939,7 @@
                             : ('my-profile.unclear' | translate)
                         }}
                         - {{ centificate?.issue_date_to | date: dateFormat }}
-                      </p> 
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -606,14 +956,12 @@
                     [id]="'centificate-' + centificate?._key"
                     *ngIf="isMyUserProfile"
                   >
-                    <nb-icon
-                      nbSuffix
-                      icon="edit-outline"
-                      pack="eva"
-                    ></nb-icon>
+                    <nb-icon nbSuffix icon="edit-outline" pack="eva"></nb-icon>
                   </a>
                   <a
-                    (click)="nextPage('user-certificate-detail', centificate?._key)"
+                    (click)="
+                      nextPage('user-certificate-detail', centificate?._key)
+                    "
                     [id]="'centificate-' + centificate?._key"
                     *ngIf="!isMyUserProfile"
                   >
@@ -673,14 +1021,12 @@
                     [id]="'centificate-' + centificate?._key"
                     *ngIf="isMyUserProfile"
                   >
-                    <nb-icon
-                      nbSuffix
-                      icon="edit-outline"
-                      pack="eva"
-                    ></nb-icon>
+                    <nb-icon nbSuffix icon="edit-outline" pack="eva"></nb-icon>
                   </a>
                   <a
-                    (click)="nextPage('user-certificate-detail', centificate?._key)"
+                    (click)="
+                      nextPage('user-certificate-detail', centificate?._key)
+                    "
                     [id]="'centificate-' + centificate?._key"
                     *ngIf="!isMyUserProfile"
                   >
@@ -690,115 +1036,80 @@
               </div>
             </li>
           </ul>
+          <div class="icon_down_up">
+            <ait-button
+              *ngIf="!isShowCertificate"
+              [iconName]="'arrowhead-down-outline'"
+              [color]="'#fff'"
+              [styleText]="{ 'font-size': '10px' }"
+              [styleBtn]="{
+                width: '115px',
+                'min-width': '100px',
+                height: '24px'
+              }"
+              [styleIcon]="{ 'font-size': '8px' }"
+              [title]="'view more'"
+              [id]="'reorder-skills'"
+              [isDefault]="'true'"
+              (click)="getDown('isShowCertificate', true)"
+            ></ait-button>
+
+            <ait-button
+              *ngIf="isShowCertificate"
+              [iconName]="'arrowhead-up-outline'"
+              [color]="'#fff'"
+              [styleText]="{ 'font-size': '10px' }"
+              [styleBtn]="{
+                width: '110px',
+                'min-width': '100px',
+                height: '24px'
+              }"
+              [styleIcon]="{ 'font-size': '10px' }"
+              [title]="'view less'"
+              [id]="'reorder-skills'"
+              [isDefault]="'true'"
+              (click)="getDown('isShowCertificate', false)"
+            ></ait-button>
+          </div>
         </div>
-      </card-content>
+      </ait-card-content>
     </div>
     <!-- course -->
     <div class="course">
-      <card-content
-        [isOpen]="false"
+      <ait-card-content
+        style="display: flex; justify-content: center"
+        [isOpen]="true"
         tabindex="2"
         [id]="'継続する'"
-        style="outline-color: #10529d"
-        class="content_card"
-        style="display: flex; justify-content: center"
         [label]="'my-profile.course'"
-        [styleLabel]="{ 'font-size': '26px' }"
-        [styleText]="{ 'font-size': '15px' }"
+        [styleLabel]="{ 'font-size': '26px','padding' : '15px 0px 7px 0px' }"
         (onClickButtonHeader)="nextPage('user-course')"
         [actionBtn]="isMyUserProfile ? actionBtn : ''"
         [buttonTitle]="'add course'"
         [disableHeader]="false"
         [widthBtn]="'120px'"
-        [content]="getCounter('my-profile.course-count', countCourse)"
-        [styleContent]="{
+        [summary]="getCounter('my-profile.course-count', countCourse)"
+        [styleSummary]="{
           color: '#8F9BB3',
           'font-size': '12px',
           'margin-top': '5px'
         }"
         [idBtn]="'openCourse'"
-        [padding]="'13px 22px'"
-        (onToggle)="getExpan($event,'isShowCourse')"
-        [height]="isShowCourse ? '0px' : 'auto'"
+        [padding]="'0'"
+        (onToggle)="getExpan($event, 'isShowCourse')"
       >
         <div class="container_user" *ngIf="userCourse.length == 0">
-          <p class="data_empty">{{'データがありません。' | translate}}</p>
+          <p class="data_empty">{{ 'データがありません。' | translate }}</p>
         </div>
         <div class="container_user" *ngIf="userCourse.length > 0">
           <ul
             *ngFor="
               let course of userCourse;
-              let index = index; let first = first
+              let index = index;
+              let first = first
             "
           >
-          <li class="timeline-event" *ngIf="isShowCourse">
-            <hr *ngIf="!first" />
-            <div class="timeline-block">
-              <div class="img-timeline-cmp">
-                <img
-                  src="../../../../../assets/images/image.png"
-                  alt="project"
-                />
-              </div>
-              <div class="timeline-info">
-                <div>
-                  <p id="title-timeline">
-                    {{ course?.name }}
-                  </p>
-                  <div class="desc-info">
-                    <p>
-                      {{ course?.training_center }}
-                    </p>
-                    <p *ngIf="!course?.start_date_to">
-                      {{
-                        course?.start_date_from
-                          ? (course?.start_date_from | date: dateFormat)
-                          : ('my-profile.unclear' | translate)
-                      }}
-                      - {{ 'my-profile.prevent' | translate }}
-                    </p>
-
-                    <p *ngIf="course?.start_date_to">
-                      {{
-                        course?.start_date_from
-                          ? (course?.start_date_from | date: dateFormat)
-                          : ('my-profile.unclear' | translate)
-                      }}
-                      - {{ course?.start_date_to | date: dateFormat }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div
-                id="ic-edit"
-                [nbTooltip]="
-                  isMyUserProfile
-                    ? ('my-profile.edit' | translate)
-                    : ('my-profile.view' | translate)
-                "
-              >
-                <a
-                  (click)="nextPage('user-course', course?._key)"
-                  [id]="'course-' + course?._key"
-                  *ngIf="isMyUserProfile"
-                >
-                  <nb-icon
-                    nbSuffix
-                    icon="edit-outline"
-                    pack="eva"
-                  ></nb-icon>
-                </a>
-                <a
-                  (click)="nextPage('user-course-detail', course?._key)"
-                  [id]="'course-' + course?._key"
-                  *ngIf="!isMyUserProfile"
-                >
-                  <nb-icon nbSuffix icon="eye-outline" pack="eva"></nb-icon>
-                </a>
-              </div>
-            </div>
-          </li>
-            <li class="timeline-event" *ngIf="index < 3 && !isShowCourse">
+            <li class="timeline-event" *ngIf="isShowCourse">
               <hr *ngIf="!first" />
               <div class="timeline-block">
                 <div class="img-timeline-cmp">
@@ -810,7 +1121,7 @@
                 <div class="timeline-info">
                   <div>
                     <p id="title-timeline">
-                      {{ course?.name }}
+                      {{ course?.name?.value }}
                     </p>
                     <div class="desc-info">
                       <p>
@@ -849,11 +1160,7 @@
                     [id]="'course-' + course?._key"
                     *ngIf="isMyUserProfile"
                   >
-                    <nb-icon
-                      nbSuffix
-                      icon="edit-outline"
-                      pack="eva"
-                    ></nb-icon>
+                    <nb-icon nbSuffix icon="edit-outline" pack="eva"></nb-icon>
                   </a>
                   <a
                     (click)="nextPage('user-course-detail', course?._key)"
@@ -861,124 +1168,143 @@
                     *ngIf="!isMyUserProfile"
                   >
                     <nb-icon nbSuffix icon="eye-outline" pack="eva"></nb-icon>
-                    <!-- <nb-icon icon="eye" pack="font-awesome" [options]="{ animation: { type: 'zoom' } }></nb-icon> -->
+                  </a>
+                </div>
+              </div>
+            </li>
+            <li class="timeline-event" *ngIf="index < 3 && !isShowCourse">
+              <hr *ngIf="!first" />
+              <div class="timeline-block">
+                <div class="img-timeline-cmp">
+                  <img
+                    src="../../../../../assets/images/image.png"
+                    alt="project"
+                  />
+                </div>
+                <div class="timeline-info">
+                  <div>
+                    <p id="title-timeline">
+                      {{ course?.name?.value }}
+                    </p>
+                    <div class="desc-info">
+                      <p>
+                        {{ course?.training_center }}
+                      </p>
+                      <p *ngIf="!course?.start_date_to">
+                        {{
+                          course?.start_date_from
+                            ? (course?.start_date_from | date: dateFormat)
+                            : ('my-profile.unclear' | translate)
+                        }}
+                        - {{ 'my-profile.prevent' | translate }}
+                      </p>
+
+                      <p *ngIf="course?.start_date_to">
+                        {{
+                          course?.start_date_from
+                            ? (course?.start_date_from | date: dateFormat)
+                            : ('my-profile.unclear' | translate)
+                        }}
+                        - {{ course?.start_date_to | date: dateFormat }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  id="ic-edit"
+                  [nbTooltip]="
+                    isMyUserProfile
+                      ? ('my-profile.edit' | translate)
+                      : ('my-profile.view' | translate)
+                  "
+                >
+                  <a
+                    (click)="nextPage('user-course', course?._key)"
+                    [id]="'course-' + course?._key"
+                    *ngIf="isMyUserProfile"
+                  >
+                    <nb-icon nbSuffix icon="edit-outline" pack="eva"></nb-icon>
+                  </a>
+                  <a
+                    (click)="nextPage('user-course-detail', course?._key)"
+                    [id]="'course-' + course?._key"
+                    *ngIf="!isMyUserProfile"
+                  >
+                    <nb-icon nbSuffix icon="eye-outline" pack="eva"></nb-icon>
                   </a>
                 </div>
               </div>
             </li>
           </ul>
+          <div class="icon_down_up">
+            <ait-button
+              *ngIf="!isShowCourse"
+              [iconName]="'arrowhead-down-outline'"
+              [color]="'#fff'"
+              [styleText]="{ 'font-size': '10px' }"
+              [styleBtn]="{
+                width: '115px',
+                'min-width': '100px',
+                height: '24px'
+              }"
+              [styleIcon]="{ 'font-size': '8px' }"
+              [title]="'view more'"
+              [id]="'reorder-skills'"
+              [isDefault]="'true'"
+              (click)="getDown('isShowCourse', true)"
+            ></ait-button>
+
+            <ait-button
+              *ngIf="isShowCourse"
+              [iconName]="'arrowhead-up-outline'"
+              [color]="'#fff'"
+              [styleText]="{ 'font-size': '10px' }"
+              [styleBtn]="{
+                width: '110px',
+                'min-width': '100px',
+                height: '24px'
+              }"
+              [styleIcon]="{ 'font-size': '10px' }"
+              [title]="'view less'"
+              [id]="'reorder-skills'"
+              [isDefault]="'true'"
+              (click)="getDown('isShowCourse', false)"
+            ></ait-button>
+          </div>
         </div>
-      </card-content>
+      </ait-card-content>
     </div>
     <!-- education -->
     <div class="education">
-      <card-content
-        tabindex="2"
-        [isOpen]="false"
-        [id]="'継続する'"
-        style="outline-color: #10529d"
-        class="content_card"
+      <ait-card-content
         style="display: flex; justify-content: center"
+        tabindex="2"
+        [isOpen]="true"
+        [id]="'継続する'"
         [label]="'educations' | translate"
-        [styleLabel]="{ 'font-size': '26px' }"
+        [styleLabel]="{ 'font-size': '26px','padding' : '15px 0px 7px 0px' }"
         [styleText]="{ 'font-size': '15px' }"
         (onClickButtonHeader)="nextPage('user-education')"
         [actionBtn]="isMyUserProfile ? actionBtn : ''"
         [buttonTitle]="'add education'"
         [disableHeader]="false"
         [widthBtn]="'120px'"
-        [styleContent]="{
-          color: '#8F9BB3',
-          'font-size': '12px',
-          'margin-top': '5px'
-        }"
-        [content]="''"
         [idBtn]="'openEducation'"
-        [padding]="'25px 22px'"
-        (onToggle)="getExpan($event,'isShowEducation')"
-        [height]="isShowEducation ? '0px' : 'auto'"
+        [padding]="'0'"
+        (onToggle)="getExpan($event, 'isShowEducation')"
       >
-      <div class="container_user" *ngIf="userEducation.length == 0">
-        <p class="data_empty">{{'データがありません。' | translate}}</p>
-      </div>
-        <div
-          class="container_user"
-          *ngIf="userEducation.length > 0"
-        >
+        <div class="container_user" *ngIf="userEducation.length == 0">
+          <p class="data_empty">{{ 'データがありません。' | translate }}</p>
+        </div>
+        <div class="container_user" *ngIf="userEducation.length > 0">
           <ul
             *ngFor="
               let education of userEducation;
-              let index = index; let first = first
+              let index = index;
+              let first = first
             "
           >
-          <li class="timeline-event" *ngIf="isShowEducation">
-            <hr *ngIf="!first" />
-            <div class="timeline-block">
-              <div class="img-timeline-cmp">
-                <img
-                  src="../../../../../assets/images/image.png"
-                  alt="project"
-                />
-              </div>
-              <div class="timeline-info">
-                <div>
-                  <p id="title-timeline">
-                    {{ education?.school }}
-                  </p>
-                  <div class="desc-info">
-                    <p style="text-decoration-line: underline">
-                      {{ education?.field_of_study }}
-                    </p>
-                    <p *ngIf="!education.start_date_to">
-                      {{
-                        education?.start_date_from
-                          ? (education?.start_date_from | date: monthFormat)
-                          : ('my-profile.unclear' | translate)
-                      }}
-                      - {{ 'my-profile.prevent' | translate }}
-                    </p>
-                    <p *ngIf="education.start_date_to">
-                      {{
-                        education?.start_date_from
-                          ? (education?.start_date_from | date: monthFormat)
-                          : ('my-profile.unclear' | translate)
-                      }}
-                      - {{ education?.start_date_to | date: monthFormat }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div
-                id="ic-edit"
-                [nbTooltip]="
-                  isMyUserProfile
-                    ? ('my-profile.edit' | translate)
-                    : ('my-profile.view' | translate)
-                "
-                style="top: 28px !important"
-              >
-                <a
-                  (click)="nextPage('user-education/', education?._key)"
-                  [id]="'education-' + education?._key"
-                  *ngIf="isMyUserProfile"
-                >
-                  <nb-icon
-                    nbSuffix
-                    icon="edit-outline"
-                    pack="eva"
-                  ></nb-icon>
-                </a>
-                <a
-                  (click)="nextPage('user-education-detail/', education?._key)"
-                  [id]="'education-' + education?._key"
-                  *ngIf="!isMyUserProfile"
-                >
-                  <nb-icon nbSuffix icon="eye-outline" pack="eva"></nb-icon>
-                </a>
-              </div>
-            </div>
-          </li>
-            <li class="timeline-event" *ngIf="index <3 && !isShowEducation">
+            <li class="timeline-event" *ngIf="isShowEducation">
               <hr *ngIf="!first" />
               <div class="timeline-block">
                 <div class="img-timeline-cmp">
@@ -1029,14 +1355,12 @@
                     [id]="'education-' + education?._key"
                     *ngIf="isMyUserProfile"
                   >
-                    <nb-icon
-                      nbSuffix
-                      icon="edit-outline"
-                      pack="eva"
-                    ></nb-icon>
+                    <nb-icon nbSuffix icon="edit-outline" pack="eva"></nb-icon>
                   </a>
                   <a
-                    (click)="nextPage('user-education-detail/', education?._key)"
+                    (click)="
+                      nextPage('user-education-detail/', education?._key)
+                    "
                     [id]="'education-' + education?._key"
                     *ngIf="!isMyUserProfile"
                   >
@@ -1045,103 +1369,141 @@
                 </div>
               </div>
             </li>
-
-           
+            <li class="timeline-event" *ngIf="index < 3 && !isShowEducation">
+              <hr *ngIf="!first" />
+              <div class="timeline-block">
+                <div class="img-timeline-cmp">
+                  <img
+                    src="../../../../../assets/images/image.png"
+                    alt="project"
+                  />
+                </div>
+                <div class="timeline-info">
+                  <div>
+                    <p id="title-timeline">
+                      {{ education?.school }}
+                    </p>
+                    <div class="desc-info">
+                      <p style="text-decoration-line: underline">
+                        {{ education?.field_of_study }}
+                      </p>
+                      <p *ngIf="!education.start_date_to">
+                        {{
+                          education?.start_date_from
+                            ? (education?.start_date_from | date: monthFormat)
+                            : ('my-profile.unclear' | translate)
+                        }}
+                        - {{ 'my-profile.prevent' | translate }}
+                      </p>
+                      <p *ngIf="education.start_date_to">
+                        {{
+                          education?.start_date_from
+                            ? (education?.start_date_from | date: monthFormat)
+                            : ('my-profile.unclear' | translate)
+                        }}
+                        - {{ education?.start_date_to | date: monthFormat }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  id="ic-edit"
+                  [nbTooltip]="
+                    isMyUserProfile
+                      ? ('my-profile.edit' | translate)
+                      : ('my-profile.view' | translate)
+                  "
+                  style="top: 28px !important"
+                >
+                  <a
+                    (click)="nextPage('user-education/', education?._key)"
+                    [id]="'education-' + education?._key"
+                    *ngIf="isMyUserProfile"
+                  >
+                    <nb-icon nbSuffix icon="edit-outline" pack="eva"></nb-icon>
+                  </a>
+                  <a
+                    (click)="
+                      nextPage('user-education-detail/', education?._key)
+                    "
+                    [id]="'education-' + education?._key"
+                    *ngIf="!isMyUserProfile"
+                  >
+                    <nb-icon nbSuffix icon="eye-outline" pack="eva"></nb-icon>
+                  </a>
+                </div>
+              </div>
+            </li>
           </ul>
+          <div class="icon_down_up">
+            <ait-button
+              *ngIf="!isShowEducation"
+              [iconName]="'arrowhead-down-outline'"
+              [color]="'#fff'"
+              [styleText]="{ 'font-size': '10px' }"
+              [styleBtn]="{
+                width: '115px',
+                'min-width': '100px',
+                height: '24px'
+              }"
+              [styleIcon]="{ 'font-size': '8px' }"
+              [title]="'view more'"
+              [id]="'reorder-skills'"
+              [isDefault]="'true'"
+              (click)="getDown('isShowEducation', true)"
+            ></ait-button>
+
+            <ait-button
+              *ngIf="isShowEducation"
+              [iconName]="'arrowhead-up-outline'"
+              [color]="'#fff'"
+              [styleText]="{ 'font-size': '10px' }"
+              [styleBtn]="{
+                width: '110px',
+                'min-width': '100px',
+                height: '24px'
+              }"
+              [styleIcon]="{ 'font-size': '10px' }"
+              [title]="'view less'"
+              [id]="'reorder-skills'"
+              [isDefault]="'true'"
+              (click)="getDown('isShowEducation', false)"
+            ></ait-button>
+          </div>
         </div>
-      </card-content>
+      </ait-card-content>
     </div>
-    <!-- LANGUAGES -->
+    <!-- languages -->
     <div class="languages">
-      <card-content
-        tabindex="2"
-        [isOpen]="false"
-        [id]="'継続する'"
-        style="outline-color: #10529d"
-        class="content_card"
+      <ait-card-content
         style="display: flex; justify-content: center"
+        tabindex="2"
+        [isOpen]="true"
+        [id]="'継続する'"
         [label]="'languages' | translate"
-        [styleLabel]="{ 'font-size': '26px' }"
-        [styleText]="{ 'font-size': '15px' }"
+        [styleLabel]="{ 'font-size': '26px','padding' : '15px 0px 7px 0px' }"
         (onClickButtonHeader)="nextPage('user-language')"
         [actionBtn]="isMyUserProfile ? actionBtn : ''"
         [buttonTitle]="'add language'"
         [disableHeader]="false"
         [widthBtn]="'120px'"
-        [content]=""
-        [styleContent]="{
-          color: '#8F9BB3',
-          'font-size': '12px',
-          'margin-top': '5px'
-        }"
         [idBtn]="'openLanguage'"
-        [padding]="'25px 22px'"
-        (onToggle)="getExpan($event,'isShowLanguages')"
-        [height]="isShowLanguages ? '0px' : 'auto'"
-        >
+        [padding]="'0px'"
+        (onToggle)="getExpan($event, 'isShowLanguages')"
+        [isColumn]="true"
+      >
         <div class="container_user" *ngIf="userLanguage.length == 0">
-          <p class="data_empty">{{'データがありません。' | translate}}</p>
+          <p class="data_empty">{{ 'データがありません。' | translate }}</p>
         </div>
         <div class="container_user" *ngIf="userLanguage.length > 0">
           <ul
             *ngFor="
               let language of userLanguage;
-              let index = index; let first = first
+              let index = index;
+              let first = first
             "
           >
-          <li class="timeline-event" *ngIf="isShowLanguages" >
-            <hr *ngIf="!first" />
-            <div class="timeline-block">
-              <div class="img-timeline-cmp">
-                <img
-                  class="languagea-img"
-                  [src]="language.image"
-                  alt="project"
-                />
-              </div>
-              <div class="timeline-info">
-                <div>
-                  <p id="title-timeline">
-                    {{ language?.language }}
-                  </p>
-                  <div class="desc-info">
-                    <p style="text-decoration-line: underline">
-                      {{ language?.proficiency }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div
-                id="ic-edit"
-                [nbTooltip]="
-                  isMyUserProfile
-                    ? ('my-profile.edit' | translate)
-                    : ('my-profile.view' | translate)
-                "
-                style="top: 18px"
-              >
-                <a
-                  (click)="nextPage('user-language/', language?._key)"
-                  [id]="'language-' + language?._key"
-                  *ngIf="isMyUserProfile"
-                >
-                  <nb-icon
-                    nbSuffix
-                    icon="edit-outline"
-                    pack="eva"
-                  ></nb-icon>
-                </a>
-                <a
-                  (click)="nextPage('user-language-detail/', language?._key)"
-                  [id]="'language-' + language?._key"
-                  *ngIf="!isMyUserProfile"
-                >
-                  <nb-icon nbSuffix icon="eye-outline" pack="eva"></nb-icon>
-                </a>
-              </div>
-            </div>
-          </li>
-            <li class="timeline-event" *ngIf="index <3 && !isShowLanguages" >
+            <li class="timeline-event" *ngIf="isShowLanguages">
               <hr *ngIf="!first" />
               <div class="timeline-block">
                 <div class="img-timeline-cmp">
@@ -1177,11 +1539,7 @@
                     [id]="'language-' + language?._key"
                     *ngIf="isMyUserProfile"
                   >
-                    <nb-icon
-                      nbSuffix
-                      icon="edit-outline"
-                      pack="eva"
-                    ></nb-icon>
+                    <nb-icon nbSuffix icon="edit-outline" pack="eva"></nb-icon>
                   </a>
                   <a
                     (click)="nextPage('user-language-detail/', language?._key)"
@@ -1193,10 +1551,92 @@
                 </div>
               </div>
             </li>
-
+            <li class="timeline-event" *ngIf="index < 3 && !isShowLanguages">
+              <hr *ngIf="!first" />
+              <div class="timeline-block">
+                <div class="img-timeline-cmp">
+                  <img
+                    class="languagea-img"
+                    [src]="language.image"
+                    alt="project"
+                  />
+                </div>
+                <div class="timeline-info">
+                  <div>
+                    <p id="title-timeline">
+                      {{ language?.language }}
+                    </p>
+                    <div class="desc-info">
+                      <p style="text-decoration-line: underline">
+                        {{ language?.proficiency }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  id="ic-edit"
+                  [nbTooltip]="
+                    isMyUserProfile
+                      ? ('my-profile.edit' | translate)
+                      : ('my-profile.view' | translate)
+                  "
+                  style="top: 18px"
+                >
+                  <a
+                    (click)="nextPage('user-language/', language?._key)"
+                    [id]="'language-' + language?._key"
+                    *ngIf="isMyUserProfile"
+                  >
+                    <nb-icon nbSuffix icon="edit-outline" pack="eva"></nb-icon>
+                  </a>
+                  <a
+                    (click)="nextPage('user-language-detail/', language?._key)"
+                    [id]="'language-' + language?._key"
+                    *ngIf="!isMyUserProfile"
+                  >
+                    <nb-icon nbSuffix icon="eye-outline" pack="eva"></nb-icon>
+                  </a>
+                </div>
+              </div>
+            </li>
           </ul>
+          <div class="icon_down_up">
+            <ait-button
+              *ngIf="!isShowLanguages"
+              [iconName]="'arrowhead-down-outline'"
+              [color]="'#fff'"
+              [styleText]="{ 'font-size': '10px' }"
+              [styleBtn]="{
+                width: '115px',
+                'min-width': '100px',
+                height: '24px'
+              }"
+              [styleIcon]="{ 'font-size': '8px' }"
+              [title]="'view more'"
+              [id]="'reorder-skills'"
+              [isDefault]="'true'"
+              (click)="getDown('isShowLanguages', true)"
+            ></ait-button>
+
+            <ait-button
+              *ngIf="isShowLanguages"
+              [iconName]="'arrowhead-up-outline'"
+              [color]="'#fff'"
+              [styleText]="{ 'font-size': '10px' }"
+              [styleBtn]="{
+                width: '110px',
+                'min-width': '100px',
+                height: '24px'
+              }"
+              [styleIcon]="{ 'font-size': '10px' }"
+              [title]="'view less'"
+              [id]="'reorder-skills'"
+              [isDefault]="'true'"
+              (click)="getDown('isShowLanguages', false)"
+            ></ait-button>
+          </div>
         </div>
-      </card-content>
+      </ait-card-content>
     </div>
   </div>
 </div>

@@ -19,12 +19,20 @@ export class UserCourseService extends AitBaseService {
     condition['training_center'] = {
       attribute: 'training_center',
       ref_collection: 'm_training_center',
-      ref_attribute: 'code'
+      ref_attribute: '_key'
+    };
+    condition['name'] = {
+      attribute: 'name',
+      ref_collection: 'm_course',
+      ref_attribute: '_key'
     };
     return await this.query('findCourse', {collection: 'user_course',  condition    }, 
     {
       _key : true,
-      name:true,
+      name:{
+        _key: true,
+        value: true,
+      },
       is_online: true,
       training_center:{
         _key: true,
@@ -54,12 +62,20 @@ export class UserCourseService extends AitBaseService {
     condition['training_center'] = {
       attribute: 'training_center',
       ref_collection: 'm_training_center',
-      ref_attribute: 'code'
+      ref_attribute: '_key'
+    };
+    condition['name'] = {
+      attribute: 'name',
+      ref_collection: 'm_course',
+      ref_attribute: '_key'
     };
     return await this.query('findCourse', {collection: 'user_course',  condition    }, 
     {
       _key : true,
-      name:true,    
+      name:{
+        _key: true,
+        value: true,
+      },         
       training_center:{
         _key: true,
         value: true,

@@ -10,12 +10,13 @@ export class UserSkillEntity extends BaseEntity {
   @Field(() => String, { nullable: true })
   _to?: string;
 
-  @Field(() => String, { nullable: true })
-  relationship?: string;
-
   @Field(() => Float, { nullable: true })
   sort_no?: number;
+
+  @Field(() => Float, { nullable: true })
+  level?: number;
   
   @Field(() => KeyValueEntity, { nullable: true })
   skills?: KeyValueEntity;
+  
 }

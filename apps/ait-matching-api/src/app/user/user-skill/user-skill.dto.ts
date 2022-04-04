@@ -10,11 +10,11 @@ export class UserSkillDto extends BaseDto {
   @Field(() => String, { nullable: true })
   _to?: string;
 
-  @Field(() => String, { nullable: true })
-  relationship?: string;
-
   @Field(() => Float, { nullable: true })
   sort_no?: number;
+
+  @Field(() => Float, { nullable: true })
+  level?: number;
 
   @Field(() => ConditionDto, { nullable: true })
   skills?: ConditionDto;

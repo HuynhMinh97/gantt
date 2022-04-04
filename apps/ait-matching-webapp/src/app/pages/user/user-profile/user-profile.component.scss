@@ -5,14 +5,25 @@
     max-width: 1080px;
     position: relative;
     margin: auto;
-    width: 100%;
+    width: 100% !important;
     .container_user{
-     padding: 0 20px 20px 20px;
+     padding: 0;
+     width: 100% !important;
+     position: relative;
+     .icon_down_up{
+      text-align: center;
+      color: #8f9bb3;
+      position: absolute;
+      bottom: -35px;
+      transform: translateX(-50%);
+      left: 50%;
+     }
+    
     }
     .reorder_skills{
       position: absolute;
-      top: 59.5px;
-      right: 173px;
+      top: 101px;
+      right: 200px;
     }
     .profile{
       .input_inline{
@@ -518,5 +529,19 @@ ul .timeline {
   margin: 0;
   color: rgb(143, 155, 179);
 }
-
+nb-icon {
+  font-size: 1.5rem;
+}
+.hidden {
+  visibility: hidden;
+  opacity: 0;
+  height: 0;
+  transition: height 10s linear;
+}
+.show {
+  visibility: visible;
+  opacity: 1;
+  height:auto;
+  transition: height 10s linear;
+}
   

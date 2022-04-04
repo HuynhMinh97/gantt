@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { hasLength, isArrayFull, RESULT_STATUS } from '@ait/shared';
+import { CompanyInfoDto, hasLength, isArrayFull, isObjectFull, RESULT_STATUS } from '@ait/shared';
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NavigationStart, Router } from '@angular/router';
-import { NbLayoutScrollService,NbToastrService } from '@nebular/theme';
-import { select, Store } from '@ngrx/store';
+import { NbLayoutScrollService } from '@nebular/theme';
+import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
 
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -12,7 +11,6 @@ import {
   AitAppUtils,
   AitAuthService,
   AitBaseComponent,
-  AitDateFormatService,
   AitEnvironmentService,
   AitMasterDataService,
   AitTranslationService,
@@ -21,12 +19,13 @@ import {
   PAGES,
   TabView,
 } from '@ait/ui';
+import { RecommencedUserService } from '../../../services/recommenced-user.service';
+import { ReactionService } from '../../../services/reaction.service';
 import { Apollo } from 'apollo-angular';
 import { StoreKeywordsSearch } from '../../../state/actions';
-import { ReactionService } from '../../../services/recommen/reaction.service';
-import { RecommencedUserService } from '../../../services/recommen/recommenced-user.service';
-import { RECOMMENCED_JOB_CODE_CAPTIONS } from './captions';
+import { UserProfileService } from '../../../services/user-profile.service';
 import { RecommencedJobService } from '../../../services/recommen/recommenced-job.service';
+import { RECOMMENCED_JOB_CODE_CAPTIONS } from './captions';
 
 export enum StorageKey {
   KEYWORD = 'keyword',
@@ -34,72 +33,16 @@ export enum StorageKey {
 }
 
 @Component({
-  selector: 'ait-recommenced-job',
+  selector: 'ait-recommenced-user',
+  styleUrls: ['./recommenced-job.component.scss'],
   templateUrl: './recommenced-job.component.html',
-  styleUrls: ['./recommenced-job.component.scss']
 })
-export class RecommencedJobComponent
-  extends AitBaseComponent
-  implements OnInit {
+export class RecommencedJobComponent extends AitBaseComponent implements OnInit {
   isNavigate = false;
   currentKeyword = {};
   currentCondition = {};
   master_data_fields = ['prefecture', 'job_business', 'residence_status'];
   inputVal = '';
-  constructor(
-    router: Router,
-    layoutScrollService: NbLayoutScrollService,
-    private masterDataService: AitMasterDataService,
-    private recommencedJobService: RecommencedJobService,
-    private reactionService: ReactionService,
-    private translateService: AitTranslationService,
-    store: Store<AppState | any>,
-    authService: AitAuthService,
-    env: AitEnvironmentService,
-    apollo: Apollo,
-    private dateFormatService: AitDateFormatService
-  ) {
-    super(
-      store,
-      authService,
-      apollo,
-      null,
-      env,
-      layoutScrollService,
-      null,
-      null,
-      router
-    );
-
-    this.setModulePage({
-      page: PAGES.RECOMMENCED_JOB,
-      module: MODULES.RECOMMENCED_JOB,
-    });
-    router.events.subscribe((val) => {
-      // see also
-      if (val instanceof NavigationStart) {
-        this.isNavigate = true;
-      }
-    });
-
-    store.pipe(select(this.getCaption)).subscribe(() => {
-      const comma = this.translateService.translate('s_0001');
-      if (comma !== 's_0001') {
-        this.comma = comma;
-      }
-    });
-
-    // tslint:disable-next-line: deprecation
-    layoutScrollService.onScroll().subscribe((e) => {
-      const path = AitAppUtils.getParamsOnUrl(true);
-
-      if (path.includes('jobs')) {
-        this.loadNext(e);
-      }
-    });
-    this.inputControlMaster = new FormControl('');
-  }
-
   tabs: TabView[] = [
     {
       title: 'おすすめ',
@@ -154,17 +97,115 @@ export class RecommencedJobComponent
 
   disableTab = false;
 
-  getNummberMode8 = (target: number) => {
-    if (target === 0) {
-      return 8;
+  constructor(
+    layoutScrollService: NbLayoutScrollService,
+    private masterDataService: AitMasterDataService,
+    private matchingCompanyService: RecommencedUserService,
+    private reactionService: ReactionService,
+    private translateService: AitTranslationService,
+    private userProfileService: UserProfileService,
+    private formBuilder: FormBuilder,
+    private recommencedJobService: RecommencedJobService,
+    store: Store<AppState>,
+    authService: AitAuthService,
+    router: Router,
+    env: AitEnvironmentService,
+    apollo: Apollo
+  ) {
+    super(store, authService, apollo, null, env, layoutScrollService, null, null, router);
+
+    this.userProfileService.finProfileByUserId(this.user_id).then((res) => {
+      if (res.status === RESULT_STATUS.OK && res.data.length == 0) {
+        this.router.navigate([`user-onboarding`]);
+      }
+    });
+
+    this.setModulePage({
+      page: PAGES.RECOMMENCED_JOB,
+      module: MODULES.RECOMMENCED_JOB,
+    });
+
+    // tslint:disable-next-line: deprecation
+    layoutScrollService.onScroll().subscribe((e) => {
+      const path = AitAppUtils.getParamsOnUrl(true);
+
+      if (path.includes('user-jobs')) {
+        this.loadNext(e);
+      }
+    });
+    this.inputControlMaster = new FormControl('');
+  }
+
+  ngOnInit() {
+    for(let i = 0; i < 20; i++){
+      const a =  { 
+        _key: 'a'+i, 
+        name: 'thuan' + i, 
+        name_kana: 'thuan ' + i, 
+        work: { _key: 'e1', value: 'Develop' }, 
+        prefecture:  [{ _key: 'e1', value: 'Develop'}], 
+        company_business: { _key: 'e1', value: 'Develop' },
+        job_business: [{ _key: 'e1', value: 'Develop'}],
+        salary: '10',
+        description: 'thuan test ok',
+        business: [{ _key: 'e1', value: 'Develop'}]
+      }
+      this.dataFilter.push(a);
+    }  
+
+    const keyword: any = JSON.parse(
+      localStorage.getItem(StorageKey.KEYWORD + `_${this.user_id}_job`)
+    );
+
+    if (keyword?._key) {
+      this.addUser(keyword, true);
+      this.filterMain();
+    } else {
+      this.callSearchAll();
     }
-    if (target) {
-      const num = target.toString();
-      const lastString = num[num.length - 1];
-      return 2 * 8 - Number(lastString);
-    }
-    return 0;
-  };
+    // call api # master data
+    this.inputControlMaster.valueChanges
+      .pipe(
+        debounceTime(100),
+        distinctUntilChanged()
+        // tslint:disable-next-line: deprecation
+      )
+      .subscribe((text) => {
+        this.recommencedJobService.searchUser(text).then((r) => {
+          if (r.status === RESULT_STATUS.OK) {
+            const target = r?.data;
+            if (target.length !== 0) {
+              this.messageSearch = '';
+              this.dataSuggestAll = target;
+              this.dataSuggest = AitAppUtils.getUniqueArray(
+                target || [],
+                'value'
+              );
+            } else {
+              this.dataSuggest = [];
+              this.dataSuggestAll = [];
+              if (text) {
+                this.messageSearch = 'データがありません。';
+              }
+            }
+          }
+        });
+        if (text === '') {
+          this.messageSearch = '';
+        }
+      });
+  }
+
+  private callSearchAll() {
+    this.isExpan = true;
+    this.user_request_key = null;
+    this.matchingUser(null).then((res) => {
+      this.getDataByRound().then((r) => {
+        // this.isLoading = false;
+        this.setSkeleton(false);
+      });
+    });
+  }
 
   setSkeleton = (flag?: boolean) => {
     if (flag === undefined) {
@@ -191,17 +232,191 @@ export class RecommencedJobComponent
       } else {
         this.cardSkeleton = [];
         this.dataFilterSave = this.currentDataCard;
-
-        //
       }
     }
   };
 
-  isObjectEmpty = (obj) => Object.keys(obj || {}).length === 0;
+  getNummberMode8 = (target: number) => {
+    if (target === 0) {
+      return 8;
+    }
+    if (target) {
+      const num = target.toString();
+      const lastString = num[num.length - 1];
+      return 2 * 8 - Number(lastString);
+    }
+    return 0;
+  };
+
+  // Get Data by round and base on all of result
+  getDataByRound = async (take = 8) => {
+    if (this.currentRound !== this.round) {
+      this.currentRound = this.round;
+      // return data by round
+      const from = 0 + take * (this.round - 1);
+      const to = this.round * take;
+      if (this.dataFilter.length <= this.dataIncludesId.length) {
+        const ids = this.dataIncludesId
+          .map((d) => d.value)
+          .slice(from, to)
+          .filter((x) => !!x); // value is user_profile key
+        const detail = await this.getDetailMatching(ids);
+
+        if (detail.length === 0 && this.dataFilter.length !== 0) {
+          this.textDataNull = '';
+          this.textDataNullSave = '';
+          this.textDataEnd = '022';
+          this.setSkeleton(false);
+        } else {
+          this.textDataNull = '';
+          this.textDataNullSave = '';
+          const uq = AitAppUtils.getUniqueArray(
+            [...this.dataFilter, ...(detail || [])],
+            '_key'
+          ).filter((f) => f?._key);
+
+          let data = [];
+
+          if (this.user_request_key) {
+            data = uq.map((d) => ({
+              ...d,
+              total_score: this.dataIncludesId.find((f) => f.value === d._key)
+                ?.total_score,
+              group_no: this.dataIncludesId.find((f) => f.value === d._key)
+                ?.group_no,
+              // current_salary: 100000,
+              // salary : 1000000
+            }));
+          } else {
+            data = uq.map((d) => ({
+              ...d,
+              total_score: this.dataIncludesId.find((f) => f.value === d._key)
+                ?.total_score,
+              group_no: 3,
+              // current_salary: 100000,
+              // salary : 1000000
+            }));
+          }
+          this.dataFilter = data || this.dataFilterDf;
+          this.dataFilterDf = data || this.dataFilterDf;
+
+          if (!AitAppUtils.isObjectEmpty(this.filterCommon)) {
+            this.filterMain();
+          }
+
+          this.setSkeleton(false);
+
+          if (this.dataFilter.length === 0) {
+            this.textDataNull = '021';
+          }
+          this.round++;
+        }
+      }
+    }
+  };
+
+  private getDetailMatching = async (list_ids: string[]) => {
+    const res = await this.recommencedJobService.getDetailMatching(
+      this.user_request_key || this.company || null,
+      list_ids
+    );
+    if (res.status === RESULT_STATUS.OK) {
+      if (res.data?.length === 0) {
+        this.textDataNull = '021';
+      }
+      return res.data;
+    }
+  };
+
+  private matchingUser = async (_key: string) => {
+    const filter = this.filterCommon;
+    const res = await this.recommencedJobService.matchingUser(_key);
+
+    if (res.status === RESULT_STATUS.OK) {
+      //(res?.data || []).sort((a, b) => b.total_score - a.total_score);
+      const data = res.data;
+      if (data && data?.length !== 0) {
+        this.dataIncludesId = data;
+        this.filterCommon = filter;
+      } else {
+        this.setSkeleton(false);
+        this.textDataNull = '021';
+      }
+    }
+  };
+
+  loadNext = (event) => {
+    if (
+      (this.userSelect.length == 0 && this.cardSkeleton.length !== 0) ||
+      this.dataFilter.length === 0
+    ) {
+      const startPos = event.target.scrollTop;
+      const pos =
+        (event.target.scrollTop || document.body.scrollTop) +
+        document.documentElement.offsetHeight;
+      const max = event.target.scrollHeight;
+      // pos/max will give you the distance between scroll bottom and and bottom of screen in percentage.
+      if (pos <= max) {
+        if (!this.spinnerLoading) {
+          // Coding something 😋😋😋
+          if (this.currentTab === 'R' && this.textDataEnd === '') {
+            if (this.dataIncludesId.length >= 8) {
+              this.setSkeleton(true);
+              // this.spinnerLoading = true;
+
+              this.getDataByRound().then((r) => {
+                // this.filterMain();
+              });
+            } else {
+              this.textDataEnd = '022';
+              
+            }
+          } else {
+            this.setSkeleton(true);
+            if (this.dataIncludesIdSave.length >= 8) {
+              
+              this.setSkeleton(true);
+            } else {
+              this.textDataEnd = '022';
+              
+            }
+          }
+         
+        }
+      }
+    }
+  };
+
+  addUser = (user: any, isSync = false) => {
+    this.userName = user?.value;
+    this.user_profile_key = user?._key;
+    this.isExpan = false;
+    if (!isSync) {
+      this.filterCommonAppended = {};
+      this.filterCommon = {};
+    }
+    this.removeSearch();
+
+    this.setSkeleton(true);
+    localStorage.setItem(
+      StorageKey.KEYWORD + `_${this.user_id}_job`,
+      JSON.stringify({ ...user })
+    );
+
+    if (this.user_profile_key) {
+      this.getDetailUser(user?.user_id).then((r) => {
+        this.userSelect = r;
+        this.dataSuggest = [];
+        this.currentSearch = user;
+        this.user_request_key = user?.user_key;
+        this.submitSearch();
+      });
+    } else {
+      this.callSearchAll();
+    }
+  };
 
   removeSearch = (isPrevented = false, isButton = false) => {
-    // this.filterCommonAppended = {}
-    // this.filterCommon = {};
     this.dataFilter = [];
     this.dataIncludesId = [];
     this.dataIncludesIdSave = [];
@@ -238,65 +453,31 @@ export class RecommencedJobComponent
     }
   };
 
-  goTop = () => {
-    this.gotoTop();
-  };
-
-  private matchingUser = async (_key: string) => {
-    const filter = this.filterCommon;
-    const res = await this.recommencedJobService.matchingUser(_key);
-
+  private getDetailUser = async (userid: string) => {
+    const res = await this.recommencedJobService.getUserProfile(userid);
+    const ret = [];
     if (res.status === RESULT_STATUS.OK) {
-      //(res?.data || []).sort((a, b) => b.total_score - a.total_score);
-      const data = res.data;
-      if (data && data?.length !== 0) {
-        this.dataIncludesId = data;
-        this.filterCommon = filter;
-      } else {
-        this.setSkeleton(false);
-        this.textDataNull = '021';
+      if ((res?.data || []).length !== 0) {
+        res.data.forEach((item) => {
+          const dto: any = {};
+          dto._key = item?._key;
+          dto.address = item?.address;
+          dto.dob = item?.dob;
+          dto.gender = item?.gender?.value;
+          dto.passport_number = item?.passport_number;
+          dto.country = item?.country?.value;
+          dto.user_key = item?.user_id;
+          dto.job_company = item?.job_company;
+          ret.push(dto);
+        });
       }
     }
+    return ret;
   };
-
-  private getDetailMatching = async (list_ids: string[]) => {
-    const res = await this.recommencedJobService.getDetailMatching(
-      this.user_request_key || this.company || null,
-      list_ids
-    );
-    if (res.status === RESULT_STATUS.OK) {
-      if (res.data?.length === 0) {
-        this.textDataNull = '021';
-      }
-      return res.data;
-    }
-  };
-
-  getDataClone = (data) => {
-    return AitAppUtils.deepCloneArray(data || []);
-  };
-
-  handleSyncData = ($event) => {
-    const { job_key, is_saved } = $event;
-    const find = this.dataFilterDf.find((f) => f._key === job_key);
-    const currentFind = this.dataFilter.find((f) => f._key === job_key);
-    if (find) {
-      find.is_saved = is_saved;
-    }
-
-    if (currentFind) {
-      currentFind.is_saved = is_saved;
-    }
-  };
-
-  ToggleExpan = () => (this.isExpan = !this.isExpan);
-  ToggleExpan1 = () => {
-    this.isExpan1 = !this.isExpan1;
-  };
-
+  resetRound = () => (this.round = 1);
   submitSearch = (key?: string) => {
     this.isLoading = true;
-    // this.setSkeleton(true);
+   
     this.matchingUser(key || this.user_request_key || null).then((m) => {
       this.getDataByRound().then((r) => {
         // this.isLoading = false;
@@ -306,13 +487,7 @@ export class RecommencedJobComponent
   };
 
   filterMain = () => {
-    // tslint:disable-next-line: no-console
-
-    // const conds = AppUtils.isObjectEmpty(this.filterCommonAppended) ? this.filterCommon : this.filterCommonAppended;
     const condition = {};
-    // let data1 = [];
-    // let data2 = [];
-
     const result = this.dataFilterDf.filter((f) => {
       let check = [];
 
@@ -321,11 +496,6 @@ export class RecommencedJobComponent
         const isValid = this.checkValidForFilter(value);
         if (isValid) {
           condition[key] = value;
-          // if (key.includes('description')) {
-
-          //   const c = f[key]?.includes(value)
-          //   check = [...check, c];
-          // }
           if (!key.includes('salary')) {
             if (this.master_data_fields.includes(key)) {
               if (isArrayFull(f[key])) {
@@ -431,22 +601,12 @@ export class RecommencedJobComponent
       return false;
     }
   }
-
   acceptedSalary = (salary: number, isFirst?: boolean) => {
     const target = salary || 0;
 
     // return isFirst ? target - 30000 : target + 30000;
     return target;
   };
-
-  filterDescription = (value) => {
-    const filter = of(value);
-    filter.pipe(distinctUntilChanged(), debounceTime(200)).subscribe((text) => {
-      this.filterCommon = { ...this.filterCommon, description: text };
-      this.filterMain();
-    });
-  };
-
   sortByGroup = (data: any[]) => {
     if (!data) {
       return [];
@@ -454,457 +614,125 @@ export class RecommencedJobComponent
     return data.sort((d1, d2) => d1?.group_no - d2.group_no);
   };
 
-  checkValidRangeNumber = (field: string, salary) => {
-    // case reset salary1
-    // if (field === 'salary1') {
-    //   if (this.filterCommon['salary2'] && salary > this.filterCommon['salary2']) {
-    //     this.isResetSalaryFrom = true;
-    //     this.filterCommon['salary1'] = null;
-    //   }
-    //   else {
-    //     this.filterCommon = { ...this.filterCommon, [field]: salary };
-
-    //   }
-    // }
-    // else {
-    //   if (this.filterCommon['salary1'] && salary < this.filterCommon['salary1']) {
-    //     this.isResetSalaryTo = true;
-    //     this.filterCommon['salary2'] = null;
-    //   }
-    //   else {
-    //     this.filterCommon = { ...this.filterCommon, [field]: salary };
-    //   }
-    // }
-    this.filterCommon = { ...this.filterCommon, [field]: salary };
-    this.filterMain();
-  };
-
-  filterBySalary = (salary, field) => {
-    const filter = of(salary);
-    filter.pipe(distinctUntilChanged(), debounceTime(200)).subscribe((sal) => {
-      this.isResetSalaryFrom = false;
-      this.isResetSalaryTo = false;
-      this.checkValidRangeNumber(field, sal);
-    });
-  };
-
-  filterByCondition = (val: any, type: string) => {
-    const value = val?.value || [];
-    const target = this.getValueFromMaster(value);
-    this.filterCommon = { ...this.filterCommon, [type]: target };
-    this.filterMain();
-  };
-
-  getValueFromMaster(value: any[]) {
-    if (value.length === 0) {
-      return [];
-    } else {
-      const result = [];
-      (value || []).forEach((e) => {
-        if (e?._key) {
-          result.push(e?._key);
-        }
-      });
-      return result;
-    }
-  }
-
-  private getDetailUser = async (userid: string) => {
-    const res = await this.recommencedJobService.getUserProfile(userid);
-    const ret = [];
-    if (res.status === RESULT_STATUS.OK) {
-      if ((res?.data || []).length !== 0) {
-        res.data.forEach((item) => {
-          const dto: any = {};
-          dto._key = item?._key;
-          dto.address = item?.address;
-          dto.dob = item?.dob;
-          dto.gender = item?.gender?.value;
-          dto.passport_number = item?.passport_number;
-          dto.country = item?.country?.value;
-          dto.user_key = item?.user_id;
-          dto.job_company = item?.job_company;
-          ret.push(dto);
-        });
-      }
-    }
-    return ret;
-  };
-
-  handleClickViewMore = () => {
-    if (this.user_request_key) {
-      this.router.navigateByUrl('/candidate-detail/' + this.user_request_key);
-    }
-  };
-
-  addUser = (user: any, isSync = false) => {
-    this.userName = user?.value;
-    this.user_profile_key = user?._key;
-    this.isExpan = false;
-    if (!isSync) {
-      this.filterCommonAppended = {};
-      this.filterCommon = {};
-    }
-    this.removeSearch();
-
-    this.setSkeleton(true);
-
-    // //save keyword to localstorage
-    localStorage.setItem(
-      StorageKey.KEYWORD + `_${this.user_id}_job`,
-      JSON.stringify({ ...user })
-    );
-
-    // // const getDataFromCompanyValue = this.dataSuggestAll.filter(f => f?.value === company?.value).map(m => m._key);
-    if (this.user_profile_key) {
-      this.getDetailUser(user?.user_id).then((r) => {
-        this.userSelect = r;
-        this.dataSuggest = [];
-        this.currentSearch = user;
-        this.user_request_key = user?.user_key;
-        this.submitSearch();
-      });
-    } else {
-      this.callSearchAll();
-    }
-  };
-
-  ngOnInit() {
-    // const keyword: any = JSON.parse(
-    //   localStorage.getItem(StorageKey.KEYWORD + `_${this.user_id}_job`)
-    // );
-    // // const filter =
-    // //   localStorage.getItem(
-    // //     StorageKey.FILTER + `_${this.user_id}_job`)
-    // //     ? JSON.parse(localStorage.getItem(StorageKey.FILTER + `_${this.user_id}_job`))
-    // //     : {};
-    // if (keyword?._key) {
-    //   //mannq change
-    //   // this.filterCommon = filter;
-    //   // this.filterCommonAppended = filter;
-    //   this.addUser(keyword, true);
-
-    //   this.filterMain();
-    // } else {
-    //   this.callSearchAll();
-    // }
-    // // call api # master data
-    // this.inputControlMaster.valueChanges
-    //   .pipe(
-    //     debounceTime(100),
-    //     distinctUntilChanged()
-    //     // tslint:disable-next-line: deprecation
-    //   )
-    //   .subscribe((text) => {
-    //     this.recommencedJobService.searchUser(text).then((r) => {
-    //       if (r.status === RESULT_STATUS.OK) {
-    //         const target = r?.data;
-    //         if (target.length !== 0) {
-    //           this.messageSearch = '';
-    //           this.dataSuggestAll = target;
-    //           this.dataSuggest = AitAppUtils.getUniqueArray(
-    //             target || [],
-    //             'value'
-    //           );
-    //         } else {
-    //           this.dataSuggest = [];
-    //           this.dataSuggestAll = [];
-    //           if (text) {
-    //             this.messageSearch = 'データがありません。';
-    //           }
-    //         }
-    //       }
-    //     });
-    //     if (text === '') {
-    //       this.messageSearch = '';
-    //     }
-    //   });
-  }
-
-  private callSearchAll() {
-    this.isExpan = true;
-    this.user_request_key = null;
-    this.matchingUser(null).then((res) => {
-      this.getDataByRound().then((r) => {
-        // this.isLoading = false;
-        this.setSkeleton(false);
-      });
-    });
-  }
-
-  loadNext = (event) => {
-    if (
-      (this.userSelect.length !== 0 && this.cardSkeleton.length === 0) ||
-      this.dataFilter.length !== 0
-    ) {
-      const startPos = event.target.scrollTop;
-      const pos =
-        (event.target.scrollTop || document.body.scrollTop) +
-        document.documentElement.offsetHeight;
-      const max = event.target.scrollHeight;
-      // pos/max will give you the distance between scroll bottom and and bottom of screen in percentage.
-      if (pos >= max) {
-        if (!this.spinnerLoading) {
-          // Coding something 😋😋😋
-
-          if (this.currentTab === 'R' && this.textDataEnd === '') {
-            if (this.dataIncludesId.length >= 8) {
-              this.setSkeleton(true);
-              // this.spinnerLoading = true;
-
-              this.getDataByRound().then((r) => {
-                // this.filterMain();
-              });
-            } else {
-              this.textDataEnd = '022';
-              // setTimeout(() => {
-              // this.setSkeleton(false);
-
-              // }, 1000)
-            }
-          } else {
-            if (this.dataIncludesIdSave.length >= 8) {
-              // this.spinnerLoading = true;
-              this.setSkeleton(true);
-              this.getDataByRoundSave().then((r) => {
-                // this.filterMain();
-              });
-            } else {
-              this.textDataEnd = '022';
-              // setTimeout(() => {
-              //   this.setSkeleton(false);
-
-              // }, 1000)
-            }
-          }
-          // this.spinnerLoading = false;
-        }
-      }
-
-      if (startPos !== 0) {
-      }
-    }
-  };
-
+  isObjectEmpty = (obj) => Object.keys(obj || {}).length === 0;
   getPlaceHolder = () =>
-    !this.isObjectEmpty(this.currentSearch)
-      ? ''
-      : this.getTitlePlaceholderSearch();
-  getTitleSearchBtn = () =>
-    this.translateService.translate(
-      RECOMMENCED_JOB_CODE_CAPTIONS.TITLE_BUTTON_SEARCH
-    );
+  !this.isObjectEmpty(this.currentSearch)
+    ? ''
+    : this.getTitlePlaceholderSearch();
 
-  getTitlePlaceholderSearch = () =>
+    getTitlePlaceholderSearch = () =>
     this.translateService.translate(
       RECOMMENCED_JOB_CODE_CAPTIONS.PLACEHOLDER_SEARCH_BAR
     );
+    handleInput = (value) => {
+      this.addressSearch = value;
+    };
 
-  handleInput = (value) => {
-    this.addressSearch = value;
-  };
+    handleClickButton = () => {
+      const target = this.currentSearch;
+      // this.removeSearch(true);
+      this.addUser(target);
+    };
 
-  // Highlight name option when user type
-  highlightName = (name) => {
-    if (/[a-zA-Z0-9]/.test(name)) {
-      const res = name.replace(
-        new RegExp(this.addressSearch.trim(), 'gmi'),
-        (match) => {
-          return `<b class="hightlighted" style="background:yellow">${match}</b>`;
-        }
-      );
-
-      return res;
-    }
-    return name;
-  };
-
-  getDate = (d) => this.dateFormatService.formatDate(d, 'display');
-
-  // Get Data by round and base on all of result
-  getDataByRound = async (take = 8) => {
-    if (this.currentRound !== this.round) {
-      this.currentRound = this.round;
-      // return data by round
-      const from = 0 + take * (this.round - 1);
-      const to = this.round * take;
-      if (this.dataFilter.length <= this.dataIncludesId.length) {
-        const ids = this.dataIncludesId
-          .map((d) => d.value)
-          .slice(from, to)
-          .filter((x) => !!x); // value is user_profile key
-        const detail = await this.getDetailMatching(ids);
-
-        if (detail.length === 0 && this.dataFilter.length !== 0) {
-          this.textDataNull = '';
-          this.textDataNullSave = '';
-          this.textDataEnd = '022';
-          this.setSkeleton(false);
-        } else {
-          this.textDataNull = '';
-          this.textDataNullSave = '';
-          const uq = AitAppUtils.getUniqueArray(
-            [...this.dataFilter, ...(detail || [])],
-            '_key'
-          ).filter((f) => f?._key);
-
-          let data = [];
-
-          if (this.user_request_key) {
-            data = uq.map((d) => ({
-              ...d,
-              total_score: this.dataIncludesId.find((f) => f.value === d._key)
-                ?.total_score,
-              group_no: this.dataIncludesId.find((f) => f.value === d._key)
-                ?.group_no,
-              // current_salary: 100000,
-              // salary : 1000000
-            }));
-          } else {
-            data = uq.map((d) => ({
-              ...d,
-              total_score: this.dataIncludesId.find((f) => f.value === d._key)
-                ?.total_score,
-              group_no: 3,
-              // current_salary: 100000,
-              // salary : 1000000
-            }));
-          }
-          this.dataFilter = data || this.dataFilterDf;
-          this.dataFilterDf = data || this.dataFilterDf;
-
-          if (!AitAppUtils.isObjectEmpty(this.filterCommon)) {
-            this.filterMain();
-          }
-
-          this.setSkeleton(false);
-
-          if (this.dataFilter.length === 0) {
-            this.textDataNull = '021';
-          }
-          this.round++;
-        }
-
-        // push total score to detail
-      }
-    }
-  };
-
-  handleClickButton = () => {
-    const target = this.currentSearch;
-    // this.removeSearch(true);
-    this.addUser(target);
-  };
-
-  // Get Data by round and base on all of result
-  getDataByRoundSave = async (take = 8) => {
-    // return data by round
-
-    const from = 0 + take * (this.round - 1);
-    const to = this.round * take;
-    const ids = this.dataIncludesIdSave.map((m) => m?.value).slice(from, to); // value is user_profile key
-    const detail = await this.getDetailMatching(ids);
-
-    if (detail.length === 0) {
+    getTabSelect = (tab) => {
+      this.dataFilterSave = [];
+      this.dataFilterSaveDf = [];
+      this.dataFilterDf = [];
+      this.dataFilter = [];
       this.textDataNull = '';
       this.textDataNullSave = '';
-      this.textDataEnd = '022';
-      this.setSkeleton(false);
-    } else {
-      // push total score to detail
-      const uq = AitAppUtils.getUniqueArray(
-        [...this.dataFilterSave, ...(detail || [])],
-        '_key'
-      ).filter((f) => f?._key);
-      if (uq.length === 0) {
-        this.textDataNullSave = '021';
-      }
-      const data = uq.map((d) => ({
-        ...d,
-        total_score: this.dataIncludesIdSave.find((f) => f.value === d._key)
-          ?.total_score,
-        group_no: this.dataIncludesIdSave.find((f) => f.value === d._key)
-          ?.group_no,
-      }));
-
-      const target = (data || []).sort(
-        (a, b) => (a.group_no || 99) - (b.group_no || 99)
-      );
-
-      this.dataFilterSave = target || this.dataFilterSave;
-      this.dataFilterSaveDf = target || this.dataFilterSaveDf;
-      this.round++;
-      // this.setSkeleton(false);
-      if (!AitAppUtils.isObjectEmpty(this.filterCommon)) {
-        this.filterMain();
-      }
-      this.setSkeleton(false);
-    }
-  };
-
-  handleClickChipInput(e) {
-    e.preventDefault();
-  }
-
-  // thêm nút scroll to top : TODO
-
-  resetRound = () => (this.round = 1);
-
-  getTabSelect = (tab) => {
-    this.dataFilterSave = [];
-    this.dataFilterSaveDf = [];
-    this.dataFilterDf = [];
-    this.dataFilter = [];
-    this.textDataNull = '';
-    this.textDataNullSave = '';
-    this.textDataEnd = '';
-    this.currentRound = 0;
-
-    this.isLoading = true;
-    this.resetRound();
-
-    this.currentTab = tab.value;
-    if (this.currentTab !== 'R') {
-      this.setSkeleton(true);
-      this.recommencedJobService
-        .getDataTabSave(this.user_request_key || this.company)
-        .then((r) => {
-          if (r.status === RESULT_STATUS.OK) {
-            if (r.data && r.data.length !== 0) {
-              const _keys = (r.data || [])
-                .map((d) => d?.vertex?._key)
-                .filter((x) => !!x);
-              if (_keys.length !== 0) {
-                this.recommencedJobService
-                  .matchingUser(this.user_request_key || this.company, _keys)
-                  .then((r) => {
-                    if (r.status === RESULT_STATUS.OK) {
-                      this.dataIncludesIdSave = r.data || [];
-                      if (this.dataIncludesIdSave.length !== 0) {
-                        this.getDataByRoundSave().then((r) => {
-                          // this.isLoading = false;
-                          // this.setSkeleton(false);
-                        });
-                      } else {
-                        this.setSkeleton(false);
-                        this.textDataNullSave = '021';
+      this.textDataEnd = '';
+      this.currentRound = 0;
+  
+      this.isLoading = true;
+      this.resetRound();
+  
+      this.currentTab = tab.value;
+      if (this.currentTab !== 'R') {
+        this.setSkeleton(true);
+        this.recommencedJobService
+          .getDataTabSave(this.user_request_key || this.company)
+          .then((r) => {
+            if (r.status === RESULT_STATUS.OK) {
+              if (r.data && r.data.length !== 0) {
+                const _keys = (r.data || [])
+                  .map((d) => d?.vertex?._key)
+                  .filter((x) => !!x);
+                if (_keys.length !== 0) {
+                  this.recommencedJobService
+                    .matchingUser(this.user_request_key || this.company, _keys)
+                    .then((r) => {
+                      if (r.status === RESULT_STATUS.OK) {
+                        this.dataIncludesIdSave = r.data || [];
+                        if (this.dataIncludesIdSave.length !== 0) {
+                          this.getDataByRoundSave().then((r) => {
+                            // this.isLoading = false;
+                            // this.setSkeleton(false);
+                          });
+                        } else {
+                          this.setSkeleton(false);
+                          this.textDataNullSave = '021';
+                        }
                       }
-                    }
-                  });
+                    });
+                } else {
+                  this.setSkeleton(false);
+                  this.textDataNullSave = '021';
+                }
               } else {
                 this.setSkeleton(false);
                 this.textDataNullSave = '021';
               }
-            } else {
-              this.setSkeleton(false);
-              this.textDataNullSave = '021';
             }
-          }
-        });
-    } else {
-      this.setSkeleton(true);
-      this.submitSearch();
-      this.isLoading = false;
-    }
-  };
+          });
+      } else {
+        this.setSkeleton(true);
+        this.submitSearch();
+        this.isLoading = false;
+      }
+    };
+    getDataByRoundSave = async (take = 8) => {
+      // return data by round
+  
+      const from = 0 + take * (this.round - 1);
+      const to = this.round * take;
+      const ids = this.dataIncludesIdSave.map((m) => m?.value).slice(from, to); // value is user_profile key
+      const detail = await this.getDetailMatching(ids);
+  
+      if (detail.length === 0) {
+        this.textDataNull = '';
+        this.textDataNullSave = '';
+        this.textDataEnd = '022';
+        this.setSkeleton(false);
+      } else {
+        // push total score to detail
+        const uq = AitAppUtils.getUniqueArray(
+          [...this.dataFilterSave, ...(detail || [])],
+          '_key'
+        ).filter((f) => f?._key);
+        if (uq.length === 0) {
+          this.textDataNullSave = '021';
+        }
+        const data = uq.map((d) => ({
+          ...d,
+          total_score: this.dataIncludesIdSave.find((f) => f.value === d._key)
+            ?.total_score,
+          group_no: this.dataIncludesIdSave.find((f) => f.value === d._key)
+            ?.group_no,
+        }));
+  
+        const target = (data || []).sort(
+          (a, b) => (a.group_no || 99) - (b.group_no || 99)
+        );
+  
+        this.dataFilterSave = target || this.dataFilterSave;
+        this.dataFilterSaveDf = target || this.dataFilterSaveDf;
+        this.round++;
+        // this.setSkeleton(false);
+        if (!AitAppUtils.isObjectEmpty(this.filterCommon)) {
+          this.filterMain();
+        }
+        this.setSkeleton(false);
+      }
+    };
 }

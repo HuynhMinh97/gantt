@@ -406,34 +406,7 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
     }
   }
 
-  async find(key: string) {
-    if (this.course_key) {
-      this.callLoadingApp();
-      await this.userCourseService
-        .findCourseByKey(key)
-        .then((r) => {
-          if (r.status === RESULT_STATUS.OK) {
-            if (r.data.length > 0) {
-              const data = r.data[0];
-              this.course.patchValue({ ...data });
-              this.courseClone = this.course.value;
-              this.companyCenter = [{ _key: data.training_center?._key }, { value: data.training_center?.value }];
-              this.listFile = this.course.value.file;
-              if (this.user_id != data.user_id) {
-                this.mode = MODE.VIEW
-                this.isReadonly = true;
-              }   
-              this.cancelLoadingApp();           
-            }
-            else {
-              this.cancelLoadingApp();
-              this.router.navigate([`/404`]);
-            }
-          }
-        });
-    }
-    return;
-  }
+ 
   //delete
   async deleteUserById() {
     this.dialogService.open(AitConfirmDialogComponent, {
@@ -499,6 +472,8 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
   }
 
   public save = async (data = {}) => {
+    console.log(data);
+    
     try {
       data['user_id']= this.user_id;
       return await this.userCourseService.saveCourse(data)
@@ -512,5 +487,34 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
       
     }
     
+  }
+
+  async find(key: string) {
+    if (this.course_key) {
+      this.callLoadingApp();
+      await this.userCourseService
+        .findCourseByKey(key)
+        .then((r) => {
+          if (r.status === RESULT_STATUS.OK) {
+            if (r.data.length > 0) {
+              const data = r.data[0];
+              this.course.patchValue({ ...data });
+              this.courseClone = this.course.value;
+              this.companyCenter = [{ _key: data.training_center?._key }, { value: data.training_center?.value }];
+              this.listFile = this.course.value.file;
+              if (this.user_id != data.user_id) {
+                this.mode = MODE.VIEW
+                this.isReadonly = true;
+              }   
+              this.cancelLoadingApp();           
+            }
+            else {
+              this.cancelLoadingApp();
+              this.router.navigate([`/404`]);
+            }
+          }
+        });
+    }
+    return;
   }
 }

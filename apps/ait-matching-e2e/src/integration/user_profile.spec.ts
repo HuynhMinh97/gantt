@@ -10,76 +10,47 @@ describe('Navigate user profile', () => {
     cy.login('lacnt', '12345678');
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(3000);
-    cy.visit(Cypress.env('host') + Cypress.env('user_profile'));
+    // cy.visit(Cypress.env('host') + Cypress.env('user_profile'));
     cy.url().should('eq', Cypress.env('host') + Cypress.env('user_profile'));
     checkUI();
-    findUserOnboarding();
-    addProjects();
-    addExperiences();
-    addCertificates();
-    addCourses();
-    addEducations();
-    addLanguages();
+    // findUserOnboarding();
+    // addProjects();
+    // addExperiences();
+    // addCertificates();
+    // addCourses();
+    // addEducations();
+    // addLanguages();
 
   });
 
   function checkUI() {
     const query = `
     query {
-        findProfile(
+      findProfile(
         request: {
           collection: "user_profile"
           condition: {
             user_id: "${Cypress.env('user_id')}"
-            country_region: {
-              attribute: "country_region"
-              ref_collection: "sys_master_data"
-              ref_attribute: "code"
-            }
-            province_city: {
-              attribute: "province_city"
-              ref_collection: "sys_master_data"
-              ref_attribute: "code"
-            }
-            title: {
-                attribute: "title"
-                ref_collection: "m_title"
-                ref_attribute: "code"
-              }
-            company_working: {
-              attribute: "company_working"
-              ref_collection: "m_company"
-              ref_attribute: "code"
-            }
             del_flag: false
           }
           company: "${Cypress.env('company')}"
           lang: "${Cypress.env('lang')}"
           user_id: "${Cypress.env('user_id')}"
+          module: "user"
+          page: "user_profiles"
+          options: {}
         }
       ) {
         data {
           user_id
-          country_region {
-            _key
-            value
-          }
-          province_city {
-            _key
-            value
-          }
-          company_working {
-            _key
-            value
-          }
-          title {
-            _key
-            value
-          }
-          first_name
           last_name
+          first_name
+          phone_number
+          romaji
+          katakana
+          bod
           about
-         
+          gender
         }
         message
         errors
@@ -89,7 +60,7 @@ describe('Navigate user profile', () => {
       }
     }
     `;
-
+    console.log(query);
     cy.request({
       method: 'POST',
       url: Cypress.env('host') + Cypress.env('api_url'),
@@ -97,18 +68,25 @@ describe('Navigate user profile', () => {
       failOnStatusCode: false,
     }).then((response) => {
       const data = response.body.data.findProfile.data[0];
-      cy.get('#fullname_input').should('have.text', ' ' + data.last_name + ' ' + data.first_name + ' ');
-      cy.get('#company_input').should('have.text', ' ' + data.title.value + " at " + data.company_working.value + ' ');
-      cy.get('#country_region_input').should('have.text', data.province_city.value + ', ' + data.country_region.value);
-      cy.get('#about_input').should('have.text', ' ' + (data.about ? data.about : '') + ' ')
+      console.log(data.first_name);
+      cy.getValueInput('first_name', data.first_name);
+      cy.getValueInput('katakana', data.katakana);
+      // cy.getValueDate('born_on_date', data.bod);
+      cy.getValueInput('last_name', data.last_name);
+      cy.getValueInput('romaji', data.romaji);
+      cy.getValueInput('gender', data.gender);
+      cy.getValueInput('phone_number', data.phone_number);
+      cy.get('#' + 'description').should('have.value', data.about)
+      
+
     });
-    getTextMenu('SKILLS', 'SKILLS');
-    getTextMenu('PROJECTS', 'PROJECTS');
-    getTextMenu('EXPERIENCES', 'EXPERIENCES');
-    getTextMenu('CERTIFICATES', 'CERTIFICATES');
-    getTextMenu('COURSES', 'COURSES');
-    getTextMenu('EDUCATIONS', 'EDUCATIONS');
-    getTextMenu('LANGUAGES', 'LANGUAGES');
+    getTextMenu('Skills', 'Skills');
+    getTextMenu('Projects', 'Projects');
+    getTextMenu('Experiences', 'Experiences');
+    getTextMenu('Certificates', 'Certificates');
+    getTextMenu('Courses', 'Courses');
+    getTextMenu('Educations', 'Educations');
+    getTextMenu('Languages', 'Languages');
 
   }
 

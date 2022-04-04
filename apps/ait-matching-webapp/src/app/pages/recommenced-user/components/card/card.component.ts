@@ -74,6 +74,8 @@ export class AureoleVCardComponent implements OnInit {
   @Input() addressSearch = '';
   @Input() company_key = '';
   @Output() actionSaveEvent = new EventEmitter();
+  @Input() tabIndex;
+  @Input() isJob = false;
   fieldDate = ['生年月日'];
   avatarURL = 'https://ui-avatars.com/api/?name=';
   avatar = '';

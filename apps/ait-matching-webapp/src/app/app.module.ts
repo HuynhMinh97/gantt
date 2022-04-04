@@ -52,7 +52,6 @@ import { CommonModule } from '@angular/common';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { UserJobAlertComponent } from './pages/user/user-job-alert/user-job-alert.component';
 import { UserReorderSkillsComponent } from './pages/user/user-reorder-skills/user-reorder-skills.component';
-import { CardContentProfileComponent } from './pages/user/user-profile/card-content/card-content.component';
 import { CountryComponent } from './components/country/country.component';
 import { UserLanguageDetailComponent } from './pages/user/user-language-detail/user-language-detail.component';
 import { UserEducationDetailComponent } from './pages/user/user-education-detail/user-education-detail.component';
@@ -105,7 +104,6 @@ const PAGES = [
   UserReorderSkillsComponent,
   UserProfileComponent,
   UserJobAlertComponent,
-  CardContentProfileComponent,
   UserLanguageDetailComponent,
   UserEducationDetailComponent,
   UserCourseDetailComponent,
@@ -120,6 +118,8 @@ const PAGES = [
   EducationListComponent,
   CertificateListComponent,
   SkillListViewComponent,
+  DragScrollComponent,
+  RecommencedJobComponent,
 ];
 
 @NgModule({
@@ -127,8 +127,7 @@ const PAGES = [
     AppComponent,
     ...AUREOLE_V_COMPONENTS,
     ...PAGES,
-    DragScrollComponent,
-    RecommencedJobComponent,
+   
 
   ],
   imports: [

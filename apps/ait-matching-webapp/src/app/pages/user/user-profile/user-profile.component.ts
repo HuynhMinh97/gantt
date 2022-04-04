@@ -23,7 +23,6 @@ import {
   EducationDto,
   LanguageDto,
   OrderSkill,
-  ProfileDto,
 } from './user-profile';
 import { UserProfileService } from '../../../services/user-profile.service';
 import { UserProjectService } from '../../../services/user-project.service';
@@ -35,11 +34,10 @@ import { UserEducationService } from '../../../services/user-education.service';
 import { UserLanguageService } from '../../../services/user-language.service';
 import { MatchingUtils } from '../../../../../../../apps/ait-matching-webapp/src/app/@constants/utils/matching-utils';
 import { UserSkillsService } from '../../../services/user-skills.service';
-
 @Component({
   selector: 'ait-user-profile',
   templateUrl: './user-profile.component.html',
-  styleUrls: ['./user-profile.component.scss']
+  styleUrls: ['./user-profile.component.scss'],
 })
 export class UserProfileComponent extends AitBaseComponent implements OnInit {
   mode = '';
@@ -154,8 +152,8 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     try {
       await this.getMasterData();
       await this.getMaxSkill();
-      this.getFriends();
-      this.getCountFriends();
+      // this.getFriends();
+      // this.getCountFriends();
       this.getUserProfileByUserId();
       this.getSkillByUserId();
       this.getProjectByUserId();
@@ -389,6 +387,8 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     this.userCourseService.findCourseByUserId(this.profileId)
       .then((res) => {
         const data = res.data;
+        console.log(data);
+        
         this.countCourse = data.length;
         for (const element of data) {
           const course = {} as CourseDto;
@@ -611,6 +611,18 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       this.heightExperience = '200px'
     }else{
       this.heightExperience = '0px'
+    }
+  }
+  getDown(val, data, name?: string){
+    this[val] = data;
+    const element = document.getElementById(name);
+    console.log(element);
+    if(data){
+      console.log('end');   
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }else{
+      console.log('start');
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 }

@@ -19,7 +19,26 @@
       </div>
     </div>
   </div>
-  <div class="divider__card"></div>
+  <div class="divider__card">
+    <div class="stamp" *ngIf="card?.stamp === 1">
+      <img
+        [nbTooltip]="'在留期限 満了1ヶ月前'"
+        src="../../../../../../../assets/images/stamp_1_month.png"
+        alt=""
+        srcset=""
+        loading="lazy"
+      />
+    </div>
+    <div class="stamp" *ngIf="card?.stamp === 2">
+      <img
+        [nbTooltip]="'在留期限 満了3ヶ月前'"
+        src="../../../../../../../assets/images/stamp_3_months.png"
+        alt=""
+        srcset=""
+        loading="lazy"
+      />
+    </div>
+  </div>
   <!-- <mat-chip-list> -->
   <div class="list__skills" (click)="navigateProfile(cardH.user_id)">
     <div class="content">

@@ -6,8 +6,8 @@ export class UserProjectEntity extends BaseEntity {
     @Field(() => KeyValueEntity, { nullable: true })
     skills?: KeyValueEntity;
 
-    @Field(() => String, { nullable: true })
-    name?: string;
+    @Field(() => KeyValueEntity, { nullable: true })
+    name?: KeyValueEntity;
 
     @Field(() => Float, { nullable: true })
     start_date_from?: number;
