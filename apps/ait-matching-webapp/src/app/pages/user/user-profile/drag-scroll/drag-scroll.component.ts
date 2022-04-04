@@ -13,7 +13,6 @@ export class DragScrollComponent implements OnChanges {
   @Input() maxWidth: string;
   @Input() minWidth: string;
   @Input() width: string;
-  @Input() isNormal = false;
   errorList = '';
   constructor(private translateService: AitTranslationService) {
   }
