@@ -54,10 +54,7 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
       layoutScrollService,
       toastrService
     );
-    this.setModulePage({
-      module: 'user',
-      page: 'user_language',
-    });
+    
 
     this.userLanguage = this.formBuilder.group({
       language: new FormControl(null, [Validators.required]),

@@ -82,7 +82,9 @@ export class UserOnboardingService extends AitBaseService {
       condition[item] = {
         attribute: item,
         ref_collection: 'sys_master_data',
-        ref_attribute: 'code',
+        ref_attribute: '_key',
+        get_by: '_key',
+
       };
     });
 
@@ -90,7 +92,9 @@ export class UserOnboardingService extends AitBaseService {
       condition[item] = {
         attribute: item,
         ref_collection: 'sys_master_data',
-        ref_attribute: 'code',
+        ref_attribute: '_key',
+        get_by: '_key',
+
       };
     });
     const keyMasterArray = [
@@ -117,6 +121,7 @@ export class UserOnboardingService extends AitBaseService {
         attribute: item.att,
         ref_collection: item.col,
         ref_attribute: '_key',
+        get_by: '_key',
       };
     });
 
@@ -169,7 +174,9 @@ export class UserOnboardingService extends AitBaseService {
       condition[item] = {
         attribute: item,
         ref_collection: 'sys_master_data',
-        ref_attribute: 'code',
+        ref_attribute: '_key',
+        get_by: '_key',
+
       };
     });
     const keyMasterArray = [
@@ -190,12 +197,15 @@ export class UserOnboardingService extends AitBaseService {
         attribute: item.att,
         ref_collection: item.col,
         ref_attribute: '_key',
+        get_by: '_key',
+
       };
     });
     condition['job_setting_skills'] = {
       attribute: 'job_setting_skills',
       ref_collection:'m_skill', 
-      ref_attribute: '_key'
+        get_by: '_key',
+        ref_attribute: '_key',
     }
     const returnFields = {
       _key: true,
@@ -312,7 +322,7 @@ export class UserOnboardingService extends AitBaseService {
 
   async findSkillsByCode(code: string) {
     const condition: any = {
-      code: code,
+      _key: code,
     };
     const returnFields = {
       _key: true,

@@ -81,6 +81,9 @@ export class UserOnboardingComponent
   companySkills = [];
   dateFormat = '';
   sort_no = 0;
+  maxSkillJobSetting = 10;
+  maxSkillCurrentJob = 50;
+
   isReset = false;
   isLangJP = false;
   isSubmit = false;
@@ -305,7 +308,6 @@ export class UserOnboardingComponent
           if (r.status === RESULT_STATUS.OK) {
             this.jobSettingData = r.data[0];
             this.userJobSettingInfo.patchValue({ ...this.jobSettingData });
-            console.log(this.userJobSettingInfo);
             this.userJobSettingInfoClone = this.userJobSettingInfo.value;
           } else {
             this.callLoadingApp();
@@ -320,7 +322,6 @@ export class UserOnboardingComponent
               if (r.data.length > 0 && !this.dataCountry.del_flag) {
                 this.userOnboardingInfo.patchValue({ ...this.dataCountry });
                 this.userOnboardingInfoClone = this.userOnboardingInfo.value;
-            console.log(this.userOnboardingInfo);
 
                 this.user_id_profile = this.dataCountry.user_id;
                 this._key = this.dataCountry._key;
@@ -440,13 +441,14 @@ export class UserOnboardingComponent
       for (const skill of res.data) {
         listSkills.push(skill?.skills);
       }
+      
       this.userOnboardingInfo.controls['current_job_skills'].setValue([
         ...listSkills,
       ]);
       this.companySkills = listSkills
       this.userOnboardingInfoClone = this.userOnboardingInfo.value;
       this.cancelLoadingApp();
-      console.log(this.companySkills)
+      
     });
   }
 
@@ -567,7 +569,7 @@ export class UserOnboardingComponent
     const skills = saveData.job_setting_skills;
     const arrSkills = [];
     for (const skill of skills) {
-      const skill_key = await this.userOnbService.findMSkillsByCode(
+      const skill_key = await this.userOnbService.findSkillsByCode(
         skill._key
       );
       arrSkills.push(skill_key.data[0]._key);
@@ -624,6 +626,7 @@ export class UserOnboardingComponent
     saveData.company_working = saveData.company_working
       ? saveData.company_working?._key
       : null;
+      
     this.current_job_skills = saveData.current_job_skills;
     delete saveData.current_job_skills;
     if (this.mode === MODE.NEW) {
@@ -642,14 +645,16 @@ export class UserOnboardingComponent
   }
 
   async saveDataUserSkill() {
+    debugger
     this.user_skill._from = 'sys_user/' + this.authService.getUserID();
     this.user_skill.relationship = 'biz_user_skill';
     const skills = [];
     for (const item of this.current_job_skills) {
-      await this.userOnbService.findMSkillsByCode(item._key).then((res) => {
+      await this.userOnbService.findSkillsByCode(item._key).then((res) => {
         skills.push(res.data[0]._key);
       });
     }
+    
     skills.forEach(async (skill) => {
       this.sort_no += 1;
       this.user_skill.sort_no = this.sort_no;

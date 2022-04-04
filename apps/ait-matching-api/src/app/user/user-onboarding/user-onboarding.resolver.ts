@@ -22,7 +22,6 @@ export class UserOnboardingInfoResolver extends AitBaseService {
     request: UserOnboardingInfoRequest
   ) {
     const data = await this.find(request, user);
-    console.log(data.data[0]);
     return await this.find(request, user);
   }
 
@@ -71,11 +70,12 @@ export class UserOnboardingInfoResolver extends AitBaseService {
   // }
 
   @Query(() => UserOnboardingInfoResponse, { name: 'findSkillOnboarding' })
-  findSkillOnboarding(
+  async findSkillOnboarding(
     @AitCtxUser() user: SysUser,
     @Args('request', { type: () => UserOnboardingInfoRequest })
     request: UserOnboardingInfoRequest
   ) {
+    console.log(request)
     return this.find(request, user);
   }
 
@@ -92,7 +92,6 @@ export class UserOnboardingInfoResolver extends AitBaseService {
           RETURN v.code 
       `;
       const result = await this.query(aqlQuery);
-      console.log(result);
       return await this.query(aqlQuery);
   }
 

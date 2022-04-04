@@ -335,12 +335,17 @@
                     [label]="'skills(max 50)'"
                     [required]="true"
                     [collection]="'m_skill'"
-                    [maxItem]="50"
+                    [maxItem]="maxSkillCurrentJob"
                     [placeholder]="
                       'fill name and enter to add your skills' | translate
                     "
                     [style]="{ width: '400px' }"
-                    (watchValue)="takeMasterValueSkillCurrentJob($event, 'current_job_skills')"
+                    (watchValue)="
+                      takeMasterValueSkillCurrentJob(
+                        $event,
+                        'current_job_skills'
+                      )
+                    "
                     [defaultValue]="companySkills"
                     [isReset]="isReset"
                     [isSubmit]="isSubmit"
@@ -505,17 +510,22 @@
                     [label]="'skills(max 10)'"
                     [required]="true"
                     [collection]="'m_skill'"
-                    [maxItem]="10"
+                    [maxItem]="maxSkillJobSetting"
                     [placeholder]="
                       'fill name and enter to add your skills' | translate
                     "
                     [style]="{ width: '400px' }"
-                    (watchValue)="takeMasterValueSkillJobSetting($event, 'job_setting_skills')"
+                    (watchValue)="
+                      takeMasterValueSkillJobSetting(
+                        $event,
+                        'job_setting_skills'
+                      )
+                    "
                     [defaultValue]="companySkills"
                     [isReset]="isReset"
                     [isSubmit]="isSubmit"
+                    [isEvaluate]="true"
                   ></ait-autocomplete-master>
-                  
                 </div>
               </ng-container>
             </div>
@@ -534,7 +544,7 @@
                     [maxItem]="1"
                     [placeholder]="'please select level'"
                     [collection]="'sys_master_data'"
-                    [class]="'EMP_LEVEL'"
+                    [class]="'EMPLOYEE_LEVEL'"
                     [disableOutputDefault]="true"
                     [isReset]="resetJobSettingInfo.job_setting_level"
                     (watchValue)="
