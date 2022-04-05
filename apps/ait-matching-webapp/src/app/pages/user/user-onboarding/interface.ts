@@ -21,7 +21,7 @@ export interface UserOnboardingDto extends BaseDto {
   katakana?: string;
   romaji?: string;
   gender: KeyValueDto;
-  bod: Date;
+  dob: Date;
   phone_number: number;
   about: string;
   country_region: KeyValueDto;

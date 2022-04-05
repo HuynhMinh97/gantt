@@ -164,10 +164,10 @@
                         *ngFor="let option of genderList; let isDefault = three"
                         [value]="option"
                         [checked]="
-                          userOnboardingInfo?.controls['gender']?.value
-                            ? userOnboardingInfo?.controls['gender']?.value.value
-                                ?._key == option.code
-                            : isDefault
+                        userOnboardingInfo?.controls['gender']?.value
+                        ? userOnboardingInfo?.controls['gender']?.value
+                            ?._key == option.code
+                        : isDefault
                         "
                         (valueChange)="takeGenderValue($event)"
                       >
@@ -338,7 +338,7 @@
                     [collection]="'m_skill'"
                     [maxItem]="maxSkillCurrentJob"
                     [placeholder]="
-                      'fill name and enter to add your skills' | translate
+                      'Fill name and enter to add your skill' | translate
                     "
                     [style]="{ width: '400px' }"
                     (watchValue)="
@@ -513,7 +513,7 @@
                     [collection]="'m_skill'"
                     [maxItem]="maxSkillJobSetting"
                     [placeholder]="
-                      'fill name and enter to add your skills' | translate
+                      'Fill name and enter to add your skill' | translate
                     "
                     [style]="{ width: '400px' }"
                     (watchValue)="
