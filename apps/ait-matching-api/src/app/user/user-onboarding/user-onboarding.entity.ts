@@ -75,14 +75,14 @@ export class UserOnboardingInfoEntity extends BaseEntity {
     @Field(() => KeyValueEntity, { nullable: true })
     industry_working?: KeyValueEntity;
 
-    @Field(() => KeyValueEntity, { nullable: true })
-    job_setting_title?: KeyValueEntity;
+    @Field(() => [KeyValueEntity], { nullable: true })
+    job_setting_title?: KeyValueEntity[];
 
-    @Field(() => KeyValueEntity, { nullable: true })
-    job_setting_level?: KeyValueEntity;
+    @Field(() => [KeyValueEntity], { nullable: true })
+    job_setting_level?: KeyValueEntity[];
 
-    @Field(() => KeyValueEntity, { nullable: true })
-    location?: KeyValueEntity;
+    @Field(() => [KeyValueEntity], { nullable: true })
+    location?: KeyValueEntity[];
 
     @Field(() => Float, { nullable: true })
     available_time_to?: number;

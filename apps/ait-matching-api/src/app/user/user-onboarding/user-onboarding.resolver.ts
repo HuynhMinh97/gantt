@@ -100,8 +100,8 @@ export class UserOnboardingInfoResolver extends AitBaseService {
   }
 
 
-  @Mutation(() => UserSkillResponse, { name: 'removeBizUserSkill' })
-  async removeBizUserSkill(
+  @Mutation(() => UserSkillResponse, { name: 'removeUserSkillByKey' })
+  async removeUserSkillByKey(
     @AitCtxUser() user: SysUser,
     @Args('request', { type: () => UserSkillRequest }) request: UserSkillRequest
   ) {
@@ -110,9 +110,9 @@ export class UserOnboardingInfoResolver extends AitBaseService {
     const from = JSON.stringify(request.data[0]._from);
     if (user_id) {
       const aqlQuery = `
-        FOR data IN biz_user_skill
+        FOR data IN user_skill
         FILTER data._from == ${from}
-        UPDATE data WITH { del_flag: true } IN biz_user_skill
+        UPDATE data WITH { del_flag: true } IN user_skill
         RETURN data
       `;
       console.log(aqlQuery);
