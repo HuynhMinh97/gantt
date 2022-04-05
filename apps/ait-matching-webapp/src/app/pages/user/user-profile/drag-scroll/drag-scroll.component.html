@@ -28,6 +28,7 @@
     *ngFor="let skill of list"
     [ngStyle]="{ background: skill.isHightLight ? '#e0eeff' : '#fff' }"
     [nbTooltip]="skill[showField]"
+    [nbTooltipTrigger]="'hover'"
   >
     <span
       style="
