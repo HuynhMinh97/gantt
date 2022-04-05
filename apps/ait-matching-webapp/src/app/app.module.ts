@@ -68,6 +68,11 @@ import { LanguageListComponent } from './pages/list/language-list/language-list.
 import { EducationListComponent } from './pages/list/education-list/education-list.component';
 import { CertificateListComponent } from './pages/list/certificate-list/certificate-list.component';
 import { SkillListViewComponent } from './pages/list/skill-list/skill-list-view/skill-list-view.component';
+import { MyProjectQueriesComponent } from './pages/my-project-queries/my-project-queries.component';
+import { AddRoleComponent } from './pages/group-role/add-role/add-role.component';
+import { GroupRoleRegisterComponent } from './pages/group-role/group-role-register/group-role-register.component';
+import { Ng2SmartTableModule } from 'ng2-smart-table';
+import { GroupRoleListComponent } from './pages/group-role/group-role-list/group-role-list.component';
 import { RecommencedJobComponent } from './pages/recommenced/recommenced-job/recommenced-job.component';
 
 const AIT_UI_MODULES = [AitChipModule, AitTabsModule, AitTocMenuModule];
@@ -127,10 +132,16 @@ const PAGES = [
     AppComponent,
     ...AUREOLE_V_COMPONENTS,
     ...PAGES,
+    DragScrollComponent,
+    MyProjectQueriesComponent,
+    AddRoleComponent,
+    GroupRoleRegisterComponent,
+    GroupRoleListComponent,
    
 
   ],
   imports: [
+    Ng2SmartTableModule,
     NbTooltipModule,
     NbButtonModule,
     NbEvaIconsModule,

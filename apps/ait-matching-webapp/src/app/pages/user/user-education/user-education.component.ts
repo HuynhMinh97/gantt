@@ -65,11 +65,7 @@ export class UserEducationComponent extends AitBaseComponent implements OnInit {
       start_date_to: new FormControl(null, [Validators.required]),
       issue_date: new FormControl(null, [Validators.required]),
     });
-
-    this.setModulePage({
-      module: 'user',
-      page: 'user_education',
-    });
+    
   }
 
    ngOnInit(): void {

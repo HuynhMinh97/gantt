@@ -33,7 +33,7 @@ export class UserEducationService extends AitBaseService {
     condition['school'] = {
       attribute: 'school',
       ref_collection: 'm_school',
-      ref_attribute: 'code',
+      ref_attribute: '_key',
     };
     if (!condition['create_by']) {
       condition['create_by'] = {};
