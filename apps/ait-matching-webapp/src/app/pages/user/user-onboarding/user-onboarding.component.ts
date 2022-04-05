@@ -223,12 +223,11 @@ export class UserOnboardingComponent
     this.userJobSettingInfo = this.formBuilder.group({
       job_setting_title: new FormControl(null),
       industry: new FormControl(null, [
-        Validators.required,
         Validators.maxLength(50),
       ]),
       location: new FormControl(null),
       job_setting_skills: new FormControl(null, Validators.maxLength(50)),
-      job_setting_level: new FormControl(null),
+      job_setting_level: new FormControl(null,Validators.required,),
       available_time_from: new FormControl(null),
       available_time_to: new FormControl(null),
       _key: new FormControl(null),
@@ -246,12 +245,11 @@ export class UserOnboardingComponent
       katakana: new FormControl(null),
       romaji: new FormControl(null),
       gender: new FormControl(null, [Validators.required]),
-      dob: new FormControl(null, [Validators.required]),
-      phone_number: new FormControl(null, [Validators.required]),
+      dob: new FormControl(null),
+      phone_number: new FormControl(null),
       about: new FormControl(null),
       country_region: new FormControl(null, [Validators.required]),
       postcode: new FormControl(null, [
-        Validators.required,
         Validators.maxLength(20),
       ]),
       province_city: new FormControl(null, [Validators.required]),
@@ -262,11 +260,11 @@ export class UserOnboardingComponent
         Validators.maxLength(500),
       ]),
       floor_building: new FormControl(null, [Validators.maxLength(500)]),
-      company_working: new FormControl(null),
-      current_job_title: new FormControl(null),
+      company_working: new FormControl(null,Validators.required,),
+      current_job_title: new FormControl(null,Validators.required,),
       industry_working: new FormControl(null, [Validators.required]),
-      current_job_level: new FormControl(null),
-      current_job_skills: new FormControl(null, Validators.maxLength(50)),
+      current_job_level: new FormControl(null,Validators.required,),
+      current_job_skills: new FormControl(null,[Validators.required, Validators.maxLength(50)]),
       _key: new FormControl(null),
     });
 
@@ -607,7 +605,6 @@ export class UserOnboardingComponent
   }
 
   saveDataUserProfile() {
-    debugger
     const saveData = this.userOnboardingInfo.value;
     saveData.ward = saveData.ward ? saveData.ward?._key : null;
     saveData.current_job_title = saveData.current_job_title
@@ -678,8 +675,8 @@ export class UserOnboardingComponent
     }, 100);
 
     if (
-      (this.userOnboardingInfo.valid || this.isChanged) &&
-      (this.userJobSettingInfo.valid || this.isChanged) &&
+      (this.userOnboardingInfo.valid ) &&
+      (this.userJobSettingInfo.valid ) &&
       !this.available_time_error
     ) {
       this.callLoadingApp();
