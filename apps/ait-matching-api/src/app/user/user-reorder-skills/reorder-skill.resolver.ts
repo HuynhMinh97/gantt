@@ -37,8 +37,6 @@ export class ReorderSkillResolver extends AitBaseService {
       )
       RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name, category:category[0]})
     `;
-    console.log(aqlQuery);
-    
       return await this.query(aqlQuery);
 
     } else {
