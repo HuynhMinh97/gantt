@@ -105,6 +105,7 @@ export class UserEducationService extends AitBaseService {
       attribute: 'school',
       ref_collection: 'm_school',
       ref_attribute: '_key',
+      get_by: '_key',
     };
 
     const returnFields = this.returnFields;

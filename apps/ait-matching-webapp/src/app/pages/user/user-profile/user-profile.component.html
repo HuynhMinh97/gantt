@@ -269,6 +269,7 @@
           <p class="data_empty">{{ 'データがありません。' | translate }}</p>
         </div>
         <div class="container_user" *ngIf="userProject.length > 0">
+
           <div *ngIf="!isShowProject">
             <ul>
             <li class="timeline-event">
@@ -290,6 +291,7 @@
                   </div>
                 </div>
               </div>
+              <div class="devline"></div>
             </li>
             <li
               class="timeline-event"
@@ -300,7 +302,7 @@
                 let index = index;
               "
             > 
-              <div class="devline" *ngIf="!last"></div>
+              <div class="devline" *ngIf="last"></div>
               <div class="timeline-block" *ngIf="index < 2">
                 <div class="img-timeline">
                   <img
@@ -576,7 +578,7 @@
                     </div>
                   </div>
                 </div>
-                <!-- <div class="devline"></div> -->
+                <div class="devline"></div>
               </li>
               <li
                 class="timeline-event"
@@ -587,7 +589,7 @@
                   let index = index
                 "
               >
-                <div class="devline" *ngIf=" !last && index < 2"></div>
+                <div class="devline" *ngIf="last" ></div>
                 <div class="timeline-block" *ngIf="index < 2">
                   <div class="img-timeline">
                     <img
