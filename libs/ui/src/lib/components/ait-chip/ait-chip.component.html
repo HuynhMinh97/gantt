@@ -6,10 +6,11 @@
   [ngClass]="isChipInCard ? 'chipInCard' : 'chip'"
   [nbTooltip]="title"
   (click)="onClickChipEvent()"
-  [nbTooltipTrigger]="isTooltip ? 'hover' : 'noop'"
   *ngIf="title"
   [id]="ID('chip')"
 >
+  
+<!-- [nbTooltipTrigger]="isTooltip ? 'hover' : 'noop'" -->
   <span
     [ngClass]="isEvaluate ? 'chip1' : ''"
     style="
