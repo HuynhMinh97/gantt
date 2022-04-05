@@ -110,17 +110,17 @@ export class SaveJobSettingInfoDto extends BaseDto {
     @Field(() => [String], { nullable: true })
     job_setting_skills?: string[];
 
-    @Field(() => String, { nullable: true })
-    job_setting_title?: string;
+    @Field(() => [String], { nullable: true })
+    job_setting_title?: string[];
 
     @Field(() => [String], { nullable: true })
     industry?: string[];
 
-    @Field(() => String, { nullable: true })
-    location?: string;
+    @Field(() => [String], { nullable: true })
+    location?: string[];
 
-    @Field(() => String, { nullable: true })
-    job_setting_level?: string;
+    @Field(() => [String], { nullable: true })
+    job_setting_level?: string[];
 
     @Field(() => Float, { nullable: true })
     available_time_from?: number;

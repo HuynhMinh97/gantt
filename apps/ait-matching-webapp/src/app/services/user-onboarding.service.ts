@@ -153,7 +153,7 @@ export class UserOnboardingService extends AitBaseService {
       _from: _from,
       del_flag: false,
     }
-    return await this.query('findMSkillByFrom', { collection: 'biz_user_skill', condition },
+    return await this.query('findMSkillByFrom', { collection: 'user_skill', condition },
       {
         skills: {
           _key: true,
@@ -291,8 +291,8 @@ export class UserOnboardingService extends AitBaseService {
   async removeBizUserSkill(data: any[]) {
     const returnFields = { _key: true };
     return await this.mutation(
-      'removeBizUserSkill',
-      'biz_user_skill',
+      'removeUserSkillByKey',
+      'user_skill',
       data,
       returnFields
     );
@@ -302,7 +302,7 @@ export class UserOnboardingService extends AitBaseService {
     const returnField = { _key: true, del_flag: true };
     return await this.mutation(
       'saveUserSkill',
-      'biz_user_skill',
+      'user_skill',
       data,
       returnField
     );

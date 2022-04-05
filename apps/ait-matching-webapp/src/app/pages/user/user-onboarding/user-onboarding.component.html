@@ -164,22 +164,21 @@
                         *ngFor="let option of genderList; let isDefault = three"
                         [value]="option"
                         [checked]="
-                        userOnboardingInfo?.controls['gender']?.value
-                        ? userOnboardingInfo?.controls['gender']?.value
-                            ?._key == option.code
-                        : isDefault
+                          userOnboardingInfo?.controls['gender']?.value
+                            ? userOnboardingInfo?.controls['gender']?.value
+                                ?._key == option.code
+                            : isDefault
                         "
                         (valueChange)="takeGenderValue($event)"
                       >
                         {{ option.name }}
                       </nb-radio>
-                    
                     </nb-radio-group>
                   </div>
                 </div>
               </ng-container>
               <ait-space [margin]="'7.25px'"></ait-space>
-              
+
               <ng-container>
                 <div class="input_inline">
                   <ait-input-text
@@ -467,17 +466,15 @@
                     [label]="'title'"
                     [isSubmit]="isSubmit"
                     [allowNew]="true"
-                    [maxItem]="1"
+                    [maxItem]="10"
                     [placeholder]="'please select title'"
                     [collection]="'m_title'"
                     [disableOutputDefault]="true"
                     [isReset]="resetJobSettingInfo.job_setting_title"
-                    (watchValue)="
-                      takeMasterValueJobSetting($event, 'job_setting_title')
-                    "
-                    [defaultValue]="[
-                      userJobSettingInfo?.controls['job_setting_title']?.value
-                    ]"
+                    (watchValue)="takeMasterValueJobSettings($event?.value,'userJobSettingInfo', 'job_setting_title')"
+                    [defaultValue]="
+                    userJobSettingInfo?.controls['job_setting_title']?.value
+                  "
                   ></ait-autocomplete-master-data>
                 </div>
               </ng-container>
@@ -490,13 +487,13 @@
                     [label]="'location'"
                     [isSubmit]="isSubmit"
                     [allowNew]="true"
-                    [maxItem]="1"
+                    [maxItem]="10"
                     [placeholder]="'please select location'"
                     [collection]="'sys_master_data'"
                     [class]="'ADDRESS'"
                     [disableOutputDefault]="true"
                     [isReset]="resetJobSettingInfo.location"
-                    (watchValue)="takeMasterValueJobSetting($event, 'location')"
+                    (watchValue)="takeMasterValueJobSettings($event?.value,'userJobSettingInfo', 'location')"
                     [defaultValue]="[
                       userJobSettingInfo?.controls['location']?.value
                     ]"
@@ -527,7 +524,6 @@
                     "
                     [isReset]="isReset"
                     [isSubmit]="isSubmit"
-                    [isEvaluate]="true"
                   ></ait-autocomplete-master>
                 </div>
               </ng-container>
@@ -544,21 +540,20 @@
                     [id]="'job_setting_level'"
                     [label]="'level'"
                     [isSubmit]="isSubmit"
-                    [maxItem]="1"
+                    [maxItem]="10"
                     [placeholder]="'please select level'"
                     [collection]="'sys_master_data'"
                     [class]="'EMPLOYEE_LEVEL'"
                     [disableOutputDefault]="true"
                     [isReset]="resetJobSettingInfo.job_setting_level"
-                    (watchValue)="
-                      takeMasterValueJobSetting($event, 'job_setting_level')
-                    "
-                    [defaultValue]="[
+                    (watchValue)="takeMasterValueJobSettings($event?.value,'userJobSettingInfo', 'job_setting_level')"
+                    [defaultValue]="
                       userJobSettingInfo?.controls['job_setting_level']?.value
-                    ]"
+                    "
                   ></ait-autocomplete-master-data>
                 </div>
               </ng-container>
+              
               <ait-space [margin]="'22px'"></ait-space>
               <ng-container>
                 <div class="input_date">
