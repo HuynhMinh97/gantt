@@ -33,7 +33,6 @@ import {
   AitConfirmDialogComponent,
   AitEnvironmentService,
   AitMasterDataService,
-  AitNavigationService,
   AitTranslationService,
   AppState,
   getUserSetting,
@@ -48,9 +47,6 @@ import {
   RESULT_STATUS,
 } from '@ait/shared';
 import { KeyValueCheckedDto } from './interface';
-import { UserProfileService } from '../../../services/user-profile.service';
-import { UserSkillsService } from '../../../services/user-skills.service';
-import { UserProjectService } from '../../../services/user-project.service';
 @Component({
   selector: 'ait-user-onboarding',
   templateUrl: './user-onboarding.component.html',
@@ -183,11 +179,7 @@ export class UserOnboardingComponent
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
     private dialogService: NbDialogService,
-    private navigation: AitNavigationService,
-    private userProjectService: UserProjectService,
     private userOnbService: UserOnboardingService,
-    private userSkillsService: UserSkillsService,
-    private userProfileService: UserProfileService,
     private translateService: AitTranslationService,
     private masterDataService: AitMasterDataService,
     @Optional() private nbDialogRef: NbDialogRef<UserOnboardingComponent>,
@@ -227,7 +219,7 @@ export class UserOnboardingComponent
       ]),
       location: new FormControl(null),
       job_setting_skills: new FormControl(null, Validators.maxLength(50)),
-      job_setting_level: new FormControl(null,Validators.required,),
+      job_setting_level: new FormControl(null),
       available_time_from: new FormControl(null),
       available_time_to: new FormControl(null),
       _key: new FormControl(null),
