@@ -134,7 +134,7 @@ export class UserExperienceService extends AitBaseService {
       returnFields
     );
   }
-//thuan
+// user profile
 async findUserExperienceByUserId(user_id?: string) {
   const condition: any = {
     user_id: user_id,
@@ -145,7 +145,8 @@ async findUserExperienceByUserId(user_id?: string) {
     condition[item] = {
       attribute: item,
       ref_collection: 'sys_master_data',
-      ref_attribute: 'code',
+      ref_attribute: '_key',
+      get_by: '_key',
     };
   });
 
@@ -164,7 +165,8 @@ async findUserExperienceByUserId(user_id?: string) {
     condition[item.att] = {
       attribute: item.att,
       ref_collection: item.col,
-      ref_attribute: 'code'
+      ref_attribute: '_key',
+      get_by: '_key',
     };
   });
 
