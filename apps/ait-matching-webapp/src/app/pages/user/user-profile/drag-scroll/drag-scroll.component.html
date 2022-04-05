@@ -6,7 +6,7 @@
     'min-width': minWidth || null,
     width: width || null
   }"
-  style="overflow: hidden; height: 50px"
+  style="overflow: hidden;height: 50px;"
   id="drag-scroll-button"
 >
   <button
@@ -27,6 +27,7 @@
     "
     *ngFor="let skill of list"
     [ngStyle]="{ background: skill.isHightLight ? '#e0eeff' : '#fff' }"
+    [nbTooltip]="skill[showField]"
   >
     <span
       style="
@@ -34,17 +35,14 @@
         font-weight: 600;
         font-size: 13px;
         color: #10529d;
-        width: 100%;
         white-space: nowrap;
         overflow: hidden !important;
         text-overflow: ellipsis;
       "
-       nbTooltip]="skill[showField]"
-      [innerHTML]="skill[showField]"
-      >
-    </span>
+      >{{ skill[showField] }}</span
+    >
+
+    <!-- {{skillList | json}} -->
   </button>
-  <p *ngIf="list.length === 0" style="color: rgb(143, 155, 179)">
-    {{ errorList }}
-  </p>
+  <p *ngIf="list.length === 0" style="color: rgb(143, 155, 179);">{{errorList}} </p>
 </drag-scroll>
