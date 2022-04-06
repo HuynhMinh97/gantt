@@ -45,6 +45,9 @@ export class SysGroupEntity extends BaseEntity {
   name: string;
 
   @Field(() => String, { nullable: true })
+  name_edit: string;
+
+  @Field(() => String, { nullable: true })
   type: string;
 
   @Field(() => String, { nullable: true })
