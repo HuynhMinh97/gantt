@@ -9,7 +9,7 @@ import {
   UserJobSettingRequest,
   UserOnboardingInfoRequest,
 } from './user-onboarding.request';
-import { CurrentJobSkillsEntity } from './user-onboarding.entity';
+import { CurrentJobSkillsEntity, UserOnboardingInfoEntity } from './user-onboarding.entity';
 import { UserSkillResponse } from '../user-skill/user-skill.response';
 import { UserSkillRequest } from '../user-skill/user-skill.request';
 import { RESULT_STATUS } from '@ait/shared';
@@ -25,12 +25,11 @@ export class UserOnboardingInfoResolver extends AitBaseService {
     request: UserOnboardingInfoRequest
   ) {
     const data = await this.find(request, user);
-    console.log(data);
     return await this.find(request, user);
   }
 
   @Query(() => UserOnboardingInfoResponse, { name: 'findJobSettingInfo' })
-  findJobSettingInfo(
+  async findJobSettingInfo(
     @AitCtxUser() user: SysUser,
     @Args('request', { type: () => UserJobSettingRequest })
     request: UserJobSettingRequest
@@ -38,6 +37,42 @@ export class UserOnboardingInfoResolver extends AitBaseService {
     return this.find(request, user);
   }
 
+  @Query(() => UserOnboardingInfoResponse, { name: 'findSkillJobSetting' })
+  async findSkillJobSetting(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => UserJobSettingRequest })
+    request: UserJobSettingRequest
+  ) {
+    const lang = request.lang;
+    const user_id = request.condition?.user_id;
+    
+    const aqlQuery = `
+    FOR v IN biz_job_setting
+    filter v.user_id == "${user_id}"
+    RETURN v.job_setting_skills
+    `;
+   const result =  await this.query(aqlQuery);
+   const jobSettingSkills = [];
+    for (const skill of result.data[0])
+    {
+      const skillName = await this.getNameOfSkill(skill.skill, lang);
+      const skills = {
+        _key:skill.skill,
+        value:skillName.data[0]
+      }
+      jobSettingSkills.push({
+        skills,
+        level: skill.level
+      })
+    }
+ 
+    const response = new UserOnboardingInfoResponse(
+      200,
+      jobSettingSkills as UserOnboardingInfoEntity[],
+      ''
+    );
+    return response;
+  }
   
 
   @Query(() => UserOnboardingInfoResponse, { name: 'findSkillOnboarding' })
@@ -46,7 +81,7 @@ export class UserOnboardingInfoResolver extends AitBaseService {
     @Args('request', { type: () => UserOnboardingInfoRequest })
     request: UserOnboardingInfoRequest
   ) {
-    console.log(request)
+    
     return this.find(request, user);
   }
 
@@ -56,14 +91,32 @@ export class UserOnboardingInfoResolver extends AitBaseService {
     @Args('request', { type: () => UserOnboardingInfoRequest })
     request: UserOnboardingInfoRequest
   ) {
-      const parentKey = request.condition?._key as string;
-      const aqlQuery = `
+    const parentKey = request.condition?._key as string;
+    const aqlQuery = `
           FOR v IN sys_master_data
           FILTER  v._key == ${parentKey}
           RETURN v.code 
       `;
-      const result = await this.query(aqlQuery);
-      return await this.query(aqlQuery);
+    const result = await this.query(aqlQuery);
+    return await this.query(aqlQuery);
+  }
+
+  async getJobSettingSkill(user_id: string) {
+    const aqlQuery = `
+     FOR v IN biz_job_setting
+     filter v.user_id == "${user_id}"
+     RETURN v.job_setting_skills
+     `;
+    return await this.query(aqlQuery);
+  }
+
+  async getNameOfSkill(_key: string, lang: string) {
+    const aqlQuery = `
+     FOR v IN m_skill
+     filter v._key == "${_key}"
+     RETURN v.name.${lang}
+     `;
+    return await this.query(aqlQuery);
   }
 
   @Mutation(() => UserOnboardingInfoResponse, {
@@ -99,7 +152,6 @@ export class UserOnboardingInfoResolver extends AitBaseService {
     return this.remove(request, user);
   }
 
-
   @Mutation(() => UserSkillResponse, { name: 'removeUserSkillByKey' })
   async removeUserSkillByKey(
     @AitCtxUser() user: SysUser,
@@ -115,8 +167,6 @@ export class UserOnboardingInfoResolver extends AitBaseService {
         UPDATE data WITH { del_flag: true } IN user_skill
         RETURN data
       `;
-      console.log(aqlQuery);
-      
       return await this.query(aqlQuery);
     } else {
       return new UserSkillResponse(RESULT_STATUS.ERROR, [], 'error');

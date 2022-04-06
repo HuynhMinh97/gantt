@@ -295,11 +295,12 @@ export class UserOnboardingComponent
         this.router.navigate([`user-onboarding-detail/${this.user_key}`]);
       } else {
         this.callLoadingApp();
-        await this.userOnbService.findJobSetting(this.user_key).then((r) => {
+        await this.userOnbService.findJobSetting(this.user_key).then(async (r) => {
           if (r.status === RESULT_STATUS.OK) {
             this.jobSettingData = r.data[0];
             this.userJobSettingInfo.patchValue({ ...this.jobSettingData });
             this.userJobSettingInfoClone = this.userJobSettingInfo.value;
+            await this.findSkillJocSetting();
           } else {
             this.callLoadingApp();
           }
@@ -317,6 +318,7 @@ export class UserOnboardingComponent
                 this.user_id_profile = this.dataCountry.user_id;
                 this._key = this.dataCountry._key;
                 isUserExist = true;
+                await this.findSkills();
               }
               this.cancelLoadingApp();
               !isUserExist && this.router.navigate([`/404`]);
@@ -324,7 +326,7 @@ export class UserOnboardingComponent
               this.callLoadingApp();
             }
           });
-        await this.findSkills();
+        
       }
     }
     await this.getGenderList();
@@ -430,7 +432,11 @@ export class UserOnboardingComponent
     await this.userOnbService.findSkillsByFrom(from).then(async (res) => {
       const listSkills = [];
       for (const skill of res.data) {
-        listSkills.push(skill?.skills);
+        listSkills.push({
+          _key: skill?.skills?._key,
+          value: skill?.skills?.value,
+          level: skill?.level,
+        });
       }
 
       this.userOnboardingInfo.controls['current_job_skills'].setValue([
@@ -438,6 +444,26 @@ export class UserOnboardingComponent
       ]);
       this.companySkills = listSkills;
       this.userOnboardingInfoClone = this.userOnboardingInfo.value;
+      this.cancelLoadingApp();
+    });
+  }
+
+  async findSkillJocSetting() {
+    const from = this.user_id;
+    await this.userOnbService.findSkillJobSetting(from).then(async (res) => {
+      const listSkills = [];
+      for (const skill of res.data) {
+        listSkills.push({
+          _key: skill?.skills?._key,
+          value: skill?.skills?.value,
+          level: skill?.level,
+        });
+      }
+
+      this.userJobSettingInfo.controls['job_setting_skills'].setValue([
+        ...listSkills,
+      ]);
+      this.userJobSettingInfoClone = this.userOnboardingInfo.value;
       this.cancelLoadingApp();
     });
   }
@@ -529,12 +555,15 @@ export class UserOnboardingComponent
     this.availableTimeErrorMessage.push(availableTimeErr);
   }
   async saveDataJobSetting() {
+    debugger
     const saveData = this.userJobSettingInfo.value;
     const skills = saveData.job_setting_skills;
     const arrSkills = [];
     for (const skill of skills) {
-      const skill_key = await this.userOnbService.findSkillsByCode(skill._key);
-      arrSkills.push(skill_key.data[0]._key);
+      arrSkills.push({
+        skill:skill._key,
+        level:skill.level
+      });
     }
 
     saveData.job_setting_skills = arrSkills;
@@ -633,20 +662,15 @@ export class UserOnboardingComponent
   }
 
   async saveJobSetting() {
+    debugger
     const jobSettingInfo = await this.saveDataJobSetting();
     await this.userOnbService.saveJobSetting(jobSettingInfo);
   }
 
   async saveDataUserSkill() {
     this.user_skill._from = 'sys_user/' + this.authService.getUserID();
-    const skills = [];
-    for (const item of this.current_job_skills) {
-      await this.userOnbService.findSkillsByCode(item._key).then((res) => {
-        if (res) {
-          skills.push(res.data[0]._key);
-        }
-      });
-    }
+    const skills = this.current_job_skills;
+    
     if (this.mode == 'EDIT') {
       const _fromSkill = [{ _from: 'sys_user/' + this.user_id }];
       await this.userOnbService.removeBizUserSkill(_fromSkill);
@@ -654,7 +678,7 @@ export class UserOnboardingComponent
     for (const skill of skills) {
       this.sort_no += 1;
       this.user_skill.sort_no = this.sort_no;
-      this.user_skill._to = 'm_skill/' + skill;
+      this.user_skill._to = 'm_skill/' + skill._key;
       this.user_skill.level = skill.level;
       await this.userOnbService.saveUserSkills([this.user_skill]);
     }

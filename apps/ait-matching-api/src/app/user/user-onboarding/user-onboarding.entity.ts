@@ -1,4 +1,4 @@
-import { Field, Float, ObjectType } from '@nestjs/graphql';
+import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
 import { BaseEntity, KeyValueEntity } from '@ait/core';
 
 
@@ -54,6 +54,9 @@ export class UserOnboardingInfoEntity extends BaseEntity {
     @Field(() => String, { nullable: true })
     floor_building?: string;
 
+    @Field(() => Int, { nullable: true })
+    level?: number;
+
     @Field(() => KeyValueEntity, { nullable: true })
     company_working?: KeyValueEntity;
 
@@ -62,6 +65,9 @@ export class UserOnboardingInfoEntity extends BaseEntity {
 
     @Field(() => [KeyValueEntity], { nullable: true })
     industry?: KeyValueEntity[];
+
+    @Field(() => KeyValueEntity, { nullable: true })
+    skills?: KeyValueEntity;
 
     @Field(() => [KeyValueEntity], { nullable: true })
     job_setting_skills?: KeyValueEntity[];
