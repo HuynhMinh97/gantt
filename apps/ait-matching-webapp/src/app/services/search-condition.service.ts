@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class SearchConditionService extends AitBaseService {
-  collection = 'search_condition';
+  collection = 'save_recommend_user_query';
   specialFields = ['skills', 'title', 'location', 'industry', 'level'];
   returnFields = {
     _key: true,

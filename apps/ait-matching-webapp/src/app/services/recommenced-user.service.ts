@@ -43,14 +43,8 @@ export class RecommencedUserService extends AitBaseService {
     return TEST2;
   }
 
-  // async getDetailMatching(company_key: string, list_ids: string[]) {
-  //   return DATA;
-  //   return await this.post(this.urldetail, {
-  //     condition: { company_key, list_ids },
-  //   }).toPromise();
-  // }
 
-  async getDetailMatching() {
+  async getDetailMatching(onlySaved = false, start = 0, end = 8) {
     const condition = {};
     const returnFields = {
       _key: true,
@@ -61,16 +55,24 @@ export class RecommencedUserService extends AitBaseService {
         _key: true,
         value: true
       },
-      skills: true
+      skills: {
+        name: true,
+        level: true
+      },
+      is_saved: true
     };
 
     condition[KEYS.COLLECTION] = COLLECTIONS.USER_PROFILE;
-    condition[KEYS.CONDITION] = {};
+    condition[KEYS.CONDITION] = { start, end };
     condition[KEYS.CONDITION]['company_working'] = {
       attribute: 'company_working',
       ref_collection: 'm_company',
       ref_attribute: 'code'
     };
+    if (onlySaved) {
+      condition[KEYS.CONDITION]['is_saved'] = true;
+    }
+    
     return await this.query('findProfileByCondition', condition, returnFields);
   }
 
