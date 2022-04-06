@@ -38,6 +38,20 @@ export class SaveRecommendUserResolver extends AitBaseService {
     return this.query(aqlStr);
   }
 
+  @Query(() => SkillForUserResponse, { name: 'findRecommendUser' })
+  findRecommendUser(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => SkillForUserRequest })
+    request: SkillForUserRequest
+  ) {
+    const id = request.condition[KEYS.USER_ID];
+    const aqlStr = `
+      FOR v,e, p IN 1..1 OUTBOUND "sys_user/${id}" save_recommend_user
+      RETURN v
+      `;
+    return this.query(aqlStr);
+  }
+
   @Mutation(() => SaveRecommendUserResponse, { name: 'saveRecommendUser' })
   saveRecommendUser(
     @AitCtxUser() user: SysUser,
@@ -47,11 +61,11 @@ export class SaveRecommendUserResolver extends AitBaseService {
     this.initialize(request, user);
     const dataSave = {};
     this.setCommonInsert(dataSave);
-    dataSave['_from'] = 'sys-user/' + request.data[0]['_from'];
-    dataSave['_to'] = 'sys-user/' + request.data[0]['_to'];
+    dataSave['_from'] = 'sys_user/' + request.data[0]['_from'];
+    dataSave['_to'] = 'sys_user/' + request.data[0]['_to'];
 
     const aqlStr = `FOR data IN ${JSON.stringify([dataSave] || [])}
-    INSERT data INTO save_recommenced_user RETURN data`;
+    INSERT data INTO save_recommend_user RETURN data`;
     return this.query(aqlStr);
   }
 
@@ -63,6 +77,17 @@ export class SaveRecommendUserResolver extends AitBaseService {
     @Args('request', { type: () => SaveRecommendUserRequest })
     request: SaveRecommendUserRequest
   ) {
-    return this.remove(request, user);
+    const _from = request.data[0]._from;
+    const _to = request.data[0]._to;
+    
+    const aqlStr = `
+    FOR u IN save_recommend_user
+      FILTER u._from == "${_from}"
+      AND u._to == "${_to}"
+      REMOVE { _key: u._key } IN save_recommend_user
+      LET removed = OLD
+    RETURN removed
+    `;
+    return this.query(aqlStr);
   }
 }

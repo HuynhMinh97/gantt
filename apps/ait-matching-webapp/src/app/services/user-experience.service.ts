@@ -180,5 +180,5 @@ async findUserExperienceByUserId(user_id?: string) {
       options: { sort_by: { value: 'start_date_to', order_by: 'DESC' } }
     }, 
     returnFields);
-}
+  }
 }
