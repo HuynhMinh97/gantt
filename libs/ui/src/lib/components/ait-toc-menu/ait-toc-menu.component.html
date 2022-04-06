@@ -10,20 +10,22 @@
         (click)="toggle()"
       ></nb-icon>
     </div>
-    <div
-      class="content"
-      [ngStyle]="isOpen ? { display: 'block' } : { display: 'none' }"
-    >
+    <div class="envelop_content">
       <div
-        class="item"
-        *ngFor="let it of items"
-        (click)="goToElemet(it.title)"
-        tabindex="{{ tabIndex + index }}"
+        class="content"
+        [ngStyle]="isOpen ? { display: 'block' } : { display: 'none' }"
       >
-        <nb-icon icon="hash-outline" class="iconHash"></nb-icon>
-        <p>
-          {{ it.title }}
-        </p>
+        <div
+          class="item"
+          *ngFor="let it of items"
+          (click)="goToElemet(it.title)"
+          tabindex="{{ tabIndex + index }}"
+        >
+          <nb-icon icon="hash-outline" class="iconHash"></nb-icon>
+          <p>
+            {{ it.title }}
+          </p>
+        </div>
       </div>
     </div>
   </div>
