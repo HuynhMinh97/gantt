@@ -134,7 +134,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     });
     this.setModulePage({
       module: 'user',
-      page: 'user_profiles',
+      page: 'user-profile',
       type: PAGE_TYPE.NEW,
     });
     this.profileId = this.activeRouter.snapshot.paramMap.get('id');

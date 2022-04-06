@@ -49,7 +49,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
     super(store, authService, apollo, null, env, layoutScrollService, toastrService,null,router);
     this.setModulePage({
       module: 'user',
-      page: 'user_skills',
+      page: 'user-skills-reorder',
     });
 
   }

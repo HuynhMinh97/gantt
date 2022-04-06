@@ -13,25 +13,14 @@ export class UserProfileService extends AitBaseService {
       user_id: user_id,
       del_flag: false,
     };
-    const specialFields = ['country_region', 'province_city'];
-
-    specialFields.forEach((item) => {
-      condition[item] = {
-        attribute: item,
-        ref_collection: 'sys_master_data',
-        ref_attribute: 'code',
-      };
-    });
-    condition['title'] = {
-      attribute: 'title',
-      ref_collection: 'm_title',
-      ref_attribute: 'code',
+   
+    condition['gender'] = {
+      attribute: 'gender',
+      ref_collection: 'sys_master_data',
+      ref_attribute: '_key',
+      get_by: '_key',
     };
-    condition['company_working'] = {
-      attribute: 'company_working',
-      ref_collection: 'm_company',
-      ref_attribute: 'code',
-    };
+    
     return await this.query(
       'findProfile',
       { collection: 'user_profile', condition },
@@ -42,28 +31,13 @@ export class UserProfileService extends AitBaseService {
         phone_number: true,
         romaji: true,
         katakana: true,
-        bod: true,
+        dob: true,
         about: true,
-        gender: true,
-        // avatar_url:true,
-        // background_url: true,
-
-        // title:{
-        //   _key: true,
-        //   value: true,
-        // },
-        // company_working:{
-        //   _key: true,
-        //   value: true,
-        // },
-        // province_city:{
-        //   _key: true,
-        //   value: true,
-        // },
-        // country_region:{
-        //   _key: true,
-        //   value: true,
-        // },
+        gender: {
+          _key: true,
+          value: true,
+        }
+        
       }
     );
   }
