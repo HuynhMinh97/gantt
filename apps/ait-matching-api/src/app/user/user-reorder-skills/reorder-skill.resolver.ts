@@ -32,7 +32,7 @@ export class ReorderSkillResolver extends AitBaseService {
       FILTER e.del_flag != true
       let category = (
         FOR t IN sys_master_data
-        FILTER data.category == t.code && t.class == "SKILL_CATEGORY"
+        FILTER data.category == t._key && t.class == "SKILL_CATEGORY"
         RETURN {_key:t.code, value: t.name.${lang} ? t.name.${lang} : t.name }
       )
       RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name, category:category[0]})

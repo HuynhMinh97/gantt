@@ -49,7 +49,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
     super(store, authService, apollo, null, env, layoutScrollService, toastrService,null,router);
     this.setModulePage({
       module: 'user',
-      page: 'user_skills',
+      page: 'user-skills-reorder',
     });
 
   }
@@ -179,7 +179,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
             break;
           }
         }
-        // kiem tra category co ton tai ko
+        // kiem tra ten category da co trong dc chua
         for (let i = 0; i < this.reorderSkills.length; i++) {
           if (skills.categoryCode == this.reorderSkills[i].code) {
             isCategory = true;
@@ -223,7 +223,7 @@ export class UserReorderSkillsComponent extends AitBaseComponent implements OnIn
     }
     this.cancelLoadingApp();
     this.reorderSkills.forEach((element,index) => {
-      if(element.code == 'OTHERS'){
+      if(element.code == 'OTHERS' || !element.code ){
         this.reorderSkills.push(element);
         this.reorderSkills.splice(index, 1 );
       }

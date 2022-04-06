@@ -33,7 +33,6 @@ import {
   AitConfirmDialogComponent,
   AitEnvironmentService,
   AitMasterDataService,
-  AitNavigationService,
   AitTranslationService,
   AppState,
   getUserSetting,
@@ -48,8 +47,6 @@ import {
   RESULT_STATUS,
 } from '@ait/shared';
 import { KeyValueCheckedDto } from './interface';
-import { UserProfileService } from '../../../services/user-profile.service';
-import { UserSkillsService } from '../../../services/user-skills.service';
 @Component({
   selector: 'ait-user-onboarding',
   templateUrl: './user-onboarding.component.html',
@@ -78,8 +75,12 @@ export class UserOnboardingComponent
   dateErrorObject = {};
   availableTimeErrorMessage = [];
   companySkills = [];
+  jobSettingSkills = [];
   dateFormat = '';
   sort_no = 0;
+  maxSkillJobSetting = 10;
+  maxSkillCurrentJob = 50;
+
   isReset = false;
   isLangJP = false;
   isSubmit = false;
@@ -87,7 +88,7 @@ export class UserOnboardingComponent
   isChanged = false;
   isDisplay = false;
   isExpan = false;
-  available_time_error=false;
+  available_time_error = false;
   resetJobSettingInfo = {
     job_setting_title: false,
     industry: false,
@@ -102,7 +103,7 @@ export class UserOnboardingComponent
     last_name: false,
     katakana: false,
     romaji: false,
-    bod: false,
+    dob: false,
     phone_number: false,
     about: false,
     country_region: false,
@@ -125,7 +126,7 @@ export class UserOnboardingComponent
     katakana: false,
     romaji: false,
     gender: false,
-    bod: false,
+    dob: false,
     phone_number: false,
     about: false,
     country_region: false,
@@ -151,7 +152,6 @@ export class UserOnboardingComponent
   user_skill = {
     _from: '',
     _to: '',
-    relationship: '',
     sort_no: 0,
   };
   JobSettingData: any;
@@ -179,10 +179,7 @@ export class UserOnboardingComponent
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
     private dialogService: NbDialogService,
-    private navigation: AitNavigationService,
     private userOnbService: UserOnboardingService,
-    private userSkillsService: UserSkillsService,
-    private userProfileService: UserProfileService,
     private translateService: AitTranslationService,
     private masterDataService: AitMasterDataService,
     @Optional() private nbDialogRef: NbDialogRef<UserOnboardingComponent>,
@@ -213,12 +210,11 @@ export class UserOnboardingComponent
 
     this.setModulePage({
       module: 'user',
-      page: 'user_onboarding',
+      page: 'user-onboarding',
     });
     this.userJobSettingInfo = this.formBuilder.group({
       job_setting_title: new FormControl(null),
       industry: new FormControl(null, [
-        Validators.required,
         Validators.maxLength(50),
       ]),
       location: new FormControl(null),
@@ -238,15 +234,14 @@ export class UserOnboardingComponent
         Validators.required,
         Validators.maxLength(200),
       ]),
-      katakana: new FormControl(null, [Validators.maxLength(200)]),
-      romaji: new FormControl(null, [Validators.maxLength(200)]),
+      katakana: new FormControl(null),
+      romaji: new FormControl(null),
       gender: new FormControl(null, [Validators.required]),
-      bod: new FormControl(null, [Validators.required]),
-      phone_number: new FormControl(null, [Validators.required]),
+      dob: new FormControl(null),
+      phone_number: new FormControl(null),
       about: new FormControl(null),
       country_region: new FormControl(null, [Validators.required]),
       postcode: new FormControl(null, [
-        Validators.required,
         Validators.maxLength(20),
       ]),
       province_city: new FormControl(null, [Validators.required]),
@@ -257,11 +252,11 @@ export class UserOnboardingComponent
         Validators.maxLength(500),
       ]),
       floor_building: new FormControl(null, [Validators.maxLength(500)]),
-      company_working: new FormControl(null),
-      current_job_title: new FormControl(null),
+      company_working: new FormControl(null,Validators.required,),
+      current_job_title: new FormControl(null,Validators.required,),
       industry_working: new FormControl(null, [Validators.required]),
-      current_job_level: new FormControl(null),
-      current_job_skills: new FormControl(null, Validators.maxLength(50)),
+      current_job_level: new FormControl(null,Validators.required,),
+      current_job_skills: new FormControl(null,[Validators.required, Validators.maxLength(50)]),
       _key: new FormControl(null),
     });
 
@@ -294,19 +289,17 @@ export class UserOnboardingComponent
       this.mode = MODE.EDIT;
     }
     if (this.user_key) {
-      if (this.user_key !== this.user_id_profile){
-        this.callLoadingApp()
+      if (this.user_key !== this.user_id_profile) {
+        this.callLoadingApp();
         this.router.navigate([`user-onboarding-detail/${this.user_key}`]);
-      }
-      else {
+      } else {
         this.callLoadingApp();
         await this.userOnbService.findJobSetting(this.user_key).then((r) => {
           if (r.status === RESULT_STATUS.OK) {
             this.jobSettingData = r.data[0];
             this.userJobSettingInfo.patchValue({ ...this.jobSettingData });
             this.userJobSettingInfoClone = this.userJobSettingInfo.value;
-          }
-          else {
+          } else {
             this.callLoadingApp();
           }
         });
@@ -319,14 +312,14 @@ export class UserOnboardingComponent
               if (r.data.length > 0 && !this.dataCountry.del_flag) {
                 this.userOnboardingInfo.patchValue({ ...this.dataCountry });
                 this.userOnboardingInfoClone = this.userOnboardingInfo.value;
+
                 this.user_id_profile = this.dataCountry.user_id;
                 this._key = this.dataCountry._key;
                 isUserExist = true;
               }
               this.cancelLoadingApp();
               !isUserExist && this.router.navigate([`/404`]);
-            }
-            else {
+            } else {
               this.callLoadingApp();
             }
           });
@@ -339,7 +332,6 @@ export class UserOnboardingComponent
     }, 500);
     this.setDefaultGenderValue();
 
-    // Run when form value change
     await this.userOnboardingInfo.valueChanges.subscribe((data) => {
       this.checkAllowSave();
     });
@@ -357,6 +349,7 @@ export class UserOnboardingComponent
         this.userOnbInfo[index] = true;
       }
     }
+   
   }
 
   toggleExpan = () => {
@@ -403,7 +396,7 @@ export class UserOnboardingComponent
     if (genderObj) {
       this.genderList = this.genderList.map((gender) =>
         Object.assign({}, gender, {
-          checked: gender.code === genderObj._key ? true : false,
+          checked: gender._key === genderObj._key ? true : false,
         })
       );
       const gender = this.genderList.find((gender) => gender.checked === true);
@@ -413,7 +406,7 @@ export class UserOnboardingComponent
       });
       const defaultGender = this.genderList[2];
       this.defaultGender = {
-        _key: defaultGender.code,
+        _key: defaultGender._key,
         value: defaultGender.name,
       };
     } else {
@@ -423,7 +416,7 @@ export class UserOnboardingComponent
 
       const gender = genderList[2];
 
-      this.defaultGender = { _key: gender.code, value: gender.name };
+      this.defaultGender = { _key: gender._key, value: gender.name };
       this.userOnboardingInfo.controls['gender'].setValue({
         ...this.defaultGender,
       });
@@ -433,17 +426,21 @@ export class UserOnboardingComponent
   // get skill current job
   async findSkills() {
     const from = 'sys_user/' + this.user_id;
-    await this.userOnbService.findSkillsByFrom(from)
-    .then(async(res) => {
+    await this.userOnbService.findSkillsByFrom(from).then(async (res) => {
       const listSkills = [];
       for (const skill of res.data) {
         listSkills.push(skill?.skills);
-      }    
-        this.userOnboardingInfo.controls['current_job_skills'].setValue([...listSkills]);
-        this.userOnboardingInfoClone = this.userOnboardingInfo.value; 
-    });    
+      }
+
+      this.userOnboardingInfo.controls['current_job_skills'].setValue([
+        ...listSkills,
+      ]);
+      this.companySkills = listSkills;
+      this.userOnboardingInfoClone = this.userOnboardingInfo.value;
+      this.cancelLoadingApp();
+    });
   }
-  
+
   resetForm() {
     if (this.mode === MODE.NEW) {
       for (const index in this.resetUserInfo) {
@@ -502,10 +499,11 @@ export class UserOnboardingComponent
     }
     this.showToastr('', this.getMsg('I0007'));
   }
-  
+
   checkDateError() {
-    const name = 'available_time_error' ;
-    const valueFrom = this.userJobSettingInfo.controls['available_time_from'].value;
+    const name = 'available_time_error';
+    const valueFrom = this.userJobSettingInfo.controls['available_time_from']
+      .value;
     const valueTo = this.userJobSettingInfo.controls['available_time_to'].value;
 
     if (!valueFrom || !valueTo) {
@@ -522,36 +520,72 @@ export class UserOnboardingComponent
     const msg = this.getMsg('E0004');
     const availableTimeErr = (msg || '')
       .replace('{0}', this.translateService.translate('available_time_to'))
-      .replace('{1}', this.translateService.translate('available_time_to_from'));
+      .replace(
+        '{1}',
+        this.translateService.translate('available_time_to_from')
+      );
     this.availableTimeErrorMessage = [];
     this.availableTimeErrorMessage.push(availableTimeErr);
   }
-  saveDataJobSetting() {
+  async saveDataJobSetting() {
     const saveData = this.userJobSettingInfo.value;
     const skills = saveData.job_setting_skills;
     const arrSkills = [];
-    skills.forEach((sk) => {
-      const skill = sk._key;
-      arrSkills.push(skill);
-    });
+    for (const skill of skills) {
+      const skill_key = await this.userOnbService.findSkillsByCode(skill._key);
+      arrSkills.push(skill_key.data[0]._key);
+    }
+
     saveData.job_setting_skills = arrSkills;
-    saveData.location = saveData.location ? saveData.location._key : null;
-    saveData.job_setting_title = saveData.job_setting_title
-      ? saveData.job_setting_title._key
-      : null;
+    const locations = saveData.location;
+    if (locations) {
+      const arrLocations = [];
+      locations.forEach((lo) => {
+        const loca = lo._key;
+        arrLocations.push(loca);
+      });
+      saveData.location = arrLocations;
+    } else {
+      saveData.location = [];
+    }
+    const titles = saveData.job_setting_title;
+    if (titles) {
+      const arrTitle = [];
+      titles.forEach((tit) => {
+        const title = tit._key;
+        arrTitle.push(title);
+      });
+      saveData.job_setting_title = arrTitle;
+    } else {
+      saveData.job_setting_title = [];
+    }
     const industrys = saveData.industry;
-    const arrIndustrys = [];
-    industrys.forEach((ind) => {
-      const indus = ind._key;
-      arrIndustrys.push(indus);
-    });
-    saveData.industry = arrIndustrys;
+    if (industrys) {
+      const arrIndustrys = [];
+      industrys.forEach((ind) => {
+        const indus = ind._key;
+        arrIndustrys.push(indus);
+      });
+      saveData.industry = arrIndustrys;
+    } else {
+      saveData.industry = [];
+    }
+
     saveData.job_setting_skills = saveData.job_setting_skills
       ? saveData.job_setting_skills
       : null;
-    saveData.job_setting_level = saveData.job_setting_level
-      ? saveData.job_setting_level._key
-      : null;
+    const levels = saveData.job_setting_level;
+    if (levels) {
+      const arrLevels = [];
+      levels.forEach((lv) => {
+        const level = lv._key;
+        arrLevels.push(level);
+      });
+      saveData.job_setting_level = arrLevels;
+    } else {
+      saveData.job_setting_level = [];
+    }
+
     saveData.available_time_to = saveData.available_time_to
       ? saveData.available_time_to
       : null;
@@ -585,10 +619,12 @@ export class UserOnboardingComponent
     saveData.company_working = saveData.company_working
       ? saveData.company_working?._key
       : null;
+
     this.current_job_skills = saveData.current_job_skills;
     delete saveData.current_job_skills;
     if (this.mode === MODE.NEW) {
       saveData['user_id'] = this.user_id;
+      saveData['top_skills'] = [];
     } else {
       saveData['user_id'] = this.authService.getUserID();
     }
@@ -596,56 +632,66 @@ export class UserOnboardingComponent
   }
 
   async saveJobSetting() {
-    await this.userOnbService.saveJobSetting(this.saveDataJobSetting());
+    const jobSettingInfo = await this.saveDataJobSetting();
+    await this.userOnbService.saveJobSetting(jobSettingInfo);
   }
 
   async saveDataUserSkill() {
-    
-      this.user_skill._from = 'sys_user/' + this.authService.getUserID();
-      this.user_skill.relationship = 'biz_user_skill';
-      const skills = [];
-      for (const item of this.current_job_skills) {
-        await this.userOnbService.findSkillsByCode(item._key).then((res) => {
+    this.user_skill._from = 'sys_user/' + this.authService.getUserID();
+    const skills = [];
+    for (const item of this.current_job_skills) {
+      await this.userOnbService.findSkillsByCode(item._key).then((res) => {
+        if (res) {
           skills.push(res.data[0]._key);
-        });
-      }
-      skills.forEach(async (skill) => {
-        this.sort_no += 1;
-        this.user_skill.sort_no = this.sort_no;
-        this.user_skill._to = 'm_skill/' + skill;
-        await this.userOnbService.saveUserSkills([this.user_skill]);
+        }
       });
-    
+    }
+    if (this.mode == 'EDIT') {
+      const _fromSkill = [{ _from: 'sys_user/' + this.user_id }];
+      await this.userOnbService.removeBizUserSkill(_fromSkill);
+    }
+    for (const skill of skills) {
+      this.sort_no += 1;
+      this.user_skill.sort_no = this.sort_no;
+      this.user_skill._to = 'm_skill/' + skill;
+      await this.userOnbService.saveUserSkills([this.user_skill]);
+    }
+    // skills.forEach(async (skill) => {
+     
+    // });
+    this.cancelLoadingApp();
   }
 
-  save() {
+  async save() {
     this.isSubmit = true;
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
-   
-    if (this.userOnboardingInfo.valid && this.userJobSettingInfo.valid && !this.available_time_error) {
+
+    if (
+      (this.userOnboardingInfo.valid ) &&
+      (this.userJobSettingInfo.valid ) &&
+      !this.available_time_error
+    ) {
       this.callLoadingApp();
-      this.userOnbService
-        .save(this.saveDataUserProfile())
-        .then((res) => {
-          if (res?.status === RESULT_STATUS.OK) {
-            this.saveDataUserSkill();
-            this.saveJobSetting();
-            const message =
-              this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
-            this.showToastr('', message);
-            this.cancelLoadingApp();
-            if (this.user_key) {
-              this.router.navigate([`user-profile`]);
-            } else {
-              this.router.navigate([`user-job-alert`]);
-            }
+      await this.userOnbService.save(this.saveDataUserProfile()).then((res) => {
+        if (res?.status === RESULT_STATUS.OK) {
+          this.saveDataUserSkill();
+          this.saveJobSetting();
+          const message =
+            this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
+          this.showToastr('', message);
+          this.cancelLoadingApp();
+          if (this.user_key) {
+            this.router.navigate([`user-profile`]);
           } else {
-            this.cancelLoadingApp();
-            this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+            this.router.navigate([`user-job-alert`]);
           }
-        });
+        } else {
+          this.cancelLoadingApp();
+          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+        }
+      });
     } else {
       this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
       this.scrollIntoError();
@@ -738,7 +784,7 @@ export class UserOnboardingComponent
     if (isObjectFull(value)) {
       this.userOnboardingInfo.controls['gender'].markAsDirty();
       this.userOnboardingInfo.controls['gender'].setValue({
-        _key: value.code,
+        _key: value._key,
         value: value.name,
       });
     } else {
@@ -750,6 +796,23 @@ export class UserOnboardingComponent
     if (isObjectFull(value)) {
       this.userJobSettingInfo.controls[target].markAsDirty();
       this.userJobSettingInfo.controls[target].setValue(value?.value[0]);
+    }
+  }
+
+  takeMasterValueJobSettings(
+    value: KeyValueDto[],
+    group: string,
+    form: string
+  ): void {
+    if (isArrayFull(value)) {
+      const data = [];
+      value.forEach((file) => {
+        data.push(file);
+      });
+      this.userJobSettingInfo.markAsDirty();
+      this[group].controls[form].setValue(data);
+    } else {
+      this[group].controls[form].setValue(null);
     }
   }
 
@@ -769,7 +832,7 @@ export class UserOnboardingComponent
     }
   }
 
-  takeDatePickerValue(value: number, group: string, form: string, origin= '') {
+  takeDatePickerValue(value: number, group: string, form: string, origin = '') {
     if (value) {
       const data = value as number;
       value = new Date(data).setHours(0, 0, 0, 0);
@@ -797,6 +860,46 @@ export class UserOnboardingComponent
       this.userOnboardingInfo.patchValue(item);
     } else {
       this.userOnboardingInfo.patchValue(null);
+    }
+  }
+
+  takeMasterValueSkillJobSetting(val: any, form: string): void {
+    if (val.value.length > 0) {
+      if (isObjectFull(val)) {
+        const data = [];
+        val.value.forEach((item) => {
+          data.push(item);
+        });
+        this.userJobSettingInfo.controls[form].markAsDirty();
+        this.userJobSettingInfo.controls[form].setValue(data);
+        this.isChanged = true;
+      } else {
+        const msg = this.getMsg('E0022').replace('{0}');
+        this.showToastr('', msg, KEYS.WARNING);
+      }
+    } else {
+      this.userJobSettingInfo.controls[form].markAsDirty();
+      this.userJobSettingInfo.controls[form].setValue(null);
+    }
+  }
+
+  takeMasterValueSkillCurrentJob(val: any, form: string): void {
+    if (val.value.length > 0) {
+      if (isObjectFull(val)) {
+        const data = [];
+        val.value.forEach((item) => {
+          data.push(item);
+        });
+        this.userOnboardingInfo.controls[form].markAsDirty();
+        this.userOnboardingInfo.controls[form].setValue(data);
+        this.isChanged = true;
+      } else {
+        const msg = this.getMsg('E0022').replace('{0}');
+        this.showToastr('', msg, KEYS.WARNING);
+      }
+    } else {
+      this.userOnboardingInfo.controls[form].markAsDirty();
+      this.userOnboardingInfo.controls[form].setValue(null);
     }
   }
 

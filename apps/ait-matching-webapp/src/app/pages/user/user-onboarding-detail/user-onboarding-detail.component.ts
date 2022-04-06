@@ -70,7 +70,7 @@ export class UserOnboardingDetailComponent
 
     this.setModulePage({
       module: 'user',
-      page: 'user_onboarding',
+      page: 'user-onboarding',
     });
 
     store.pipe(select(getUserSetting)).subscribe((setting) => {

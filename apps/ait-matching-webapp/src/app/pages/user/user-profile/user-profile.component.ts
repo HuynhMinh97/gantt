@@ -134,7 +134,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     });
     this.setModulePage({
       module: 'user',
-      page: 'user_profiles',
+      page: 'user-profile',
       type: PAGE_TYPE.NEW,
     });
     this.profileId = this.activeRouter.snapshot.paramMap.get('id');
@@ -161,7 +161,8 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       this.getCentificateByUserId();
       this.getCourseByUserId();
       this.getEducationByUserId();
-      this.getLanguageByUserId();     
+      this.getLanguageByUserId();  
+         
     } catch (e) {
       this.cancelLoadingApp();
     }
@@ -274,6 +275,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           }
         });
       }      
+      console.log(this.skillByCategory);
     })  
     this.skillByCategory.forEach((element, index) => {
       if(element.code == 'OTHERS'){

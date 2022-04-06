@@ -25,7 +25,7 @@
         [label]="'basic information' | translate"
         style="display: flex; justify-content: center"
         [styleLabel]="{ 'font-size': '26px','padding' : '15px 0px 7px 0px'}"
-        (onClickButtonHeader)="nextPage('user-onboarding/', user_id)"
+        (onClickButtonHeader)="nextPage('user/', user_id)"
         [actionBtn]="isMyUserProfile ? actionBtnProfile : ''"
         [buttonTitle]="'edit_profile'"
         [disableHeader]="false"
@@ -67,7 +67,7 @@
                 <ait-output-text
                   [label]="'born on date'"
                   [width]="'200px'"
-                  [value]="DataUserProfile?.bod | date: dateFormat"
+                  [value]="DataUserProfile?.dob | date: dateFormat"
                   [id]="'born_on_date'"
                 ></ait-output-text>
               </div>
@@ -118,7 +118,7 @@
                 <ait-output-text
                   [label]="'gender'"
                   [width]="'200px'"
-                  [value]="DataUserProfile?.gender || ''"
+                  [value]="DataUserProfile?.gender?.value || ''"
                   [id]="'gender'"
                 ></ait-output-text>
               </div>
@@ -140,7 +140,7 @@
     <div style="position: relative" class="skills">
       <div class="reorder_skills" style="z-index: 100" *ngIf="isMyUserProfile">
         <ait-button
-          (click)="nextPage('user-reorder-skills')"
+          (click)="nextPage('user-skills-reorder')"
           [iconName]="'menu-outline'"
           [color]="'#fff'"
           [styleText]="{ 'font-size': '10px' }"
@@ -204,7 +204,7 @@
               ></ait-drag-scroll>
             </div>
           </div>
-          <div class="icon_down_up">
+          <div class="icon_down_up" *ngIf="skillByCategory.length > 3">
             <ait-button
               *ngIf="!isShowSkill"
               [iconName]="'arrowhead-down-outline'"
@@ -269,6 +269,7 @@
           <p class="data_empty">{{ 'データがありません。' | translate }}</p>
         </div>
         <div class="container_user" *ngIf="userProject.length > 0">
+
           <div *ngIf="!isShowProject">
             <ul>
             <li class="timeline-event">
@@ -290,6 +291,7 @@
                   </div>
                 </div>
               </div>
+              <div class="devline"></div>
             </li>
             <li
               class="timeline-event"
@@ -300,7 +302,7 @@
                 let index = index;
               "
             > 
-              <div class="devline" *ngIf="!last && index < 2"></div>
+              <div class="devline" *ngIf="last && !first"></div>
               <div class="timeline-block" *ngIf="index < 2">
                 <div class="img-timeline">
                   <img
@@ -487,7 +489,8 @@
             <hr *ngIf="!last" />
           </ul>
           </div>
-          <div class="icon_down_up">
+
+          <div class="icon_down_up" *ngIf="(userProject.length > 1) || (userProject.length == 1 && userProject[0]?.data_project.length >2) ">
             <ait-button
               *ngIf="!isShowProject"
               [iconName]="'arrowhead-down-outline'"
@@ -575,7 +578,7 @@
                     </div>
                   </div>
                 </div>
-                <!-- <div class="devline"></div> -->
+                <div class="devline"></div>
               </li>
               <li
                 class="timeline-event"
@@ -586,7 +589,7 @@
                   let index = index
                 "
               >
-                <div class="devline" *ngIf=" !last && index < 2"></div>
+                <div class="devline" *ngIf="last && !first" ></div>
                 <div class="timeline-block" *ngIf="index < 2">
                   <div class="img-timeline">
                     <img
@@ -829,7 +832,7 @@
               <hr *ngIf="!last" />
             </ul>
           </div>
-          <div class="icon_down_up">
+          <div class="icon_down_up" *ngIf="(userExperience.length > 1) || (userExperience.length == 1 && userExperience[0]?.data_project.length >2) ">
             <ait-button
               *ngIf="!isShowExperience"
               [iconName]="'arrowhead-down-outline'"
@@ -877,7 +880,7 @@
         [label]="'certificates' | translate"
         [styleLabel]="{ 'font-size': '26px','padding' : '15px 0px 7px 0px' }"
         [styleText]="{ 'font-size': '15px' }"
-        (onClickButtonHeader)="nextPage('user-certificate')"
+        (onClickButtonHeader)="nextPage('user-certificate-award')"
         [actionBtn]="isMyUserProfile ? actionBtn : ''"
         [buttonTitle]="'add certificate'"
         [disableHeader]="false"
@@ -952,7 +955,7 @@
                   "
                 >
                   <a
-                    (click)="nextPage('user-certificate', centificate?._key)"
+                    (click)="nextPage('user-certificate-award', centificate?._key)"
                     [id]="'centificate-' + centificate?._key"
                     *ngIf="isMyUserProfile"
                   >
@@ -960,7 +963,7 @@
                   </a>
                   <a
                     (click)="
-                      nextPage('user-certificate-detail', centificate?._key)
+                      nextPage('user-certificate-award-detail', centificate?._key)
                     "
                     [id]="'centificate-' + centificate?._key"
                     *ngIf="!isMyUserProfile"
@@ -1017,7 +1020,7 @@
                   "
                 >
                   <a
-                    (click)="nextPage('user-certificate', centificate?._key)"
+                    (click)="nextPage('user-certificate-award', centificate?._key)"
                     [id]="'centificate-' + centificate?._key"
                     *ngIf="isMyUserProfile"
                   >
@@ -1025,7 +1028,7 @@
                   </a>
                   <a
                     (click)="
-                      nextPage('user-certificate-detail', centificate?._key)
+                      nextPage('user-certificate-award-detail', centificate?._key)
                     "
                     [id]="'centificate-' + centificate?._key"
                     *ngIf="!isMyUserProfile"
@@ -1036,7 +1039,7 @@
               </div>
             </li>
           </ul>
-          <div class="icon_down_up">
+          <div class="icon_down_up" *ngIf="userCentificate.length > 3">
             <ait-button
               *ngIf="!isShowCertificate"
               [iconName]="'arrowhead-down-outline'"
@@ -1236,7 +1239,7 @@
               </div>
             </li>
           </ul>
-          <div class="icon_down_up">
+          <div class="icon_down_up" *ngIf="userCourse.length > 3">
             <ait-button
               *ngIf="!isShowCourse"
               [iconName]="'arrowhead-down-outline'"
@@ -1435,7 +1438,7 @@
               </div>
             </li>
           </ul>
-          <div class="icon_down_up">
+          <div class="icon_down_up"  *ngIf="userEducation.length > 3">
             <ait-button
               *ngIf="!isShowEducation"
               [iconName]="'arrowhead-down-outline'"
@@ -1600,7 +1603,7 @@
               </div>
             </li>
           </ul>
-          <div class="icon_down_up">
+          <div class="icon_down_up" *ngIf="userLanguage.length > 3">
             <ait-button
               *ngIf="!isShowLanguages"
               [iconName]="'arrowhead-down-outline'"

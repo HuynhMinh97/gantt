@@ -262,6 +262,4 @@ export class ProjectListComponent extends AitBaseComponent implements OnInit {
     this.source = new LocalDataSource(dataSearch);
     return dataSearch;
   }
-
- 
 }

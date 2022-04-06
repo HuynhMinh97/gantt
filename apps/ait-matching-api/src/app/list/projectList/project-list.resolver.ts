@@ -37,9 +37,9 @@ export class ProjectListResolver extends AitBaseService {
     const res = await this.find(rq);
     const userList = res.data || [];
     const userArr = [];
-    listData.forEach((data) => {
+    for (const data of listData) {
       const obj = userList.find((u) => u.user_id === data.user_id);
-      const skills = this.getSkills(data, lang);
+      const skills = await this.getSkills(data, lang);
       if (username == null) {
         if (obj) {
           userArr.push({
@@ -69,7 +69,41 @@ export class ProjectListResolver extends AitBaseService {
           });
         }
       }
-    });
+    }
+
+    // listData.forEach((data) => {
+    //   const obj = userList.find((u) => u.user_id === data.user_id);
+    //   const skills = this.getSkills(data, lang);
+    //   if (username == null) {
+    //     if (obj) {
+    //       userArr.push({
+    //         ...data,
+    //         first_name: obj.first_name,
+    //         last_name: obj.last_name,
+    //         skills: skills,
+    //       });
+    //     } else {
+    //       userArr.push({
+    //         ...data,
+    //         first_name: '',
+    //         last_name: '',
+    //         skills: skills,
+    //       });
+    //     }
+    //   } else {
+    //     if (
+    //       obj.first_name.toLocaleLowerCase().includes(username) ||
+    //       obj.last_name.toLocaleLowerCase().includes(username)
+    //     ) {
+    //       userArr.push({
+    //         ...data,
+    //         first_name: obj.first_name,
+    //         last_name: obj.last_name,
+    //         skills: skills,
+    //       });
+    //     }
+    //   }
+    // });
     const response = new ProjectListResponse(
       200,
       userArr as ProjectListEntity[],
@@ -77,7 +111,6 @@ export class ProjectListResolver extends AitBaseService {
     );
     return response;
   }
- 
 
   async getSkills(element: any, lang: string) {
     const _from = 'biz_project/' + element._key;
@@ -87,9 +120,8 @@ export class ProjectListResolver extends AitBaseService {
       `;
 
     const result = await this.query(aqlQuery);
-    if (isArrayFull(result)) {
+    if (result.data.length > 0) {
       return result.data.join(', ');
-    }
-    return null;
+    } else return null;
   }
 }

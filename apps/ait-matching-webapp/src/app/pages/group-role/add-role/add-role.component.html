@@ -1,0 +1,239 @@
+<ait-template-page
+  [pageTitle]="'Add role'"
+  [isTableIncluded]="false"
+  [isExpandIncluded]="false"
+>
+  <div leftArea2>
+    <ng-container>
+      <ait-output-text
+        [label]="'group name'"
+        [id]="'group name'"
+        [width]="'200px'"
+        [value]="name"
+      ></ait-output-text>
+    </ng-container>
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
+      <ait-input-text
+        [id]="'name'"
+        [height]="'40px'"
+        [width]="'400px'"
+        [rows]="1"
+        [label]="'name'"
+        [required]="true"
+        [placeholder]="'please input name'"
+        [isReset]="isReset"
+        [isSubmit]="isSubmit"
+        [length]="4000"
+        (watchValue)="takeInputValue($event, 'name')"
+        [defaultValue]="
+          roleForm?.controls['name'].value
+            ? roleForm?.controls['name'].value
+            : null
+        "
+      ></ait-input-text>
+
+      <div>
+        <ait-error-message
+          *ngIf="isExist"
+          [id]="'errorExit'"
+          [errors]="['name already exists' | translate]"
+        >
+        </ait-error-message>
+      </div>
+    </ng-container>
+
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
+      <ait-autocomplete-master-data
+        [id]="'module'"
+        [width]="'400px'"
+        [label]="'module'"
+        [required]="true"
+        [maxItem]="1"
+        [isReset]="isReset"
+        [isSubmit]="isSubmit"
+        [placeholder]="'please select module'"
+        [collection]="'sys_module'"
+        [disableOutputDefault]="true"
+        (watchValue)="takeMasterValue($event.value, 'module')"
+        [defaultValue]="
+          roleForm?.controls['module']?.value
+            ? [roleForm?.controls['module']?.value]
+            : null
+        "
+        [isSubmit]="isSubmit"
+      >
+      </ait-autocomplete-master-data>
+      <div>
+        <ait-error-message *ngIf="isExist" [id]="'errorExit'" [errors]="['  ']">
+        </ait-error-message>
+      </div>
+    </ng-container>
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
+      <ait-autocomplete-master-data
+        *ngIf="employeeList.length > 0"
+        [id]="'employee_name'"
+        [width]="'400px'"
+        [label]="'employee'"
+        [required]="true"
+        [maxItem]="1000"
+        [isReset]="isReset"
+        [isSubmit]="isSubmit"
+        [placeholder]="'please select employee'"
+        [dataSource]="employeeList"
+        [disableOutputDefault]="true"
+        (watchValue)="takeMasterValues($event.value, 'employee_name')"
+        [isSubmit]="isSubmit"
+        [defaultValue]="roleForm?.controls['employee_name']?.value"
+      >
+      </ait-autocomplete-master-data>
+      <div>
+        <ait-error-message *ngIf="isExist" [id]="'errorExit'" [errors]="['  ']">
+        </ait-error-message>
+      </div>
+    </ng-container>
+  </div>
+
+  <div rightArea2>
+    <ait-space [margin]="'28px'"></ait-space>
+    <ng-container>
+      <ait-input-text
+        [id]="'remark'"
+        [height]="'40px'"
+        [width]="'400px'"
+        [rows]="1"
+        [label]="'Remark'"
+        [required]="false"
+        [placeholder]="'please input remark'"
+        [length]="4000"
+        [isReset]="isReset"
+        [isSubmit]="isSubmit"
+        (watchValue)="takeInputValue($event, 'remark')"
+        [defaultValue]="
+          roleForm?.controls['remark'].value
+            ? roleForm?.controls['remark'].value
+            : null
+        "
+      ></ait-input-text>
+    </ng-container>
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
+      <ait-autocomplete-master-data
+        [id]="'page'"
+        [width]="'400px'"
+        [label]="'page'"
+        [required]="true"
+        [maxItem]="1"
+        [placeholder]="'please select page'"
+        [collection]="'sys_page'"
+        [disableOutputDefault]="true"
+        (watchValue)="takeMasterValue($event.value, 'page')"
+        [defaultValue]=""
+        [isSubmit]="isSubmit"
+        [isReset]="isReset"
+        [defaultValue]="
+          roleForm?.controls['page']?.value
+            ? [roleForm?.controls['page']?.value]
+            : null
+        "
+      >
+      </ait-autocomplete-master-data>
+    </ng-container>
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
+      <ait-autocomplete-master-data
+        [id]="'permission'"
+        [width]="'200px'"
+        [label]="'permission'"
+        [required]="true"
+        [maxItem]="5"
+        [placeholder]="'All'"
+        [class]="'ROLE_PERMISSION'"
+        [collection]="'sys_master_data'"
+        [disableOutputDefault]="true"
+        (watchValue)="takeMasterValues($event.value, 'permission')"
+        [isSubmit]="isSubmit"
+        [isReset]="isReset"
+        [defaultValue]="roleForm?.controls['permission']?.value"
+      >
+      </ait-autocomplete-master-data>
+    </ng-container>
+  </div>
+  <div groupButtonArea>
+    <ait-space [margin]="'15px'"></ait-space>
+    <div class="group_button">
+      <!-- reset -->
+      <ait-button
+        *ngIf="mode === 'EDIT'"
+        [id]="'delete'"
+        [width]="'150px'"
+        [height]="'40px'"
+        [title]="'delete'"
+        [isDefault]="true"
+        (click)="delete()"
+      >
+      </ait-button>
+      <ait-button
+        *ngIf="mode === 'EDIT'"
+        [id]="'coppy'"
+        [width]="'150px'"
+        [height]="'40px'"
+        [title]="'coppy'"
+        [isDefault]="true"
+        (click)="coppy()"
+      >
+      </ait-button>
+      <ait-button
+        [id]="'clear'"
+        [width]="'150px'"
+        [height]="'40px'"
+        [title]="'clear'"
+        [isDefault]="true"
+        (click)="clear()"
+      >
+      </ait-button>
+      <!-- search -->
+      <ait-button
+        [id]="'reset'"
+        [width]="'150px'"
+        [height]="'40px'"
+        [title]="'reset'"
+        [isDefault]="true"
+      >
+      </ait-button>
+      <ait-button
+        *ngIf="mode === 'NEW'"
+        [id]="'save'"
+        [width]="'150px'"
+        [height]="'40px'"
+        [title]="'Add'"
+        [isDefault]="true"
+        (click)="add()"
+      >
+      </ait-button>
+      <ait-button
+        *ngIf="mode === 'EDIT' && isChanged"
+        [id]="'save'"
+        [width]="'150px'"
+        [height]="'40px'"
+        [title]="'Save'"
+        [isDefault]="true"
+        (click)="save()"
+      >
+      </ait-button>
+      <ait-button
+        *ngIf="mode === 'EDIT' && !isChanged"
+        [id]="'save'"
+        [width]="'150px'"
+        [height]="'40px'"
+        [fontsize]="'14px'"
+        [title]="'save'"
+        [isDefault]="true"
+        [margin]="'0px'"
+        [style]="'disabled'"
+      ></ait-button>
+    </div>
+  </div>
+</ait-template-page>

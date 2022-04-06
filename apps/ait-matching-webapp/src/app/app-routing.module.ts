@@ -1,3 +1,5 @@
+import { GroupRoleListComponent } from './pages/group-role/group-role-list/group-role-list.component';
+import { GroupRoleRegisterComponent } from './pages/group-role/group-role-register/group-role-register.component';
 import { UserOnboardingComponent } from './pages/user/user-onboarding/user-onboarding.component';
 import { UserLanguageComponent } from './pages/user/user-language/user-language.component';
 import { UserEducationComponent } from './pages/user/user-education/user-education.component';
@@ -27,6 +29,8 @@ import { UserProjectDetailComponent } from './pages/user/user-project-detail/use
 import { UserCourseDetailComponent } from './pages/user/user-course-detail/user-course-detail.component';
 import { LanguageListComponent } from './pages/list/language-list/language-list.component';
 import { RecommencedJobComponent } from './pages/recommenced/recommenced-job/recommenced-job.component';
+import { AddRoleComponent } from './pages/group-role/add-role/add-role.component';
+import { MyProjectQueriesComponent } from './pages/my-project-queries/my-project-queries.component';
 
 
 // Push your routes here one by one 🎉
@@ -43,7 +47,7 @@ export const routes: Routes = [
     component: RecommencedJobComponent
   },
   {
-    path: 'user-onboarding',
+    path: 'user',
     canActivate: [AitAuthGuardService],
     component: UserOnboardingComponent
   },
@@ -53,12 +57,12 @@ export const routes: Routes = [
     component: UserSkillsComponent
   },
   {
-    path: 'user-onboarding/:id',
+    path: 'user/:id',
     canActivate: [AitAuthGuardService],
     component: UserOnboardingComponent
   },
   {
-    path: 'user-onboarding-detail/:id',
+    path: 'user-detail/:id',
     canActivate: [AitAuthGuardService],
     component: UserOnboardingDetailComponent
   },
@@ -78,17 +82,17 @@ export const routes: Routes = [
     component: UserCourseDetailComponent
   },
   {
-    path: 'user-certificate',
+    path: 'user-certificate-award',
     canActivate: [AitAuthGuardService], 
     component: UserCertificateComponent
   },
   {
-    path: 'user-certificate/:id',
+    path: 'user-certificate-award/:id',
     canActivate: [AitAuthGuardService], 
     component: UserCertificateComponent
   },
   {
-    path: 'user-certificate-detail/:id',
+    path: 'user-certificate-award-detail/:id',
     canActivate: [AitAuthGuardService], 
     component: UserCertificateDetailComponent
   },
@@ -108,7 +112,7 @@ export const routes: Routes = [
     component: UserProjectDetailComponent
   },
   {
-    path: 'user-reorder-skills',
+    path: 'user-skills-reorder',
     canActivate: [AitAuthGuardService], 
     component: UserReorderSkillsComponent
   },
@@ -198,19 +202,40 @@ export const routes: Routes = [
   },
   {
     path: 'project-list',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    canActivate: [AitAuthGuardService],
     component: ProjectListComponent
   },
   {
     path: 'certificate-list',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    canActivate: [AitAuthGuardService], 
     component: CertificateListComponent
   },
   {
     path: 'education-list',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    canActivate: [AitAuthGuardService], 
     component: EducationListComponent
   },
+  {
+    path: 'my-project-queries',
+    canActivate: [AitAuthGuardService], 
+    component: MyProjectQueriesComponent
+  },
+  {
+    path: 'role',
+    canActivate: [AitAuthGuardService], 
+    component: AddRoleComponent
+  },
+  {
+    path: 'group-role',
+    canActivate: [AitAuthGuardService], 
+    component: GroupRoleRegisterComponent
+  },
+  {
+    path: 'group-role-list',
+    canActivate: [AitAuthGuardService], 
+    component: GroupRoleListComponent
+  },
+  
   {
     path: '',
     pathMatch: 'full',

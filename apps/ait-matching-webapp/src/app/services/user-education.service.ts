@@ -17,6 +17,7 @@ export class UserEducationService extends AitBaseService {
     file: true,
     start_date_from: true,
     start_date_to: true,
+    issue_date: true,
     description: true,
     del_flag: true,
     create_at: true,
@@ -33,7 +34,7 @@ export class UserEducationService extends AitBaseService {
     condition['school'] = {
       attribute: 'school',
       ref_collection: 'm_school',
-      ref_attribute: 'code',
+      ref_attribute: '_key',
     };
     if (!condition['create_by']) {
       condition['create_by'] = {};
@@ -104,7 +105,8 @@ export class UserEducationService extends AitBaseService {
     condition['school'] = {
       attribute: 'school',
       ref_collection: 'm_school',
-      ref_attribute: 'code',
+      ref_attribute: '_key',
+      get_by: '_key',
     };
 
     const returnFields = this.returnFields;

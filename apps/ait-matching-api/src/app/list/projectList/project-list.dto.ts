@@ -12,6 +12,9 @@ export class ProjectListDto extends BaseDto {
   @Field(() => String, { nullable: true })
   user_id: string;
 
+  @Field(() => String, { nullable: true })
+  biz_project_key: string;
+
   @Field(() => ConditionDto, { nullable: true })
   username: ConditionDto;
 
@@ -55,6 +58,9 @@ export class ProjectListDto extends BaseDto {
 export class SearchProjectDto {
   @Field(() => ID, { nullable: true })
   _key: string;
+
+  @Field(() => ID, { nullable: true })
+  biz_project_key: string;
 
   @Field(() => Boolean, { nullable: true })
   del_flag: boolean;

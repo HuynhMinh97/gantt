@@ -3,11 +3,6 @@ import { InputType, Field, Int } from '@nestjs/graphql';
 
 @InputType()
 export class UserProfileDto extends BaseDto {
-  @Field(() => String, { nullable: true })
-  avatar_url?: string;
-
-  @Field(() => String, { nullable: true })
-  background_url?: string;
 
   @Field(() => String, { nullable: true })
   last_name?: string;
@@ -16,28 +11,16 @@ export class UserProfileDto extends BaseDto {
   first_name?: string;
 
   @Field(() => ConditionDto, { nullable: true })
-  title?: ConditionDto;
-  
-  @Field(() => ConditionDto, { nullable: true })
-  company_working?: ConditionDto;
-
-  @Field(() => ConditionDto, { nullable: true })
-  province_city?: ConditionDto;
-
-  @Field(() => ConditionDto, { nullable: true })
-  country_region?: ConditionDto;
-
-  @Field(() => String, { nullable: true })
-  introduce?: string;
-
-  @Field(() => ConditionDto, { nullable: true })
   top_skills?: ConditionDto; 
 
-  @Field(() => String, { nullable: true })
-  category?: string;
+  @Field(() => ConditionDto, { nullable: true })
+  gender?: ConditionDto; 
+
+  @Field(() => Number, { nullable: true })
+  dob?: number;
 
   @Field(() => String, { nullable: true })
-  name?: string;
+  phone_number?: string;
   
   @Field(() => String, { nullable: true })
   about?: string;

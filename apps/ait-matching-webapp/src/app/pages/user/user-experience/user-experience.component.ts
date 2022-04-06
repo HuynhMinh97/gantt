@@ -57,15 +57,6 @@ export class UserExperienceComponent
       null,
       router
     );
-
-   
-  
-
-    this.setModulePage({
-      module: 'user',
-      page: 'user_experience',
-    });
-
    
   }
 

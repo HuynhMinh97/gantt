@@ -37,21 +37,18 @@ export class EducationListResolver extends AitBaseService {
     const userArr = [];
     listData.forEach((data) => {
       const obj = userList.find((u) => u.user_id === data.user_id);
-      const skills = this.getSkills(data, lang);
       if (username == null) {
         if (obj) {
           userArr.push({
             ...data,
             first_name: obj.first_name,
             last_name: obj.last_name,
-            skills: skills,
           });
         } else {
           userArr.push({
             ...data,
             first_name: '',
             last_name: '',
-            skills: skills,
           });
         }
       } else {
@@ -63,7 +60,6 @@ export class EducationListResolver extends AitBaseService {
             ...data,
             first_name: obj.first_name,
             last_name: obj.last_name,
-            skills: skills,
           });
         }
       }
@@ -77,15 +73,6 @@ export class EducationListResolver extends AitBaseService {
   }
  
 
-  async getSkills(element: any, lang: string) {
-    const _from = 'biz_project/' + element._key;
-    const aqlQuery = `
-        FOR v IN 1..1 OUTBOUND "${_from}" biz_project_skill
-        RETURN v.name.${lang}
-      `;
-
-    const result = await this.query(aqlQuery);
-    return result.data.join(', ');
-  }
+ 
 }
 

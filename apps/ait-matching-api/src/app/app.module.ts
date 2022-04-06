@@ -1,3 +1,4 @@
+import { GroupRoleListResolver } from './group-role/group-role-list/group-role-list.resolver';
 import { UserSkillResolver } from './user/user-skill/user-skill.resolver';
 import { UserOnboardingInfoResolver } from './user/user-onboarding/user-onboarding.resolver';
 import { UserLanguageInfoResolver } from './user/user-language/user-language.resolver';
@@ -18,6 +19,7 @@ import { ProjectListResolver } from './list/projectList/project-list.resolver';
 import { LanguageListResolver } from './list/language-list.ts/language-list.resolver';
 import { EducationListResolver } from './list/education-list/education-list.resolver';
 import { CertificateResolver } from './list/certificate-list/certificate-list.resolver';
+import { GetEmployeeResolver } from './group-role/add-role/add-role.resolver';
 import { SearchConditionResolver } from './search-condition/search-condition.resolver';
 import { SaveRecommendUserResolver } from './save-recommend-user/save-recommend-user.resolver';
 
@@ -39,6 +41,8 @@ const RESOLVERS = [
   LanguageListResolver,
   EducationListResolver,
   CertificateResolver,
+  GetEmployeeResolver,
+  GroupRoleListResolver,
   SearchConditionResolver,
   SaveRecommendUserResolver,
   {
