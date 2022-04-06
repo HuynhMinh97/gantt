@@ -82,17 +82,17 @@ export const routes: Routes = [
     component: UserCourseDetailComponent
   },
   {
-    path: 'user-certificate',
+    path: 'user-certificate-award',
     canActivate: [AitAuthGuardService], 
     component: UserCertificateComponent
   },
   {
-    path: 'user-certificate/:id',
+    path: 'user-certificate-award/:id',
     canActivate: [AitAuthGuardService], 
     component: UserCertificateComponent
   },
   {
-    path: 'user-certificate-detail/:id',
+    path: 'user-certificate-award-detail/:id',
     canActivate: [AitAuthGuardService], 
     component: UserCertificateDetailComponent
   },
@@ -112,7 +112,7 @@ export const routes: Routes = [
     component: UserProjectDetailComponent
   },
   {
-    path: 'user-reorder-skills',
+    path: 'user-skills-reorder',
     canActivate: [AitAuthGuardService], 
     component: UserReorderSkillsComponent
   },
