@@ -67,7 +67,7 @@
                 <ait-output-text
                   [label]="'born on date'"
                   [width]="'200px'"
-                  [value]="DataUserProfile?.bod | date: dateFormat"
+                  [value]="DataUserProfile?.dob | date: dateFormat"
                   [id]="'born_on_date'"
                 ></ait-output-text>
               </div>
@@ -118,7 +118,7 @@
                 <ait-output-text
                   [label]="'gender'"
                   [width]="'200px'"
-                  [value]="DataUserProfile?.gender || ''"
+                  [value]="DataUserProfile?.gender?.value || ''"
                   [id]="'gender'"
                 ></ait-output-text>
               </div>
@@ -302,7 +302,7 @@
                 let index = index;
               "
             > 
-              <div class="devline" *ngIf="last"></div>
+              <div class="devline" *ngIf="last && !first"></div>
               <div class="timeline-block" *ngIf="index < 2">
                 <div class="img-timeline">
                   <img
@@ -589,7 +589,7 @@
                   let index = index
                 "
               >
-                <div class="devline" *ngIf="last" ></div>
+                <div class="devline" *ngIf="last && !first" ></div>
                 <div class="timeline-block" *ngIf="index < 2">
                   <div class="img-timeline">
                     <img

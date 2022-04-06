@@ -648,6 +648,7 @@ export class UserOnboardingComponent
     this.user_skill._from = 'sys_user/' + this.authService.getUserID();
     const skills = [];
     for (const item of this.current_job_skills) {
+      debugger
       await this.userOnbService.findSkillsByCode(item._key).then((res) => {
         if (res) {
           skills.push(res.data[0]._key);
