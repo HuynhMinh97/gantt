@@ -25,7 +25,7 @@
         [label]="'basic information' | translate"
         style="display: flex; justify-content: center"
         [styleLabel]="{ 'font-size': '26px','padding' : '15px 0px 7px 0px'}"
-        (onClickButtonHeader)="nextPage('user-onboarding/', user_id)"
+        (onClickButtonHeader)="nextPage('user/', user_id)"
         [actionBtn]="isMyUserProfile ? actionBtnProfile : ''"
         [buttonTitle]="'edit_profile'"
         [disableHeader]="false"
@@ -140,7 +140,7 @@
     <div style="position: relative" class="skills">
       <div class="reorder_skills" style="z-index: 100" *ngIf="isMyUserProfile">
         <ait-button
-          (click)="nextPage('user-reorder-skills')"
+          (click)="nextPage('user-skills-reorder')"
           [iconName]="'menu-outline'"
           [color]="'#fff'"
           [styleText]="{ 'font-size': '10px' }"
@@ -880,7 +880,7 @@
         [label]="'certificates' | translate"
         [styleLabel]="{ 'font-size': '26px','padding' : '15px 0px 7px 0px' }"
         [styleText]="{ 'font-size': '15px' }"
-        (onClickButtonHeader)="nextPage('user-certificate')"
+        (onClickButtonHeader)="nextPage('user-certificate-award')"
         [actionBtn]="isMyUserProfile ? actionBtn : ''"
         [buttonTitle]="'add certificate'"
         [disableHeader]="false"
@@ -955,7 +955,7 @@
                   "
                 >
                   <a
-                    (click)="nextPage('user-certificate', centificate?._key)"
+                    (click)="nextPage('user-certificate-award', centificate?._key)"
                     [id]="'centificate-' + centificate?._key"
                     *ngIf="isMyUserProfile"
                   >
@@ -963,7 +963,7 @@
                   </a>
                   <a
                     (click)="
-                      nextPage('user-certificate-detail', centificate?._key)
+                      nextPage('user-certificate-award-detail', centificate?._key)
                     "
                     [id]="'centificate-' + centificate?._key"
                     *ngIf="!isMyUserProfile"
@@ -1020,7 +1020,7 @@
                   "
                 >
                   <a
-                    (click)="nextPage('user-certificate', centificate?._key)"
+                    (click)="nextPage('user-certificate-award', centificate?._key)"
                     [id]="'centificate-' + centificate?._key"
                     *ngIf="isMyUserProfile"
                   >
@@ -1028,7 +1028,7 @@
                   </a>
                   <a
                     (click)="
-                      nextPage('user-certificate-detail', centificate?._key)
+                      nextPage('user-certificate-award-detail', centificate?._key)
                     "
                     [id]="'centificate-' + centificate?._key"
                     *ngIf="!isMyUserProfile"
