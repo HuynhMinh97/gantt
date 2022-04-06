@@ -210,7 +210,7 @@ export class UserOnboardingComponent
 
     this.setModulePage({
       module: 'user',
-      page: 'user_onboarding',
+      page: 'user-onboarding',
     });
     this.userJobSettingInfo = this.formBuilder.group({
       job_setting_title: new FormControl(null),
@@ -650,13 +650,15 @@ export class UserOnboardingComponent
       const _fromSkill = [{ _from: 'sys_user/' + this.user_id }];
       await this.userOnbService.removeBizUserSkill(_fromSkill);
     }
-
-    skills.forEach(async (skill) => {
+    for (const skill of skills) {
       this.sort_no += 1;
       this.user_skill.sort_no = this.sort_no;
       this.user_skill._to = 'm_skill/' + skill;
       await this.userOnbService.saveUserSkills([this.user_skill]);
-    });
+    }
+    // skills.forEach(async (skill) => {
+     
+    // });
     this.cancelLoadingApp();
   }
 

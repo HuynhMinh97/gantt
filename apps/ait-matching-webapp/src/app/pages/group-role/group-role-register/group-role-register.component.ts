@@ -247,7 +247,7 @@ export class GroupRoleRegisterComponent
   edit(data?: any) {
     this.groupRoleRegisterService.groupRole = this.roleRegis.value;
     this.addRoleService.roleUser_key = data;
-    this.router.navigate([`add-role`]);
+    this.router.navigate([`role`]);
   }
   async deleteInTable(data?: any, load?: boolean) {
     console.log('1');
@@ -326,7 +326,7 @@ export class GroupRoleRegisterComponent
         this.groupRoleRegisterService.groupSaveRole = this.saveRoleData;
       }
 
-      this.router.navigate([`add-role`]);
+      this.router.navigate([`role`]);
     } else {
     }
   }

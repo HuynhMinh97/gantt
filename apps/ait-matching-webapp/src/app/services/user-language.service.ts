@@ -30,6 +30,7 @@ export class UserLanguageService extends AitBaseService {
         attribute: item,
         ref_collection: 'sys_master_data',
         ref_attribute: '_key',
+        get_by: '_key',
       };
     });
 
@@ -84,6 +85,7 @@ export class UserLanguageService extends AitBaseService {
         attribute: item,
         ref_collection: 'sys_master_data',
         ref_attribute: '_key',
+        get_by: '_key',
       };
     });
 

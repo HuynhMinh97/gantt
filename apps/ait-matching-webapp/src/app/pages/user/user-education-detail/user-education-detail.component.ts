@@ -52,10 +52,7 @@ export class UserEducationDetailComponent
         this.dateFormat = setting['date_format_display'];
       }
     });
-    this.setModulePage({
-      module: 'user',
-      page: 'user_education',
-    });
+    
   }
 
   ngOnInit(): void {
@@ -84,17 +81,20 @@ export class UserEducationDetailComponent
         const value = result.data[0][key].value;
         dataForm['data'][0][key] = value;
       } else {
-        if (key === 'change_at' || key === 'create_at') {
+        if (key === 'change_at' || key === 'create_at' ) {
           const value = result.data[0][key];
           dataForm['data'][0][key] = this.getDateFormat(value);
         } else {
-          if (key === 'start_date_from' || key === 'start_date_to') {
+          if (key === 'start_date_from' || key === 'start_date_to' || key === 'issue_date') {
             const value = result.data[0][key];
             if(value){
+              if(key.includes('issue_date')) {
+                dataForm['data'][0][key] = this.getDateFormat(value).substring(0,10);
+              }
               if(key.includes('_from')) {
-                this.startDateFrom = this.getDateFormat(value).substring(0,9);
+                this.startDateFrom = this.getDateFormat(value).substring(0,10);
               } else {
-                this.startDateto = this.getDateFormat(value).substring(0,9);
+                this.startDateto = this.getDateFormat(value).substring(0,10);
               }
             }
           } else {
