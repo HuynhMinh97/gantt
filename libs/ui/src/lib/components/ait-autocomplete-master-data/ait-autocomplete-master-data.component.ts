@@ -99,6 +99,7 @@ export class AitAutoCompleteMasterDataComponent
 
   @Input() class: string;
   @Input() parentCode: string;
+  @Input() parentCodeExternal: string;
   @Input() code: string;
   @Input() sortBy: string;
   @Input() allowDelete = false;
@@ -345,6 +346,9 @@ export class AitAutoCompleteMasterDataComponent
         if (this.parentCode && key === 'parentCode') {
           this.settingData();
         }
+        if (this.parentCodeExternal && key === 'parentCodeExternal') {
+          this.settingData();
+        }
         if (this.defaultValue && key === 'defaultValue') {
           this.defaultValueDf = this.defaultValue || [];
           setTimeout(() => {
@@ -467,6 +471,7 @@ export class AitAutoCompleteMasterDataComponent
   checkAllowNew = (value: string) => {
     if (this.allowNew) {
       const find = this.dataSourceDf.find((d) => d.value === value);
+      console.log(2)
       const dataReq: any = {
         code: value,
         name: {
@@ -607,6 +612,9 @@ export class AitAutoCompleteMasterDataComponent
     if (this.parentCode) {
       cond['parent_code'] = this.parentCode;
     }
+    if (this.parentCodeExternal) {
+      cond['parent_code_external'] = this.parentCodeExternal;
+    }
     if (this.code) {
       cond['code'] = this.code;
     }
@@ -645,6 +653,7 @@ export class AitAutoCompleteMasterDataComponent
           value: [this.class],
         };
       }
+      console.log(condition)
       const rest = await this.masterDataService.find(
         {
           ...condition,

@@ -2,7 +2,7 @@
   width: 100%;
   min-height: 130px;
   background: #ffffff;
-  padding: 50px;
+  padding: 30px 50px 50px 50px;
   margin-top: 30px;
   display: flex;
   justify-content: center;
@@ -118,7 +118,7 @@
   -webkit-text-fill-color: transparent;
   margin: 0;
   font-weight: bold;
-  font-size: 2vmax;
+  font-size: 1.5vmax;
   display: flex;
   align-items: center;
   text-align: center;
@@ -126,6 +126,6 @@
 }
 
 .text__gradient__no__string {
-  font-size: 2vmax;
+  font-size: 1.5vmax;
   word-break: keep-all;
 }
