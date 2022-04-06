@@ -47,7 +47,7 @@ export const routes: Routes = [
     component: RecommencedJobComponent
   },
   {
-    path: 'user-onboarding',
+    path: 'user',
     canActivate: [AitAuthGuardService],
     component: UserOnboardingComponent
   },
@@ -57,12 +57,12 @@ export const routes: Routes = [
     component: UserSkillsComponent
   },
   {
-    path: 'user-onboarding/:id',
+    path: 'user/:id',
     canActivate: [AitAuthGuardService],
     component: UserOnboardingComponent
   },
   {
-    path: 'user-onboarding-detail/:id',
+    path: 'user-detail/:id',
     canActivate: [AitAuthGuardService],
     component: UserOnboardingDetailComponent
   },

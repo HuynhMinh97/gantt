@@ -152,6 +152,7 @@ export class UserOnboardingComponent
   user_skill = {
     _from: '',
     _to: '',
+    level:'',
     sort_no: 0,
   };
   JobSettingData: any;
@@ -522,7 +523,7 @@ export class UserOnboardingComponent
       .replace('{0}', this.translateService.translate('available_time_to'))
       .replace(
         '{1}',
-        this.translateService.translate('available_time_to_from')
+        this.translateService.translate('available_time_from')
       );
     this.availableTimeErrorMessage = [];
     this.availableTimeErrorMessage.push(availableTimeErr);
@@ -654,6 +655,7 @@ export class UserOnboardingComponent
       this.sort_no += 1;
       this.user_skill.sort_no = this.sort_no;
       this.user_skill._to = 'm_skill/' + skill;
+      this.user_skill.level = skill.level;
       await this.userOnbService.saveUserSkills([this.user_skill]);
     }
     // skills.forEach(async (skill) => {
