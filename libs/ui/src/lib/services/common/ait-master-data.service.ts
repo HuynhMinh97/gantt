@@ -168,4 +168,30 @@ export class AitMasterDataService extends AitBaseService {
       includeNotActive
     );
   }
+  async findKey(
+    condition: any,
+    rf?: any,
+    collection: string = 'sys_master_data',
+    options: any = {},
+    includeNotDelete: boolean = true,
+    includeNotActive: boolean = false
+  ) {
+    const returnFields = rf ? rf : this.returnFields;
+    const request = {};
+    if (isObjectFull(condition)) {
+      request['condition'] = condition;
+    }
+    if (isObjectFull(options)) {
+      request['options'] = options;
+    }
+    request['collection'] = collection;
+
+    return await this.query(
+      'findSystemMaster',
+      request,
+      returnFields,
+      includeNotDelete,
+      includeNotActive
+    );
+  }
 }
