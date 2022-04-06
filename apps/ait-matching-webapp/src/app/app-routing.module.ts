@@ -37,7 +37,7 @@ import { MyProjectQueriesComponent } from './pages/my-project-queries/my-project
 
 export const routes: Routes = [
   {
-    path: 'test',
+    path: 'recommenced-user',
     canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
     component: RecommencedUserComponent
   }, 

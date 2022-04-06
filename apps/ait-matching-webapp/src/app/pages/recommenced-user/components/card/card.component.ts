@@ -95,28 +95,28 @@ export class AureoleVCardComponent implements OnInit {
 
   imageNotFound() {
     this.isLoadingAvatar = false;
-    this.avatar = this.card?.first_name
+    this.avatar = this.cardH?.first_name
       ? this.avatarURL +
-        (this.card?.last_name.replace(' ', '+') +
-          this.card?.first_name.replace(' ', '+'))
+        (this.cardH?.last_name.replace(' ', '+') +
+          this.cardH?.first_name.replace(' ', '+'))
       : this.avatarURL + '';
   }
 
   getAvatar = () => {
     const avatar =
-      this.card?.avatar &&
-      this.card?.avatar.length !== 0 &&
-      this.card?.avatar instanceof Array
-        ? this.card?.avatar[0]
+      this.cardH?.avatar &&
+      this.cardH?.avatar.length !== 0 &&
+      this.cardH?.avatar instanceof Array
+        ? this.cardH?.avatar[0]
         : null;
     this.avatar = this.originUrl + avatar;
   };
 
   getAvatarDefault = () => {
-    return this.card?.first_name
+    return this.cardH?.first_name
       ? this.avatarURL +
-          (this.card?.last_name.replace(' ', '+') +
-            this.card?.first_name.replace(' ', '+'))
+          (this.cardH?.last_name.replace(' ', '+') +
+            this.cardH?.first_name.replace(' ', '+'))
       : this.avatarURL + '';
   };
 
@@ -178,12 +178,16 @@ export class AureoleVCardComponent implements OnInit {
   ) {
     store.pipe(select(getEmpId)).subscribe((id) => (this.userId = id));
   }
+
   ngOnInit() {
-    this.cardH = this.card;
+    this.cardH = { ...this.card };
+    this.cardH.skills = this.cardH.skills
+      .slice()
+      .sort((a, b) => b.level - a.level);
     this.getAvatar();
     this.addColor();
     this.fieldCard = this.fieldCard
-      .map((m) => ({ key: m, value: this.card[FIELD[m]], field: FIELD[m] }))
+      .map((m) => ({ key: m, value: this.cardH[FIELD[m]], field: FIELD[m] }))
       .filter((v) => v.value);
   }
 
@@ -196,10 +200,10 @@ export class AureoleVCardComponent implements OnInit {
   };
 
   addColor = () => {
-    if (this.card?.group_no === 1) {
+    if (this.cardH?.group_no === 1) {
       this.backgroundCard = color.green;
       this.colorCard = COLOR.color1;
-    } else if (this.card?.group_no === 2) {
+    } else if (this.cardH?.group_no === 2) {
       this.backgroundCard = color.orange;
       this.colorCard = COLOR.color2;
     } else {
@@ -220,32 +224,41 @@ export class AureoleVCardComponent implements OnInit {
   };
 
   getIndustry = () => {
-    return this.card.company.replace('（', ',').replace('）', '').split(',')[1];
+    return this.cardH.company
+      .replace('（', ',')
+      .replace('）', '')
+      .split(',')[1];
   };
 
-  actionButtonSave = () => {
-    console.log(this.user_id);
-    console.log(this.card.user_id);
-    this.recommencedService.saveRecommendUser(this.user_id, this.card?.user_id);
-    return;
-    if (!this.card.is_saved) {
-      
-    } else {
-      this.reactionService
-        .removeSaveCompanyUser([
-          {
-            company_id: this.company_key,
-            user_key: this.card.user_id,
-          },
-        ])
-        .then((r) => {
-          if (r.status === RESULT_STATUS.OK) {
-            this.card.is_saved = !this.card?.is_saved;
-          }
+  routerToProfile() {
+    console.log(this.cardH.user_id)
+    this.router.navigate([`/user-profile/${this.cardH.user_id}`])
+  }
+
+  actionButtonSave = (_key: string) => {
+    this.cardH.is_saved = !this.cardH?.is_saved;
+    if (!this.cardH.is_saved) {
+      const _from = `sys_user/${this.user_id}`;
+      const _to = `sys_user/${_key}`; 
+      this.recommencedService
+      .removeSaveRecommendUser(_from, _to).then(r => {
+        if (r.status === RESULT_STATUS.OK) {
           this.actionSaveEvent.emit({
             user_id: this.card.user_id,
             is_saved: this.card.is_saved,
           });
+        }
+      })
+    } else {
+      this.recommencedService
+        .saveRecommendUser(this.user_id, this.cardH?.user_id)
+        .then((r) => {
+          if (r.status === RESULT_STATUS.OK) {
+            this.actionSaveEvent.emit({
+              user_id: this.card.user_id,
+              is_saved: this.card.is_saved,
+            });
+          }
         });
     }
   };

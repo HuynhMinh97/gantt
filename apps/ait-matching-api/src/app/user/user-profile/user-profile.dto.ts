@@ -1,5 +1,5 @@
 import { BaseDto, ConditionDto } from '@ait/core';
-import { InputType, Field, Float } from '@nestjs/graphql';
+import { InputType, Field, Int } from '@nestjs/graphql';
 
 @InputType()
 export class UserProfileDto extends BaseDto {
@@ -25,6 +25,23 @@ export class UserProfileDto extends BaseDto {
   @Field(() => String, { nullable: true })
   about?: string;
 
+  @Field(() => String, { nullable: true })
+  _from?: string;
+
+  @Field(() => String, { nullable: true })
+  _to?: string;
+
+  @Field(() => String, { nullable: true })
+  relationship?: string;
+
+  @Field(() => Int, { nullable: true })
+  start?: number;
+
+  @Field(() => Int, { nullable: true })
+  end?: number;
+
+  @Field(() => Boolean, { nullable: true })
+  is_saved?: boolean;
 }
 
 

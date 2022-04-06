@@ -5,7 +5,7 @@ import { SearchConditionResponse } from './search-condition.response';
 
 @Resolver()
 export class SearchConditionResolver extends AitBaseService {
-  collection = 'search_condition';
+  collection = 'save_recommend_user_query';
 
   @Query(() => SearchConditionResponse, { name: 'findSearchCondition' })
   findSearchCondition(
