@@ -431,7 +431,7 @@ export class AitAutoCompleteMasterComponent
     };
 
     await this.masterDataService
-      .find(
+      .findKey(
         condition,
         returnFields,
         this.collection,

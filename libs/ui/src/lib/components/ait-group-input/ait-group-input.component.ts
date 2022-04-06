@@ -129,7 +129,11 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
       ) {
         this.moduleKey = resModule.data[0]?.code || '';
         this.pageKey = resPage.data[0]?.code || '';
-        this.pageTitle = resPage.data[0]?.name || '';
+        if(this._key){
+          this.pageTitle = resPage.data[0]?.name_edit || '';
+        }else{
+          this.pageTitle = resPage.data[0]?.name || '';
+        }
 
         const resGroup = await this.renderPageService.findGroup({
           module: this.moduleKey,
