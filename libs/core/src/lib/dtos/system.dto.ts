@@ -13,6 +13,9 @@ export class SystemDto extends BaseDto {
   @Field(() => String, { nullable: true })
   parent_code?: string;
 
+  @Field(() => String, { nullable: true })
+  parent_code_external?: string;
+
   @Field(() => Int, { nullable: true })
   sort_no?: number;
 

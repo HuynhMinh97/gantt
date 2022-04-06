@@ -112,7 +112,7 @@ export class AitBaseService {
 
     if (dataInsert.length > 0) {
       const aqlStr = `FOR data IN ${JSON.stringify(dataInsert)}
-      INSERT data INTO ${collection} RETURN MERGE(data, {name: data.name.${lang} ? data.name.${lang} : data.name }) `;
+      INSERT data INTO ${collection} RETURN MERGE(data, {name: data.name.${lang} ? data.name.${lang} : IS_STRING(data.name) == true ? data.name : "" }) `;
 
       try {
         const res = await this.db.query(aqlStr);
@@ -221,7 +221,7 @@ export class AitBaseService {
         }
       });
     }
-    aqlStr += `\r\n RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name }) `;
+    aqlStr += `\r\n RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : IS_STRING(data.name) == true ? data.name : "" }) `;
 
     // console.log(aqlStr);
 
@@ -423,7 +423,7 @@ export class AitBaseService {
     aqlStr += `\r\n RETURN MERGE(\r\n data, {\r\n `;
 
     if (!hasName) {
-      aqlStr += ` name:  data.name.${lang} ? data.name.${lang} : data.name, \r\n`;
+      aqlStr += ` name:  data.name.${lang} ? data.name.${lang} : IS_STRING(data.name) == true ? data.name : "", \r\n`;
     }
 
     // attribute
