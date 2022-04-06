@@ -17,6 +17,7 @@ export class UserEducationService extends AitBaseService {
     file: true,
     start_date_from: true,
     start_date_to: true,
+    issue_date: true,
     description: true,
     del_flag: true,
     create_at: true,

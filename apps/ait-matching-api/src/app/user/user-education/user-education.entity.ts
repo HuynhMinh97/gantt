@@ -24,6 +24,9 @@ export class UserEducationInfoEntity extends BaseEntity {
   @Field(() => Float, { nullable: true })
   start_date_to?: number;
 
+  @Field(() => Float, { nullable: true })
+  issue_date?: number;
+
   @Field(() => String, { nullable: true })
   description?: string;
 

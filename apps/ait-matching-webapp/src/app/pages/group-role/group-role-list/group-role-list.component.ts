@@ -322,7 +322,7 @@ export class GroupRoleListComponent extends AitBaseComponent implements OnInit {
 
   new() {
     this.groupRoleRegisterService.groupSaveRole = [];
-    this.router.navigate([`group-role-register`]);
+    this.router.navigate([`group-role`]);
   }
 
   delete(data) {
@@ -363,7 +363,7 @@ export class GroupRoleListComponent extends AitBaseComponent implements OnInit {
     this.groupRoleRegisterService.role_key = data;
     this.groupRoleRegisterService.roleDataSave = [];
     this.groupRoleRegisterService.groupRoleList = [];
-    this.router.navigate([`group-role-register`]);
+    this.router.navigate([`group-role`]);
   }
 
   copy(data) {
