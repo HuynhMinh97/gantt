@@ -58,11 +58,6 @@ export class UserExperienceDetailComponent
       }
     });
 
-    this.setModulePage({
-      module: 'user',
-      page: 'user_experience',
-    });
-
   }
 
   ngOnInit(): void {
@@ -100,9 +95,9 @@ export class UserExperienceDetailComponent
               const value = result.data[0][key];
               if (value) {
                 if(key.includes('_from')) {
-                  this.startDateFrom = this.getDateFormat(value).substring(0,9);
+                  this.startDateFrom = this.getDateFormat(value).substring(0,10);
                 } else {
-                  this.startDateto = this.getDateFormat(value).substring(0,9);
+                  this.startDateto = this.getDateFormat(value).substring(0,10);
                 }
               }
             } else {
@@ -122,7 +117,6 @@ export class UserExperienceDetailComponent
       dataForm['numData'] = result.numData;
       dataForm['numError'] = result.numError;
       dataForm['status'] = result.status;
-      console.log(dataForm);
       return dataForm;
     
   };

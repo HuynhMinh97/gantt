@@ -621,7 +621,7 @@
           <ait-button
             *ngIf="mode !== 'VIEW'"
             [id]="'cancel'"
-            [title]="'クリア'"
+            [title]="'clear'"
             [width]="'150px'"
             [isDefault]="true"
             (click)="clear()"
@@ -630,7 +630,7 @@
             *ngIf="mode === 'EDIT'"
             [id]="'reset'"
             [width]="'150px'"
-            [title]="'リセット'"
+            [title]="'reset'"
             [isDefault]="true"
             (click)="resetForm()"
           >
@@ -640,7 +640,7 @@
             *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
             [id]="'save'"
             [width]="'150px'"
-            [title]="'保存する'"
+            [title]="'save'"
             (click)="save()"
             [isDefault]="true"
           >
