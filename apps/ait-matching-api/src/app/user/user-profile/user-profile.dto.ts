@@ -25,6 +25,21 @@ export class UserProfileDto extends BaseDto {
   @Field(() => String, { nullable: true })
   about?: string;
 
+  @Field(() => ConditionDto, { nullable: true })
+  company_working?: ConditionDto;
+
+  @Field(() => ConditionDto, { nullable: true })
+  province_city?: ConditionDto;
+
+  @Field(() => ConditionDto, { nullable: true })
+  industry_working?: ConditionDto;
+
+  @Field(() => ConditionDto, { nullable: true })
+  current_job_title?: ConditionDto;
+
+  @Field(() => ConditionDto, { nullable: true })
+  current_job_level?: ConditionDto;
+
   @Field(() => String, { nullable: true })
   _from?: string;
 

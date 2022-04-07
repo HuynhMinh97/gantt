@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   isArrayFull,
+  isObjectFull,
   KeyValueDto,
   RESULT_STATUS,
 } from '@ait/shared';
@@ -75,10 +76,10 @@ export class RecommencedUserComponent
       _key: new FormControl(null),
       keyword: new FormControl(null),
       skills: new FormControl(null),
-      title: new FormControl(null),
-      location: new FormControl(null),
-      industry: new FormControl(null),
-      level: new FormControl(null),
+      current_job_title: new FormControl(null),
+      province_city: new FormControl(null),
+      industry_working: new FormControl(null),
+      current_job_level: new FormControl(null),
       valid_time_from: new FormControl(null),
       valid_time_to: new FormControl(null),
     });
@@ -286,10 +287,6 @@ export class RecommencedUserComponent
     // this.setSkeleton(true);
   };
 
-  filterMain = () => {
-    //
-  };
-
   handleClickChipInput(e) {
     e.preventDefault();
   }
@@ -298,7 +295,7 @@ export class RecommencedUserComponent
     const value = val?.value || [];
     const target = this.getValueFromMaster(value);
     this.filterCommon = { ...this.filterCommon, [type]: target };
-    this.filterMain();
+    // this.filterMain();
   };
 
   getValueFromMaster(value: any[]) {
@@ -352,7 +349,6 @@ export class RecommencedUserComponent
       const max = event.target.scrollHeight;
       // pos/max will give you the distance between scroll bottom and and bottom of screen in percentage.
       if (pos >= max) {
-        console.log(123);
         if (!this.spinnerLoading) {
           // Coding something 😋😋😋
           if (this.currentTab === 'R' && this.textDataEnd === '') {
@@ -381,24 +377,29 @@ export class RecommencedUserComponent
 
   // Get Data by round and base on all of result
   getDataByRound = async (onlySaved = false) => {
-    const detail = await this.getDetailMatching(onlySaved, this.currentCount);
-    if (isArrayFull(detail) && !onlySaved) {
-      this.dataFilter = this.dataFilter.concat(detail);
-      this.currentCount = Math.ceil(this.dataFilter.length / 8);
-    }
-    if (isArrayFull(detail) && onlySaved) {
-      this.dataFilterSave = this.dataFilterSave.concat(detail);
-      this.currentCount = Math.ceil(this.dataFilterSave.length / 8);
-    }
-    if (
-      detail.length === 0 &&
-      ((this.dataFilter.length !== 0 && !onlySaved) ||
-        (this.dataFilterSave.length !== 0 && onlySaved))
-    ) {
-      this.textDataNull = '';
-      this.textDataNullSave = '';
-      this.textDataEnd = '022';
-      this.setSkeleton(false);
+    try {
+      const detail = await this.getDetailMatching(onlySaved, this.currentCount);
+      if (isArrayFull(detail) && !onlySaved) {
+        this.dataFilter = this.dataFilter.concat(detail);
+        this.dataFilterDf = [...this.dataFilter];
+        this.currentCount = Math.ceil(this.dataFilter.length / 8);
+      }
+      if (isArrayFull(detail) && onlySaved) {
+        this.dataFilterSave = this.dataFilterSave.concat(detail);
+        this.currentCount = Math.ceil(this.dataFilterSave.length / 8);
+      }
+      if (
+        detail.length === 0 &&
+        ((this.dataFilter.length !== 0 && !onlySaved) ||
+          (this.dataFilterSave.length !== 0 && onlySaved))
+      ) {
+        this.textDataNull = '';
+        this.textDataNullSave = '';
+        this.textDataEnd = '022';
+        this.setSkeleton(false);
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -435,6 +436,7 @@ export class RecommencedUserComponent
     } else {
       this.searchForm.controls[form].setValue(null);
     }
+    this.filterMain(0);
   }
 
   takeDatePickerValue(value: number, form: string): void {
@@ -446,6 +448,7 @@ export class RecommencedUserComponent
     } else {
       this.searchForm.controls[form].setValue(null);
     }
+    // this.filterMain();
   }
 
   reset(): void {
@@ -465,6 +468,15 @@ export class RecommencedUserComponent
     }
   }
 
+  showQueryList() {
+    this.router.navigate[`/`];
+  }
+
+  search() {
+    const keyword = this.searchForm.controls['keyword'].value;
+    console.log(keyword);
+  }
+
   save(): void {
     const data = this.searchForm.value;
     const obj = {};
@@ -473,11 +485,52 @@ export class RecommencedUserComponent
         obj[prop] = data[prop];
       }
     }
-    console.log(obj);
+
     this.searchConditionService.save(obj).then((res) => {
       if (res.status === RESULT_STATUS.OK) {
         this.searchForm.controls['_key'].setValue(res.data[0]?._key || '');
       }
     });
+  }
+
+  filterMain(type: number) {
+    console.log(1);
+    try {
+      const formValue = this.searchForm.value;
+      const condition = Object.entries(formValue).reduce(
+        (a, [k, v]) => (v == null ? a : ((a[k] = v), a)),
+        {}
+      );
+      if (isObjectFull(condition) && type === 0) {
+        const daveForFilter = [...this.dataFilterDf].filter((m) => {
+          let isValid = true;
+          for (const prop in condition) {
+            if (isArrayFull(condition[prop]) && isArrayFull(m[prop])) {
+              const data = m[prop].map((t: any) => t['_key']);
+              isValid = condition[prop].every((z: any) =>
+                data.includes(z['_key'])
+              );
+              if (!isValid) break;
+            } else if (m[prop]) {
+              const data = [m[prop]].map((t: any) => t['_key']);
+              isValid = condition[prop].every((z: any) =>
+                data.includes(z['_key'])
+              );
+              console.log(isValid)
+              if (!isValid) break;
+            } else {
+              isValid = false;
+              break;
+            }
+          }
+          return isValid;
+        });
+        this.dataFilter = daveForFilter;
+      } else {
+        this.dataFilter = [...this.dataFilterDf];
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }
 }

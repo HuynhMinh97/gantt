@@ -12,8 +12,8 @@
       <div class="info">
         <div style="display: flex; width: 100%; flex-direction: column">
           <p class="name empty">{{ cardH?.last_name + cardH?.first_name }}</p>
-          <p class="dept empty" [nbTooltip]="cardH?.company_working.value">
-            {{ cardH?.company_working.value }}
+          <p class="dept empty" [nbTooltip]="cardH?.company_working?.value">
+            {{ cardH?.company_working?.value }}
           </p>
         </div>
       </div>

@@ -180,15 +180,19 @@ export class AureoleVCardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.cardH = { ...this.card };
-    this.cardH.skills = this.cardH.skills
+    try {
+      this.cardH = { ...this.card };
+      this.cardH.skills = this.cardH.skills
       .slice()
       .sort((a, b) => b.level - a.level);
-    this.getAvatar();
-    this.addColor();
-    this.fieldCard = this.fieldCard
+      this.getAvatar();
+      this.addColor();
+      this.fieldCard = this.fieldCard
       .map((m) => ({ key: m, value: this.cardH[FIELD[m]], field: FIELD[m] }))
       .filter((v) => v.value);
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   getDateField = (key) => {

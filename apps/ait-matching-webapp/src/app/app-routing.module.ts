@@ -239,7 +239,7 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: localStorage.getItem('access_token') ? 'user-profile' : 'sign-in'
+    redirectTo: localStorage.getItem('access_token') ? 'recommenced-user' : 'sign-in'
   },
 
 ];

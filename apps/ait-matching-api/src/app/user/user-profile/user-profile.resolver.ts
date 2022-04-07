@@ -72,24 +72,70 @@ export class UserProfileResolver extends AitBaseService {
     LET current_data = (
       FOR data IN user_profile
       FILTER data.company == "${company}" &&
+      
       data.del_flag != true
       RETURN MERGE(
       data, {
        name:  data.name.${lang} ? data.name.${lang} : data.name,
+
       company_working : (
-      IS_ARRAY(data.company_working) == true ? (
-      FOR doc IN m_company
-      FILTER doc.code IN TO_ARRAY(data.company_working)
-      RETURN
-      { _key: doc.code, value: doc.name.${lang} } ) :
-       (FOR doc IN m_company
-       FILTER doc.code == data.company_working
-      RETURN
-      { _key: doc.code, value: doc.name.${lang} })[0] ),
+        IS_ARRAY(data.company_working) == true ? (
+        FOR doc IN m_company
+        FILTER doc._key IN TO_ARRAY(data.company_working)
+        RETURN
+        { _key: doc.code, value: doc.name.${lang} } ) :
+        (FOR doc IN m_company
+        FILTER doc._key == data.company_working
+        RETURN
+        { _key: doc.code, value: doc.name.${lang} })[0] ),
+
+      industry_working : (
+        IS_ARRAY(data.industry_working) == true ? (
+        FOR doc IN m_industry
+        FILTER doc._key IN TO_ARRAY(data.industry_working)
+        RETURN
+        { _key: doc.code, value: doc.name.${lang} } ) :
+         (FOR doc IN m_industry
+         FILTER doc._key == data.industry_working
+        RETURN
+        { _key: doc.code, value: doc.name.${lang} })[0] ),
+
+      current_job_title : (
+        IS_ARRAY(data.current_job_title) == true ? (
+        FOR doc IN m_title
+        FILTER doc._key IN TO_ARRAY(data.current_job_title)
+        RETURN
+        { _key: doc.code, value: doc.name.${lang} } ) :
+         (FOR doc IN m_title
+         FILTER doc._key == data.current_job_title
+        RETURN
+        { _key: doc.code, value: doc.name.${lang} })[0] ),
+
+      current_job_level : (
+        IS_ARRAY(data.current_job_level) == true ? (
+        FOR doc IN sys_master_data
+        FILTER doc._key IN TO_ARRAY(data.current_job_level)
+        RETURN
+        { _key: doc.code, value: doc.name.${lang} } ) :
+         (FOR doc IN sys_master_data
+         FILTER doc._key == data.current_job_level
+        RETURN
+        { _key: doc.code, value: doc.name.${lang} })[0] ),
+
+      province_city : (
+        IS_ARRAY(data.province_city) == true ? (
+        FOR doc IN sys_master_data
+        FILTER doc._key IN TO_ARRAY(data.province_city)
+        RETURN
+        { _key: doc.code, value: doc.name.${lang} } ) :
+         (FOR doc IN sys_master_data
+         FILTER doc._key == data.province_city
+        RETURN
+        { _key: doc.code, value: doc.name.${lang} })[0] ),
       
       skills: (
       FOR v,e, p IN 1..1 OUTBOUND CONCAT("sys_user/",data.user_id) user_skill
-           RETURN { name: v.name.${lang}, level: e.level }
+           RETURN { _key: v._key, name: v.name.${lang}, level: e.level }
       )
       })
      )
@@ -100,19 +146,19 @@ export class UserProfileResolver extends AitBaseService {
       data.del_flag != true
       RETURN MERGE(
       data, {
-       name:  data.name.${lang} ? data.name.${lang} : data.name,
+       name: data.name.${lang} ? data.name.${lang} : data.name,
        })
      )
      
      FOR data IN result `;
 
-     if (!isSaved) {
-       aqlStr1 += `
+    if (!isSaved) {
+      aqlStr1 += `
         LIMIT ${+start}, ${+end}
        `;
-     }
+    }
 
-     aqlStr1 += `
+    aqlStr1 += `
       RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name })
     `;
 
@@ -127,7 +173,7 @@ export class UserProfileResolver extends AitBaseService {
       const savedData: any[] = savedUser.data || [];
       const data = [];
       res.data.forEach((e: any) => {
-        const i = savedData.findIndex(z => z._to === `sys_user/${e.user_id}`);
+        const i = savedData.findIndex((z) => z._to === `sys_user/${e.user_id}`);
         if (isSaved) {
           if (i !== -1) {
             const temp = { ...e, is_saved: true };
@@ -143,17 +189,9 @@ export class UserProfileResolver extends AitBaseService {
           }
         }
       });
-      return new UserProfileResponse(
-        200,
-        data,
-        ''
-      )
+      return new UserProfileResponse(200, data, '');
     } else {
-      return new UserProfileResponse(
-        200,
-        [],
-        ''
-      );
+      return new UserProfileResponse(200, [], '');
     }
   }
 }
