@@ -221,7 +221,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
             if(this.mode == MODE.VIEW) {
               this.router.navigate([`/404`]);
             }else{
-              this.router.navigate([`user-onboarding`]);
+              this.router.navigate([`user`]);
             }
             
           }

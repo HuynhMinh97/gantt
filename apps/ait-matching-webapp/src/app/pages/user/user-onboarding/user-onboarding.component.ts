@@ -460,11 +460,12 @@ export class UserOnboardingComponent
           level: skill?.level,
         });
       }
-
+      this.jobSettingSkills = listSkills;
       this.userJobSettingInfo.controls['job_setting_skills'].setValue([
         ...listSkills,
+
       ]);
-      this.userJobSettingInfoClone = this.userOnboardingInfo.value;
+      this.userJobSettingInfoClone = this.userJobSettingInfo.value;
       this.cancelLoadingApp();
     });
   }
@@ -513,6 +514,7 @@ export class UserOnboardingComponent
       this.userOnboardingInfo.patchValue({
         ...this.userOnboardingInfoClone,
       });
+      this.companySkills = this.userOnboardingInfo.controls['current_job_skills'].value;
       for (const index in this.resetJobSettingInfo) {
         if (!this.userJobSettingInfo.controls[index].value) {
           this.resetJobSettingInfo[index] = true;
@@ -522,6 +524,7 @@ export class UserOnboardingComponent
         }
       }
       this.userJobSettingInfo.patchValue({ ...this.userJobSettingInfoClone });
+      this.jobSettingSkills = this.userJobSettingInfo.controls['job_setting_skills'].value;
       this.jobSettingData = { ...this.userJobSettingInfo.value };
       this.dataCountry = { ...this.userOnboardingInfo.value };
     }
@@ -930,6 +933,8 @@ export class UserOnboardingComponent
   }
 
   clear() {
+    this.companySkills = [];
+    this.jobSettingSkills = [];
     this.userOnboardingInfo.reset();
     this.userJobSettingInfo.reset();
     for (const index in this.resetUserInfo) {
