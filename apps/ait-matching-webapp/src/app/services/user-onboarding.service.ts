@@ -159,9 +159,23 @@ export class UserOnboardingService extends AitBaseService {
           _key: true,
           value: true
         },
+        level: true,
       })
   }
-  
+   async findSkillJobSetting(user_id: string){
+    const condition = {
+      user_id: user_id,
+      del_flag: false,
+    }
+    return await this.query('findSkillJobSetting', { collection: 'setting', condition },
+      {
+        skills: {
+          _key: true,
+          value: true
+        },
+        level: true,
+      })
+   }
 
   async findJobSetting(_id?: string) {
     const condition: any = {
