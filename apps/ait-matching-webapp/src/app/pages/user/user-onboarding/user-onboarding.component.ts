@@ -333,7 +333,7 @@ export class UserOnboardingComponent
     setTimeout(() => {
       this.cancelLoadingApp();
     }, 500);
-    this.setDefaultGenderValue();
+    await this.setDefaultGenderValue();
 
     await this.userOnboardingInfo.valueChanges.subscribe((data) => {
       this.checkAllowSave();
@@ -393,21 +393,22 @@ export class UserOnboardingComponent
   }
 
   // In create mode default = 男性, edit mode = user.gender
-  setDefaultGenderValue() {
+  async setDefaultGenderValue() {
     const genderObj = this.userOnboardingInfo.controls['gender']
       .value as KeyValueDto;
     if (genderObj) {
-      this.genderList = this.genderList.map((gender) =>
+      this.genderList = await this.genderList.map((gender) =>
         Object.assign({}, gender, {
           checked: gender._key === genderObj._key ? true : false,
         })
       );
-      const gender = this.genderList.find((gender) => gender.checked === true);
+      const gender = await this.genderList.find((gender) => gender.checked === true);
       this.userOnboardingInfo.controls['gender'].setValue({
-        _key: gender.code,
+        _key: gender._key,
         value: gender.name,
       });
       const defaultGender = this.genderList[2];
+      console.log(this.userOnboardingInfo.controls['gender']);
       this.defaultGender = {
         _key: defaultGender._key,
         value: defaultGender.name,
@@ -555,7 +556,6 @@ export class UserOnboardingComponent
     this.availableTimeErrorMessage.push(availableTimeErr);
   }
   async saveDataJobSetting() {
-    debugger
     const saveData = this.userJobSettingInfo.value;
     const skills = saveData.job_setting_skills;
     const arrSkills = [];
@@ -662,7 +662,6 @@ export class UserOnboardingComponent
   }
 
   async saveJobSetting() {
-    debugger
     const jobSettingInfo = await this.saveDataJobSetting();
     await this.userOnbService.saveJobSetting(jobSettingInfo);
   }
@@ -682,9 +681,6 @@ export class UserOnboardingComponent
       this.user_skill.level = skill.level;
       await this.userOnbService.saveUserSkills([this.user_skill]);
     }
-    // skills.forEach(async (skill) => {
-     
-    // });
     this.cancelLoadingApp();
   }
 

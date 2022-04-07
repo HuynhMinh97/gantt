@@ -166,7 +166,7 @@
                         [checked]="
                           userOnboardingInfo?.controls['gender']?.value
                             ? userOnboardingInfo?.controls['gender']?.value
-                                ?._key == option.code
+                                ?._key == option._key
                             : isDefault
                         "
                         (valueChange)="takeGenderValue($event)"
@@ -485,6 +485,7 @@
                   <ait-autocomplete-master-data
                     [width]="'400px'"
                     [id]="'location'"
+                    [parentCodeExternal]="'VIETNAM'"
                     [label]="'location'"
                     [isSubmit]="isSubmit"
                     [allowNew]="true"
