@@ -1,5 +1,5 @@
 import { BaseDto, ConditionDto, KeyValueDto } from '@ait/core';
-import { InputType, Field, Float } from '@nestjs/graphql';
+import { InputType, Field, Float, Int } from '@nestjs/graphql';
 
 @InputType()
 export class UserOnboardingInfoDto extends BaseDto {
@@ -105,10 +105,19 @@ export class JobSettingInfoDto extends BaseDto {
     @Field(() => Float, { nullable: true })
     available_time_to?: number;
 }
+
+@InputType()
+export class SaveSkillJobSetting {
+    @Field(() => String, { nullable: true })
+    skill?: string;
+
+    @Field(() => Int, { nullable: true })
+    level?: number;
+}
 @InputType()
 export class SaveJobSettingInfoDto extends BaseDto {
-    @Field(() => [String], { nullable: true })
-    job_setting_skills?: string[];
+    @Field(() => [SaveSkillJobSetting], { nullable: true })
+    job_setting_skills?: SaveSkillJobSetting[];
 
     @Field(() => [String], { nullable: true })
     job_setting_title?: string[];

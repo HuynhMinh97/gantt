@@ -152,6 +152,7 @@ export class UserOnboardingComponent
   user_skill = {
     _from: '',
     _to: '',
+    level:'',
     sort_no: 0,
   };
   JobSettingData: any;
@@ -294,11 +295,12 @@ export class UserOnboardingComponent
         this.router.navigate([`user-onboarding-detail/${this.user_key}`]);
       } else {
         this.callLoadingApp();
-        await this.userOnbService.findJobSetting(this.user_key).then((r) => {
+        await this.userOnbService.findJobSetting(this.user_key).then(async (r) => {
           if (r.status === RESULT_STATUS.OK) {
             this.jobSettingData = r.data[0];
             this.userJobSettingInfo.patchValue({ ...this.jobSettingData });
             this.userJobSettingInfoClone = this.userJobSettingInfo.value;
+            await this.findSkillJocSetting();
           } else {
             this.callLoadingApp();
           }
@@ -316,6 +318,7 @@ export class UserOnboardingComponent
                 this.user_id_profile = this.dataCountry.user_id;
                 this._key = this.dataCountry._key;
                 isUserExist = true;
+                await this.findSkills();
               }
               this.cancelLoadingApp();
               !isUserExist && this.router.navigate([`/404`]);
@@ -323,14 +326,14 @@ export class UserOnboardingComponent
               this.callLoadingApp();
             }
           });
-        await this.findSkills();
+        
       }
     }
     await this.getGenderList();
     setTimeout(() => {
       this.cancelLoadingApp();
     }, 500);
-    this.setDefaultGenderValue();
+    await this.setDefaultGenderValue();
 
     await this.userOnboardingInfo.valueChanges.subscribe((data) => {
       this.checkAllowSave();
@@ -390,21 +393,22 @@ export class UserOnboardingComponent
   }
 
   // In create mode default = 男性, edit mode = user.gender
-  setDefaultGenderValue() {
+  async setDefaultGenderValue() {
     const genderObj = this.userOnboardingInfo.controls['gender']
       .value as KeyValueDto;
     if (genderObj) {
-      this.genderList = this.genderList.map((gender) =>
+      this.genderList = await this.genderList.map((gender) =>
         Object.assign({}, gender, {
           checked: gender._key === genderObj._key ? true : false,
         })
       );
-      const gender = this.genderList.find((gender) => gender.checked === true);
+      const gender = await this.genderList.find((gender) => gender.checked === true);
       this.userOnboardingInfo.controls['gender'].setValue({
-        _key: gender.code,
+        _key: gender._key,
         value: gender.name,
       });
       const defaultGender = this.genderList[2];
+      console.log(this.userOnboardingInfo.controls['gender']);
       this.defaultGender = {
         _key: defaultGender._key,
         value: defaultGender.name,
@@ -429,7 +433,11 @@ export class UserOnboardingComponent
     await this.userOnbService.findSkillsByFrom(from).then(async (res) => {
       const listSkills = [];
       for (const skill of res.data) {
-        listSkills.push(skill?.skills);
+        listSkills.push({
+          _key: skill?.skills?._key,
+          value: skill?.skills?.value,
+          level: skill?.level,
+        });
       }
 
       this.userOnboardingInfo.controls['current_job_skills'].setValue([
@@ -437,6 +445,26 @@ export class UserOnboardingComponent
       ]);
       this.companySkills = listSkills;
       this.userOnboardingInfoClone = this.userOnboardingInfo.value;
+      this.cancelLoadingApp();
+    });
+  }
+
+  async findSkillJocSetting() {
+    const from = this.user_id;
+    await this.userOnbService.findSkillJobSetting(from).then(async (res) => {
+      const listSkills = [];
+      for (const skill of res.data) {
+        listSkills.push({
+          _key: skill?.skills?._key,
+          value: skill?.skills?.value,
+          level: skill?.level,
+        });
+      }
+
+      this.userJobSettingInfo.controls['job_setting_skills'].setValue([
+        ...listSkills,
+      ]);
+      this.userJobSettingInfoClone = this.userOnboardingInfo.value;
       this.cancelLoadingApp();
     });
   }
@@ -522,7 +550,7 @@ export class UserOnboardingComponent
       .replace('{0}', this.translateService.translate('available_time_to'))
       .replace(
         '{1}',
-        this.translateService.translate('available_time_to_from')
+        this.translateService.translate('available_time_from')
       );
     this.availableTimeErrorMessage = [];
     this.availableTimeErrorMessage.push(availableTimeErr);
@@ -532,8 +560,10 @@ export class UserOnboardingComponent
     const skills = saveData.job_setting_skills;
     const arrSkills = [];
     for (const skill of skills) {
-      const skill_key = await this.userOnbService.findSkillsByCode(skill._key);
-      arrSkills.push(skill_key.data[0]._key);
+      arrSkills.push({
+        skill:skill._key,
+        level:skill.level
+      });
     }
 
     saveData.job_setting_skills = arrSkills;
@@ -638,14 +668,8 @@ export class UserOnboardingComponent
 
   async saveDataUserSkill() {
     this.user_skill._from = 'sys_user/' + this.authService.getUserID();
-    const skills = [];
-    for (const item of this.current_job_skills) {
-      await this.userOnbService.findSkillsByCode(item._key).then((res) => {
-        if (res) {
-          skills.push(res.data[0]._key);
-        }
-      });
-    }
+    const skills = this.current_job_skills;
+    
     if (this.mode == 'EDIT') {
       const _fromSkill = [{ _from: 'sys_user/' + this.user_id }];
       await this.userOnbService.removeBizUserSkill(_fromSkill);
@@ -653,12 +677,10 @@ export class UserOnboardingComponent
     for (const skill of skills) {
       this.sort_no += 1;
       this.user_skill.sort_no = this.sort_no;
-      this.user_skill._to = 'm_skill/' + skill;
+      this.user_skill._to = 'm_skill/' + skill._key;
+      this.user_skill.level = skill.level;
       await this.userOnbService.saveUserSkills([this.user_skill]);
     }
-    // skills.forEach(async (skill) => {
-     
-    // });
     this.cancelLoadingApp();
   }
 
