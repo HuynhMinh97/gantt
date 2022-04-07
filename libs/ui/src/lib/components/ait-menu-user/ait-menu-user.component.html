@@ -15,7 +15,7 @@
         </div>
         <div *ngIf="isHavingUserProfile" style="margin: auto">
           <ait-button [id]="'remove'" [width]="'136px'" [height]="'24px'" [fontsize]="'10px'" [title]="'view profile'"
-        [isDefault]="true">
+        [isDefault]="true" (click)="navigateToMyProfile()">
       </ait-button>
         </div>
       <ait-space [margin]="'5px'"></ait-space>

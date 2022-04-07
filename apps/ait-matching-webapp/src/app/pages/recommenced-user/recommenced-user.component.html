@@ -9,7 +9,7 @@
                 <input class="out_line" #inputSearch type="text" [placeholder]="'Please input your keyword'" autofocus
                     formControlName="keyword" tabindex="5" />
             </div>
-            <button style="border: none" tabindex="6" class="aureole__button__search out_line">
+            <button style="border: none" tabindex="6" class="aureole__button__search out_line" (click)="search()">
                 <div class="icon__look__up" style="margin: 2px 6px 0 0">
                     <nb-icon icon="search" style="color: white" pack="font-awesome-fas"></nb-icon>
                 </div>
@@ -33,30 +33,30 @@
                     <ait-autocomplete-master-data [label]="'Title'" [collection]="'m_title'" [id]="'number_format'"
                         [icon]="'search-outline'" [style]="{ width: '400px' }" [placeholder]="'Please select title'"
                         [disableOutputDefault]="true" [tabIndex]="6"
-                        (watchValue)="takeMasterValues($event?.value, 'title')" [isReset]="isReset"
-                        [defaultValue]="searchForm.controls['title'].value">
+                        (watchValue)="takeMasterValues($event?.value, 'current_job_title')" [isReset]="isReset"
+                        [defaultValue]="searchForm.controls['current_job_title'].value">
                     </ait-autocomplete-master-data>
                     <ait-space [margin]="'7.25px'"></ait-space>
                     <ait-autocomplete-master-data [label]="'Location'" [class]="'ADDRESS'" [id]="'number_format'"
                         [icon]="'search-outline'" [style]="{ width: '400px' }" [placeholder]="'Please select location'"
                         [disableOutputDefault]="true" [tabIndex]="5" [parentCodeExternal]="'VIETNAM'"
-                        (watchValue)="takeMasterValues($event?.value, 'location')" [isReset]="isReset"
-                        [defaultValue]="searchForm.controls['location'].value">
+                        (watchValue)="takeMasterValues($event?.value, 'province_city')" [isReset]="isReset"
+                        [defaultValue]="searchForm.controls['province_city'].value">
                     </ait-autocomplete-master-data>
                 </div>
                 <div class="right_side">
                     <ait-autocomplete-master-data [label]="'Industry'" [collection]="'m_industry'"
                         [id]="'number_format'" [icon]="'search-outline'" [style]="{ width: '400px' }"
                         [placeholder]="'Please select industry'" [disableOutputDefault]="true" [tabIndex]="5"
-                        (watchValue)="takeMasterValues($event?.value, 'industry')" [isReset]="isReset"
-                        [defaultValue]="searchForm.controls['industry'].value">
+                        (watchValue)="takeMasterValues($event?.value, 'industry_working')" [isReset]="isReset"
+                        [defaultValue]="searchForm.controls['industry_working'].value">
                     </ait-autocomplete-master-data>
                     <ait-space [margin]="'7.25px'"></ait-space>
                     <ait-autocomplete-master-data [label]="'Level'" [class]="'EMPLOYEE_LEVEL'" [id]="'number_format'"
                         [icon]="'search-outline'" [style]="{ width: '400px' }" [placeholder]="'Please select level'"
                         [disableOutputDefault]="true" [tabIndex]="5"
-                        (watchValue)="takeMasterValues($event?.value, 'level')" [isReset]="isReset"
-                        [defaultValue]="searchForm.controls['level'].value">
+                        (watchValue)="takeMasterValues($event?.value, 'current_job_level')" [isReset]="isReset"
+                        [defaultValue]="searchForm.controls['current_job_level'].value">
                     </ait-autocomplete-master-data>
                     <ait-space [margin]="'7.25px'"></ait-space>
 
@@ -77,6 +77,10 @@
                     </ng-container>
                 </div>
                 <div class="bottom_side">
+                    <ait-button [id]="'reset'" [width]="'150px'" [height]="'32px'" [marginleft]="'0px'"
+                        [title]="'Query List'" [isDefault]="true" (click)="showQueryList()">
+                    </ait-button>
+                    <span style="flex: 1 1 auto"></span>
                     <!-- reset -->
                     <ait-button [id]="'reset'" [width]="'150px'" [height]="'32px'" [title]="'clear'" [isDefault]="true"
                         (click)="reset()">

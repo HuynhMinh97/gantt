@@ -1,8 +1,11 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { BaseEntity, KeyValueEntity } from '@ait/core';
 
 @ObjectType()
 export class SkillEntity {
+  @Field(() => ID, { nullable: true })
+  _key: string;
+
   @Field(() => String, { nullable: true })
   name: string;
 
@@ -35,6 +38,21 @@ export class UserProfileEntity extends BaseEntity {
   @Field(() => KeyValueEntity, { nullable: true })
   gender?: KeyValueEntity;
 
+  @Field(() => KeyValueEntity, { nullable: true })
+  company_working?: KeyValueEntity;
+
+  @Field(() => KeyValueEntity, { nullable: true })
+  industry_working?: KeyValueEntity;
+
+  @Field(() => KeyValueEntity, { nullable: true })
+  current_job_title?: KeyValueEntity;
+
+  @Field(() => KeyValueEntity, { nullable: true })
+  current_job_level?: KeyValueEntity;
+
+  @Field(() => KeyValueEntity, { nullable: true })
+  province_city?: KeyValueEntity;
+
   @Field(() => String, { nullable: true })
   dob?: string;
 
@@ -46,5 +64,8 @@ export class UserProfileEntity extends BaseEntity {
 
   @Field(() => String, { nullable: true })
   phone_number?: string;
+
+  @Field(() => Boolean, { nullable: true })
+  is_saved?: boolean;
 
 }

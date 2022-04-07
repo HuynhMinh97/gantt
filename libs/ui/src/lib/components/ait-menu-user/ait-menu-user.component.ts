@@ -113,7 +113,7 @@ export class AitMenuUserComponent extends AitBaseComponent implements OnInit {
   }
 
   isUserLogined = () => this.authService.isLogined();
-  navigateToMyProfile = () => this.router.navigateByUrl('/');
+  navigateToMyProfile = () => this.router.navigateByUrl('/user-profile');
   navigateToJobList = () => this.router.navigateByUrl('/');
   navigateToPostAJob = () => this.router.navigateByUrl('/');
 

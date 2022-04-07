@@ -55,7 +55,24 @@ export class RecommencedUserService extends AitBaseService {
         _key: true,
         value: true
       },
+      industry_working: {
+        _key: true,
+        value: true
+      },
+      current_job_title: {
+        _key: true,
+        value: true
+      },
+      current_job_level: {
+        _key: true,
+        value: true
+      },
+      province_city: {
+        _key: true,
+        value: true
+      },
       skills: {
+        _key: true,
         name: true,
         level: true
       },
@@ -64,11 +81,6 @@ export class RecommencedUserService extends AitBaseService {
 
     condition[KEYS.COLLECTION] = COLLECTIONS.USER_PROFILE;
     condition[KEYS.CONDITION] = { start, end };
-    condition[KEYS.CONDITION]['company_working'] = {
-      attribute: 'company_working',
-      ref_collection: 'm_company',
-      ref_attribute: 'code'
-    };
     if (onlySaved) {
       condition[KEYS.CONDITION]['is_saved'] = true;
     }
