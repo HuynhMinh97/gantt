@@ -3,20 +3,26 @@ import { InputType, Field, Float } from '@nestjs/graphql';
 
 @InputType()
 export class SearchConditionDto extends BaseDto {
+  @Field(() => String, { nullable: true })
+  name?: string;
+
+  @Field(() => String, { nullable: true })
+  keyword?: string;
+
   @Field(() => ConditionDto, { nullable: true })
   skills?: ConditionDto;
 
   @Field(() => ConditionDto, { nullable: true })
-  title?: ConditionDto;
+  current_job_title?: ConditionDto;
 
   @Field(() => ConditionDto, { nullable: true })
-  location?: ConditionDto;
+  province_city?: ConditionDto;
 
   @Field(() => ConditionDto, { nullable: true })
-  industry?: ConditionDto;
+  industry_working?: ConditionDto;
 
   @Field(() => ConditionDto, { nullable: true })
-  level?: ConditionDto;
+  current_job_level?: ConditionDto;
 
   @Field(() => Float, { nullable: true })
   valid_time_from?: number;
@@ -27,20 +33,26 @@ export class SearchConditionDto extends BaseDto {
 
 @InputType()
 export class SaveSearchConditionDto extends BaseDto {
+  @Field(() => String, { nullable: true })
+  name?: string;
+
+  @Field(() => String, { nullable: true })
+  keyword?: string;
+  
   @Field(() => [String], { nullable: true })
   skills?: string[];
 
   @Field(() => [String], { nullable: true })
-  title?: string[];
+  current_job_title?: string[];
 
   @Field(() => [String], { nullable: true })
-  location?: string[];
+  province_city?: string[];
 
   @Field(() => [String], { nullable: true })
-  industry?: string[];
+  industry_working?: string[];
 
   @Field(() => [String], { nullable: true })
-  level?: string[];
+  current_job_level?: string[];
 
   @Field(() => Float, { nullable: true })
   valid_time_from?: number;

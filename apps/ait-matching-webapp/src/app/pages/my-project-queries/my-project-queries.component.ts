@@ -1,4 +1,5 @@
 import {
+  isArrayFull,
   isObjectFull,
   isString,
   KeyValueDto,
@@ -20,13 +21,16 @@ import { Apollo } from 'apollo-angular';
 import { ProjectListService } from '../../services/project-list.service';
 import dayjs from 'dayjs';
 import { LocalDataSource } from 'ng2-smart-table';
+import { SearchConditionService } from '../../services/search-condition.service';
 
 @Component({
   selector: 'ait-project-list',
   templateUrl: './my-project-queries.component.html',
   styleUrls: ['./my-project-queries.component.scss'],
 })
-export class MyProjectQueriesComponent extends AitBaseComponent implements OnInit {
+export class MyProjectQueriesComponent
+  extends AitBaseComponent
+  implements OnInit {
   @ViewChild('area') area: ElementRef;
 
   source: LocalDataSource;
@@ -53,7 +57,8 @@ export class MyProjectQueriesComponent extends AitBaseComponent implements OnIni
     env: AitEnvironmentService,
     authService: AitAuthService,
     toastrService: NbToastrService,
-    layoutScrollService: NbLayoutScrollService
+    layoutScrollService: NbLayoutScrollService,
+    private searchConditionService: SearchConditionService
   ) {
     super(
       store,
@@ -86,105 +91,45 @@ export class MyProjectQueriesComponent extends AitBaseComponent implements OnIni
         this.dateFormat = setting['date_format_display'];
       }
     });
-
-    this.setModulePage({
-      module: '',
-      page: '',
-    });
-  }
-  ngOnInit(): void {
-    this.callLoadingApp();
   }
 
-  getOperator(key: string) {
-    if (
-      key === 'create_at_from' ||
-      key === 'change_at_from' 
-    ) {
-      return OPERATOR.GREATER_OR_EQUAL;
-    } else {
-      return OPERATOR.LESS_OR_EQUAL;
-    }
-  }
-
-  focusToTable() {
-    try {
-      setTimeout(() => {
-        this.area.nativeElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
+  getVales(data: KeyValueDto[]): string {
+    if (isArrayFull(data)) {
+      const result = [];
+        data.forEach((element: KeyValueDto) => {
+          result.push(element?.value ?? '');
         });
-      }, 0);
-    } catch {}
+        return result.join(', ');
+    } else {
+      return '';
+    }
   }
 
   public search = async (condition = {}, data = {}) => {
-    this.searchProject.patchValue({ ...data });
-    if (
-      this.searchProject.valid &&
-      !this.isChangeAtError &&
-      !this.isCreateAtError
-    ) {
-      const object = {};
-      Object.keys(this.searchProject.controls).forEach((key) => {
-        const value = this.searchProject.controls[key].value;
-        if (value) {
-          if (this.dateAtributes.includes(key)) {
-            object[key] = {
-              target: key.slice(0, 9) || '',
-              operator: this.getOperator(key),
-              valueAsNumber: value,
-            };
-          } else if (this.userAttribute.includes(key)) {
-            try {
-              if (!object[key]) {
-                object[key] = { operator: OPERATOR.LIKE };
-              }
-              object[key]['value'] = value;
-            } catch (e) {}
-          } else {
-            const isStr = isString(value);
-            object[key] = {
-              operator: isStr ? OPERATOR.LIKE : OPERATOR.IN,
-            };
-            if (isStr) {
-              object[key]['valueAsString'] = value;
-            } else {
-              object[key]['value'] = this.getArrayKeys(value);
-            }
-          }
-        }
-      });
-
-      if (isObjectFull(object)) {
-        const data = await this.getData(object);
-        this.focusToTable();
-        return { data: data };
-      } else {
-        const data = await this.getData();
-        this.focusToTable();
-        return { data: data };
-      }
-    } else {
-      const data = await this.getData();
-      this.focusToTable();
-      return { data: data };
-    }
+    const res = await this.searchConditionService.find();
+    const resData: any[] = res.data || [];
+    const nextData = [];
+    resData.forEach(e => {
+      const obj = {
+        _key: e['_key'] || '',
+        name: e['name'] || '',
+        keyword: e['keyword'] || '',
+        skills: this.getVales(e['skills']),
+        current_job_title: this.getVales(e['current_job_title']),
+        province_city: this.getVales(e['province_city']),
+        industry_working: this.getVales(e['industry_working']),
+        current_job_level: this.getVales(e['current_job_level']),
+        valid_time_from: this.getDateFormat(e['valid_time_from']),
+        valid_time_to: this.getDateFormat(e['valid_time_to']),
+        create_at: this.getDateFormat(e['create_at']),
+        create_by: e['create_by'],
+        change_at: this.getDateFormat(e['change_at']),
+        change_by: e['change_by']
+      };
+      nextData.push(obj);
+    });
+    return { data: nextData };
   };
-
-  getArrayKeys(values: KeyValueDto | KeyValueDto[]) {
-    const isArray = Array.isArray(values);
-    const result = [];
-    if (isArray) {
-      ((values as KeyValueDto[]) || []).forEach((item) => {
-        result.push(item._key);
-      });
-      return result;
-    } else {
-      result.push((values as KeyValueDto)._key);
-      return result;
-    }
-  }
 
   getDateFormat(time: number) {
     if (!time) {
@@ -193,30 +138,4 @@ export class MyProjectQueriesComponent extends AitBaseComponent implements OnIni
       return dayjs(time).format(this.dateFormat.toUpperCase() + ' HH:mm');
     }
   }
-  async getData(object?: any) {
-    const dataSearch = [];
-    await this.projectListService.find(object).then((res) => {
-      if (res?.status === RESULT_STATUS.OK) {
-        const data = res.data;
-        if (data.length > 0) {
-          data.forEach((element) => {
-            const dataFormat = {};
-            dataFormat['name'] = element?.name;
-            dataFormat['_key'] = element?._key;
-            dataFormat['code'] = element?.code;
-            dataFormat['category'] = element?.category?.value;
-            dataFormat['create_by'] = element?.create_by;
-            dataFormat['change_by'] = element?.change_by;
-            dataFormat['create_at'] = this.getDateFormat(element?.create_at);
-            dataFormat['change_at'] = this.getDateFormat(element?.change_at);
-            dataSearch.push(dataFormat);
-          });
-        }
-      }
-    });
-    this.source = new LocalDataSource(dataSearch);
-    return dataSearch;
-  }
-
- 
 }

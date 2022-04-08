@@ -2,6 +2,7 @@
 import {
   isArrayFull,
   isObjectFull,
+  KEYS,
   KeyValueDto,
   RESULT_STATUS,
 } from '@ait/shared';
@@ -9,6 +10,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
+  NbDialogService,
   NbIconLibraries,
   NbLayoutScrollService,
   NbToastrService,
@@ -30,6 +32,7 @@ import { Apollo } from 'apollo-angular';
 import { RecommencedUserService } from '../../services/recommenced-user.service';
 import { StoreKeywordsSearch } from '../../state/actions';
 import { SearchConditionService } from '../../services/search-condition.service';
+import { SetNameComponent } from './components/set-name/set-name.component';
 
 export enum StorageKey {
   KEYWORD = 'keyword',
@@ -53,6 +56,7 @@ export class RecommencedUserComponent
     private translateService: AitTranslationService,
     private iconLibraries: NbIconLibraries,
     private formBuilder: FormBuilder,
+    private dialogService: NbDialogService,
     store: Store<AppState | any>,
     authService: AitAuthService,
     router: Router,
@@ -315,10 +319,11 @@ export class RecommencedUserComponent
   getTitle = (name: string) => this.translateService.translate(name);
 
   async ngOnInit() {
-    // eslint-disable-next-line no-constant-condition
-    if (false) {
-      this.searchConditionService.find().then((e) => {
+    const queriesKey = localStorage.getItem('my-project-queries');
+    if (queriesKey) {
+      this.searchConditionService.find({_key: queriesKey}).then((e) => {
         this.searchForm.patchValue(e.data[0]);
+        localStorage.setItem('my-project-queries', null);
       });
     }
     this.callSearchAll();
@@ -469,7 +474,7 @@ export class RecommencedUserComponent
   }
 
   showQueryList() {
-    this.router.navigate[`/`];
+    this.router.navigate([`/my-project-queries`]);
   }
 
   search() {
@@ -478,23 +483,43 @@ export class RecommencedUserComponent
   }
 
   save(): void {
-    const data = this.searchForm.value;
-    const obj = {};
-    for (const prop in data) {
-      if (data[prop]) {
-        obj[prop] = data[prop];
+    this.dialogService.open(SetNameComponent, {
+      closeOnBackdropClick: true,
+      hasBackdrop: true,
+      autoFocus: false
+    })
+    .onClose.subscribe(async (name) => {
+      try {
+        if (name) {
+        const data = this.searchForm.value;
+        const obj = { name };
+        for (const prop in data) {
+          if (data[prop]) {
+            if (isArrayFull(data[prop])) {
+              const result = [];
+              data[prop].forEach((e: KeyValueDto) => {
+                result.push(e?._key ?? '');
+              });
+              obj[prop] = result;
+            } else {
+              obj[prop] = data[prop];
+            }
+          }
+        }
+        this.searchConditionService.save(obj).then((res) => {
+          if (res.status === RESULT_STATUS.OK) {
+            this.searchForm.controls['_key'].setValue(res.data[0]?._key || '');
+            this.showToastr('', this.getMsg('I0005'));
+          } else {
+            this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+          }
+        });
       }
-    }
-
-    this.searchConditionService.save(obj).then((res) => {
-      if (res.status === RESULT_STATUS.OK) {
-        this.searchForm.controls['_key'].setValue(res.data[0]?._key || '');
-      }
+    } catch (e) { console.log(e) }
     });
   }
 
   filterMain(type: number) {
-    console.log(1);
     try {
       const formValue = this.searchForm.value;
       const condition = Object.entries(formValue).reduce(
@@ -511,12 +536,11 @@ export class RecommencedUserComponent
                 data.includes(z['_key'])
               );
               if (!isValid) break;
-            } else if (m[prop]) {
+            } else if (isArrayFull(condition[prop]) && m[prop]) {
               const data = [m[prop]].map((t: any) => t['_key']);
               isValid = condition[prop].every((z: any) =>
                 data.includes(z['_key'])
               );
-              console.log(isValid)
               if (!isValid) break;
             } else {
               isValid = false;
