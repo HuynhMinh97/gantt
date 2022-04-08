@@ -1,0 +1,14 @@
+<div class="form-container" style="margin: auto">
+    <div class="title">
+        <ait-input-text [id]="'name'" [height]="'40px'" [width]="'350px'" [rows]="1" [label]="'Name'" [required]="true" (watchValue)="takeInputValue($event)"
+        [isSubmit]="isSubmit"
+            [placeholder]="'please input name'" [length]="4000"></ait-input-text>
+    </div>
+    <div class="group">
+        <ait-button [id]="'cancel'" [width]="'100px'" [height]="'32px'" [title]="'Cancel'" [isDefault]="true" (click)="close(false)">
+        </ait-button>
+        <ait-button [id]="'save'" [width]="'100px'" [height]="'32px'" [title]="'Save'"
+            [isDefault]="true" (click)="close(true)">
+        </ait-button>
+    </div>
+</div>

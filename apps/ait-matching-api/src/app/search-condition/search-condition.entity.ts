@@ -3,20 +3,26 @@ import { ObjectType, Field, Float } from '@nestjs/graphql';
 
 @ObjectType()
 export class SearchConditionEntity extends BaseEntity {
+  @Field(() => String, { nullable: true })
+  name?: string;
+
+  @Field(() => String, { nullable: true })
+  keyword?: string;
+  
   @Field(() => [KeyValueEntity], { nullable: true })
   skills?: string[];
 
   @Field(() => [KeyValueEntity], { nullable: true })
-  title?: string[];
+  current_job_title?: string[];
 
   @Field(() => [KeyValueEntity], { nullable: true })
-  location?: string[];
+  province_city?: string[];
 
   @Field(() => [KeyValueEntity], { nullable: true })
-  industry?: string[];
+  industry_working?: string[];
 
   @Field(() => [KeyValueEntity], { nullable: true })
-  level?: string[];
+  current_job_level?: string[];
 
   @Field(() => Float, { nullable: true })
   valid_time_from?: number;
