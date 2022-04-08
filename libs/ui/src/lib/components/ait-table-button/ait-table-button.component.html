@@ -9,12 +9,12 @@
         <span class="icon_text">{{getTitle('view')}}</span>
       </button>
       <!-- edit -->
-      <button mat-menu-item (click)="edit()">
+      <button mat-menu-item (click)="edit()" *ngIf="isValidPath()">
         <nb-icon icon="pen" pack="font-awesome-fas"></nb-icon>
         <span class="icon_text">{{getTitle('edit')}}</span>
       </button>
       <!-- copy -->
-      <button mat-menu-item (click)="copy()">
+      <button mat-menu-item (click)="copy()" *ngIf="isValidPath()">
         <nb-icon icon="copy" pack="font-awesome"></nb-icon>
         <span class="icon_text">{{getTitle('copy')}}</span>
       </button>

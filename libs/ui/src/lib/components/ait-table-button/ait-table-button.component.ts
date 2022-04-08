@@ -47,6 +47,7 @@ export class AitTableButtonComponent
     );
     this.iconLibraries.registerFontPack('font-awesome', { packClass: 'far', iconClassPrefix: 'fa' });
     this.iconLibraries.registerFontPack('font-awesome-fas', { packClass: 'fas', iconClassPrefix: 'fa' });
+    this.path = this.router.url;
   }
   @Input() value: any;
   @Input() rowData: any;
@@ -55,6 +56,7 @@ export class AitTableButtonComponent
   @Output() editEvent: EventEmitter<any> = new EventEmitter();
   @Output() deleteEvent: EventEmitter<any> = new EventEmitter();
   isOpen = false;
+  path = '';
   items: NbMenuItem[] = [];
 
   message = '他システムのデータのため、修正できません。';
@@ -83,11 +85,18 @@ export class AitTableButtonComponent
     }
   }
 
+  isValidPath(): boolean {
+    return this.path !== '/my-project-queries';
+  }
+
   getTitle(title: string) {
     return this.translateService.translate(title);
   }
 
   view() {
+    if (!this.isValidPath()) {
+      localStorage.setItem('my-project-queries', this.value);
+    }
     this.detailEvent.emit(this.value);
   }
 
