@@ -10,7 +10,10 @@ export const environment = {
   },
   API_PATH: {
     BASE_REST_PREFIX: '/rest-api/v1',
-    BASE_GRAPHQL_PREFIX:'/api/v1',
+    BASE_GRAPHQL_PREFIX: '/api/v1',
+    RECOMMENCED: {
+      MATCHING_USER: '/recommenced/matching',
+    },
     AUREOLEV: {
       RECOMMENCED_USER: {
         MATCHING_COMPANY: '/recommenced-user/matching-company',
@@ -19,7 +22,7 @@ export const environment = {
         GET_TAB_SAVE: '/recommenced-user/get-tab-save',
         SEARCH_COMPANY: '/recommenced-user/search-company',
         SAVE_COMPANY_USER: '/recommenced-user/save-company-user',
-        REMOVE_SAVE_COMPANY_USER : '/recommenced-user/remove-save-company-user'
+        REMOVE_SAVE_COMPANY_USER: '/recommenced-user/remove-save-company-user',
       },
       RECOMMENCED_JOB: {
         MATCHING_USER: '/recommenced-job/matching-user',
@@ -28,8 +31,8 @@ export const environment = {
         GET_TAB_SAVE: '/recommenced-job/get-tab-save',
         SEARCH_USER: '/recommenced-job/search-user',
         SAVE_USER_JOB: '/recommenced-job/save-user-job',
-        REMOVE_SAVE_USER_JOB : '/recommenced-job/remove-save-user-job'
-      }
+        REMOVE_SAVE_USER_JOB: '/recommenced-job/remove-save-user-job',
+      },
     },
     SYS: {
       AUTH_API_PATH: '/auth',
@@ -46,7 +49,7 @@ export const environment = {
       JOB: '/jobs',
     },
     COMPANY: {
-      SAVE: '/company/save'
-    }
+      SAVE: '/company/save',
+    },
   },
 };

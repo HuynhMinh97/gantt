@@ -22,6 +22,7 @@ import { CertificateResolver } from './list/certificate-list/certificate-list.re
 import { GetEmployeeResolver } from './group-role/add-role/add-role.resolver';
 import { SearchConditionResolver } from './search-condition/search-condition.resolver';
 import { SaveRecommendUserResolver } from './save-recommend-user/save-recommend-user.resolver';
+import { RecommencedUserController } from './recommenced-user/recommenced-user.controller';
 
 const RESOLVERS = [
   UserExperienceInfoResolver,
@@ -46,20 +47,23 @@ const RESOLVERS = [
   SearchConditionResolver,
   SaveRecommendUserResolver,
   {
-  provide: 'ENVIRONMENT',
-  useValue: environment
-  }
-  ];
+    provide: 'ENVIRONMENT',
+    useValue: environment,
+  },
+];
 @Module({
   imports: [
     HttpModule,
     AitCoreModule.forRoot(environment),
-    AitAuthModule.forRoot(environment)
+    AitAuthModule.forRoot(environment),
   ],
-  controllers: [],
-  providers: [...RESOLVERS, {
-    provide: 'ENVIRONMENT',
-    useValue: environment
-  }],
+  controllers: [RecommencedUserController],
+  providers: [
+    ...RESOLVERS,
+    {
+      provide: 'ENVIRONMENT',
+      useValue: environment,
+    },
+  ],
 })
-export class AppModule { }
+export class AppModule {}
