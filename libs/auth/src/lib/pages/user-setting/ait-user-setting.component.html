@@ -1,6 +1,6 @@
 <div class="template__popup">
   <ait-text-gradient [content]="'1001' | translate" [id]="'title'"></ait-text-gradient>
-  <ait-space></ait-space>
+  <ait-space [margin]="'10px'"></ait-space>
   <ait-card-content class="content__card" [label]="'基本情報'" [padding]="'0 5rem'" [disableHeader]="true"
     [transition]="false">
     <div class="form__wrapper" nbSpinnerStatus="primary" [nbSpinner]="loadingSetting">
@@ -53,13 +53,12 @@
       </ait-autocomplete-master-data>
 
       <ait-space [margin]="'7.25px'"></ait-space>
-
     </div>
   </ait-card-content>
   <div class="button__group">
-    <ait-button (click)="back()" [id]="'back'" [width]="'200px'" [title]="'c_2004'" [isDefault]="true" [tabIndex]="6">
+    <ait-button (click)="back()" [id]="'back'" [width]="'150px'" [title]="'c_2004'" [isDefault]="true" [tabIndex]="6">
     </ait-button>
-    <ait-button (click)="save()" [id]="'save'" [width]="'200px'" [title]="'c_2001'" [isDefault]="true" [tabIndex]="7">
+    <ait-button (click)="save()" [id]="'save'" [width]="'150px'" [title]="'c_2001'" [isDefault]="true" [tabIndex]="7">
     </ait-button>
   </div>
 </div>
