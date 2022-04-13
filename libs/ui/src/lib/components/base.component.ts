@@ -329,7 +329,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
         }
     }
       `,
-      fetchPolicy: 'network-only'
+        fetchPolicy: 'network-only',
       })
       .toPromise();
     return rest?.data?.findUserSetting;
@@ -494,7 +494,12 @@ export class AitBaseComponent implements OnInit, OnDestroy {
     return value.length < minLength && value.length !== 0 ? message : null;
   };
 
-  getMinLengthMessage = (value: string, minLength: number, fieldName: string, errorMessage: string) => {
+  getMinLengthMessage = (
+    value: string,
+    minLength: number,
+    fieldName: string,
+    errorMessage: string
+  ) => {
     const target = value || '';
     if (value.length === 0) {
       return null;
@@ -639,8 +644,8 @@ export class AitBaseComponent implements OnInit, OnDestroy {
 
   getMessageByTypeAndCode = async (type: string, code: string[]) => {
     return await this.apollo
-    .query({
-      query: gql`
+      .query({
+        query: gql`
         query {
         findSystem(
           request: {
@@ -648,7 +653,9 @@ export class AitBaseComponent implements OnInit, OnDestroy {
             lang: "${this.lang || this.env?.COMMON?.LANG_DEFAULT}"
             collection: "sys_message"
             user_id: ""
-            condition: { type: "${type}", code: { value: ${JSON.stringify(code)} } }
+            condition: { type: "${type}", code: { value: ${JSON.stringify(
+          code
+        )} } }
           }
         ) {
           data {
@@ -660,10 +667,10 @@ export class AitBaseComponent implements OnInit, OnDestroy {
             }
           }
         }
-      `
-    })
-    .toPromise();
-  }
+      `,
+      })
+      .toPromise();
+  };
 
   // Start basecomponent for initializing
   ngOnInit() {
@@ -698,7 +705,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
   setModulePage = (data: BaseInitData) => {
     const { module, page, type } = data;
     this.getPermission(page, module).then((r) => {
-      this.checkPermission();
+      // this.checkPermission();
     });
     this.store.dispatch(new SetModulePage({ page, module, type }));
     this.module = module;
@@ -719,7 +726,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
         }
       }
     });
-    
+
     // Coding here for calling api to request caption or master data for module and page 🚀🚀🚀
   };
 
@@ -901,26 +908,36 @@ export class AitBaseComponent implements OnInit, OnDestroy {
   // }
 
   async checkPermission() {
-    const isHavingAllPermission = this.currentPermission.includes(PERMISSIONS.FULL_CONTROLL);
+    const isHavingAllPermission = this.currentPermission.includes(
+      PERMISSIONS.FULL_CONTROLL
+    );
     if (isHavingAllPermission) return;
     if (isArrayFull(this.currentPermission)) {
       switch (this.type) {
         case PAGE_TYPE.NEW: {
-          const isHavingPermission = this.currentPermission.includes(PERMISSIONS.WRITE);
+          const isHavingPermission = this.currentPermission.includes(
+            PERMISSIONS.WRITE
+          );
           if (!isHavingPermission) this.navigateTo403();
           break;
         }
         case PAGE_TYPE.EDIT: {
-          const isHavingPermission = this.currentPermission.includes(PERMISSIONS.EDIT);
+          const isHavingPermission = this.currentPermission.includes(
+            PERMISSIONS.EDIT
+          );
           if (!isHavingPermission) this.navigateTo403();
-          this.isAllowDelete = this.currentPermission.includes(PERMISSIONS.DELETE);
+          this.isAllowDelete = this.currentPermission.includes(
+            PERMISSIONS.DELETE
+          );
           break;
         }
-          default: {
-            const isHavingPermission = this.currentPermission.includes(PERMISSIONS.READ);
-            if (!isHavingPermission) this.navigateTo403();
-            break;
-          }
+        default: {
+          const isHavingPermission = this.currentPermission.includes(
+            PERMISSIONS.READ
+          );
+          if (!isHavingPermission) this.navigateTo403();
+          break;
+        }
       }
     } else {
       this.navigateTo403();
@@ -937,7 +954,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
       const moduleKey = await this.getKey(module, 'module');
 
       if (!pageKey || !moduleKey) return;
-      
+
       const result: any = await this.apollo
         .query({
           query: gql`query{
