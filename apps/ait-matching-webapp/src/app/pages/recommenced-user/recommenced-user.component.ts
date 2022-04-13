@@ -51,7 +51,7 @@ export class RecommencedUserComponent
   currentCount = 0;
   constructor(
     layoutScrollService: NbLayoutScrollService,
-    private matchingCompanyService: RecommencedUserService,
+    private matchingService: RecommencedUserService,
     private searchConditionService: SearchConditionService,
     private translateService: AitTranslationService,
     private iconLibraries: NbIconLibraries,
@@ -234,23 +234,8 @@ export class RecommencedUserComponent
     this.gotoTop();
   };
 
-  private matchingCompany = async (_key: string) => {
-    const filter = this.filterCommon;
-    const res = await this.matchingCompanyService.matchingCompany(_key);
-
-    if (res.status === RESULT_STATUS.OK) {
-      const data = res.data;
-      if (data && data?.length !== 0) {
-        this.filterCommon = filter;
-      } else {
-        this.setSkeleton(false);
-        this.textDataNull = '021';
-      }
-    }
-  };
-
   private getDetailMatching = async (onlySaved = false, start = 0, end = 8) => {
-    const res = await this.matchingCompanyService.getDetailMatching(
+    const res = await this.matchingService.getDetailMatching(
       onlySaved,
       start * 8,
       end
@@ -321,7 +306,7 @@ export class RecommencedUserComponent
   async ngOnInit() {
     const queriesKey = localStorage.getItem('my-project-queries');
     if (queriesKey) {
-      this.searchConditionService.find({_key: queriesKey}).then((e) => {
+      this.searchConditionService.find({ _key: queriesKey }).then((e) => {
         this.searchForm.patchValue(e.data[0]);
         localStorage.setItem('my-project-queries', null);
       });
@@ -479,44 +464,50 @@ export class RecommencedUserComponent
 
   search() {
     const keyword = this.searchForm.controls['keyword'].value;
+    // this.matchingService.getCompanyProfile;
     console.log(keyword);
   }
 
   save(): void {
-    this.dialogService.open(SetNameComponent, {
-      closeOnBackdropClick: true,
-      hasBackdrop: true,
-      autoFocus: false
-    })
-    .onClose.subscribe(async (name) => {
-      try {
-        if (name) {
-        const data = this.searchForm.value;
-        const obj = { name };
-        for (const prop in data) {
-          if (data[prop]) {
-            if (isArrayFull(data[prop])) {
-              const result = [];
-              data[prop].forEach((e: KeyValueDto) => {
-                result.push(e?._key ?? '');
-              });
-              obj[prop] = result;
-            } else {
-              obj[prop] = data[prop];
+    this.dialogService
+      .open(SetNameComponent, {
+        closeOnBackdropClick: true,
+        hasBackdrop: true,
+        autoFocus: false,
+      })
+      .onClose.subscribe(async (name) => {
+        try {
+          if (name) {
+            const data = this.searchForm.value;
+            const obj = { name };
+            for (const prop in data) {
+              if (data[prop]) {
+                if (isArrayFull(data[prop])) {
+                  const result = [];
+                  data[prop].forEach((e: KeyValueDto) => {
+                    result.push(e?._key ?? '');
+                  });
+                  obj[prop] = result;
+                } else {
+                  obj[prop] = data[prop];
+                }
+              }
             }
+            this.searchConditionService.save(obj).then((res) => {
+              if (res.status === RESULT_STATUS.OK) {
+                this.searchForm.controls['_key'].setValue(
+                  res.data[0]?._key || ''
+                );
+                this.showToastr('', this.getMsg('I0005'));
+              } else {
+                this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+              }
+            });
           }
+        } catch (e) {
+          console.log(e);
         }
-        this.searchConditionService.save(obj).then((res) => {
-          if (res.status === RESULT_STATUS.OK) {
-            this.searchForm.controls['_key'].setValue(res.data[0]?._key || '');
-            this.showToastr('', this.getMsg('I0005'));
-          } else {
-            this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-          }
-        });
-      }
-    } catch (e) { console.log(e) }
-    });
+      });
   }
 
   filterMain(type: number) {
