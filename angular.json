@@ -67,10 +67,12 @@
                             "optimization": true,
                             "extractLicenses": true,
                             "inspect": false,
-                            "fileReplacements": [{
-                                "replace": "apps/ait-api-starter/src/environments/environment.ts",
-                                "with": "apps/ait-api-starter/src/environments/environment.prod.ts"
-                            }]
+                            "fileReplacements": [
+                                {
+                                    "replace": "apps/ait-api-starter/src/environments/environment.ts",
+                                    "with": "apps/ait-api-starter/src/environments/environment.prod.ts"
+                                }
+                            ]
                         }
                     }
                 },
@@ -123,10 +125,12 @@
                             "optimization": true,
                             "extractLicenses": true,
                             "inspect": false,
-                            "fileReplacements": [{
-                                "replace": "apps/ait-matching-api/src/environments/environment.ts",
-                                "with": "apps/ait-matching-api/src/environments/environment.prod.ts"
-                            }]
+                            "fileReplacements": [
+                                {
+                                    "replace": "apps/ait-matching-api/src/environments/environment.ts",
+                                    "with": "apps/ait-matching-api/src/environments/environment.prod.ts"
+                                }
+                            ]
                         }
                     }
                 },
@@ -156,7 +160,6 @@
                 }
             }
         },
-
         "ait-matching-webapp": {
             "projectType": "application",
             "root": "apps/ait-matching-webapp",
@@ -193,10 +196,12 @@
                     },
                     "configurations": {
                         "production": {
-                            "fileReplacements": [{
-                                "replace": "apps/ait-matching-webapp/src/environments/environment.ts",
-                                "with": "apps/ait-matching-webapp/src/environments/environment.prod.ts"
-                            }],
+                            "fileReplacements": [
+                                {
+                                    "replace": "apps/ait-matching-webapp/src/environments/environment.ts",
+                                    "with": "apps/ait-matching-webapp/src/environments/environment.prod.ts"
+                                }
+                            ],
                             "optimization": true,
                             "outputHashing": "all",
                             "sourceMap": false,
@@ -204,15 +209,16 @@
                             "extractLicenses": true,
                             "vendorChunk": false,
                             "buildOptimizer": true,
-                            "budgets": [{
+                            "budgets": [
+                                {
                                     "type": "initial",
-                                    "maximumWarning": "2mb",
-                                    "maximumError": "5mb"
+                                    "maximumWarning": "5mb",
+                                    "maximumError": "10mb"
                                 },
                                 {
                                     "type": "anyComponentStyle",
-                                    "maximumWarning": "6kb",
-                                    "maximumError": "10kb"
+                                    "maximumWarning": "900kb",
+                                    "maximumError": "900kb"
                                 }
                             ]
                         }
@@ -233,7 +239,8 @@
                 "serve-with-api": {
                     "builder": "@angular-devkit/architect:allOf",
                     "options": {
-                        "targets": [{
+                        "targets": [
+                            {
                                 "target": "ait-matching-webapp:serve"
                             },
                             {
@@ -326,10 +333,12 @@
                     },
                     "configurations": {
                         "production": {
-                            "fileReplacements": [{
-                                "replace": "apps/ait-webapp-starter/src/environments/environment.ts",
-                                "with": "apps/ait-webapp-starter/src/environments/environment.prod.ts"
-                            }],
+                            "fileReplacements": [
+                                {
+                                    "replace": "apps/ait-webapp-starter/src/environments/environment.ts",
+                                    "with": "apps/ait-webapp-starter/src/environments/environment.prod.ts"
+                                }
+                            ],
                             "optimization": true,
                             "outputHashing": "all",
                             "sourceMap": false,
@@ -337,15 +346,16 @@
                             "extractLicenses": true,
                             "vendorChunk": false,
                             "buildOptimizer": true,
-                            "budgets": [{
+                            "budgets": [
+                                {
                                     "type": "initial",
-                                    "maximumWarning": "2mb",
-                                    "maximumError": "5mb"
+                                    "maximumWarning": "5mb",
+                                    "maximumError": "10mb"
                                 },
                                 {
                                     "type": "anyComponentStyle",
-                                    "maximumWarning": "6kb",
-                                    "maximumError": "10kb"
+                                    "maximumWarning": "900kb",
+                                    "maximumError": "900kb"
                                 }
                             ]
                         }
