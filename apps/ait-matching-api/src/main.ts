@@ -3,19 +3,24 @@
  * This is only a minimal backend to get started.
  */
 
-import { Logger } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-
-import { AppModule } from './app/app.module';
-
-async function bootstrap() {
+ import { Logger } from '@nestjs/common';
+ import { NestFactory } from '@nestjs/core';
+import { json, urlencoded } from 'express';
+ 
+ import { AppModule } from './app/app.module';
+ import { environment } from './environments/environment';
+ 
+ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const globalPrefix = 'api';
+  const globalPrefix = 'rest-api/v1';
   app.setGlobalPrefix(globalPrefix);
-  const port = process.env.PORT || 3333;
+  app.use(json({ limit: '10mb' }));
+  app.use(urlencoded({ extended: true, limit: '10mb' }));
+  const port = environment.APP.PORT || 3333;
   await app.listen(port, () => {
     Logger.log('Listening at http://localhost:' + port + '/' + globalPrefix);
   });
 }
-
-bootstrap();
+ 
+ bootstrap();
+ 

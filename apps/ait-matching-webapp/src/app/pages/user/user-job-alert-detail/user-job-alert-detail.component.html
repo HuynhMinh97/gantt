@@ -1,0 +1,97 @@
+<div class="user__wrapper" id="user_job_alert">
+    <ait-text-gradient
+      [content]="'title header'"
+      [id]="'job-alert-detail'"
+    ></ait-text-gradient>
+    <ait-space></ait-space>
+  <div class="content__card">
+    <div class="form">
+      <div class="input_inline">
+        <ait-output-text
+          [label]="'INDUSTRY'"
+          [width]="'400px'"
+          [id]="'industry'"
+          [valueArray]="industrys"
+        ></ait-output-text>
+      </div>
+      <div class="input_inline">
+        <ait-output-text
+          [label]="'EXPERIENCE_LEVEL'"
+          [id]="'experience_level'"
+          [width]="'400px'"
+          [valueArray]="experienceLevels"
+        ></ait-output-text>
+        </div>
+        <div class="input_inline">
+          <ait-output-text
+            [label]="'EMPLOYEE_TYPE'"
+            [id]="'employee_type'"
+            [width]="'200px'"
+          [valueArray]="employeeTypes"
+          ></ait-output-text>
+        </div>
+        <div class="input_inline">
+            <ait-output-text
+              [label]="'LOCATION'"
+              [id]="'location'"
+              [width]="'400px'"
+              [valueArray]="locations"
+            ></ait-output-text>
+            </div>
+        <div class="start-date">
+          <ait-datepicker
+            [label]="'AVAILABLE TIME'"
+            [id]="'start_date_from'"
+            [disable]="true"
+            [styleInput]="{ color: '#8f9bb3', width: '180px', background:'#ffffff' }"
+            [defaultValue]="stateUserJobAlert.start_date_from"
+          ></ait-datepicker>
+          <span style="margin-bottom: 4px">〜</span>
+          <ait-datepicker
+            [id]="'start_date_to'"
+            [disable]="true"
+            [styleInput]="{ color: '#8f9bb3', width: '180px', background:'#ffffff' }"
+            [defaultValue]="stateUserJobAlert.start_date_to"
+          ></ait-datepicker>
+        </div>
+        <div class="start-date">
+            <ait-input-number
+            [label]="'SALARY'"
+            [defaultValue]="stateUserJobAlert.salary_from"
+            [id]="'salary_from'"
+            [isReadOnly]="true"
+            [isCurrency]="true"
+            [styleInput]="{ color: '#8f9bb3', background:'#ffffff' }"
+            [widthInput]="'180px'"
+            
+          ></ait-input-number>
+          <span style="margin-bottom: 4px">〜</span>
+          <ait-input-number
+          [defaultValue]="stateUserJobAlert.salary_to"
+          [id]="'salary_to'"
+          [isReadOnly]="true"
+          [styleInput]="{ color: '#8f9bb3', background:'#ffffff' }"
+          [isCurrency]="true"
+          [widthInput]="'180px'"
+        ></ait-input-number>
+        </div>
+      </div>
+    </div> 
+  <div class="sticky">
+    <div class="action-row">
+      <div class="block">
+      <ait-button
+        [id]="'close'"
+        [width]="'150px'"
+        [title]="'close'"
+        (click)="close()"
+        [background]="
+          'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+        "
+      ></ait-button>
+      </div>
+    </div>
+  </div>   
+  </div>
+  
+

@@ -21,9 +21,6 @@ export class Utils {
   static getArrayMasterKeyValue(array: any[], classCode: string, dataMaster: any[]) {
 
     const getDataByClassCode = dataMaster.filter(data => data?.class === classCode);
-    if (classCode === 'JOB_OCCUPATION') {
-      // console.log('master-datra', array, classCode, getDataByClassCode)
-    }
     if (getDataByClassCode.length === 0) {
       return [];
     }
@@ -43,7 +40,6 @@ export class Utils {
   }
 
   static getKeyValue(data: any, lang: string) {
-    // // // console.log('data', data)
     if (!data || data === null) {
       return null
     }

@@ -12,6 +12,6 @@ export class AppComponent extends AitBaseComponent implements OnInit {
   menu = MENU_ITEMS
 
   ngOnInit() {
-    this.initBaseComponent()
+    this.initBaseComponent();
   }
 }

@@ -15,6 +15,12 @@ export class BaseRequest {
   @Field(() => String, { nullable: true })
   user_id: string;
 
+  @Field(() => String, { nullable: true })
+  module: string;
+
+  @Field(() => String, { nullable: true })
+  page: string;
+
   @Field(() => OptionDto, { nullable: true })
   options: OptionDto;
 }

@@ -67,7 +67,6 @@ export class AitTranslationService {
   */
   translate(value: string): string {
     const code = (value || '').toLowerCase();
-    // console.log(code,this.captionByPage)
 
     if (this.captionByPage.length !== 0) {
       const find = this.captionByPage.find(caption => {

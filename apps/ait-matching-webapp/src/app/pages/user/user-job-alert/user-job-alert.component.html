@@ -1,0 +1,225 @@
+<div class="user__wrapper" id="user_job_alert">
+  <div style="min-height: 85px;">
+    <ait-text-gradient
+    *ngIf="isLoad"
+      [fontsize]="'36px'"
+      [content]="'title header'"
+      [id]="'title header'"
+    ></ait-text-gradient>
+    <ait-space></ait-space>
+  </div>
+  <div class="content__card">
+    <div class="form">
+      <div class="input_inline">
+        <ait-autocomplete-master-data
+          [id]="'industry'"
+          [label]="'industry'"
+          [required]="false"
+          [collection]="'m_industry'"
+          [maxItem]="50"
+          [placeholder]="'select'"
+          [width]="'400px'"
+          (watchValue)="takeMasterValues($event, 'industry')"
+          [defaultValue]="industrys"
+          [isReset]="resetUserjobAlert.industry"
+        ></ait-autocomplete-master-data>
+      </div>
+      <div class="input_inline">
+        <ait-autocomplete-master-data
+          [class]="'EXPERIENCE_LEVEL'"
+          [id]="'experience_level'"
+          [class]="'EXPERIENCE_LEVEL'"
+          [label]="'experence level'"
+          [required]="false"
+          [allowNew]="false"
+          [maxItem]="999"
+          [isSubmit]="isSubmit"
+          [placeholder]="'select'"
+          [disableOutputDefault]="true"
+          [isReset]="resetUserjobAlert.experience_level"
+          (watchValue)="takeMasterValues($event, 'experience_level')"
+          [defaultValue]="experienceLevels"
+          [width]="'400px'"
+        ></ait-autocomplete-master-data>
+      </div>
+      <div class="input_inline">
+        <ait-autocomplete-master-data
+          [class]="'EMPLOYEE_TYPE'"
+          [id]="'employee_type'"
+          [label]="'employee type'"
+          [required]="false"
+          [allowNew]="false"
+          [maxItem]="999"
+          [isSubmit]="isSubmit"
+          [placeholder]="'select'"
+          [collection]="'sys_master_data'"
+          [disableOutputDefault]="true"
+          [isReset]="resetUserjobAlert.employee_type"
+          (watchValue)="takeMasterValues($event, 'employee_type')"
+          [defaultValue]="employeeTypes"
+          [width]="'200px'"
+        ></ait-autocomplete-master-data>
+      </div>
+
+      <div class="input_inline">
+        <ait-autocomplete-master-data
+          [class]="'ADDRESS'"
+          [id]="'location'"
+          [label]="'location'"
+          [required]="false"
+          [maxItem]="50"
+          [placeholder]="'select'"
+          [width]="'400px'"
+          (watchValue)="takeMasterValues($event, 'location')"
+          [defaultValue]="locations"
+          [isReset]="resetUserjobAlert.location"
+        ></ait-autocomplete-master-data>
+      </div>
+
+      <div class="input_date">
+        <ait-datepicker
+          [label]="'available time'"
+          [format]="dateFormat"
+          [placeholder]="'01/01/2021'"
+          [id]="'start_date_from'"
+          [style]="{ width: '180px' }"
+          [isReset]="resetUserjobAlert.start_date_from"
+          [defaultValue]="userjobAlert.controls['start_date_from'].value"
+          (watchValue)="
+            takeDatePickerValue(
+              $event?.value,
+              'userjobAlert',
+              'start_date_from'
+            )
+          "
+          [isSubmit]="isSubmit"
+        ></ait-datepicker>
+
+        <span style="position: relative;bottom: -30px;">~</span>
+
+        <ait-datepicker
+          [required]="false"
+          [format]="dateFormat"
+          [label]="''"
+          [placeholder]="''"
+          [id]="'start_date_to'"
+          [style]="{ width: '180px' }"
+          (watchValue)="
+            takeDatePickerValue($event?.value, 'userjobAlert', 'start_date_to')
+          "
+          [defaultValue]="userjobAlert.controls['start_date_to'].value"
+          [isReset]="resetUserjobAlert.start_date_to"
+          [isSubmit]="isSubmit"
+        ></ait-datepicker>
+      </div>
+
+      <ait-error-message
+        [errors]="errorDate"
+        [id]="'messagErrorDate'"
+      ></ait-error-message>
+
+      <div class="input_date">
+        <ait-input-number
+          [id]="'salary_from'"
+          [label]="'salary'"
+          [height]="'40px'"
+          [widthInput]="'180px'"
+          [required]="false"
+          [placeholder]="'1,000'"
+          (watchValue)="
+            takeInputNumberValue($event, 'userjobAlert', 'salary_from')
+          "
+          [defaultValue]="userjobAlert.controls['salary_from'].value"
+          [isReset]="resetUserjobAlert.salary_from"
+   
+          [length]="400"
+          [min]="0"
+          [max]="999999999999"
+        ></ait-input-number>
+
+        <span style="position: relative;bottom: -30px;">~</span>
+
+        <ait-input-number
+          [id]="'salary_to'"
+          [height]="'40px'"
+          [label]="' '"
+          [widthInput]="'180px'"
+          [required]="false"
+          [placeholder]="'5,000'"
+          (watchValue)="
+            takeInputNumberValue($event, 'userjobAlert', 'salary_to')
+          "
+          [defaultValue]="userjobAlert.controls['salary_to'].value"
+          [isReset]="resetUserjobAlert.salary_to"
+      
+          [length]="400"
+          [min]="0"
+          [max]="999999999999"
+        ></ait-input-number>
+      </div>
+
+      <ait-error-message
+        [id]="'errorSalary'"
+        [errors]="errorSalary"
+      ></ait-error-message>
+    </div>
+  </div>
+  <ait-space></ait-space>
+  <div class="sticky">
+    <div class="action-row">
+      <div class="block">
+        <ait-button
+          *ngIf="mode === 'EDIT'"
+          [title]="'キャンセル'"
+          [id]="'cancel'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+          [width]="'200px'"
+          (click)="back()"
+        ></ait-button>
+
+        <ait-button
+          *ngIf="mode === 'NEW'"
+          [title]="'スキップ'"
+          [id]="'skip'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+          [width]="'200px'"
+          (click)="skip()"
+        ></ait-button>
+
+        <ait-button
+          *ngIf="mode === 'EDIT' || mode === 'NEW'"
+          [title]="'リセット'"
+          [id]="'reset'"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+          [width]="'200px'"
+          (click)="resetForm()"
+        ></ait-button>
+
+        <ait-button
+          [id]="'saveClose'"
+          *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
+          [width]="'200px'"
+          [title]="'保存する'"
+          (click)="saveAndClose()"
+          [background]="
+            'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)'
+          "
+        >
+        </ait-button>
+        <ait-button
+          *ngIf="!isChanged && mode === 'EDIT'"
+          [id]="'saveClose'"
+          [width]="'200px'"
+          [title]="'保存する'"
+          [style]="'disabled'"
+        ></ait-button>
+      </div>
+    </div>
+  </div>
+</div>

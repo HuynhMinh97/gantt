@@ -19,6 +19,7 @@ export class AitChipComponent implements OnChanges {
   @Input() styles: any = {};
   @Input() title = 'default';
   @Input() isTooltip = false;
+  @Input() isHaveIcon = true;
   @Input() icon = '';
   @Input() status = 'primary'
   @Output() action = new EventEmitter();
@@ -26,7 +27,17 @@ export class AitChipComponent implements OnChanges {
   @Input() background = '#ffffff';
   @Input() colorText = '#10529D';
   @Input() is18n = true;
-  constructor(private translateService : AitTranslationService,private store:Store<AppState>) {
+  @Input() id;
+  @Input() level = 1;
+  @Input() isEvaluate = false;
+  @Output() watchValue = new EventEmitter();
+  @Input() maxWidth = '100%';
+  STAR = [1,2,3,4,5]
+  ID(element: string) {
+    const idx = this.id && this.id !== '' ? this.id : Date.now();
+    return element + '_' + idx;
+  }
+  constructor(private translateService: AitTranslationService, private store: Store<AppState>) {
 
   }
 
@@ -50,4 +61,9 @@ export class AitChipComponent implements OnChanges {
   }
 
   onClickChipEvent = () => this.onClickChip.emit({ isClickChip: true });
+
+  clickStar(val){
+    this.level = val + 1;
+    this.watchValue.emit(val + 1);
+  }
 }

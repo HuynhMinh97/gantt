@@ -33,7 +33,9 @@ export class AitOutputFileComponent implements OnChanges {
   @Input() classContainer;
   files: any[] = [
   ]
-  url = ''
+  url = '';
+  @Input() id;
+  @Input() tabIndex;
 
   numberOfFilesI18 = 'c_3001';
 
@@ -45,6 +47,12 @@ export class AitOutputFileComponent implements OnChanges {
   sanitize(url: string) {
     return this.sanitizer.bypassSecurityTrustUrl(url);
   }
+
+  ID(element: string) {
+    const idx = this.id && this.id !== '' ? this.id : Date.now();
+    return idx + '_' + element;
+  }
+
 
   getUrl = (file_key) => this.url + `?file_key=${file_key}`
 

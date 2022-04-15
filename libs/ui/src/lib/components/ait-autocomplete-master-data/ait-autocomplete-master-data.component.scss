@@ -1,6 +1,37 @@
 @import "../../@theme/styles/themes.scss";
 
+.cdk-drag-preview {
+  // z-index: 100;
+  background: whitesmoke;
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+              0 8px 10px 1px rgba(0, 0, 0, 0.14),
+              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.option__container:last-child {
+  border: none;
+}
+
+.autocompleteeeee.cdk-drop-list-dragging .option__container:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
 .option__container {
+  position: relative;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding-right: 10px;
 }
 
 .selected__items {
@@ -44,20 +75,34 @@
   display: none;
 }
 
+.textx {
+  display: inline-block;
+  width: 180px;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+  padding-top: 8px;
+}
+
 .autocompleteeeee {
   background: #fff;
   position: absolute;
   width: 100%;
+  overflow-x: hidden !important;
   /* bottom: 0; */
   top: 45px;
   border-radius: 5px;
   max-height: 270px;
   overflow: auto;
-  z-index: 999999999;
+  z-index: 999;
   border-color: #e4e9f2;
   border-style: solid;
   border-width: 0.0625rem;
   .option__container {
+    &.isSelect {
+      background: #10529d;
+      color: #fff;
+    }
     display: flex;
     align-items: center;
     width: 100%;
@@ -69,6 +114,7 @@
 
     &:hover {
       background: #f5f5f5;
+      color: #000;
       cursor: pointer;
     }
   }
@@ -82,8 +128,11 @@
 }
 
 .input__container {
+  &.focus {
+    border: 1px solid #10529d;
+  }
   height: 40px;
-  background:transparent;
+  background: transparent;
   border: 1px solid nb-theme(color-basic-400);
   box-sizing: border-box;
   border-radius: 4px;
@@ -92,6 +141,7 @@
   flex-direction: row;
   position: relative;
   border: 1px solid nb-theme(color-basic-600);
+
   &.isError {
     border: 1px solid nb-theme(color-danger-500);
   }
@@ -100,6 +150,20 @@
     right: 0;
     top: 0;
     z-index: 333;
+  }
+  &:hover {
+    .cancle {
+      &.isCancel {
+        display: block;
+      }
+    }
+  }
+  .cancle {
+    position: absolute;
+    right: 20px;
+    top: 0;
+    z-index: 333;
+    display: none;
   }
   .span {
     padding-left: 5px;

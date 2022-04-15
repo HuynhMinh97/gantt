@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/member-ordering */
-import { APP_SECRET_KEY, RESULT_STATUS } from '@ait/shared';
+import { APP_SECRET_KEY, PAGE_TYPE, RESULT_STATUS } from '@ait/shared';
 import {
   AitAuthService,
   AitBaseComponent,
@@ -24,6 +24,7 @@ import { NbToastrService } from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { Apollo, gql } from 'apollo-angular';
 import * as CryptoJS from 'crypto-js';
+import _ from 'lodash';
 
 @Component({
   selector: 'ait-login',
@@ -36,32 +37,26 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
   passwordLabel = '003';
 
   constructor(
-    private router: Router,
+    router: Router,
     apollo: Apollo,
     authService: AitAuthService,
     store: Store<AppState>,
     public toastrService: NbToastrService,
     private translateService: AitTranslationService,
     userService: AitUserService,
-    private envService: AitEnvironmentService,
-
+    private envService: AitEnvironmentService
   ) {
-
-    super(store, authService, apollo, userService, envService);
-    console.log(this.allMessages)
+    super(store, authService, apollo, userService, envService, null, null, null, router);
     this.setModulePage({
       page: PAGES.SIGNIN,
-      module: MODULES.AUTH
-    })
-    // this.getPageInfo(PAGES.SIGNIN).then(page => {
-    //   console.log('Login page', page);
-    //   this.pageInfo = page;
-    // })
+      module: MODULES.AUTH,
+      type: PAGE_TYPE.VIEW
+    });
 
-    store.pipe(select(getCaption)).subscribe(c => {
+    store.pipe(select(getCaption)).subscribe((c) => {
       this.emailLabel = translateService.translate(this.emailLabel);
       this.passwordLabel = translateService.translate(this.passwordLabel);
-    })
+    });
     this.formLoginCtrl = new FormGroup({
       email: new FormControl(''),
       password: new FormControl(''),
@@ -73,16 +68,16 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
     password: [],
   };
   notifyText = '';
+  requireMessage = '';
+  lengthMessage = '';
   isShowPassword = false;
   toggleShowPass = () => (this.isShowPassword = !this.isShowPassword);
   navigateToResetPassword = () => {
     this.router.navigateByUrl('/reset-password');
-    console.log('navigate -> reset password')
   };
   navigateToSignUp = () => {
     this.router.navigateByUrl('/sign-up');
-    console.log('navigate -> sign up')
-  }
+  };
   navigateToDB = () => this.router.navigateByUrl('/');
   navigateToHome = () => this.router.navigateByUrl('/');
   naviagteToOnBoarding = (user_key: string) =>
@@ -93,32 +88,40 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
   setErrors = (newState: { email?: any[]; password?: any[] }) =>
     (this.errors = { ...this.errors, ...newState });
 
-  ngOnInit() {
-    console.log('Login page');
-    // const item = of(localStorage.getItem('access_token'));
-    // item.subscribe(d => console.log(d))
-    console.log(history.state)
+  async ngOnInit() {
     if (history.state?.email) {
       this.formLoginCtrl.setValue({
         ...this.formLoginCtrl.value,
-        email : history.state?.email
-      })
+        email: history.state?.email,
+      });
     }
+
+    const res = await this.getMessageByTypeAndCode('E', ['0001', '0010']);
+    this.lengthMessage = res?.data['findSystem']?.data[0]?.message[this.lang || this.env?.COMMON?.LANG_DEFAULT] || '';
+    this.requireMessage = res?.data['findSystem']?.data[1]?.message[this.lang || this.env?.COMMON?.LANG_DEFAULT] || '';
   }
 
   isAureoleV = () => {
     const target: any = this.envService;
     return !target?.default;
-  }
+  };
 
   getErrorEmailMessage = (value) => {
     const errorList = [
       this.checkRequired(value, this.emailLabel), // method này mình dùng để check required
       // this.checkMaxLength(value, 5), // method này dùng để check maxlength nè 😋😋
     ];
-    this.setErrors({
-      email: errorList,
-    });
+    
+    if (this.requireMessage && _.isEqual(errorList, ['E0001'])) {
+      const message = this.requireMessage.replace('{0}', this.emailLabel);
+      this.setErrors({
+        email: [message],
+      });
+    } else {
+      this.setErrors({
+        email: errorList,
+      });
+    }
   };
 
   getErrorPasswordMessage = (value) => {
@@ -126,6 +129,17 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
       this.checkRequired(value, this.passwordLabel),
       this.checkMinLength(value, PASSWORD_LENGTH, this.passwordLabel),
     ];
+    const message = this.requireMessage.replace('{0}', this.passwordLabel);
+
+    const index1 = (errorList || []).indexOf('E0001');
+    const index2 = (errorList || []).indexOf('E0010');
+
+    if (index1 !== -1) {
+      errorList[index1] = message;
+    }
+    if (index2 !== -1) {
+      errorList[index2] = this.getMinLengthMessage(value, PASSWORD_LENGTH, this.passwordLabel, this.lengthMessage);
+    }
     this.setErrors({
       password: errorList,
     });
@@ -156,7 +170,6 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
   };
 
   setupUserSetting = (userId, company?: string) => {
-
     this.userService.getUserSetting(userId).then((r) => {
       const data = (r.data || []).filter(
         (f) => !!f || !AitAppUtils.isObjectEmpty(f)
@@ -225,11 +238,11 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
   };
 
   getUserInfo = async (user_id: string) => {
-    // console.log(user_id)
     if (user_id && user_id !== '') {
       let user = null;
-      const rest_user: any = await this.apollo.query({
-        query: gql`
+      const rest_user: any = await this.apollo
+        .query({
+          query: gql`
         query {
           findByConditionUser(request:{
             company: "${this.company}",
@@ -246,31 +259,35 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
             company
           }
         }
-        `
-      }).toPromise();
+        `,
+        })
+        .toPromise();
       const result = rest_user?.data?.findByConditionUser;
       if (result) {
-        user = result[0]
+        user = result[0];
       }
 
       return user;
     }
     return {};
-  }
+  };
 
   redirectTo(uri: string) {
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() =>
-      this.router.navigate([uri]));
+    this.router
+      .navigateByUrl('/', { skipLocationChange: true })
+      .then(() => this.router.navigate([uri]));
   }
 
   login = () => {
-    this.loginHandle2().then()
-  }
+    this.loginHandle2().then();
+  };
 
   loginHandle2 = async () => {
     const { email, password } = this.formLoginCtrl.value;
-    const hashedPwd = await this.hashPwd(password);
+    this.getErrorEmailMessage(email);
+    this.getErrorPasswordMessage(password);
     if (!AitAppUtils.isLogined() && !this.isErrors()) {
+      const hashedPwd = await this.hashPwd(password);
       if (email && hashedPwd) {
         this.isLoading = true;
         try {
@@ -279,78 +296,50 @@ export class AitLoginComponent extends AitBaseComponent implements OnInit {
           if (result) {
             this.authService.saveTokens(result?.token, result?.refreshToken);
             const userInfo = this.authService.decodeJWT(result?.token);
-            const setUser = await this.getUserInfo(userInfo['user_key'])
-            console.log(setUser);
+            const setUser = await this.getUserInfo(userInfo['user_key']);
             if (setUser?.email) {
-              localStorage.setItem('isRemember', JSON.stringify(this.isRemember));
+              localStorage.setItem(
+                'isRemember',
+                JSON.stringify(this.isRemember)
+              );
+              localStorage.setItem('isCheckedToken', 'true');
               location.reload();
             }
           }
           this.isLoading = false;
         } catch (e) {
-          console.log(e)
           if (!(e?.message || '').includes('email')) {
-            const message = this.translateService.getMsg('E0107');
+            const res = await this.getMessageByTypeAndCode('E',['0107']);
+            const message = res?.data['findSystem']?.data[0]?.message[this.lang || this.env?.COMMON?.LANG_DEFAULT] || '';
             this.setErrors({
-              password: [...this.errors.password, message]
-            })
-          }
-          else if ((e?.message || '').includes('email')) {
-            const message = this.translateService.getMsg('E0104');
+              password: [...this.errors.password, message],
+            });
+          } else if ((e?.message || '').includes('email')) {
+            const res = await this.getMessageByTypeAndCode('E',['0104']);
+            const message = res?.data['findSystem']?.data[0]?.message[this.lang || this.env?.COMMON?.LANG_DEFAULT] || '';
             this.setErrors({
-              email: [...this.errors.email, message]
-            })
+              email: [...this.errors.email, message],
+            });
           }
           this.isLoading = false;
         }
-        // this.aitGraphQLService.login(email, hashedPwd).then((res) => {
-        //   const result = res;
-        //   if (result) {
-        //     this.authService.saveTokens(result?.token, result?.refreshToken);
-        //     const userInfo = this.authService.decodeJWT(result?.token);
-        //     this.userService.getUserInfo(userInfo['user_key']).then(r => {
-        //       const userfind = r ? r[0] : null;
-        //       if (userfind?.email) {
-        //         localStorage.setItem('isRemember', JSON.stringify(this.isRemember));
-        //         // this.setupUserSetting(this.authService.getUserID(), this.company);
-        //         // const item = of(localStorage.getItem('access_token'));
-        //         // item.subscribe(d => console.log(d))
-        //         this.router.navigate(['example']);
-        //       }
-        //     }
-        //     )
-        //   }
-        //   this.isLoading = false;
-        // }).catch(e => {
-        //   if (!(e?.message || '').includes('email')) {
-        //     const message = this.getMsg('E0107');
-        //     this.setErrors({
-        //       password: [...this.errors.password, message]
-        //     })
-        //   }
-        //   else {
-        //     const message = this.getMsg('E0104');
-        //     this.setErrors({
-        //       email: [...this.errors.email, message]
-        //     })
-        //   }
-        //   this.isLoading = false;
-        // })
       }
     }
-
   };
 
   private hashPwd = async (pwd: string): Promise<any> => {
     const key = CryptoJS.enc.Utf8.parse(APP_SECRET_KEY);
     const iv = CryptoJS.enc.Utf8.parse(APP_SECRET_KEY);
-    const encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(pwd.toString()), key,
+    const encrypted = CryptoJS.AES.encrypt(
+      CryptoJS.enc.Utf8.parse(pwd.toString()),
+      key,
       {
         keySize: 128 / 8,
         iv: iv,
         mode: CryptoJS.mode.CBC,
-        padding: CryptoJS.pad.Pkcs7
-      });
+        padding: CryptoJS.pad.Pkcs7,
+      }
+    );
     return encrypted.toString();
   };
 }

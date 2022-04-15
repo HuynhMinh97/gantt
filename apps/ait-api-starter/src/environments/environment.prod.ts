@@ -1,15 +1,16 @@
 export const environment = {
   production: true,
+  isMatching : true,
   APP: {
-    SECRET_KEY: 'AIT_SECRET_KEY',
+    SECRET_KEY: 'ait',
     HOST: 'http://127.0.0.1',
-    PORT: 3004,
-    API_PREFIX: '/api/v1',
+    PORT: 3002,
+    API_PREFIX: '/rest-api/v1',
     GRAPHQL_PREFIX: '/api/v1',
-    HOST_DOMAIN: 'https://aureole-v.aureole-it.vn',
+    HOST_DOMAIN: 'http://192.168.136.17',
   },
   API_CORE: {
-    HOST: 'http://127.0.0.1:4004',
+    HOST: 'http://192.168.136.17:4002',
     MATCHING_ENGINE_PATH: '/matching-engine',
     GET: '/api/get',
     SAVE: '/api/save',
@@ -18,5 +19,11 @@ export const environment = {
     EXCUTE_FUCTION: '/api/execute-function',
     MATCHING: '/matching',
     AUREOLE_V: '/sync/aureole-v',
+  },
+  DATABASE: {
+    HOST: 'http://192.168.136.17:8529/',
+    NAME: 'ait_starter',
+    USER: 'ait_starter',
+    PASS: 'ait_starter',
   },
 };

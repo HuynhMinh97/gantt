@@ -38,12 +38,9 @@ export class AitTextAreaComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     for (const key in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, key)) {
-        // console.log(JSON.parse(this.defaultValue))
         if (key === KEYS.DEFAULT_VALUE && this.defaultValue) {
-
           this.inputControl.patchValue(this.defaultValue);
         }
-
       }
     }
   }

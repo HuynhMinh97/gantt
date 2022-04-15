@@ -1,3 +1,4 @@
+import { PAGE_TYPE } from '@ait/shared';
 import {
   AitAuthService, AitBaseComponent, AitEnvironmentService, AitUserService, AppState, MODULES, PAGES
 } from '@ait/ui';
@@ -13,17 +14,18 @@ import { Apollo } from 'apollo-angular';
 })
 export class AitResetPasswordComponent extends AitBaseComponent {
   constructor(
-    private router: Router,
+    router: Router,
     store: Store<AppState>,
     authService: AitAuthService,
     userService: AitUserService,
     envService: AitEnvironmentService,
     apollo: Apollo
   ) {
-    super(store, authService, apollo, userService, envService,);
+    super(store, authService, apollo, userService, envService, null, null, null, router);
     this.setModulePage({
       page: PAGES.RESET_PASSWORD,
-      module: MODULES.AUTH
+      module: MODULES.AUTH,
+      type: PAGE_TYPE.VIEW
     })
   }
 

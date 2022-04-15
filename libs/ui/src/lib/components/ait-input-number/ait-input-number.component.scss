@@ -12,15 +12,19 @@ input[type="number"] {
 }
 
 input {
-  background-color: transparent;
+  background: transparent;
 }
 
 .input__contrainer {
 
   input {
+    -ms-ime-mode: inactive;
     &.isDefault {
-      background: nb-theme(color-basic-200);
+      background: nb-theme(color-basic-200) !important;
       border: 1px solid nb-theme(color-basic-600);
+    }
+    &.focus {
+      border: 1px solid #10529D !important;
     }
     font-size: 12px;
     text-align: right;

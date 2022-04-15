@@ -2,19 +2,16 @@
 .template__popup {
   height: 100%;
   width: 100%;
+  margin-top: 20px;
   display: flex;
   display: flex;
   align-items: center;
-  justify-content: center;
   flex-direction: column;
-  background: nb-theme(background-gradient-blue);
-  padding-top: 50px;
   .form__wrapper {
     display: flex;
     flex-direction: column;
     margin: auto;
     align-items: center;
-    width: 50%;
     margin-top: 0;
   }
   .title {
@@ -64,6 +61,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    margin-top: 3rem;
     width: 100%;
   }
 }

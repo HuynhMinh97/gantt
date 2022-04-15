@@ -1,12 +1,14 @@
 export const environment = {
   production: false,
+  isMatching : true,
   APP: {
     SECRET_KEY: 'ait',
     HOST: 'http://127.0.0.1',
-    PORT: 3002,
+    PORT: 3000,
     API_PREFIX: '/rest-api/v1',
     GRAPHQL_PREFIX: '/api/v1',
     HOST_DOMAIN: 'http://192.168.136.17',
+    DEFAULT_PERMISSIONS: ['READ'],
   },
   API_CORE: {
     HOST: 'http://192.168.136.17:4002',
@@ -21,8 +23,8 @@ export const environment = {
   },
   DATABASE: {
     HOST: 'http://192.168.136.17:8529/',
-    NAME: 'ait-matching-system-starter',
-    USER: 'ait-matching-system-starter',
-    PASS: 'ait-matching-system-starter',
+    NAME: 'ait_starter',
+    USER: 'ait_starter',
+    PASS: 'ait_starter',
   },
 };

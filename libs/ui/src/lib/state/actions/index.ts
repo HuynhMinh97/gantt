@@ -46,18 +46,25 @@ export class SHOWSNACKBAR implements Action {
   err
   // tslint:disable-next-line: variable-name
   constructor(_payload: any, snackbar: NbToastrService, store: Store<AppState>) {
-    const trService = new AitTranslationService(store);
-    store.pipe(select(getCaption)).subscribe(() => {
-      this.err = trService.getMsg('E0100');
-      // console.log(this.err)
-      if (this.err && this.err !== 'E0100') {
-        this.payload = _payload;
-        snackbar.danger('Error', this.err, {
-          duration: 3000,
-          position: NbGlobalPhysicalPosition.BOTTOM_RIGHT
-        });
-      }
-    })
+    if (_payload?.type === 'warning') {
+      snackbar.warning(_payload?.message, _payload?.title, {
+        duration: 3000,
+        position: NbGlobalPhysicalPosition.BOTTOM_RIGHT
+      });
+    }
+    else {
+      const trService = new AitTranslationService(store);
+      store.pipe(select(getCaption)).subscribe(() => {
+        this.err = trService.getMsg('E0100');
+        if (this.err && this.err !== 'E0100') {
+          this.payload = _payload;
+          snackbar.danger('Error', this.err, {
+            duration: 3000,
+            position: NbGlobalPhysicalPosition.BOTTOM_RIGHT
+          });
+        }
+      })
+    }
 
   }
 }
@@ -158,8 +165,8 @@ export class GetCurrencySymbol implements Action {
 
 export class SetModulePage implements Action {
   readonly type = ActionTypes.Set_module_page;
-  public payload: { page: string, module: string };
-  constructor(_payload: { page: string, module: string }) {
+  public payload: { page: string, module: string, type: string };
+  constructor(_payload: { page: string, module: string, type: string }) {
     this.payload = _payload;
   }
 }

@@ -9,7 +9,7 @@ import { tap, catchError, map } from 'rxjs/operators';
 import { SHOWSNACKBAR } from '../../state/actions';
 import { NbToastrService } from '@nebular/theme';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { MessageModel, SYSTEM_COMPANY } from '@ait/shared';
+import { COLLECTIONS, MessageModel, SYSTEM_COMPANY, SYSTEM_LANG } from '@ait/shared';
 import { AitEnvironmentService } from '../ait-environment.service';
 import { AitAppUtils } from '../../utils/ait-utils';
 import { Apollo, gql } from 'apollo-angular';
@@ -50,8 +50,6 @@ export class AitBaseService implements OnDestroy {
       this.company = company;
       this.page = page;
       this.module = module;
-
-      //  console.log(this.company)
     });
   }
 
@@ -138,17 +136,6 @@ export class AitBaseService implements OnDestroy {
     refresh_token: localStorage.getItem('refresh_token')
   }).toPromise();
 
-  // checkToken2 = async () => {
-  //   const name = GRAPHQL.VALIDATE_TOKEN;
-  //   const returnField = {
-  //     timeLog: true,
-  //     token_valid: true
-  //   }
-  //   const result = await this.mutation(name, returnField, []);
-  //   // console.log(result);
-  //   return result?.data?.validateToken;
-  // }
-
   get(apiSufix: string): Observable<any> {
     return this.http.post<any>(this.baseURL + apiSufix, {
       // Chỗ này là bao gồm condition và data, tùy vào yêu cầu của api để sử dụng
@@ -195,10 +182,7 @@ export class AitBaseService implements OnDestroy {
       if (errorMessage.errorDetail.status >= 500) {
         this.store.dispatch(new SHOWSNACKBAR('', this.snackbar, this.store))
       }
-
       // TODO: better job of transforming error for user consumption
-      // // console.log(errorMessage);
-
       // Let the app keep running by returning an empty result.
       return of(result as T);
     };
@@ -211,12 +195,15 @@ export class AitBaseService implements OnDestroy {
    * @param condition condition search
    * @returns data or error
    */
-  query(name: string, request: any, returnField?: any): Promise<any> {
-    // console.log(localStorage.lang)
+  query(name: string, request: any, returnField?: any, includeNotDelete : boolean = true, includeNotActive: boolean = false): Promise<any> {
     // Request to graphql query
+    const MASTER_COLLECTION = [COLLECTIONS.MASTER_DATA, COLLECTIONS.CAPTION, COLLECTIONS.MESSAGE];
     request['company'] = this.company || localStorage.comp || SYSTEM_COMPANY;
-    request['lang'] = localStorage.lang || this.currentLang;
+    request['lang'] = localStorage.lang || this.currentLang || this.env?.COMMON?.LANG_DEFAULT || SYSTEM_LANG;
     request['user_id'] = this.user_id;
+    request['module'] = this.module || '';
+    request['page'] = this.page || '';
+    const collection = request['collection'];
 
     // Setup gql json
     const query = {
@@ -232,11 +219,14 @@ export class AitBaseService implements OnDestroy {
       }
     };
 
-    (!!this.env.isMatching) && (request['condition']['del_flag'] = !this.env.isMatching);
+    request['condition'] = request['condition'] ?? {};
+    request['options'] = request['options'] ?? {};
+    (!!this.env.isMatching) && (includeNotDelete) && (request['condition']['del_flag'] = false);
+    (!!this.env.isMatching) && (includeNotActive || MASTER_COLLECTION.includes(collection)) && (request['condition']['active_flag'] = true);
     query.query[name]['__args'] = { request };
     // Parse to gql
     const gqlQuery = jsonToGraphQLQuery(query, { pretty: true });
-    console.log(gqlQuery)
+    // console.log(gqlQuery);
 
     const result = this.apollo
       .query({
@@ -284,7 +274,7 @@ export class AitBaseService implements OnDestroy {
     query.mutation[name]['__args'] = { request };
     // Parse to gql
     const gqlQuery = jsonToGraphQLQuery(query, { pretty: true });
-    console.log(gqlQuery)
+    // console.log(gqlQuery)
     return this.apollo
       .mutate({
         mutation: gql`

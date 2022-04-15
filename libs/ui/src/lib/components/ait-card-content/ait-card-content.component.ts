@@ -1,5 +1,5 @@
 /* eslint-disable @angular-eslint/no-output-on-prefix */
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { AitEnvironmentService, AitTranslationService } from '../../services';
 import { AppState, getCaption } from '../../state/selectors';
@@ -7,15 +7,17 @@ import { AppState, getCaption } from '../../state/selectors';
 @Component({
   selector: 'ait-card-content',
   templateUrl: './ait-card-content.component.html',
-  styleUrls: ['./ait-card-content.component.scss'
-  ],
+  styleUrls: ['./ait-card-content.component.scss'],
 })
-
-export class AitCardContentComponent {
-  constructor(private envService: AitEnvironmentService, private store: Store<AppState>, private translate: AitTranslationService) {
+export class AitCardContentComponent  implements OnChanges {
+  constructor(
+    private envService: AitEnvironmentService,
+    private store: Store<AppState>,
+    private translate: AitTranslationService,
+  ) {
     store.pipe(select(getCaption)).subscribe(() => {
-      this.buttonTitle = translate.translate('c_2003');
-    })
+      this.buttonTitle = translate.translate(this.buttonTitle || '追加する');
+    });
   }
   @Input() label = 'Default';
   @Input() loading = false;
@@ -23,10 +25,11 @@ export class AitCardContentComponent {
   @Output() onToggle = new EventEmitter();
   @Input() isColumn = false;
   @Input() isStart = false;
+  @Input() transition = true;
   @Input() padding = '';
-  @Input() actionBtn = [
-
-  ]
+  @Input() tooltip = '';
+  @Input() actionBtn = [];
+  @Input() widthBtn = 'auto';
   @Input() disableHeader = false;
   gradientString = 'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)';
   isShow = true;
@@ -35,11 +38,23 @@ export class AitCardContentComponent {
   isDev = false;
   @Input()
   disableButton = false;
-  buttonTitle = ''
+  @Input() buttonTitle = '';
   @Input() classContainer: any;
+  @Input() id;
+
+  @Input() summary = '';
+  @Input() styleSummary = {};
+  @Input() styleLabel = {};
+  @Input() styleDivider = {};
+  @Input() styleContent = {};
+
+  ID(element: string) {
+    const idx = this.id && this.id !== '' ? this.id : Date.now();
+    return idx + '_' + element;
+  }
 
   get textButton(): string {
-    return 'c_2003';
+    return '追加する';
   }
 
   get LABEL(): string {
@@ -53,10 +68,21 @@ export class AitCardContentComponent {
     }
   };
 
-
   handleClickBtnHeader = () => {
-    // this.isShow = !this.isShow;
-    this.onClickButtonHeader.emit({ clicked: true });
+    !this.tooltip && this.onClickButtonHeader.emit({ clicked: true });
+  };
+
+  ngOnChanges(changes: SimpleChanges) {
+    for (const key in changes) {
+      if (Object.prototype.hasOwnProperty.call(changes, key)) {
+        if (key === 'buttonTitle') {
+          this.store.pipe(select(getCaption)).subscribe((r) => {
+              this.buttonTitle = this.translate.translate(this.buttonTitle);           
+          })
+        }
+
+      }
+    }
   }
 
 }

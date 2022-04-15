@@ -98,7 +98,10 @@ export enum KEYS {
   JOB_COMPANY = 'job_company',
   FILE_KEY = 'file_key',
   IDS = 'ids',
-  DEL_FLAG = 'del_flag'
+  DEL_FLAG = 'del_flag',
+  IS_MATCHING = 'is_matching',
+  CUSTOM = '$$$$@@@@!!!!',
+  OTHERS = 'OTHERS',
 }
 
 export enum ACTIVE_FLAG {
@@ -164,10 +167,19 @@ export enum DATA_TYPE {
 }
 
 export enum PERMISSIONS {
-  CREATE_NEW = 'CREATE_NEW',
-  UPDATE = 'UPDATE',
-  DELETE = 'DELETE',
-  READ = 'READ'
+  FULL_CONTROLL = 'FULL_CONTROLL',
+  READ = 'READ',
+  WRITE = 'WRITE',
+  EDIT = 'EDIT',
+  DELETE = 'DELETE'
+}
+
+export enum PAGE_TYPE {
+  SEARCH = 'SEARCH',
+  NEW = 'NEW',
+  EDIT = 'EDIT',
+  VIEW = 'VIEW',
+  MATCHING = 'MATCHING'
 }
 
 export enum GRAPHQL {
@@ -181,6 +193,7 @@ export enum GRAPHQL {
   REMOVE_BINARY_DATA = 'removeBinaryData',
   // User settings
   FIND_USER_SETTING = 'findUserSetting',
+  FIND_USER_SETTING_CUSTOM = 'findUserSettingCustom',
   SAVE_USER_SETTING = 'saveUserSetting',
   REMOVE_USER_SETTING = 'removeUserSetting',
   // Auth
@@ -191,13 +204,26 @@ export enum GRAPHQL {
   GENERATE_TOKEN = 'generateToken',
   CHANGE_PASSWORD = 'changePassword',
   FIND_USER = 'findByConditionUser',
-  CHECK_PASSWORD = 'checkPassword'
+  CHECK_PASSWORD = 'checkPassword',
+
+  FIND_MODULE = 'findSysModule',
+  FIND_GROUP = 'findSysGroup',
+  FIND_PAGE = 'findSysPage',
+  FIND_SEARCH_CONDITIONS = 'findSysSearchCondition',
+  FIND_SEARCH_RESULT = 'findSysSearchResult',
+  FIND_SYS_INPUT = 'findSysInput',
+  FIND_SYS_VIEW = 'findSysView',
+  FIND_DATA_BY_COLLECTION = 'findDataByCollection',
+  FIND_ALL_DATA_BY_COLLECTION = 'findAllDataByCollection',
+  SAVE_DATA_RENDER = 'saveDataRender'
 }
 
 export enum COLLECTIONS {
   USER = 'sys_user',
   CAPTION = 'sys_caption',
   MODULE = 'sys_module',
+  GROUP = 'sys_group',
+  PAGE = 'sys_page',
   MESSAGE = 'sys_message',
   CLASS = 'sys_class',
   MASTER_DATA = 'sys_master_data',
@@ -205,7 +231,12 @@ export enum COLLECTIONS {
   SYS_BINARY_DATA = 'sys_binary_data',
   USER_PROFILE = 'user_profile',
   EXAMPLE = 'example',
-  COMPANY = 'sys_company'
+  COMPANY = 'sys_company',
+  M_SKILL = 'm_skill',
+  SEARCH_CONDITIONS = 'sys_search_condition',
+  SEARCH_RESULT = 'sys_search_result',
+  SYS_INPUT = 'sys_input',
+  SYS_VIEW = 'sys_view',
 }
 
 export enum OPERATOR {
@@ -226,4 +257,10 @@ export enum OPERATOR {
 export enum ORDER_BY {
   ASC = 'ASC',
   DESC = 'DESC',
+}
+
+export enum Role {
+  ADMIN = 'admin',
+  USER = 'user',
+  CUSTOM = 'custom'
 }

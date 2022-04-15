@@ -2,6 +2,16 @@
 .datepicker {
   background: nb-theme(color-basic-200) !important;
   border: 1px solid nb-theme(color-basic-600) !important;
+  &.focus {
+    border: 1px solid #10529d !important;
+  }
+  &.disable {
+    background: transparent !important;
+    border: none !important;
+  }
+  &.hasborder {
+    border: 1px solid nb-theme(color-basic-600) !important;
+  }
   &.isError {
     border: 1px solid nb-theme(color-danger-500);
   }
@@ -10,6 +20,11 @@
   }
   &.hasBorder {
     border: 1px solid rgb(228, 233, 242) !important;
+  }
+}
+input {
+  &.readonly {
+    color: gray !important;
   }
 }
 
@@ -33,5 +48,5 @@
 .input_area {
   background-color: transparent !important;
   border: none;
-  max-width: 100%
+  max-width: 100%;
 }

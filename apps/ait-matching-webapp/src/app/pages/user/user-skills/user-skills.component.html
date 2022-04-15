@@ -1,0 +1,76 @@
+  <div class="user__wrapper">
+    <div class="header">
+      <ait-text-gradient
+        *ngIf="isLoad"
+        [fontsize]="'36px'"
+        [id]="'form_edit_user_skill'"
+        [content]="'edit skills'"
+      ></ait-text-gradient>
+    </div>
+
+    <div class="content__card">
+      <div class="form">
+        <div class="input_inline">
+          <ait-autocomplete-master
+            [id]="'skills'"
+            [label]="'skills(max 50)'"
+            [required]="true"
+            [collection]="'m_skill'"
+            [maxItem]="maxSkill"
+            [placeholder]="'fill name and enter to add your skills' | translate"
+            [style]="{ width: '400px' }"
+            (watchValue)="takeMasterValue($event, 'skills')"
+            [defaultValue]="companySkills"
+            [isReset]="isReset"
+            [isSubmit]="isSubmit"
+            [isEvaluate]="true"
+          ></ait-autocomplete-master>
+        </div>
+      </div>
+    </div>
+    <div class="sticky">
+      <div class="action-row">
+        <div class="block">
+          <ait-button
+            [id]="'cancel'"
+            [width]="'150px'"
+            [title]="'clear'"
+            [isDefault]="true"
+            nbSpinnerStatus="primary"
+            [tabIndex]="40"
+            (click)="clear()"
+            [isDefault]="true"
+          ></ait-button>
+
+          <ait-button
+            [id]="'cancel'"
+            [width]="'150px'"
+            [title]="'reset'"
+            [isDefault]="true"
+            nbSpinnerStatus="primary"
+            [tabIndex]="40"
+            (click)="reset()"
+            [isDefault]="true"
+          ></ait-button>
+
+          <ait-button
+            *ngIf="isChanged"
+            [id]="'save'"
+            [width]="'150px'"
+            [title]="'save'"
+            (click)="saveAndClose()"
+            [isDefault]="true"
+          ></ait-button>
+
+          <ait-button
+            *ngIf="!isChanged"
+            [id]="'disabled'"
+            [width]="'150px'"
+            [title]="'save'"
+            [style]="'disabled'"
+          ></ait-button>
+        </div>
+      </div>
+    </div>
+  </div>
+

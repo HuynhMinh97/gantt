@@ -1,0 +1,223 @@
+<div class="component__container">
+  <div class="main__container">
+    <ait-text-gradient
+      [content]="'Group role register'"
+      [id]="'title'"
+    ></ait-text-gradient>
+    <div class="filter__container">
+      <div class="input__area">
+        <div class="content">
+          <div class="left__side">
+            <ng-container>
+              <ait-input-text
+                [id]="'name'"
+                [height]="'40px'"
+                [width]="'400px'"
+                [rows]="1"
+                [label]="'name'"
+                [required]="true"
+                [placeholder]="'please input name'"
+                [isReset]="isReset"
+                [isSubmit]="isSubmit"
+                [length]="4000"
+                (watchValue)="takeInputValue($event, 'name')"
+                [defaultValue]="groupName"
+              ></ait-input-text>
+              <div>
+                <ait-error-message
+                  *ngIf="isExist"
+                  [id]="'errorExit'"
+                  [errors]="['name already exists'| translate]"
+                >
+                </ait-error-message>
+              </div>
+            </ng-container>
+          </div>
+          <div class="right__side">
+            <ng-container>
+              <ait-input-text
+                [id]="'remark'"
+                [height]="'40px'"
+                [width]="'400px'"
+                [rows]="1"
+                [label]="'remark'"
+                [required]="false"
+                [placeholder]="'please input remark'"
+                [length]="4000"
+                (watchValue)="takeInputValue($event, 'remark')"
+                [isReset]="isReset"
+                [isSubmit]="isSubmit"
+                [defaultValue]="remark"
+              ></ait-input-text>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- table -->
+    <div class="filter__container">
+      <div
+        class="header__filter"
+        (click)="toggleTableExpan()"
+        [ngStyle]="!isTableExpan ? { border: 'none' } : null"
+      >
+        <ait-text-gradient
+          [content]="'role list'"
+          [id]="'title'"
+          [fontsize]="'21px'"
+        ></ait-text-gradient>
+        <div style="display:flex;" #display>
+            <ait-button
+            [id]="'delete'"
+            [width]="'100px'"
+            [height]="'24px'"
+            [minwidth]="'100px'"
+            [title]="'add'"
+            [isDefault]="true"
+            (click)="add()"
+        ></ait-button>
+        <div class="icon__expan" (click)="toggleTableExpan()">
+            <nb-icon
+              icon="arrow-ios-upward-outline"
+              *ngIf="isTableExpan"
+              (click)="toggleTableExpan()"
+            >
+            </nb-icon>
+            <nb-icon
+              icon="arrow-ios-downward-outline"
+              *ngIf="!isTableExpan"
+              (click)="toggleTableExpan()"
+            >
+            </nb-icon>
+          </div>
+        </div>
+
+       
+      </div>
+
+      <div
+        class="input__area"
+        [ngStyle]="{
+          height: isTableExpan ? 'auto' : '0px',
+          'margin-bottom': isTableExpan ? null : '0px',
+          'margin-top': isTableExpan ? null : '0px'
+        }"
+      >
+        <div
+          style="width: 100%"
+          [ngStyle]="{ display: isTableExpan ? 'block' : 'none' }"
+        >
+        <ait-button-setting-table
+          [id]="'roel'"
+          [dataSource]="columns"
+         
+       
+          [columnExport]="columnExport"
+          [fileName]="'Role'"
+        ></ait-button-setting-table>
+
+          <div class="table__area" #area>
+            <ng2-smart-table
+              [settings]="settingTable"
+              [source]="source"
+              (userRowSelect)="onUserRowSelect($event)"
+              #table
+              *ngIf="done"
+            ></ng2-smart-table>
+          </div>
+          <div
+            *ngIf="totalRows > 0 && done"
+            [ngClass]="isValidPage ? 'per_page' : 'per_page2'"
+          >
+            <nb-select
+              placeholder="Select Showcase"
+              [(selected)]="perPage"
+              (selectedChange)="changePage()"
+            >
+            <nb-option value="10">10{{'case' | translate}}</nb-option>
+            <nb-option value="20">20{{'case' | translate}}</nb-option>
+            <nb-option value="30">30{{'case' | translate}}</nb-option>
+            <nb-option value="50">50{{'case' | translate}}</nb-option>
+            <nb-option value="100">100{{'case' | translate}}</nb-option>
+            </nb-select>
+          </div>
+
+          <div
+            class="num_page"
+            *ngIf="pageDetail && totalRows > 0 && done"
+            [ngStyle]="{
+              left: isValidPage ? left + 'px' : '0px',
+              'margin-top': isValidPage ? '-62px' : '10px'
+            }"
+          >
+            {{ pageDetail }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <ait-space [margin]="'15px'"></ait-space>
+    <div class="group_button">
+      <!-- reset -->
+      <ait-button
+      
+        [id]="'delete'"
+        [width]="'150px'"
+        [height]="'40px'"
+        [title]="'delete'"
+        [isDefault]="true"
+        
+      >
+      </ait-button>
+      <ait-button
+       
+        [id]="'coppy'"
+        [width]="'150px'"
+        [height]="'40px'"
+        [title]="'coppy'"
+        [isDefault]="true"
+        
+      >
+      </ait-button>
+      <ait-button
+        [id]="'clear'"
+        [width]="'150px'"
+        [height]="'40px'"
+        [title]="'clear'"
+        [isDefault]="true"
+      
+      >
+      </ait-button>
+      <!-- search -->
+      <ait-button
+        [id]="'reset'"
+        [width]="'150px'"
+        [height]="'40px'"
+        [title]="'reset'"
+        [isDefault]="true"
+      
+      >
+      </ait-button>
+      <ait-button
+      *ngIf="mode === 'NEW' || (mode === 'EDIT' && isChangedTable )"
+        [id]="'save'"
+        [width]="'150px'"
+        [height]="'40px'"
+        [title]="'save'"
+        [isDefault]="true"
+        (click)="saveGroupRole()"
+      >
+      </ait-button>
+      <ait-button   
+      *ngIf="mode === 'EDIT'  && !isChangedTable"
+        [id]="'save'"
+        [width]="'150px'"
+        [height]="'40px'"
+        [fontsize]="'14px'"
+        [title]="'save'"
+        [isDefault]="true"
+        [margin]="'0px'"
+        [style]="'disabled'"
+      ></ait-button>
+    </div>
+  </div>
+</div>

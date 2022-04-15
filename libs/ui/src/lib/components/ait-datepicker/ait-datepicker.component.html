@@ -1,3 +1,4 @@
+
 <div [ngClass]="classContainer">
   <ait-label
     [label]="label"
@@ -15,7 +16,9 @@
       max-width: 100%;
     "
     class="datepicker"
+    [class.disable]="disable"
     [class.isError]="isError"
+    [class.focus]="getFocus()"
   >
     <nb-icon
       nbSuffix
@@ -28,20 +31,24 @@
     <input
       nbInput
       #inputDateTime
-      [placeholder]="getPlaceHolder()"
+      [placeholder]="placeholder !== null ? placeholder : getFormat()"
       [nbDatepicker]="dateTimePicker"
       [(ngModel)]="date"
-      *ngIf="!disable"
+      [formControl]="inputCtrl"
+      *ngIf="!disable && !readonly"
       [shape]="isRound ? 'semi-round' : 'rectangle'"
       [ngStyle]="styleInput"
-      (focusout)="checkValidDateInput()"
-      (click)="clickInput($event)"
+      (focusout)="checkValidDateInput(); isFocus = false"
+      (focus)="focusInput()"
+      (click)="clickInput($event); this.nbDatepicker.hidePicker()"
       (input)="handleInput($event)"
       (beforeinput)="onBeforeInput($event)"
       class="input_area"
       id="{{ ID('input') }}"
       [style.width]="width"
       [style.height]="height"
+      tabindex="{{ tabIndex }}"
+      autocomplete="off"
     />
     <input
       [ngClass]="'border__bottom__input'"
@@ -50,9 +57,11 @@
       #inputDateTime
       disabled
       [value]="valueDf"
-      *ngIf="disable"
+      [class.disable]="disable"
+      *ngIf="disable && !readonly"
       [shape]="isRound ? 'semi-round' : 'rectangle'"
       [ngStyle]="styleInput"
+      autocomplete="off"
       style="
         padding-top: 0;
         padding-bottom: 0;
@@ -61,7 +70,34 @@
         padding-left: 16px;
       "
       id="{{ ID('input') }}"
+      tabindex="{{ tabIndex }}"
     />
+
+    <input
+
+      nbInput
+      fullWidth
+      #inputDateTime
+      [readOnly]="readonly"
+      [value]="valueDf"
+      [class.readonly]="readonly"
+      *ngIf="!disable && readonly"
+      [shape]="isRound ? 'semi-round' : 'rectangle'"
+      [ngStyle]="styleInput"
+      autocomplete="off"
+      style="
+        padding-top: 0;
+        padding-bottom: 0;
+        font-size: 12px;
+        text-align: left;
+        padding-left: 16px;
+        border: none;
+        background: transparent;
+      "
+      id="{{ ID('input') }}"
+      tabindex="{{ tabIndex }}"
+    />
+
     <nb-datepicker
       #dateTimePicker
       [format]="format ? format : getFormat()"
@@ -83,5 +119,9 @@
       </p>
     </div>
   </div>
-  <ait-error-message *ngIf="required" [errors]="messagesError()" [id]="id"></ait-error-message>
+  <ait-error-message
+    *ngIf="required"
+    [errors]="messagesError()"
+    [id]="id"
+  ></ait-error-message>
 </div>

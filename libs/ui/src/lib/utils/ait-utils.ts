@@ -195,6 +195,7 @@ export class AitAppUtils extends Utils {
     }
     return location.hash.split('/');
   }
+  
   static getArrayNotFalsy = (array: any[]) => array.filter(a => !!a);
   static deepCloneArray = (array: any[]) => [...array.map(a => ({ ...a }))];
   static getDif2Days(date1: string | Date | any, date2: string | Date | any) {

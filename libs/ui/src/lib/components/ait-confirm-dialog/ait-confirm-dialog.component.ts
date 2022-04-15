@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { NbDialogRef } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
@@ -14,6 +14,12 @@ export class AitConfirmDialogComponent extends AitBaseComponent {
   title = '';
   btn_left = '';
   btn_right = '';
+  @Input() id;
+  @Input() style = {};
+  ID(element: string) {
+    const idx = this.id && this.id !== '' ? this.id : Date.now();
+    return idx + '_' + element;
+  }
 
   constructor(
     private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,

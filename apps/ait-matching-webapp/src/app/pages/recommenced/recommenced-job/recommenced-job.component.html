@@ -1,0 +1,136 @@
+<div class="aureolev__container">
+  <div class="main__container">
+      <!-- search -->
+      <div class="aureolev__search__container out_line" tabindex="1" [formGroup]="searchForm">
+          <div class="aureolev__input__container out_line" tabindex="2">
+              <div class="icon__look__up out_line" tabindex="3">
+                  <nb-icon icon="search" style="font-size: 16px" pack="font-awesome-fas"></nb-icon>
+              </div>
+              <input class="out_line" #inputSearch type="text" [placeholder]="'Please input your keyword'" autofocus
+                  formControlName="keyword" tabindex="5" />
+          </div>
+          <button style="border: none" tabindex="6" class="aureole__button__search out_line">
+              <div class="icon__look__up" style="margin: 2px 6px 0 0">
+                  <nb-icon icon="search" style="color: white" pack="font-awesome-fas"></nb-icon>
+              </div>
+              <p class="empty">
+                  {{ getTitleSearchBtn() }}
+              </p>
+          </button>
+      </div>
+
+      <ait-card-content style="width: 100%;" [isColumn]="true" [label]="'Filter'"
+          [styleLabel]="{'font-size': '1.5vmax'}">
+          <div class="content">
+              <div class="left_side">
+                  <ait-autocomplete-master-data [label]="'Skills'" [collection]="'m_skill'" [id]="'number_format'"
+                      [icon]="'search-outline'" [style]="{ width: '400px' }" [placeholder]="'Please select skill'"
+                      [disableOutputDefault]="true" [tabIndex]="5"
+                      (watchValue)="takeMasterValues($event?.value, 'skills')" [isReset]="isReset"
+                      [defaultValue]="searchForm.controls['skills'].value">
+                  </ait-autocomplete-master-data>
+                  <ait-space [margin]="'7.25px'"></ait-space>
+                  <ait-autocomplete-master-data [label]="'Title'" [collection]="'m_title'" [id]="'number_format'"
+                      [icon]="'search-outline'" [style]="{ width: '400px' }" [placeholder]="'Please select title'"
+                      [disableOutputDefault]="true" [tabIndex]="6"
+                      (watchValue)="takeMasterValues($event?.value, 'title')" [isReset]="isReset"
+                      [defaultValue]="searchForm.controls['title'].value">
+                  </ait-autocomplete-master-data>
+                  <ait-space [margin]="'7.25px'"></ait-space>
+                  <ait-autocomplete-master-data [label]="'Location'" [class]="'ADDRESS'" [id]="'number_format'"
+                      [icon]="'search-outline'" [style]="{ width: '400px' }" [placeholder]="'Please select location'"
+                      [disableOutputDefault]="true" [tabIndex]="5" [parentCodeExternal]="'VIETNAM'"
+                      (watchValue)="takeMasterValues($event?.value, 'location')" [isReset]="isReset"
+                      [defaultValue]="searchForm.controls['location'].value">
+                  </ait-autocomplete-master-data>
+              </div>
+              <div class="right_side">
+                  <ait-autocomplete-master-data [label]="'Industry'" [collection]="'m_industry'"
+                      [id]="'number_format'" [icon]="'search-outline'" [style]="{ width: '400px' }"
+                      [placeholder]="'Please select industry'" [disableOutputDefault]="true" [tabIndex]="5"
+                      (watchValue)="takeMasterValues($event?.value, 'industry')" [isReset]="isReset"
+                      [defaultValue]="searchForm.controls['industry'].value">
+                  </ait-autocomplete-master-data>
+                  <ait-space [margin]="'7.25px'"></ait-space>
+                  <ait-autocomplete-master-data [label]="'Level'" [class]="'EMPLOYEE_LEVEL'" [id]="'number_format'"
+                      [icon]="'search-outline'" [style]="{ width: '400px' }" [placeholder]="'Please select level'"
+                      [disableOutputDefault]="true" [tabIndex]="5"
+                      (watchValue)="takeMasterValues($event?.value, 'level')" [isReset]="isReset"
+                      [defaultValue]="searchForm.controls['level'].value">
+                  </ait-autocomplete-master-data>
+                  <ait-space [margin]="'7.25px'"></ait-space>
+
+                  <ng-container>
+                      <div style="display: flex">
+                          <ait-datepicker [label]="'Valid Time'" [styleLabel]="{ 'text-transform': 'initial' }"
+                              [width]="'170px'" [placeholder]="'yyyy/MM/dd'" [isReset]="isReset"
+                              [dateInput]="searchForm.controls['valid_time_from'].value"
+                              (watchValue)="takeDatePickerValue($event?.value, 'valid_time_from')">
+                          </ait-datepicker>
+
+                          <span class="center_span">~</span>
+                          <ait-datepicker [styleLabel]="{ 'text-transform': 'initial' }" [width]="'170px'"
+                              [isReset]="isReset" [dateInput]="searchForm.controls['valid_time_to'].value"
+                              (watchValue)="takeDatePickerValue($event?.value, 'valid_time_to')">
+                          </ait-datepicker>
+                      </div>
+                  </ng-container>
+              </div>
+              <div class="bottom_side">
+                  <!-- reset -->
+                  <ait-button [id]="'reset'" [width]="'150px'" [height]="'32px'" [title]="'clear'" [isDefault]="true"
+                      (click)="reset()">
+                  </ait-button>
+                  <!-- search -->
+                  <ait-button [id]="'search'" [width]="'150px'" [height]="'32px'" [title]="'save'" [isDefault]="true"
+                      (click)="save()">
+                  </ait-button>
+              </div>
+          </div>
+      </ait-card-content>
+
+      <!-- result -->
+      <div class="aureolev__matching__result" tabindex="23" style="outline-color: #10529d">
+          <div class="aureolev__matching__header">
+              <ait-text-gradient [fontsize]="'20px'" [content]="getTitle('Recommendation for you')">
+              </ait-text-gradient>
+              <div class="actionGroup" tabindex="24" style="outline-color: #10529d">
+                  <ait-tabs *ngIf="!disableTab" [tabIndex]="25" [tabs]="tabs" [disabled]="cardSkeleton.length !== 0"
+                      (onTabSelect)="getTabSelect($event)"></ait-tabs>
+              </div>
+          </div>
+          <div class="divider"></div>
+          <div class="list__card" tabindex="{{ 24 + tabs.length }}" style="outline-color: #10529d">
+              <div class="what" style="display: flex; flex-direction: row; flex-wrap: wrap"
+                  *ngIf="currentTab !== 'R'">
+                  <p *ngIf="cardSkeleton.length === 0 && dataFilterSave.length === 0">
+                      {{ textDataNullSave }}
+                  </p>
+                  <ait-aureolev-card *ngFor="let card of dataFilterSave; let i = index" [card]="card"
+                      [user_id]="user_id" tabindex="{{ 30 + i + 1 }}" style="outline-color: #10529d"
+                      [addressSearch]="addressSearch" [company_key]="company_key"
+                      (actionSaveEvent)="handleSyncData($event)">
+                  </ait-aureolev-card>
+                  <ait-card-skeleton *ngFor="let card of cardSkeleton"></ait-card-skeleton>
+              </div>
+              <div class="what" style="display: flex; flex-direction: row; flex-wrap: wrap"
+                  *ngIf="currentTab === 'R'">
+                  <p *ngIf="cardSkeleton.length === 0 && dataFilter.length === 0">
+                      {{ textDataNull }}
+                  </p>
+                  <ait-aureolev-card *ngFor="let card of dataFilter; let ix = index" [card]="card" [user_id]="user_id"
+                      [addressSearch]="addressSearch" [company_key]="company_key" tabindex="{{ 30 + ix + 1 }}"
+                      style="outline-color: #10529d" (actionSaveEvent)="handleSyncData($event)">
+                  </ait-aureolev-card>
+                  <ait-card-skeleton *ngFor="let card of cardSkeleton"></ait-card-skeleton>
+              </div>
+          </div>
+          <div class="spinner__loading" style="min-height: 50px; margin: 20px; background: transparent"
+              *ngIf="spinnerLoading" [nbSpinner]="spinnerLoading" [nbSpinnerStatus]="'primary'"></div>
+          <div class="spinner__loading" style="min-height: 50px; margin: 20px; background: transparent"
+              *ngIf="!textDataNull && !textDataNullSave">
+              {{ textDataEnd }}
+          </div>
+      </div>
+  </div>
+</div>

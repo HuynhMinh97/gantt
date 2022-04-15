@@ -51,7 +51,7 @@ export const routes: Routes = [
     component: Ait404Component
   },
   {
-    path: '**',
+    path: '',
     pathMatch: 'full',
     redirectTo: '404'
   },

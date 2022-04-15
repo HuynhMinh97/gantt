@@ -1,0 +1,47 @@
+@import '../group-role-register/group-role-register.component.scss';
+
+.filter__container {
+    margin-top: 20px;
+}
+.button_table{
+    display: flex;
+    justify-content: space-between;
+    button{
+        outline: none;
+        border: none;
+        background-color: #ffffff;
+        padding: 5px;
+    }
+    i{
+        background: linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 1.3rem !important;
+        margin: 0px 10px 10px 10px;
+    }
+    .button_right{
+        display: flex;
+        position: relative;
+        .setting_table{
+            position: absolute;
+            top: -13px;
+            right: 50px;
+        }
+        
+    }
+}
+.num_page {
+    display: flex;
+    width: 150px;
+    height: 40px;
+    font-size: 14px;
+    border: 1px solid #E4E9F2;
+    border-radius: 5px;
+    align-items: center;
+    justify-content: center;
+    margin-top: -67px;
+    position: sticky;
+    // left: 570px;
+    color: #10529D;
+  }

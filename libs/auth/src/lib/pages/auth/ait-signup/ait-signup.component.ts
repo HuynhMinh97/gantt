@@ -4,13 +4,13 @@ import {
   AitAuthService,
   AitBaseComponent,
   AitEnvironmentService,
-  AitUserService, AitAppUtils, MODULES, PAGES, getCaption, AitTranslationService, PASSWORD_LENGTH
+  AitUserService, AitAppUtils, MODULES, PAGES, AitTranslationService, PASSWORD_LENGTH
 } from '@ait/ui';
 import { Component, HostBinding, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NbToastrService } from '@nebular/theme';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { AppState } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
 import { AitEnvironmentService as EnvService } from '../../../services/environment.service';
@@ -30,7 +30,7 @@ export class AitSignUpComponent extends AitBaseComponent implements OnInit {
   env: any;
 
   constructor(
-    private router: Router,
+    router: Router,
     authService: AitAuthService,
     toastrService: NbToastrService,
     store: Store<AppState>,
@@ -40,7 +40,7 @@ export class AitSignUpComponent extends AitBaseComponent implements OnInit {
     apollo: Apollo,
     _env: EnvService,
   ) {
-    super(store, authService, apollo, userService, envService, null, toastrService);
+    super(store, authService, apollo, userService, envService, null, toastrService, null, router);
     this.setModulePage({
       page: PAGES.SIGNUP,
       module: MODULES.AUTH
@@ -182,21 +182,8 @@ export class AitSignUpComponent extends AitBaseComponent implements OnInit {
                 email
               }
             });
-            // this.authService.saveTokens(result?.token, result?.refreshToken);
-            // const userInfo = this.authService.decodeJWT(result?.token);
-            // console.log(userInfo)
-            // this.userService.getUserInfo(userInfo['user_key']).then(r => {
-            //   console.log(r)
-            //   const userfind = r ? r[0] : null;
-            //   if (userfind?.email) {
-            //     // this.setupUserSetting(this.authService.getUserID(), this.company);
-            //     location.reload()
-            //   }
-            // })
-
           }
         }).catch(e => {
-          console.log(e);
           this.isLoading = false;
           this.showToastr(
             this.translateService.translate(

@@ -15,4 +15,6 @@ export * from './common/ait-setting-route.service';
 export * from './ait-environment.service';
 export * from './common/ait-user-setting.service';
 export * from './common/ait-layout.service';
+export * from './common/ait-save-temp.service';
+export * from './common/ait-render-page.service';
 //mapping route and components

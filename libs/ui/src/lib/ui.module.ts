@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { APP_INITIALIZER, ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { AitTemplatePageModule } from './components/ait-template-page/ait-template-page.module';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { AitButtonModule } from './components/ait-button/ait-button.module';
 import { AitThemeModule } from './@theme/theme.module';
 import { AitInputTextModule } from './components/ait-input-text/ait-input-text.module';
 import { AitSpaceModule } from './components/ait-space/ait-space.module';
 import { AitLabelModule } from './components/ait-label/ait-label.module';
 import { AitChipModule } from './components/ait-chip/ait-chip.module';
-import { AitDragScrollModule } from './components/ait-drag-scroll/ait-drag-scroll.module';
 import { AitBackButtonModule } from './components/ait-back-button/ait-back-button.module';
 import { AitUpButtonModule } from './components/ait-up-button/ait-up-button.module';
 import { AitDatepickerModule } from './components/ait-datepicker/ait-datepicker.module';
@@ -60,6 +60,19 @@ import { AppState, } from './state/selectors';
 import { AitSettingAppService } from './services/ait-setting-app.service';
 import { AitTemplatePopupModule } from './components/ait-template-popup/ait-template-popup.module';
 import { AitTocMenuModule } from './components/ait-toc-menu/ait-toc-menu.module';
+import localeEnn from '@angular/common/locales/en';
+import localeVnn from '@angular/common/locales/vi';
+import localeJpp from '@angular/common/locales/ja';
+import { LocaleProvider } from './@theme/locale/locale.provider';
+import { AitTableCellModule } from './components/ait-table-cell/ait-table-cell.module';
+import { AitGroupSearchModule } from './components/ait-group-search/ait-group-search.module';
+import { AitGroupInputModule } from './components/ait-group-input/ait-group-input.module';
+import { AitTableButtonModule } from './components/ait-table-button/ait-table-button.module';
+import { AitGroupViewModule } from './components/ait-group-view/ait-group-view.module';
+import { AitButtonTableModule } from './components/ait-button-setting-table/ait-button-setting-table.module';
+registerLocaleData(localeEnn);
+registerLocaleData(localeVnn);
+registerLocaleData(localeJpp);
 
 export function initializeApp(appInitService: AitSettingAppService) {
   return () => {
@@ -97,7 +110,6 @@ const NB_MODULES = [
     AitCommonLayoutModule,
     AitLabelModule,
     AitChipModule,
-    AitDragScrollModule,
     AitBackButtonModule,
     AitUpButtonModule,
     AitDatepickerModule,
@@ -117,12 +129,19 @@ const NB_MODULES = [
     AitAutocompleteMasterDataModule,
     AitOutputTextModule,
     AitTextGradientModule,
+    AitGroupSearchModule,
+    AitGroupInputModule,
+    AitGroupViewModule,
+    AitButtonTableModule,
     StoreModule.forRoot({
       ...rootReducers,
       ...inItialState
     }),
     ...NB_MODULES,
-    AitTocMenuModule
+    AitTocMenuModule,
+    AitTableCellModule,
+    AitTableButtonModule,
+    AitTemplatePageModule
   ],
   exports: [
     CommonModule,
@@ -133,7 +152,6 @@ const NB_MODULES = [
     AitCommonLayoutModule,
     AitLabelModule,
     AitChipModule,
-    AitDragScrollModule,
     AitBackButtonModule,
     AitUpButtonModule,
     AitDatepickerModule,
@@ -148,6 +166,9 @@ const NB_MODULES = [
     AitProgressModule,
     AitTimePickerModule,
     AitTextGradientModule,
+    AitGroupSearchModule,
+    AitGroupInputModule,
+    AitGroupViewModule,
     AitCardContentModule,
     AitButtonModule,
     AitConfirmDialogModule,
@@ -159,7 +180,11 @@ const NB_MODULES = [
     AitTranslatePipe,
     AitUiComponent,
     AitBaseComponent,
-    AitTocMenuModule
+    AitTocMenuModule,
+    AitTableCellModule,
+    AitTableButtonModule,
+    AitButtonTableModule,
+    AitTemplatePageModule
   ],
   providers: [
     AitBaseService,
@@ -170,7 +195,8 @@ const NB_MODULES = [
       useFactory: initializeApp,
       deps: [AitSettingAppService],
       multi: true
-    }
+    },
+    LocaleProvider
   ]
 })
 export class AitUiModule {
@@ -197,15 +223,7 @@ export class AitUiModule {
     else {
 
       // create error link
-      const errorLink = onError(({ graphQLErrors, networkError }) => {
-        // if (graphQLErrors)
-        //   graphQLErrors.map(({ message, locations, path }) =>
-        //     console.log(
-        //       `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-        //     ),
-        //   );
-        // if (networkError) console.log(networkError);
-      });
+      const errorLink = onError(({ graphQLErrors, networkError }) => {});
 
       const http = this.httpLink.create({
         uri, headers: new HttpHeaders({
