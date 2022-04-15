@@ -292,10 +292,10 @@ export class UserOnboardingComponent
     if (this.user_key) {
       if (this.user_key !== this.user_id_profile) {
         this.callLoadingApp();
-        this.router.navigate([`user-onboarding-detail/${this.user_key}`]);
+        this.router.navigate([`user-detail/${this.user_key}`]);
       } else {
         this.callLoadingApp();
-        await this.userOnbService.findJobSetting(this.user_key).then(async (r) => {
+        await this.userOnbService.findJobSetting(this.user_key)?.then(async (r) => {
           if (r.status === RESULT_STATUS.OK) {
             this.jobSettingData = r.data[0];
             this.userJobSettingInfo.patchValue({ ...this.jobSettingData });
@@ -306,8 +306,7 @@ export class UserOnboardingComponent
           }
         });
         await this.userOnbService
-          .findUserOnboardingByKey(this.user_key)
-          .then(async (r) => {
+          .findUserOnboardingByKey(this.user_key)?.then(async (r) => {
             if (r.status === RESULT_STATUS.OK) {
               let isUserExist = false;
               this.dataCountry = r.data[0];
@@ -328,6 +327,11 @@ export class UserOnboardingComponent
           });
         
       }
+    } else {
+        const existProfile = await this.userOnbService.findUserOnboardingByKey(this.user_id_profile);
+        if(isObjectFull(existProfile.data[0])) {
+          this.router.navigate([`user/${this.user_id_profile}`]);
+        }
     }
     await this.getGenderList();
     setTimeout(() => {
@@ -408,7 +412,6 @@ export class UserOnboardingComponent
         value: gender.name,
       });
       const defaultGender = this.genderList[2];
-      console.log(this.userOnboardingInfo.controls['gender']);
       this.defaultGender = {
         _key: defaultGender._key,
         value: defaultGender.name,
