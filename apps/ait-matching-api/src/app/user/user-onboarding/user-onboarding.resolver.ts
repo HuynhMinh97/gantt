@@ -53,18 +53,30 @@ export class UserOnboardingInfoResolver extends AitBaseService {
     `;
    const result =  await this.query(aqlQuery);
    const jobSettingSkills = [];
-    for (const skill of result.data[0])
-    {
-      const skillName = await this.getNameOfSkill(skill.skill, lang);
-      const skills = {
-        _key:skill.skill,
-        value:skillName.data[0]
-      }
-      jobSettingSkills.push({
-        skills,
-        level: skill.level
-      })
+   if (result.data[0]){
+     for (const skill of result.data[0])
+     {
+       const skillName = await this.getNameOfSkill(skill.skill, lang);
+       const skills = {
+         _key:skill.skill,
+         value:skillName.data[0]
+       }
+       jobSettingSkills.push({
+         skills,
+         level: skill.level
+       })
+     }
+   }
+   else {
+    const skills = {
+      _key:null,
+      value:null
     }
+    jobSettingSkills.push({
+      skills,
+      level: null
+    })
+   }
  
     const response = new UserOnboardingInfoResponse(
       200,
