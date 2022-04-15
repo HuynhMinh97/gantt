@@ -7,6 +7,7 @@ export const environment = {
     LANG_DEFAULT: 'en_US',
     LOCALE_DEFAULT: 'en-US',
     VERSION: 'v1.1',
+    HEADER: 'Matching System v1.0',
   },
   API_PATH: {
     BASE_REST_PREFIX: '/rest-api/v1',
