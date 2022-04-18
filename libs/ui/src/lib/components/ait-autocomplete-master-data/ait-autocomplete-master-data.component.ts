@@ -471,7 +471,6 @@ export class AitAutoCompleteMasterDataComponent
   checkAllowNew = (value: string) => {
     if (this.allowNew) {
       const find = this.dataSourceDf.find((d) => d.value === value);
-      console.log(2)
       const dataReq: any = {
         code: value,
         name: {
@@ -653,7 +652,6 @@ export class AitAutoCompleteMasterDataComponent
           value: [this.class],
         };
       }
-      console.log(condition)
       const rest = await this.masterDataService.find(
         {
           ...condition,

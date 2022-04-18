@@ -1,9 +1,9 @@
-import { UserCertificate } from "./user_certificate.spec";
-import { UserCourse } from "./user_course.spec";
-import { UserEducation } from "./user_education.spec";
-import { UserExperience } from "./user_experience.spec";
-import { UserLanguage } from "./user_language.spec";
-import { UserProject } from "./user_project.spec";
+import { UserCertificate } from './user_certificate.spec';
+import { UserCourse } from './user_course.spec';
+import { UserEducation } from './user_education.spec';
+import { UserExperience } from './user_experience.spec';
+import { UserLanguage } from './user_language.spec';
+import { UserProject } from './user_project.spec';
 
 describe('Navigate user profile', () => {
   it('Check Mode New', function () {
@@ -20,7 +20,6 @@ describe('Navigate user profile', () => {
     // addCourses();
     // addEducations();
     // addLanguages();
-
   });
 
   function checkUI() {
@@ -60,7 +59,6 @@ describe('Navigate user profile', () => {
       }
     }
     `;
-    console.log(query);
     cy.request({
       method: 'POST',
       url: Cypress.env('host') + Cypress.env('api_url'),
@@ -68,7 +66,6 @@ describe('Navigate user profile', () => {
       failOnStatusCode: false,
     }).then((response) => {
       const data = response.body.data.findProfile.data[0];
-      console.log(data.first_name);
       cy.getValueInput('first_name', data.first_name);
       cy.getValueInput('katakana', data.katakana);
       // cy.getValueDate('born_on_date', data.bod);
@@ -76,9 +73,7 @@ describe('Navigate user profile', () => {
       cy.getValueInput('romaji', data.romaji);
       cy.getValueInput('gender', data.gender);
       cy.getValueInput('phone_number', data.phone_number);
-      cy.get('#' + 'description').should('have.value', data.about)
-      
-
+      cy.get('#' + 'description').should('have.value', data.about);
     });
     getTextMenu('Skills', 'Skills');
     getTextMenu('Projects', 'Projects');
@@ -87,11 +82,10 @@ describe('Navigate user profile', () => {
     getTextMenu('Courses', 'Courses');
     getTextMenu('Educations', 'Educations');
     getTextMenu('Languages', 'Languages');
-
   }
 
   function getTextMenu(id, value) {
-    cy.get('#menu_item_' + id).should('have.text', ' ' + value + ' ')
+    cy.get('#menu_item_' + id).should('have.text', ' ' + value + ' ');
   }
 
   function findUserOnboarding() {
@@ -211,12 +205,13 @@ describe('Navigate user profile', () => {
       body: { query },
       failOnStatusCode: false,
     }).then((response) => {
-      const dataUserOnboarding = response.body.data.findUserOnboardingInfo.data[0];
+      const dataUserOnboarding =
+        response.body.data.findUserOnboardingInfo.data[0];
       cy.getValueInput('first_name', dataUserOnboarding.first_name);
       cy.getValueInput('last_name', dataUserOnboarding.last_name);
       // cy.getValueDate('dob', dataUserOnboarding.dob);
       cy.getValueInput('phone_number', dataUserOnboarding.phone_number);
-      cy.textareaValue("about", dataUserOnboarding.about);
+      cy.textareaValue('about', dataUserOnboarding.about);
       cy.getValueMaster('country', dataUserOnboarding.country_region);
       cy.getValueInput('postcode', dataUserOnboarding.postcode);
       cy.getValueMaster('city', dataUserOnboarding.province_city);
@@ -227,7 +222,6 @@ describe('Navigate user profile', () => {
       cy.getValueMaster('industry', dataUserOnboarding.industry);
       cy.getValueMaster('title', dataUserOnboarding.title);
       cy.getValueMaster('company_working', dataUserOnboarding.company_working);
-
     });
     cy.clickButton('cancel');
   }
@@ -289,14 +283,15 @@ describe('Navigate user profile', () => {
       url: Cypress.env('host') + Cypress.env('api_url'),
       body: { query },
       failOnStatusCode: false,
-
     }).then((response) => {
       const data = response.body.data.findUserProject.data[0];
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(3000);
-      cy.get('#project_detail_menu_toc_item_PROJECTS').find('#project-' + data._key).click();
+      cy.get('#project_detail_menu_toc_item_PROJECTS')
+        .find('#project-' + data._key)
+        .click();
       UserProject.findProject(data._key);
-    })
+    });
     cy.clickButton('cancel');
   }
 
@@ -380,14 +375,15 @@ describe('Navigate user profile', () => {
       url: Cypress.env('host') + Cypress.env('api_url'),
       body: { query },
       failOnStatusCode: false,
-
     }).then((response) => {
       const data = response.body.data.findUserExperienceInfo.data[0];
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(3000);
-      cy.get('#experience_detail_menu_toc_item_EXPERIENCES').find('#experience-' + data._key).click();
+      cy.get('#experience_detail_menu_toc_item_EXPERIENCES')
+        .find('#experience-' + data._key)
+        .click();
       UserExperience.findUserExperienceInfo(data._key);
-    })
+    });
     cy.clickButton('cancel');
   }
 
@@ -443,19 +439,21 @@ describe('Navigate user profile', () => {
         numError
       }
     }
-    `; cy.request({
+    `;
+    cy.request({
       method: 'POST',
       url: Cypress.env('host') + Cypress.env('api_url'),
       body: { query },
       failOnStatusCode: false,
-
     }).then((response) => {
       const data = response.body.data.findUsercertificate.data[0];
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(3000);
-      cy.get('#certificate_detail_menu_toc_item_CERTIFICATES').find('#centificate-' + data._key).click();
+      cy.get('#certificate_detail_menu_toc_item_CERTIFICATES')
+        .find('#centificate-' + data._key)
+        .click();
       UserCertificate.findUsercertificate(data._key);
-    })
+    });
     cy.clickButton('cancel');
   }
 
@@ -502,19 +500,21 @@ describe('Navigate user profile', () => {
         numError
       }
     }
-    `; cy.request({
+    `;
+    cy.request({
       method: 'POST',
       url: Cypress.env('host') + Cypress.env('api_url'),
       body: { query },
       failOnStatusCode: false,
-
     }).then((response) => {
       const data = response.body.data.findCourse.data[0];
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(3000);
-      cy.get('#course_detail_menu_toc_item_COURSES').find('#course-' + data._key).click();
+      cy.get('#course_detail_menu_toc_item_COURSES')
+        .find('#course-' + data._key)
+        .click();
       UserCourse.findUserCourse(data._key);
-    })
+    });
     cy.clickButton('cancel');
   }
   function addEducations() {
@@ -563,23 +563,22 @@ describe('Navigate user profile', () => {
         numError
       }
     }
-    `; cy.request({
+    `;
+    cy.request({
       method: 'POST',
       url: Cypress.env('host') + Cypress.env('api_url'),
       body: { query },
       failOnStatusCode: false,
-
     }).then((response) => {
-      console.log(response.body.data);
-
       const data = response.body.data.findUserEducationInfo.data[0];
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(3000);
-      cy.get('#education_detail_menu_toc_item_EDUCATIONS').find('#education-' + data._key).click();
+      cy.get('#education_detail_menu_toc_item_EDUCATIONS')
+        .find('#education-' + data._key)
+        .click();
       UserEducation.findUserEducation(data._key);
-    })
+    });
     cy.clickButton('cancel');
-
   }
 
   function addLanguages() {
@@ -635,20 +634,21 @@ describe('Navigate user profile', () => {
         numError
       }
     }
-    `; cy.request({
+    `;
+    cy.request({
       method: 'POST',
       url: Cypress.env('host') + Cypress.env('api_url'),
       body: { query },
       failOnStatusCode: false,
-
     }).then((response) => {
       const data = response.body.data.findUserLanguageInfo.data[0];
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(3000);
-      cy.get('#language_detail_menu_toc_item_LANGUAGES').find('#language-' + data._key).click();
+      cy.get('#language_detail_menu_toc_item_LANGUAGES')
+        .find('#language-' + data._key)
+        .click();
       UserLanguage.findUserLanguage(data._key);
-    })
+    });
     cy.clickButton('cancel');
   }
-
 });

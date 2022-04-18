@@ -139,7 +139,7 @@ export class GroupRoleListComponent extends AitBaseComponent implements OnInit {
     'change_at_to',
   ];
   userAttribute = ['create_by', 'change_by'];
-  comboboxSearch = ['permission',];
+  comboboxSearch = ['permission'];
 
   set = {};
   countPage = 0;
@@ -205,10 +205,7 @@ export class GroupRoleListComponent extends AitBaseComponent implements OnInit {
   }
 
   getOperator(key: string) {
-    if (
-      key === 'create_at_from' ||
-      key === 'change_at_from' 
-    ) {
+    if (key === 'create_at_from' || key === 'change_at_from') {
       return OPERATOR.GREATER_OR_EQUAL;
     } else {
       return OPERATOR.LESS_OR_EQUAL;
@@ -241,7 +238,7 @@ export class GroupRoleListComponent extends AitBaseComponent implements OnInit {
         roleTable['create_by'] = role?.create_by;
         roleTable['change_by'] = role?.change_by;
         roleTable['change_at'] = this.getDateFormat(role?.change_at);
-        if (roleTable['name']!==undefined) {
+        if (roleTable['name'] !== undefined) {
           this.groupDataTable.push(roleTable);
         }
       });
@@ -258,11 +255,11 @@ export class GroupRoleListComponent extends AitBaseComponent implements OnInit {
         const value = this.searchRole.controls[key].value;
         if (value) {
           if (this.dateAtributes.includes(key)) {
-              object[key] = {
-                target: key.slice(0, 9) || '',
-                operator: this.getOperator(key),
-                valueAsNumber: value,
-              };
+            object[key] = {
+              target: key.slice(0, 9) || '',
+              operator: this.getOperator(key),
+              valueAsNumber: value,
+            };
           } else {
             if (this.userAttribute.includes(key)) {
               try {
@@ -288,7 +285,6 @@ export class GroupRoleListComponent extends AitBaseComponent implements OnInit {
               if (isStr) {
                 object[key]['valueAsString'] = value;
               }
-              
             }
           }
         }
@@ -304,7 +300,7 @@ export class GroupRoleListComponent extends AitBaseComponent implements OnInit {
       await this.getDataTable();
       this.focusToTable();
     }
-  };
+  }
 
   getArrayKeys(values: KeyValueDto | KeyValueDto[]) {
     const isArray = Array.isArray(values);
@@ -326,7 +322,6 @@ export class GroupRoleListComponent extends AitBaseComponent implements OnInit {
   }
 
   delete(data) {
-    console.log('1');
     // let checkUse = null;
     // if (this.listDbConnectionInDimension.length > 0) {
     //   checkUse = this.listDbConnectionInDimension.find(actor => actor === data);
@@ -350,7 +345,6 @@ export class GroupRoleListComponent extends AitBaseComponent implements OnInit {
     //             } else {
     //               this.showToastr('', this.getMsg('E0050'), KEYS.WARNING);
     //             }
-
     //           })
     //       }
     //     });
@@ -507,23 +501,11 @@ export class GroupRoleListComponent extends AitBaseComponent implements OnInit {
   getError() {
     const msg = this.getMsg('E0004');
     const createAtError = (msg || '')
-      .replace(
-        '{0}',
-        this.translateService.translate('create_at_to')
-      )
-      .replace(
-        '{1}',
-        this.translateService.translate('create_at_from')
-      );
+      .replace('{0}', this.translateService.translate('create_at_to'))
+      .replace('{1}', this.translateService.translate('create_at_from'));
     const changeAtError = (msg || '')
-      .replace(
-        '{0}',
-        this.translateService.translate('change_at_to')
-      )
-      .replace(
-        '{1}',
-        this.translateService.translate('change_at_from')
-      );
+      .replace('{0}', this.translateService.translate('change_at_to'))
+      .replace('{1}', this.translateService.translate('change_at_from'));
 
     this.changeAtErrorMessage = [];
     this.createAtErrorMessage = [];
@@ -539,13 +521,11 @@ export class GroupRoleListComponent extends AitBaseComponent implements OnInit {
     }
   }
 
-
-  clear(){
+  clear() {
     this.isReset = true;
     setTimeout(() => {
       this.isReset = false;
     }, 100);
     this.searchRole.reset();
-    
   }
 }

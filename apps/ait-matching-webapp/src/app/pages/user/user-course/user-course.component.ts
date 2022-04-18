@@ -1,22 +1,28 @@
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { 
-  MODE, 
+import {
+  MODE,
   AppState,
-  AitAppUtils, 
-  AitAuthService, 
-  AitBaseComponent, 
-  AitEnvironmentService, 
-  AitTranslationService, 
+  AitAppUtils,
+  AitAuthService,
+  AitBaseComponent,
+  AitEnvironmentService,
+  AitTranslationService,
   AitConfirmDialogComponent,
-  getUserSetting, 
+  getUserSetting,
 } from '@ait/ui';
-import { 
-  Component, 
-  OnInit, 
-  ElementRef, 
-} from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { NbToastrService, NbLayoutScrollService, NbDialogService, NbDialogRef } from '@nebular/theme';
+import { Component, OnInit, ElementRef } from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import {
+  NbToastrService,
+  NbLayoutScrollService,
+  NbDialogService,
+  NbDialogRef,
+} from '@nebular/theme';
 import { isArrayFull, isObjectFull, KEYS, RESULT_STATUS } from '@ait/shared';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
@@ -28,7 +34,7 @@ import { UserSkillsService } from '../../../services/user-skills.service';
 @Component({
   selector: 'ait-user-course',
   templateUrl: './user-course.component.html',
-  styleUrls: ['./user-course.component.scss']
+  styleUrls: ['./user-course.component.scss'],
 })
 export class UserCourseComponent extends AitBaseComponent implements OnInit {
   mode = MODE.NEW;
@@ -88,7 +94,17 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
     store: Store<AppState>,
     apollo: Apollo
   ) {
-    super(store, authService, apollo, null, env, layoutScrollService, toastrService, null, router);
+    super(
+      store,
+      authService,
+      apollo,
+      null,
+      env,
+      layoutScrollService,
+      toastrService,
+      null,
+      router
+    );
     this.user_id = this.authService.getUserID();
     this.setModulePage({
       module: 'user',
@@ -120,14 +136,13 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
       training_center: new FormControl(null),
       user_id: new FormControl(null),
     });
-   
   }
   // get value form
   async ngOnInit(): Promise<any> {
     this.getMaxFile();
     setTimeout(() => {
-      this.isLoad = true;      
-    },500);
+      this.isLoad = true;
+    }, 500);
     if (this.course_key) {
       this.mode = MODE.EDIT;
     }
@@ -154,27 +169,29 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
       { ...courseInfo },
       { ...courseClone }
     );
-    this.isChanged = !(isChangedUserInfo);
+    this.isChanged = !isChangedUserInfo;
   }
-  async getMaxFile(){
-    await this.userSkillsService.getMaxSkill({value: ['maxSizeFile']})
-    .then((res) => {
-      this.sizeFile = parseInt(res.data[0].name);
-    })
-    await this.userSkillsService.getMaxSkill({value: ['maxFile']})
-    .then((res) => {
-      this.maxFile = parseInt(res.data[0].name);
-      this.titlFile = this.translateService.translate('upload max 5 files')
-        .replace('{0}', this.maxFile.toString())
-        .replace('{1}', this.sizeFile.toString());
-    })
+  async getMaxFile() {
+    await this.userSkillsService
+      .getMaxSkill({ value: ['maxSizeFile'] })
+      .then((res) => {
+        this.sizeFile = parseInt(res.data[0].name);
+      });
+    await this.userSkillsService
+      .getMaxSkill({ value: ['maxFile'] })
+      .then((res) => {
+        this.maxFile = parseInt(res.data[0].name);
+        this.titlFile = this.translateService
+          .translate('upload max 5 files')
+          .replace('{0}', this.maxFile.toString())
+          .replace('{1}', this.sizeFile.toString());
+      });
   }
   takeMasterValue(val: any, form: string): void {
     if (isObjectFull(val) && val.value.length > 0) {
       this.course.controls[form].markAsDirty();
       this.course.controls[form].setValue(val?.value[0]);
-    }
-    else {
+    } else {
       this.course.controls[form].markAsDirty();
       this.course.controls[form].setValue(null);
     }
@@ -207,9 +224,8 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
       value = new Date(data).setHours(0, 0, 0, 0);
       this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(value);
-      // set jp_dob format japan cadidates    
+      // set jp_dob format japan cadidates
       form === 'dob' && this.setKanjiDate();
-
     } else {
       this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(null);
@@ -223,15 +239,17 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
     const msg = this.getMsg('E0004');
     const dateFrom = this.course.controls['start_date_from'].value;
     const dateTo = this.course.controls['start_date_to'].value;
-    if (dateFrom > dateTo  && dateTo != null) {
+    if (dateFrom > dateTo && dateTo != null) {
       const transferMsg = (msg || '')
         .replace('{0}', this.translateService.translate('date from'))
         .replace('{1}', this.translateService.translate('date to'));
       res.push(transferMsg);
     }
-    if(!dateFrom && dateTo){
-      const transferMsg = (this.getMsg('E0020') || '')
-      .replace('{0}', this.translateService.translate('date from'));
+    if (!dateFrom && dateTo) {
+      const transferMsg = (this.getMsg('E0020') || '').replace(
+        '{0}',
+        this.translateService.translate('date from')
+      );
       res.push(transferMsg);
     }
     return res;
@@ -274,11 +292,10 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
     if (this.mode === MODE.NEW) {
       await this.reset();
       setTimeout(() => {
-        this.course.controls['start_date_from'].setValue(this.dateNow)
+        this.course.controls['start_date_from'].setValue(this.dateNow);
         this.showToastr('', this.getMsg('I0007'));
       }, 100);
-    }
-    else {
+    } else {
       this.isResetFile = true;
       setTimeout(() => {
         this.isResetFile = false;
@@ -289,12 +306,14 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
         this.isClearErrors = false;
       }, 100);
       this.companyCenter = [];
-      this.companyCenter.push({ _key: this.courseClone.training_center?._key, value: this.courseClone.training_center?.value });
+      this.companyCenter.push({
+        _key: this.courseClone.training_center?._key,
+        value: this.courseClone.training_center?.value,
+      });
       this.course.patchValue({ ...this.courseClone });
       this.listFile = this.course.value.file;
       this.showToastr('', this.getMsg('I0007'));
     }
-
   }
 
   async saveAndContinue() {
@@ -303,12 +322,14 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
       this.isSubmit = false;
     }, 100);
     const saveData = this.course.value;
-    saveData.training_center = saveData.training_center ? saveData.training_center._key : null;
+    saveData.training_center = saveData.training_center
+      ? saveData.training_center._key
+      : null;
     saveData['user_id'] = this.authService.getUserID();
     if (this.course.value.is_online == null) {
       saveData['is_online'] = false;
     }
-    this.error.length
+    this.error.length;
     if (this.course.valid && this.error.length <= 0) {
       this.callLoadingApp();
       await this.userCourseService
@@ -328,7 +349,8 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
             this.cancelLoadingApp();
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
-        }).catch(() => {
+        })
+        .catch(() => {
           this.cancelLoadingApp();
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         });
@@ -343,7 +365,9 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
       this.isSubmit = false;
     }, 100);
     const saveData = this.course.value;
-    saveData.training_center = saveData.training_center ? saveData.training_center._key : null;
+    saveData.training_center = saveData.training_center
+      ? saveData.training_center._key
+      : null;
     saveData['user_id'] = this.authService.getUserID();
     if (this.course.value.is_online == null) {
       saveData['is_online'] == false;
@@ -363,7 +387,8 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
             this.cancelLoadingApp();
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
-        }).catch(() => {
+        })
+        .catch(() => {
           this.cancelLoadingApp();
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         });
@@ -389,10 +414,10 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
             block: 'center',
           });
           break;
-        } catch { }
+        } catch {}
       }
     }
-    
+
     if (this.error.length > 0) {
       const invalidControl = this.element.nativeElement.querySelector(
         `.ng-star-inserted div`
@@ -402,21 +427,21 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
           behavior: 'auto',
           block: 'center',
         });
-      } catch { }
+      } catch {}
     }
   }
 
- 
   //delete
   async deleteUserById() {
-    this.dialogService.open(AitConfirmDialogComponent, {
-      closeOnBackdropClick: true,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-        title: this.getMsg('I0004'),
-      },
-    })
+    this.dialogService
+      .open(AitConfirmDialogComponent, {
+        closeOnBackdropClick: true,
+        hasBackdrop: true,
+        autoFocus: false,
+        context: {
+          title: this.getMsg('I0004'),
+        },
+      })
       .onClose.subscribe(async (event) => {
         if (event) {
           await this.userCourseService.deleteCourseByKey(this.courseClone._key);
@@ -440,9 +465,9 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
           hasBackdrop: true,
           autoFocus: false,
           context: {
-            style: {width: '90%'},
+            style: { width: '90%' },
             title: this.getMsg('I0006'),
-            id:'back-user-course',
+            id: 'back-user-course',
           },
         })
         .onClose.subscribe(async (event) => {
@@ -451,9 +476,9 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
           }
         });
     } else {
-      if(this.isSave){
+      if (this.isSave) {
         this.closeDialog(true);
-      }else{
+      } else {
         this.closeDialog(false);
       }
     }
@@ -472,48 +497,43 @@ export class UserCourseComponent extends AitBaseComponent implements OnInit {
   }
 
   public save = async (data = {}) => {
-    console.log(data);
-    
     try {
-      data['user_id']= this.user_id;
-      return await this.userCourseService.saveCourse(data)
-      .then(async (res) => {
+      data['user_id'] = this.user_id;
+      return await this.userCourseService.saveCourse(data).then(async (res) => {
         if (res?.status === RESULT_STATUS.OK) {
           return res;
         }
-      })
+      });
     } catch (error) {
       console.log(error);
-      
     }
-    
-  }
+  };
 
   async find(key: string) {
     if (this.course_key) {
       this.callLoadingApp();
-      await this.userCourseService
-        .findCourseByKey(key)
-        .then((r) => {
-          if (r.status === RESULT_STATUS.OK) {
-            if (r.data.length > 0) {
-              const data = r.data[0];
-              this.course.patchValue({ ...data });
-              this.courseClone = this.course.value;
-              this.companyCenter = [{ _key: data.training_center?._key }, { value: data.training_center?.value }];
-              this.listFile = this.course.value.file;
-              if (this.user_id != data.user_id) {
-                this.mode = MODE.VIEW
-                this.isReadonly = true;
-              }   
-              this.cancelLoadingApp();           
+      await this.userCourseService.findCourseByKey(key).then((r) => {
+        if (r.status === RESULT_STATUS.OK) {
+          if (r.data.length > 0) {
+            const data = r.data[0];
+            this.course.patchValue({ ...data });
+            this.courseClone = this.course.value;
+            this.companyCenter = [
+              { _key: data.training_center?._key },
+              { value: data.training_center?.value },
+            ];
+            this.listFile = this.course.value.file;
+            if (this.user_id != data.user_id) {
+              this.mode = MODE.VIEW;
+              this.isReadonly = true;
             }
-            else {
-              this.cancelLoadingApp();
-              this.router.navigate([`/404`]);
-            }
+            this.cancelLoadingApp();
+          } else {
+            this.cancelLoadingApp();
+            this.router.navigate([`/404`]);
           }
-        });
+        }
+      });
     }
     return;
   }

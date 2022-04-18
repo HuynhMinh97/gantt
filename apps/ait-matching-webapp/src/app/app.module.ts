@@ -90,7 +90,7 @@ const NB_UI_MODULES = [
   NbInputModule,
   NbFormFieldModule,
   NbRadioModule,
-  NbDialogModule
+  NbDialogModule,
 ];
 
 const AUREOLE_V_COMPONENTS = [
@@ -141,8 +141,6 @@ const PAGES = [
     GroupRoleRegisterComponent,
     GroupRoleListComponent,
     SetNameComponent,
-   
-
   ],
   imports: [
     Ng2SmartTableModule,
@@ -180,7 +178,5 @@ const PAGES = [
   bootstrap: [AppComponent],
 })
 export class AppModule {
-  constructor(router: Router) {
-    console.log(router);
-  }
+  constructor(router: Router) {}
 }

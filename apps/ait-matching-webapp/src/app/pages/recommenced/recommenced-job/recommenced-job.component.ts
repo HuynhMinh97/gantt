@@ -1,8 +1,4 @@
-import {
-  isArrayFull,
-  KeyValueDto,
-  RESULT_STATUS,
-} from '@ait/shared';
+import { isArrayFull, KeyValueDto, RESULT_STATUS } from '@ait/shared';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -39,8 +35,9 @@ export enum StorageKey {
   styleUrls: ['./recommenced-job.component.scss'],
   templateUrl: './recommenced-job.component.html',
 })
-export class RecommencedJobComponent extends AitBaseComponent implements OnInit {
-  
+export class RecommencedJobComponent
+  extends AitBaseComponent
+  implements OnInit {
   searchForm: FormGroup;
   currentCount = 0;
   constructor(
@@ -350,7 +347,6 @@ export class RecommencedJobComponent extends AitBaseComponent implements OnInit 
       const max = event.target.scrollHeight;
       // pos/max will give you the distance between scroll bottom and and bottom of screen in percentage.
       if (pos >= max) {
-        console.log(123);
         if (!this.spinnerLoading) {
           // Coding something 😋😋😋
           if (this.currentTab === 'R' && this.textDataEnd === '') {
@@ -471,7 +467,6 @@ export class RecommencedJobComponent extends AitBaseComponent implements OnInit 
         obj[prop] = data[prop];
       }
     }
-    console.log(obj);
     this.searchConditionService.save(obj).then((res) => {
       if (res.status === RESULT_STATUS.OK) {
         this.searchForm.controls['_key'].setValue(res.data[0]?._key || '');

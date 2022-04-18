@@ -21,7 +21,11 @@ import {
   AitConfirmDialogComponent,
 } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
-import { NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
+import {
+  NbDialogService,
+  NbLayoutScrollService,
+  NbToastrService,
+} from '@nebular/theme';
 import {
   isObjectFull,
   KEYS,
@@ -121,7 +125,6 @@ export class AddRoleComponent extends AitBaseComponent implements OnInit {
 
     this.roleForm.patchValue({ ...result.data[0] });
     this.roleFormClone = this.roleForm.value;
-    console.log(this.roleForm);
   }
 
   checkAllowSave() {
@@ -140,9 +143,6 @@ export class AddRoleComponent extends AitBaseComponent implements OnInit {
     }, 100);
     this.roleForm.reset();
   }
-
-
-  
 
   async save() {
     if (this.roleForm.valid) {
@@ -167,7 +167,7 @@ export class AddRoleComponent extends AitBaseComponent implements OnInit {
           this.showToastr('', message);
           this.groupRoleRegisterService.role_key =
             saveRoleInfo['role_key'] + '/' + saveRoleInfo['employee_name']._key;
-            this.router.navigate([`group-role-register`])
+          this.router.navigate([`group-role-register`]);
           this.cancelLoadingApp();
         } else {
           this.cancelLoadingApp();
