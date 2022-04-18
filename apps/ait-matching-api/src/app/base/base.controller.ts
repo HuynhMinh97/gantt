@@ -1,8 +1,8 @@
 import { AitBaseController, AitBaseService } from '@ait/core';
 import { RequestCoreModel } from '@ait/shared';
 import { HttpService } from '@nestjs/common';
+import { environment } from '../../environments/environment';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { environment } from 'apps/ait-api-starter/src/environments/environment';
 import { LOG_TEMPLATE } from '../commons/consts';
 import { CommonUtils } from '../utils/utils';
 

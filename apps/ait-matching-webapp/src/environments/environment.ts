@@ -13,7 +13,7 @@ export const environment = {
     BASE_REST_PREFIX: '/rest-api/v1',
     BASE_GRAPHQL_PREFIX: '/api/v1',
     RECOMMENCED: {
-      MATCHING_USER: '/recommenced/matching',
+      MATCHING_USER: '/recommenced-user/matching',
     },
     AUREOLEV: {
       RECOMMENCED_USER: {
