@@ -1,32 +1,49 @@
-import { 
-  MODE, 
-  AppState, 
-  AitAppUtils, 
-  AitAuthService, 
-  AitBaseComponent, 
+import {
+  MODE,
+  AppState,
+  AitAppUtils,
+  AitAuthService,
+  AitBaseComponent,
   AitEnvironmentService,
-  AitTranslationService, 
+  AitTranslationService,
   AitConfirmDialogComponent,
-  getUserSetting, 
+  getUserSetting,
 } from '@ait/ui';
 import kanjidate from 'kanjidate';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Component, ElementRef, OnInit } from '@angular/core';
-import { isArrayFull, isObjectFull, KEYS, PAGE_TYPE, RESULT_STATUS } from '@ait/shared';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { NbToastrService, NbLayoutScrollService, NbDialogService, NbDialogRef } from '@nebular/theme';
+import {
+  isArrayFull,
+  isObjectFull,
+  KEYS,
+  PAGE_TYPE,
+  RESULT_STATUS,
+} from '@ait/shared';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import {
+  NbToastrService,
+  NbLayoutScrollService,
+  NbDialogService,
+  NbDialogRef,
+} from '@nebular/theme';
 import { UserCerfiticateService } from '../../../services/user-certificate.service';
 import { UserSkillsService } from '../../../services/user-skills.service';
-
 
 @Component({
   selector: 'ait-user-certificate',
   templateUrl: './user-certificate.component.html',
-  styleUrls: ['./user-certificate.component.scss']
+  styleUrls: ['./user-certificate.component.scss'],
 })
-export class UserCertificateComponent extends AitBaseComponent implements OnInit {
+export class UserCertificateComponent
+  extends AitBaseComponent
+  implements OnInit {
   mode = MODE.NEW;
   certificateClone: any;
   certificate: FormGroup;
@@ -94,24 +111,24 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
     this.user_id = this.authService.getUserID();
     this.certificate_key = this.activeRouter.snapshot.paramMap.get('id');
 
-    if(this.certificate_key){
-      this.type = PAGE_TYPE.EDIT
-    }else{
-      this.type = PAGE_TYPE.NEW
+    if (this.certificate_key) {
+      this.type = PAGE_TYPE.EDIT;
+    } else {
+      this.type = PAGE_TYPE.NEW;
     }
-    
+
     this.setModulePage({
       module: 'user',
       page: 'user_cerfiticate',
-      type: this.type
+      type: this.type,
     });
-    
+
     store.pipe(select(getUserSetting)).subscribe((setting) => {
       if (isObjectFull(setting) && setting['date_format_display']) {
         this.dateFormat = setting['date_format_display'];
       }
     });
-    
+
     // this.router.events.subscribe((event) => {
     //   if (event instanceof NavigationStart) {
     //       this.closeDialog(false);
@@ -128,7 +145,10 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
       issue_date_from: new FormControl(null),
       certificate_award_number: new FormControl(null),
       file: new FormControl(null, [Validators.maxLength(5)]),
-      name: new FormControl(null, [Validators.required, Validators.maxLength(200)]),
+      name: new FormControl(null, [
+        Validators.required,
+        Validators.maxLength(200),
+      ]),
     });
   }
   async ngOnInit(): Promise<any> {
@@ -164,21 +184,24 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
       { ...certificateInfo },
       { ...certificateClone }
     );
-    this.isChanged = !(isChangedUserInfo);
+    this.isChanged = !isChangedUserInfo;
   }
 
-  async getMaxFile(){
-    await this.userSkillsService.getMaxSkill({value: ['maxSizeFile']})
-    .then((res) => {
-      this.sizeFile = parseInt(res.data[0].name);
-    })
-    await this.userSkillsService.getMaxSkill({value: ['maxFile']})
-    .then((res) => {
-      this.maxFile = parseInt(res.data[0].name);
-      this.titlFile = this.translateService.translate('upload max 5 files')
-        .replace('{0}', this.maxFile.toString())
-        .replace('{1}', this.sizeFile.toString());
-    })
+  async getMaxFile() {
+    await this.userSkillsService
+      .getMaxSkill({ value: ['maxSizeFile'] })
+      .then((res) => {
+        this.sizeFile = parseInt(res.data[0].name);
+      });
+    await this.userSkillsService
+      .getMaxSkill({ value: ['maxFile'] })
+      .then((res) => {
+        this.maxFile = parseInt(res.data[0].name);
+        this.titlFile = this.translateService
+          .translate('upload max 5 files')
+          .replace('{0}', this.maxFile.toString())
+          .replace('{1}', this.sizeFile.toString());
+      });
   }
 
   takeMasterValue(val: any, form: string): void {
@@ -219,7 +242,7 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
       value = new Date(data).setHours(0, 0, 0, 0);
       this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(value);
-      // set jp_dob format japan cadidates    
+      // set jp_dob format japan cadidates
       form === 'dob' && this.setKanjiDate();
     }
     this.error = this.checkDatePicker();
@@ -230,15 +253,17 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
     const msg = this.getMsg('E0004');
     const dateFrom = this.certificate.controls['issue_date_from'].value;
     const dateTo = this.certificate.controls['issue_date_to'].value;
-    if (dateFrom > dateTo  && dateTo != null) {
+    if (dateFrom > dateTo && dateTo != null) {
       const transferMsg = (msg || '')
         .replace('{0}', this.translateService.translate('issue date'))
         .replace('{1}', this.translateService.translate('issue date to'));
       res.push(transferMsg);
     }
-    if(!dateFrom && dateTo){
-      const transferMsg = (this.getMsg('E0020') || '')
-      .replace('{0}', this.translateService.translate('date from'));
+    if (!dateFrom && dateTo) {
+      const transferMsg = (this.getMsg('E0020') || '').replace(
+        '{0}',
+        this.translateService.translate('date from')
+      );
       res.push(transferMsg);
     }
     return res;
@@ -282,11 +307,10 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
     if (this.mode === MODE.NEW) {
       await this.reset();
       setTimeout(() => {
-        this.certificate.controls['issue_date_from'].setValue(this.dateNow)
+        this.certificate.controls['issue_date_from'].setValue(this.dateNow);
         this.showToastr('', this.getMsg('I0007'));
       }, 100);
-    }
-    else {
+    } else {
       this.isResetFile = true;
       setTimeout(() => {
         this.isResetFile = false;
@@ -306,7 +330,9 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
   dataSave() {
     const saveData = this.certificate.value;
     saveData['name'] = saveData.name?._key ? saveData.name._key : null;
-    saveData['issue_by'] = saveData.issue_by?._key ? saveData.issue_by._key : null;
+    saveData['issue_by'] = saveData.issue_by?._key
+      ? saveData.issue_by._key
+      : null;
     if (this.certificate_key) {
       saveData['_key'] = this.certificate_key;
     } else {
@@ -330,14 +356,19 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
               this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
             this.showToastr('', message);
             await this.reset();
-            setTimeout(() => { this.certificate.controls['issue_date_from'].setValue(this.dateNow) }, 100);
+            setTimeout(() => {
+              this.certificate.controls['issue_date_from'].setValue(
+                this.dateNow
+              );
+            }, 100);
             this.isSave = true;
             this.cancelLoadingApp();
           } else {
             this.cancelLoadingApp();
             this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
-        }).catch(() => {
+        })
+        .catch(() => {
           this.cancelLoadingApp();
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         });
@@ -388,10 +419,10 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
             block: 'center',
           });
           break;
-        } catch { }
+        } catch {}
       }
     }
-    
+
     if (this.error.length > 0) {
       const invalidControl = this.element.nativeElement.querySelector(
         `.ng-star-inserted div`
@@ -401,60 +432,66 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
           behavior: 'auto',
           block: 'center',
         });
-      } catch { }
+      } catch {}
     }
   }
 
   async find(key: string) {
     if (this.certificate_key) {
       this.callLoadingApp();
-      await this.cartificateService
-        .findUserByKey(key)
-        .then((r) => {
-          if (r.status === RESULT_STATUS.OK) {
-            if (r.data.length > 0) {
-              const data = r.data[0];
-              this.certificate.patchValue({ ...data });
-              this.certificateClone = this.certificate.value;
-              this.companyName = [{ _key: data.name?._key }, { value: data.name?.value }];
-              this.companyIssue = [{ _key: data.issue_by?._key }, { value: data.issue_by?.value }];
-              this.files = data.file;
-              if (this.user_id != data.user_id) {
-                this.mode = MODE.VIEW
-              }
-              this.cancelLoadingApp();
+      await this.cartificateService.findUserByKey(key).then((r) => {
+        if (r.status === RESULT_STATUS.OK) {
+          if (r.data.length > 0) {
+            const data = r.data[0];
+            this.certificate.patchValue({ ...data });
+            this.certificateClone = this.certificate.value;
+            this.companyName = [
+              { _key: data.name?._key },
+              { value: data.name?.value },
+            ];
+            this.companyIssue = [
+              { _key: data.issue_by?._key },
+              { value: data.issue_by?.value },
+            ];
+            this.files = data.file;
+            if (this.user_id != data.user_id) {
+              this.mode = MODE.VIEW;
             }
-            else {
-              this.cancelLoadingApp();
-              this.router.navigate([`/404`]);
-            }
+            this.cancelLoadingApp();
+          } else {
+            this.cancelLoadingApp();
+            this.router.navigate([`/404`]);
           }
-        });
+        }
+      });
     }
     return;
   }
 
   //delete
   async deleteUserById() {
-    this.dialogService.open(AitConfirmDialogComponent, {
-      closeOnBackdropClick: true,
-      hasBackdrop: true,
-      autoFocus: false,
-      context: {
-        title: this.getMsg('I0004'),
-      },
-    })
+    this.dialogService
+      .open(AitConfirmDialogComponent, {
+        closeOnBackdropClick: true,
+        hasBackdrop: true,
+        autoFocus: false,
+        context: {
+          title: this.getMsg('I0004'),
+        },
+      })
       .onClose.subscribe(async (event) => {
         if (event) {
           if (this.certificate_key) {
-            await this.cartificateService.remove(this.certificate_key).then((res) => {
-              if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
-                this.showToastr('', this.getMsg('I0003'));
-                this.closeDialog(true);
-              } else {
-                this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-              }
-            });
+            await this.cartificateService
+              .remove(this.certificate_key)
+              .then((res) => {
+                if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
+                  this.showToastr('', this.getMsg('I0003'));
+                  this.closeDialog(true);
+                } else {
+                  this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+                }
+              });
           } else {
             this.showToastr('', this.getMsg('E0050'), KEYS.WARNING);
           }
@@ -470,9 +507,9 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
           hasBackdrop: true,
           autoFocus: false,
           context: {
-            style: {width: '90%'},
+            style: { width: '90%' },
             title: this.getMsg('I0006'),
-            id:'back-user-certificate',
+            id: 'back-user-certificate',
           },
         })
         .onClose.subscribe(async (event) => {
@@ -493,30 +530,29 @@ export class UserCertificateComponent extends AitBaseComponent implements OnInit
     let title = '';
     this.selectFile = this.translateService.translate('select_file');
     if (this.mode === MODE.EDIT) {
-      title = this.translateService.translate('edit certificate')
+      title = this.translateService.translate('edit certificate');
     }
     if (this.mode === MODE.NEW) {
-      title = this.translateService.translate('add certificate')
+      title = this.translateService.translate('add certificate');
     }
     return title;
   }
   closeDialog(event: boolean) {
     // this.nbDialogRef.close(event);
   }
- 
+
   public save = async (data = {}) => {
     try {
-      data['user_id']= this.user_id;
-      return await this.cartificateService.saveUserCartificate(data)
-      .then(async (res) => {
-        if (res?.status === RESULT_STATUS.OK) {
-          return res;
-        }
-      })
+      data['user_id'] = this.user_id;
+      return await this.cartificateService
+        .saveUserCartificate(data)
+        .then(async (res) => {
+          if (res?.status === RESULT_STATUS.OK) {
+            return res;
+          }
+        });
     } catch (error) {
       console.log(error);
-      
     }
-    
-  }
+  };
 }

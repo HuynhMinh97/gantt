@@ -1,5 +1,10 @@
 /* eslint-disable @typescript-eslint/member-ordering */
-import { isArrayFull, isObjectFull, PAGE_TYPE, RESULT_STATUS } from '@ait/shared';
+import {
+  isArrayFull,
+  isObjectFull,
+  PAGE_TYPE,
+  RESULT_STATUS,
+} from '@ait/shared';
 import {
   AitAuthService,
   AitBaseComponent,
@@ -8,12 +13,16 @@ import {
   AppState,
   getSettingLangTime,
   getUserSetting,
-  MODE
+  MODE,
 } from '@ait/ui';
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
+import {
+  NbDialogService,
+  NbLayoutScrollService,
+  NbToastrService,
+} from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import dayjs from 'dayjs';
@@ -88,14 +97,14 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   actionBtn = [
     {
       title: '追加',
-      icon: 'plus'
-    }
+      icon: 'plus',
+    },
   ];
   actionBtnProfile = [
     {
       title: '追加',
-      icon: 'edit-outline'
-    }
+      icon: 'edit-outline',
+    },
   ];
   skillUserName: any;
   constructor(
@@ -118,15 +127,25 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     apollo: Apollo,
     env: AitEnvironmentService,
     layoutScrollService: NbLayoutScrollService,
-    toastrService: NbToastrService,
+    toastrService: NbToastrService
   ) {
-    super(store, authService, apollo, null, env, layoutScrollService, toastrService,null, router);
+    super(
+      store,
+      authService,
+      apollo,
+      null,
+      env,
+      layoutScrollService,
+      toastrService,
+      null,
+      router
+    );
     store.pipe(select(getUserSetting)).subscribe((setting) => {
       if (isObjectFull(setting) && setting['date_format_display']) {
         this.dateFormat = setting['date_format_display'];
       }
     });
-    this.store.pipe(select(getSettingLangTime)).subscribe(setting => {
+    this.store.pipe(select(getSettingLangTime)).subscribe((setting) => {
       if (setting) {
         const display = setting?.date_format_display;
         this.monthFormat = MatchingUtils.getFormatYearMonth(display);
@@ -144,7 +163,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       this.profileId = this.user_id;
       this.mode = MODE.EDIT;
       this.isMyUserProfile = true;
-    } 
+    }
     this.skills = this.translateService.translate('skills');
   }
 
@@ -157,12 +176,11 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       this.getUserProfileByUserId();
       this.getSkillByUserId();
       this.getProjectByUserId();
-      this.getExperiencByUserId()
+      this.getExperiencByUserId();
       this.getCentificateByUserId();
       this.getCourseByUserId();
       this.getEducationByUserId();
-      this.getLanguageByUserId();  
-         
+      this.getLanguageByUserId();
     } catch (e) {
       this.cancelLoadingApp();
     }
@@ -174,29 +192,29 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         const setting = await this.findUserSettingCode();
         if (isObjectFull(setting) && isArrayFull(masterValue)) {
           const format = setting['date_format_display'];
-          const data = masterValue.find(item => item.code === format);
+          const data = masterValue.find((item) => item.code === format);
           if (data) {
             this.dateFormat = data['name'];
           }
         }
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
-  nextPage(link: string, key?: string){
-    if(key){
+  nextPage(link: string, key?: string) {
+    if (key) {
       this.router.navigate([`${link}/${key}`]);
-    }else{
+    } else {
       this.router.navigate([`${link}`]);
     }
   }
 
-  async getMaxSkill(){
-    await this.userSkillsService.getMaxSkill({value: ['maxSkill']})
-    .then((res) => {
-      this.maxSkill = parseInt(res.data[0].name);
-    })
+  async getMaxSkill() {
+    await this.userSkillsService
+      .getMaxSkill({ value: ['maxSkill'] })
+      .then((res) => {
+        this.maxSkill = parseInt(res.data[0].name);
+      });
   }
   getDateFormat(time: number) {
     if (!time) {
@@ -208,41 +226,38 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
 
   async getUserProfileByUserId() {
     this.callLoadingApp();
-    await this.userProfileService.findProfile(this.profileId)
-      .then((res) => {
-        if (res.status === RESULT_STATUS.OK) {
-          if (res.data.length > 0) {
-            const data = res.data[0]
-            this.DataUserProfile = data;
-            this.isload = true;
-            this.cancelLoadingApp();
+    await this.userProfileService.findProfile(this.profileId).then((res) => {
+      if (res.status === RESULT_STATUS.OK) {
+        if (res.data.length > 0) {
+          const data = res.data[0];
+          this.DataUserProfile = data;
+          this.isload = true;
+          this.cancelLoadingApp();
+        } else {
+          this.cancelLoadingApp();
+          if (this.mode == MODE.VIEW) {
+            this.router.navigate([`/404`]);
           } else {
-            this.cancelLoadingApp();
-            if(this.mode == MODE.VIEW) {
-              this.router.navigate([`/404`]);
-            }else{
-              this.router.navigate([`user`]);
-            }
-            
+            this.router.navigate([`user`]);
           }
-          this.timeExperienceStr = this.dateDiffInYears(this.timeExperience);
         }
-      })
-      this.cancelLoadingApp();
+        this.timeExperienceStr = this.dateDiffInYears(this.timeExperience);
+      }
+    });
+    this.cancelLoadingApp();
   }
 
-  async getSkillByUserId() { 
-    await this.userProfileService.findTopSkill(this.profileId)
-      .then((res) => {
-        const data = res.data[0]; 
-        this.topSkills = [];
-        this.topSkills = data.top_skills ? data.top_skills : [];
-      })
+  async getSkillByUserId() {
+    await this.userProfileService.findTopSkill(this.profileId).then((res) => {
+      const data = res.data[0];
+      this.topSkills = [];
+      this.topSkills = data.top_skills ? data.top_skills : [];
+    });
     const from = 'sys_user/' + this.profileId;
     await this.reoderSkillsService.findReorder(from).then(async (res) => {
       if (res.status === RESULT_STATUS.OK) {
         const data = res.data;
-        this.countSkill =  data.length ;
+        this.countSkill = data.length;
         const top5 = {} as OrderSkill;
         top5.name = this.translateService.translate('top 5');
         top5.data = [];
@@ -251,7 +266,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
             for (const topskill of this.topSkills) {
               if (topskill._key == item._key) {
                 top5.data.push(item);
-                break
+                break;
               }
             }
           }
@@ -264,7 +279,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
               this.skillByCategory[index].data.push(item);
               isCategory = true;
             }
-          })
+          });
           if (!isCategory) {
             const skillsGroup = {} as OrderSkill;
             skillsGroup.name = item.category?.value;
@@ -274,95 +289,112 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
             this.skillByCategory.push(skillsGroup);
           }
         });
-      }      
-      console.log(this.skillByCategory);
-    })  
-    this.skillByCategory.forEach((element, index) => {
-      if(element.code == 'OTHERS'){
-        this.skillByCategory.push(element);
-        this.skillByCategory.splice(index, 1 );
       }
-    }); 
+    });
+    this.skillByCategory.forEach((element, index) => {
+      if (element.code == 'OTHERS') {
+        this.skillByCategory.push(element);
+        this.skillByCategory.splice(index, 1);
+      }
+    });
   }
 
   async getProjectByUserId() {
     this.timeProject = 0;
-    await this.userProjectService.getProjectByUserId(this.profileId)
+    await this.userProjectService
+      .getProjectByUserId(this.profileId)
       .then(async (res) => {
-        if(res.status == RESULT_STATUS.OK && res.data.length > 0 ){
-          const company_values = Array.from(new Set(res.data.map(m => m?.company_working?.value))).filter(f => !!f);
-          const companyUserProjects = this.groupBy(res.data, p => p.company_working?.value);
-  
-          const datacompany = company_values.map(element => {
-            let timeworkingInfo = 0;         
-            companyUserProjects.get(element).forEach(e => {
-              timeworkingInfo += this.dateDiffInMonths(e.start_date_from, e.start_date_to);
+        if (res.status == RESULT_STATUS.OK && res.data.length > 0) {
+          const company_values = Array.from(
+            new Set(res.data.map((m) => m?.company_working?.value))
+          ).filter((f) => !!f);
+          const companyUserProjects = this.groupBy(
+            res.data,
+            (p) => p.company_working?.value
+          );
+
+          const datacompany = company_values.map((element) => {
+            let timeworkingInfo = 0;
+            companyUserProjects.get(element).forEach((e) => {
+              timeworkingInfo += this.dateDiffInMonths(
+                e.start_date_from,
+                e.start_date_to
+              );
             });
             this.timeProject += timeworkingInfo;
             return {
               company_name: element,
               data_project: companyUserProjects.get(element),
               working_time: timeworkingInfo,
-            }
+            };
           });
           setTimeout(() => {
             this.userProject = datacompany;
-            this.userProject.forEach(element => {
-              element.data_project.forEach((item , index)=> {
-                if(!item?.start_date_to){
+            this.userProject.forEach((element) => {
+              element.data_project.forEach((item, index) => {
+                if (!item?.start_date_to) {
                   element.data_project.unshift(item);
-                  element.data_project.splice(index + 1,1);
+                  element.data_project.splice(index + 1, 1);
                 }
               });
             });
             this.getHieghtProject();
           }, 1000);
         }
-      })
+      });
   }
 
-  async getExperiencByUserId() {  
-    this.callLoadingApp(); 
+  async getExperiencByUserId() {
+    this.callLoadingApp();
     this.timeExperience = 0;
     this.timeExperienceStr = this.dateDiffInYears(this.timeExperience);
-    await this.userExperienceService.findUserExperienceByUserId(this.profileId)
+    await this.userExperienceService
+      .findUserExperienceByUserId(this.profileId)
       .then(async (res) => {
         if (res?.status === RESULT_STATUS.OK && res.data.length > 0) {
-          const company_values = Array.from(new Set(res.data.map(m => m?.company_working?.value))).filter(f => !!f);
-          const companyUserExps = this.groupBy(res.data, p => p.company_working?.value);
-          const datacompany = company_values.map(element => {
+          const company_values = Array.from(
+            new Set(res.data.map((m) => m?.company_working?.value))
+          ).filter((f) => !!f);
+          const companyUserExps = this.groupBy(
+            res.data,
+            (p) => p.company_working?.value
+          );
+          const datacompany = company_values.map((element) => {
             let timeworkingInfo = 0;
-            companyUserExps.get(element).forEach(e => {
-              timeworkingInfo += this.dateDiffInMonths(e.start_date_from, e.start_date_to);
+            companyUserExps.get(element).forEach((e) => {
+              timeworkingInfo += this.dateDiffInMonths(
+                e.start_date_from,
+                e.start_date_to
+              );
             });
             this.timeExperience += timeworkingInfo;
             return {
               company_name: element,
               data_project: companyUserExps.get(element),
               working_time: timeworkingInfo,
-            }
+            };
           });
           setTimeout(() => {
             this.userExperience = datacompany;
-            this.userExperience.forEach(element => {
-              element.data_project.forEach((item , index)=> {
-                if(!item?.start_date_to){
+            this.userExperience.forEach((element) => {
+              element.data_project.forEach((item, index) => {
+                if (!item?.start_date_to) {
                   element.data_project.unshift(item);
-                  element.data_project.splice(index + 1,1);
+                  element.data_project.splice(index + 1, 1);
                 }
               });
             });
             this.timeExperienceStr = this.dateDiffInYears(this.timeExperience);
             this.getHieghtExperience();
-          }, 1000);   
-        }else{
+          }, 1000);
+        } else {
         }
-      })
-      
+      });
   }
 
   async getCentificateByUserId() {
-    await this.userCetificateService.findUserCetificateByKey(this.profileId)
+    await this.userCetificateService
+      .findUserCetificateByKey(this.profileId)
       .then((res) => {
         const data = res.data;
         this.countCentificate = data.length;
@@ -383,36 +415,34 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           centificate.name = element.name?.value;
           this.userCentificate.push(centificate);
         }
-      })
+      });
   }
   getCourseByUserId() {
-    this.userCourseService.findCourseByUserId(this.profileId)
-      .then((res) => {
-        const data = res.data;
-        console.log(data);
-        
-        this.countCourse = data.length;
-        for (const element of data) {
-          const course = {} as CourseDto;
-          let datefrom = element.start_date_from;
-          let dateTo = element.start_date_to;
-          if (!datefrom) {
-            datefrom = Date.now();
-          }
-          if (!dateTo) {
-            dateTo = Date.now();
-          }
-          course._key = element._key;
-          course.name = element.name;
-          course.start_date_from = element.start_date_from;
-          course.start_date_to = element.start_date_to;
-          course.training_center = element.training_center?.value;
-          this.userCourse.push(course);
+    this.userCourseService.findCourseByUserId(this.profileId).then((res) => {
+      const data = res.data;
+      this.countCourse = data.length;
+      for (const element of data) {
+        const course = {} as CourseDto;
+        let datefrom = element.start_date_from;
+        let dateTo = element.start_date_to;
+        if (!datefrom) {
+          datefrom = Date.now();
         }
-      })
+        if (!dateTo) {
+          dateTo = Date.now();
+        }
+        course._key = element._key;
+        course.name = element.name;
+        course.start_date_from = element.start_date_from;
+        course.start_date_to = element.start_date_to;
+        course.training_center = element.training_center?.value;
+        this.userCourse.push(course);
+      }
+    });
   }
   getEducationByUserId() {
-    this.userEducationService.findUserEducationByUserId(this.profileId)
+    this.userEducationService
+      .findUserEducationByUserId(this.profileId)
       .then((res) => {
         const data = res.data;
         for (const element of data) {
@@ -428,15 +458,15 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           education._key = element._key;
           education.school = element.school?.value;
           education.start_date_from = element.start_date_from;
-          education.start_date_to = element.start_date_to ;
+          education.start_date_to = element.start_date_to;
           education.field_of_study = element.field_of_study;
           this.userEducation.push(education);
         }
-
-      })
+      });
   }
   getLanguageByUserId() {
-    this.userLanguageService.findUserLanguageByUserId(this.profileId)
+    this.userLanguageService
+      .findUserLanguageByUserId(this.profileId)
       .then((res) => {
         const data = res.data;
         for (const element of data) {
@@ -453,57 +483,58 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           language.language = element.language?.value;
           language.proficiency = element.proficiency?.value;
           if (element.language?._key == 'en_US') {
-            language.image = '../../../../../assets/images/english.png'
+            language.image = '../../../../../assets/images/english.png';
           }
           if (element.language?._key == 'vi_VN') {
-            language.image = '../../../../../assets/images/vietnam.png'
+            language.image = '../../../../../assets/images/vietnam.png';
           }
           if (element.language?._key == 'ja_JP') {
-            language.image = '../../../../../assets/images/flag.png'
+            language.image = '../../../../../assets/images/flag.png';
           }
           setTimeout(() => {
             this.userLanguage.push(language);
-          }, 100)
+          }, 100);
         }
-
-      })
+      });
   }
 
   fomatDate(time: number) {
-    const day = time / 1000 / 60 / 60 / 24;// milliseconds -> day
+    const day = time / 1000 / 60 / 60 / 24; // milliseconds -> day
     if (day <= 31) {
       return '1 Months';
     } else {
-      const month = (day - day % 30) / 30;
+      const month = (day - (day % 30)) / 30;
       if (month < 12) {
         return month.toString() + ' Months';
       } else {
-        const year = (month - month % 12) / 12;
-        return (year.toString() + ' Year ' + (month % 12).toString() + ' Months ');
+        const year = (month - (month % 12)) / 12;
+        return (
+          year.toString() + ' Year ' + (month % 12).toString() + ' Months '
+        );
       }
     }
   }
 
   dateDiffInYears(month) {
     const monthStr = this.translateService.translate('my-profile.months');
-    const yearStr = this.translateService.translate('my-profile.years'); 
+    const yearStr = this.translateService.translate('my-profile.years');
     if (month < 12) {
       return month.toString() + ' ' + monthStr;
     } else {
       const year = Math.trunc(month / 12).toString();
-      month = (month % 12)
+      month = month % 12;
       if (month == 0) {
         return year + ' ' + yearStr;
       } else {
-        return year + ' ' + yearStr + ' ' + month.toString() +' ' + monthStr;
+        return year + ' ' + yearStr + ' ' + month.toString() + ' ' + monthStr;
       }
     }
   }
 
   dateDiffInMonths(startDate, endDate) {
-    if(!startDate && !endDate){
-      return 0
-    }else{
+    if (!startDate && !endDate) {
+      return 0;
+    } else {
       startDate = new Date(startDate);
       if (!endDate) {
         endDate = new Date();
@@ -512,14 +543,13 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
       }
       let months;
       months = (endDate.getFullYear() - startDate.getFullYear()) * 12;
-      months += (endDate.getMonth() - startDate.getMonth());
+      months += endDate.getMonth() - startDate.getMonth();
       if (months == 0) {
         return 1;
       } else {
         return months;
       }
     }
-    
   }
 
   groupBy(list, keyGetter) {
@@ -536,94 +566,103 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     return map;
   }
 
-  getCounter = (message, value) => {   
+  getCounter = (message, value) => {
     const content = this.translateService.translate(message);
     return content.replace('{0}', value);
-  }
-  getCounterSkill = async (message, value) => { 
+  };
+  getCounterSkill = async (message, value) => {
     const content = this.translateService.translate(message);
-    return content.replace('{0}', value).replace('{1}', this.maxSkill.toString());
-  }
+    return content
+      .replace('{0}', value)
+      .replace('{1}', this.maxSkill.toString());
+  };
 
   _unixtimeToDate = (unix_time: number) => {
     const result = new Date(unix_time);
     return result;
-  }
+  };
 
-  getCountFriends(){
-    this.userProfileService.getCountFriends('sys_user/' + this.profileId)
-    .then((res) => {
-      if(res?.status == RESULT_STATUS.OK){
-        this.countFriend = res.data.length;
-      } 
-    })
+  getCountFriends() {
+    this.userProfileService
+      .getCountFriends('sys_user/' + this.profileId)
+      .then((res) => {
+        if (res?.status == RESULT_STATUS.OK) {
+          this.countFriend = res.data.length;
+        }
+      });
   }
-  getFriends(){
-    this.userProfileService.getFriends('sys_user/' + this.user_id)
-    .then((res) => {
-      if(res?.status == RESULT_STATUS.OK){
-        if(res.data.length > 0)
-        this.isFriend = true;
-      } 
-    })
+  getFriends() {
+    this.userProfileService
+      .getFriends('sys_user/' + this.user_id)
+      .then((res) => {
+        if (res?.status == RESULT_STATUS.OK) {
+          if (res.data.length > 0) this.isFriend = true;
+        }
+      });
   }
-  saveFriends(){
+  saveFriends() {
     const friend = {
       _from: 'sys_user/' + this.user_id,
       _to: 'sys_user/' + this.profileId,
-      relationship: 'love'
-    }
-    this.userProfileService.saveFriends(friend)
-    .then((res) => {
-      if(res?.status == RESULT_STATUS.OK){
+      relationship: 'love',
+    };
+    this.userProfileService.saveFriends(friend).then((res) => {
+      if (res?.status == RESULT_STATUS.OK) {
         this.isFriend = true;
         this.countFriend += 1;
-      }      
-    })
+      }
+    });
   }
-  deleteFriends(){
-    const friend = [{
-      _from: 'sys_user/' + this.user_id,
-      _to: 'sys_user/' + this.profileId,
-    }]
-    this.userProfileService.removeFriends(friend)
-    .then((res) => {
-      if(res?.status == RESULT_STATUS.OK){
+  deleteFriends() {
+    const friend = [
+      {
+        _from: 'sys_user/' + this.user_id,
+        _to: 'sys_user/' + this.profileId,
+      },
+    ];
+    this.userProfileService.removeFriends(friend).then((res) => {
+      if (res?.status == RESULT_STATUS.OK) {
         this.isFriend = false;
         this.countFriend -= 1;
-      }      
-    })
+      }
+    });
   }
-  getExpan(data, val){
+  getExpan(data, val) {
     this[val] = true;
   }
-  getHieghtProject(){
-    if(this.userProject[0]?.data_project.length >=2 && !this.isShowProject){
-      this.heightProject = '320px'
-    }else if(this.userProject[0]?.data_project.length ==1 && !this.isShowProject){
-      this.heightProject = '200px'
-    }else{
-      this.heightProject = '0px'
+  getHieghtProject() {
+    if (this.userProject[0]?.data_project.length >= 2 && !this.isShowProject) {
+      this.heightProject = '320px';
+    } else if (
+      this.userProject[0]?.data_project.length == 1 &&
+      !this.isShowProject
+    ) {
+      this.heightProject = '200px';
+    } else {
+      this.heightProject = '0px';
     }
   }
-  getHieghtExperience(){
-    if(this.userExperience[0]?.data_project.length >=2 && !this.isShowExperience){
-      this.heightExperience = '320px'
-    }else if(this.userExperience[0]?.data_project.length ==1 && !this.isShowExperience){
-      this.heightExperience = '200px'
-    }else{
-      this.heightExperience = '0px'
+  getHieghtExperience() {
+    if (
+      this.userExperience[0]?.data_project.length >= 2 &&
+      !this.isShowExperience
+    ) {
+      this.heightExperience = '320px';
+    } else if (
+      this.userExperience[0]?.data_project.length == 1 &&
+      !this.isShowExperience
+    ) {
+      this.heightExperience = '200px';
+    } else {
+      this.heightExperience = '0px';
     }
   }
-  getDown(val, data, name?: string){
+  getDown(val, data, name?: string) {
     this[val] = data;
     const element = document.getElementById(name);
-    console.log(element);
-    if(data){
-      console.log('end');   
+    if (data) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }else{
-      console.log('start');
+    } else {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }

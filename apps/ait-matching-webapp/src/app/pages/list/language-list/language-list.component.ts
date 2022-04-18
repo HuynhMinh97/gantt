@@ -1,5 +1,11 @@
 import { LanguageListService } from './../../../services/language-list.service';
-import { AitAuthService, AitBaseComponent, AitEnvironmentService, AppState, getUserSetting } from '@ait/ui';
+import {
+  AitAuthService,
+  AitBaseComponent,
+  AitEnvironmentService,
+  AppState,
+  getUserSetting,
+} from '@ait/ui';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
@@ -12,7 +18,7 @@ import dayjs from 'dayjs';
 @Component({
   selector: 'ait-language-list',
   templateUrl: './language-list.component.html',
-  styleUrls: ['./language-list.component.scss']
+  styleUrls: ['./language-list.component.scss'],
 })
 export class LanguageListComponent extends AitBaseComponent implements OnInit {
   @ViewChild('area') area: ElementRef;
@@ -27,8 +33,7 @@ export class LanguageListComponent extends AitBaseComponent implements OnInit {
     'change_at_to',
   ];
   userAttribute = ['create_by', 'change_by'];
-  comboboxSearch = ['language','proficiency'];
-
+  comboboxSearch = ['language', 'proficiency'];
 
   constructor(
     private languageListService: LanguageListService,
@@ -57,29 +62,28 @@ export class LanguageListComponent extends AitBaseComponent implements OnInit {
       language: new FormControl(null),
       // 学校名
       proficiency: new FormControl(null),
-       // 登録者
-       create_by: new FormControl(null),
-       // 最終更新者
-       change_by: new FormControl(null),
-       // 最終更新日時
-       change_at_from: new FormControl(null),
-       change_at_to: new FormControl(null),
-       // 登録日時
-       create_at_from: new FormControl(null),
-       create_at_to: new FormControl(null),
-   });
+      // 登録者
+      create_by: new FormControl(null),
+      // 最終更新者
+      change_by: new FormControl(null),
+      // 最終更新日時
+      change_at_from: new FormControl(null),
+      change_at_to: new FormControl(null),
+      // 登録日時
+      create_at_from: new FormControl(null),
+      create_at_to: new FormControl(null),
+    });
 
-   store.pipe(select(getUserSetting)).subscribe((setting) => {
-    if (isObjectFull(setting) && setting['date_format_display']) {
-      this.dateFormat = setting['date_format_display'];
-    }
-  });
-  // set đa ngôn ngữ
-  this.setModulePage({
-    module: 'certificate_list',
-    page: 'certificate_list',
-  });
-
+    store.pipe(select(getUserSetting)).subscribe((setting) => {
+      if (isObjectFull(setting) && setting['date_format_display']) {
+        this.dateFormat = setting['date_format_display'];
+      }
+    });
+    // set đa ngôn ngữ
+    this.setModulePage({
+      module: 'certificate_list',
+      page: 'certificate_list',
+    });
   }
 
   ngOnInit(): void {
@@ -87,10 +91,7 @@ export class LanguageListComponent extends AitBaseComponent implements OnInit {
   }
 
   getOperator(key: string) {
-    if (
-      key === 'create_at_from' ||
-      key === 'change_at_from' 
-    ) {
+    if (key === 'create_at_from' || key === 'change_at_from') {
       return OPERATOR.GREATER_OR_EQUAL;
     } else {
       return OPERATOR.LESS_OR_EQUAL;
@@ -123,21 +124,17 @@ export class LanguageListComponent extends AitBaseComponent implements OnInit {
         const data = res.data;
         if (data.length > 0) {
           data.forEach(async (element) => {
-            
             const dataFormat = {};
             dataFormat['employee_name'] =
               element.first_name + ' ' + element.last_name;
             dataFormat['language'] = element?.language.value;
             dataFormat['_key'] = element?._key;
-            dataFormat['proficiency'] =
-              element?.proficiency?.value;
+            dataFormat['proficiency'] = element?.proficiency?.value;
             dataFormat['create_by'] = element?.create_by;
             dataFormat['change_by'] = element?.change_by;
             dataFormat['create_at'] = this.getDateFormat(element?.create_at);
             dataFormat['change_at'] = this.getDateFormat(element?.change_at);
             dataSearch.push(dataFormat);
-            console.log(dataFormat
-              );
           });
         }
       }
@@ -154,13 +151,11 @@ export class LanguageListComponent extends AitBaseComponent implements OnInit {
         const value = this.searchLanguage.controls[key].value;
         if (value) {
           if (this.dateAtributes.includes(key)) {
-            
-              object[key] = {
-                target: key.slice(0, 9) || '',
-                operator: this.getOperator(key),
-                valueAsNumber: value,
-              };
-            
+            object[key] = {
+              target: key.slice(0, 9) || '',
+              operator: this.getOperator(key),
+              valueAsNumber: value,
+            };
           } else if (this.userAttribute.includes(key)) {
             try {
               if (!object[key]) {
@@ -203,5 +198,4 @@ export class LanguageListComponent extends AitBaseComponent implements OnInit {
       return { data: datas };
     }
   };
-
 }

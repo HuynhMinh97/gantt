@@ -29,11 +29,6 @@ export class RecommencedUserController extends BaseController {
     super(aitBaseService, httpSerivce);
   }
 
-  @Get('')
-  hello() {
-    return 'Hello!!!';
-  }
-
   @Post('matching')
   async searchCompany(@Body() body: RequestModel<any>): Promise<any> {
     try {

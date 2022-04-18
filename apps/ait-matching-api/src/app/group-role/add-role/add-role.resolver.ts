@@ -75,7 +75,6 @@ export class GetEmployeeResolver extends AitBaseService {
     const module = await this.getModule(listData['module']);
     const page = await this.getPage(listData['page']);
     const permissionObj = await this.findPermission(lang);
-    console.log(permissionObj);
     const permissionArr = [];
     permissionObj.data.forEach((permission) => {
       listData['permission'].forEach((per) => {
@@ -86,8 +85,8 @@ export class GetEmployeeResolver extends AitBaseService {
     });
     const roleUserInfo = [];
     roleUserInfo.push({
-      role_key:roleKey,
-      _key: listData['_key'] ,
+      role_key: roleKey,
+      _key: listData['_key'],
       name: listData['name'],
       remark: listData['remark'],
       module: module.data[0],
@@ -104,12 +103,11 @@ export class GetEmployeeResolver extends AitBaseService {
     return response;
   }
 
- 
-
   @Mutation(() => GroupRoleListResponse, { name: 'removeRoleUser' })
   removeRoleUser(
     @AitCtxUser() user: SysUser,
-    @Args('request', { type: () => GroupRoleListRequest }) request: GroupRoleListRequest
+    @Args('request', { type: () => GroupRoleListRequest })
+    request: GroupRoleListRequest
   ) {
     return this.remove(request, user);
   }

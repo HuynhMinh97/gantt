@@ -18,7 +18,7 @@ export const environment = {
     REMOVE: '/api/remove',
     SEARCH: '/api/search',
     EXCUTE_FUCTION: '/api/execute-function',
-    MATCHING: '/matching-engine/matching/v3',
+    MATCHING: '/matching/v3',
     AUREOLE_V: '/sync/aureole-v',
   },
   DATABASE: {

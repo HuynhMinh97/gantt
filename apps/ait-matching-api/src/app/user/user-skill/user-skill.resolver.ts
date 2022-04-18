@@ -7,17 +7,16 @@ import { UserSkillResponse } from './user-skill.response';
 
 @Resolver()
 export class UserSkillResolver extends AitBaseService {
-
   @Query(() => UserSkillResponse, { name: 'findMSkillByFrom' })
   async findMSkillByFrom(
-      @AitCtxUser() user: SysUser,
-      @Args('request', { type: () => UserSkillRequest }) request: UserSkillRequest
-  ) {  
-      const user_id = request.user_id;
-      const lang = request.lang;
-      const from = request.condition._from as string;
-      const collection = request.collection;
-      if (user_id) {
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => UserSkillRequest }) request: UserSkillRequest
+  ) {
+    const user_id = request.user_id;
+    const lang = request.lang;
+    const from = request.condition._from as string;
+    const collection = request.collection;
+    if (user_id) {
       const aqlQuery = `
           FOR v,e, p IN 1..1 OUTBOUND "${from}" ${collection}
           FILTER  e.del_flag != true
@@ -26,9 +25,9 @@ export class UserSkillResolver extends AitBaseService {
       `;
       const result = await this.query(aqlQuery);
       return await this.query(aqlQuery);
-      } else {
+    } else {
       return new UserSkillResponse(RESULT_STATUS.ERROR, [], 'error');
-      }
+    }
   }
 
   @Query(() => UserSkillResponse, { name: 'findUserSkill' })
@@ -83,8 +82,6 @@ export class UserSkillResolver extends AitBaseService {
         UPDATE data WITH { del_flag: true } IN user_skill
         RETURN data
       `;
-      console.log(aqlQuery);
-      
       return await this.query(aqlQuery);
     } else {
       return new UserSkillResponse(RESULT_STATUS.ERROR, [], 'error');

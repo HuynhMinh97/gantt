@@ -183,15 +183,15 @@ export class AureoleVCardComponent implements OnInit {
     try {
       this.cardH = { ...this.card };
       this.cardH.skills = this.cardH.skills
-      .slice()
-      .sort((a, b) => b.level - a.level);
+        .slice()
+        .sort((a, b) => b.level - a.level);
       this.getAvatar();
       this.addColor();
       this.fieldCard = this.fieldCard
-      .map((m) => ({ key: m, value: this.cardH[FIELD[m]], field: FIELD[m] }))
-      .filter((v) => v.value);
+        .map((m) => ({ key: m, value: this.cardH[FIELD[m]], field: FIELD[m] }))
+        .filter((v) => v.value);
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
   }
 
@@ -235,24 +235,22 @@ export class AureoleVCardComponent implements OnInit {
   };
 
   routerToProfile() {
-    console.log(this.cardH.user_id)
-    this.router.navigate([`/user-profile/${this.cardH.user_id}`])
+    this.router.navigate([`/user-profile/${this.cardH.user_id}`]);
   }
 
   actionButtonSave = (_key: string) => {
     this.cardH.is_saved = !this.cardH?.is_saved;
     if (!this.cardH.is_saved) {
       const _from = `sys_user/${this.user_id}`;
-      const _to = `sys_user/${_key}`; 
-      this.recommencedService
-      .removeSaveRecommendUser(_from, _to).then(r => {
+      const _to = `sys_user/${_key}`;
+      this.recommencedService.removeSaveRecommendUser(_from, _to).then((r) => {
         if (r.status === RESULT_STATUS.OK) {
           this.actionSaveEvent.emit({
             user_id: this.card.user_id,
             is_saved: this.card.is_saved,
           });
         }
-      })
+      });
     } else {
       this.recommencedService
         .saveRecommendUser(this.user_id, this.cardH?.user_id)

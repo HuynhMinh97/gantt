@@ -464,8 +464,7 @@ export class RecommencedUserComponent
 
   search() {
     const keyword = this.searchForm.controls['keyword'].value;
-    // this.matchingService.getCompanyProfile;
-    console.log(keyword);
+    this.matchingService.matchingUser(keyword).then((res) => console.log(res));
   }
 
   save(): void {

@@ -7,20 +7,21 @@ import { ReorderSkillRequest } from './reorder-skill.request';
 
 @Resolver()
 export class ReorderSkillResolver extends AitBaseService {
-
   @Query(() => ReorderSkillResponse, { name: 'findReorder' })
   findReorder(
     @AitCtxUser() user: SysUser,
-    @Args('request', { type: () => ReorderSkillRequest }) request: ReorderSkillRequest
+    @Args('request', { type: () => ReorderSkillRequest })
+    request: ReorderSkillRequest
   ) {
     return this.find(request, user);
   }
 
-  //tim theo egde 
+  //tim theo egde
   @Query(() => ReorderSkillResponse, { name: 'findReorderSkill' })
   async findReorderSkill(
     @AitCtxUser() user: SysUser,
-    @Args('request', { type: () => ReorderSkillRequest }) request: ReorderSkillRequest
+    @Args('request', { type: () => ReorderSkillRequest })
+    request: ReorderSkillRequest
   ) {
     const user_id = request.user_id;
     const lang = request.lang;
@@ -38,7 +39,6 @@ export class ReorderSkillResolver extends AitBaseService {
       RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name, category:category[0]})
     `;
       return await this.query(aqlQuery);
-
     } else {
       return new ReorderSkillResponse(RESULT_STATUS.ERROR, [], 'error');
     }
@@ -47,7 +47,8 @@ export class ReorderSkillResolver extends AitBaseService {
   @Mutation(() => ReorderSkillResponse, { name: 'saveUserSkillReorder' })
   saveUserSkillReorder(
     @AitCtxUser() user: SysUser,
-    @Args('request', { type: () => ReorderSkillRequest }) request: ReorderSkillRequest
+    @Args('request', { type: () => ReorderSkillRequest })
+    request: ReorderSkillRequest
   ) {
     return this.save(request, user);
   }
@@ -55,15 +56,13 @@ export class ReorderSkillResolver extends AitBaseService {
   @Mutation(() => ReorderSkillResponse, { name: 'UpdateTopSkill' })
   async UpdateTopSkill(
     @AitCtxUser() user: SysUser,
-    @Args('request', { type: () => ReorderSkillRequest }) request: ReorderSkillRequest
+    @Args('request', { type: () => ReorderSkillRequest })
+    request: ReorderSkillRequest
   ) {
     const user_id = request.user_id;
     if (user_id) {
       const user_id = JSON.stringify(request.user_id);
       const topSkill = JSON.stringify(request.data[0].top_skills);
-      console.log(JSON.stringify(request.data[0].top_skills));
-      
-  
       const aqlQuery = `
       FOR data IN user_profile
       FILTER data.user_id == ${user_id}
@@ -79,13 +78,14 @@ export class ReorderSkillResolver extends AitBaseService {
   @Mutation(() => ReorderSkillResponse, { name: 'removeSkillReorder' })
   async removeSkillReorder(
     @AitCtxUser() user: SysUser,
-    @Args('request', { type: () => ReorderSkillRequest }) request: ReorderSkillRequest
+    @Args('request', { type: () => ReorderSkillRequest })
+    request: ReorderSkillRequest
   ) {
     // return this.remove(request, user);
     const user_id = request.user_id;
-    const data = JSON.stringify(request.data);   
+    const data = JSON.stringify(request.data);
     if (user_id) {
-      const aqlQuery=`
+      const aqlQuery = `
         FOR data IN user_skill
         FOR skill in ${data}
         FILTER data._from == skill._from && data._to == skill._to && "del_flag" != true
@@ -97,6 +97,4 @@ export class ReorderSkillResolver extends AitBaseService {
       return new ReorderSkillResponse(RESULT_STATUS.ERROR, [], 'error');
     }
   }
-
-
 }

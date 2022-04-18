@@ -1,4 +1,11 @@
-import { isArrayFull, isObjectFull, isString, KEYS, OPERATOR, RESULT_STATUS } from '@ait/shared';
+import {
+  isArrayFull,
+  isObjectFull,
+  isString,
+  KEYS,
+  OPERATOR,
+  RESULT_STATUS,
+} from '@ait/shared';
 import {
   AitAuthService,
   AitBaseComponent,
@@ -11,7 +18,13 @@ import {
   getUserSetting,
 } from '@ait/ui';
 
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SkillListService } from '../../../../services/skill-list.service';
 import dayjs from 'dayjs';
@@ -19,7 +32,11 @@ import dayjs from 'dayjs';
 import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
-import { NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
+import {
+  NbDialogService,
+  NbLayoutScrollService,
+  NbToastrService,
+} from '@nebular/theme';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 // import { SkillRegisterService } from '../../../../services/add-skill.service';
 
@@ -28,8 +45,6 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
   templateUrl: './skill-list-view.component.html',
   styleUrls: ['./skill-list-view.component.scss'],
 })
-
-
 export class SkillListViewComponent extends AitBaseComponent implements OnInit {
   @ViewChild('area') area: ElementRef;
   @ViewChild('table') table: Ng2SmartTableComponent;
@@ -38,7 +53,6 @@ export class SkillListViewComponent extends AitBaseComponent implements OnInit {
   searchSkill: FormGroup;
   nameFileCsv = '';
   max_sort_no = 0;
-  
 
   dateFormat: string;
   dataExport: any[] = [];
@@ -69,23 +83,28 @@ export class SkillListViewComponent extends AitBaseComponent implements OnInit {
     'business',
     'residence_status',
     'desired_salary_from',
-    'desired_salary_to'
+    'desired_salary_to',
   ];
-  userAttribute = [
-    'create_by',
-    'change_by'
-  ];
-  
+  userAttribute = ['create_by', 'change_by'];
+
   columns = [
-    {value: 'Name',_key: 'name',},
-    {value: 'Code',_key: 'code',},
-    {value: 'Category',_key: 'category',},
-    {value: 'Create By',_key: 'create_by',},
-    {value: 'Create At',_key: 'create_at',},
-    {value: 'Change By',_key: 'change_by',},
-    {value: 'Change At',_key: 'change_at',}
-  ]
-  columnExport = ['name', 'code', 'category', 'create_by', 'create_at', 'change_by', 'change_at',];
+    { value: 'Name', _key: 'name' },
+    { value: 'Code', _key: 'code' },
+    { value: 'Category', _key: 'category' },
+    { value: 'Create By', _key: 'create_by' },
+    { value: 'Create At', _key: 'create_at' },
+    { value: 'Change By', _key: 'change_by' },
+    { value: 'Change At', _key: 'change_at' },
+  ];
+  columnExport = [
+    'name',
+    'code',
+    'category',
+    'create_by',
+    'create_at',
+    'change_by',
+    'change_at',
+  ];
   constructor(
     public router: Router,
     private skillListService: SkillListService,
@@ -131,14 +150,12 @@ export class SkillListViewComponent extends AitBaseComponent implements OnInit {
 
     store.pipe(select(getLang)).subscribe((lang) => {
       this.language = lang;
-    })
+    });
 
     this.setModulePage({
       module: 'skill_list',
       page: 'skill_list',
     });
-
-    
   }
 
   ngOnInit() {
@@ -160,35 +177,39 @@ export class SkillListViewComponent extends AitBaseComponent implements OnInit {
   }
   deleteAll(data) {
     if (this.selectedItems.length > 0 && data) {
-      this.dialogService.open(AitConfirmDialogComponent, {
-        closeOnBackdropClick: true,
-        hasBackdrop: true,
-        autoFocus: false,
-        context: {
-          title: this.getMsg('I0004'),
-        },
-      })
+      this.dialogService
+        .open(AitConfirmDialogComponent, {
+          closeOnBackdropClick: true,
+          hasBackdrop: true,
+          autoFocus: false,
+          context: {
+            title: this.getMsg('I0004'),
+          },
+        })
         .onClose.subscribe(async (event) => {
           if (event) {
             try {
               this.callLoadingApp();
               let count = 0;
               for (const i of this.selectedItems) {
-                await this.skillListService.removeSkillByKey(i._key)
+                await this.skillListService
+                  .removeSkillByKey(i._key)
                   .then((res) => {
                     if (res.status === RESULT_STATUS.OK) {
                       count++;
                     } else {
                       this.showToastr('', this.getMsg('E0050'), KEYS.WARNING);
                     }
-                  })
+                  });
               }
-              setTimeout(() => { this.selectedItems = [] }, 1000)
+              setTimeout(() => {
+                this.selectedItems = [];
+              }, 1000);
               if (count > 0) {
                 this.showToastr('', this.getMsg('I0003'));
                 this.getData();
                 this.cancelLoadingApp();
-              }else{
+              } else {
                 this.cancelLoadingApp();
               }
             } catch (error) {
@@ -227,17 +248,14 @@ export class SkillListViewComponent extends AitBaseComponent implements OnInit {
         const num1 = (currentPaging.page - 1) * currentPaging.perPage + 1;
         const num2 = num1 + (currentPaging.perPage - 1);
         const num3 = num2 > this.totalRows ? this.totalRows : num2;
-        if (this.language === 'ja_JP')
-        {
+        if (this.language === 'ja_JP') {
           this.pageDetail = `${this.totalRows} ${outOf} ${num1} - ${num3} ${cases}`;
-          
         } else {
           this.pageDetail = `${num1} - ${num3} ${outOf} ${this.totalRows} ${cases}`;
         }
-        
+
         this.left = this.getLeft(+currentPaging.page);
-      } catch {
-      }
+      } catch {}
     }
   }
 
@@ -269,9 +287,12 @@ export class SkillListViewComponent extends AitBaseComponent implements OnInit {
     }
   }
 
-  
   getOperator(key: string) {
-    if (key === 'create_at_from' || key === 'change_at_from' || key === 'desired_salary_from') {
+    if (
+      key === 'create_at_from' ||
+      key === 'change_at_from' ||
+      key === 'desired_salary_from'
+    ) {
       return OPERATOR.GREATER_OR_EQUAL;
     } else {
       return OPERATOR.LESS_OR_EQUAL;
@@ -284,7 +305,7 @@ export class SkillListViewComponent extends AitBaseComponent implements OnInit {
         this.dataTable = [];
         const data = res.data;
         if (data.length > 0) {
-          data.forEach(element => {
+          data.forEach((element) => {
             const dataFormat = {};
             dataFormat['name'] = element?.name;
             dataFormat['code'] = element?.code;
@@ -298,44 +319,43 @@ export class SkillListViewComponent extends AitBaseComponent implements OnInit {
           });
         }
       }
-    })
-    console.log(dataSearch);
+    });
     this.source = new LocalDataSource(dataSearch);
     return dataSearch;
   }
 
-
-  public search = async (condition = {},data = {}) => {
-    this.searchSkill.patchValue({ ...data});
-    if (this.searchSkill.valid && !this.isChangeAtError && !this.isCreateAtError ) {
+  public search = async (condition = {}, data = {}) => {
+    this.searchSkill.patchValue({ ...data });
+    if (
+      this.searchSkill.valid &&
+      !this.isChangeAtError &&
+      !this.isCreateAtError
+    ) {
       const object = {};
       Object.keys(this.searchSkill.controls).forEach((key) => {
         const value = this.searchSkill.controls[key].value;
         if (value) {
           if (this.dateAtributes.includes(key)) {
             object[key] = {
-              target: (key.slice(0, 9) || ''),
+              target: key.slice(0, 9) || '',
               operator: this.getOperator(key),
-              valueAsNumber: value
-            }
+              valueAsNumber: value,
+            };
           } else if (this.userAttribute.includes(key)) {
             try {
               if (!object[key]) {
-                object[key] = {operator: OPERATOR.LIKE};
+                object[key] = { operator: OPERATOR.LIKE };
               }
               object[key]['value'] = value;
-            } catch (e) {
-            }
-          }
-          
-          else {
+            } catch (e) {}
+          } else {
             const isStr = isString(value);
             object[key] = {
               operator: isStr ? OPERATOR.LIKE : OPERATOR.IN,
             };
             if (isStr) {
               object[key]['valueAsString'] = value;
-            } 
+            }
           }
         }
       });
@@ -343,24 +363,20 @@ export class SkillListViewComponent extends AitBaseComponent implements OnInit {
       if (isObjectFull(object)) {
         const data = await this.getData(object);
         this.focusToTable();
-        return { data: data}
+        return { data: data };
       } else {
         const data = await this.getData();
         this.focusToTable();
-        return { data: data}
+        return { data: data };
       }
-    }
-    else {
+    } else {
       const data = await this.getData();
-        this.focusToTable();
-        return { data: data}
+      this.focusToTable();
+      return { data: data };
     }
-  }
-
-  
+  };
 
   exportCsv() {
-
     const dayNow = Date.now();
     this.nameFileCsv = 'skill' + dayNow.toString();
     let data = [];
@@ -379,8 +395,4 @@ export class SkillListViewComponent extends AitBaseComponent implements OnInit {
       return dayjs(time).format(this.dateFormat.toUpperCase() + ' HH:mm');
     }
   }
-
-  
-
-  
 }
