@@ -48,19 +48,12 @@ export class RecommencedUserController extends BaseController {
         separated_input_data: [],
         required_matching_items: [],
       };
-      let ret = [];
-
+      let data = [];
       const result = await this.matching(req);
       if (result?.status === RESULT_STATUS.OK) {
-        const data = result?.data?.data;
-        if (data) {
-          ret = data.map((d) => ({
-            _key: d?._key,
-            value: d?.name ? d?.name[body.lang] : null,
-          }));
-        }
+        data = result?.data?.data || [];
       }
-      return new ResponseModel(RESULT_STATUS.OK, ret);
+      return new ResponseModel(RESULT_STATUS.OK, data);
     } catch (error) {
       return new ResponseModel(RESULT_STATUS.ERROR, error);
     }
