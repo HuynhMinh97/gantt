@@ -53,7 +53,7 @@ export class GroupRoleRegisterComponent
   pageDetail = '';
   done = false;
   dateFormat: string;
-  roleAndEmployeeKey='';
+  roleAndEmployeeKey = '';
   role_key = '';
   employee_key = '';
   groupName = '';
@@ -159,7 +159,7 @@ export class GroupRoleRegisterComponent
     private formBuilder: FormBuilder,
     private renderPageService: AitRenderPageService,
     private groupRoleRegisterService: GroupRoleRegisterService,
-    private addRoleService:AddRoleService,
+    private addRoleService: AddRoleService,
     public router: Router,
 
     env: AitEnvironmentService,
@@ -193,8 +193,13 @@ export class GroupRoleRegisterComponent
   async ngOnInit(): Promise<void> {
     this.cancelLoadingApp();
     this.roleAndEmployeeKey = this.groupRoleRegisterService?.role_key;
-    this.employee_key = this.roleAndEmployeeKey?.substring(this.roleAndEmployeeKey?.indexOf('/') + 1)
-    this.role_key = this.roleAndEmployeeKey?.substring(0,this.roleAndEmployeeKey?.indexOf('/'))
+    this.employee_key = this.roleAndEmployeeKey?.substring(
+      this.roleAndEmployeeKey?.indexOf('/') + 1
+    );
+    this.role_key = this.roleAndEmployeeKey?.substring(
+      0,
+      this.roleAndEmployeeKey?.indexOf('/')
+    );
     if (this.roleAndEmployeeKey !== undefined) {
       this.mode = MODE.EDIT;
     } else {
@@ -212,7 +217,6 @@ export class GroupRoleRegisterComponent
       }
     }
     this.dataSettingTable = JSON.parse(JSON.stringify(this.columns));
-    console.log(this.settingTable);
     const listSaveRole = this.groupRoleRegisterService.groupSaveRole;
     if (isObjectFull(listSaveRole)) {
       this.saveRoleData = listSaveRole;
@@ -238,20 +242,14 @@ export class GroupRoleRegisterComponent
     }
   }
 
-  detail(data?: any) {
-    console.log('1');
-  }
-  coppy(data?: any) {
-    console.log('1');
-  }
+  detail(data?: any) {}
+  coppy(data?: any) {}
   edit(data?: any) {
     this.groupRoleRegisterService.groupRole = this.roleRegis.value;
     this.addRoleService.roleUser_key = data;
     this.router.navigate([`role`]);
   }
-  async deleteInTable(data?: any, load?: boolean) {
-    console.log('1');
-  }
+  async deleteInTable(data?: any, load?: boolean) {}
 
   getColumns(data) {
     const columns = [];
@@ -334,12 +332,12 @@ export class GroupRoleRegisterComponent
   async getRoleList() {
     const arr = [];
     const roleList = await this.groupRoleRegisterService.getGroupRoleList(
-      this.role_key, this.employee_key
+      this.role_key,
+      this.employee_key
     );
     this.groupName = roleList?.data[0]?.name;
     this.remark = roleList?.data[0]?.remark;
     for (const role of roleList.data) {
-      
       const dataTable = {};
       dataTable['name'] = role?.child_name;
       dataTable['_key'] = role?.roleUser_key;
@@ -353,7 +351,6 @@ export class GroupRoleRegisterComponent
       dataTable['permission'] = role?.permission;
       arr.push(dataTable);
     }
-    console.log(arr);
     return arr;
   }
 
@@ -421,7 +418,7 @@ export class GroupRoleRegisterComponent
       }
     }
     this.cancelLoadingApp();
-    
+
     setTimeout(() => {
       this.source = new LocalDataSource(this.roleRegisterDataTable);
     }, 700);
@@ -435,7 +432,6 @@ export class GroupRoleRegisterComponent
     };
     let groupRoleKey = '';
     for (const role of this.saveRoleData) {
-     
       const existRole = await this.groupRoleRegisterService.findRole(
         role.groupName
       );
@@ -520,11 +516,10 @@ export class GroupRoleRegisterComponent
     return await this.groupRoleRegisterService.saveRoleUser(sys_role_page);
   }
 
-
   // async delete(){
-    
+
   //   const data = this.roleRegisterDataTable;
-    
+
   //     this.dialogService.open(AitConfirmDialogComponent, {
   //       closeOnBackdropClick: true,
   //       hasBackdrop: true,
@@ -543,7 +538,7 @@ export class GroupRoleRegisterComponent
   //               } else {
   //                 this.showToastr('', this.getMsg('E0050'), KEYS.WARNING);
   //               }
-  
+
   //             })
   //         }
   //       });

@@ -1,14 +1,14 @@
-import { 
-  AitAppUtils, 
-  AitAuthService, 
-  AitBaseComponent, 
+import {
+  AitAppUtils,
+  AitAuthService,
+  AitBaseComponent,
   AitConfirmDialogComponent,
-  AitEnvironmentService, 
-  AitTranslationService, 
-  AitUserService, 
-  AppState, 
-  getSettingLangTime, 
-  MODE 
+  AitEnvironmentService,
+  AitTranslationService,
+  AitUserService,
+  AppState,
+  getSettingLangTime,
+  MODE,
 } from '@ait/ui';
 import { Component, ElementRef, OnInit } from '@angular/core';
 import {
@@ -18,18 +18,29 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
-import { NbToastrService, NbLayoutScrollService, NbDialogService, NbDialogRef } from '@nebular/theme';
-import { select, Store} from '@ngrx/store';
+import {
+  NbToastrService,
+  NbLayoutScrollService,
+  NbDialogService,
+  NbDialogRef,
+} from '@nebular/theme';
+import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { UserProjectErrorsMessage } from './interface';
-import { isArrayFull, isObjectFull, KEYS, KeyValueDto, RESULT_STATUS } from '@ait/shared';
+import {
+  isArrayFull,
+  isObjectFull,
+  KEYS,
+  KeyValueDto,
+  RESULT_STATUS,
+} from '@ait/shared';
 import { UserProjectService } from '../../../services/user-project.service';
 import { UserProfileService } from '../../../services/user-profile.service';
 import { MatchingUtils } from '../../../../app/@constants/utils/matching-utils';
 @Component({
   selector: 'ait-user-project',
   templateUrl: './user-project.component.html',
-  styleUrls: ['./user-project.component.scss']
+  styleUrls: ['./user-project.component.scss'],
 })
 export class UserProjectComponent extends AitBaseComponent implements OnInit {
   mode = MODE.NEW;
@@ -51,7 +62,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
   sort_no = 0;
   error = [];
   keyEdit = '';
- 
+
   resetUserProject = {
     name: false,
     title: false,
@@ -78,18 +89,15 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     _to: '',
     relationship: '',
     sort_no: 0,
-  }
+  };
   biz_project_skill = {
     _from: '',
     _to: '',
     relationship: '',
     sort_no: 0,
   };
- 
-  dateField = [
-    'start_date_from',
-    'start_date_to'
-  ];
+
+  dateField = ['start_date_from', 'start_date_to'];
   project_key = '';
   constructor(
     public router: Router,
@@ -108,7 +116,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     env: AitEnvironmentService,
     userService: AitUserService,
     toastrService: NbToastrService,
-    layoutScrollService: NbLayoutScrollService,
+    layoutScrollService: NbLayoutScrollService
   ) {
     super(
       store,
@@ -119,7 +127,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       layoutScrollService,
       toastrService
     );
-    this.store.pipe(select(getSettingLangTime)).subscribe(setting => {
+    this.store.pipe(select(getSettingLangTime)).subscribe((setting) => {
       if (setting) {
         const display = setting?.date_format_display;
         this.dateFormat = MatchingUtils.getFormatYearMonth(display);
@@ -129,7 +137,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       module: 'user',
       page: 'user_project',
     });
-    
+
     this.project_key = this.activeRouter.snapshot.paramMap.get('id');
 
     this.userProject = this.formBuilder.group({
@@ -138,16 +146,31 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       title: new FormControl(null, [Validators.required]),
       start_date_from: new FormControl(null, [Validators.required]),
       company_working: new FormControl(null, [Validators.required]),
-      name: new FormControl(null, [Validators.required, Validators.maxLength(200)]),
-      skills: new FormControl(null, [Validators.required, Validators.maxLength(10)]),
-      achievement: new FormControl(null, [Validators.required, Validators.maxLength(4000)]),
-      description: new FormControl(null, [Validators.required, Validators.maxLength(4000)]),
-      responsibility: new FormControl(null, [Validators.required, Validators.maxLength(4000)]),
+      name: new FormControl(null, [
+        Validators.required,
+        Validators.maxLength(200),
+      ]),
+      skills: new FormControl(null, [
+        Validators.required,
+        Validators.maxLength(10),
+      ]),
+      achievement: new FormControl(null, [
+        Validators.required,
+        Validators.maxLength(4000),
+      ]),
+      description: new FormControl(null, [
+        Validators.required,
+        Validators.maxLength(4000),
+      ]),
+      responsibility: new FormControl(null, [
+        Validators.required,
+        Validators.maxLength(4000),
+      ]),
     });
   }
 
   // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
-  async ngOnInit() {    
+  async ngOnInit() {
     // this.callLoadingApp();
     // setTimeout(() => {
     //   this.isLoad = true;
@@ -171,65 +194,51 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
 
   public find = async (data = {}) => {
     try {
-      const dataFind = [];     
+      const dataFind = [];
       await this.findUserProjectByKey();
       await this.findSkillsByFrom();
       dataFind.push(this.userProject.value);
-      console.log(dataFind);
-      
-      return {data: dataFind }
-    } catch (error) {
-     
-    }
-    
-  }
+      return { data: dataFind };
+    } catch (error) {}
+  };
 
-  public save = async (data = {}) => { 
-    console.log(data);
-    
+  public save = async (data = {}) => {
     try {
-      return await this.userProjectService.saveBizProject(this.dataSaveProject(data))
+      return await this.userProjectService
+        .saveBizProject(this.dataSaveProject(data))
         .then(async (res) => {
           if (res?.status === RESULT_STATUS.OK) {
             const data = res.data[0];
             await this.saveUserProject(data._key);
             await this.saveSkill(data._key);
             return res;
-          } 
-        })
+          }
+        });
     } catch (error) {
       console.log(error);
-      
     }
-    
-  }
- 
+  };
+
   public delete = async (data = '') => {
     try {
       return await this.userProjectService.remove(data).then((res) => {
         if (res.status === RESULT_STATUS.OK && res.data.length > 0) {
-          const _fromSkill = [
-            { _from: 'user_project/' + this.project_key },
-          ];
-          const _toUser = [
-            { _to: 'biz_project/' + this.project_key },
-          ];
+          const _fromSkill = [{ _from: 'user_project/' + this.project_key }];
+          const _toUser = [{ _to: 'biz_project/' + this.project_key }];
           this.userProjectService.removeSkill(_fromSkill);
           this.userProjectService.removeUserProejct(_toUser);
           // this.userProfileService.onLoad.next(this.projectDataInput);
           return res;
-        } 
+        }
       });
     } catch (error) {
       console.log(error);
-      
     }
-    
-  }
-  
+  };
+
   async findUserProjectByKey() {
     const res = await this.userProjectService.find(this.project_key);
-    const data = res.data[0];    
+    const data = res.data[0];
     if (res.data.length > 0) {
       this.userProject.patchValue({ ...data });
       this.userProjectClone = this.userProject.value;
@@ -245,15 +254,14 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
 
   async findSkillsByFrom() {
     const from = 'user_project/' + this.project_key;
-    await this.userProjectService.findSkillsByFrom(from)
-    .then(async(res) => {
+    await this.userProjectService.findSkillsByFrom(from).then(async (res) => {
       const listSkills = [];
       for (const skill of res.data) {
         listSkills.push(skill?.skills);
-      }    
-        this.userProject.controls['skills'].setValue([...listSkills]);
-        this.userProjectClone = this.userProject.value; 
-    });    
+      }
+      this.userProject.controls['skills'].setValue([...listSkills]);
+      this.userProjectClone = this.userProject.value;
+    });
   }
 
   // async inputProject() {
@@ -264,15 +272,13 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
   //       this.companyName = res.data[0].company_working;
   //     });
   // }
- 
+
   getArrayData = (data: any[]) => {
     if (!data || data.length === 0) {
-      return []
+      return [];
     }
-    return Array.from(new Set(data.map(d => d?._key).filter(x => !!x)));
-  }
-
-  
+    return Array.from(new Set(data.map((d) => d?._key).filter((x) => !!x)));
+  };
 
   // getTitleByMode() {
   //   let title = '';
@@ -285,10 +291,9 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
   //   return title;
   // }
 
-  
   dataSaveProject(data: any) {
     this.keyEdit = data?._key;
-    const saveData = data
+    const saveData = data;
     saveData['user_id'] = this.authService.getUserID();
     this.listSkills = JSON.parse(JSON.stringify(saveData.skills));
     delete saveData.skills;
@@ -297,13 +302,11 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
 
   async saveSkill(bizProjectKey: string) {
     this.biz_project_skill._from = 'user_project/' + bizProjectKey;
-    if ( this.keyEdit) {
-      const _fromSkill = [
-        { _from: 'user_project/' + this.project_key },
-      ];
+    if (this.keyEdit) {
+      const _fromSkill = [{ _from: 'user_project/' + this.project_key }];
       this.userProjectService.removeSkill(_fromSkill);
     }
-    for(const skill of this.listSkills){
+    for (const skill of this.listSkills) {
       this.sort_no += 1;
       this.biz_project_skill.sort_no = this.sort_no;
       this.biz_project_skill._to = 'm_skill/' + skill;
@@ -316,7 +319,8 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     this.connection_user_project._to = 'user_project/' + bizProjectKey;
     this.connection_user_project.relationship = 'user project';
     this.connection_user_project.sort_no = this.sort_no + 1;
-    await this.userProjectService.saveConnectionUserProject(this.connection_user_project);
+    await this.userProjectService.saveConnectionUserProject(
+      this.connection_user_project
+    );
   }
-
 }

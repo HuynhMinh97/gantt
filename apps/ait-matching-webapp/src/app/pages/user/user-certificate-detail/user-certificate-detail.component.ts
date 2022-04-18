@@ -1,8 +1,19 @@
 import { isArrayFull, isObjectFull, RESULT_STATUS } from '@ait/shared';
-import { AitBaseComponent, AitEnvironmentService, AppState, AitAuthService, AitAppUtils, getSettingLangTime } from '@ait/ui';
+import {
+  AitBaseComponent,
+  AitEnvironmentService,
+  AppState,
+  AitAuthService,
+  AitAppUtils,
+  getSettingLangTime,
+} from '@ait/ui';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
-import { NbToastrService, NbLayoutScrollService, NbDialogRef } from '@nebular/theme';
+import {
+  NbToastrService,
+  NbLayoutScrollService,
+  NbDialogRef,
+} from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { UserProjectDto } from '../user-certificate/certificate-interface';
@@ -10,14 +21,14 @@ import { UserCerfiticateService } from './../../../services/user-certificate.ser
 import dayjs from 'dayjs';
 import { MatchingUtils } from '../../../@constants/utils/matching-utils';
 
-
 @Component({
   selector: 'ait-user-certificate-detail',
   templateUrl: './user-certificate-detail.component.html',
-  styleUrls: ['./user-certificate-detail.component.scss']
+  styleUrls: ['./user-certificate-detail.component.scss'],
 })
-export class UserCertificateDetailComponent extends AitBaseComponent implements OnInit {
-
+export class UserCertificateDetailComponent
+  extends AitBaseComponent
+  implements OnInit {
   user_key: any = '';
   stateUserCertificate = {};
   dateFormat: any;
@@ -41,7 +52,7 @@ export class UserCertificateDetailComponent extends AitBaseComponent implements 
       toastrService
     );
 
-    this.store.pipe(select(getSettingLangTime)).subscribe(setting => {
+    this.store.pipe(select(getSettingLangTime)).subscribe((setting) => {
       if (setting) {
         const display = setting?.date_format_display;
         this.dateFormat = MatchingUtils.getFormatYearMonth(display);
@@ -56,7 +67,7 @@ export class UserCertificateDetailComponent extends AitBaseComponent implements 
   }
 
   async ngOnInit(): Promise<void> {
-    this.getMasterData();     
+    this.getMasterData();
   }
 
   async getMasterData() {
@@ -66,14 +77,13 @@ export class UserCertificateDetailComponent extends AitBaseComponent implements 
         const setting = await this.findUserSettingCode();
         if (isObjectFull(setting) && isArrayFull(masterValue)) {
           const format = setting['date_format_display'];
-          const data = masterValue.find(item => item.code === format);
+          const data = masterValue.find((item) => item.code === format);
           if (data) {
             this.dateFormat = data['name'];
           }
         }
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   getDateFormat(time: number) {
@@ -85,7 +95,7 @@ export class UserCertificateDetailComponent extends AitBaseComponent implements 
   }
 
   public find = async (key = {}) => {
-    if(isObjectFull(key)){
+    if (isObjectFull(key)) {
       return await this.certificateService
         .findUserByKey(this.user_key)
         .then((r) => {
@@ -95,47 +105,42 @@ export class UserCertificateDetailComponent extends AitBaseComponent implements 
             const datas = [];
             let dayFrom = '';
             let dayTo = '';
-            if(this.stateUserCertificate['issue_date_from']){
-              dayFrom = this.getDateFormat(this.stateUserCertificate['issue_date_from']);
+            if (this.stateUserCertificate['issue_date_from']) {
+              dayFrom = this.getDateFormat(
+                this.stateUserCertificate['issue_date_from']
+              );
             }
-            if(this.stateUserCertificate['issue_date_to']){
-              dayTo = this.getDateFormat(this.stateUserCertificate['issue_date_to']);
+            if (this.stateUserCertificate['issue_date_to']) {
+              dayTo = this.getDateFormat(
+                this.stateUserCertificate['issue_date_to']
+              );
             }
-            if(dayFrom && ! dayTo){
-              this.stateUserCertificate['issue_date'] = dayFrom
-            }else if(!dayFrom && dayTo){
-              this.stateUserCertificate['issue_date'] = dayTo
-            }else if(dayFrom && dayTo){
-              this.stateUserCertificate['issue_date'] = dayFrom + '  ~  ' + dayTo;
-            }else{
+            if (dayFrom && !dayTo) {
+              this.stateUserCertificate['issue_date'] = dayFrom;
+            } else if (!dayFrom && dayTo) {
+              this.stateUserCertificate['issue_date'] = dayTo;
+            } else if (dayFrom && dayTo) {
+              this.stateUserCertificate['issue_date'] =
+                dayFrom + '  ~  ' + dayTo;
+            } else {
               this.stateUserCertificate['issue_date'] = '';
             }
             const certificate = {};
-            console.log(this.stateUserCertificate);
-            for(const item in this.stateUserCertificate){
-              if(isObjectFull(this.stateUserCertificate[item])){
-                if(item == 'file'){
+            for (const item in this.stateUserCertificate) {
+              if (isObjectFull(this.stateUserCertificate[item])) {
+                if (item == 'file') {
                   certificate[item] = this.stateUserCertificate[item];
-                }else{
+                } else {
                   certificate[item] = this.stateUserCertificate[item].value;
                 }
-              }
-              else{
+              } else {
                 certificate[item] = this.stateUserCertificate[item];
-              } 
-                
+              }
             }
             datas.push(certificate);
-            console.log(datas);
-            
-            return {data : datas};
+            return { data: datas };
           }
         });
-
-      
     }
-
-  }
-  
-
+  };
 }
