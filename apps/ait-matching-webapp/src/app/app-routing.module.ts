@@ -248,6 +248,11 @@ export const routes: Routes = [
     component: CreateUserComponent
   },
   {
+    path: 'edit-user/:id',
+    canActivate: [AitAuthGuardService], 
+    component: CreateUserComponent
+  },
+  {
     path: '',
     pathMatch: 'full',
     redirectTo: localStorage.getItem('access_token') ? 'recommenced-user' : 'sign-in'

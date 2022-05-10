@@ -48,7 +48,7 @@ export class CreateUserService extends AitBaseService {
             mutation {
               register(input: {username: "${username}", email: "${email}", password: "${password}",company : "${
           company || this.company
-        }", delete_flag: false, active_flag: true, type: "03" }) {
+        }", del_flag: false, active_flag: true, type: 3 }) {
                 token
                 refreshToken
                 timeLog

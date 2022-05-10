@@ -32,7 +32,7 @@ export class UserListDto extends BaseDto  {
 export class UserSearchDto {
   
   @Field(() => Boolean, { nullable: true })
-  delete_flag: boolean;
+  del_flag: boolean;
 
   @Field(() => ConditionDto, { nullable: true })
   username: ConditionDto;

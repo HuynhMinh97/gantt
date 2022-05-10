@@ -78,6 +78,7 @@ import { RecommencedJobComponent } from './pages/recommenced/recommenced-job/rec
 import { SetNameComponent } from './pages/recommenced-user/components/set-name/set-name.component';
 import { UserListComponent } from './pages/list/user-list/user-list.component';
 import { CreateUserComponent } from './pages/list/user-list/create-user/create-user.component';
+import { AddSkillComponent } from './pages/list/skill-list/add-skill/add-skill.component';
 
 const AIT_UI_MODULES = [AitChipModule, AitTabsModule, AitTocMenuModule];
 
@@ -145,6 +146,7 @@ const PAGES = [
     SetNameComponent,
     UserListComponent,
     CreateUserComponent,
+    AddSkillComponent,
   ],
   imports: [
     Ng2SmartTableModule,

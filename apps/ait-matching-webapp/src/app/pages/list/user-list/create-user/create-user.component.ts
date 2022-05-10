@@ -16,7 +16,7 @@ import {
 import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
-import * as bcrypt from 'bcrypt';
+import { ActivatedRoute } from '@angular/router';
 
 
 
@@ -32,6 +32,8 @@ export class CreateUserComponent extends AitBaseComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private createUserService: CreateUserService,
+    public activeRouter: ActivatedRoute,
+
 
     env: AitEnvironmentService,
     store: Store<AppState>,
@@ -59,12 +61,13 @@ export class CreateUserComponent extends AitBaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.user_key = this.activeRouter.snapshot.paramMap.get('id');
     this.cancelLoadingApp();
   }
 
   
   public save = async (condition = {}) => {
-    debugger
+    
     let email;
     let password;
     let username;
@@ -97,12 +100,7 @@ export class CreateUserComponent extends AitBaseComponent implements OnInit {
       : (this.checkPw = false);
      
     if (this.checkPw) {
-      // const saveData = {};
-      // Object.keys(condition).forEach((key) => {
-      //   const value = condition[key];
-      //   saveData[key] = value;
-      // });
-      // console.log(saveData)
+    
       const result = await this.createUserService.registerForAdmin(
         username,
         email,

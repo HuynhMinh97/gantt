@@ -10,11 +10,6 @@ export class SkillListService extends AitBaseService {
     _key: true,
     sort_no: true,
     name: true,
-    code: true,
-    category: {
-      _key: true,
-      value: true,
-    },
     create_by: true,
     change_by: true,
     create_at: true,
@@ -33,13 +28,6 @@ export class SkillListService extends AitBaseService {
     {
       condition['category'] = {};
     }
-    
-    if (!condition['category']['ref_attribute'])
-    {
-      condition['category']['ref_attribute'] = 'code';
-    }
-    
-    condition['category']['attribute'] = 'category';
     condition['create_by']['type'] = 'matching';
     condition['change_by']['type'] = 'matching';
 
