@@ -76,6 +76,8 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { GroupRoleListComponent } from './pages/group-role/group-role-list/group-role-list.component';
 import { RecommencedJobComponent } from './pages/recommenced/recommenced-job/recommenced-job.component';
 import { SetNameComponent } from './pages/recommenced-user/components/set-name/set-name.component';
+import { UserListComponent } from './pages/list/user-list/user-list.component';
+import { CreateUserComponent } from './pages/list/user-list/create-user/create-user.component';
 
 const AIT_UI_MODULES = [AitChipModule, AitTabsModule, AitTocMenuModule];
 
@@ -141,6 +143,8 @@ const PAGES = [
     GroupRoleRegisterComponent,
     GroupRoleListComponent,
     SetNameComponent,
+    UserListComponent,
+    CreateUserComponent,
   ],
   imports: [
     Ng2SmartTableModule,
