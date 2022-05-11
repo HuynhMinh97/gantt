@@ -307,6 +307,8 @@ export class SkillListViewComponent extends AitBaseComponent implements OnInit {
           data.forEach((element) => {
             const dataFormat = {};
             dataFormat['name'] = element?.name;
+            dataFormat['type'] = element?.category?.value;
+
             dataFormat['_key'] = element?._key;
             dataFormat['create_by'] = element?.create_by;
             dataFormat['change_by'] = element?.change_by;

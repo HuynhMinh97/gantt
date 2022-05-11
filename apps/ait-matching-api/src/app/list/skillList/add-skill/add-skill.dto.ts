@@ -8,9 +8,6 @@ export class SkillRegisterDto extends BaseDto {
   @Field(() => String, { nullable: true })
   name?: string;
 
-  @Field(() => String, { nullable: true })
-  code?: string;
-
   @Field(() => Int, { nullable: true })
   sort_no?: number;
 
@@ -25,9 +22,6 @@ export class SkillRegisterDto extends BaseDto {
 export class SkillRegisterSaveDto extends BaseDto {
   @Field(() => LangDto, { nullable: true })
   name?: LangDto;
-
-  @Field(() => String, { nullable: true })
-  code?: string;
 
   @Field(() => Int, { nullable: true })
   sort_no?: number;

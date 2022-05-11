@@ -21,5 +21,22 @@ export class UserListResolver extends AitBaseService {
   ) {    
     return this.save(request, user);
   }
+
+  // @Mutation(() => SaveRecommendUserResponse, {
+  //   name: 'removeSaveRecommendUser',
+  // })
+  // removeSaveRecommendUser(
+  //   @AitCtxUser() user: SysUser,
+  //   @Args('request', { type: () => SaveRecommendUserRequest })
+  //   request: SaveRecommendUserRequest
+  // ) {
+  //   const aqlStr = `
+  //   FOR u IN sys_user
+  //     REMOVE { _key: u._key } IN sys_user
+  //     LET removed = OLD
+  //   RETURN removed
+  //   `;
+  //   return this.query(aqlStr);
+  // }
 }
 

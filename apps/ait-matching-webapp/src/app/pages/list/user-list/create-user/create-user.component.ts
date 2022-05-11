@@ -67,11 +67,11 @@ export class CreateUserComponent extends AitBaseComponent implements OnInit {
 
   
   public save = async (condition = {}) => {
-    
     let email;
     let password;
     let username;
     let confirmPassword;
+    let _key
     const saveData = {};
     saveData['user_id'] = this.authService.getUserID();
     Object.keys(condition).forEach((key) => {
@@ -90,8 +90,12 @@ export class CreateUserComponent extends AitBaseComponent implements OnInit {
           username = value;
           break;
         }
-        default: {
+        case 'confirm_password': {
           confirmPassword = value;
+          break;
+        }
+        default: {
+          _key= value
         }
       }
     });
@@ -100,12 +104,12 @@ export class CreateUserComponent extends AitBaseComponent implements OnInit {
       : (this.checkPw = false);
      
     if (this.checkPw) {
-    
       const result = await this.createUserService.registerForAdmin(
         username,
         email,
         password,
-        this.env?.COMMON?.COMPANY_DEFAULT
+        this.env?.COMMON?.COMPANY_DEFAULT,
+        _key
       );
 
       const data = {
