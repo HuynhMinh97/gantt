@@ -23,6 +23,7 @@ import { GetEmployeeResolver } from './group-role/add-role/add-role.resolver';
 import { SearchConditionResolver } from './search-condition/search-condition.resolver';
 import { SaveRecommendUserResolver } from './save-recommend-user/save-recommend-user.resolver';
 import { RecommencedUserController } from './recommenced-user/recommenced-user.controller';
+import { UserListResolver } from './list/user-list/user-list.resolver';
 
 const RESOLVERS = [
   UserExperienceInfoResolver,
@@ -46,6 +47,7 @@ const RESOLVERS = [
   GroupRoleListResolver,
   SearchConditionResolver,
   SaveRecommendUserResolver,
+  UserListResolver,
   {
     provide: 'ENVIRONMENT',
     useValue: environment,

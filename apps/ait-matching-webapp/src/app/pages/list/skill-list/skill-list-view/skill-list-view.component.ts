@@ -38,7 +38,6 @@ import {
   NbToastrService,
 } from '@nebular/theme';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-// import { SkillRegisterService } from '../../../../services/add-skill.service';
 
 @Component({
   selector: 'ait-skill-list-view',
@@ -308,9 +307,7 @@ export class SkillListViewComponent extends AitBaseComponent implements OnInit {
           data.forEach((element) => {
             const dataFormat = {};
             dataFormat['name'] = element?.name;
-            dataFormat['code'] = element?.code;
             dataFormat['_key'] = element?._key;
-            dataFormat['category'] = element?.category.value;
             dataFormat['create_by'] = element?.create_by;
             dataFormat['change_by'] = element?.change_by;
             dataFormat['create_at'] = this.getDateFormat(element?.create_at);

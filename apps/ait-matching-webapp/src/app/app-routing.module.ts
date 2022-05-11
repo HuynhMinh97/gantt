@@ -31,6 +31,9 @@ import { LanguageListComponent } from './pages/list/language-list/language-list.
 import { RecommencedJobComponent } from './pages/recommenced/recommenced-job/recommenced-job.component';
 import { AddRoleComponent } from './pages/group-role/add-role/add-role.component';
 import { MyProjectQueriesComponent } from './pages/my-project-queries/my-project-queries.component';
+import { UserListComponent } from './pages/list/user-list/user-list.component';
+import { CreateUserComponent } from './pages/list/user-list/create-user/create-user.component';
+
 
 
 // Push your routes here one by one 🎉
@@ -235,7 +238,20 @@ export const routes: Routes = [
     canActivate: [AitAuthGuardService], 
     component: GroupRoleListComponent
   },
-  
+  {
+    path: 'user-list',
+    canActivate: [AitAuthGuardService], 
+    component: UserListComponent
+  },{
+    path: 'create-user',
+    canActivate: [AitAuthGuardService], 
+    component: CreateUserComponent
+  },
+  {
+    path: 'edit-user/:id',
+    canActivate: [AitAuthGuardService], 
+    component: CreateUserComponent
+  },
   {
     path: '',
     pathMatch: 'full',
