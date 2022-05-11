@@ -1,3 +1,4 @@
+import { CreateUserComponent } from './pages/list/user-list/create-user/create-user.component';
 import { GroupRoleListComponent } from './pages/group-role/group-role-list/group-role-list.component';
 import { GroupRoleRegisterComponent } from './pages/group-role/group-role-register/group-role-register.component';
 import { UserOnboardingComponent } from './pages/user/user-onboarding/user-onboarding.component';
@@ -32,9 +33,7 @@ import { RecommencedJobComponent } from './pages/recommenced/recommenced-job/rec
 import { AddRoleComponent } from './pages/group-role/add-role/add-role.component';
 import { MyProjectQueriesComponent } from './pages/my-project-queries/my-project-queries.component';
 import { UserListComponent } from './pages/list/user-list/user-list.component';
-import { CreateUserComponent } from './pages/list/user-list/create-user/create-user.component';
-
-
+import { AddSkillComponent } from './pages/list/skill-list/add-skill/add-skill.component';
 
 // Push your routes here one by one 🎉
 
@@ -42,228 +41,240 @@ export const routes: Routes = [
   {
     path: 'recommenced-user',
     canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
-    component: RecommencedUserComponent
-  }, 
+    component: RecommencedUserComponent,
+  },
   {
     path: 'recommenced-job',
     canActivate: [AitAuthGuardService],
-    component: RecommencedJobComponent
+    component: RecommencedJobComponent,
   },
   {
     path: 'user',
     canActivate: [AitAuthGuardService],
-    component: UserOnboardingComponent
+    component: UserOnboardingComponent,
   },
   {
     path: 'user-skills',
     canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
-    component: UserSkillsComponent
+    component: UserSkillsComponent,
   },
   {
     path: 'user/:id',
     canActivate: [AitAuthGuardService],
-    component: UserOnboardingComponent
+    component: UserOnboardingComponent,
   },
   {
     path: 'user-detail/:id',
     canActivate: [AitAuthGuardService],
-    component: UserOnboardingDetailComponent
+    component: UserOnboardingDetailComponent,
   },
   {
     path: 'user-course',
-    canActivate: [AitAuthGuardService], 
-    component: UserCourseComponent
+    canActivate: [AitAuthGuardService],
+    component: UserCourseComponent,
   },
   {
     path: 'user-course/:id',
-    canActivate: [AitAuthGuardService], 
-    component: UserCourseComponent
+    canActivate: [AitAuthGuardService],
+    component: UserCourseComponent,
   },
   {
     path: 'user-course-detail/:id',
-    canActivate: [AitAuthGuardService], 
-    component: UserCourseDetailComponent
+    canActivate: [AitAuthGuardService],
+    component: UserCourseDetailComponent,
   },
   {
     path: 'user-certificate-award',
-    canActivate: [AitAuthGuardService], 
-    component: UserCertificateComponent
+    canActivate: [AitAuthGuardService],
+    component: UserCertificateComponent,
   },
   {
     path: 'user-certificate-award/:id',
-    canActivate: [AitAuthGuardService], 
-    component: UserCertificateComponent
+    canActivate: [AitAuthGuardService],
+    component: UserCertificateComponent,
   },
   {
     path: 'user-certificate-award-detail/:id',
-    canActivate: [AitAuthGuardService], 
-    component: UserCertificateDetailComponent
+    canActivate: [AitAuthGuardService],
+    component: UserCertificateDetailComponent,
   },
   {
     path: 'user-project',
-    canActivate: [AitAuthGuardService], 
-    component: UserProjectComponent
+    canActivate: [AitAuthGuardService],
+    component: UserProjectComponent,
   },
   {
     path: 'user-project/:id',
-    canActivate: [AitAuthGuardService], 
-    component: UserProjectComponent
+    canActivate: [AitAuthGuardService],
+    component: UserProjectComponent,
   },
   {
     path: 'user-project-detail/:id',
-    canActivate: [AitAuthGuardService], 
-    component: UserProjectDetailComponent
+    canActivate: [AitAuthGuardService],
+    component: UserProjectDetailComponent,
   },
   {
     path: 'user-skills-reorder',
-    canActivate: [AitAuthGuardService], 
-    component: UserReorderSkillsComponent
+    canActivate: [AitAuthGuardService],
+    component: UserReorderSkillsComponent,
   },
   {
     path: 'user-skills',
-    canActivate: [AitAuthGuardService], 
-    component: UserSkillsComponent
+    canActivate: [AitAuthGuardService],
+    component: UserSkillsComponent,
   },
   {
     path: 'user-profile',
     canActivate: [AitAuthGuardService],
-    component: UserProfileComponent
+    component: UserProfileComponent,
   },
   {
     path: 'user-profile/:id',
     canActivate: [AitAuthGuardService],
-    component: UserProfileComponent
+    component: UserProfileComponent,
   },
   {
     path: 'user-experience',
     canActivate: [AitAuthGuardService],
-    component: UserExperienceComponent
+    component: UserExperienceComponent,
   },
   {
     path: 'user-experience/:id',
     canActivate: [AitAuthGuardService],
-    component: UserExperienceComponent
+    component: UserExperienceComponent,
   },
   {
     path: 'user-experience-detail/:id',
     canActivate: [AitAuthGuardService],
-    component: UserExperienceDetailComponent
+    component: UserExperienceDetailComponent,
   },
   {
     path: 'user-education',
     canActivate: [AitAuthGuardService],
-    component: UserEducationComponent
+    component: UserEducationComponent,
   },
   {
     path: 'user-education/:id',
     canActivate: [AitAuthGuardService],
-    component: UserEducationComponent
+    component: UserEducationComponent,
   },
   {
     path: 'user-education-detail/:id',
     canActivate: [AitAuthGuardService],
-    component: UserEducationDetailComponent
+    component: UserEducationDetailComponent,
   },
   {
     path: 'user-language',
     canActivate: [AitAuthGuardService],
-    component: UserLanguageComponent
-  },{
+    component: UserLanguageComponent,
+  },
+  {
     path: 'user-language-detail/:id',
     canActivate: [AitAuthGuardService],
-    component: UserLanguageDetailComponent
+    component: UserLanguageDetailComponent,
   },
   {
     path: 'user-language/:id',
     canActivate: [AitAuthGuardService],
-    component: UserLanguageComponent
+    component: UserLanguageComponent,
   },
   {
     path: 'user-job-alert',
     canActivate: [AitAuthGuardService],
-    component: UserJobAlertComponent
+    component: UserJobAlertComponent,
   },
   {
     path: 'user-job-alert/:id',
     canActivate: [AitAuthGuardService],
-    component: UserJobAlertComponent
+    component: UserJobAlertComponent,
   },
   {
     path: 'user-job-alert-detail/:id',
     canActivate: [AitAuthGuardService],
-    component: UserJobAlertDetailComponent
+    component: UserJobAlertDetailComponent,
   },
   {
     path: 'skill-list',
-    canActivate: [AitAuthGuardService], 
-    component: SkillListViewComponent
+    canActivate: [AitAuthGuardService],
+    component: SkillListViewComponent,
   },
   {
     path: 'language-list',
-    canActivate: [AitAuthGuardService], 
-    component: LanguageListComponent
+    canActivate: [AitAuthGuardService],
+    component: LanguageListComponent,
   },
   {
     path: 'project-list',
     canActivate: [AitAuthGuardService],
-    component: ProjectListComponent
+    component: ProjectListComponent,
   },
   {
     path: 'certificate-list',
-    canActivate: [AitAuthGuardService], 
-    component: CertificateListComponent
+    canActivate: [AitAuthGuardService],
+    component: CertificateListComponent,
   },
   {
     path: 'education-list',
-    canActivate: [AitAuthGuardService], 
-    component: EducationListComponent
+    canActivate: [AitAuthGuardService],
+    component: EducationListComponent,
   },
   {
     path: 'my-project-queries',
-    canActivate: [AitAuthGuardService], 
-    component: MyProjectQueriesComponent
+    canActivate: [AitAuthGuardService],
+    component: MyProjectQueriesComponent,
   },
   {
     path: 'role',
-    canActivate: [AitAuthGuardService], 
-    component: AddRoleComponent
+    canActivate: [AitAuthGuardService],
+    component: AddRoleComponent,
   },
   {
     path: 'group-role',
-    canActivate: [AitAuthGuardService], 
-    component: GroupRoleRegisterComponent
+    canActivate: [AitAuthGuardService],
+    component: GroupRoleRegisterComponent,
   },
   {
     path: 'group-role-list',
-    canActivate: [AitAuthGuardService], 
-    component: GroupRoleListComponent
+    canActivate: [AitAuthGuardService],
+    component: GroupRoleListComponent,
   },
   {
     path: 'user-list',
-    canActivate: [AitAuthGuardService], 
-    component: UserListComponent
-  },{
-    path: 'create-user',
-    canActivate: [AitAuthGuardService], 
-    component: CreateUserComponent
+    canActivate: [AitAuthGuardService],
+    component: UserListComponent,
   },
   {
-    path: 'edit-user/:id',
-    canActivate: [AitAuthGuardService], 
-    component: CreateUserComponent
+    path: 'create-user',
+    canActivate: [AitAuthGuardService],
+    component: CreateUserComponent,
   },
+  {
+    path: 'create-user/:id',
+    canActivate: [AitAuthGuardService],
+    component: CreateUserComponent,
+  },
+  {
+    path: 'skill',
+    canActivate: [AitAuthGuardService],
+    component: AddSkillComponent,
+  },
+  {
+    path: 'skill/:id',
+    canActivate: [AitAuthGuardService],
+    component: AddSkillComponent,
+  },
+  
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: localStorage.getItem('access_token') ? 'recommenced-user' : 'sign-in'
+    redirectTo: localStorage.getItem('access_token')
+      ? 'recommenced-user'
+      : 'sign-in',
   },
-
 ];
-
-
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
