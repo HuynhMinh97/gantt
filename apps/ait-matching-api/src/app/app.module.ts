@@ -13,10 +13,10 @@ import { UserProjectResolver } from './user/user-project/user-project.resolver';
 import { ReorderSkillResolver } from './user/user-reorder-skills/reorder-skill.resolver';
 import { UserProfileResolver } from './user/user-profile/user-profile.resolver';
 import { UserJobAlertResolver } from './user/user-job-alert/user_job_alert.resolver';
-import { SkillListResolver } from './list/skillList/skill-List/skill_list.resolver';
+import { SkillListResolver } from './list/skillList/skill-List/skill-list.resolver';
 import { SkillRegisterResolver } from './list/skillList/add-skill/add-skill.resolver';
 import { ProjectListResolver } from './list/projectList/project-list.resolver';
-import { LanguageListResolver } from './list/language-list.ts/language-list.resolver';
+import { LanguageListResolver } from './list/language-list/language-list.resolver';
 import { EducationListResolver } from './list/education-list/education-list.resolver';
 import { CertificateResolver } from './list/certificate-list/certificate-list.resolver';
 import { GetEmployeeResolver } from './group-role/add-role/add-role.resolver';
@@ -24,6 +24,7 @@ import { SearchConditionResolver } from './search-condition/search-condition.res
 import { SaveRecommendUserResolver } from './save-recommend-user/save-recommend-user.resolver';
 import { RecommencedUserController } from './recommenced-user/recommenced-user.controller';
 import { UserListResolver } from './list/user-list/user-list.resolver';
+import { CaptionListResolver } from './list/caption-list/caption-list.resolver';
 
 const RESOLVERS = [
   UserExperienceInfoResolver,
@@ -48,6 +49,7 @@ const RESOLVERS = [
   SearchConditionResolver,
   SaveRecommendUserResolver,
   UserListResolver,
+  CaptionListResolver,
   {
     provide: 'ENVIRONMENT',
     useValue: environment,

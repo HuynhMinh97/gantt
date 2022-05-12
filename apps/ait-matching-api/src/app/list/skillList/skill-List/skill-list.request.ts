@@ -1,6 +1,6 @@
 import { BaseRequest } from '@ait/core';
 import { Field, InputType } from '@nestjs/graphql';
-import { SearchSkillListDto, SkillListDto } from './skill_list.dto';
+import { SearchSkillListDto, SkillListDto } from './skill-list.dto';
 
 @InputType()
 export class SkillListRequest extends BaseRequest {

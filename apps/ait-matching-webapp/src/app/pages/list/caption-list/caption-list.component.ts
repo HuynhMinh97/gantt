@@ -1,32 +1,24 @@
-import { LocalDataSource } from 'ng2-smart-table';
-import {
-  AitAuthService,
-  AitBaseComponent,
-  AitEnvironmentService,
-  AppState,
-  getUserSetting,
-} from '@ait/ui';
+import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
+import { CaptionListService } from './../../../services/caption-list.service';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AitAuthService, AitBaseComponent, AitEnvironmentService, AppState, getUserSetting } from '@ait/ui';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
-import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { isObjectFull, isString, OPERATOR, RESULT_STATUS } from '@ait/shared';
 import dayjs from 'dayjs';
-import { log } from 'console';
-import { UserListService } from '../../../services/user-list.service';
+import { LocalDataSource } from 'ng2-smart-table';
 
 @Component({
-  selector: 'ait-user-list',
-  templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.scss'],
+  selector: 'ait-caption-list',
+  templateUrl: './caption-list.component.html',
+  styleUrls: ['./caption-list.component.scss']
 })
-export class UserListComponent extends AitBaseComponent implements OnInit {
+export class CaptionListComponent extends AitBaseComponent implements OnInit {
   @ViewChild('area') area: ElementRef;
-
-  source: LocalDataSource;
   dateFormat: string;
-  searchUser: FormGroup;
+  source: LocalDataSource;
+  searchCaption: FormGroup;
   dateAtributes = [
     'create_at_from',
     'create_at_to',
@@ -34,9 +26,12 @@ export class UserListComponent extends AitBaseComponent implements OnInit {
     'change_at_to',
   ];
   userAttribute = ['create_by', 'change_by'];
+  comboboxSearch = ['module', 'page'];
+
+
   constructor(
+    private captionListService: CaptionListService,
     private formBuilder: FormBuilder,
-    private userListService: UserListService,
     store: Store<AppState>,
     apollo: Apollo,
     env: AitEnvironmentService,
@@ -54,9 +49,13 @@ export class UserListComponent extends AitBaseComponent implements OnInit {
       toastrService
     );
 
-    this.searchUser = this.formBuilder.group({
-      username: new FormControl(null),
-      email: new FormControl(null),
+    this.searchCaption = this.formBuilder.group({
+      name: new FormControl(null),
+      module: new FormControl(null),
+      page: new FormControl(null),
+      code: new FormControl(null),
+      start_date_from: new FormControl(null),
+      start_date_to: new FormControl(null),
       create_by: new FormControl(null),
       change_by: new FormControl(null),
       change_at_from: new FormControl(null),
@@ -70,34 +69,27 @@ export class UserListComponent extends AitBaseComponent implements OnInit {
         this.dateFormat = setting['date_format_display'];
       }
     });
-
     this.setModulePage({
-      module: 'user',
-      page: 'user-list',
+      module: 'education_list',
+      page: 'education_list',
     });
-  }
+    
+   }
 
   ngOnInit(): void {
     this.callLoadingApp();
+    console.log(this.dateFormat);
   }
 
   getOperator(key: string) {
-    if (key === 'create_at_from' || key === 'change_at_from') {
+    if (
+      key === 'create_at_from' ||
+      key === 'change_at_from' 
+    ) {
       return OPERATOR.GREATER_OR_EQUAL;
     } else {
       return OPERATOR.LESS_OR_EQUAL;
     }
-  }
-
-  focusToTable() {
-    try {
-      setTimeout(() => {
-        this.area.nativeElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-        });
-      }, 0);
-    } catch {}
   }
 
   getDateFormat(time: number) {
@@ -109,23 +101,29 @@ export class UserListComponent extends AitBaseComponent implements OnInit {
   }
 
   async getData(obj?: any) {
-    
     const dataSearch = [];
-    await this.userListService.find(obj).then((res) => {
-      
+    await this.captionListService.searchCaption(obj).then((res) => {
       if (res.status === RESULT_STATUS.OK) {
         const data = res.data;
         if (data.length > 0) {
           data.forEach(async (element) => {
             const dataFormat = {};
-            dataFormat['username'] = element?.username;
-            dataFormat['email'] = element?.email;
+            dataFormat['module'] = element?.module._key;
+            dataFormat['page'] = element?.page._key;
             dataFormat['_key'] = element?._key;
+            dataFormat['name'] = element?.name;
+            dataFormat['code'] = element?.code;
             dataFormat['create_by'] = element?.create_by;
             dataFormat['change_by'] = element?.change_by;
             dataFormat['create_at'] = this.getDateFormat(element?.create_at);
             dataFormat['change_at'] = this.getDateFormat(element?.change_at);
-            dataSearch.push(dataFormat);
+            dataFormat['start_date'] = this.getDateFormat(
+              element?.start_date_from
+            );
+            if (dataFormat['module']){
+
+              dataSearch.push(dataFormat);
+            }
           });
         }
       }
@@ -135,24 +133,34 @@ export class UserListComponent extends AitBaseComponent implements OnInit {
   }
 
   public search = async (condition = {}, data = {}) => {
-    this.searchUser.patchValue({ ...data });
-    if (this.searchUser.valid) {
+    debugger
+    this.searchCaption.patchValue({ ...data });
+    if (this.searchCaption.valid) {
       const object = {};
-      Object.keys(this.searchUser.controls).forEach((key) => {
-        const value = this.searchUser.controls[key].value;
+      Object.keys(this.searchCaption.controls).forEach((key) => {
+        const value = this.searchCaption.controls[key].value;
         if (value) {
           if (this.dateAtributes.includes(key)) {
-            object[key] = {
-              target: key.slice(0, 9) || '',
-              operator: this.getOperator(key),
-              valueAsNumber: value,
-            };
+              object[key] = {
+                target: key.slice(0, 9) || '',
+                operator: this.getOperator(key),
+                valueAsNumber: value,
+              };
           } else if (this.userAttribute.includes(key)) {
             try {
               if (!object[key]) {
                 object[key] = { operator: OPERATOR.LIKE };
               }
               object[key]['value'] = value;
+            } catch (e) {}
+          } else if (this.comboboxSearch.includes(key)) {
+            try {
+              if (!object[key]) {
+                object[key] = { operator: OPERATOR.LIKE };
+              }
+              object[key]['value'] = value.value;
+              const isStr = isString(value);
+              object[key]['operator'] = isStr ? OPERATOR.LIKE : OPERATOR.IN;
             } catch (e) {}
           } else {
             const isStr = isString(value);
@@ -174,11 +182,22 @@ export class UserListComponent extends AitBaseComponent implements OnInit {
         this.focusToTable();
         return { data: data };
       }
-    }
-    else {
+    } else {
       const datas = await this.getData();
       this.focusToTable();
       return { data: datas };
     }
   };
+
+  focusToTable() {
+    try {
+      setTimeout(() => {
+        this.area.nativeElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }, 0);
+    } catch {}
+  }
+
 }

@@ -1,3 +1,4 @@
+import { AddCationComponent } from './pages/list/caption-list/add-cation/add-cation.component';
 import { CreateUserComponent } from './pages/list/user-list/create-user/create-user.component';
 import { GroupRoleListComponent } from './pages/group-role/group-role-list/group-role-list.component';
 import { GroupRoleRegisterComponent } from './pages/group-role/group-role-register/group-role-register.component';
@@ -34,6 +35,7 @@ import { AddRoleComponent } from './pages/group-role/add-role/add-role.component
 import { MyProjectQueriesComponent } from './pages/my-project-queries/my-project-queries.component';
 import { UserListComponent } from './pages/list/user-list/user-list.component';
 import { AddSkillComponent } from './pages/list/skill-list/add-skill/add-skill.component';
+import { CaptionListComponent } from './pages/list/caption-list/caption-list.component';
 
 // Push your routes here one by one 🎉
 
@@ -263,7 +265,21 @@ export const routes: Routes = [
     canActivate: [AitAuthGuardService],
     component: AddSkillComponent,
   },
-  
+  {
+    path: 'caption-list',
+    canActivate: [AitAuthGuardService],
+    component: CaptionListComponent,
+  },
+  {
+    path: 'caption',
+    canActivate: [AitAuthGuardService],
+    component: AddCationComponent,
+  },
+  {
+    path: 'caption/:id',
+    canActivate: [AitAuthGuardService],
+    component: AddCationComponent,
+  },
   {
     path: '',
     pathMatch: 'full',
