@@ -108,8 +108,8 @@ export class CaptionListComponent extends AitBaseComponent implements OnInit {
         if (data.length > 0) {
           data.forEach(async (element) => {
             const dataFormat = {};
-            dataFormat['module'] = element?.module.value;
-            dataFormat['page'] = element?.page.value;
+            dataFormat['module'] = element?.module._key;
+            dataFormat['page'] = element?.page._key;
             dataFormat['_key'] = element?._key;
             dataFormat['name'] = element?.name;
             dataFormat['code'] = element?.code;
@@ -120,7 +120,10 @@ export class CaptionListComponent extends AitBaseComponent implements OnInit {
             dataFormat['start_date'] = this.getDateFormat(
               element?.start_date_from
             );
-            dataSearch.push(dataFormat);
+            if (dataFormat['module']){
+
+              dataSearch.push(dataFormat);
+            }
           });
         }
       }
@@ -130,6 +133,7 @@ export class CaptionListComponent extends AitBaseComponent implements OnInit {
   }
 
   public search = async (condition = {}, data = {}) => {
+    debugger
     this.searchCaption.patchValue({ ...data });
     if (this.searchCaption.valid) {
       const object = {};
@@ -154,7 +158,7 @@ export class CaptionListComponent extends AitBaseComponent implements OnInit {
               if (!object[key]) {
                 object[key] = { operator: OPERATOR.LIKE };
               }
-              object[key]['value'] = value._key;
+              object[key]['value'] = value.value;
               const isStr = isString(value);
               object[key]['operator'] = isStr ? OPERATOR.LIKE : OPERATOR.IN;
             } catch (e) {}

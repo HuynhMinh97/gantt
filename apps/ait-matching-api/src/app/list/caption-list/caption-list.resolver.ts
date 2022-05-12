@@ -20,7 +20,24 @@ export class CaptionListResolver extends AitBaseService {
     @Args('request', { type: () => CaptionListSearchRequest })
     request: CaptionListSearchRequest
   ) {
-    console.log(this.find(request, user))
+    return this.find(request, user);
+  }
+
+  @Query(() => CaptionListResponse, { name: 'findPageByKey' })
+  async findPageByKey(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => CaptionListSearchRequest })
+    request: CaptionListSearchRequest
+  ) {
+    return this.find(request, user);
+  }
+
+  @Query(() => CaptionListResponse, { name: 'findModuleByKey' })
+  async findModuleByKey(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => CaptionListSearchRequest })
+    request: CaptionListSearchRequest
+  ) {
     return this.find(request, user);
   }
 }

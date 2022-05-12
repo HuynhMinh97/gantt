@@ -295,17 +295,23 @@ export class UserOnboardingComponent
         this.router.navigate([`user-detail/${this.user_key}`]);
       } else {
         this.callLoadingApp();
-        await this.userOnbService.findJobSetting(this.user_key)?.then(async (r) => {
-          if (r.status === RESULT_STATUS.OK) {
-            this.jobSettingData = r.data[0];
-            this.userJobSettingInfo.patchValue({ ...this.jobSettingData });
-            this.userJobSettingInfoClone = this.userJobSettingInfo.value;
-            await this.findSkillJocSetting();
-          } else {
-            this.callLoadingApp();
-          }
-        });
-        await this.userOnbService
+        try {
+          await this.userOnbService.findJobSetting(this.user_key)?.then(async (r) => {
+            if (r.status === RESULT_STATUS.OK) {
+              this.jobSettingData = r.data[0];
+              this.userJobSettingInfo.patchValue({ ...this.jobSettingData });
+              this.userJobSettingInfoClone = this.userJobSettingInfo.value;
+              await this.findSkillJocSetting();
+            } else {
+              this.callLoadingApp();
+            }
+          });
+        } catch (error) {
+          this.callLoadingApp();
+        }
+       
+        try {
+          await this.userOnbService
           .findUserOnboardingByKey(this.user_key)?.then(async (r) => {
             if (r.status === RESULT_STATUS.OK) {
               let isUserExist = false;
@@ -325,7 +331,10 @@ export class UserOnboardingComponent
               this.callLoadingApp();
             }
           });
-        
+        }
+        catch (error) {
+          this.callLoadingApp();
+        }
       }
     } else {
         const existProfile = await this.userOnbService.findUserOnboardingByKey(this.user_id_profile);

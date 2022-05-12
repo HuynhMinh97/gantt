@@ -1,241 +1,475 @@
 <div class="component__container">
-    <div class="main__container">
-        <ait-text-gradient [content]="pageTitle"></ait-text-gradient>
+  <div class="main__container">
+    <ait-text-gradient [content]="pageTitle"></ait-text-gradient>
 
-        <div *ngIf="allowNew" style="width: 100%;
-    text-align: right;
-    margin-bottom: -10px;">
-            <ait-button [id]="'new'" [width]="'150px'" [height]="'32px'" [title]="'New'" [isDefault]="true"
-                (onClick)="create()">
-            </ait-button>
-        </div>
-
-        <div class="filter__container">
-            <div class="header__filter" (click)="toggleExpan()" [ngStyle]="!isExpan ? { border: 'none' } : null">
-                <ait-text-gradient [content]="searchContent" [fontsize]="'21px'"></ait-text-gradient>
-                <div class="icon__expan" (click)="toggleExpan()">
-                    <nb-icon icon="arrow-ios-upward-outline" *ngIf="isExpan" (click)="toggleExpan()"></nb-icon>
-                    <nb-icon icon="arrow-ios-downward-outline" *ngIf="!isExpan" (click)="toggleExpan()"></nb-icon>
-                </div>
-            </div>
-
-            <div class="input__area" [ngStyle]="{
-                'height': isExpan ? 'auto' : '0px',
-                'margin-bottom': isExpan ? null : '0px',
-                'margin-top': isExpan ? null : '0px'
-              }">
-
-                <div class="content" *ngIf="isExpan">
-
-                    <div class="left__side" *ngIf="leftSide.length > 0">
-                        <ng-container *ngFor="let component of leftSide">
-                        <div [ngStyle]="{margin: component?.component_setting?.margin || 0}"></div>
-                            <ait-autocomplete-master-data *ngIf="component.type === 'combobox'"
-                                [class]="component?.component_setting?.class" [parentCodeExternal]="component?.component_setting?.parent_code_external"
-                                [collection]="component?.component_setting?.collection" [label]="component?.item_label"
-                                [maxItem]="component?.component_setting?.max_item"
-                                [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
-                                [style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }"
-                                [id]="component?.item_id"
-                                (watchValue)="takeMaster($event?.value, component?.item_id, component?.component_setting?.max_item)"
-                                [defaultValue]="getDefaultValue(searchForm.controls[component?.item_id].value, component?.component_setting?.max_item)">
-                            </ait-autocomplete-master-data>
-
-                            <ait-input-number *ngIf="component.type === 'number'">
-
-                            </ait-input-number>
-
-                            <ait-input-text *ngIf="component.type === 'text'" [length]="1000"
-                                [label]="component?.item_label" [placeholder]="component?.item_placeholder"
-                                [width]="component?.component_setting?.width" [fullWidth]="true"
-                                [id]="component?.item_id" (watchValue)="takeInputValue($event, component?.item_id)"
-                                [defaultValue]="searchForm.controls[component?.item_id].value" [isReset]="isReset">
-                            </ait-input-text>
-
-                            <ait-datepicker
-                                *ngIf="component.type === 'date' && component?.component_setting?.from_to !== true"
-                                [placeholder]="component?.item_placeholder" [id]="component?.item_id"
-                                [label]="component?.item_label" [style]="component?.component_setting?.width"
-                                [isReset]="isReset" [dateInput]="searchForm.controls[component?.item_id].value"
-                                (watchValue)="takeDatePickerValue($event?.value, component?.item_id)">
-                            </ait-datepicker>
-
-                            <div class="check-form" *ngIf="component.type === 'checkbox'" style="margin-top: 5px;">
-                                <nb-checkbox [id]="component?.item_id"
-                                    [checked]="inputForm.controls[component?.item_id].value"
-                                    (checkedChange)="toggle($event, component?.item_id)">
-                                </nb-checkbox>
-                                <p class="pcontent">
-                                    {{ getCheckBoxTitle(component?.component_setting?.title) }}
-                                </p>
-                            </div>
-
-                            <ng-container
-                                *ngIf="component.type === 'date' && component?.component_setting?.from_to === true">
-                                <div style="display: flex">
-                                    <!-- create_at_from -->
-                                    <ait-datepicker [placeholder]="component?.item_placeholder"
-                                        [id]="component?.item_id + '_from'" [label]="component?.item_label"
-                                        [style]="{ width: component?.component_setting?.width }" [isReset]="isReset"
-                                        [dateInput]="searchForm.controls[component?.item_id + '_from'].value"
-                                        (watchValue)="takeDatePickerValue($event?.value, component?.item_id + '_from')">
-                                    </ait-datepicker>
-
-                                    <span class="center_span">~</span>
-                                    <!-- create_at_to -->
-                                    <ait-datepicker [placeholder]="component?.item_placeholder"
-                                        [id]="component?.item_id + '_to'"
-                                        [style]="{ width: component?.component_setting?.width }" [isReset]="isReset"
-                                        [dateInput]="searchForm.controls[component?.item_id + '_to'].value"
-                                        (watchValue)="takeDatePickerValue($event?.value, component?.item_id + '_to')">
-                                    </ait-datepicker>
-                                </div>
-                                <div [style.width]="'450px'">
-                                    <ait-error-message *ngIf="isCreateAtError" [errors]="createAtErrorMessage">
-                                    </ait-error-message>
-                                </div>
-                            </ng-container>
-
-                            <ait-space *ngIf="component.type === 'space'" [margin]="'31.75px'"></ait-space>
-                            <ait-space [margin]="'7.25px'"></ait-space>
-                        </ng-container>
-                    </div>
-
-                    <div class="right__side" *ngIf="rightSide.length > 0">
-                        <ng-container *ngFor="let component of rightSide">
-                        <div [ngStyle]="{margin: component?.component_setting?.margin || 0}"></div>
-                            <ait-autocomplete-master-data *ngIf="component.type === 'combobox'"
-                                [class]="component?.component_setting?.class" [parentCodeExternal]="component?.component_setting?.parent_code_external"
-                                [collection]="component?.component_setting?.collection" [label]="component?.item_label"
-                                [maxItem]="component?.component_setting?.max_item"
-                                [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
-                                [style]="{ width: component?.component_setting?.width ? component?.component_setting?.width : '250px' }"
-                                [id]="component?.item_id"
-                                (watchValue)="takeMaster($event?.value, component?.item_id, component?.component_setting?.max_item)"
-                                [defaultValue]="getDefaultValue(searchForm.controls[component?.item_id].value, component?.component_setting?.max_item)">
-                            </ait-autocomplete-master-data>
-
-                            <ait-input-number *ngIf="component.type === 'number'">
-
-                            </ait-input-number>
-
-                            <ait-input-text *ngIf="component.type === 'text'" [length]="1000"
-                                [label]="component?.item_label" [placeholder]="component?.item_placeholder"
-                                [width]="component?.component_setting?.width" [fullWidth]="true"
-                                [id]="component?.item_id" (watchValue)="takeInputValue($event, component?.item_id)"
-                                [defaultValue]="searchForm.controls[component?.item_id].value" [isReset]="isReset">
-                            </ait-input-text>
-
-                            <ait-datepicker
-                                *ngIf="component.type === 'date' && component?.component_setting?.from_to !== true"
-                                [placeholder]="component?.item_placeholder" [id]="component?.item_id"
-                                [label]="component?.item_label" [style]="component?.component_setting?.width"
-                                [isReset]="isReset" [dateInput]="searchForm.controls[component?.item_id].value"
-                                (watchValue)="takeDatePickerValue($event?.value, component?.item_id)">
-                            </ait-datepicker>
-
-                            <div class="check-form" *ngIf="component.type === 'checkbox'" style="margin-top: 5px;">
-                                <nb-checkbox [id]="component?.item_id"
-                                    [checked]="inputForm.controls[component?.item_id].value"
-                                    (checkedChange)="toggleCheckbox($event, component?.item_id)">
-                                </nb-checkbox>
-                                <p class="pcontent">
-                                    {{ getCheckBoxTitle(component?.component_setting?.title) }}
-                                </p>
-                            </div>
-
-                            <ng-container
-                                *ngIf="component.type === 'date' && component?.component_setting?.from_to === true">
-                                <div style="display: flex">
-                                    <!-- create_at_from -->
-                                    <ait-datepicker [placeholder]="component?.item_placeholder"
-                                        [id]="component?.item_id + '_from'" [label]="component?.item_label"
-                                        [style]="{ width: component?.component_setting?.width }" [isReset]="isReset"
-                                        [dateInput]="searchForm.controls[component?.item_id + '_from'].value"
-                                        (watchValue)="takeDatePickerValue($event?.value, component?.item_id + '_from')">
-                                    </ait-datepicker>
-
-                                    <span class="center_span">~</span>
-                                    <!-- create_at_to -->
-                                    <ait-datepicker [placeholder]="component?.item_placeholder"
-                                        [id]="component?.item_id + '_to'"
-                                        [style]="{ width: component?.component_setting?.width }" [isReset]="isReset"
-                                        [dateInput]="searchForm.controls[component?.item_id + '_to'].value"
-                                        (watchValue)="takeDatePickerValue($event?.value, component?.item_id + '_to')">
-                                    </ait-datepicker>
-                                </div>
-                                <div [style.width]="'450px'">
-                                    <ait-error-message *ngIf="isCreateAtError" [errors]="createAtErrorMessage">
-                                    </ait-error-message>
-                                </div>
-                            </ng-container>
-
-                            <ait-space *ngIf="component.type === 'space'" [margin]="'31.75px'"></ait-space>
-                            <ait-space [margin]="'7.25px'"></ait-space>
-                        </ng-container>
-                    </div>
-
-                    <div class="bottom__side">
-                        <!-- reset -->
-                        <ait-button [id]="'reset'" [width]="'150px'" [height]="'32px'" [title]="'reset'"
-                            [isDefault]="true" (click)="reset($event)">
-                        </ait-button>
-                        <!-- search -->
-                        <ait-button [id]="'search'" [width]="'150px'" [height]="'32px'" [title]="'検索'"
-                            [isDefault]="true" (click)="search($event)">
-                        </ait-button>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <!-- table -->
-        <ng-container *ngFor="let element of tableComponents">
-            <div class="filter_container">
-                <div class="header__filter" (click)="toggleTableExpan()"
-                    [ngStyle]="!isTableExpan ? { border: 'none' } : null">
-                    <ait-text-gradient [content]="tableTitle" [fontsize]="'21px'"></ait-text-gradient>
-                    <div class="icon__expan" (click)="toggleTableExpan()">
-                        <nb-icon icon="arrow-ios-upward-outline" *ngIf="isTableExpan" (click)="toggleTableExpan()">
-                        </nb-icon>
-                        <nb-icon icon="arrow-ios-downward-outline" *ngIf="!isTableExpan" (click)="toggleTableExpan()">
-                        </nb-icon>
-                    </div>
-                </div>
-
-                <div class="input__area" [ngStyle]="{
-                    'height': isTableExpan ? 'auto' : '0px',    
-                    'margin-bottom': isTableExpan ? null : '0px',
-                    'margin-top': isTableExpan ? null : '0px'
-                  }">
-                    <div style="width: 100%" [ngStyle]="{ 'display': isTableExpan ? 'block' : 'none' }">
-                        <ait-button-setting-table [id]="collection" [dataSource]="columnTable"
-                            (columnDislay)="settingColumnTable($event.value)" [dataExport]="exportCsv()"
-                            [columnExport]="hearder" [dataDelete]="selectedItems" [fileName]="nameFileCsv"
-                            (isDelete)="deleteAll($event.value)"></ait-button-setting-table>
-
-                        <div class="table__area" #area>
-                            <ng2-smart-table [settings]="settings" [source]="source"
-                                (userRowSelect)="onUserRowSelect($event)" #table *ngIf="done"></ng2-smart-table>
-                        </div>
-                        <div *ngIf="totalRows > 0 && done" [ngClass]="isValidPage? 'per_page':'per_page2'">
-                            <nb-select placeholder="Select Showcase" [(selected)]="perPage"
-                                (selectedChange)="changePage()">
-                                <nb-option value="10">10</nb-option>
-                                <nb-option value="20">20</nb-option>
-                                <nb-option value="30">30</nb-option>
-                                <nb-option value="50">50</nb-option>
-                                <nb-option value="100">100</nb-option>
-                            </nb-select>
-                        </div>
-                        <div class="num_page" *ngIf="pageDetail && totalRows > 0  && done"
-                            [ngStyle]="{'left': isValidPage? left + 'px' : '0px', 'margin-top': isValidPage ? '-67px' : '10px'}">
-                            {{ pageDetail }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </ng-container>
+    <div
+      *ngIf="allowNew"
+      style="width: 100%; text-align: right; margin-bottom: -10px"
+    >
+      <ait-button
+        [id]="'new'"
+        [width]="'150px'"
+        [height]="'32px'"
+        [title]="'New'"
+        [isDefault]="true"
+        (onClick)="create()"
+      >
+      </ait-button>
     </div>
+
+    <div class="filter__container">
+      <div
+        class="header__filter"
+        (click)="toggleExpan()"
+        [ngStyle]="!isExpan ? { border: 'none' } : null"
+      >
+        <ait-text-gradient
+          [content]="searchContent"
+          [fontsize]="'21px'"
+        ></ait-text-gradient>
+        <div class="icon__expan" (click)="toggleExpan()">
+          <nb-icon
+            icon="arrow-ios-upward-outline"
+            *ngIf="isExpan"
+            (click)="toggleExpan()"
+          ></nb-icon>
+          <nb-icon
+            icon="arrow-ios-downward-outline"
+            *ngIf="!isExpan"
+            (click)="toggleExpan()"
+          ></nb-icon>
+        </div>
+      </div>
+
+      <div
+        class="input__area"
+        [ngStyle]="{
+          height: isExpan ? 'auto' : '0px',
+          'margin-bottom': isExpan ? null : '0px',
+          'margin-top': isExpan ? null : '0px'
+        }"
+      >
+        <div class="content" *ngIf="isExpan">
+          <div class="left__side" *ngIf="leftSide.length > 0">
+            <ng-container *ngFor="let component of leftSide">
+              <div
+                [ngStyle]="{
+                  margin: component?.component_setting?.margin || 0
+                }"
+              ></div>
+              <ait-autocomplete-master-data
+                *ngIf="component.type === 'combobox'"
+                [class]="component?.component_setting?.class"
+                [parentCodeExternal]="
+                  component?.component_setting?.parent_code_external
+                "
+                [collection]="component?.component_setting?.collection"
+                [label]="component?.item_label"
+                [maxItem]="component?.component_setting?.max_item"
+                [placeholder]="component?.item_placeholder"
+                [disableOutputDefault]="true"
+                [style]="{
+                  width: component?.component_setting?.width
+                    ? component?.component_setting?.width
+                    : '250px'
+                }"
+                [id]="component?.item_id"
+                (watchValue)="
+                  takeMaster(
+                    $event?.value,
+                    component?.item_id,
+                    component?.component_setting?.max_item
+                  )
+                "
+                [defaultValue]="
+                  getDefaultValue(
+                    searchForm.controls[component?.item_id].value,
+                    component?.component_setting?.max_item
+                  )
+                "
+              >
+              </ait-autocomplete-master-data>
+
+              <ait-input-number *ngIf="component.type === 'number'">
+              </ait-input-number>
+
+              <ait-input-text
+                *ngIf="component.type === 'text'"
+                [length]="1000"
+                [label]="component?.item_label"
+                [placeholder]="component?.item_placeholder"
+                [width]="component?.component_setting?.width"
+                [fullWidth]="true"
+                [id]="component?.item_id"
+                (watchValue)="takeInputValue($event, component?.item_id)"
+                [defaultValue]="searchForm.controls[component?.item_id].value"
+                [isReset]="isReset"
+              >
+              </ait-input-text>
+
+              <ait-datepicker
+                *ngIf="
+                  component.type === 'date' &&
+                  component?.component_setting?.from_to !== true
+                "
+                [placeholder]="component?.item_placeholder"
+                [id]="component?.item_id"
+                [label]="component?.item_label"
+                [style]="component?.component_setting?.width"
+                [isReset]="isReset"
+                [dateInput]="searchForm.controls[component?.item_id].value"
+                (watchValue)="
+                  takeDatePickerValue($event?.value, component?.item_id)
+                "
+              >
+              </ait-datepicker>
+
+              <div
+                class="check-form"
+                *ngIf="component.type === 'checkbox'"
+                style="margin-top: 5px"
+              >
+                <nb-checkbox
+                  [id]="component?.item_id"
+                  [checked]="inputForm.controls[component?.item_id].value"
+                  (checkedChange)="toggle($event, component?.item_id)"
+                >
+                </nb-checkbox>
+                <p class="pcontent">
+                  {{ getCheckBoxTitle(component?.component_setting?.title) }}
+                </p>
+              </div>
+
+              <ng-container
+                *ngIf="
+                  component.type === 'date' &&
+                  component?.component_setting?.from_to === true
+                "
+              >
+                <div style="display: flex">
+                  <!-- create_at_from -->
+                  <ait-datepicker
+                    [placeholder]="component?.item_placeholder"
+                    [id]="component?.item_id + '_from'"
+                    [label]="component?.item_label"
+                    [style]="{ width: component?.component_setting?.width }"
+                    [isReset]="isReset"
+                    [dateInput]="
+                      searchForm.controls[component?.item_id + '_from'].value
+                    "
+                    (watchValue)="
+                      takeDatePickerValue(
+                        $event?.value,
+                        component?.item_id + '_from'
+                      )
+                    "
+                  >
+                  </ait-datepicker>
+
+                  <span class="center_span">~</span>
+                  <!-- create_at_to -->
+                  <ait-datepicker
+                    [placeholder]="component?.item_placeholder"
+                    [id]="component?.item_id + '_to'"
+                    [style]="{ width: component?.component_setting?.width }"
+                    [isReset]="isReset"
+                    [dateInput]="
+                      searchForm.controls[component?.item_id + '_to'].value
+                    "
+                    (watchValue)="
+                      takeDatePickerValue(
+                        $event?.value,
+                        component?.item_id + '_to'
+                      )
+                    "
+                  >
+                  </ait-datepicker>
+                </div>
+                <div [style.width]="'450px'">
+                  <ait-error-message
+                    *ngIf="isCreateAtError"
+                    [errors]="createAtErrorMessage"
+                  >
+                  </ait-error-message>
+                </div>
+              </ng-container>
+
+              <ait-space
+                *ngIf="component.type === 'space'"
+                [margin]="'31.75px'"
+              ></ait-space>
+              <ait-space [margin]="'7.25px'"></ait-space>
+            </ng-container>
+          </div>
+
+          <div class="right__side" *ngIf="rightSide.length > 0">
+            <ng-container *ngFor="let component of rightSide">
+              <div
+                [ngStyle]="{
+                  margin: component?.component_setting?.margin || 0
+                }"
+              ></div>
+              <ait-autocomplete-master-data
+                *ngIf="component.type === 'combobox'"
+                [class]="component?.component_setting?.class"
+                [parentCodeExternal]="
+                  component?.component_setting?.parent_code_external
+                "
+                [collection]="component?.component_setting?.collection"
+                [label]="component?.item_label"
+                [maxItem]="component?.component_setting?.max_item"
+                [placeholder]="component?.item_placeholder"
+                [disableOutputDefault]="true"
+                [style]="{
+                  width: component?.component_setting?.width
+                    ? component?.component_setting?.width
+                    : '250px'
+                }"
+                [id]="component?.item_id"
+                (watchValue)="
+                  takeMaster(
+                    $event?.value,
+                    component?.item_id,
+                    component?.component_setting?.max_item
+                  )
+                "
+                [defaultValue]="
+                  getDefaultValue(
+                    searchForm.controls[component?.item_id].value,
+                    component?.component_setting?.max_item
+                  )
+                "
+              >
+              </ait-autocomplete-master-data>
+
+              <ait-input-number *ngIf="component.type === 'number'">
+              </ait-input-number>
+
+              <ait-input-text
+                *ngIf="component.type === 'text'"
+                [length]="1000"
+                [label]="component?.item_label"
+                [placeholder]="component?.item_placeholder"
+                [width]="component?.component_setting?.width"
+                [fullWidth]="true"
+                [id]="component?.item_id"
+                (watchValue)="takeInputValue($event, component?.item_id)"
+                [defaultValue]="searchForm.controls[component?.item_id].value"
+                [isReset]="isReset"
+              >
+              </ait-input-text>
+
+              <ait-datepicker
+                *ngIf="
+                  component.type === 'date' &&
+                  component?.component_setting?.from_to !== true
+                "
+                [placeholder]="component?.item_placeholder"
+                [id]="component?.item_id"
+                [label]="component?.item_label"
+                [style]="component?.component_setting?.width"
+                [isReset]="isReset"
+                [dateInput]="searchForm.controls[component?.item_id].value"
+                (watchValue)="
+                  takeDatePickerValue($event?.value, component?.item_id)
+                "
+              >
+              </ait-datepicker>
+
+              <div
+                class="check-form"
+                *ngIf="component.type === 'checkbox'"
+                style="margin-top: 5px"
+              >
+                <nb-checkbox
+                  [id]="component?.item_id"
+                  [checked]="inputForm.controls[component?.item_id].value"
+                  (checkedChange)="toggleCheckbox($event, component?.item_id)"
+                >
+                </nb-checkbox>
+                <p class="pcontent">
+                  {{ getCheckBoxTitle(component?.component_setting?.title) }}
+                </p>
+              </div>
+
+              <ng-container
+                *ngIf="
+                  component.type === 'date' &&
+                  component?.component_setting?.from_to === true
+                "
+              >
+                <div style="display: flex">
+                  <!-- create_at_from -->
+                  <ait-datepicker
+                    [placeholder]="component?.item_placeholder"
+                    [id]="component?.item_id + '_from'"
+                    [label]="component?.item_label"
+                    [style]="{ width: component?.component_setting?.width }"
+                    [isReset]="isReset"
+                    [dateInput]="
+                      searchForm.controls[component?.item_id + '_from'].value
+                    "
+                    (watchValue)="
+                      takeDatePickerValue(
+                        $event?.value,
+                        component?.item_id + '_from'
+                      )
+                    "
+                  >
+                  </ait-datepicker>
+
+                  <span class="center_span">~</span>
+                  <!-- create_at_to -->
+                  <ait-datepicker
+                    [placeholder]="component?.item_placeholder"
+                    [id]="component?.item_id + '_to'"
+                    [style]="{ width: component?.component_setting?.width }"
+                    [isReset]="isReset"
+                    [dateInput]="
+                      searchForm.controls[component?.item_id + '_to'].value
+                    "
+                    (watchValue)="
+                      takeDatePickerValue(
+                        $event?.value,
+                        component?.item_id + '_to'
+                      )
+                    "
+                  >
+                  </ait-datepicker>
+                </div>
+                <div [style.width]="'450px'">
+                  <ait-error-message
+                    *ngIf="isCreateAtError"
+                    [errors]="createAtErrorMessage"
+                  >
+                  </ait-error-message>
+                </div>
+              </ng-container>
+
+              <ait-space
+                *ngIf="component.type === 'space'"
+                [margin]="'31.75px'"
+              ></ait-space>
+              <ait-space [margin]="'7.25px'"></ait-space>
+            </ng-container>
+          </div>
+
+          <div class="bottom__side">
+            <!-- reset -->
+            <ait-button
+              [id]="'reset'"
+              [width]="'150px'"
+              [height]="'32px'"
+              [title]="'reset'"
+              [isDefault]="true"
+              (click)="reset($event)"
+            >
+            </ait-button>
+            <!-- search -->
+            <ait-button
+              [id]="'search'"
+              [width]="'150px'"
+              [height]="'32px'"
+              [title]="'検索'"
+              [isDefault]="true"
+              (click)="search($event)"
+            >
+            </ait-button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- table -->
+    <ng-container *ngFor="let element of tableComponents">
+      <div class="filter_container">
+        <div
+          class="header__filter"
+          (click)="toggleTableExpan()"
+          [ngStyle]="!isTableExpan ? { border: 'none' } : null"
+        >
+          <ait-text-gradient
+            [content]="tableTitle"
+            [fontsize]="'21px'"
+          ></ait-text-gradient>
+          <div class="icon__expan" (click)="toggleTableExpan()">
+            <nb-icon
+              icon="arrow-ios-upward-outline"
+              *ngIf="isTableExpan"
+              (click)="toggleTableExpan()"
+            >
+            </nb-icon>
+            <nb-icon
+              icon="arrow-ios-downward-outline"
+              *ngIf="!isTableExpan"
+              (click)="toggleTableExpan()"
+            >
+            </nb-icon>
+          </div>
+        </div>
+
+        <div
+          class="input__area"
+          [ngStyle]="{
+            height: isTableExpan ? 'auto' : '0px',
+            'margin-bottom': isTableExpan ? null : '0px',
+            'margin-top': isTableExpan ? null : '0px'
+          }"
+        >
+          <div
+            style="width: 100%"
+            [ngStyle]="{ display: isTableExpan ? 'block' : 'none' }"
+          >
+            <ait-button-setting-table
+              [id]="collection"
+              [dataSource]="columnTable"
+              (columnDislay)="settingColumnTable($event.value)"
+              [dataExport]="exportCsv()"
+              [columnExport]="hearder"
+              [dataDelete]="selectedItems"
+              [fileName]="nameFileCsv"
+              (isDelete)="deleteAll($event.value)"
+              [dataExportAll]="dataTable"
+            ></ait-button-setting-table>
+
+            <div class="table__area" #area>
+              <ng2-smart-table
+                [settings]="settings"
+                [source]="source"
+                (userRowSelect)="onUserRowSelect($event)"
+                #table
+                *ngIf="done"
+              ></ng2-smart-table>
+            </div>
+            <div
+              *ngIf="totalRows > 0 && done"
+              [ngClass]="isValidPage ? 'per_page' : 'per_page2'"
+            >
+              <nb-select
+                placeholder="Select Showcase"
+                [(selected)]="perPage"
+                (selectedChange)="changePage()"
+              >
+                <nb-option value="10">10</nb-option>
+                <nb-option value="20">20</nb-option>
+                <nb-option value="30">30</nb-option>
+                <nb-option value="50">50</nb-option>
+                <nb-option value="100">100</nb-option>
+              </nb-select>
+            </div>
+            <div
+              class="num_page"
+              *ngIf="pageDetail && totalRows > 0 && done"
+              [ngStyle]="{
+                left: isValidPage ? left + 'px' : '0px',
+                'margin-top': isValidPage ? '-67px' : '10px'
+              }"
+            >
+              {{ pageDetail }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
 </div>

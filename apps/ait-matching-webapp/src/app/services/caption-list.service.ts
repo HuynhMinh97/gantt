@@ -9,7 +9,6 @@ export class CaptionListService extends AitBaseService {
   collection = 'sys_caption';
   returnFields = {
     _key: true,
-    group_no: true,
     name: true,
     code: true,
     module: {
@@ -44,10 +43,10 @@ export class CaptionListService extends AitBaseService {
     }
     condition['module']['attribute'] = 'module';
     condition['module']['ref_collection'] = 'sys_module';
-    condition['module']['ref_attribute'] = '_key';
+    condition['module']['ref_attribute'] = 'code';
     condition['page']['attribute'] = 'page';
     condition['page']['ref_collection'] = 'sys_page';
-    condition['page']['ref_attribute'] = '_key';
+    condition['page']['ref_attribute'] = 'code';
     condition['create_by']['type'] = 'matching';
     condition['change_by']['type'] = 'matching';
 
@@ -56,9 +55,11 @@ export class CaptionListService extends AitBaseService {
       {
         collection: this.collection,
         condition: condition,
-        options: { sort_by: { value: 'sort_no', order_by: 'DESC' } },
+        options: { sort_by: { value: 'module', order_by: 'DESC' } },
       },
       this.returnFields
     );
   }
 }
+
+

@@ -1,3 +1,4 @@
+import { AddCationComponent } from './pages/list/caption-list/add-cation/add-cation.component';
 import { CreateUserComponent } from './pages/list/user-list/create-user/create-user.component';
 import { GroupRoleListComponent } from './pages/group-role/group-role-list/group-role-list.component';
 import { GroupRoleRegisterComponent } from './pages/group-role/group-role-register/group-role-register.component';
@@ -269,7 +270,16 @@ export const routes: Routes = [
     canActivate: [AitAuthGuardService],
     component: CaptionListComponent,
   },
-  
+  {
+    path: 'caption',
+    canActivate: [AitAuthGuardService],
+    component: AddCationComponent,
+  },
+  {
+    path: 'caption/:id',
+    canActivate: [AitAuthGuardService],
+    component: AddCationComponent,
+  },
   {
     path: '',
     pathMatch: 'full',
