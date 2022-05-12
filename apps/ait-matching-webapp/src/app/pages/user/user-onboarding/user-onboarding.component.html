@@ -485,10 +485,9 @@
                   <ait-autocomplete-master-data
                     [width]="'400px'"
                     [id]="'location'"
-                    [parentCodeExternal]="'VIETNAM'"
                     [label]="'location'"
                     [isSubmit]="isSubmit"
-                    [allowNew]="true"
+                    [parentCodeExternal]="'VIETNAM'"
                     [maxItem]="10"
                     [placeholder]="'please select location'"
                     [collection]="'sys_master_data'"
@@ -496,9 +495,9 @@
                     [disableOutputDefault]="true"
                     [isReset]="resetJobSettingInfo.location"
                     (watchValue)="takeMasterValueJobSettings($event?.value,'userJobSettingInfo', 'location')"
-                    [defaultValue]="[
+                    [defaultValue]="
                       userJobSettingInfo?.controls['location']?.value
-                    ]"
+                    "
                   ></ait-autocomplete-master-data>
                 </div>
               </ng-container>

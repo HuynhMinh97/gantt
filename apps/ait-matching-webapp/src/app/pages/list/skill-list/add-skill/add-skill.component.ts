@@ -39,6 +39,8 @@ export class AddSkillComponent extends AitBaseComponent implements OnInit {
       layoutScrollService,
       toastrService
     );
+
+    
   }
 
   ngOnInit(): void {
@@ -47,7 +49,6 @@ export class AddSkillComponent extends AitBaseComponent implements OnInit {
   }
 
   public save = async (condition = {}) => {
-    
     const arrSortNo = [];
     const sort_no = await this.addSkillService.getMaxSortNo().then((res) => {
       

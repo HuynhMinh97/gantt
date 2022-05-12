@@ -24,4 +24,32 @@ export class AddCaptionService extends AitBaseService{
     request['condition']['_key'] = module_key;
     return await this.query('findModuleByKey', request, returnFields);
   }
+
+  async findCaptionByKey(caption_key?:string) {
+    const returnFields = { 
+      code: true,
+      module: true,
+      page: true,
+      name: {
+        en_US: true,
+        ja_JP: true,
+        vi_VN: true,
+      }
+    };
+    const request = {};
+    request['collection'] = 'sys_caption';
+    request['condition']= {};
+    request['condition']['_key'] = caption_key;
+    return await this.query('findCaptionByKey', request, returnFields);
+  }
+
+  async saveCaption(data: any) {
+    const returnField = { _key: true };
+    return await this.mutation(
+      'saveCaption',
+       'sys_caption',
+      [data],
+      returnField
+    );
+  }
 }

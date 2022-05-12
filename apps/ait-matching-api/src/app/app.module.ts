@@ -1,3 +1,4 @@
+import { CaptionRegisterResolver } from './list/caption-list/add-caption/add-caption.resolver';
 import { GroupRoleListResolver } from './group-role/group-role-list/group-role-list.resolver';
 import { UserSkillResolver } from './user/user-skill/user-skill.resolver';
 import { UserOnboardingInfoResolver } from './user/user-onboarding/user-onboarding.resolver';
@@ -50,6 +51,7 @@ const RESOLVERS = [
   SaveRecommendUserResolver,
   UserListResolver,
   CaptionListResolver,
+  CaptionRegisterResolver,
   {
     provide: 'ENVIRONMENT',
     useValue: environment,
