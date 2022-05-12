@@ -79,6 +79,7 @@ import { SetNameComponent } from './pages/recommenced-user/components/set-name/s
 import { UserListComponent } from './pages/list/user-list/user-list.component';
 import { CreateUserComponent } from './pages/list/user-list/create-user/create-user.component';
 import { AddSkillComponent } from './pages/list/skill-list/add-skill/add-skill.component';
+import { CaptionListComponent } from './pages/list/caption-list/caption-list.component';
 
 const AIT_UI_MODULES = [AitChipModule, AitTabsModule, AitTocMenuModule];
 
@@ -147,6 +148,7 @@ const PAGES = [
     UserListComponent,
     CreateUserComponent,
     AddSkillComponent,
+    CaptionListComponent,
   ],
   imports: [
     Ng2SmartTableModule,

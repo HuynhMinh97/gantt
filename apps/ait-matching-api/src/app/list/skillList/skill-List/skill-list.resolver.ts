@@ -1,7 +1,7 @@
 import { AitBaseService, AitCtxUser, SysUser } from '@ait/core';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { SkillListRequest, SkillListSearchRequest } from './skill_list.request';
-import { SkillListResponse } from './skill_list.response';
+import { SkillListRequest, SkillListSearchRequest } from './skill-list.request';
+import { SkillListResponse } from './skill-list.response';
 
 @Resolver()
 export class SkillListResolver extends AitBaseService {

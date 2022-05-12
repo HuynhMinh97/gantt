@@ -34,6 +34,7 @@ import { AddRoleComponent } from './pages/group-role/add-role/add-role.component
 import { MyProjectQueriesComponent } from './pages/my-project-queries/my-project-queries.component';
 import { UserListComponent } from './pages/list/user-list/user-list.component';
 import { AddSkillComponent } from './pages/list/skill-list/add-skill/add-skill.component';
+import { CaptionListComponent } from './pages/list/caption-list/caption-list.component';
 
 // Push your routes here one by one 🎉
 
@@ -262,6 +263,11 @@ export const routes: Routes = [
     path: 'skill/:id',
     canActivate: [AitAuthGuardService],
     component: AddSkillComponent,
+  },
+  {
+    path: 'caption-list',
+    canActivate: [AitAuthGuardService],
+    component: CaptionListComponent,
   },
   
   {
