@@ -464,7 +464,21 @@ export class RecommencedUserComponent
 
   search() {
     const keyword = this.searchForm.controls['keyword'].value;
-    this.matchingService.matchingUser(keyword).then((res) => console.log(res));
+    if (keyword) {
+      this.matchingService.matchingUser(keyword).then((res) => {
+        console.log(res);
+        if (res?.data.length > 0) {
+          const arr = res.data.map((e: {item:string}) => e.item);
+          this.matchingFilter(arr);
+        }
+      });
+    } else {
+    this.dataFilter = this.dataFilterDf;
+    }
+  }
+
+  matchingFilter(arr: string[]) {
+    this.dataFilter = this.dataFilter.filter(e => arr.includes(e.user_id));
   }
 
   save(): void {
