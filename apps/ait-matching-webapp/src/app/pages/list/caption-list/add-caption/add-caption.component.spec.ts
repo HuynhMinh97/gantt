@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddCationComponent } from './add-cation.component';
+import { AddCationComponent } from './add-caption.component';
 
 describe('AddCationComponent', () => {
   let component: AddCationComponent;

@@ -80,7 +80,8 @@ import { UserListComponent } from './pages/list/user-list/user-list.component';
 import { CreateUserComponent } from './pages/list/user-list/create-user/create-user.component';
 import { AddSkillComponent } from './pages/list/skill-list/add-skill/add-skill.component';
 import { CaptionListComponent } from './pages/list/caption-list/caption-list.component';
-import { AddCationComponent } from './pages/list/caption-list/add-cation/add-cation.component';
+import { AddCationComponent } from './pages/list/caption-list/add-caption/add-caption.component';
+import { SkillDetailComponent } from './pages/list/skill-list/skill-detail/skill-detail.component';
 
 const AIT_UI_MODULES = [AitChipModule, AitTabsModule, AitTocMenuModule];
 
@@ -151,6 +152,7 @@ const PAGES = [
     AddSkillComponent,
     CaptionListComponent,
     AddCationComponent,
+    SkillDetailComponent,
   ],
   imports: [
     Ng2SmartTableModule,
