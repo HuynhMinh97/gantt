@@ -17,7 +17,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./add-skill.component.scss'],
 })
 export class AddSkillComponent extends AitBaseComponent implements OnInit {
-  skill_key: string
+  skill_key: string;
 
   constructor(
     public activeRouter: ActivatedRoute,
@@ -39,8 +39,6 @@ export class AddSkillComponent extends AitBaseComponent implements OnInit {
       layoutScrollService,
       toastrService
     );
-
-    
   }
 
   ngOnInit(): void {
@@ -51,16 +49,14 @@ export class AddSkillComponent extends AitBaseComponent implements OnInit {
   public save = async (condition = {}) => {
     const arrSortNo = [];
     const sort_no = await this.addSkillService.getMaxSortNo().then((res) => {
-      
-       res.data.forEach((r) => arrSortNo.push(r.sort_no))
+      res.data.forEach((r) => arrSortNo.push(r.sort_no));
     });
-    const max = Math.max(...arrSortNo)
-     
-    
+    const max = Math.max(...arrSortNo);
+
     const saveData = {};
     Object.keys(condition).forEach((key) => {
-        const value = condition[key];
-        saveData[key] = value;
+      const value = condition[key];
+      saveData[key] = value;
     });
     saveData['sort_no'] = max + 1;
     saveData['active_flag'] = true;

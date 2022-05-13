@@ -1,3 +1,4 @@
+import { SkillListResolver } from './list/skill-List/skill-list.resolver';
 import { CaptionRegisterResolver } from './list/caption-list/add-caption/add-caption.resolver';
 import { GroupRoleListResolver } from './group-role/group-role-list/group-role-list.resolver';
 import { UserSkillResolver } from './user/user-skill/user-skill.resolver';
@@ -14,9 +15,8 @@ import { UserProjectResolver } from './user/user-project/user-project.resolver';
 import { ReorderSkillResolver } from './user/user-reorder-skills/reorder-skill.resolver';
 import { UserProfileResolver } from './user/user-profile/user-profile.resolver';
 import { UserJobAlertResolver } from './user/user-job-alert/user_job_alert.resolver';
-import { SkillListResolver } from './list/skillList/skill-List/skill-list.resolver';
-import { SkillRegisterResolver } from './list/skillList/add-skill/add-skill.resolver';
-import { ProjectListResolver } from './list/projectList/project-list.resolver';
+import { SkillRegisterResolver } from './list/skill-list/add-skill/add-skill.resolver';
+import { ProjectListResolver } from './list/project-List/project-list.resolver';
 import { LanguageListResolver } from './list/language-list/language-list.resolver';
 import { EducationListResolver } from './list/education-list/education-list.resolver';
 import { CertificateResolver } from './list/certificate-list/certificate-list.resolver';

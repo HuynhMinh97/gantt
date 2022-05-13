@@ -1,7 +1,13 @@
 import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { CaptionListService } from './../../../services/caption-list.service';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { AitAuthService, AitBaseComponent, AitEnvironmentService, AppState, getUserSetting } from '@ait/ui';
+import {
+  AitAuthService,
+  AitBaseComponent,
+  AitEnvironmentService,
+  AppState,
+  getUserSetting,
+} from '@ait/ui';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
@@ -12,7 +18,7 @@ import { LocalDataSource } from 'ng2-smart-table';
 @Component({
   selector: 'ait-caption-list',
   templateUrl: './caption-list.component.html',
-  styleUrls: ['./caption-list.component.scss']
+  styleUrls: ['./caption-list.component.scss'],
 })
 export class CaptionListComponent extends AitBaseComponent implements OnInit {
   @ViewChild('area') area: ElementRef;
@@ -27,7 +33,6 @@ export class CaptionListComponent extends AitBaseComponent implements OnInit {
   ];
   userAttribute = ['create_by', 'change_by'];
   comboboxSearch = ['module', 'page'];
-
 
   constructor(
     private captionListService: CaptionListService,
@@ -73,8 +78,7 @@ export class CaptionListComponent extends AitBaseComponent implements OnInit {
       module: 'education_list',
       page: 'education_list',
     });
-    
-   }
+  }
 
   ngOnInit(): void {
     this.callLoadingApp();
@@ -82,10 +86,7 @@ export class CaptionListComponent extends AitBaseComponent implements OnInit {
   }
 
   getOperator(key: string) {
-    if (
-      key === 'create_at_from' ||
-      key === 'change_at_from' 
-    ) {
+    if (key === 'create_at_from' || key === 'change_at_from') {
       return OPERATOR.GREATER_OR_EQUAL;
     } else {
       return OPERATOR.LESS_OR_EQUAL;
@@ -107,6 +108,7 @@ export class CaptionListComponent extends AitBaseComponent implements OnInit {
         const data = res.data;
         if (data.length > 0) {
           data.forEach(async (element) => {
+            debugger
             const dataFormat = {};
             dataFormat['module'] = element?.module._key;
             dataFormat['page'] = element?.page._key;
@@ -120,8 +122,7 @@ export class CaptionListComponent extends AitBaseComponent implements OnInit {
             dataFormat['start_date'] = this.getDateFormat(
               element?.start_date_from
             );
-            if (dataFormat['module']){
-
+            if (dataFormat['module']) {
               dataSearch.push(dataFormat);
             }
           });
@@ -133,7 +134,6 @@ export class CaptionListComponent extends AitBaseComponent implements OnInit {
   }
 
   public search = async (condition = {}, data = {}) => {
-    debugger
     this.searchCaption.patchValue({ ...data });
     if (this.searchCaption.valid) {
       const object = {};
@@ -141,11 +141,11 @@ export class CaptionListComponent extends AitBaseComponent implements OnInit {
         const value = this.searchCaption.controls[key].value;
         if (value) {
           if (this.dateAtributes.includes(key)) {
-              object[key] = {
-                target: key.slice(0, 9) || '',
-                operator: this.getOperator(key),
-                valueAsNumber: value,
-              };
+            object[key] = {
+              target: key.slice(0, 9) || '',
+              operator: this.getOperator(key),
+              valueAsNumber: value,
+            };
           } else if (this.userAttribute.includes(key)) {
             try {
               if (!object[key]) {
@@ -199,5 +199,4 @@ export class CaptionListComponent extends AitBaseComponent implements OnInit {
       }, 0);
     } catch {}
   }
-
 }

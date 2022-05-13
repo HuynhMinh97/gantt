@@ -1,4 +1,4 @@
-import { AddCationComponent } from './pages/list/caption-list/add-cation/add-cation.component';
+import { AddCationComponent } from './pages/list/caption-list/add-caption/add-caption.component';
 import { CreateUserComponent } from './pages/list/user-list/create-user/create-user.component';
 import { GroupRoleListComponent } from './pages/group-role/group-role-list/group-role-list.component';
 import { GroupRoleRegisterComponent } from './pages/group-role/group-role-register/group-role-register.component';
