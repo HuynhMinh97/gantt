@@ -1,4 +1,4 @@
-import { SkillListResolver } from './list/skill-List/skill-list.resolver';
+import { SkillListResolver } from './list/skill-list/skill-list.resolver';
 import { CaptionRegisterResolver } from './list/caption-list/add-caption/add-caption.resolver';
 import { GroupRoleListResolver } from './group-role/group-role-list/group-role-list.resolver';
 import { UserSkillResolver } from './user/user-skill/user-skill.resolver';

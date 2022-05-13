@@ -108,7 +108,6 @@ export class CaptionListComponent extends AitBaseComponent implements OnInit {
         const data = res.data;
         if (data.length > 0) {
           data.forEach(async (element) => {
-            debugger
             const dataFormat = {};
             dataFormat['module'] = element?.module._key;
             dataFormat['page'] = element?.page._key;
