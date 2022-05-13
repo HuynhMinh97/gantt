@@ -1,3 +1,4 @@
+import { SkillDetailComponent } from './pages/list/skill-list/skill-detail/skill-detail.component';
 import { AddCationComponent } from './pages/list/caption-list/add-caption/add-caption.component';
 import { CreateUserComponent } from './pages/list/user-list/create-user/create-user.component';
 import { GroupRoleListComponent } from './pages/group-role/group-role-list/group-role-list.component';
@@ -266,6 +267,11 @@ export const routes: Routes = [
     component: AddSkillComponent,
   },
   {
+    path: 'skill-detail/:id',
+    canActivate: [AitAuthGuardService],
+    component: SkillDetailComponent,
+  },
+  {
     path: 'caption-list',
     canActivate: [AitAuthGuardService],
     component: CaptionListComponent,
@@ -280,6 +286,8 @@ export const routes: Routes = [
     canActivate: [AitAuthGuardService],
     component: AddCationComponent,
   },
+
+  
   {
     path: '',
     pathMatch: 'full',

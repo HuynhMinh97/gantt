@@ -21,6 +21,8 @@ export class AddSkillService extends AitBaseService {
       )
   }
 
+  
+
   async saveSkill(data: any) {
     const returnField = { _key: true };
     return await this.mutation(
