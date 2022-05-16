@@ -59,11 +59,11 @@ export enum FIELD {
 }
 
 @Component({
-  selector: 'ait-aureolev-card',
+  selector: 'ait-card',
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.scss'],
 })
-export class AureoleVCardComponent implements OnInit {
+export class AitCardComponent implements OnInit {
   @Input() card: any;
   @Input() user_id: any;
   i18n = '';

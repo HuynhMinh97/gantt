@@ -6,7 +6,7 @@ import { CompanyInfo } from '../pages/interface';
 
 @Injectable({ providedIn: 'root' })
 export class RecommencedUserService extends AitBaseService {
-  private url = environment.API_PATH.AUREOLEV.RECOMMENCED_USER.MATCHING_COMPANY;
+  private url = environment.API_PATH.AIT.RECOMMENCED_USER.MATCHING_COMPANY;
   private saveCompanyInfo = environment.API_PATH.COMPANY.SAVE;
   private matchingUrl = environment.API_PATH.RECOMMENCED.MATCHING_USER;
 

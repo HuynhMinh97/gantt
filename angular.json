@@ -232,7 +232,8 @@
                     },
                     "configurations": {
                         "production": {
-                            "browserTarget": "ait-matching-webapp:build:production"
+                            "browserTarget": "ait-matching-webapp:build:production",
+                            "proxyConfig": "apps/ait-matching-webapp/proxy.conf.prod.json"
                         }
                     }
                 },

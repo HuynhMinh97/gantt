@@ -6,11 +6,11 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root'
 })
 export class RecommencedJobService extends AitBaseService {
-  private searchUserUrl = environment.API_PATH.AUREOLEV.RECOMMENCED_JOB.SEARCH_USER;
-  private getUserProfileUrl = environment.API_PATH.AUREOLEV.RECOMMENCED_JOB.GET_USER_PROFILE;
-  private matchingUrl = environment.API_PATH.AUREOLEV.RECOMMENCED_JOB.MATCHING_USER;
-  private urldetail = environment.API_PATH.AUREOLEV.RECOMMENCED_JOB.GET_DETAIL_MATCHING;
-  private getTabSaveUrl = environment.API_PATH.AUREOLEV.RECOMMENCED_JOB.GET_TAB_SAVE;
+  private searchUserUrl = environment.API_PATH.AIT.RECOMMENCED_JOB.SEARCH_USER;
+  private getUserProfileUrl = environment.API_PATH.AIT.RECOMMENCED_JOB.GET_USER_PROFILE;
+  private matchingUrl = environment.API_PATH.AIT.RECOMMENCED_JOB.MATCHING_USER;
+  private urldetail = environment.API_PATH.AIT.RECOMMENCED_JOB.GET_DETAIL_MATCHING;
+  private getTabSaveUrl = environment.API_PATH.AIT.RECOMMENCED_JOB.GET_TAB_SAVE;
 
   async searchUser(keyword: string) {
     return await this.post(this.searchUserUrl, { condition: { keyword } }).toPromise();

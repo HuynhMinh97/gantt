@@ -1,4 +1,4 @@
-export enum AureoleActionTypes {
+export enum AitActionTypes {
   store_keywords_search = '[RECOMMENCED] STORE KEYWORDS SEARCH',
   get_object_id_webdb = '[WEB DB] GET OBJECT ID WEBDB',
   isReloadApiConfig = '[APP] RELOAD API CONFIG',
