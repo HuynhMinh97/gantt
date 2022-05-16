@@ -7,12 +7,12 @@ import { CompanyInfo } from '../../pages/interface';
 @Injectable({ providedIn: 'root' })
 export class RecommencedUserService extends AitBaseService {
   // private baseUrlEx = 'http://localhost:3000/api/v1';
-  private url = environment.API_PATH.AUREOLEV.RECOMMENCED_USER.MATCHING_COMPANY;
-  private urldetail = environment.API_PATH.AUREOLEV.RECOMMENCED_USER.GET_DETAIL_MATCHING;
-  private profileCompUrl = environment.API_PATH.AUREOLEV.RECOMMENCED_USER.GET_COMPANY_PROFILE;
-  private getTabSaveUrl = environment.API_PATH.AUREOLEV.RECOMMENCED_USER.GET_TAB_SAVE;
+  private url = environment.API_PATH.AIT.RECOMMENCED_USER.MATCHING_COMPANY;
+  private urldetail = environment.API_PATH.AIT.RECOMMENCED_USER.GET_DETAIL_MATCHING;
+  private profileCompUrl = environment.API_PATH.AIT.RECOMMENCED_USER.GET_COMPANY_PROFILE;
+  private getTabSaveUrl = environment.API_PATH.AIT.RECOMMENCED_USER.GET_TAB_SAVE;
   private saveCompanyInfo = environment.API_PATH.COMPANY.SAVE;
-  private searchCompanyUrl = environment.API_PATH.AUREOLEV.RECOMMENCED_USER.SEARCH_COMPANY;
+  private searchCompanyUrl = environment.API_PATH.AIT.RECOMMENCED_USER.SEARCH_COMPANY;
 
   async getDataTabSave(company_key: string) {
     return await this.post(this.getTabSaveUrl, { data: [{ list_keys: [company_key] }] }).toPromise();

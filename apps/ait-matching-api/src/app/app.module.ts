@@ -1,3 +1,5 @@
+import { SkillListResolver } from './list/skill-list/skill-list.resolver';
+import { CaptionRegisterResolver } from './list/caption-list/add-caption/add-caption.resolver';
 import { GroupRoleListResolver } from './group-role/group-role-list/group-role-list.resolver';
 import { UserSkillResolver } from './user/user-skill/user-skill.resolver';
 import { UserOnboardingInfoResolver } from './user/user-onboarding/user-onboarding.resolver';
@@ -13,16 +15,17 @@ import { UserProjectResolver } from './user/user-project/user-project.resolver';
 import { ReorderSkillResolver } from './user/user-reorder-skills/reorder-skill.resolver';
 import { UserProfileResolver } from './user/user-profile/user-profile.resolver';
 import { UserJobAlertResolver } from './user/user-job-alert/user_job_alert.resolver';
-import { SkillListResolver } from './list/skillList/skill-List/skill_list.resolver';
-import { SkillRegisterResolver } from './list/skillList/add-skill/add-skill.resolver';
-import { ProjectListResolver } from './list/projectList/project-list.resolver';
-import { LanguageListResolver } from './list/language-list.ts/language-list.resolver';
+import { SkillRegisterResolver } from './list/skill-list/add-skill/add-skill.resolver';
+import { ProjectListResolver } from './list/project-List/project-list.resolver';
+import { LanguageListResolver } from './list/language-list/language-list.resolver';
 import { EducationListResolver } from './list/education-list/education-list.resolver';
 import { CertificateResolver } from './list/certificate-list/certificate-list.resolver';
 import { GetEmployeeResolver } from './group-role/add-role/add-role.resolver';
 import { SearchConditionResolver } from './search-condition/search-condition.resolver';
 import { SaveRecommendUserResolver } from './save-recommend-user/save-recommend-user.resolver';
 import { RecommencedUserController } from './recommenced-user/recommenced-user.controller';
+import { UserListResolver } from './list/user-list/user-list.resolver';
+import { CaptionListResolver } from './list/caption-list/caption-list.resolver';
 
 const RESOLVERS = [
   UserExperienceInfoResolver,
@@ -46,6 +49,9 @@ const RESOLVERS = [
   GroupRoleListResolver,
   SearchConditionResolver,
   SaveRecommendUserResolver,
+  UserListResolver,
+  CaptionListResolver,
+  CaptionRegisterResolver,
   {
     provide: 'ENVIRONMENT',
     useValue: environment,

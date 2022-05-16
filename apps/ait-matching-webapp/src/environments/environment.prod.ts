@@ -15,7 +15,7 @@ export const environment = {
     RECOMMENCED: {
       MATCHING_USER: '/recommenced/matching',
     },
-    AUREOLEV: {
+    AIT: {
       RECOMMENCED_USER: {
         MATCHING_COMPANY: '/recommenced-user/matching-company',
         GET_DETAIL_MATCHING: '/recommenced-user/get-detail',

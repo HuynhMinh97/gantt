@@ -74,7 +74,7 @@ export class GetEmployeeResolver extends AitBaseService {
     }
     const module = await this.getModule(listData['module']);
     const page = await this.getPage(listData['page']);
-    const permissionObj = await this.findPermission(lang);
+    const permissionObj = await this.findPermission2(lang);
     const permissionArr = [];
     permissionObj.data.forEach((permission) => {
       listData['permission'].forEach((per) => {
@@ -130,7 +130,7 @@ export class GetEmployeeResolver extends AitBaseService {
     return await this.query(aqlQuery);
   }
 
-  async findPermission(lang: string) {
+  async findPermission2(lang: string) {
     const aqlQuery = `
     for v in sys_master_data
     filter v.class == "ROLE_PERMISSION"

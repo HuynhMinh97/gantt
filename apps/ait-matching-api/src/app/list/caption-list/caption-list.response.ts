@@ -1,11 +1,11 @@
 import { RESULT_STATUS, Utils } from "@ait/shared";
 import { Field, Int, ObjectType } from "@nestjs/graphql";
-import { SkillListEntity } from "./skill_list.entity";
+import { CaptionListEntity } from "./caption-list.entity";
 
 @ObjectType()
-export class SkillListResponse {
-    @Field(() => [SkillListEntity], { nullable: true })
-    data?: SkillListEntity[];
+export class CaptionListResponse {
+    @Field(() => [CaptionListEntity], { nullable: true })
+    data?: CaptionListEntity[];
     
     @Field(() => String, { nullable: true })
     errors?: string;
@@ -22,7 +22,7 @@ export class SkillListResponse {
     @Field(() => Int, { nullable: true })
     numError?: number = 0;
 
-    constructor(status: number, result: SkillListEntity[], message: string) {
+    constructor(status: number, result: CaptionListEntity[], message: string) {
         this.status = status;
         switch (status) {
           case RESULT_STATUS.OK:

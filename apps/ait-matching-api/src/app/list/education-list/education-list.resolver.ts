@@ -21,6 +21,8 @@ export class EducationListResolver extends AitBaseService {
     @Args('request', { type: () => EducationListRequest })
     request: EducationListRequest
   ) {
+    const a = request.condition
+    console.log(a)
     const lang = request.lang;
     const username = request.condition?.employee_name?.valueAsString
       .toLocaleLowerCase()
