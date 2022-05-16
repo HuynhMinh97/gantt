@@ -13,44 +13,7 @@ export const environment = {
     BASE_REST_PREFIX: '/rest-api/v1',
     BASE_GRAPHQL_PREFIX: '/api/v1',
     RECOMMENCED: {
-      MATCHING_USER: '/recommenced/matching',
-    },
-    AUREOLEV: {
-      RECOMMENCED_USER: {
-        MATCHING_COMPANY: '/recommenced-user/matching-company',
-        GET_DETAIL_MATCHING: '/recommenced-user/get-detail',
-        GET_COMPANY_PROFILE: '/recommenced-user/get-company-profile',
-        GET_TAB_SAVE: '/recommenced-user/get-tab-save',
-        SEARCH_COMPANY: '/recommenced-user/search-company',
-        SAVE_COMPANY_USER: '/recommenced-user/save-company-user',
-        REMOVE_SAVE_COMPANY_USER: '/recommenced-user/remove-save-company-user',
-      },
-      RECOMMENCED_JOB: {
-        MATCHING_USER: '/recommenced-job/matching-user',
-        GET_DETAIL_MATCHING: '/recommenced-job/get-detail',
-        GET_USER_PROFILE: '/recommenced-job/get-user-profile',
-        GET_TAB_SAVE: '/recommenced-job/get-tab-save',
-        SEARCH_USER: '/recommenced-job/search-user',
-        SAVE_USER_JOB: '/recommenced-job/save-user-job',
-        REMOVE_SAVE_USER_JOB: '/recommenced-job/remove-save-user-job',
-      },
-    },
-    SYS: {
-      AUTH_API_PATH: '/auth',
-      COMPANY: '/company',
-      LANG: '/lang',
-      CLASS: '/class',
-      MASTER_DATA: '/master-data',
-      UPLOAD: '/upload-file',
-      USER: '/user',
-      BINARY_DATA: '/binary-data',
-      USER_PROFILE: '/user-profile',
-    },
-    BIZ: {
-      JOB: '/jobs',
-    },
-    COMPANY: {
-      SAVE: '/company/save',
+      MATCHING_USER: '/recommenced-user/matching',
     },
   },
 };

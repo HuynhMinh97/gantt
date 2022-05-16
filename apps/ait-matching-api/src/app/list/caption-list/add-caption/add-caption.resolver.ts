@@ -4,7 +4,7 @@ import {
   CaptionRegisterRequest,
   CaptionRegisterSaveRequest,
 } from './add-caption.request';
-import { CaptionRegisterResponse, CaptionResponse } from './add-Caption.response';
+import { CaptionRegisterResponse, CaptionResponse } from './add-caption.response';
 
 @Resolver()
 export class CaptionRegisterResolver extends AitBaseService {

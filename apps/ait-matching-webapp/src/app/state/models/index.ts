@@ -6,6 +6,6 @@ export interface KeywordSearch {
   user_id?: string;
 }
 
-export interface AureoleAppState {
+export interface AitAppState {
   keywordsSearch: any
 }

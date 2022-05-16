@@ -17,14 +17,12 @@ export const environment = {
     SAVE: '/api/save',
     REMOVE: '/api/remove',
     SEARCH: '/api/search',
-    EXCUTE_FUCTION: '/api/execute-function',
     MATCHING: '/matching/v3',
-    AUREOLE_V: '/sync/aureole-v',
   },
   DATABASE: {
     HOST: 'http://192.168.136.17:8529/',
-    NAME: 'ait_matching_dev',
-    USER: 'ait_matching_dev',
-    PASS: 'ait_matching_dev',
+    NAME: 'backup_matching_dev_2022_05_12',
+    USER: 'backup',
+    PASS: 'backup',
   },
 };

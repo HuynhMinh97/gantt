@@ -1,4 +1,4 @@
-import { AddCaptionService } from './../../../../services/add-caption.service';
+import { AddCaptionService } from '../../../../services/add-caption.service';
 import {
   AitAuthService,
   AitBaseComponent,
@@ -14,9 +14,9 @@ import { Apollo } from 'apollo-angular';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'ait-add-cation',
-  templateUrl: './add-cation.component.html',
-  styleUrls: ['./add-cation.component.scss'],
+  selector: 'ait-add-caption',
+  templateUrl: './add-caption.component.html',
+  styleUrls: ['./add-caption.component.scss'],
 })
 export class AddCationComponent extends AitBaseComponent implements OnInit {
   caption_key: string;
@@ -61,27 +61,8 @@ export class AddCationComponent extends AitBaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.caption_key = this.activeRouter.snapshot.paramMap.get('id');
-    // if ( this.caption_key) {
-    //   this.getCaptionByKey();
-    // }
     this.cancelLoadingApp();
   }
-
-  // async getCaptionByKey() {
-  //   const captionData = {};
-  //   const caption = await this.addCaptionService.findCaptionByKey(this.caption_key);
-  //   captionData['en_US']  = caption.data[0].name.en_US;
-  //   captionData['ja_JP'] = caption.data[0].name.ja_JP;
-  //   captionData['vi_VN'] = caption.data[0].name.vi_VN;
-  //   captionData['module']  = caption.data[0].module
-  //   captionData['page'] = caption.data[0].page
-  //   captionData['code'] = caption.data[0].code
-  //   // console.log(captionData);
-  //   this.captionForm.patchValue({...captionData}) ;
-  //   console.log(this.captionForm.value);
-  //   return caption;
-  // }
-
   public find = async () => {
     const captionData = {};
     captionData['data'] = {};
@@ -90,10 +71,9 @@ export class AddCationComponent extends AitBaseComponent implements OnInit {
     captionData['data'][0]['en_US']  = caption.data[0].name.en_US;
     captionData['data'][0]['ja_JP'] = caption.data[0].name.ja_JP;
     captionData['data'][0]['vi_VN'] = caption.data[0].name.vi_VN;
-    captionData['data'][0]['module']  = '13629480'
-    captionData['data'][0]['page'] = '13629175'
-    captionData['data'][0]['code'] = caption.data[0].code
-    // this.captionForm.patchValue({...captionData}) ;
+    captionData['data'][0]['module']  = caption.data[0].module;
+    captionData['data'][0]['page'] = caption.data[0].page;
+    captionData['data'][0]['code'] = caption.data[0].code;
     return captionData;
   }
 

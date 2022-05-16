@@ -17,9 +17,7 @@ export const environment = {
     SAVE: '/api/save',
     REMOVE: '/api/remove',
     SEARCH: '/api/search',
-    EXCUTE_FUCTION: '/api/execute-function',
     MATCHING: '/matching/v3',
-    AUREOLE_V: '/sync/aureole-v',
   },
   DATABASE: {
     HOST: 'http://192.168.136.17:8529/',

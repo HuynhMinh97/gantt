@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { Router } from '@angular/router';
 import {
   AitAuthGuardService,
   AitAuthScreenService,
@@ -18,7 +17,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
-import { aureoleRootReducers } from './state/rootReducers';
 import { AppRoutingModule } from './app-routing.module';
 import {
   NbButtonModule,
@@ -32,12 +30,10 @@ import {
   NbRadioModule,
   NbDialogModule,
 } from '@nebular/theme';
-import { AureoleVCardComponent } from './pages/recommenced-user/components/card/card.component';
+import { AitCardComponent } from './pages/recommenced-user/components/card/card.component';
 import { ContentRowComponent } from './pages/recommenced-user/components/content/content.component';
 import { CardSkeletonComponent } from './pages/recommenced-user/components/card-skeleton/card-skeleton.component';
 import { RecommencedUserComponent } from './pages/recommenced-user/recommenced-user.component';
-import { SyncApiConfigService } from './services/sync_api_config.service';
-import { SyncPEService } from './services/sync_pe_history.service';
 import { ReactionService } from './services/reaction.service';
 import { RecommencedUserService } from './services/recommenced-user.service';
 import { UserExperienceComponent } from './pages/user/user-experience/user-experience.component';
@@ -80,7 +76,8 @@ import { UserListComponent } from './pages/list/user-list/user-list.component';
 import { CreateUserComponent } from './pages/list/user-list/create-user/create-user.component';
 import { AddSkillComponent } from './pages/list/skill-list/add-skill/add-skill.component';
 import { CaptionListComponent } from './pages/list/caption-list/caption-list.component';
-import { AddCationComponent } from './pages/list/caption-list/add-cation/add-cation.component';
+import { AddCationComponent } from './pages/list/caption-list/add-caption/add-caption.component';
+import { SkillDetailComponent } from './pages/list/skill-list/skill-detail/skill-detail.component';
 
 const AIT_UI_MODULES = [AitChipModule, AitTabsModule, AitTocMenuModule];
 
@@ -98,8 +95,8 @@ const NB_UI_MODULES = [
   NbDialogModule,
 ];
 
-const AUREOLE_V_COMPONENTS = [
-  AureoleVCardComponent,
+const COMPONENTS = [
+  AitCardComponent,
   ContentRowComponent,
   CardSkeletonComponent,
 ];
@@ -138,7 +135,7 @@ const PAGES = [
 @NgModule({
   declarations: [
     AppComponent,
-    ...AUREOLE_V_COMPONENTS,
+    ...COMPONENTS,
     ...PAGES,
     DragScrollComponent,
     MyProjectQueriesComponent,
@@ -151,6 +148,7 @@ const PAGES = [
     AddSkillComponent,
     CaptionListComponent,
     AddCationComponent,
+    SkillDetailComponent,
   ],
   imports: [
     Ng2SmartTableModule,
@@ -170,7 +168,7 @@ const PAGES = [
     AitUiModule.forRoot(environment),
     AitAuthModule.forRoot(environment),
     StoreModule.forRoot(
-      { ...rootReducers, ...aureoleRootReducers },
+      { ...rootReducers },
       {
         initialState: {},
       }
@@ -181,12 +179,9 @@ const PAGES = [
   providers: [
     ...AIT_UI_SERVICES,
     ReactionService,
-    SyncApiConfigService,
-    SyncPEService,
     RecommencedUserService,
   ],
   bootstrap: [AppComponent],
 })
 export class AppModule {
-  constructor(router: Router) {}
 }
