@@ -1,15 +1,15 @@
-<div class="aureolev__container">
+<div class="ait__container">
     <div class="main__container">
         <!-- search -->
-        <div class="aureolev__search__container out_line" tabindex="1" [formGroup]="searchForm">
-            <div class="aureolev__input__container out_line" tabindex="2">
+        <div class="ait__search__container out_line" tabindex="1" [formGroup]="searchForm">
+            <div class="ait__input__container out_line" tabindex="2">
                 <div class="icon__look__up out_line" tabindex="3">
                     <nb-icon icon="search" style="font-size: 16px" pack="font-awesome-fas"></nb-icon>
                 </div>
                 <input class="out_line" #inputSearch type="text" [placeholder]="'Please input your keyword'" autofocus
                     formControlName="keyword" tabindex="5" />
             </div>
-            <button style="border: none" tabindex="6" class="aureole__button__search out_line" (click)="search()">
+            <button style="border: none" tabindex="6" class="ait__button__search out_line" (click)="search()">
                 <div class="icon__look__up" style="margin: 2px 6px 0 0">
                     <nb-icon icon="search" style="color: white" pack="font-awesome-fas"></nb-icon>
                 </div>
@@ -94,8 +94,8 @@
         </ait-card-content>
 
         <!-- result -->
-        <div class="aureolev__matching__result" tabindex="23" style="outline-color: #10529d">
-            <div class="aureolev__matching__header">
+        <div class="ait__matching__result" tabindex="23" style="outline-color: #10529d">
+            <div class="ait__matching__header">
                 <ait-text-gradient [fontsize]="'20px'" [content]="getTitle('Recommendation for you')">
                 </ait-text-gradient>
                 <div class="actionGroup" tabindex="24" style="outline-color: #10529d">
@@ -110,11 +110,10 @@
                     <p *ngIf="cardSkeleton.length === 0 && dataFilterSave.length === 0">
                         {{ textDataNullSave }}
                     </p>
-                    <ait-aureolev-card *ngFor="let card of dataFilterSave; let i = index" [card]="card"
-                        [user_id]="user_id" tabindex="{{ 30 + i + 1 }}" style="outline-color: #10529d"
-                        [addressSearch]="addressSearch" [company_key]="company_key"
-                        (actionSaveEvent)="handleSyncData($event)">
-                    </ait-aureolev-card>
+                    <ait-card *ngFor="let card of dataFilterSave; let i = index" [card]="card" [user_id]="user_id"
+                        tabindex="{{ 30 + i + 1 }}" style="outline-color: #10529d" [addressSearch]="addressSearch"
+                        [company_key]="company_key" (actionSaveEvent)="handleSyncData($event)">
+                    </ait-card>
                     <ait-card-skeleton *ngFor="let card of cardSkeleton"></ait-card-skeleton>
                 </div>
                 <div class="what" style="display: flex; flex-direction: row; flex-wrap: wrap"
@@ -122,10 +121,10 @@
                     <p *ngIf="cardSkeleton.length === 0 && dataFilter.length === 0">
                         {{ textDataNull }}
                     </p>
-                    <ait-aureolev-card *ngFor="let card of dataFilter; let ix = index" [card]="card" [user_id]="user_id"
+                    <ait-card *ngFor="let card of dataFilter; let ix = index" [card]="card" [user_id]="user_id"
                         [addressSearch]="addressSearch" [company_key]="company_key" tabindex="{{ 30 + ix + 1 }}"
                         style="outline-color: #10529d" (actionSaveEvent)="handleSyncData($event)">
-                    </ait-aureolev-card>
+                    </ait-card>
                     <ait-card-skeleton *ngFor="let card of cardSkeleton"></ait-card-skeleton>
                 </div>
             </div>
