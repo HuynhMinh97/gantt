@@ -34,7 +34,8 @@ export class AddCaptionService extends AitBaseService{
         en_US: true,
         ja_JP: true,
         vi_VN: true,
-      }
+      },
+      change_at: true, change_by: true, create_at: true, create_by: true,
     };
     const request = {};
     request['collection'] = 'sys_caption';

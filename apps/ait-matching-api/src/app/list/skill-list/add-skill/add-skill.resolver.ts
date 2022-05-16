@@ -21,18 +21,32 @@ export class SkillRegisterResolver extends AitBaseService {
     @Args('request', { type: () => SkillRegisterRequest })
     request: SkillRegisterRequest
   ) {
-    const result = await this.find(request);
-    console.log(result)
     return this.find(request);
   
   }
 
-  @Mutation(() => SkillRegisterResponse, { name: 'saveSkill' })
-  saveSkill(
+  @Mutation(() => SkillRegisterResponse, { name: 'saveSkillInMSkill' })
+  saveSkillInMSkill(
     @AitCtxUser() user: SysUser,
     @Args('request', { type: () => SkillRegisterRequest })
     request: SkillRegisterRequest
   ) {
     return this.save(request);
   }
+
+  @Query(() => SkillRegisterResponse, { name: 'findCategoryByKey' })
+  async findCategoryByKey(
+    @Args('request', { type: () => SkillRegisterRequest })
+    request: SkillRegisterRequest
+  ) {
+    // const _key =  request.condition?._key;
+    // const gql=`
+    //   FOR data IN sys_master_data
+    //   FILTER data._key == "${_key}"
+    //   return data
+    // `;
+    // return this.query(gql);
+    return this.find(request);
+  }
+  
 }
