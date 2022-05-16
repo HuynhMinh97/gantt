@@ -19,7 +19,6 @@ export class CaptionRegisterResolver extends AitBaseService {
       FILTER data._key == "${_key}"
       return data
     `;
-    console.log(await this.query(gql));
     return this.query(gql);
   }
   @Mutation(() => CaptionRegisterResponse, { name: 'saveCaption' })

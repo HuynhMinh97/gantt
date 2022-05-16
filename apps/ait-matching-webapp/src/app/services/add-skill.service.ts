@@ -20,13 +20,22 @@ export class AddSkillService extends AitBaseService {
       {sort_no: true}
       )
   }
-
+  async findCategoryByKey(category_key?:string) {
+    const returnFields = { 
+        name: true
+    };
+    const request = {};
+    request['collection'] = 'sys_master_data';
+    request['condition']= {};
+    request['condition']['_key'] = category_key;
+    return await this.query('findCategoryByKey', request, returnFields);
+  }
   
 
   async saveSkill(data: any) {
     const returnField = { _key: true };
     return await this.mutation(
-      'saveSkill',
+      'saveSkillInMSkill',
        'm_skill',
       [data],
       returnField
