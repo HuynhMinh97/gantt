@@ -104,7 +104,34 @@
                 </div>
             </div>
             <div class="divider"></div>
-            <div class="list__card" tabindex="{{ 24 + tabs.length }}" style="outline-color: #10529d">
+            <div class="list__card" tabindex="{{ 24 + tabs.length }}" style="outline-color: #10529d"
+                *ngIf="isMatchingSearch">
+                <div class="what" style="display: flex; flex-direction: row; flex-wrap: wrap"
+                    *ngIf="currentTab !== 'R'">
+                    <p *ngIf="cardSkeleton.length === 0 && dataFilterSave.length === 0">
+                        {{ textDataNullSave }}
+                    </p>
+                    <ait-card *ngFor="let card of dataFilterSave; let i = index" [card]="card" [user_id]="user_id"
+                        tabindex="{{ 30 + i + 1 }}" style="outline-color: #10529d" [addressSearch]="addressSearch"
+                        [company_key]="company_key" (actionSaveEvent)="handleSyncData($event)">
+                    </ait-card>
+                    <ait-card-skeleton *ngFor="let card of cardSkeleton"></ait-card-skeleton>
+                </div>
+                <div class="what" style="display: flex; flex-direction: row; flex-wrap: wrap"
+                    *ngIf="currentTab === 'R'">
+                    <p *ngIf="cardSkeleton.length === 0 && dataFilter.length === 0">
+                        {{ textDataNull }}
+                    </p>
+                    <ait-card *ngFor="let card of dataFilter; let ix = index" [card]="card" [user_id]="user_id"
+                        [addressSearch]="addressSearch" [company_key]="company_key" tabindex="{{ 30 + ix + 1 }}"
+                        style="outline-color: #10529d" (actionSaveEvent)="handleSyncData($event)">
+                    </ait-card>
+                    <ait-card-skeleton *ngFor="let card of cardSkeleton"></ait-card-skeleton>
+                </div>
+            </div>
+
+            <div class="list__card" tabindex="{{ 24 + tabs.length }}" style="outline-color: #10529d"
+                *ngIf="!isMatchingSearch">
                 <div class="what" style="display: flex; flex-direction: row; flex-wrap: wrap"
                     *ngIf="currentTab !== 'R'">
                     <p *ngIf="cardSkeleton.length === 0 && dataFilterSave.length === 0">
