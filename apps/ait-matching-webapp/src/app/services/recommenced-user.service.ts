@@ -2,19 +2,10 @@ import { COLLECTIONS, KEYS } from '@ait/shared';
 import { AitBaseService } from '@ait/ui';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { CompanyInfo } from '../pages/interface';
 
 @Injectable({ providedIn: 'root' })
 export class RecommencedUserService extends AitBaseService {
-  private url = environment.API_PATH.AIT.RECOMMENCED_USER.MATCHING_COMPANY;
-  private saveCompanyInfo = environment.API_PATH.COMPANY.SAVE;
   private matchingUrl = environment.API_PATH.RECOMMENCED.MATCHING_USER;
-
-  async matchingCompany(company_key: string, input_user?: string[]) {
-    return await this.post(this.url, {
-      condition: { company_key, input_users: input_user || [] },
-    }).toPromise();
-  }
 
   async matchingUser(keyword: string) {
     return await this.post(this.matchingUrl, {
@@ -22,7 +13,7 @@ export class RecommencedUserService extends AitBaseService {
     }).toPromise();
   }
 
-  async getDetailMatching(onlySaved = false, start = 0, end = 8) {
+  async getDetailMatching(list = [], onlySaved = false, start = 0, end = 8) {
     const condition = {};
     const returnFields = {
       _key: true,
@@ -101,15 +92,5 @@ export class RecommencedUserService extends AitBaseService {
     };
 
     return await this.query('findSkillForUser', condition, returnFields);
-  }
-
-  async saveCompanyProfile(
-    condition: { user_id: string },
-    data: [CompanyInfo]
-  ) {
-    return await this.post(this.saveCompanyInfo, {
-      condition,
-      data,
-    }).toPromise();
   }
 }

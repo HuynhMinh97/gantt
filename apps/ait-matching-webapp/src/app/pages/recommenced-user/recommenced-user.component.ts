@@ -49,6 +49,7 @@ export class RecommencedUserComponent
   implements OnInit {
   searchForm: FormGroup;
   currentCount = 0;
+  currentMatchingCount = 0;
   constructor(
     layoutScrollService: NbLayoutScrollService,
     private matchingService: RecommencedUserService,
@@ -159,6 +160,7 @@ export class RecommencedUserComponent
   currentRound = 0;
   textDataEnd = '';
   disableTab = false;
+  isMatchingSearch = false;
 
   getNummberMode8 = (target: number) => {
     if (target === 0) {
@@ -234,13 +236,18 @@ export class RecommencedUserComponent
     this.gotoTop();
   };
 
-  private getDetailMatching = async (onlySaved = false, start = 0, end = 8) => {
+  private getDetailMatching = async (
+    list = [],
+    onlySaved = false,
+    start = 0,
+    end = 8
+  ) => {
     const res = await this.matchingService.getDetailMatching(
+      list,
       onlySaved,
       start * 8,
       end
     );
-
     if (res.status === RESULT_STATUS.OK) {
       if (res.data?.length === 0) {
         this.textDataNull = '021';
@@ -368,7 +375,11 @@ export class RecommencedUserComponent
   // Get Data by round and base on all of result
   getDataByRound = async (onlySaved = false) => {
     try {
-      const detail = await this.getDetailMatching(onlySaved, this.currentCount);
+      const detail = await this.getDetailMatching(
+        [],
+        onlySaved,
+        this.currentCount
+      );
       if (isArrayFull(detail) && !onlySaved) {
         this.dataFilter = this.dataFilter.concat(detail);
         this.dataFilterDf = [...this.dataFilter];
@@ -388,6 +399,18 @@ export class RecommencedUserComponent
         this.textDataEnd = '022';
         this.setSkeleton(false);
       }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  getDataByList = async (list: string[], onlySaved = false) => {
+    try {
+      const detail = await this.getDetailMatching(
+        list,
+        onlySaved,
+        this.currentMatchingCount
+      );
     } catch (e) {
       console.log(e);
     }
@@ -468,17 +491,18 @@ export class RecommencedUserComponent
       this.matchingService.matchingUser(keyword).then((res) => {
         console.log(res);
         if (res?.data.length > 0) {
-          const arr = res.data.map((e: {item:string}) => e.item);
+          const arr = res.data.map((e: { item: string }) => e.item);
+          console.log(arr);
           this.matchingFilter(arr);
         }
       });
     } else {
-    this.dataFilter = this.dataFilterDf;
+      this.dataFilter = this.dataFilterDf;
     }
   }
 
   matchingFilter(arr: string[]) {
-    this.dataFilter = this.dataFilter.filter(e => arr.includes(e.user_id));
+    this.dataFilter = this.dataFilter.filter((e) => arr.includes(e.user_id));
   }
 
   save(): void {
