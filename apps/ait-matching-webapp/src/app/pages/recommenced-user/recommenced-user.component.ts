@@ -138,13 +138,21 @@ export class RecommencedUserComponent
   textDataNullSave = '';
   isExpan = false;
   currentTab = 'R';
-  dataFilter = [];
-  dataFilterDf = [];
   isShowViewBtn = true;
   isReset = false;
 
+  dataFilter = [];
+  dataFilterDf = [];
+
+  dataMatching = [];
+  dataMatchingDf = [];
+
   dataFilterSave = [];
   dataFilterSaveDf = [];
+
+  dataMatchingSave = [];
+  dataMatchingSaveDf = [];
+
   dataIncludesIdSave = [];
 
   messageSearch = '';
@@ -242,17 +250,32 @@ export class RecommencedUserComponent
     start = 0,
     end = 8
   ) => {
-    const res = await this.matchingService.getDetailMatching(
-      list,
-      onlySaved,
-      start * 8,
-      end
-    );
-    if (res.status === RESULT_STATUS.OK) {
-      if (res.data?.length === 0) {
-        this.textDataNull = '021';
+    if (list.length === 0) {
+      const res = await this.matchingService.getDetailMatching(
+        onlySaved,
+        start * 8,
+        end
+      );
+      if (res.status === RESULT_STATUS.OK) {
+        if (res.data?.length === 0) {
+          this.textDataNull = '021';
+        }
+        return res.data;
       }
-      return res.data;
+    } else {
+      const res = await this.matchingService.getUserByList(
+        list,
+        onlySaved,
+        start * 8,
+        end
+      );
+      console.log(res);
+      if (res.status === RESULT_STATUS.OK) {
+        if (res.data?.length === 0) {
+          this.textDataNull = '021';
+        }
+        return res.data;
+      }
     }
   };
 
@@ -339,6 +362,7 @@ export class RecommencedUserComponent
   }
 
   loadNext = (event) => {
+    if (this.isMatchingSearch) {return}
     if (this.cardSkeleton.length === 0 || this.dataFilter.length !== 0) {
       const pos =
         (event.target.scrollTop || document.body.scrollTop) +
@@ -410,11 +434,63 @@ export class RecommencedUserComponent
         list,
         onlySaved,
         this.currentMatchingCount
-      );
-    } catch (e) {
-      console.log(e);
+        );
+        if (isArrayFull(detail) && !onlySaved) {
+          this.dataMatching = this.dataMatching.concat(detail);
+          this.dataMatchingDf = [...this.dataMatching];
+          this.currentMatchingCount = Math.ceil(this.dataMatching.length / 8);
+        }
+        if (isArrayFull(detail) && onlySaved) {
+          this.dataMatchingSave = this.dataMatchingSave.concat(detail);
+          this.currentMatchingCount = Math.ceil(this.dataMatchingSave.length / 8);
+        }
+        if (
+          detail.length === 0 &&
+          ((this.dataMatching.length !== 0 && !onlySaved) ||
+            (this.dataMatchingSave.length !== 0 && onlySaved))
+        ) {
+          this.textDataNull = '';
+          this.textDataNullSave = '';
+          this.textDataEnd = '022';
+        }
+      } catch (e) {
+        console.log(e);
+      } finally {
+        console.log(1)
+        this.setSkeleton(false);
     }
   };
+
+  search() {
+    const keyword = this.searchForm.controls['keyword'].value;
+    if (!keyword) {
+      this.isMatchingSearch = false;
+      this.dataFilter = [];
+      this.dataFilterDf = [];
+
+      this.setSkeleton(true);
+      this.callSearchAll();
+      setTimeout(() => {
+        this.setSkeleton(false);
+      }, 500);
+      return
+    }
+    this.setSkeleton(true);
+    if (keyword) {
+      this.isMatchingSearch = true;
+      this.matchingService.matchingUser(keyword).then((res) => {
+        console.log(res);
+        if (res?.data.length > 0) {
+          const arr = res.data.map((e: { item: string }) => e.item);
+          this.getDataByList(arr);
+          return;
+          this.matchingFilter(arr);
+        }
+      });
+    } else {
+      this.dataFilter = this.dataFilterDf;
+    }
+  }
 
   // thêm nút scroll to top : TODO
   resetRound = () => (this.round = 1);
@@ -483,22 +559,6 @@ export class RecommencedUserComponent
 
   showQueryList() {
     this.router.navigate([`/my-project-queries`]);
-  }
-
-  search() {
-    const keyword = this.searchForm.controls['keyword'].value;
-    if (keyword) {
-      this.matchingService.matchingUser(keyword).then((res) => {
-        console.log(res);
-        if (res?.data.length > 0) {
-          const arr = res.data.map((e: { item: string }) => e.item);
-          console.log(arr);
-          this.matchingFilter(arr);
-        }
-      });
-    } else {
-      this.dataFilter = this.dataFilterDf;
-    }
   }
 
   matchingFilter(arr: string[]) {
