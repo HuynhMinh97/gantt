@@ -1,19 +1,19 @@
-import { AureoleAppState } from '../models';
-import { AureoleActionTypes } from '../types';
+import { AitAppState } from '../models';
+import { AitActionTypes } from '../types';
 
-const initialState: AureoleAppState = {
+const initialState: AitAppState = {
   keywordsSearch: {}
 }
 
 interface CommonAction {
   type: string;
-  payload: AureoleAppState | any;
+  payload: AitAppState | any;
 }
 
 
-export const AureoleCommonReducer = (state = initialState, action: CommonAction): AureoleAppState => {
+export const AitCommonReducer = (state = initialState, action: CommonAction): AitAppState => {
   switch (action.type) {
-    case AureoleActionTypes.store_keywords_search:
+    case AitActionTypes.store_keywords_search:
       return {
         ...state,
         keywordsSearch: action.payload,

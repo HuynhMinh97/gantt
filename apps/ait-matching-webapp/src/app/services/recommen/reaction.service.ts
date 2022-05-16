@@ -39,11 +39,11 @@ export interface ReactionLoveCompany {
 export class ReactionService extends AitBaseService {
 
 
-  private urlReactionCompanySaveUser = environment.API_PATH.AUREOLEV.RECOMMENCED_USER.SAVE_COMPANY_USER;
-  private urlReactionRemoveCompanySaveUser = environment.API_PATH.AUREOLEV.RECOMMENCED_USER.REMOVE_SAVE_COMPANY_USER;
+  private urlReactionCompanySaveUser = environment.API_PATH.AIT.RECOMMENCED_USER.SAVE_COMPANY_USER;
+  private urlReactionRemoveCompanySaveUser = environment.API_PATH.AIT.RECOMMENCED_USER.REMOVE_SAVE_COMPANY_USER;
 
-  private urlReactionJobSaveUser = environment.API_PATH.AUREOLEV.RECOMMENCED_JOB.SAVE_USER_JOB;
-  private urlReactionRemoveJobSaveUser = environment.API_PATH.AUREOLEV.RECOMMENCED_JOB.REMOVE_SAVE_USER_JOB;
+  private urlReactionJobSaveUser = environment.API_PATH.AIT.RECOMMENCED_JOB.SAVE_USER_JOB;
+  private urlReactionRemoveJobSaveUser = environment.API_PATH.AIT.RECOMMENCED_JOB.REMOVE_SAVE_USER_JOB;
 
 
   removeSaveCompanyUser = async (data: ReactionCompany[]) => {
