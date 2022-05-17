@@ -62,7 +62,7 @@ export class CaptionDetailComponent extends AitBaseComponent implements OnInit {
 
   public find = async (condition: any) => {
     const skill = await this.addCaptionService.findCaptionByKey(condition._key);
-   
+    debugger
     const dataForm = {
       data: [],
     };

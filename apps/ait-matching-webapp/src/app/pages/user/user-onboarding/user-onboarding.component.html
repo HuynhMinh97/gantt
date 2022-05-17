@@ -7,12 +7,12 @@
       [fontsize]="'36px'"
     ></ait-text-gradient>
 
+    
     <div class="template__filter__container">
       <div class="template__input__area">
         <ait-card-content
           [styleDivider]="{ 'margin-left': '10px' }"
           [styleLabel]="{ 'font-size': '26px' }"
-          tabindex="2"
           [isOpen]="true"
           [isStart]="true"
           [id]="'メニュー'"
@@ -92,7 +92,7 @@
                     [length]="4000"
                     [label]="'about'"
                     [width]="'400px'"
-                    [placeholder]="'place your text'"
+                    [placeholder]="'please-input-about'"
                     [isReset]="resetUserInfo.about"
                     (watchValue)="takeInputValue($event, 'about')"
                     [defaultValue]="
@@ -160,7 +160,7 @@
                   <div>
                     <nb-radio-group style="display: flex">
                       <nb-radio
-                        [tabIndex]="5"
+                        
                         *ngFor="let option of genderList; let isDefault = three"
                         [value]="option"
                         [checked]="
@@ -204,7 +204,6 @@
         <ait-card-content
           [styleDivider]="{ 'margin-left': '10px' }"
           [styleLabel]="{ 'font-size': '26px' }"
-          tabindex="2"
           [isOpen]="true"
           [isStart]="true"
           [id]="'メニュー'"
@@ -230,7 +229,7 @@
                     [length]="500"
                     [width]="'400px'"
                     [required]="true"
-                    [label]="'ADDRESS'"
+                    [label]="'address'"
                     [placeholder]="'please input address'"
                     [isReset]="resetUserInfo.address"
                     [isSubmit]="isSubmit"
@@ -272,7 +271,6 @@
         <ait-card-content
           [styleDivider]="{ 'margin-left': '10px' }"
           [styleLabel]="{ 'font-size': '26px' }"
-          tabindex="2"
           [isOpen]="true"
           [isStart]="true"
           [id]="'メニュー'"
@@ -420,7 +418,7 @@
             'font-size': '12px',
             'margin-left': '10px'
           }"
-          tabindex="2"
+         
           [isOpen]="true"
           [isStart]="true"
           [id]="'メニュー'"
@@ -511,7 +509,7 @@
                     [collection]="'m_skill'"
                     [maxItem]="maxSkillJobSetting"
                     [placeholder]="
-                      'Fill name and enter to add your skill' | translate
+                    'Fill name and enter to add your skill' | translate
                     "
                     [style]="{ width: '400px' }"
                     (watchValue)="
@@ -651,7 +649,7 @@
             *ngIf="!isChanged && mode === 'EDIT'"
             [id]="'save'"
             [width]="'150px'"
-            [title]="'保存する'"
+            [title]="'save'"
             [style]="'disabled'"
           ></ait-button>
         </div>
