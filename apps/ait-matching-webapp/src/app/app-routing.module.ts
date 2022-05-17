@@ -37,6 +37,7 @@ import { MyProjectQueriesComponent } from './pages/my-project-queries/my-project
 import { UserListComponent } from './pages/list/user-list/user-list.component';
 import { AddSkillComponent } from './pages/list/skill-list/add-skill/add-skill.component';
 import { CaptionListComponent } from './pages/list/caption-list/caption-list.component';
+import { CaptionDetailComponent } from './pages/list/caption-list/caption-detail/caption-detail.component';
 
 // Push your routes here one by one 🎉
 
@@ -286,8 +287,11 @@ export const routes: Routes = [
     canActivate: [AitAuthGuardService],
     component: AddCationComponent,
   },
-
-  
+  {
+    path: 'caption-detail/:id',
+    canActivate: [AitAuthGuardService],
+    component: CaptionDetailComponent,
+  },
   {
     path: '',
     pathMatch: 'full',

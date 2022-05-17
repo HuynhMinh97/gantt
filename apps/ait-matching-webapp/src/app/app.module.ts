@@ -78,6 +78,7 @@ import { AddSkillComponent } from './pages/list/skill-list/add-skill/add-skill.c
 import { CaptionListComponent } from './pages/list/caption-list/caption-list.component';
 import { AddCationComponent } from './pages/list/caption-list/add-caption/add-caption.component';
 import { SkillDetailComponent } from './pages/list/skill-list/skill-detail/skill-detail.component';
+import { CaptionDetailComponent } from './pages/list/caption-list/caption-detail/caption-detail.component';
 
 const AIT_UI_MODULES = [AitChipModule, AitTabsModule, AitTocMenuModule];
 
@@ -149,6 +150,7 @@ const PAGES = [
     CaptionListComponent,
     AddCationComponent,
     SkillDetailComponent,
+    CaptionDetailComponent,
   ],
   imports: [
     Ng2SmartTableModule,

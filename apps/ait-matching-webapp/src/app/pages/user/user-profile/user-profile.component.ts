@@ -170,9 +170,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     try {
       await this.getMasterData();
-     
-      // this.getFriends();
-      // this.getCountFriends();
       this.getUserProfileByUserId();
       this.getSkillByUserId();
       this.getProjectByUserId();

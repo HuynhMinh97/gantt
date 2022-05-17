@@ -47,7 +47,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
   isReset = false;
   isSubmit = false;
   sort_no = 0;
-  maxSkill = 0;
+  maxSkill = 50;
   user_skills = {
     _from: '',
     _to: '',
@@ -85,7 +85,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
 
     this.setModulePage({
       module: 'user',
-      page: 'user_skills',
+      page: 'user-skills',
     });
 
     this.router.events.subscribe((event) => {
@@ -108,7 +108,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
       setTimeout(() => {
         this.isLoad = true;
       }, 300);
-      await this.getMaxSkill();
+      // await this.getMaxSkill();
       await this.findSkills();
       await this.findTopSkills();
       this.userSkills.valueChanges.subscribe((data) => {
@@ -171,13 +171,7 @@ export class UserSkillsComponent extends AitBaseComponent implements OnInit {
     return checked;
   };
 
-  async getMaxSkill() {
-    await this.userSkillsService
-      .getMaxSkill({ value: ['maxSkill'] })
-      .then((res) => {
-        this.maxSkill = parseInt(res.data[0].name);
-      });
-  }
+  
 
   async findTopSkills() {
     await this.userProfileService.findTopSkill(this.user_id).then((res) => {
