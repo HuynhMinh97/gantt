@@ -89,6 +89,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   countCentificate = 0;
   timeExperienceStr = '';
   maxSkill = 0;
+  categoryOther_key = 'ed3d2608-87b9-4d85-9e15-829d24675bc1';
 
   dateFormat = 'dd/MM/yyyy';
   monthFormat: any;
@@ -245,6 +246,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
   }
 
   async getSkillByUserId() {
+    let categoryOther_index = 0;
     await this.userProfileService.findTopSkill(this.profileId).then((res) => {
       const data = res.data[0];
       this.topSkills = [];
@@ -272,28 +274,36 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         data.forEach((item) => {
           let isCategory = false;
           this.skillByCategory.forEach((element, index) => {
-            if (item.category?.value == element.name) {
+            if (
+              item.category?.value != null &&
+              item.category?.value == element.name
+            ) {
+              if (element.name === 'Others') {
+                categoryOther_index = index;
+              }
               this.skillByCategory[index].data.push(item);
               isCategory = true;
             }
           });
           if (!isCategory) {
             const skillsGroup = {} as OrderSkill;
-            skillsGroup.name = item.category?.value;
-            skillsGroup.code = item.category?._key;
+            skillsGroup.name = item.category?.value
+              ? item.category?.value
+              : 'Others';
+            skillsGroup.code = item.category?._key
+              ? item.category?._key
+              : this.categoryOther_key;
             skillsGroup.data = [];
             skillsGroup.data.push(item);
             this.skillByCategory.push(skillsGroup);
           }
         });
+
+       
+       
       }
     });
-    this.skillByCategory.forEach((element, index) => {
-      if (element.code == 'OTHERS') {
-        this.skillByCategory.push(element);
-        this.skillByCategory.splice(index, 1);
-      }
-    });
+   
   }
 
   async getProjectByUserId() {

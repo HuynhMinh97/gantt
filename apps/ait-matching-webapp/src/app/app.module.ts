@@ -64,7 +64,7 @@ import { ProjectListComponent } from './pages/list/project-list/project-list.com
 import { LanguageListComponent } from './pages/list/language-list/language-list.component';
 import { EducationListComponent } from './pages/list/education-list/education-list.component';
 import { CertificateListComponent } from './pages/list/certificate-list/certificate-list.component';
-import { SkillListViewComponent } from './pages/list/skill-list/skill-list-view/skill-list-view.component';
+import { SkillListViewComponent } from './pages/list/skill-list/skill-list.component';
 import { MyProjectQueriesComponent } from './pages/my-project-queries/my-project-queries.component';
 import { AddRoleComponent } from './pages/group-role/add-role/add-role.component';
 import { GroupRoleRegisterComponent } from './pages/group-role/group-role-register/group-role-register.component';

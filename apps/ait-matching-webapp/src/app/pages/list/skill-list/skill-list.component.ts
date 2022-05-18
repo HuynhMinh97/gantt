@@ -26,7 +26,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SkillListService } from '../../../../services/skill-list.service';
+import { SkillListService } from '../../../services/skill-list.service';
 import dayjs from 'dayjs';
 
 import { LocalDataSource, Ng2SmartTableComponent } from 'ng2-smart-table';
@@ -40,9 +40,9 @@ import {
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'ait-skill-list-view',
-  templateUrl: './skill-list-view.component.html',
-  styleUrls: ['./skill-list-view.component.scss'],
+  selector: 'ait-skill-list',
+  templateUrl: './skill-list.component.html',
+  styleUrls: ['./skill-list.component.scss'],
 })
 export class SkillListViewComponent extends AitBaseComponent implements OnInit {
   @ViewChild('area') area: ElementRef;
@@ -307,7 +307,7 @@ export class SkillListViewComponent extends AitBaseComponent implements OnInit {
           data.forEach((element) => {
             const dataFormat = {};
             dataFormat['name'] = element?.name;
-            dataFormat['type'] = element?.category?.value;
+            dataFormat['type'] = element?.category?.value ? element?.category?.value : 'Others';
 
             dataFormat['_key'] = element?._key;
             dataFormat['create_by'] = element?.create_by;
