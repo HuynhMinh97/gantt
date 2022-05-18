@@ -73,6 +73,7 @@ export class UserExperienceDetailComponent
   }
 
   public find = async (condition: any ) => {
+    
     const result = await this.userExperienceService
       .findUserExperienceByKey(condition._key);
       const dataForm = {
@@ -82,7 +83,7 @@ export class UserExperienceDetailComponent
       dataForm['data'][0]={};
       Object.keys(result.data[0]).forEach((key) => {
         if(this.combobox.includes(key)) {
-          const value = result.data[0][key].value;
+          const value = result.data[0][key]?.value;
         dataForm['data'][0][key] = value;
         } else {
           if(this.dateAtributes.includes(key)) {

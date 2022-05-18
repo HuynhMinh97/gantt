@@ -224,22 +224,7 @@ export class RecommencedJobComponent
     this.gotoTop();
   };
 
-  private matchingCompany = async (_key: string) => {
-    const filter = this.filterCommon;
-    const res = await this.matchingCompanyService.matchingCompany(_key);
-
-    if (res.status === RESULT_STATUS.OK) {
-      const data = res.data;
-      if (data && data?.length !== 0) {
-        this.filterCommon = filter;
-      } else {
-        this.setSkeleton(false);
-        this.textDataNull = '021';
-      }
-    }
-  };
-
-  private getDetailMatching = async (onlySaved = false, start = 0, end = 8) => {
+  private getDetailMatching = async (list = [], onlySaved = false, start = 0, end = 8) => {
     const res = await this.matchingCompanyService.getDetailMatching(
       onlySaved,
       start * 8,
@@ -375,7 +360,7 @@ export class RecommencedJobComponent
 
   // Get Data by round and base on all of result
   getDataByRound = async (onlySaved = false) => {
-    const detail = await this.getDetailMatching(onlySaved, this.currentCount);
+    const detail = await this.getDetailMatching([], onlySaved, this.currentCount);
     if (isArrayFull(detail) && !onlySaved) {
       this.dataFilter = this.dataFilter.concat(detail);
       this.currentCount = Math.ceil(this.dataFilter.length / 8);

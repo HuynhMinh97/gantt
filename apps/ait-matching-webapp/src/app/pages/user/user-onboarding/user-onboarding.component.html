@@ -1,104 +1,60 @@
 <ait-toc-menu [id]="'メニュー'"></ait-toc-menu>
 <div class="template__container">
   <div class="main__container user__wrapper">
-    <ait-text-gradient
-      [content]="'basic_infomation'"
-      [id]="'basic_infomation'"
-      [fontsize]="'36px'"
-    ></ait-text-gradient>
+    <ait-text-gradient [content]="'basic_infomation'" [id]="'basic_infomation'" [fontsize]="'36px'"></ait-text-gradient>
+
 
     <div class="template__filter__container">
       <div class="template__input__area">
-        <ait-card-content
-          [styleDivider]="{ 'margin-left': '10px' }"
-          [styleLabel]="{ 'font-size': '26px' }"
-          tabindex="2"
-          [isOpen]="true"
-          [isStart]="true"
-          [id]="'メニュー'"
-          class="content"
-          [label]="'basic_infomation' | translate"
-          [disableHeader]="false"
-          padding="'10px'"
-        >
+        <ait-card-content [styleDivider]="{ 'margin-left': '10px' }" [styleLabel]="{ 'font-size': '26px' }"
+          [isOpen]="true" [isStart]="true" [id]="'メニュー'" class="content" [label]="'basic_infomation' | translate"
+          [disableHeader]="false" padding="'10px'">
           <div class="left__side">
             <div style="padding-left: 10px">
               <ait-space [margin]="'7.25px'"></ait-space>
               <ng-container>
                 <div class="input_inline">
-                  <ait-input-text
-                    [id]="'first_name'"
-                    [label]="'first name'"
-                    [length]="200"
-                    [width]="'400px'"
-                    [required]="true"
-                    [isSubmit]="isSubmit"
-                    [isReset]="resetUserInfo.first_name"
-                    [placeholder]="'please input first name'"
-                    (watchValue)="takeInputValue($event, 'first_name')"
+                  <ait-input-text [id]="'first_name'" [label]="'first name'" [length]="200" [width]="'400px'"
+                    [required]="true" [isSubmit]="isSubmit" [isReset]="resetUserInfo.first_name"
+                    [placeholder]="'please input first name'" (watchValue)="takeInputValue($event, 'first_name')"
                     [defaultValue]="
                       userOnboardingInfo?.controls['first_name']?.value
-                    "
-                  ></ait-input-text>
+                    "></ait-input-text>
                 </div>
               </ng-container>
               <ait-space *ngIf="isLangJP" [margin]="'7.25px'"></ait-space>
               <ng-container>
                 <div *ngIf="isLangJP" class="input_inline">
-                  <ait-input-text
-                    [id]="'katakana'"
-                    [label]="'katakana'"
-                    [length]="200"
-                    [width]="'400px'"
-                    [isSubmit]="isSubmit"
-                    [isReset]="resetUserInfo.katakana"
-                    [placeholder]="'please input katakana name'"
-                    (watchValue)="takeInputValue($event, 'katakana')"
+                  <ait-input-text [id]="'katakana'" [label]="'katakana'" [length]="200" [width]="'400px'"
+                    [isSubmit]="isSubmit" [isReset]="resetUserInfo.katakana"
+                    [placeholder]="'please input katakana name'" (watchValue)="takeInputValue($event, 'katakana')"
                     [defaultValue]="
                       userOnboardingInfo?.controls['katakana']?.value
-                    "
-                  ></ait-input-text>
+                    "></ait-input-text>
                 </div>
               </ng-container>
               <ait-space [margin]="'7.25px'"></ait-space>
               <ng-container>
                 <div class="input_inline">
-                  <ait-datepicker
-                    [required]="false"
-                    [format]="dateFormat"
-                    [label]="'born on date'"
-                    [placeholder]="'yyyyy/MM/dd'"
-                    [id]="'dob'"
-                    [style]="{ width: '180px', height: '40px' }"
-                    [isReset]="true"
-                    [isSubmit]="isSubmit"
-                    (watchValue)="
+                  <ait-datepicker [required]="false" [format]="dateFormat" [label]="'born on date'"
+                    [placeholder]="'yyyyy/MM/dd'" [id]="'dob'" [style]="{ width: '180px', height: '40px' }"
+                    [isReset]="true" [isSubmit]="isSubmit" (watchValue)="
                       takeDatePickerValue(
                         $event?.value,
                         'userOnboardingInfo',
                         'dob'
                       )
-                    "
-                    [defaultValue]="userOnboardingInfo?.controls['dob']?.value"
-                  ></ait-datepicker>
+                    " [defaultValue]="userOnboardingInfo?.controls['dob']?.value"></ait-datepicker>
                 </div>
               </ng-container>
               <ait-space [margin]="'7.25px'"></ait-space>
               <ng-container>
                 <div class="input_inline">
-                  <ait-input-text
-                    [rows]="4"
-                    [id]="'about'"
-                    [length]="4000"
-                    [label]="'about'"
-                    [width]="'400px'"
-                    [placeholder]="'place your text'"
-                    [isReset]="resetUserInfo.about"
-                    (watchValue)="takeInputValue($event, 'about')"
-                    [defaultValue]="
+                  <ait-input-text [rows]="4" [id]="'about'" [length]="4000" [label]="'about'" [width]="'400px'"
+                    [placeholder]="'please-input-about'" [isReset]="resetUserInfo.about"
+                    (watchValue)="takeInputValue($event, 'about')" [defaultValue]="
                       userOnboardingInfo?.controls['about']?.value
-                    "
-                  >
+                    ">
                   </ait-input-text>
                 </div>
               </ng-container>
@@ -110,67 +66,40 @@
               <ait-space [margin]="'7.25px'"></ait-space>
               <ng-container>
                 <div class="input_inline">
-                  <ait-input-text
-                    [id]="'last_name'"
-                    [label]="'last name'"
-                    [length]="200"
-                    [width]="'400px'"
-                    [required]="true"
-                    [isSubmit]="isSubmit"
-                    [isReset]="resetUserInfo.last_name"
-                    [placeholder]="'please input last name'"
-                    (watchValue)="takeInputValue($event, 'last_name')"
+                  <ait-input-text [id]="'last_name'" [label]="'last name'" [length]="200" [width]="'400px'"
+                    [required]="true" [isSubmit]="isSubmit" [isReset]="resetUserInfo.last_name"
+                    [placeholder]="'please input last name'" (watchValue)="takeInputValue($event, 'last_name')"
                     [defaultValue]="
                       userOnboardingInfo?.controls['last_name']?.value
-                    "
-                  ></ait-input-text>
+                    "></ait-input-text>
                 </div>
               </ng-container>
               <ait-space *ngIf="isLangJP" [margin]="'7.25px'"></ait-space>
 
               <ng-container>
                 <div *ngIf="isLangJP" class="input_inline">
-                  <ait-input-text
-                    [id]="'romaji'"
-                    [label]="'romaji'"
-                    [length]="200"
-                    [width]="'400px'"
-                    [isSubmit]="isSubmit"
-                    [isReset]="resetUserInfo.romaji"
-                    [placeholder]="'please input romaji'"
-                    (watchValue)="takeInputValue($event, 'romaji')"
-                    [defaultValue]="
+                  <ait-input-text [id]="'romaji'" [label]="'romaji'" [length]="200" [width]="'400px'"
+                    [isSubmit]="isSubmit" [isReset]="resetUserInfo.romaji" [placeholder]="'please input romaji'"
+                    (watchValue)="takeInputValue($event, 'romaji')" [defaultValue]="
                       userOnboardingInfo?.controls['romaji']?.value
-                    "
-                  ></ait-input-text>
+                    "></ait-input-text>
                 </div>
               </ng-container>
               <ait-space [margin]="'7.25px'"></ait-space>
 
               <ng-container>
                 <div class="input_area">
-                  <ait-label
-                    class="ait-label"
-                    [label]="'gender'"
-                    id="gender"
-                    [required]="true"
-                  ></ait-label>
+                  <ait-label class="ait-label" [label]="'gender'" id="gender" [required]="true"></ait-label>
                   <ait-space [margin]="'6px'"></ait-space>
 
                   <div>
                     <nb-radio-group style="display: flex">
-                      <nb-radio
-                        [tabIndex]="5"
-                        *ngFor="let option of genderList; let isDefault = three"
-                        [value]="option"
-                        [checked]="
+                      <nb-radio *ngFor="let option of genderList; let isDefault = three" [value]="option" [checked]="
                           userOnboardingInfo?.controls['gender']?.value
                             ? userOnboardingInfo?.controls['gender']?.value
                                 ?._key == option._key
                             : isDefault
-                        "
-                        (valueChange)="takeGenderValue($event)"
-                      >
+                        " (valueChange)="takeGenderValue($event)">
                         {{ option.name }}
                       </nb-radio>
                     </nb-radio-group>
@@ -181,19 +110,12 @@
 
               <ng-container>
                 <div class="input_inline">
-                  <ait-input-text
-                    [length]="15"
-                    [width]="'400px'"
-                    [isSubmit]="isSubmit"
-                    [id]="'phone_number'"
-                    [label]="'phone number'"
-                    [placeholder]="'please input phone number'"
-                    [isReset]="resetUserInfo.phone_number"
-                    (watchValue)="takeInputValue($event, 'phone_number')"
+                  <ait-input-text [length]="15" [width]="'400px'" [isSubmit]="isSubmit" [id]="'phone_number'"
+                    [label]="'phone number'" [placeholder]="'please input phone number'"
+                    [isReset]="resetUserInfo.phone_number" (watchValue)="takeInputValue($event, 'phone_number')"
                     [defaultValue]="
                       userOnboardingInfo?.controls['phone_number']?.value
-                    "
-                  >
+                    ">
                   </ait-input-text>
                 </div>
               </ng-container>
@@ -201,44 +123,20 @@
             </div>
           </div>
         </ait-card-content>
-        <ait-card-content
-          [styleDivider]="{ 'margin-left': '10px' }"
-          [styleLabel]="{ 'font-size': '26px' }"
-          tabindex="2"
-          [isOpen]="true"
-          [isStart]="true"
-          [id]="'メニュー'"
-          class="content"
-          [label]="'adress' | translate"
-          [disableHeader]="false"
-          padding="'10px'"
-        >
-          <ait-country
-            style="width: 100%"
-            (watchValue)="takeValueCountry($event)"
-            [isReset]="isResetCountry"
-            [defaultValue]="userOnboardingInfo.value"
-            [isClear]="isClear"
-            [isSubmit]="isSubmit"
-          ></ait-country>
+        <ait-card-content [styleDivider]="{ 'margin-left': '10px' }" [styleLabel]="{ 'font-size': '26px' }"
+          [isOpen]="true" [isStart]="true" [id]="'メニュー'" class="content" [label]="'adress' | translate"
+          [disableHeader]="false" padding="'10px'">
+          <ait-country style="width: 100%" (watchValue)="takeValueCountry($event)" [isReset]="isResetCountry"
+            [defaultValue]="userOnboardingInfo.value" [isClear]="isClear" [isSubmit]="isSubmit"></ait-country>
           <div class="left__side">
             <div style="padding-left: 10px">
               <ng-container>
                 <div class="input_inline">
-                  <ait-input-text
-                    [id]="'adress'"
-                    [length]="500"
-                    [width]="'400px'"
-                    [required]="true"
-                    [label]="'ADDRESS'"
-                    [placeholder]="'please input address'"
-                    [isReset]="resetUserInfo.address"
-                    [isSubmit]="isSubmit"
-                    (watchValue)="takeInputValue($event, 'address')"
-                    [defaultValue]="
+                  <ait-input-text [id]="'adress'" [length]="500" [width]="'400px'" [required]="true" [label]="'address'"
+                    [placeholder]="'please input address'" [isReset]="resetUserInfo.address" [isSubmit]="isSubmit"
+                    (watchValue)="takeInputValue($event, 'address')" [defaultValue]="
                       userOnboardingInfo?.controls['address']?.value
-                    "
-                  >
+                    ">
                   </ait-input-text>
                 </div>
               </ng-container>
@@ -249,19 +147,11 @@
             <div style="padding-left: 20px">
               <ng-container>
                 <div class="input_inline">
-                  <ait-input-text
-                    [id]="'floor_building'"
-                    [label]="'floor_building'"
-                    [length]="500"
-                    [width]="'400px'"
-                    [placeholder]="'please input floor/building'"
-                    [isReset]="resetUserInfo.floor_building"
-                    [isSubmit]="isSubmit"
-                    (watchValue)="takeInputValue($event, 'floor_building')"
-                    [defaultValue]="
+                  <ait-input-text [id]="'floor_building'" [label]="'floor_building'" [length]="500" [width]="'400px'"
+                    [placeholder]="'please input floor/building'" [isReset]="resetUserInfo.floor_building"
+                    [isSubmit]="isSubmit" (watchValue)="takeInputValue($event, 'floor_building')" [defaultValue]="
                       userOnboardingInfo?.controls['floor_building']?.value
-                    "
-                  >
+                    ">
                   </ait-input-text>
                 </div>
               </ng-container>
@@ -269,88 +159,50 @@
             </div>
           </div>
         </ait-card-content>
-        <ait-card-content
-          [styleDivider]="{ 'margin-left': '10px' }"
-          [styleLabel]="{ 'font-size': '26px' }"
-          tabindex="2"
-          [isOpen]="true"
-          [isStart]="true"
-          [id]="'メニュー'"
-          class="content"
-          [label]="'current_job_information' | translate"
-          [disableHeader]="false"
-          padding="'10px'"
-        >
+        <ait-card-content [styleDivider]="{ 'margin-left': '10px' }" [styleLabel]="{ 'font-size': '26px' }"
+          [isOpen]="true" [isStart]="true" [id]="'メニュー'" class="content" [label]="'current_job_information' | translate"
+          [disableHeader]="false" padding="'10px'">
           <div class="left__side">
             <div style="padding-left: 10px">
               <ait-space [margin]="'7.25px'"></ait-space>
               <ng-container>
                 <div class="input_inline">
-                  <ait-autocomplete-master-data
-                    [width]="'400px'"
-                    [id]="'company_working'"
-                    [label]="'company_working'"
-                    [isSubmit]="isSubmit"
-                    [allowNew]="true"
-                    [required]="true"
-                    [maxItem]="1"
-                    [placeholder]="'please select company'"
-                    [collection]="'m_company'"
-                    [disableOutputDefault]="true"
-                    [isReset]="resetUserInfo.company_working"
-                    (watchValue)="takeMasterValue($event, 'company_working')"
+                  <ait-autocomplete-master-data [width]="'400px'" [id]="'company_working'" [label]="'company_working'"
+                    [isSubmit]="isSubmit" [allowNew]="true" [required]="true" [maxItem]="1"
+                    [placeholder]="'please select company'" [collection]="'m_company'" [disableOutputDefault]="true"
+                    [isReset]="resetUserInfo.company_working" (watchValue)="takeMasterValue($event, 'company_working')"
                     [defaultValue]="[
                       userOnboardingInfo?.controls['company_working']?.value
-                    ]"
-                  ></ait-autocomplete-master-data>
+                    ]"></ait-autocomplete-master-data>
                 </div>
               </ng-container>
               <ait-space [margin]="'7.25px'"></ait-space>
               <ng-container>
                 <div class="input_inline">
-                  <ait-autocomplete-master-data
-                    [id]="'current_job_title'"
-                    [width]="'400px'"
-                    [label]="'your_title'"
-                    [isSubmit]="isSubmit"
-                    [allowNew]="true"
-                    [required]="true"
-                    [maxItem]="1"
-                    [placeholder]="'please select title'"
-                    [collection]="'m_title'"
-                    [disableOutputDefault]="true"
+                  <ait-autocomplete-master-data [id]="'current_job_title'" [width]="'400px'" [label]="'your_title'"
+                    [isSubmit]="isSubmit" [allowNew]="true" [required]="true" [maxItem]="1"
+                    [placeholder]="'please select title asd'" [collection]="'m_title'" [disableOutputDefault]="true"
                     [isReset]="resetUserInfo.current_job_title"
-                    (watchValue)="takeMasterValue($event, 'current_job_title')"
-                    [defaultValue]="[
+                    (watchValue)="takeMasterValue($event, 'current_job_title')" [defaultValue]="
+                    userOnboardingInfo?.controls['current_job_title']?.value ?
+                    [
                       userOnboardingInfo?.controls['current_job_title']?.value
-                    ]"
-                  ></ait-autocomplete-master-data>
+                    ]: null"></ait-autocomplete-master-data>
                 </div>
               </ng-container>
               <ait-space [margin]="'7.25px'"></ait-space>
               <ng-container>
                 <div class="input_inline">
-                  <ait-autocomplete-master
-                    [id]="'current_job_skills'"
-                    [label]="'skills(max 50)'"
-                    [required]="true"
-                    [collection]="'m_skill'"
-                    [maxItem]="maxSkillCurrentJob"
-                    [placeholder]="
+                  <ait-autocomplete-master [id]="'current_job_skills'" [label]="'skills(max 50)'" [required]="true"
+                    [collection]="'m_skill'" [maxItem]="maxSkillCurrentJob" [placeholder]="
                       'Fill name and enter to add your skill' | translate
-                    "
-                    [style]="{ width: '400px' }"
-                    (watchValue)="
+                    " [style]="{ width: '400px' }" (watchValue)="
                       takeMasterValueSkillCurrentJob(
                         $event,
                         'current_job_skills'
                       )
-                    "
-                    [defaultValue]="companySkills"
-                    [isReset]="isReset"
-                    [isSubmit]="isSubmit"
-                    [isEvaluate]="true"
-                  ></ait-autocomplete-master>
+                    " [defaultValue]="companySkills" [isReset]="isReset" [isSubmit]="isSubmit" [isEvaluate]="true">
+                  </ait-autocomplete-master>
                 </div>
               </ng-container>
               <ait-space [margin]="'7.25px'"></ait-space>
@@ -362,171 +214,99 @@
               <ait-space [margin]="'7.25px'"></ait-space>
               <ng-container>
                 <div class="input_inline">
-                  <ait-autocomplete-master-data
-                    [id]="'industry_working'"
-                    [width]="'400px'"
-                    [label]="'industry_working'"
-                    [required]="true"
-                    [isSubmit]="isSubmit"
-                    [allowNew]="true"
-                    [maxItem]="1"
-                    [placeholder]="'please select industry'"
-                    [collection]="'m_industry'"
-                    [disableOutputDefault]="true"
-                    [isReset]="resetJobSettingInfo.industry"
-                    (watchValue)="takeMasterValue($event, 'industry_working')"
+                  <ait-autocomplete-master-data [id]="'industry_working'" [width]="'400px'" [label]="'industry_working'"
+                    [required]="true" [isSubmit]="isSubmit" [allowNew]="true" [maxItem]="1"
+                    [placeholder]="'please select industry'" [collection]="'m_industry'" [disableOutputDefault]="true"
+                    [isReset]="resetJobSettingInfo.industry" (watchValue)="takeMasterValue($event, 'industry_working')"
                     [defaultValue]="[
                       userOnboardingInfo?.controls['industry_working']?.value
-                    ]"
-                  ></ait-autocomplete-master-data>
+                    ]"></ait-autocomplete-master-data>
                 </div>
               </ng-container>
               <ait-space [margin]="'7.25px'"></ait-space>
 
               <ng-container>
                 <div class="input_inline">
-                  <ait-autocomplete-master-data
-                    [id]="'current_job_level'"
-                    [width]="'400px'"
-                    [label]="'your_level'"
-                    [required]="true"
-                    [isSubmit]="isSubmit"
-                    [allowNew]="true"
-                    [maxItem]="1"
-                    [class]="'EMPLOYEE_LEVEL'"
-                    [placeholder]="'please select level'"
-                    [collection]="'sys_master_data'"
-                    [disableOutputDefault]="true"
+                  <ait-autocomplete-master-data [id]="'current_job_level'" [width]="'400px'" [label]="'your_level'"
+                    [required]="true" [isSubmit]="isSubmit" [allowNew]="true" [maxItem]="1" [class]="'EMPLOYEE_LEVEL'"
+                    [placeholder]="'please select level'" [collection]="'sys_master_data'" [disableOutputDefault]="true"
                     [isReset]="resetUserInfo.current_job_level"
-                    (watchValue)="takeMasterValue($event, 'current_job_level')"
-                    [defaultValue]="[
+                    (watchValue)="takeMasterValue($event, 'current_job_level')" [defaultValue]="[
                       userOnboardingInfo?.controls['current_job_level']?.value
-                    ]"
-                  ></ait-autocomplete-master-data>
+                    ]"></ait-autocomplete-master-data>
                 </div>
               </ng-container>
               <ait-space [margin]="'7.25px'"></ait-space>
             </div>
           </div>
         </ait-card-content>
-        <ait-card-content
-          [styleDivider]="{ 'margin-left': '10px' }"
-          [styleLabel]="{ 'font-size': '26px' }"
-          [summary]="
+        <ait-card-content [styleDivider]="{ 'margin-left': '10px' }" [styleLabel]="{ 'font-size': '26px' }" [summary]="
             'this_setting_is_used_to_find_the_best_job_for_you' | translate
-          "
-          [styleSummary]="{
+          " [styleSummary]="{
             color: '#8F9BB3',
             'font-size': '12px',
             'margin-left': '10px'
-          }"
-          tabindex="2"
-          [isOpen]="true"
-          [isStart]="true"
-          [id]="'メニュー'"
-          class="content"
-          [label]="'job_setting' | translate"
-          [disableHeader]="false"
-          padding="'10px'"
-        >
+          }" [isOpen]="true" [isStart]="true" [id]="'メニュー'" class="content" [label]="'job_setting' | translate"
+          [disableHeader]="false" padding="'10px'">
           <div class="left__side">
             <div style="padding-left: 10px">
               <ait-space [margin]="'7.25px'"></ait-space>
               <ng-container>
                 <div class="input_inline">
-                  <ait-autocomplete-master-data
-                    [id]="'industry'"
-                    [width]="'400px'"
-                    [label]="'industry'"
-                    [isSubmit]="isSubmit"
-                    [allowNew]="true"
-                    [maxItem]="50"
-                    [placeholder]="'please select industry'"
-                    [collection]="'m_industry'"
-                    [disableOutputDefault]="true"
-                    [isReset]="resetJobSettingInfo.industry"
+                  <ait-autocomplete-master-data [id]="'industry'" [width]="'400px'" [label]="'industry'"
+                    [isSubmit]="isSubmit" [allowNew]="true" [maxItem]="50" [placeholder]="'please select industry'"
+                    [collection]="'m_industry'" [disableOutputDefault]="true" [isReset]="resetJobSettingInfo.industry"
                     (watchValue)="
                       takeMasterValues(
                         $event?.value,
                         'userJobSettingInfo',
                         'industry'
                       )
-                    "
-                    [defaultValue]="
+                    " [defaultValue]="
                       userJobSettingInfo?.controls['industry']?.value
-                    "
-                  ></ait-autocomplete-master-data>
+                    "></ait-autocomplete-master-data>
                 </div>
               </ng-container>
               <ait-space [margin]="'7.25px'"></ait-space>
               <ng-container>
                 <div class="input_inline">
-                  <ait-autocomplete-master-data
-                    [id]="'job_setting_title'"
-                    [width]="'400px'"
-                    [label]="'title'"
-                    [isSubmit]="isSubmit"
-                    [allowNew]="true"
-                    [maxItem]="10"
-                    [placeholder]="'please select title'"
-                    [collection]="'m_title'"
-                    [disableOutputDefault]="true"
+                  <ait-autocomplete-master-data [id]="'job_setting_title'" [width]="'400px'" [label]="'title'"
+                    [isSubmit]="isSubmit" [allowNew]="true" [maxItem]="10" [placeholder]="'please select title zxc'"
+                    [collection]="'m_title'" [disableOutputDefault]="true"
                     [isReset]="resetJobSettingInfo.job_setting_title"
                     (watchValue)="takeMasterValueJobSettings($event?.value,'userJobSettingInfo', 'job_setting_title')"
                     [defaultValue]="
                     userJobSettingInfo?.controls['job_setting_title']?.value
-                  "
-                  ></ait-autocomplete-master-data>
+                  "></ait-autocomplete-master-data>
                 </div>
               </ng-container>
               <ait-space [margin]="'7.25px'"></ait-space>
               <ng-container>
                 <div class="input_inline">
-                  <ait-autocomplete-master-data
-                    [width]="'400px'"
-                    [id]="'location'"
-                    [label]="'location'"
-                    [isSubmit]="isSubmit"
-                    [parentCodeExternal]="'VIETNAM'"
-                    [maxItem]="10"
-                    [placeholder]="'please select location'"
-                    [collection]="'sys_master_data'"
-                    [class]="'ADDRESS'"
-                    [disableOutputDefault]="true"
-                    [isReset]="resetJobSettingInfo.location"
+                  <ait-autocomplete-master-data [width]="'400px'" [id]="'location'" [label]="'location'"
+                    [isSubmit]="isSubmit" [parentCodeExternal]="'VIETNAM'" [maxItem]="10"
+                    [placeholder]="'please select location'" [collection]="'sys_master_data'" [class]="'ADDRESS'"
+                    [disableOutputDefault]="true" [isReset]="resetJobSettingInfo.location"
                     (watchValue)="takeMasterValueJobSettings($event?.value,'userJobSettingInfo', 'location')"
                     [defaultValue]="
                       userJobSettingInfo?.controls['location']?.value
-                    "
-                  ></ait-autocomplete-master-data>
+                    "></ait-autocomplete-master-data>
                 </div>
               </ng-container>
               <ait-space [margin]="'7.25px'"></ait-space>
               <ng-container>
                 <div class="input_inline">
-                  <ait-autocomplete-master
-                    [id]="'job_setting_skills'"
-                    [label]="'skills(max 10)'"
-                    [required]="true"
-                    [collection]="'m_skill'"
-                    [maxItem]="maxSkillJobSetting"
-                    [placeholder]="
-                      'Fill name and enter to add your skill' | translate
-                    "
-                    [style]="{ width: '400px' }"
-                    (watchValue)="
+                  <ait-autocomplete-master [id]="'job_setting_skills'" [label]="'skills(max 10)'" [required]="true"
+                    [collection]="'m_skill'" [maxItem]="maxSkillJobSetting" [placeholder]="
+                    'Fill name and enter to add your skill' | translate
+                    " [style]="{ width: '400px' }" (watchValue)="
                       takeMasterValueSkillJobSetting(
                         $event,
                         'job_setting_skills'
                       )
-                    "
-                    [defaultValue]="
+                    " [defaultValue]="
                     jobSettingSkills
-                    "
-                    [isReset]="isReset"
-                    [isSubmit]="isSubmit"
-                    [isEvaluate]="true"
-                  ></ait-autocomplete-master>
+                    " [isReset]="isReset" [isSubmit]="isSubmit" [isEvaluate]="true"></ait-autocomplete-master>
                 </div>
               </ng-container>
             </div>
@@ -537,76 +317,47 @@
               <ait-space [margin]="'62px'"></ait-space>
               <ng-container>
                 <div class="input_inline">
-                  <ait-autocomplete-master-data
-                    [width]="'400px'"
-                    [id]="'job_setting_level'"
-                    [label]="'level'"
-                    [isSubmit]="isSubmit"
-                    [maxItem]="10"
-                    [placeholder]="'please select level'"
-                    [collection]="'sys_master_data'"
-                    [class]="'EMPLOYEE_LEVEL'"
-                    [disableOutputDefault]="true"
+                  <ait-autocomplete-master-data [width]="'400px'" [id]="'job_setting_level'" [label]="'level'"
+                    [isSubmit]="isSubmit" [maxItem]="10" [placeholder]="'please select level'"
+                    [collection]="'sys_master_data'" [class]="'EMPLOYEE_LEVEL'" [disableOutputDefault]="true"
                     [isReset]="resetJobSettingInfo.job_setting_level"
                     (watchValue)="takeMasterValueJobSettings($event?.value,'userJobSettingInfo', 'job_setting_level')"
                     [defaultValue]="
                       userJobSettingInfo?.controls['job_setting_level']?.value
-                    "
-                  ></ait-autocomplete-master-data>
+                    "></ait-autocomplete-master-data>
                 </div>
               </ng-container>
-              
+
               <ait-space [margin]="'22px'"></ait-space>
               <ng-container>
                 <div class="input_date">
-                  <ait-datepicker
-                    [label]="'available time'"
-                    [format]="dateFormat"
-                    [placeholder]="'yyyyy/MM/dd'"
-                    [id]="'start_date_from'"
-                    [style]="{ width: '180px', height: '40px' }"
-                    [isReset]="true"
+                  <ait-datepicker [label]="'available time'" [format]="dateFormat" [placeholder]="'yyyyy/MM/dd'"
+                    [id]="'start_date_from'" [style]="{ width: '180px', height: '40px' }" [isReset]="true"
                     [defaultValue]="
                       userJobSettingInfo?.controls['available_time_from']?.value
-                    "
-                    (watchValue)="
+                    " (watchValue)="
                       takeDatePickerValue(
                         $event?.value,
                         'userJobSettingInfo',
                         'available_time_from'
                       )
-                    "
-                    [isSubmit]="isSubmit"
-                  ></ait-datepicker>
+                    " [isSubmit]="isSubmit"></ait-datepicker>
 
                   <span style="position: relative; bottom: -30px">~</span>
 
-                  <ait-datepicker
-                    [required]="false"
-                    [format]="dateFormat"
-                    [label]="''"
-                    [placeholder]="''"
-                    [id]="'start_date_to'"
-                    [style]="{ width: '180px', height: '40px' }"
-                    (watchValue)="
+                  <ait-datepicker [required]="false" [format]="dateFormat" [label]="''" [placeholder]="''"
+                    [id]="'start_date_to'" [style]="{ width: '180px', height: '40px' }" (watchValue)="
                       takeDatePickerValue(
                         $event?.value,
                         'userJobSettingInfo',
                         'available_time_to'
                       )
-                    "
-                    [defaultValue]="
+                    " [defaultValue]="
                       userJobSettingInfo?.controls['available_time_to']?.value
-                    "
-                    [isReset]="true"
-                    [isSubmit]="isSubmit"
-                  ></ait-datepicker>
+                    " [isReset]="true" [isSubmit]="isSubmit"></ait-datepicker>
                 </div>
                 <div [style.width]="'420px'">
-                  <ait-error-message
-                    *ngIf="available_time_error"
-                    [errors]="availableTimeErrorMessage"
-                  >
+                  <ait-error-message *ngIf="available_time_error" [errors]="availableTimeErrorMessage">
                   </ait-error-message>
                 </div>
               </ng-container>
@@ -620,40 +371,17 @@
     <div class="sticky">
       <div class="action-row">
         <div class="block">
-          <ait-button
-            *ngIf="mode !== 'VIEW'"
-            [id]="'cancel'"
-            [title]="'clear'"
-            [width]="'150px'"
-            [isDefault]="true"
-            (click)="clear()"
-          ></ait-button>
-          <ait-button
-            *ngIf="mode === 'EDIT'"
-            [id]="'reset'"
-            [width]="'150px'"
-            [title]="'reset'"
-            [isDefault]="true"
-            (click)="resetForm()"
-          >
+          <ait-button *ngIf="mode !== 'VIEW'" [id]="'cancel'" [title]="'clear'" [width]="'150px'" [isDefault]="true"
+            (click)="clear()"></ait-button>
+          <ait-button *ngIf="mode === 'EDIT'" [id]="'reset'" [width]="'150px'" [title]="'reset'" [isDefault]="true"
+            (click)="resetForm()">
           </ait-button>
 
-          <ait-button
-            *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
-            [id]="'save'"
-            [width]="'150px'"
-            [title]="'save'"
-            (click)="save()"
-            [isDefault]="true"
-          >
+          <ait-button *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'" [id]="'save'" [width]="'150px'"
+            [title]="'save'" (click)="save()" [isDefault]="true">
           </ait-button>
-          <ait-button
-            *ngIf="!isChanged && mode === 'EDIT'"
-            [id]="'save'"
-            [width]="'150px'"
-            [title]="'保存する'"
-            [style]="'disabled'"
-          ></ait-button>
+          <ait-button *ngIf="!isChanged && mode === 'EDIT'" [id]="'save'" [width]="'150px'" [title]="'save'"
+            [style]="'disabled'"></ait-button>
         </div>
       </div>
     </div>

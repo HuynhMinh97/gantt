@@ -1,25 +1,28 @@
-import { AddSkillService } from './../../../../services/add-skill.service';
-import { AitAuthService, AitBaseComponent, AitEnvironmentService, AppState, getUserSetting } from '@ait/ui';
+import { AddCaptionService } from './../../../../services/add-caption.service';
+import { AitBaseComponent } from './../../../../../../../../libs/ui/src/lib/components/base.component';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
+import { AitAuthService, AitEnvironmentService, AppState, getUserSetting } from '@ait/ui';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
-import { cond } from 'lodash';
-import { isObjectFull } from '@ait/shared';
+import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import dayjs from 'dayjs';
+import { isObjectFull } from '@ait/shared';
+
 
 @Component({
-  selector: 'ait-skill-detail',
-  templateUrl: './skill-detail.component.html',
-  styleUrls: ['./skill-detail.component.scss']
+  selector: 'ait-caption-detail',
+  templateUrl: './caption-detail.component.html',
+  styleUrls: ['./caption-detail.component.scss']
 })
-export class SkillDetailComponent extends AitBaseComponent implements OnInit {
+export class CaptionDetailComponent extends AitBaseComponent implements OnInit {
   _key: string;
   dateFormat: string;
+
+
   constructor(
     public activeRouter: ActivatedRoute,
-    private addSkillService: AddSkillService,
+    private addCaptionService: AddCaptionService,
 
     store: Store<AppState>,
     apollo: Apollo,
@@ -49,8 +52,6 @@ export class SkillDetailComponent extends AitBaseComponent implements OnInit {
     this._key = this.activeRouter.snapshot.paramMap.get('id');
     this.callLoadingApp();
   }
-
-
   getDateFormat(time: number) {
     if (!time) {
       return '';
@@ -60,21 +61,24 @@ export class SkillDetailComponent extends AitBaseComponent implements OnInit {
   }
 
   public find = async (condition: any) => {
-    const skill = await this.addSkillService.findSkillByKey(condition._key);
-   
+    const skill = await this.addCaptionService.findCaptionByKey(condition._key);
+    debugger
     const dataForm = {
       data: [],
     };
 
     dataForm['data'][0] = {};
     Object.keys(skill.data[0]).forEach((key) => {
-      if (key === 'category') {
-        const value = skill.data[0][key].value;
-        dataForm['data'][0][key] = value;
-      }else if (key === 'change_at' || key === 'create_at' ) {
+       if (key === 'change_at' || key === 'create_at' ) {
         const value = skill.data[0][key];
         dataForm['data'][0][key] = this.getDateFormat(value);
-      } else {
+      } else if (key === 'name')
+      {
+        dataForm['data'][0]['en_US'] = skill.data[0]['name']['en_US'];
+        dataForm['data'][0]['vi_VN'] = skill.data[0]['name']['vi_VN'];
+        dataForm['data'][0]['ja_JP'] = skill.data[0]['name']['ja_JP'];
+      }else
+       {
             const value = skill.data[0][key];
             dataForm['data'][0][key] = value;
       }

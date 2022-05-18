@@ -71,39 +71,6 @@ export class ProjectListResolver extends AitBaseService {
       }
     }
 
-    // listData.forEach((data) => {
-    //   const obj = userList.find((u) => u.user_id === data.user_id);
-    //   const skills = this.getSkills(data, lang);
-    //   if (username == null) {
-    //     if (obj) {
-    //       userArr.push({
-    //         ...data,
-    //         first_name: obj.first_name,
-    //         last_name: obj.last_name,
-    //         skills: skills,
-    //       });
-    //     } else {
-    //       userArr.push({
-    //         ...data,
-    //         first_name: '',
-    //         last_name: '',
-    //         skills: skills,
-    //       });
-    //     }
-    //   } else {
-    //     if (
-    //       obj.first_name.toLocaleLowerCase().includes(username) ||
-    //       obj.last_name.toLocaleLowerCase().includes(username)
-    //     ) {
-    //       userArr.push({
-    //         ...data,
-    //         first_name: obj.first_name,
-    //         last_name: obj.last_name,
-    //         skills: skills,
-    //       });
-    //     }
-    //   }
-    // });
     const response = new ProjectListResponse(
       200,
       userArr as ProjectListEntity[],

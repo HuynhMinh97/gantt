@@ -25,6 +25,9 @@ export class UserProfileDto extends BaseDto {
   @Field(() => String, { nullable: true })
   about?: string;
 
+  @Field(() => [String], { nullable: true })
+  list?: string[];
+
   @Field(() => ConditionDto, { nullable: true })
   company_working?: ConditionDto;
 
