@@ -642,6 +642,7 @@ export class UserOnboardingComponent
   }
 
   saveDataUserProfile() {
+    debugger
     const saveData = this.userOnboardingInfo.value;
     saveData.ward = saveData.ward ? saveData.ward?._key : null;
     saveData.current_job_title = saveData.current_job_title
@@ -711,24 +712,30 @@ export class UserOnboardingComponent
       !this.available_time_error
     ) {
       this.callLoadingApp();
-      await this.userOnbService.save(this.saveDataUserProfile()).then((res) => {
-        if (res?.status === RESULT_STATUS.OK) {
-          this.saveDataUserSkill();
-          this.saveJobSetting();
-          const message =
-            this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
-          this.showToastr('', message);
-          this.cancelLoadingApp();
-          if (this.user_key) {
-            this.router.navigate([`user-profile`]);
+      try { 
+
+        await this.userOnbService.save(this.saveDataUserProfile()).then((res) => {
+          if (res?.status === RESULT_STATUS.OK) {
+            this.saveDataUserSkill();
+            this.saveJobSetting();
+            const message =
+              this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
+            this.showToastr('', message);
+            this.cancelLoadingApp();
+            if (this.user_key) {
+              this.router.navigate([`user-profile`]);
+            } else {
+              this.router.navigate([`user-job-alert`]);
+            }
           } else {
-            this.router.navigate([`user-job-alert`]);
+            this.cancelLoadingApp();
+            this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
-        } else {
-          this.cancelLoadingApp();
-          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-        }
-      });
+        });
+      } catch {
+        this.cancelLoadingApp();
+            this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+      }
     } else {
       this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
       this.scrollIntoError();
@@ -856,7 +863,7 @@ export class UserOnboardingComponent
   takeMasterValue(value: any, target: string): void {
     if (isObjectFull(value)) {
       this.userOnboardingInfo.controls[target].markAsDirty();
-      this.userOnboardingInfo.controls[target].setValue(isArrayFull(value) ? value[0] : value);
+      this.userOnboardingInfo.controls[target].setValue(value?.value[0]);
     } else {
       this.userOnboardingInfo.controls[target].setValue(null);
     }

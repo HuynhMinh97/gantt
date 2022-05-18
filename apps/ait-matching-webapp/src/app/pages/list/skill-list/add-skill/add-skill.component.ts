@@ -10,6 +10,7 @@ import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { ActivatedRoute } from '@angular/router';
+import { async } from '@angular/core/testing';
 
 @Component({
   selector: 'ait-add-skill',
@@ -44,6 +45,22 @@ export class AddSkillComponent extends AitBaseComponent implements OnInit {
   ngOnInit(): void {
     this.skill_key = this.activeRouter.snapshot.paramMap.get('id');
     this.cancelLoadingApp();
+    this.find();
+  }
+
+  public find = async() => {
+    const category_others = {
+      value: 'Others',
+      _key: 'ed3d2608-87b9-4d85-9e15-829d24675bc1'
+    }
+      const skillData = {};
+      skillData['data'] = {};
+      skillData['data'][0] = {};
+      const skill = await this.addSkillService.findSkillByKey(this.skill_key);
+      skillData['data'][0]['name'] = skill.data[0]?.name;
+      
+      skillData['data'][0]['category'] = skill.data[0]?.category ? skill.data[0]?.category : category_others  ;
+      return skillData;
   }
 
   public save = async (condition = {}) => {
@@ -60,6 +77,7 @@ export class AddSkillComponent extends AitBaseComponent implements OnInit {
     });
     saveData['sort_no'] = max + 1;
     saveData['active_flag'] = true;
+    if (this.skill_key){ saveData['_key'] = this.skill_key;}
     return await this.addSkillService.saveSkill(saveData);
   };
 }

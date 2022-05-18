@@ -121,9 +121,9 @@ export class CaptionListComponent extends AitBaseComponent implements OnInit {
             dataFormat['start_date'] = this.getDateFormat(
               element?.start_date_from
             );
-            if (dataFormat['module']) {
+            
               dataSearch.push(dataFormat);
-            }
+           
           });
         }
       }

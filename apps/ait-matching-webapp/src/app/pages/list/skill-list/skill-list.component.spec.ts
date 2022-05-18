@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SkillListViewComponent } from './skill-list-view.component';
+import { SkillListViewComponent } from './skill-list.component';
 
 describe('SkillListViewComponent', () => {
   let component: SkillListViewComponent;
