@@ -63,7 +63,7 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
   isClear = false;
   isClearErrors = false;
   isCopy = false;
-  isAllowDelete = false;
+  isAllowDelete = true;
   cloneData: any;
   searchComponents: any;
   dateErrorObject = {};

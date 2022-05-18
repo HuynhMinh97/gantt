@@ -226,7 +226,6 @@ export class RecommencedJobComponent
 
   private getDetailMatching = async (list = [], onlySaved = false, start = 0, end = 8) => {
     const res = await this.matchingCompanyService.getDetailMatching(
-      list,
       onlySaved,
       start * 8,
       end
