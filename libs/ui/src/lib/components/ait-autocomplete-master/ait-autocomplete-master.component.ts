@@ -292,12 +292,6 @@ export class AitAutoCompleteMasterComponent
   };
 
   getPlaceholder = () => {
-    if (this.selectItems.length === 0) {
-      return this.placeholder;
-    }
-    if (this.maxItem < 2) {
-      return this.selectItems.length === 0 ? this.placeholder : '';
-    }
     return this.isNew
       ? this.translateService.translate('c_10011')
       : this.translateService.translate('c_10012');

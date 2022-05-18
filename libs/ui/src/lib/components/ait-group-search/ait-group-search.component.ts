@@ -248,20 +248,20 @@ export class AitGroupSearchComponent
 
   detail(data: any) {
     if (this.pageRouter) {
-      this.router.navigate([`${this.pageRouter?.view || ''}`]);
+      this.router.navigate([`${this.pageRouter?.view || ''}/${data}`]);
     }
   }
 
   copy(data: any) {
     if (this.pageRouter) {
       this.watchKey.emit(data);
-      // this.router.navigate([`${this.pageRouter?.input || ''}`]);
+      this.router.navigate([`${this.pageRouter?.input || ''}/${data}`]);
     }
   }
 
   edit(data: any) {
     if (this.pageRouter) {
-      this.router.navigate([`${this.pageRouter?.input || ''}` + `/${data}`]);
+      this.router.navigate([`${this.pageRouter?.input || ''}/${data}`]);
     }
   }
 
