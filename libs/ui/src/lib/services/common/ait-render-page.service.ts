@@ -17,6 +17,7 @@ export class AitRenderPageService extends AitBaseService {
     _key: true,
     code: true,
     name: true,
+    name_edit: true,
     router: {
       search: true,
       input: true,
