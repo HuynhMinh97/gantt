@@ -3,9 +3,10 @@
   <div class="main__container user__wrapper">
     <ait-text-gradient [content]="'basic_infomation'" [id]="'basic_infomation'" [fontsize]="'36px'"></ait-text-gradient>
 
+
     <div class="template__filter__container">
       <div class="template__input__area">
-        <ait-card-content [styleDivider]="{ 'margin-left': '10px' }" [styleLabel]="{ 'font-size': '26px' }" tabindex="2"
+        <ait-card-content [styleDivider]="{ 'margin-left': '10px' }" [styleLabel]="{ 'font-size': '26px' }"
           [isOpen]="true" [isStart]="true" [id]="'メニュー'" class="content" [label]="'basic_infomation' | translate"
           [disableHeader]="false" padding="'10px'">
           <div class="left__side">
@@ -50,7 +51,7 @@
               <ng-container>
                 <div class="input_inline">
                   <ait-input-text [rows]="4" [id]="'about'" [length]="4000" [label]="'about'" [width]="'400px'"
-                    [placeholder]="'place your text'" [isReset]="resetUserInfo.about"
+                    [placeholder]="'please-input-about'" [isReset]="resetUserInfo.about"
                     (watchValue)="takeInputValue($event, 'about')" [defaultValue]="
                       userOnboardingInfo?.controls['about']?.value
                     ">
@@ -93,8 +94,7 @@
 
                   <div>
                     <nb-radio-group style="display: flex">
-                      <nb-radio [tabIndex]="5" *ngFor="let option of genderList; let isDefault = three" [value]="option"
-                        [checked]="
+                      <nb-radio *ngFor="let option of genderList; let isDefault = three" [value]="option" [checked]="
                           userOnboardingInfo?.controls['gender']?.value
                             ? userOnboardingInfo?.controls['gender']?.value
                                 ?._key == option._key
@@ -123,7 +123,7 @@
             </div>
           </div>
         </ait-card-content>
-        <ait-card-content [styleDivider]="{ 'margin-left': '10px' }" [styleLabel]="{ 'font-size': '26px' }" tabindex="2"
+        <ait-card-content [styleDivider]="{ 'margin-left': '10px' }" [styleLabel]="{ 'font-size': '26px' }"
           [isOpen]="true" [isStart]="true" [id]="'メニュー'" class="content" [label]="'adress' | translate"
           [disableHeader]="false" padding="'10px'">
           <ait-country style="width: 100%" (watchValue)="takeValueCountry($event)" [isReset]="isResetCountry"
@@ -132,7 +132,7 @@
             <div style="padding-left: 10px">
               <ng-container>
                 <div class="input_inline">
-                  <ait-input-text [id]="'adress'" [length]="500" [width]="'400px'" [required]="true" [label]="'ADDRESS'"
+                  <ait-input-text [id]="'adress'" [length]="500" [width]="'400px'" [required]="true" [label]="'address'"
                     [placeholder]="'please input address'" [isReset]="resetUserInfo.address" [isSubmit]="isSubmit"
                     (watchValue)="takeInputValue($event, 'address')" [defaultValue]="
                       userOnboardingInfo?.controls['address']?.value
@@ -159,7 +159,7 @@
             </div>
           </div>
         </ait-card-content>
-        <ait-card-content [styleDivider]="{ 'margin-left': '10px' }" [styleLabel]="{ 'font-size': '26px' }" tabindex="2"
+        <ait-card-content [styleDivider]="{ 'margin-left': '10px' }" [styleLabel]="{ 'font-size': '26px' }"
           [isOpen]="true" [isStart]="true" [id]="'メニュー'" class="content" [label]="'current_job_information' | translate"
           [disableHeader]="false" padding="'10px'">
           <div class="left__side">
@@ -246,8 +246,8 @@
             color: '#8F9BB3',
             'font-size': '12px',
             'margin-left': '10px'
-          }" tabindex="2" [isOpen]="true" [isStart]="true" [id]="'メニュー'" class="content"
-          [label]="'job_setting' | translate" [disableHeader]="false" padding="'10px'">
+          }" [isOpen]="true" [isStart]="true" [id]="'メニュー'" class="content" [label]="'job_setting' | translate"
+          [disableHeader]="false" padding="'10px'">
           <div class="left__side">
             <div style="padding-left: 10px">
               <ait-space [margin]="'7.25px'"></ait-space>
@@ -298,7 +298,7 @@
                 <div class="input_inline">
                   <ait-autocomplete-master [id]="'job_setting_skills'" [label]="'skills(max 10)'" [required]="true"
                     [collection]="'m_skill'" [maxItem]="maxSkillJobSetting" [placeholder]="
-                      'Fill name and enter to add your skill' | translate
+                    'Fill name and enter to add your skill' | translate
                     " [style]="{ width: '400px' }" (watchValue)="
                       takeMasterValueSkillJobSetting(
                         $event,
@@ -380,7 +380,7 @@
           <ait-button *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'" [id]="'save'" [width]="'150px'"
             [title]="'save'" (click)="save()" [isDefault]="true">
           </ait-button>
-          <ait-button *ngIf="!isChanged && mode === 'EDIT'" [id]="'save'" [width]="'150px'" [title]="'保存する'"
+          <ait-button *ngIf="!isChanged && mode === 'EDIT'" [id]="'save'" [width]="'150px'" [title]="'save'"
             [style]="'disabled'"></ait-button>
         </div>
       </div>

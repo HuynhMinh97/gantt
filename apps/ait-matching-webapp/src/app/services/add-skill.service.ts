@@ -44,15 +44,15 @@ export class AddSkillService extends AitBaseService {
       create_by: true,
       change_by: true,
     };
-    if (!condition['create_by']) {
-      condition['create_by'] = {};
-    }
+    
     condition['category'] = {
       attribute: 'category',
       ref_collection: 'sys_master_data',
       ref_attribute: '_key',
     };
-
+    if (!condition['create_by']) {
+      condition['create_by'] = {};
+    }
     if (!condition['change_by']) {
       condition['change_by'] = {};
     }

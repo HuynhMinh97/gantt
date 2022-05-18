@@ -68,9 +68,9 @@ export class AddCationComponent extends AitBaseComponent implements OnInit {
     captionData['data'] = {};
     captionData['data'][0] = {};
     const caption = await this.addCaptionService.findCaptionByKey(this.caption_key);
-    captionData['data'][0]['en_US']  = caption.data[0].name.en_US;
-    captionData['data'][0]['ja_JP'] = caption.data[0].name.ja_JP;
-    captionData['data'][0]['vi_VN'] = caption.data[0].name.vi_VN;
+    captionData['data'][0]['name_en_US']  = caption.data[0].name.en_US;
+    captionData['data'][0]['name_ja_JP'] = caption.data[0].name.ja_JP;
+    captionData['data'][0]['name_vi_VN'] = caption.data[0].name.vi_VN;
     captionData['data'][0]['module']  = caption.data[0].module;
     captionData['data'][0]['page'] = caption.data[0].page;
     captionData['data'][0]['code'] = caption.data[0].code;

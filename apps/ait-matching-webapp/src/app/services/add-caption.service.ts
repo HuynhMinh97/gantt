@@ -37,10 +37,27 @@ export class AddCaptionService extends AitBaseService{
       },
       change_at: true, change_by: true, create_at: true, create_by: true,
     };
+
+    const condition: any = {
+      _key: caption_key,
+    };
+
+    
+    if (!condition['create_by']) {
+      condition['create_by'] = {};
+    }
+
+    if (!condition['change_by']) {
+      condition['change_by'] = {};
+    }
+    condition['create_by']['type'] = 'matching';
+    condition['change_by']['type'] = 'matching';
+
+    
     const request = {};
     request['collection'] = 'sys_caption';
-    request['condition']= {};
-    request['condition']['_key'] = caption_key;
+    request['condition'] = condition;
+    
     return await this.query('findCaptionByKey', request, returnFields);
   }
 
