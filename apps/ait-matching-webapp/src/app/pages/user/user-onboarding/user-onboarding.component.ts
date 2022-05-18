@@ -856,7 +856,9 @@ export class UserOnboardingComponent
   takeMasterValue(value: any, target: string): void {
     if (isObjectFull(value)) {
       this.userOnboardingInfo.controls[target].markAsDirty();
-      this.userOnboardingInfo.controls[target].setValue(value?.value[0]);
+      this.userOnboardingInfo.controls[target].setValue(isArrayFull(value) ? value[0] : value);
+    } else {
+      this.userOnboardingInfo.controls[target].setValue(null);
     }
   }
 

@@ -584,10 +584,15 @@ export class AitAutoCompleteMasterDataComponent
         const findByKey = this.dataSourceDf.find((f) => {
           if (typeof this.defaultValue[0] === 'string') {
             return f._key === this.defaultValue[0];
-          } else {
+          } else if (this.defaultValue[0]?._key) {
             return (
               f._key === this.defaultValue[0]?._key ||
               f.code === this.defaultValue[0]?._key
+            );
+          } else {
+            return (
+              f._key === this.defaultValue[0]?.value[0]?._key ||
+              f.code === this.defaultValue[0]?.value[0]?._key
             );
           }
         });
@@ -1162,13 +1167,12 @@ export class AitAutoCompleteMasterDataComponent
 
   onSelectionChange($event) {
     this.clearErrors();
-
     this.selectOne = { _key: $event?._key, value: $event?.value };
     this.inputControl.patchValue($event?.value || '');
     this.onInput.emit({ value: $event?.value });
 
     this.watchValue.emit({
-      value: [{ _key: $event?._key, value: $event?.value }],
+      value: [{ _key: $event?._key ? $event?._key : $event?.code, value: $event?.value }],
     });
     this.getFilteredDataSource();
     if (this.required) {
