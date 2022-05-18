@@ -50,6 +50,8 @@ export class UserReorderSkillsComponent
     relationship: '',
     sort_no: 0,
   };
+  categoryOther_key = 'ed3d2608-87b9-4d85-9e15-829d24675bc1';
+  
 
   constructor(
     // private nbDialogRef: NbDialogRef<AitConfirmDialogComponent>,
@@ -165,14 +167,14 @@ export class UserReorderSkillsComponent
               skills.top_skill = true;
               skills._key = element._key;
               skills.name = element.name;
-              skills.categoryName = element.category?.value;
-              skills.categoryCode = element.category?._key;
+              skills.categoryName = element.category?.value ;
+              skills.categoryCode = element.category?._key ;
             } else {
               skills.top_skill = false;
               skills._key = element._key;
               skills.name = element.name;
-              skills.categoryName = element.category?.value;
-              skills.categoryCode = element.category?._key;
+              skills.categoryName = element.category?.value ? element.category?.value : 'Others';
+              skills.categoryCode = element.category?._key ? element.category?._key : this.categoryOther_key;
             }
             this.listSkills.push(skills);
           });

@@ -24,7 +24,7 @@ import { UserOnboardingDetailComponent } from './pages/user/user-onboarding-deta
 import { UserJobAlertDetailComponent } from './pages/user/user-job-alert-detail/user-job-alert-detail.component';
 import { UserProjectComponent } from './pages/user/user-project/user-project.component';
 import { ProjectListComponent } from './pages/list/project-list/project-list.component';
-import { SkillListViewComponent } from './pages/list/skill-list/skill-list-view/skill-list-view.component';
+import { SkillListViewComponent } from './pages/list/skill-list/skill-list.component';
 import { CertificateListComponent } from './pages/list/certificate-list/certificate-list.component';
 import { EducationListComponent } from './pages/list/education-list/education-list.component';
 import { UserCertificateDetailComponent } from './pages/user/user-certificate-detail/user-certificate-detail.component';

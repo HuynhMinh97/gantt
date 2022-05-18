@@ -47,7 +47,7 @@ export class UserOnboardingInfoResolver extends AitBaseService {
     const user_id = request.condition?.user_id;
     
     const aqlQuery = `
-    FOR v IN biz_job_setting
+    FOR v IN user_job_setting
     filter v.user_id == "${user_id}"
     RETURN v.job_setting_skills
     `;
@@ -115,7 +115,7 @@ export class UserOnboardingInfoResolver extends AitBaseService {
 
   async getJobSettingSkill(user_id: string) {
     const aqlQuery = `
-     FOR v IN biz_job_setting
+     FOR v IN user_job_setting
      filter v.user_id == "${user_id}"
      RETURN v.job_setting_skills
      `;

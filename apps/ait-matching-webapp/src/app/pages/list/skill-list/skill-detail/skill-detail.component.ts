@@ -69,7 +69,7 @@ export class SkillDetailComponent extends AitBaseComponent implements OnInit {
     dataForm['data'][0] = {};
     Object.keys(skill.data[0]).forEach((key) => {
       if (key === 'category') {
-        const value = skill.data[0][key].value;
+        const value = skill.data[0][key]?.value ? skill.data[0][key]?.value : 'Others';
         dataForm['data'][0][key] = value;
       }else if (key === 'change_at' || key === 'create_at' ) {
         const value = skill.data[0][key];
