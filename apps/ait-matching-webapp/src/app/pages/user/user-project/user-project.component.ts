@@ -146,7 +146,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       title: new FormControl(null, [Validators.required]),
       start_date_from: new FormControl(null, [Validators.required]),
       company_working: new FormControl(null, [Validators.required]),
-      name: new FormControl(null, [
+      project_name: new FormControl(null, [
         Validators.required,
         Validators.maxLength(200),
       ]),
@@ -171,25 +171,8 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
 
   // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   async ngOnInit() {
-    // this.callLoadingApp();
-    // setTimeout(() => {
-    //   this.isLoad = true;
-    // }, 500);
-    // if (this.project_key) {
-    //   this.mode = MODE.EDIT;
-    // }
-    // if (this.mode === 'NEW') {
-    //   await this.inputProject();
-    //   this.userProject.controls['title'].setValue(this.titleName);
-    //   this.userProject.controls['start_date_from'].setValue(this.dateNow);
-    //   this.userProject.controls['company_working'].setValue(this.companyName);
-    //   this.userProjectClone = this.userProject.value;
-    //   this.cancelLoadingApp();
-    // } else {
-    //   await this.findBizProject();
-    //   await this.findSkills();
-    //   this.cancelLoadingApp();
-    // }
+     this.callLoadingApp();
+    
   }
 
   public find = async (data = {}) => {
@@ -264,14 +247,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     });
   }
 
-  // async inputProject() {
-  //   await this.userProjectService
-  //     .findKeyDefault(this.user_id)
-  //     .then((res) => {
-  //       this.titleName = res.data[0].title;
-  //       this.companyName = res.data[0].company_working;
-  //     });
-  // }
+  
 
   getArrayData = (data: any[]) => {
     if (!data || data.length === 0) {
@@ -280,16 +256,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     return Array.from(new Set(data.map((d) => d?._key).filter((x) => !!x)));
   };
 
-  // getTitleByMode() {
-  //   let title = '';
-  //   if (this.mode === MODE.EDIT) {
-  //     title = this.translateService.translate('edit project')
-  //   }
-  //   if (this.mode === MODE.NEW) {
-  //     title = this.translateService.translate('add project')
-  //   }
-  //   return title;
-  // }
+  
 
   dataSaveProject(data: any) {
     this.keyEdit = data?._key;

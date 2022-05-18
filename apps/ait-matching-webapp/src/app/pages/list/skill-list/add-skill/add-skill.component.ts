@@ -77,6 +77,7 @@ export class AddSkillComponent extends AitBaseComponent implements OnInit {
     });
     saveData['sort_no'] = max + 1;
     saveData['active_flag'] = true;
+    if (this.skill_key){ saveData['_key'] = this.skill_key;}
     return await this.addSkillService.saveSkill(saveData);
   };
 }

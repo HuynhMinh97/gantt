@@ -25,8 +25,8 @@ export class UserProjectService extends AitBaseService {
       ref_attribute: '_key',
       get_by: '_key',
     }
-    condition['name'] = {
-      attribute: 'name',
+    condition['project_name'] = {
+      attribute: 'project_name',
       ref_collection: 'm_project',
       ref_attribute: '_key',
       get_by: '_key',
@@ -46,7 +46,7 @@ export class UserProjectService extends AitBaseService {
         create_by: true,
         change_at: true,
         change_by: true,
-        name:  {
+        project_name:  {
           _key: true,
           value: true
         },
@@ -222,8 +222,8 @@ export class UserProjectService extends AitBaseService {
       ref_collection: 'm_title',
       ref_attribute: '_key',
     }
-    condition['name'] = {
-      attribute: 'name',
+    condition['project_name'] = {
+      attribute: 'project_name',
       ref_collection: 'm_project',
       ref_attribute: '_key',
     }
@@ -237,7 +237,7 @@ export class UserProjectService extends AitBaseService {
       {
         _key: true,
         user_id: true,
-        name: {
+        project_name: {
           _key: true,
           value: true,
         },

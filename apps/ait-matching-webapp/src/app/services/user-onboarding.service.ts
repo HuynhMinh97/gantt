@@ -248,7 +248,7 @@ export class UserOnboardingService extends AitBaseService {
 
     };
     const request = {};
-    request['collection'] = 'biz_job_setting';
+    request['collection'] = 'user_job_setting';
     request['condition'] = condition;
     return await this.query('findJobSettingInfo', request, returnFields);
   }
@@ -295,7 +295,7 @@ export class UserOnboardingService extends AitBaseService {
     const returnField = { _key: true };
     return await this.mutation(
       'saveUserJobSettingInfo',
-      'biz_job_setting',
+      'user_job_setting',
       data,
       returnField
     );
