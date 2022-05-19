@@ -29,7 +29,7 @@ export interface CertificateDto {
 }
 
 export interface CourseDto {
-    name: string,
+    course_name: string,
     training_center: string,
     start_date_from:string,
     start_date_to: string,

@@ -439,7 +439,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           dateTo = Date.now();
         }
         course._key = element._key;
-        course.name = element.name;
+        course.course_name = element.course_name;
         course.start_date_from = element.start_date_from;
         course.start_date_to = element.start_date_to;
         course.training_center = element.training_center?.value;
