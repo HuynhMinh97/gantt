@@ -46,7 +46,7 @@ export class AitBaseService {
     const { page_key, user_key, module_key } = request;
     const page_id = 'sys_page/' + page_key;
     const user_id = 'sys_user/' + user_key;
-    
+
     const aqlStr = `
     LET role_list = (
       FOR v, e, p IN 1..1 INBOUND "${page_id}" sys_role_page
@@ -73,20 +73,20 @@ export class AitBaseService {
     } catch (error) {
       return error;
     }
-    
+
     // merge permissions
     let permissions = [];
     resData.forEach((item) => {
       permissions = [...permissions, ...item?.permission];
     });
-    
+
     // distince permisssions
     permissions = Array.from(new Set(permissions));
     const dto = new PermissionOutput();
     dto.user_id = user_key;
     dto.page = page_key;
     dto.module = module_key;
-    dto.permission = isArrayFull(permissions) ? permissions: defaultRoles;
+    dto.permission = isArrayFull(permissions) ? permissions : defaultRoles;
     return dto;
   }
 
@@ -223,7 +223,7 @@ export class AitBaseService {
     }
     aqlStr += `\r\n RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : IS_STRING(data.name) == true ? data.name : "" }) `;
 
-    // console.log(aqlStr);
+    console.log(aqlStr);
 
     try {
       const result = await this.db.query(aqlStr);

@@ -186,6 +186,7 @@ export class AitGroupSearchComponent
           module: this.moduleKey,
           page: this.pageKey,
         });
+
         if (resGroup.status === RESULT_STATUS.OK && resGroup.data.length > 0) {
           const group = resGroup.data.find((e: any) => e['type'] === 'search');
           this.groupKey = group?.code || '';
@@ -421,6 +422,7 @@ export class AitGroupSearchComponent
     } catch {
       this.cancelLoadingApp();
     } finally {
+      this.done = true;
       this.cancelLoadingApp();
     }
   }
