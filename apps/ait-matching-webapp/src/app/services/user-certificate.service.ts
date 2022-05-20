@@ -17,7 +17,7 @@ export class UserCerfiticateService extends AitBaseService {
     }
     const keyMasterArray = [
       {
-        att: 'name',
+        att: 'certificate_award_name',
         col: 'm_certificate_award',
       },
       {
@@ -36,7 +36,7 @@ export class UserCerfiticateService extends AitBaseService {
     return await this.query('findUsercertificate', {collection: 'user_certificate_award',  condition    }, 
     {
       _key : true,
-      name:{
+      certificate_award_name:{
         _key: true,
         value: true,
       },
@@ -69,7 +69,7 @@ export class UserCerfiticateService extends AitBaseService {
     }
     const keyMasterArray = [
       {
-        att: 'name',
+        att: 'certificate_award_name',
         col: 'm_certificate_award',
       },
       {
@@ -88,7 +88,7 @@ export class UserCerfiticateService extends AitBaseService {
     return await this.query('findUsercertificate', {collection: 'user_certificate_award',  condition    }, 
     {
       _key : true,
-      name:{
+      certificate_award_name:{
         _key: true,
         value: true,
       },

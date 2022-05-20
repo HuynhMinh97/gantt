@@ -5,7 +5,7 @@ import { bold } from 'chalk';
 @InputType()
 export class SaveUserCertificateDto extends BaseDto {
   @Field(() => String, { nullable: true })
-  name?: string;
+  certificate_award_name?: string;
 
   @Field(() => String, { nullable: true })
   certificate_award_number?: string;
@@ -30,7 +30,7 @@ export class SaveUserCertificateDto extends BaseDto {
 }
 @InputType()export class UserCertificateDto extends BaseDto {
   @Field(() => ConditionDto, { nullable: true })
-  name?: ConditionDto;
+  certificate_award_name?: ConditionDto;
 
   @Field(() => String, { nullable: true })
   certificate_award_number?: string;

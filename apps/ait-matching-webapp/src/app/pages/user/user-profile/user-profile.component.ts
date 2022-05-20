@@ -419,7 +419,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           centificate.issue_by = element.issue_by?.value;
           centificate.issue_date_from = element.issue_date_from;
           centificate.issue_date_to = element.issue_date_to;
-          centificate.name = element.name?.value;
+          centificate.name = element.certificate_award_name?.value;
           this.userCentificate.push(centificate);
         }
       });
