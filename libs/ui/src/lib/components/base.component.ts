@@ -949,6 +949,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
   }
 
   public async getPermission(page: string, module: string) {
+    return;
     try {
       const pageKey = await this.getKey(page, 'page');
       const moduleKey = await this.getKey(module, 'module');
