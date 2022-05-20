@@ -55,8 +55,30 @@ export class SystemDto extends BaseDto {
   @Field(() => Boolean, { nullable: true })
   is_matching?: boolean;
 }
+
 @InputType()
-export class SystemMasterDto  extends OmitType(BaseDto, ['_key'] as const){
+export class SystemAllLangDto extends BaseDto {
+  @Field(() => String, { nullable: true })
+  class?: string;
+
+  @Field(() => String, { nullable: true })
+  parent_code?: string;
+
+  @Field(() => String, { nullable: true })
+  code?: string;
+
+  @Field(() => String, { nullable: true })
+  name_VN?: string;
+
+  @Field(() => String, { nullable: true })
+  name_JP?: string;
+
+  @Field(() => String, { nullable: true })
+  name_EN?: string;
+}
+
+@InputType()
+export class SystemMasterDto extends OmitType(BaseDto, ['_key'] as const) {
   @Field(() => ConditionDto, { nullable: true })
   class?: ConditionDto;
 
@@ -72,4 +94,3 @@ export class SystemMasterDto  extends OmitType(BaseDto, ['_key'] as const){
   @Field(() => Boolean, { nullable: true })
   is_matching?: boolean;
 }
-
