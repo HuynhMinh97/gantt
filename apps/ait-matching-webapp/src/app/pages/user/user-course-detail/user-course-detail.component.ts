@@ -136,7 +136,6 @@ export class UserCourseDetailComponent
                 if (item == 'file') {
                   course[item] = this.stateUserCourse[item];
                 } else {
-                  debugger
                   course[item] = this.stateUserCourse[item].value;
                 }
               } else {

@@ -322,12 +322,11 @@
                 </div>
                 <div class="timeline-info">
                   <div>
-                    <p id="title-timeline">{{ project?.name?.value }}</p>
+                    <p id="title-timeline">{{ project?.project_name?.value }}</p>
                     <div class="desc-info">
                       <p>{{ project?.title.value }}</p>
                       <p *ngIf="!project.start_date_to">
-                        {{ project?.start_date_from | date: monthFormat }} -
-                        {{ 'my-profile.prevent' | translate }}:
+                        {{ project?.start_date_from | date: monthFormat }} 
                         {{
                           dateDiffInYears(
                             dateDiffInMonths(project?.start_date_from, null)
@@ -437,8 +436,7 @@
                     <div class="desc-info">
                       <p>{{ project?.title.value }}</p>
                       <p *ngIf="!project.start_date_to">
-                        {{ project?.start_date_from | date: monthFormat }} -
-                        {{ 'my-profile.prevent' | translate }}:
+                        {{ project?.start_date_from | date: monthFormat }} 
                         {{
                           dateDiffInYears(
                             dateDiffInMonths(project?.start_date_from, null)
@@ -615,19 +613,15 @@
                       <div class="desc-info">
                         <p>
                           {{
-                            experience?.employee_type
-                              ? experience?.employee_type?.value
-                              : 'chưa xác định'
+                            experience?.employee_type.value
                           }}
                         </p>
                         <p *ngIf="!experience.start_date_to">
                           {{
-                            experience?.start_date_from
-                              ? (experience?.start_date_from
-                                | date: monthFormat)
-                              : ('my-profile.unclear' | translate)
+                           experience?.start_date_from
+                                | date: monthFormat
                           }}
-                          - {{ 'my-profile.prevent' | translate }}:
+                          
                           {{
                             dateDiffInYears(
                               dateDiffInMonths(
@@ -640,9 +634,7 @@
                         <p *ngIf="experience.start_date_to">
                           {{
                             experience?.start_date_from
-                              ? (experience?.start_date_from
-                                | date: monthFormat)
-                              : ('my-profile.unclear' | translate)
+                                | date: monthFormat
                           }}
                           - {{ experience?.start_date_to | date: monthFormat }}:
                           {{
@@ -755,19 +747,15 @@
                       <div class="desc-info">
                         <p>
                           {{
-                            experience?.employee_type
-                              ? experience?.employee_type?.value
-                              : 'chưa xác định'
+                            experience?.employee_type?.value
                           }}
                         </p>
                         <p *ngIf="!experience.start_date_to">
                           {{
                             experience?.start_date_from
-                              ? (experience?.start_date_from
-                                | date: monthFormat)
-                              : ('my-profile.unclear' | translate)
+                                | date: monthFormat
                           }}
-                          - {{ 'my-profile.prevent' | translate }}:
+                           :
                           {{
                             dateDiffInYears(
                               dateDiffInMonths(
@@ -780,9 +768,7 @@
                         <p *ngIf="experience.start_date_to">
                           {{
                             experience?.start_date_from
-                              ? (experience?.start_date_from
-                                | date: monthFormat)
-                              : ('my-profile.unclear' | translate)
+                                | date: monthFormat
                           }}
                           - {{ experience?.start_date_to | date: monthFormat }}:
                           {{
@@ -928,18 +914,14 @@
                       </p>
                       <p *ngIf="!centificate?.issue_date_to">
                         {{
-                          centificate?.issue_date_from
-                            ? (centificate?.issue_date_from | date: dateFormat)
-                            : ('my-profile.unclear' | translate)
+                          centificate?.issue_date_from | date: dateFormat
                         }}
-                        - {{ 'my-profile.prevent' | translate }}
+                        
                       </p>
 
                       <p *ngIf="centificate?.issue_date_to">
                         {{
-                          centificate?.issue_date_from
-                            ? (centificate?.issue_date_from | date: dateFormat)
-                            : ('my-profile.unclear' | translate)
+                          centificate?.issue_date_from | date: dateFormat
                         }}
                         - {{ centificate?.issue_date_to | date: dateFormat }}
                       </p>
@@ -992,19 +974,14 @@
                         {{ centificate?.issue_by }}
                       </p>
                       <p *ngIf="!centificate?.issue_date_to">
-                        {{
-                          centificate?.issue_date_from
-                            ? (centificate?.issue_date_from | date: dateFormat)
-                            : ('my-profile.unclear' | translate)
+                        {{centificate?.issue_date_from | date: dateFormat
                         }}
-                        - {{ 'my-profile.prevent' | translate }}
+                        
                       </p>
 
                       <p *ngIf="centificate?.issue_date_to">
                         {{
-                          centificate?.issue_date_from
-                            ? (centificate?.issue_date_from | date: dateFormat)
-                            : ('my-profile.unclear' | translate)
+                          centificate?.issue_date_from | date: dateFormat
                         }}
                         - {{ centificate?.issue_date_to | date: dateFormat }}
                       </p>
@@ -1124,7 +1101,7 @@
                 <div class="timeline-info">
                   <div>
                     <p id="title-timeline">
-                      {{ course?.name?.value }}
+                      {{ course?.course_name?.value }}
                     </p>
                     <div class="desc-info">
                       <p>
@@ -1132,18 +1109,15 @@
                       </p>
                       <p *ngIf="!course?.start_date_to">
                         {{
-                          course?.start_date_from
-                            ? (course?.start_date_from | date: dateFormat)
-                            : ('my-profile.unclear' | translate)
+                          course?.start_date_from | date: dateFormat
                         }}
-                        - {{ 'my-profile.prevent' | translate }}
+                        
                       </p>
 
                       <p *ngIf="course?.start_date_to">
                         {{
-                          course?.start_date_from
-                            ? (course?.start_date_from | date: dateFormat)
-                            : ('my-profile.unclear' | translate)
+                         course?.start_date_from | date: dateFormat
+                            
                         }}
                         - {{ course?.start_date_to | date: dateFormat }}
                       </p>
@@ -1187,7 +1161,7 @@
                 <div class="timeline-info">
                   <div>
                     <p id="title-timeline">
-                      {{ course?.name?.value }}
+                      {{ course?.course_name?.value }}
                     </p>
                     <div class="desc-info">
                       <p>
@@ -1195,18 +1169,14 @@
                       </p>
                       <p *ngIf="!course?.start_date_to">
                         {{
-                          course?.start_date_from
-                            ? (course?.start_date_from | date: dateFormat)
-                            : ('my-profile.unclear' | translate)
+                        course?.start_date_from | date: dateFormat
                         }}
-                        - {{ 'my-profile.prevent' | translate }}
+                        
                       </p>
 
                       <p *ngIf="course?.start_date_to">
                         {{
-                          course?.start_date_from
-                            ? (course?.start_date_from | date: dateFormat)
-                            : ('my-profile.unclear' | translate)
+                          course?.start_date_from | date: dateFormat
                         }}
                         - {{ course?.start_date_to | date: dateFormat }}
                       </p>
@@ -1327,17 +1297,13 @@
                       </p>
                       <p *ngIf="!education.start_date_to">
                         {{
-                          education?.start_date_from
-                            ? (education?.start_date_from | date: monthFormat)
-                            : ('my-profile.unclear' | translate)
+                          education?.start_date_from | date: monthFormat
                         }}
-                        - {{ 'my-profile.prevent' | translate }}
+                        
                       </p>
                       <p *ngIf="education.start_date_to">
                         {{
-                          education?.start_date_from
-                            ? (education?.start_date_from | date: monthFormat)
-                            : ('my-profile.unclear' | translate)
+                          education?.start_date_from | date: monthFormat
                         }}
                         - {{ education?.start_date_to | date: monthFormat }}
                       </p>
@@ -1392,11 +1358,9 @@
                       </p>
                       <p *ngIf="!education.start_date_to">
                         {{
-                          education?.start_date_from
-                            ? (education?.start_date_from | date: monthFormat)
-                            : ('my-profile.unclear' | translate)
+                          education?.start_date_from | date: monthFormat
                         }}
-                        - {{ 'my-profile.prevent' | translate }}
+                       
                       </p>
                       <p *ngIf="education.start_date_to">
                         {{
