@@ -38,6 +38,7 @@ import { UserListComponent } from './pages/list/user-list/user-list.component';
 import { AddSkillComponent } from './pages/list/skill-list/add-skill/add-skill.component';
 import { CaptionListComponent } from './pages/list/caption-list/caption-list.component';
 import { CaptionDetailComponent } from './pages/list/caption-list/caption-detail/caption-detail.component';
+import { UserAccountDetailComponent } from './pages/list/user-list/user-account-detail/user-account-detail.component';
 
 // Push your routes here one by one 🎉
 
@@ -256,6 +257,11 @@ export const routes: Routes = [
     path: 'create-user/:id',
     canActivate: [AitAuthGuardService],
     component: CreateUserComponent,
+  },
+  {
+    path: 'user-account-detail/:id',
+    canActivate: [AitAuthGuardService],
+    component: UserAccountDetailComponent,
   },
   {
     path: 'skill',
