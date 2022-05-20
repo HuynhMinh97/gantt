@@ -82,6 +82,7 @@ import { CaptionDetailComponent } from './pages/list/caption-list/caption-detail
 import { MasterDataListComponent } from './pages/master-data/master-data-list/master-data-list.component';
 import { MasterDataInputComponent } from './pages/master-data/master-data-input/master-data-input.component';
 import { MasterDataViewComponent } from './pages/master-data/master-data-view/master-data-view.component';
+import { UserAccountDetailComponent } from './pages/list/user-list/user-account-detail/user-account-detail.component';
 
 const AIT_UI_MODULES = [AitChipModule, AitTabsModule, AitTocMenuModule];
 
@@ -157,6 +158,7 @@ const PAGES = [
     MasterDataListComponent,
     MasterDataInputComponent,
     MasterDataViewComponent,
+    UserAccountDetailComponent,
   ],
   imports: [
     Ng2SmartTableModule,
@@ -184,12 +186,7 @@ const PAGES = [
     ...AIT_UI_MODULES,
     ...NB_UI_MODULES,
   ],
-  providers: [
-    ...AIT_UI_SERVICES,
-    ReactionService,
-    RecommencedUserService,
-  ],
+  providers: [...AIT_UI_SERVICES, ReactionService, RecommencedUserService],
   bootstrap: [AppComponent],
 })
-export class AppModule {
-}
+export class AppModule {}

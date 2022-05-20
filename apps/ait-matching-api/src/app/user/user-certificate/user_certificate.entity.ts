@@ -4,7 +4,7 @@ import { ObjectType, Int, Field, Float } from '@nestjs/graphql';
 @ObjectType()
 export class UserCertificateEntity extends BaseEntity {
   @Field(() => KeyValueEntity, { nullable: true })
-  name?: KeyValueEntity;
+  certificate_award_name?: KeyValueEntity;
 
   @Field(() => String, { nullable: true })
   certificate_award_number?: string;

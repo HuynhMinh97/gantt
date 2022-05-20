@@ -457,7 +457,7 @@
                       )
                     "
                     [defaultValue]="
-                      userJobSettingInfo?.controls['industry']?.value
+                    userJobSettingInfo?.controls['industry']?.value
                     "
                   ></ait-autocomplete-master-data>
                 </div>
@@ -484,7 +484,7 @@
                       )
                     "
                     [defaultValue]="
-                      userJobSettingInfo?.controls['job_setting_title']?.value
+                    userJobSettingInfo?.controls['job_setting_title']?.value
                     "
                   ></ait-autocomplete-master-data>
                 </div>
@@ -512,9 +512,10 @@
                       )
                     "
                     [defaultValue]="
-                      userJobSettingInfo?.controls['location']?.value
+                    userJobSettingInfo?.controls['location']?.value
                     "
                   ></ait-autocomplete-master-data>
+                  
                 </div>
               </ng-container>
               <ait-space [margin]="'7.25px'"></ait-space>
@@ -523,7 +524,7 @@
                   <ait-autocomplete-master
                     [id]="'job_setting_skills'"
                     [label]="'skills(max 10)'"
-                    [required]="true"
+                    [required]="false"
                     [collection]="'m_skill'"
                     [maxItem]="maxSkillJobSetting"
                     [placeholder]="
@@ -570,7 +571,7 @@
                       )
                     "
                     [defaultValue]="
-                      userJobSettingInfo?.controls['job_setting_level']?.value
+                    userJobSettingInfo?.controls['job_setting_level']?.value
                     "
                   ></ait-autocomplete-master-data>
                 </div>

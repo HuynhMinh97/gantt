@@ -67,60 +67,7 @@ export class UserProjectService extends AitBaseService {
     );
   }
 
-  // tim key title luu trong biz_project
-  // async findKeyDefault(user_id?: string) {
-  //   const condition = {
-  //     user_id: user_id,
-  //     company_working: {
-  //       attribute: 'company_working',
-  //       ref_collection: 'm_company',
-  //       ref_attribute: 'code',
-  //     },
-  //     title: {
-  //       attribute: 'title',
-  //       ref_collection: 'm_title',
-  //       ref_attribute: 'code',
-  //     },
-  //     del_flag: false,
-
-  //   }
-  //   const returnFields = {
-  //     company_working: {
-  //       _key: true,
-  //       value: true,
-  //     },
-  //     title: {
-  //       _key: true,
-  //       value: true,
-  //     }
-  //   };
-
-  //   const request = {};
-  //   request['collection'] = 'user_profile';
-  //   request['condition'] = condition;
-  //   return await this.query('findKey', request, returnFields);
-  // }
-
-  // async findFromBizProjectSkill(_from?: string) {
-  //   const condition = {
-  //     _from: _from,
-  //     del_flag: false,
-  //   }
-  //   condition['skills'] = {
-  //     attribute: 'skills',
-  //     ref_collection: 'm_skill',
-  //     ref_attribute: '_key',
-  //     get_by: '_key',
-  //   }
-  //   return await this.query('findMSkills', { collection: 'biz_project_skill', condition },
-  //     {
-  //       _to: true,
-  //       skills: {
-  //         _key: true,
-  //         value: true
-  //       },
-  //     })
-  // }
+  
   async findSkillsByFrom(_from?: string) {
     const condition = {
       _from: _from,
@@ -135,21 +82,7 @@ export class UserProjectService extends AitBaseService {
       })
   }
 
-  // async findMSkillsByCode(code: string) {
-  //   const condition = {
-  //     code: code,
-  //     del_flag: false,
-  //   }
-  //   return await this.query('findKey', { collection: 'm_skill', condition }, { _key: true })
-  // }
-
-  // async findMSkillsByKey(_key: string) {
-  //   const condition = {
-  //     _key: _key,
-  //     del_flag: false,
-  //   }
-  //   return await this.query('findKey', { collection: 'm_skill', condition }, { code: true, name: true })
-  // }
+  
 
   async saveBizProject(data: any) {
     const returnField = { user_id: true, _key: true };

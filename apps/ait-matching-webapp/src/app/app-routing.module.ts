@@ -41,8 +41,9 @@ import { CaptionDetailComponent } from './pages/list/caption-list/caption-detail
 import { MasterDataListComponent } from './pages/master-data/master-data-list/master-data-list.component';
 import { MasterDataInputComponent } from './pages/master-data/master-data-input/master-data-input.component';
 import { MasterDataViewComponent } from './pages/master-data/master-data-view/master-data-view.component';
+import { UserAccountDetailComponent } from './pages/list/user-list/user-account-detail/user-account-detail.component';
 
-// Push your routes here one by one 🎉
+// Push your routes here one by one ?��
 
 export const routes: Routes = [
   {
@@ -261,6 +262,11 @@ export const routes: Routes = [
     component: CreateUserComponent,
   },
   {
+    path: 'user-account-detail/:id',
+    canActivate: [AitAuthGuardService],
+    component: UserAccountDetailComponent,
+  },
+  {
     path: 'skill',
     canActivate: [AitAuthGuardService],
     component: AddSkillComponent,
@@ -314,7 +320,7 @@ export const routes: Routes = [
     path: '',
     pathMatch: 'full',
     redirectTo: localStorage.getItem('access_token')
-      ? 'recommenced-user'
+      ? 'user-profile'
       : 'sign-in',
   },
 ];

@@ -419,7 +419,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           centificate.issue_by = element.issue_by?.value;
           centificate.issue_date_from = element.issue_date_from;
           centificate.issue_date_to = element.issue_date_to;
-          centificate.name = element.name?.value;
+          centificate.name = element.certificate_award_name?.value;
           this.userCentificate.push(centificate);
         }
       });
@@ -439,7 +439,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           dateTo = Date.now();
         }
         course._key = element._key;
-        course.name = element.name;
+        course.course_name = element.course_name;
         course.start_date_from = element.start_date_from;
         course.start_date_to = element.start_date_to;
         course.training_center = element.training_center?.value;

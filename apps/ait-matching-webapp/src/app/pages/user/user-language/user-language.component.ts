@@ -1,3 +1,5 @@
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { RESULT_STATUS } from './../../../../../../../libs/shared/src/lib/commons/enums';
 import { UserLanguageService } from './../../../services/user-language.service';
 
 import { Component, OnInit } from '@angular/core';
@@ -68,12 +70,30 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
   }
 
   public save = async (condition = {}) => {
-    const saveData = {};
-    saveData['user_id'] = this.authService.getUserID();
-    Object.keys(condition).forEach((key) => {
-      const value = condition[key];
-      saveData[key] = value;
-    });
-    return await this.userLanguageService.save([saveData]);
+    debugger
+    const userId = await this.authService.getUserID();
+    const languages = await this.userLanguageService.findUserLanguageByUserId(userId);
+    const language_list = languages.data;
+    let isExist = false;
+    language_list.forEach((lang) => {
+      if(lang['language']._key.includes(condition['language'])){
+        isExist = true;
+      }
+    })
+    if (!isExist) {
+      const saveData = {};
+      saveData['user_id'] = userId;
+      Object.keys(condition).forEach((key) => {
+        const value = condition[key];
+        saveData[key] = value;
+      });
+      return await this.userLanguageService.save([saveData]);
+    }  else {
+      const dataForm = {
+        data: [],
+      };
+      dataForm['status'] = RESULT_STATUS.ERROR;
+      return dataForm;
+    }
   };
 }
