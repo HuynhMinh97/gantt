@@ -39,7 +39,7 @@ import { AddSkillComponent } from './pages/list/skill-list/add-skill/add-skill.c
 import { CaptionListComponent } from './pages/list/caption-list/caption-list.component';
 import { CaptionDetailComponent } from './pages/list/caption-list/caption-detail/caption-detail.component';
 
-// Push your routes here one by one ðŸŽ‰
+// Push your routes here one by one ?Ž‰
 
 export const routes: Routes = [
   {
@@ -296,7 +296,7 @@ export const routes: Routes = [
     path: '',
     pathMatch: 'full',
     redirectTo: localStorage.getItem('access_token')
-      ? 'recommenced-user'
+      ? 'user-profile'
       : 'sign-in',
   },
 ];
