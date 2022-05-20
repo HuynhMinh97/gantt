@@ -6,7 +6,7 @@ export const environment = {
     COMPANY_DEFAULT: 'a8cd83a1-5a4d-4500-8751-a790d649c398',
     LANG_DEFAULT: 'en_US',
     LOCALE_DEFAULT: 'en-US',
-    VERSION: 'v1.1',
+    VERSION: 'v1.0',
     HEADER: 'Matching System v1.0',
   },
   API_PATH: {

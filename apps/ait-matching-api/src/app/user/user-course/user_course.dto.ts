@@ -4,7 +4,7 @@ import { InputType, Int, Field, Float } from '@nestjs/graphql';
 @InputType()
 export class SaveCourseDto extends BaseDto {
   @Field(() => String, { nullable: true })
-  name?: string;
+  course_name?: string;
 
   @Field(() => Boolean, { nullable: true })
   is_online?: boolean;
@@ -30,7 +30,7 @@ export class SaveCourseDto extends BaseDto {
 @InputType()
 export class CourseDto extends BaseDto {
   @Field(() => ConditionDto, { nullable: true })
-  name?: ConditionDto;
+  course_name?: ConditionDto;
 
   @Field(() => Boolean, { nullable: true })
   is_online?: boolean;

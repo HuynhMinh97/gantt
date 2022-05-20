@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostListener,
   OnInit,
   Optional,
 } from '@angular/core';
@@ -33,6 +34,7 @@ import {
   AitConfirmDialogComponent,
   AitEnvironmentService,
   AitMasterDataService,
+  AitSaveTempService,
   AitTranslationService,
   AppState,
   getUserSetting,
@@ -41,6 +43,7 @@ import {
 import { Apollo } from 'apollo-angular';
 import {
   isArrayFull,
+  isNil,
   isObjectFull,
   KEYS,
   KeyValueDto,
@@ -152,7 +155,7 @@ export class UserOnboardingComponent
   user_skill = {
     _from: '',
     _to: '',
-    level:'',
+    level: '',
     sort_no: 0,
   };
   JobSettingData: any;
@@ -168,6 +171,8 @@ export class UserOnboardingComponent
     'job_setting_skills',
   ];
 
+  isSaveTemp = true;
+  saveTemp_key = '';
   user_key = '';
   _key = '';
   user_id_profile = '';
@@ -189,7 +194,8 @@ export class UserOnboardingComponent
     apollo: Apollo,
     authService: AitAuthService,
     toastrService: NbToastrService,
-    layoutScrollService: NbLayoutScrollService
+    layoutScrollService: NbLayoutScrollService,
+    saveTempService?: AitSaveTempService
   ) {
     super(
       store,
@@ -199,7 +205,7 @@ export class UserOnboardingComponent
       env,
       layoutScrollService,
       toastrService,
-      null,
+      saveTempService,
       router
     );
 
@@ -215,9 +221,7 @@ export class UserOnboardingComponent
     });
     this.userJobSettingInfo = this.formBuilder.group({
       job_setting_title: new FormControl(null),
-      industry: new FormControl(null, [
-        Validators.maxLength(50),
-      ]),
+      industry: new FormControl(null, [Validators.maxLength(50)]),
       location: new FormControl(null),
       job_setting_skills: new FormControl(null, Validators.maxLength(50)),
       job_setting_level: new FormControl(null),
@@ -242,9 +246,7 @@ export class UserOnboardingComponent
       phone_number: new FormControl(null),
       about: new FormControl(null),
       country_region: new FormControl(null, [Validators.required]),
-      postcode: new FormControl(null, [
-        Validators.maxLength(20),
-      ]),
+      postcode: new FormControl(null, [Validators.maxLength(20)]),
       province_city: new FormControl(null, [Validators.required]),
       district: new FormControl(null, [Validators.required]),
       ward: new FormControl(null, [Validators.required]),
@@ -253,11 +255,14 @@ export class UserOnboardingComponent
         Validators.maxLength(500),
       ]),
       floor_building: new FormControl(null, [Validators.maxLength(500)]),
-      company_working: new FormControl(null,Validators.required,),
-      current_job_title: new FormControl(null,Validators.required,),
+      company_working: new FormControl(null, Validators.required),
+      current_job_title: new FormControl(null, Validators.required),
       industry_working: new FormControl(null, [Validators.required]),
-      current_job_level: new FormControl(null,Validators.required,),
-      current_job_skills: new FormControl(null,[Validators.required, Validators.maxLength(50)]),
+      current_job_level: new FormControl(null, Validators.required),
+      current_job_skills: new FormControl(null, [
+        Validators.required,
+        Validators.maxLength(50),
+      ]),
       _key: new FormControl(null),
     });
 
@@ -295,52 +300,16 @@ export class UserOnboardingComponent
         this.router.navigate([`user-detail/${this.user_key}`]);
       } else {
         this.callLoadingApp();
-        try {
-          await this.userOnbService.findJobSetting(this.user_key)?.then(async (r) => {
-            if (r.status === RESULT_STATUS.OK) {
-              this.jobSettingData = r.data[0];
-              this.userJobSettingInfo.patchValue({ ...this.jobSettingData });
-              this.userJobSettingInfoClone = this.userJobSettingInfo.value;
-              await this.findSkillJocSetting();
-            } else {
-              this.callLoadingApp();
-            }
-          });
-        } catch (error) {
-          this.callLoadingApp();
-        }
-       
-        try {
-          await this.userOnbService
-          .findUserOnboardingByKey(this.user_key)?.then(async (r) => {
-            if (r.status === RESULT_STATUS.OK) {
-              let isUserExist = false;
-              this.dataCountry = r.data[0];
-              if (r.data.length > 0 && !this.dataCountry.del_flag) {
-                this.userOnboardingInfo.patchValue({ ...this.dataCountry });
-                this.userOnboardingInfoClone = this.userOnboardingInfo.value;
 
-                this.user_id_profile = this.dataCountry.user_id;
-                this._key = this.dataCountry._key;
-                isUserExist = true;
-                await this.findSkills();
-              }
-              this.cancelLoadingApp();
-              !isUserExist && this.router.navigate([`/404`]);
-            } else {
-              this.callLoadingApp();
-            }
-          });
-        }
-        catch (error) {
-          this.callLoadingApp();
-        }
+        this.checkForTemp();
       }
     } else {
-        const existProfile = await this.userOnbService.findUserOnboardingByKey(this.user_id_profile);
-        if(isObjectFull(existProfile.data[0])) {
-          this.router.navigate([`user/${this.user_id_profile}`]);
-        }
+      const existProfile = await this.userOnbService.findUserOnboardingByKey(
+        this.user_id_profile
+      );
+      if (isObjectFull(existProfile.data[0])) {
+        this.router.navigate([`user/${this.user_id_profile}`]);
+      }
     }
     await this.getGenderList();
     setTimeout(() => {
@@ -365,7 +334,6 @@ export class UserOnboardingComponent
         this.userOnbInfo[index] = true;
       }
     }
-   
   }
 
   toggleExpan = () => {
@@ -373,11 +341,11 @@ export class UserOnboardingComponent
     this.toggle.emit(this.isExpan);
   };
   checkAllowSaveJobSetting() {
-    const jocSettingInfo = { ...this.userJobSettingInfo.value };
-    const jocSettingInfoClone = { ...this.userJobSettingInfoClone };
+    const jobSettingInfo = { ...this.userJobSettingInfo.value };
+    const jobSettingInfoClone = { ...this.userJobSettingInfoClone };
     this.isChanged = !AitAppUtils.isObjectEqual(
-      { ...jocSettingInfo },
-      { ...jocSettingInfoClone }
+      { ...jobSettingInfo },
+      { ...jobSettingInfoClone }
     );
   }
   checkAllowSave() {
@@ -415,7 +383,9 @@ export class UserOnboardingComponent
           checked: gender._key === genderObj._key ? true : false,
         })
       );
-      const gender = await this.genderList.find((gender) => gender.checked === true);
+      const gender = await this.genderList.find(
+        (gender) => gender.checked === true
+      );
       this.userOnboardingInfo.controls['gender'].setValue({
         _key: gender._key,
         value: gender.name,
@@ -461,7 +431,7 @@ export class UserOnboardingComponent
     });
   }
 
-  async findSkillJocSetting() {
+  async findSkillJobSetting() {
     const from = this.user_id;
     await this.userOnbService.findSkillJobSetting(from).then(async (res) => {
       const listSkills = [];
@@ -475,7 +445,6 @@ export class UserOnboardingComponent
       this.jobSettingSkills = listSkills;
       this.userJobSettingInfo.controls['job_setting_skills'].setValue([
         ...listSkills,
-
       ]);
       this.userJobSettingInfoClone = this.userJobSettingInfo.value;
       this.cancelLoadingApp();
@@ -526,7 +495,9 @@ export class UserOnboardingComponent
       this.userOnboardingInfo.patchValue({
         ...this.userOnboardingInfoClone,
       });
-      this.companySkills = this.userOnboardingInfo.controls['current_job_skills'].value;
+      this.companySkills = this.userOnboardingInfo.controls[
+        'current_job_skills'
+      ].value;
       for (const index in this.resetJobSettingInfo) {
         if (!this.userJobSettingInfo.controls[index].value) {
           this.resetJobSettingInfo[index] = true;
@@ -536,7 +507,9 @@ export class UserOnboardingComponent
         }
       }
       this.userJobSettingInfo.patchValue({ ...this.userJobSettingInfoClone });
-      this.jobSettingSkills = this.userJobSettingInfo.controls['job_setting_skills'].value;
+      this.jobSettingSkills = this.userJobSettingInfo.controls[
+        'job_setting_skills'
+      ].value;
       this.jobSettingData = { ...this.userJobSettingInfo.value };
       this.dataCountry = { ...this.userOnboardingInfo.value };
     }
@@ -563,10 +536,7 @@ export class UserOnboardingComponent
     const msg = this.getMsg('E0004');
     const availableTimeErr = (msg || '')
       .replace('{0}', this.translateService.translate('available_time_to'))
-      .replace(
-        '{1}',
-        this.translateService.translate('available_time_from')
-      );
+      .replace('{1}', this.translateService.translate('available_time_from'));
     this.availableTimeErrorMessage = [];
     this.availableTimeErrorMessage.push(availableTimeErr);
   }
@@ -576,8 +546,8 @@ export class UserOnboardingComponent
     const arrSkills = [];
     for (const skill of skills) {
       arrSkills.push({
-        skill:skill._key,
-        level:skill.level
+        skill: skill._key,
+        level: skill.level,
       });
     }
 
@@ -642,7 +612,6 @@ export class UserOnboardingComponent
   }
 
   saveDataUserProfile() {
-    debugger
     const saveData = this.userOnboardingInfo.value;
     saveData.ward = saveData.ward ? saveData.ward?._key : null;
     saveData.current_job_title = saveData.current_job_title
@@ -685,7 +654,7 @@ export class UserOnboardingComponent
   async saveDataUserSkill() {
     this.user_skill._from = 'sys_user/' + this.authService.getUserID();
     const skills = this.current_job_skills;
-    
+
     if (this.mode == 'EDIT') {
       const _fromSkill = [{ _from: 'sys_user/' + this.user_id }];
       await this.userOnbService.removeBizUserSkill(_fromSkill);
@@ -707,34 +676,41 @@ export class UserOnboardingComponent
     }, 100);
 
     if (
-      (this.userOnboardingInfo.valid ) &&
-      (this.userJobSettingInfo.valid ) &&
+      this.userOnboardingInfo.valid &&
+      this.userJobSettingInfo.valid &&
       !this.available_time_error
     ) {
       this.callLoadingApp();
-      try { 
-
-        await this.userOnbService.save(this.saveDataUserProfile()).then((res) => {
-          if (res?.status === RESULT_STATUS.OK) {
-            this.saveDataUserSkill();
-            this.saveJobSetting();
-            const message =
-              this.mode === 'NEW' ? this.getMsg('I0001') : this.getMsg('I0002');
-            this.showToastr('', message);
-            this.cancelLoadingApp();
-            if (this.user_key) {
-              this.router.navigate([`user-profile`]);
+      try {
+        await this.userOnbService
+          .save(this.saveDataUserProfile())
+          .then(async (res) => {
+            if (res?.status === RESULT_STATUS.OK) {
+              await this.saveDataUserSkill();
+              await this.saveJobSetting();
+              const message =
+                this.mode === 'NEW'
+                  ? this.getMsg('I0001')
+                  : this.getMsg('I0002');
+              this.showToastr('', message);
+              this.cancelLoadingApp();
+              if (this.saveTemp_key != '') {
+                this.removeSaveTemp(this.saveTemp_key);
+              }
+              this.isSaveTemp = false;
+              if (this.user_key) {
+                this.router.navigate([`user-profile`]);
+              } else {
+                this.router.navigate([`user-job-alert`]);
+              }
             } else {
-              this.router.navigate([`user-job-alert`]);
+              this.cancelLoadingApp();
+              this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
             }
-          } else {
-            this.cancelLoadingApp();
-            this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-          }
-        });
+          });
       } catch {
         this.cancelLoadingApp();
-            this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+        this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
       }
     } else {
       this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
@@ -958,6 +934,7 @@ export class UserOnboardingComponent
     this.jobSettingSkills = [];
     this.userOnboardingInfo.reset();
     this.userJobSettingInfo.reset();
+    this.removeSaveTemp(this.saveTemp_key);
     for (const index in this.resetUserInfo) {
       this.resetUserInfo[index] = true;
       setTimeout(() => {
@@ -975,6 +952,139 @@ export class UserOnboardingComponent
       setTimeout(() => {
         this.isResetCountry[index] = false;
       }, 50);
+    }
+  }
+
+  async saveTemp() {
+    try {
+      const currentData = {};
+      const userOnboard = this.userOnboardingInfo.value;
+      const userJob = this.userJobSettingInfo.value;
+
+      Object.keys(userOnboard).forEach((key) => {
+        if (!key.includes('_key')) {
+          const value = userOnboard[key];
+          currentData[key] = value;
+        } else {
+          const value = userOnboard[key];
+          currentData['user_profile_key'] = value;
+        }
+      });
+
+      Object.keys(userJob).forEach((key) => {
+        if (!key.includes('_key')) {
+          const value = userJob[key];
+          currentData[key] = value;
+        } else {
+          const value = userOnboard[key];
+          currentData['user_jobSetting_key'] = value;
+        }
+      });
+      let saveData = {};
+
+      saveData = { ...currentData };
+      const data = JSON.stringify(saveData || []);
+      if (this.mode === MODE.EDIT) {
+        await this.saveTempData(this.mode, data, this.user_key);
+      } else {
+        this.saveTempData(this.mode, data);
+      }
+    } catch {}
+  }
+
+  ngOnDestroy() {
+    if (this.isSaveTemp) {
+      this.saveTemp();
+    }
+  }
+  @HostListener('window:beforeunload', ['$event']) unloadHandler() {
+    this.saveTemp();
+  }
+
+  async removeSaveTemp(_key: string) {
+    await this.removeTempData(_key);
+  }
+
+  async checkForTemp() {
+    try {
+      let _key = '';
+      if (this.mode === MODE.EDIT) {
+        _key = this.user_key;
+      }
+      const tempData = await this.findTempData(this.mode, _key);
+      this.saveTemp_key = tempData.data[0]._key;
+      if (
+        !isNil(tempData) &&
+        tempData.status === 200 &&
+        tempData.data.length > 0
+      ) {
+        const data = JSON.parse(tempData.data[0].data || {});
+        this.userJobSettingInfo.patchValue({ ...data });
+        this.userJobSettingInfo.controls['_key'].setValue(
+          data['user_jobSetting_key']
+        );
+        console.log(this.userJobSettingInfo.value);
+        this.userOnboardingInfo.patchValue({ ...data });
+        this.userOnboardingInfo.controls['_key'].setValue(
+          data['user_profile_key']
+        );
+        console.log(this.userOnboardingInfo.value);
+
+        await this.findSkillJobSetting();
+        await this.findSkills();
+        this.isChanged = true;
+      } else {
+        this.getInfomation();
+      }
+    } catch {
+      this.getInfomation();
+    }
+  }
+
+  async getInfomation() {
+    try {
+      await this.userOnbService
+        .findJobSetting(this.user_key)
+        ?.then(async (r) => {
+          if (r.status === RESULT_STATUS.OK) {
+            this.jobSettingData = r.data[0];
+            this.userJobSettingInfo.patchValue({ ...this.jobSettingData });
+            this.userJobSettingInfoClone = this.userJobSettingInfo.value;
+            console.log(this.userJobSettingInfo.value);
+
+            await this.findSkillJobSetting();
+          } else {
+            this.callLoadingApp();
+          }
+        });
+    } catch (error) {
+      this.callLoadingApp();
+    }
+
+    try {
+      await this.userOnbService
+        .findUserOnboardingByKey(this.user_key)
+        ?.then(async (r) => {
+          if (r.status === RESULT_STATUS.OK) {
+            let isUserExist = false;
+            this.dataCountry = r.data[0];
+            if (r.data.length > 0 && !this.dataCountry.del_flag) {
+              this.userOnboardingInfo.patchValue({ ...this.dataCountry });
+              this.userOnboardingInfoClone = this.userOnboardingInfo.value;
+
+              this.user_id_profile = this.dataCountry.user_id;
+              this._key = this.dataCountry._key;
+              isUserExist = true;
+              await this.findSkills();
+            }
+            this.cancelLoadingApp();
+            !isUserExist && this.router.navigate([`/404`]);
+          } else {
+            this.callLoadingApp();
+          }
+        });
+    } catch (error) {
+      this.callLoadingApp();
     }
   }
 }
