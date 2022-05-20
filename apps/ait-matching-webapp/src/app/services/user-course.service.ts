@@ -64,15 +64,15 @@ export class UserCourseService extends AitBaseService {
       ref_collection: 'm_training_center',
       ref_attribute: '_key'
     };
-    condition['name'] = {
-      attribute: 'name',
+    condition['course_name'] = {
+      attribute: 'course_name',
       ref_collection: 'm_course',
       ref_attribute: '_key'
     };
     return await this.query('findCourse', {collection: 'user_course',  condition    }, 
     {
       _key : true,
-      name:{
+      course_name:{
         _key: true,
         value: true,
       },         

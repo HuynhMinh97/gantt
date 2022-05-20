@@ -21,8 +21,8 @@ export const environment = {
   },
   DATABASE: {
     HOST: 'http://192.168.136.17:8529/',
-    NAME: 'backup_matching_dev_2022_05_12',
-    USER: 'backup',
-    PASS: 'backup',
+    NAME: 'ait_matching_prod',
+    USER: 'ait_matching_prod',
+    PASS: 'ait_matching_prod',
   },
 };

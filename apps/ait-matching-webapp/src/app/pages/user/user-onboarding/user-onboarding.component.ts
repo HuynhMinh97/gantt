@@ -334,6 +334,7 @@ export class UserOnboardingComponent
         this.userOnbInfo[index] = true;
       }
     }
+    console.log(this.userJobSettingInfoClone)
   }
 
   toggleExpan = () => {
@@ -421,17 +422,19 @@ export class UserOnboardingComponent
           level: skill?.level,
         });
       }
-
-      this.userOnboardingInfo.controls['current_job_skills'].setValue([
-        ...listSkills,
-      ]);
-      this.companySkills = listSkills;
+      if(listSkills[0]['_key']){
+        this.userOnboardingInfo.controls['current_job_skills'].setValue([
+          ...listSkills,
+        ]);
+        this.companySkills = listSkills;
+      }
       this.userOnboardingInfoClone = this.userOnboardingInfo.value;
       this.cancelLoadingApp();
     });
   }
 
   async findSkillJobSetting() {
+   
     const from = this.user_id;
     await this.userOnbService.findSkillJobSetting(from).then(async (res) => {
       const listSkills = [];
@@ -442,10 +445,12 @@ export class UserOnboardingComponent
           level: skill?.level,
         });
       }
-      this.jobSettingSkills = listSkills;
-      this.userJobSettingInfo.controls['job_setting_skills'].setValue([
-        ...listSkills,
-      ]);
+      if(listSkills[0]['_key']){
+        this.jobSettingSkills = listSkills;
+        this.userJobSettingInfo.controls['job_setting_skills'].setValue([
+          ...listSkills,
+        ]);
+      }
       this.userJobSettingInfoClone = this.userJobSettingInfo.value;
       this.cancelLoadingApp();
     });
@@ -542,6 +547,7 @@ export class UserOnboardingComponent
   }
   async saveDataJobSetting() {
     const saveData = this.userJobSettingInfo.value;
+
     const skills = saveData.job_setting_skills;
     const arrSkills = [];
     for (const skill of skills) {
@@ -976,7 +982,7 @@ export class UserOnboardingComponent
           const value = userJob[key];
           currentData[key] = value;
         } else {
-          const value = userOnboard[key];
+          const value = userJob[key];
           currentData['user_jobSetting_key'] = value;
         }
       });
@@ -1006,6 +1012,8 @@ export class UserOnboardingComponent
   }
 
   async checkForTemp() {
+    
+
     try {
       let _key = '';
       if (this.mode === MODE.EDIT) {
@@ -1023,6 +1031,8 @@ export class UserOnboardingComponent
         this.userJobSettingInfo.controls['_key'].setValue(
           data['user_jobSetting_key']
         );
+        await this.findSkillJobSetting();
+
         console.log(this.userJobSettingInfo.value);
         this.userOnboardingInfo.patchValue({ ...data });
         this.userOnboardingInfo.controls['_key'].setValue(
@@ -1030,7 +1040,6 @@ export class UserOnboardingComponent
         );
         console.log(this.userOnboardingInfo.value);
 
-        await this.findSkillJobSetting();
         await this.findSkills();
         this.isChanged = true;
       } else {
