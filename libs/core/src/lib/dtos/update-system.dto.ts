@@ -55,3 +55,18 @@ export class UpdateSystemDto extends BaseDto {
   @Field(() => String, { nullable: true })
   category?: string;
 }
+
+@InputType()
+export class UpdateSystemAllLangDto extends BaseDto {
+  @Field(() => String, { nullable: true })
+  class?: string;
+
+  @Field(() => String, { nullable: true })
+  parent_code?: string;
+
+  @Field(() => String, { nullable: true })
+  code?: string;
+
+  @Field(() => LangDto, { nullable: true })
+  name?: LangDto;
+}
