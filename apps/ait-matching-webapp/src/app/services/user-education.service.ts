@@ -53,16 +53,7 @@ export class UserEducationService extends AitBaseService {
     return await this.query('findUserEducationInfo', request, returnFields);
   }
 
-  async findKeyCompany(_key?: string) {
-    const condition = {
-      company: _key,
-    };
-    const returnFields = { code: true };
-    const request = {};
-    request['collection'] = 'm_company';
-    request['condition'] = condition;
-    return await this.query('findSystem', request, returnFields);
-  }
+ 
 
   async findFiles(_key?: string) {
     const returnField = { _key: true };

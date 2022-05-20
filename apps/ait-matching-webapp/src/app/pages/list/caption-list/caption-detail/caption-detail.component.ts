@@ -1,24 +1,27 @@
 import { AddCaptionService } from './../../../../services/add-caption.service';
-import { AitBaseComponent } from './../../../../../../../../libs/ui/src/lib/components/base.component';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AitAuthService, AitEnvironmentService, AppState, getUserSetting } from '@ait/ui';
+import {
+  AitAuthService,
+  AitBaseComponent,
+  AitEnvironmentService,
+  AppState,
+  getUserSetting,
+} from '@ait/ui';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import dayjs from 'dayjs';
 import { isObjectFull } from '@ait/shared';
 
-
 @Component({
   selector: 'ait-caption-detail',
   templateUrl: './caption-detail.component.html',
-  styleUrls: ['./caption-detail.component.scss']
+  styleUrls: ['./caption-detail.component.scss'],
 })
 export class CaptionDetailComponent extends AitBaseComponent implements OnInit {
   _key: string;
   dateFormat: string;
-
 
   constructor(
     public activeRouter: ActivatedRoute,
@@ -30,7 +33,7 @@ export class CaptionDetailComponent extends AitBaseComponent implements OnInit {
     authService: AitAuthService,
     toastrService: NbToastrService,
     layoutScrollService: NbLayoutScrollService
-  ) { 
+  ) {
     super(
       store,
       authService,
@@ -68,18 +71,16 @@ export class CaptionDetailComponent extends AitBaseComponent implements OnInit {
 
     dataForm['data'][0] = {};
     Object.keys(skill.data[0]).forEach((key) => {
-       if (key === 'change_at' || key === 'create_at' ) {
+      if (key === 'change_at' || key === 'create_at') {
         const value = skill.data[0][key];
         dataForm['data'][0][key] = this.getDateFormat(value);
-      } else if (key === 'name')
-      {
+      } else if (key === 'name') {
         dataForm['data'][0]['en_US'] = skill.data[0]['name']['en_US'];
         dataForm['data'][0]['vi_VN'] = skill.data[0]['name']['vi_VN'];
         dataForm['data'][0]['ja_JP'] = skill.data[0]['name']['ja_JP'];
-      }else
-       {
-            const value = skill.data[0][key];
-            dataForm['data'][0][key] = value;
+      } else {
+        const value = skill.data[0][key];
+        dataForm['data'][0][key] = value;
       }
     });
     dataForm['errors'] = skill.errors;
@@ -89,5 +90,4 @@ export class CaptionDetailComponent extends AitBaseComponent implements OnInit {
     dataForm['status'] = skill.status;
     return dataForm;
   };
-
 }

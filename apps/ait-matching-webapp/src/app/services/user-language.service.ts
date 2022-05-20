@@ -41,16 +41,7 @@ export class UserLanguageService extends AitBaseService {
     return await this.query('findUserLanguageInfo', request, returnFields);
   }
 
-  async findKeyCompany(_key?: string) {
-    const condition = {
-      company: _key,
-    };
-    const returnFields = { code: true };
-    const request = {};
-    request['collection'] = 'sys_company';
-    request['condition'] = condition;
-    return await this.query('findSystem', request, returnFields);
-  }
+  
 
   async save(data: any[]) {
     const returnField = { _key: true };

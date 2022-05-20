@@ -38,9 +38,12 @@ import { UserListComponent } from './pages/list/user-list/user-list.component';
 import { AddSkillComponent } from './pages/list/skill-list/add-skill/add-skill.component';
 import { CaptionListComponent } from './pages/list/caption-list/caption-list.component';
 import { CaptionDetailComponent } from './pages/list/caption-list/caption-detail/caption-detail.component';
+import { MasterDataListComponent } from './pages/master-data/master-data-list/master-data-list.component';
+import { MasterDataInputComponent } from './pages/master-data/master-data-input/master-data-input.component';
+import { MasterDataViewComponent } from './pages/master-data/master-data-view/master-data-view.component';
 import { UserAccountDetailComponent } from './pages/list/user-list/user-account-detail/user-account-detail.component';
 
-// Push your routes here one by one ?Ž‰
+// Push your routes here one by one ?ï¿½ï¿½
 
 export const routes: Routes = [
   {
@@ -297,6 +300,21 @@ export const routes: Routes = [
     path: 'caption-detail/:id',
     canActivate: [AitAuthGuardService],
     component: CaptionDetailComponent,
+  },
+  {
+    path: 'master-data',
+    canActivate: [AitAuthGuardService],
+    component: MasterDataListComponent,
+  },
+  {
+    path: 'master-data/:id',
+    canActivate: [AitAuthGuardService],
+    component: MasterDataInputComponent,
+  },
+  {
+    path: 'caption-detail/:id',
+    canActivate: [AitAuthGuardService],
+    component: MasterDataViewComponent,
   },
   {
     path: '',

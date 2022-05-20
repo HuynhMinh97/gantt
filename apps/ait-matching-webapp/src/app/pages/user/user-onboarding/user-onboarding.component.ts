@@ -223,7 +223,7 @@ export class UserOnboardingComponent
       job_setting_title: new FormControl(null),
       industry: new FormControl(null, [Validators.maxLength(50)]),
       location: new FormControl(null),
-      job_setting_skills: new FormControl(null, Validators.maxLength(50)),
+      job_setting_skills: new FormControl(null, [Validators.maxLength(50)]),
       job_setting_level: new FormControl(null),
       available_time_from: new FormControl(null),
       available_time_to: new FormControl(null),
@@ -414,6 +414,7 @@ export class UserOnboardingComponent
   async findSkills() {
     const from = 'sys_user/' + this.user_id;
     await this.userOnbService.findSkillsByFrom(from).then(async (res) => {
+      debugger
       const listSkills = [];
       for (const skill of res.data) {
         listSkills.push({
@@ -422,12 +423,12 @@ export class UserOnboardingComponent
           level: skill?.level,
         });
       }
-      if(listSkills[0]['_key']){
+      
         this.userOnboardingInfo.controls['current_job_skills'].setValue([
           ...listSkills,
         ]);
         this.companySkills = listSkills;
-      }
+      
       this.userOnboardingInfoClone = this.userOnboardingInfo.value;
       this.cancelLoadingApp();
     });
@@ -549,15 +550,18 @@ export class UserOnboardingComponent
     const saveData = this.userJobSettingInfo.value;
 
     const skills = saveData.job_setting_skills;
-    const arrSkills = [];
-    for (const skill of skills) {
-      arrSkills.push({
-        skill: skill._key,
-        level: skill.level,
-      });
+    if (skills) {
+      const arrSkills = [];
+      for (const skill of skills) {
+        arrSkills.push({
+          skill: skill._key,
+          level: skill.level,
+        });
+      }
+      saveData.job_setting_skills = arrSkills;
     }
 
-    saveData.job_setting_skills = arrSkills;
+    
     const locations = saveData.location;
     if (locations) {
       const arrLocations = [];
@@ -688,9 +692,11 @@ export class UserOnboardingComponent
     ) {
       this.callLoadingApp();
       try {
+        debugger
         await this.userOnbService
           .save(this.saveDataUserProfile())
           .then(async (res) => {
+            debugger
             if (res?.status === RESULT_STATUS.OK) {
               await this.saveDataUserSkill();
               await this.saveJobSetting();

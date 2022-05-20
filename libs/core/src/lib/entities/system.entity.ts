@@ -52,3 +52,18 @@ export class SysEntity extends BaseEntity {
   @Field(() => String, { nullable: true })
   file_max_upload?: string;
 }
+
+@ObjectType()
+export class SysAllLangEntity extends BaseEntity {
+  @Field(() => String, { nullable: true })
+  class?: string;
+
+  @Field(() => String, { nullable: true })
+  parent_code?: string;
+
+  @Field(() => String, { nullable: true })
+  code?: string;
+
+  @Field(() => LangEntity, { nullable: true })
+  name?: LangEntity;
+}
