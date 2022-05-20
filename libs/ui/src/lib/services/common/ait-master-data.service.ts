@@ -127,7 +127,7 @@ export class AitMasterDataService extends AitBaseService {
           }
         }
         `,
-        fetchPolicy: 'network-only'
+        fetchPolicy: 'network-only',
       })
       .toPromise();
   };
@@ -140,6 +140,34 @@ export class AitMasterDataService extends AitBaseService {
       request['condition'] = condition;
     }
     return await this.query(GRAPHQL.FIND_SYSTEM, request, returnFields);
+  }
+
+  async getAllMasterDataAllLanguage(condition?: any, rf?: any) {
+    const returnFields = {
+      _key: true,
+      class: true,
+      parent_code: true,
+      code: true,
+      name: {
+        vi_VN: true,
+        ja_JP: true,
+        en_US: true,
+      },
+      create_at: true,
+      create_by: true,
+      change_at: true,
+      change_by: true,
+    };
+    const request = {};
+    request['collection'] = COLLECTIONS.MASTER_DATA;
+    if (isObjectFull(condition)) {
+      request['condition'] = condition;
+    }
+    return await this.query(
+      'getAllMasterDataAllLanguage',
+      request,
+      returnFields
+    );
   }
 
   async find(
