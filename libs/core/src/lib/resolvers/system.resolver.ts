@@ -5,8 +5,14 @@ import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { Database } from 'arangojs';
 import { AitCtxUser } from '../decorators/ait-ctx-user.decorator';
 import { SysUser } from '../entities/sys-user.entity';
-import { SystemRequest } from '../requests/system.request';
-import { SystemResponse } from '../responses/system.response';
+import {
+  SystemRequest,
+  SystemAllLangRequest,
+} from '../requests/system.request';
+import {
+  SystemResponse,
+  SystemAllLangResponse,
+} from '../responses/system.response';
 import { AitBaseService } from '../services/ait-base.service';
 
 @Resolver()
@@ -39,5 +45,18 @@ export class SystemResolver extends AitBaseService {
     @Args('request', { type: () => SystemRequest }) request: SystemRequest
   ) {
     return this.remove(request, user);
+  }
+
+  @Query(() => SystemAllLangResponse, { name: 'getAllMasterDataAllLanguage' })
+  getAllMasterDataAllLanguage(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => SystemAllLangRequest })
+    request: SystemAllLangRequest
+  ) {
+    console.log(1);
+    const aqlStr = `
+    FOR data IN sys_master_data
+    RETURN data`;
+    return this.query(aqlStr);
   }
 }
