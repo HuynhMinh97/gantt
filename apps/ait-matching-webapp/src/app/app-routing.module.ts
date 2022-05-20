@@ -40,7 +40,7 @@ import { CaptionListComponent } from './pages/list/caption-list/caption-list.com
 import { CaptionDetailComponent } from './pages/list/caption-list/caption-detail/caption-detail.component';
 import { UserAccountDetailComponent } from './pages/list/user-list/user-account-detail/user-account-detail.component';
 
-// Push your routes here one by one ðŸŽ‰
+// Push your routes here one by one ?Ž‰
 
 export const routes: Routes = [
   {
@@ -302,7 +302,7 @@ export const routes: Routes = [
     path: '',
     pathMatch: 'full',
     redirectTo: localStorage.getItem('access_token')
-      ? 'recommenced-user'
+      ? 'user-profile'
       : 'sign-in',
   },
 ];
