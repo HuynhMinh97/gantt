@@ -36,6 +36,7 @@ export class AddCaptionService extends AitBaseService{
         vi_VN: true,
       },
       change_at: true, change_by: true, create_at: true, create_by: true,
+      active_flag: true,
     };
 
     const condition: any = {

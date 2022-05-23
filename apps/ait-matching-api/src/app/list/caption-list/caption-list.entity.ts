@@ -10,6 +10,9 @@ export class CaptionListEntity extends BaseEntity{
     
     @Field(() => String, { nullable: true })
     name?: string;
+
+    @Field(() => Boolean, { nullable: true })
+    active_flag?: boolean;
   
     @Field(() => String, { nullable: true })
     code?: string;

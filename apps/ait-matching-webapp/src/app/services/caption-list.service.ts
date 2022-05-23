@@ -9,6 +9,7 @@ export class CaptionListService extends AitBaseService {
   collection = 'sys_caption';
   returnFields = {
     _key: true,
+    active_flag: true,
     name: true,
     code: true,
     module: {

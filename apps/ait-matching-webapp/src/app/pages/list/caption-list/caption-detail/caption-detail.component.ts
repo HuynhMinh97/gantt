@@ -79,8 +79,13 @@ export class CaptionDetailComponent extends AitBaseComponent implements OnInit {
         dataForm['data'][0]['vi_VN'] = skill.data[0]['name']['vi_VN'];
         dataForm['data'][0]['ja_JP'] = skill.data[0]['name']['ja_JP'];
       } else {
-        const value = skill.data[0][key];
-        dataForm['data'][0][key] = value;
+        if(key === 'active_flag'){
+          const value = skill.data[0][key];
+            dataForm['data'][0][key] = value ? 'active' : 'inactive';
+        } else {
+          const value = skill.data[0][key];
+          dataForm['data'][0][key] = value;
+        }
       }
     });
     dataForm['errors'] = skill.errors;

@@ -37,6 +37,7 @@ export class CaptionRegisterEntity extends BaseEntity {
     @Field(() => Int, { nullable: true })
     group_no?: number;
     
+    
 }
 
 @ObjectType()
