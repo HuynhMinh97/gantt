@@ -10,6 +10,7 @@ export class CaptionListResolver extends AitBaseService {
     @AitCtxUser() user: SysUser,
     @Args('request', { type: () => CaptionListRequest }) request: CaptionListRequest
   ) {
+    delete request?.condition?.active_flag;
     return this.find(request, user);
   }
 
@@ -20,6 +21,7 @@ export class CaptionListResolver extends AitBaseService {
     @Args('request', { type: () => CaptionListSearchRequest })
     request: CaptionListSearchRequest
   ) {
+    delete request?.condition?.active_flag;
     return this.find(request, user);
   }
 

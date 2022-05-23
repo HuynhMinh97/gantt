@@ -74,6 +74,7 @@ export class AddCationComponent extends AitBaseComponent implements OnInit {
     captionData['data'][0]['module']  = caption.data[0].module;
     captionData['data'][0]['page'] = caption.data[0].page;
     captionData['data'][0]['code'] = caption.data[0].code;
+    captionData['data'][0]['active_flag'] = caption.data[0].active_flag;
     return captionData;
   }
 
@@ -107,9 +108,8 @@ export class AddCationComponent extends AitBaseComponent implements OnInit {
     if(this.caption_key){
       saveData['_key'] = this.caption_key;
     }
-    saveData['active_flag'] = true;
-    console.log(saveData);
-    
+    saveData['active_flag'] = condition['active_flag'] ? condition['active_flag'] : false;
+    debugger
     return await this.addCaptionService.saveCaption(saveData);
   };
 }

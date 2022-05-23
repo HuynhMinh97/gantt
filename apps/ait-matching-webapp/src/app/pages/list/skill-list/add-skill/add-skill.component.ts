@@ -64,7 +64,6 @@ export class AddSkillComponent extends AitBaseComponent implements OnInit {
   }
 
   public save = async (condition = {}) => {
-    debugger
     const arrSortNo = [];
     const sort_no = await this.addSkillService.getMaxSortNo().then((res) => {
       res.data.forEach((r) => arrSortNo.push(r.sort_no));
@@ -77,7 +76,6 @@ export class AddSkillComponent extends AitBaseComponent implements OnInit {
       saveData[key] = value;
     });
     saveData['sort_no'] = max + 1;
-    // saveData['is_matching'] = true;
     saveData['active_flag'] = condition['active_flag'] ? condition['active_flag'] : false ;
     if (this.skill_key){ saveData['_key'] = this.skill_key;}
     return await this.addSkillService.saveSkill(saveData);

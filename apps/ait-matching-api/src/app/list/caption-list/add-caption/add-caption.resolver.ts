@@ -31,7 +31,8 @@ export class CaptionRegisterResolver extends AitBaseService {
       change_at: caption.data[0]?.change_at,
       change_by: result.data[0]?.change_by,
       create_at: caption.data[0]?.create_at,
-      create_by: result.data[0]?.create_by
+      create_by: result.data[0]?.create_by,
+      active_flag: result.data[0]?.active_flag,
     });
     const response = new CaptionResponse(
       200, 

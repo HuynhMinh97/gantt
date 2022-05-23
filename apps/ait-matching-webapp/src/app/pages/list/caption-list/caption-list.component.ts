@@ -112,6 +112,7 @@ export class CaptionListComponent extends AitBaseComponent implements OnInit {
             dataFormat['module'] = element?.module._key;
             dataFormat['page'] = element?.page._key;
             dataFormat['_key'] = element?._key;
+            dataFormat['status'] = element?.active_flag ? 'Active' : 'Inactive';
             dataFormat['name'] = element?.name;
             dataFormat['code'] = element?.code;
             dataFormat['create_by'] = element?.create_by;
