@@ -584,6 +584,7 @@ export class AitGroupInputComponent extends AitBaseComponent implements OnInit {
 
   toggle(checked: boolean, form: string): void {
     this.inputForm.controls[form].setValue(checked);
+    this.checkAllowSave();
   }
 
   getCheckBoxTitle(title: string): string {
