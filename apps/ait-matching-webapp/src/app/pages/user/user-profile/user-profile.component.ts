@@ -383,6 +383,8 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           });
           setTimeout(() => {
             this.userExperience = datacompany;
+            
+          debugger
             this.userExperience.forEach((element) => {
               element.data_project.forEach((item, index) => {
                 if (!item?.start_date_to) {

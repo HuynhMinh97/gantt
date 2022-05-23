@@ -39,6 +39,7 @@ export class AddSkillService extends AitBaseService {
         _key: true,
         value: true,
       },
+      active_flag: true,
       create_at: true,
       change_at: true,
       create_by: true,
