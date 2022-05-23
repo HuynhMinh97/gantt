@@ -75,8 +75,13 @@ export class SkillDetailComponent extends AitBaseComponent implements OnInit {
         const value = skill.data[0][key];
         dataForm['data'][0][key] = this.getDateFormat(value);
       } else {
-            const value = skill.data[0][key];
-            dataForm['data'][0][key] = value;
+        if(key === 'active_flag'){
+          const value = skill.data[0][key];
+            dataForm['data'][0][key] = value ? 'active' : 'inactive';
+        } else {
+          const value = skill.data[0][key];
+          dataForm['data'][0][key] = value;
+        }
       }
     });
     dataForm['errors'] = skill.errors;
@@ -84,6 +89,7 @@ export class SkillDetailComponent extends AitBaseComponent implements OnInit {
     dataForm['numData'] = skill.numData;
     dataForm['numError'] = skill.numError;
     dataForm['status'] = skill.status;
+    debugger
     return dataForm;
   };
 

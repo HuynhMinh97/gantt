@@ -28,6 +28,9 @@ export class SkillRegisterSaveDto extends BaseDto {
 
   @Field(() => Boolean, { nullable: true })
   active_flag?: boolean;
+
+  @Field(() => Boolean, { nullable: true })
+  is_matching?: boolean;
   
   @Field(() => String, { nullable: true })
   category?: string;

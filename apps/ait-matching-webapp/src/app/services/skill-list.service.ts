@@ -18,6 +18,7 @@ export class SkillListService extends AitBaseService {
     change_by: true,
     create_at: true,
     change_at: true,
+    active_flag: true,
   };
 
   async searchSkill(condition = {}) {
