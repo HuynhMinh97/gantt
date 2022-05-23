@@ -16,12 +16,12 @@ export const MENU_ITEMS = [
         action: () => {},
         url: '/change-password',
       },
-      {
-        iconName: 'search-outline',
-        title: 'Job Setting',
-        action: () => {},
-        url: '/',
-      },
+      // {
+      //   iconName: 'search-outline',
+      //   title: 'Job Setting',
+      //   action: () => {},
+      //   url: '/',
+      // },
       {
         iconName: 'log-out-outline',
         title: 'c_1006',
