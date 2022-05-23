@@ -26,4 +26,7 @@ export class SkillListEntity extends BaseEntity{
 
     @Field(() => Int, { nullable: true })
     sort_no?: number;
+
+    @Field(() => Boolean, { nullable: true })
+    active_flag?: boolean;
 }

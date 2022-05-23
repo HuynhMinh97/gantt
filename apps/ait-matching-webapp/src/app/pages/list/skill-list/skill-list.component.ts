@@ -89,6 +89,8 @@ export class SkillListViewComponent extends AitBaseComponent implements OnInit {
   columns = [
     { value: 'Name', _key: 'name' },
     { value: 'Code', _key: 'code' },
+    { value: 'Status', _key: 'active' },
+
     { value: 'Category', _key: 'category' },
     { value: 'Create By', _key: 'create_by' },
     { value: 'Create At', _key: 'create_at' },
@@ -139,6 +141,7 @@ export class SkillListViewComponent extends AitBaseComponent implements OnInit {
       create_at_to: new FormControl(null),
       change_at_from: new FormControl(null),
       create_at_from: new FormControl(null),
+      active: new FormControl(null),
     });
 
     store.pipe(select(getUserSetting)).subscribe((setting) => {
@@ -219,16 +222,7 @@ export class SkillListViewComponent extends AitBaseComponent implements OnInit {
     }
   }
 
-  focusToTable() {
-    try {
-      setTimeout(() => {
-        this.area.nativeElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-        });
-      }, 0);
-    } catch {}
-  }
+  
 
   ngDoCheck() {
     this.totalRows = this.source != null ? this.source.count() : 0;
@@ -308,7 +302,7 @@ export class SkillListViewComponent extends AitBaseComponent implements OnInit {
             const dataFormat = {};
             dataFormat['name'] = element?.name;
             dataFormat['type'] = element?.category?.value ? element?.category?.value : 'Others';
-
+            dataFormat['status'] = element?.active_flag ? 'Active' : 'Inactive';
             dataFormat['_key'] = element?._key;
             dataFormat['create_by'] = element?.create_by;
             dataFormat['change_by'] = element?.change_by;
@@ -361,16 +355,13 @@ export class SkillListViewComponent extends AitBaseComponent implements OnInit {
 
       if (isObjectFull(object)) {
         const data = await this.getData(object);
-        this.focusToTable();
         return { data: data };
       } else {
         const data = await this.getData();
-        this.focusToTable();
         return { data: data };
       }
     } else {
       const data = await this.getData();
-      this.focusToTable();
       return { data: data };
     }
   };

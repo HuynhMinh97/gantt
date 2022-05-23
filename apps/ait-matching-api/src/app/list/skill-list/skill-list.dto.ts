@@ -31,6 +31,9 @@ export class SkillListDto extends BaseDto  {
 
   @Field(() => String, { nullable: true })
   change_by: ChangeByDto;
+
+  @Field(() => Boolean, { nullable: true })
+    active_flag?: boolean;
 }
 
 @InputType()
@@ -59,6 +62,9 @@ export class SearchSkillListDto {
 
   @Field(() => Boolean, { nullable: true })
   del_flag?: boolean;
+
+  @Field(() => Boolean, { nullable: true })
+    active_flag?: boolean;
 
   @Field(() => ConditionDto, { nullable: true })
   category?: ConditionDto;
