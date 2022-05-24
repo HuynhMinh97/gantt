@@ -58,7 +58,6 @@ export class SysGroupEntity extends BaseEntity {
 
   @Field(() => Int, { nullable: true })
   sort_no: number;
-
 }
 
 @ObjectType()
@@ -74,10 +73,10 @@ export class SysPageEntity extends SysGroupEntity {
 
   @Field(() => String, { nullable: true })
   slug: string;
-  
+
   @Field(() => String, { nullable: true })
   param: string;
-  
+
   @Field(() => String, { nullable: true })
   type: string;
 
@@ -95,7 +94,7 @@ export class SysPageEntity extends SysGroupEntity {
 export class ComponentSettingEntity {
   @Field(() => String, { nullable: true })
   collection: string;
-  
+
   @Field(() => Int, { nullable: true })
   max_item: number;
 
@@ -104,7 +103,7 @@ export class ComponentSettingEntity {
 
   @Field(() => Int, { nullable: true })
   rows: number;
-  
+
   @Field(() => String, { nullable: true })
   width: string;
 
@@ -140,9 +139,15 @@ export class ComponentSettingEntity {
 
   @Field(() => Boolean, { nullable: true })
   is_multi_language: boolean;
-  
+
   @Field(() => String, { nullable: true })
   class: string;
+
+  @Field(() => String, { nullable: true })
+  parent_code: string;
+
+  @Field(() => String, { nullable: true })
+  parent_code_external: string;
 
   @Field(() => Boolean, { nullable: true })
   allow_new: boolean;
@@ -216,7 +221,6 @@ export class SysSearchConditionEntity extends BaseEntity {
   @Field(() => SearchSettingEntity, { nullable: true })
   search_setting: SearchSettingEntity;
 
-
   @Field(() => String, { nullable: true })
   validate: string;
 }
@@ -240,7 +244,7 @@ export class SettingEntity {
 
   @Field(() => String, { nullable: true })
   select_mode: string;
-  
+
   @Field(() => PaperEntity, { nullable: true })
   paper: PaperEntity;
 }
