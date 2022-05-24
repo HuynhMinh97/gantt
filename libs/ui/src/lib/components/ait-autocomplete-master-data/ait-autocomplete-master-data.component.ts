@@ -43,7 +43,7 @@ export class AitAutoCompleteMasterDataComponent
   extends AitBaseComponent
   implements OnInit, AfterViewChecked, OnChanges {
   inputControl: FormControl;
-  currentLang = 'ja_JP';
+  currentLang = 'en_US';
   currentCompany = '';
   @Input() isShow = false;
   constructor(
@@ -132,7 +132,7 @@ export class AitAutoCompleteMasterDataComponent
   @Input() classContainer;
   @Input() id;
   @Input() styleLabel;
-  @Input() width;
+  @Input() width = '450px';
   @Input() height;
   @Input() isSubmit = false;
   @Input() allowNew = false;
@@ -444,7 +444,7 @@ export class AitAutoCompleteMasterDataComponent
   };
 
   modifileOption = (value: string, count = 5) => {
-    const width = this.width ? this.width.replace('px', '') : 200;
+    const width = this.width ? +this.width.replace('px', '') : 250;
     if (value?.length > width / 8.5) {
       return value.substring(0, width / 8 - count) + '...';
     }

@@ -10,7 +10,7 @@ import { AitBaseService } from './ait-base.service';
 export class AitRenderPageService extends AitBaseService {
   getKey = {
     _key: true,
-    code: true
+    code: true,
   };
 
   getPage = {
@@ -21,16 +21,16 @@ export class AitRenderPageService extends AitBaseService {
     router: {
       search: true,
       input: true,
-      view: true
+      view: true,
     },
     button: {
       type: true,
       text: true,
       icon: true,
-      tooltip: true
+      tooltip: true,
     },
-    allow_new: true
-  }
+    allow_new: true,
+  };
 
   searchField = {
     item_no: true,
@@ -52,6 +52,8 @@ export class AitRenderPageService extends AitBaseService {
       from_to: true,
       is_multi_language: true,
       class: true,
+      parent_code: true,
+      parent_code_external: true,
       title: true,
       rows: true,
       allow_new: true,
@@ -63,8 +65,8 @@ export class AitRenderPageService extends AitBaseService {
       file_type: true,
       data_source: {
         _key: true,
-        value: true
-      }
+        value: true,
+      },
     },
     search_setting: {
       operator: true,
@@ -72,8 +74,8 @@ export class AitRenderPageService extends AitBaseService {
       attribute: true,
       ref_collection: true,
       ref_attribute: true,
-      get_by: true
-    }
+      get_by: true,
+    },
   };
 
   searchResult = {
@@ -120,7 +122,9 @@ export class AitRenderPageService extends AitBaseService {
   }
 
   async findGroup(condition?: any, rf?: any) {
-    const returnFields = rf ? rf : { _key: true, code: true, type: true, name: true, collection: true };
+    const returnFields = rf
+      ? rf
+      : { _key: true, code: true, type: true, name: true, collection: true };
     const request = {};
     request['collection'] = COLLECTIONS.GROUP;
     if (isObjectFull(condition)) {
@@ -202,7 +206,7 @@ export class AitRenderPageService extends AitBaseService {
     const returnFields = { data: true };
     const request = {
       collection,
-      condition
+      condition,
     };
     return await this.query(
       GRAPHQL.FIND_DATA_BY_COLLECTION,
@@ -215,7 +219,7 @@ export class AitRenderPageService extends AitBaseService {
     const returnFields = { data: true };
     const request = {
       collection,
-      condition
+      condition,
     };
     return await this.query(
       GRAPHQL.FIND_ALL_DATA_BY_COLLECTION,
@@ -236,6 +240,8 @@ export class AitRenderPageService extends AitBaseService {
 
   async remove(collection: string, _key: string) {
     const data = { _key };
-    return await this.mutation('removeSystem', collection, [data], { _key: true });
+    return await this.mutation('removeSystem', collection, [data], {
+      _key: true,
+    });
   }
 }
