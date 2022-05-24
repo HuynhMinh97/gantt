@@ -23,6 +23,8 @@
                         <ait-autocomplete-master-data
                             *ngIf="component.type === 'combobox' && component?.component_setting?.max_item === 1"
                             [collection]="component?.component_setting?.collection" [label]="component?.item_label"
+                            [parentCodeExternal]="component?.component_setting?.parent_code_external"
+                            [parentCode]="component?.component_setting?.parent_code"
                             [class]="component?.component_setting?.class"
                             [maxItem]="component?.component_setting?.max_item" [isReset]="isReset"
                             [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
@@ -44,6 +46,8 @@
                             *ngIf="component.type === 'combobox'  && component?.component_setting?.max_item !== 1"
                             [collection]="component?.component_setting?.collection" [label]="component?.item_label"
                             [class]="component?.component_setting?.class"
+                            [parentCode]="component?.component_setting?.parent_code"
+                            [parentCodeExternal]="component?.component_setting?.parent_code_external"
                             [maxItem]="component?.component_setting?.max_item" [isReset]="isReset"
                             [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
                             (watchValue)="takeMaster($event?.value, component?.item_id, 0)" [defaultValue]="
@@ -142,6 +146,8 @@
                             *ngIf="component.type === 'combobox' && component?.component_setting?.max_item === 1"
                             [collection]="component?.component_setting?.collection" [label]="component?.item_label"
                             [class]="component?.component_setting?.class"
+                            [parentCode]="component?.component_setting?.parent_code"
+                            [parentCodeExternal]="component?.component_setting?.parent_code_external"
                             [maxItem]="component?.component_setting?.max_item" [isReset]="isReset"
                             [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
                             (watchValue)="takeMaster($event?.value, component?.item_id, 1)" [defaultValue]="
@@ -162,6 +168,8 @@
                             *ngIf="component.type === 'combobox'  && component?.component_setting?.max_item !== 1"
                             [collection]="component?.component_setting?.collection" [label]="component?.item_label"
                             [class]="component?.component_setting?.class"
+                            [parentCodeExternal]="component?.component_setting?.parent_code_external"
+                            [parentCode]="component?.component_setting?.parent_code"
                             [maxItem]="component?.component_setting?.max_item" [isReset]="isReset"
                             [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
                             (watchValue)="takeMaster($event?.value, component?.item_id, 0)" [defaultValue]="
@@ -245,8 +253,8 @@
         <div class="sticky">
             <div class="action-row">
                 <div class="block">
-                    <ait-button *ngIf="mode === 'EDIT' && isAllowDelete" [id]="'remove'" [width]="'150px'" [title]="'delete'"
-                        [isDefault]="true" (click)="remove()">
+                    <ait-button *ngIf="mode === 'EDIT' && isAllowDelete" [id]="'remove'" [width]="'150px'"
+                        [title]="'delete'" [isDefault]="true" (click)="remove()">
                     </ait-button>
 
                     <ait-button *ngIf="mode === 'EDIT'" [id]="'copy'" [width]="'150px'" [title]="'copy'"
