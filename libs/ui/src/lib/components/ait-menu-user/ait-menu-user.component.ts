@@ -39,7 +39,7 @@ export class AitMenuUserComponent extends AitBaseComponent implements OnInit {
   menus = [];
   fullName = '';
   avatarURL = 'https://ui-avatars.com/api/?name=';
-  currentLang = 'ja_JP';
+  currentLang = 'en_US';
   userInfo: any = {};
   openSubMenu = false;
   isDefault = true;
@@ -105,9 +105,8 @@ export class AitMenuUserComponent extends AitBaseComponent implements OnInit {
     }
 
     const config = this.router?.config as any[];
-    const index = config.findIndex(c => c.path === 'user-profile');
-    if (index !== -1)
-    {
+    const index = config.findIndex((c) => c.path === 'user-profile');
+    if (index !== -1) {
       this.isHavingUserProfile = true;
     }
   }
@@ -151,7 +150,7 @@ export class AitMenuUserComponent extends AitBaseComponent implements OnInit {
   };
 
   naviagteToLogin = () => this.router.navigateByUrl('/sign-in');
-  
+
   navigateToMangeJobs = () => this.router.navigateByUrl('/');
 
   openUserSetting() {
