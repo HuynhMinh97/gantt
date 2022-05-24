@@ -169,6 +169,7 @@ export class RecommencedUserComponent
   textDataEnd = '';
   disableTab = false;
   isMatchingSearch = false;
+  isSubmit = false;
 
   getNummberMode8 = (target: number) => {
     if (target === 0) {
@@ -362,7 +363,9 @@ export class RecommencedUserComponent
   }
 
   loadNext = (event) => {
-    if (this.isMatchingSearch) {return}
+    if (this.isMatchingSearch) {
+      return;
+    }
     if (this.cardSkeleton.length === 0 || this.dataFilter.length !== 0) {
       const pos =
         (event.target.scrollTop || document.body.scrollTop) +
@@ -434,34 +437,35 @@ export class RecommencedUserComponent
         list,
         onlySaved,
         this.currentMatchingCount
-        );
-        if (isArrayFull(detail) && !onlySaved) {
-          this.dataMatching = this.dataMatching.concat(detail);
-          this.dataMatchingDf = [...this.dataMatching];
-          this.currentMatchingCount = Math.ceil(this.dataMatching.length / 8);
-        }
-        if (isArrayFull(detail) && onlySaved) {
-          this.dataMatchingSave = this.dataMatchingSave.concat(detail);
-          this.currentMatchingCount = Math.ceil(this.dataMatchingSave.length / 8);
-        }
-        if (
-          detail.length === 0 &&
-          ((this.dataMatching.length !== 0 && !onlySaved) ||
-            (this.dataMatchingSave.length !== 0 && onlySaved))
-        ) {
-          this.textDataNull = '';
-          this.textDataNullSave = '';
-          this.textDataEnd = '022';
-        }
-      } catch (e) {
-        console.log(e);
-      } finally {
-        console.log(1)
-        this.setSkeleton(false);
+      );
+      if (isArrayFull(detail) && !onlySaved) {
+        this.dataMatching = this.dataMatching.concat(detail);
+        this.dataMatchingDf = [...this.dataMatching];
+        this.currentMatchingCount = Math.ceil(this.dataMatching.length / 8);
+      }
+      if (isArrayFull(detail) && onlySaved) {
+        this.dataMatchingSave = this.dataMatchingSave.concat(detail);
+        this.currentMatchingCount = Math.ceil(this.dataMatchingSave.length / 8);
+      }
+      if (
+        detail.length === 0 &&
+        ((this.dataMatching.length !== 0 && !onlySaved) ||
+          (this.dataMatchingSave.length !== 0 && onlySaved))
+      ) {
+        this.textDataNull = '';
+        this.textDataNullSave = '';
+        this.textDataEnd = '022';
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      console.log(1);
+      this.setSkeleton(false);
     }
   };
 
   search() {
+    this.isSubmit = true;
     const keyword = this.searchForm.controls['keyword'].value;
     if (!keyword) {
       this.isMatchingSearch = false;
@@ -473,7 +477,7 @@ export class RecommencedUserComponent
       setTimeout(() => {
         this.setSkeleton(false);
       }, 500);
-      return
+      return;
     }
     this.setSkeleton(true);
     if (keyword) {
