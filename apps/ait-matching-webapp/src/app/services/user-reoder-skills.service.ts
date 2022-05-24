@@ -73,6 +73,7 @@ export class UserReoderSkillsService extends AitBaseService{
         value: true
       },
       name: true,
+      level: true
     })
   }
 

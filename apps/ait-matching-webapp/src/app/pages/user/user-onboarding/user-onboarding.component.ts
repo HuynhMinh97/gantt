@@ -1002,9 +1002,9 @@ export class UserOnboardingComponent
   }
 
   ngOnDestroy() {
-    if (this.isSaveTemp) {
-      this.saveTemp();
-    }
+    // if (this.isSaveTemp) {
+    //   this.saveTemp();
+    // }
   }
   @HostListener('window:beforeunload', ['$event']) unloadHandler() {
     this.saveTemp();
