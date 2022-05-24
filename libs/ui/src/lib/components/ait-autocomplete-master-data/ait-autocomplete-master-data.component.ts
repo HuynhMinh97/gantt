@@ -256,59 +256,45 @@ export class AitAutoCompleteMasterDataComponent
   };
 
   handleRemove = (option: any) => {
-    if (option?.is_matching) {
-      this.masterDataService
-        .deleteDataEachItem({ _key: option?.id })
-        .then((res) => {
-          if (res) {
-            this.DataSource = this.DataSource.filter(
-              (f) => f._key !== option._key
-            );
-            this.dataSourceDf = this.dataSourceDf.filter(
-              (f) => f._key !== option._key
-            );
+    this.masterDataService
+      .deleteDataEachItem({ _key: option?.id })
+      .then((res) => {
+        if (res) {
+          this.DataSource = this.DataSource.filter(
+            (f) => f._key !== option._key
+          );
+          this.dataSourceDf = this.dataSourceDf.filter(
+            (f) => f._key !== option._key
+          );
 
-            if (this.maxItem === 1) {
-              if (this.selectOne?._key === option?._key) {
-                this.selectOne = {};
-                this.watchValue.emit({ value: [] });
-              }
-            } else {
-              this.optionSelected = this.optionSelected.filter(
-                (f) => f._key !== option?._key
-              );
-              this.watchValue.emit({
-                value: this.optionSelected.map((s) => ({
-                  _key: s?._key,
-                  value: s?.value,
-                })),
-              });
+          if (this.maxItem === 1) {
+            if (this.selectOne?._key === option?._key) {
+              this.selectOne = {};
+              this.watchValue.emit({ value: [] });
             }
-
-            setTimeout(() => {
-              if (this.errorMessages?.length === 0) {
-                this.isError = false;
-                // this.errorMessages = [];
-                this.componentErrors = [];
-              } else {
-                this.componentErrors = [];
-              }
-            }, 150);
-            this.filteredOptions$ = of(this.DataSource);
+          } else {
+            this.optionSelected = this.optionSelected.filter(
+              (f) => f._key !== option?._key
+            );
+            this.watchValue.emit({
+              value: this.optionSelected.map((s) => ({
+                _key: s?._key,
+                value: s?.value,
+              })),
+            });
           }
-        });
-    } else {
-      setTimeout(() => {
-        this.isError = false;
-        // this.errorMessages = [];
-        this.componentErrors = [];
-      }, 150);
-      this.showToastr(
-        'Thông báo',
-        'Không thể xóa vì dữ liệu không hệ thống Matching!',
-        'warning'
-      );
-    }
+
+          setTimeout(() => {
+            if (this.errorMessages?.length === 0) {
+              this.isError = false;
+              this.componentErrors = [];
+            } else {
+              this.componentErrors = [];
+            }
+          }, 150);
+          this.filteredOptions$ = of(this.DataSource);
+        }
+      });
   };
 
   ngOnChanges(changes: SimpleChanges) {
@@ -386,7 +372,6 @@ export class AitAutoCompleteMasterDataComponent
             code: r._key || r._key,
             value: r[this.targetValue] || r?.value,
             _key: r._key || r._key,
-            is_matching: r?.is_matching,
             id: r?._key,
           }));
 
@@ -401,7 +386,6 @@ export class AitAutoCompleteMasterDataComponent
       const all = {
         code: 'all',
         id: 'all',
-        is_matching: false,
         value: 'Check All',
         _key: 'all',
       };
@@ -479,7 +463,6 @@ export class AitAutoCompleteMasterDataComponent
           en_US: value,
         },
         sort_no: this.lastSortNo + 1,
-        is_matching: true,
         active_flag: true,
       };
       if (this.class && this.collection === 'sys_master_data') {
@@ -665,7 +648,6 @@ export class AitAutoCompleteMasterDataComponent
           _key: true,
           code: true,
           [this.targetValue]: true,
-          is_matching: true,
           sort_no: true,
         },
         this.collection,
@@ -684,7 +666,6 @@ export class AitAutoCompleteMasterDataComponent
       code: r._key || r.code,
       value: r[this.targetValue] || r?.value,
       _key: r._key || r.code,
-      is_matching: r?.is_matching,
       id: r?._key,
     }));
 
@@ -1172,7 +1153,12 @@ export class AitAutoCompleteMasterDataComponent
     this.onInput.emit({ value: $event?.value });
 
     this.watchValue.emit({
-      value: [{ _key: $event?._key ? $event?._key : $event?.code, value: $event?.value }],
+      value: [
+        {
+          _key: $event?._key ? $event?._key : $event?.code,
+          value: $event?.value,
+        },
+      ],
     });
     this.getFilteredDataSource();
     if (this.required) {
