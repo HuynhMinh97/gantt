@@ -109,7 +109,6 @@ export class AddCationComponent extends AitBaseComponent implements OnInit {
       saveData['_key'] = this.caption_key;
     }
     saveData['active_flag'] = condition['active_flag'] ? condition['active_flag'] : false;
-    debugger
     return await this.addCaptionService.saveCaption(saveData);
   };
 }

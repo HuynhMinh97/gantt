@@ -414,7 +414,6 @@ export class UserOnboardingComponent
   async findSkills() {
     const from = 'sys_user/' + this.user_id;
     await this.userOnbService.findSkillsByFrom(from).then(async (res) => {
-      debugger
       const listSkills = [];
       for (const skill of res.data) {
         listSkills.push({
@@ -692,11 +691,9 @@ export class UserOnboardingComponent
     ) {
       this.callLoadingApp();
       try {
-        debugger
         await this.userOnbService
           .save(this.saveDataUserProfile())
           .then(async (res) => {
-            debugger
             if (res?.status === RESULT_STATUS.OK) {
               await this.saveDataUserSkill();
               await this.saveJobSetting();
@@ -1005,9 +1002,9 @@ export class UserOnboardingComponent
   }
 
   ngOnDestroy() {
-    if (this.isSaveTemp) {
-      this.saveTemp();
-    }
+    // if (this.isSaveTemp) {
+    //   this.saveTemp();
+    // }
   }
   @HostListener('window:beforeunload', ['$event']) unloadHandler() {
     this.saveTemp();
@@ -1038,13 +1035,10 @@ export class UserOnboardingComponent
           data['user_jobSetting_key']
         );
         await this.findSkillJobSetting();
-
-        console.log(this.userJobSettingInfo.value);
         this.userOnboardingInfo.patchValue({ ...data });
         this.userOnboardingInfo.controls['_key'].setValue(
           data['user_profile_key']
         );
-        console.log(this.userOnboardingInfo.value);
 
         await this.findSkills();
         this.isChanged = true;

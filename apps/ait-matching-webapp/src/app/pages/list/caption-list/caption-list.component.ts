@@ -82,7 +82,6 @@ export class CaptionListComponent extends AitBaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.callLoadingApp();
-    console.log(this.dateFormat);
   }
 
   getOperator(key: string) {

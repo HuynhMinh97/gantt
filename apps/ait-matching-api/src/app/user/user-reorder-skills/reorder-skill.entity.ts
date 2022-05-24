@@ -21,6 +21,9 @@ export class ReorderSkillEntity extends BaseEntity {
 
   @Field(() => String, { nullable: true })
   name?: string;
+
+  @Field(() => String, { nullable: true })
+  level?: string;
   
   @Field(() => KeyValueEntity, { nullable: true })
   category?: KeyValueEntity;
