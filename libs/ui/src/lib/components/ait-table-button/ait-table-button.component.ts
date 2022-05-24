@@ -1,7 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { isObjectFull } from '@ait/shared';
-import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewEncapsulation,
+} from '@angular/core';
 import {
   NbToastrService,
   NbLayoutScrollService,
@@ -13,7 +20,12 @@ import { Router } from '@angular/router';
 import { NbIconLibraries } from '@nebular/theme';
 import { AitBaseComponent } from '../base.component';
 import { AppState } from '../../state/selectors';
-import { AitAuthService, AitEnvironmentService, AitTranslationService, AitUserService } from '../../services';
+import {
+  AitAuthService,
+  AitEnvironmentService,
+  AitTranslationService,
+  AitUserService,
+} from '../../services';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -45,8 +57,14 @@ export class AitTableButtonComponent
       toastrService,
       null
     );
-    this.iconLibraries.registerFontPack('font-awesome', { packClass: 'far', iconClassPrefix: 'fa' });
-    this.iconLibraries.registerFontPack('font-awesome-fas', { packClass: 'fas', iconClassPrefix: 'fa' });
+    this.iconLibraries.registerFontPack('font-awesome', {
+      packClass: 'far',
+      iconClassPrefix: 'fa',
+    });
+    this.iconLibraries.registerFontPack('font-awesome-fas', {
+      packClass: 'fas',
+      iconClassPrefix: 'fa',
+    });
     this.path = this.router.url;
   }
   @Input() value: any;
@@ -60,13 +78,11 @@ export class AitTableButtonComponent
   items: NbMenuItem[] = [];
 
   message = '他システムのデータのため、修正できません。';
-  isMatching = false;
   ngOnInit(): void {
     if (isObjectFull(this.rowData)) {
-      this.isMatching = !!this.rowData.is_matching;
       this.items = [
         {
-          title: this.isMatching ? 'EDIT' : this.message,
+          title: 'EDIT',
           icon: 'edit-outline',
         },
         {
