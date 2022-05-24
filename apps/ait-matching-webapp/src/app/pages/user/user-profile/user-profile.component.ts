@@ -299,7 +299,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
             this.skillByCategory.push(skillsGroup);
           }
         });
-        debugger
+       
       }
     });
    
