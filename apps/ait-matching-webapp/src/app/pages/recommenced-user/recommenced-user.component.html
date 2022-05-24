@@ -19,7 +19,7 @@
             </button>
         </div>
 
-        <ait-card-content style="width: 100%;" [isColumn]="true" [label]="'Filter'"
+        <ait-card-content style="width: 100%;" [isColumn]="true" [label]="'Filter'" *ngIf="isSubmit"
             [styleLabel]="{'font-size': '1.5vmax'}">
             <div class="content">
                 <div class="left_side">
@@ -94,7 +94,7 @@
         </ait-card-content>
 
         <!-- result -->
-        <div class="ait__matching__result" tabindex="23" style="outline-color: #10529d">
+        <div class="ait__matching__result" tabindex="23" style="outline-color: #10529d" *ngIf="isSubmit">
             <div class="ait__matching__header">
                 <ait-text-gradient [fontsize]="'20px'" [content]="getTitle('Recommendation for you')">
                 </ait-text-gradient>
