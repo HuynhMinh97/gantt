@@ -33,6 +33,7 @@
                             <ait-autocomplete-master-data *ngIf="component.type === 'combobox'"
                                 [class]="component?.component_setting?.class"
                                 [parentCodeExternal]="component?.component_setting?.parent_code_external"
+                                [parentCode]="component?.component_setting?.parent_code"
                                 [collection]="component?.component_setting?.collection" [label]="component?.item_label"
                                 [maxItem]="component?.component_setting?.max_item"
                                 [placeholder]="component?.item_placeholder" [disableOutputDefault]="true"
@@ -107,6 +108,7 @@
                             <div [ngStyle]="{margin: component?.component_setting?.margin || 0}"></div>
                             <ait-autocomplete-master-data *ngIf="component.type === 'combobox'"
                                 [class]="component?.component_setting?.class"
+                                [parentCode]="component?.component_setting?.parent_code"
                                 [parentCodeExternal]="component?.component_setting?.parent_code_external"
                                 [collection]="component?.component_setting?.collection" [label]="component?.item_label"
                                 [maxItem]="component?.component_setting?.max_item"
