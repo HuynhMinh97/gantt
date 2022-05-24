@@ -1,13 +1,25 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { NbComponentShape, NbComponentSize, NbComponentStatus } from '@nebular/theme';
+import {
+  NbComponentShape,
+  NbComponentSize,
+  NbComponentStatus,
+} from '@nebular/theme';
 import { AitTranslationService } from '../../services';
 
 @Component({
   selector: 'ait-input-text',
   templateUrl: './ait-input-text.component.html',
   styleUrls: ['./ait-input-text.component.scss'],
-  moduleId: 'ait-input-text'
+  moduleId: 'ait-input-text',
 })
 export class AitTextInputComponent implements OnChanges {
   @Input() status: NbComponentStatus = null;
@@ -26,7 +38,7 @@ export class AitTextInputComponent implements OnChanges {
   @Input() placeholder;
   @Input() styleMessage = {};
   @Input() label;
-  @Input() guidance = ''
+  @Input() guidance = '';
   @Input() guidanceIcon = '';
   @Input() rows = 1;
   @Input() cols;
@@ -43,39 +55,38 @@ export class AitTextInputComponent implements OnChanges {
   @Input() type = 'text';
   @Input() regex: RegExp;
   isShowPass = false;
-  componentErrors = []
+  componentErrors = [];
   msgRequired = '';
   errorArray = [];
   value = '';
   isFocus = false;
   @Input() tabIndex;
 
-
   inputCtrl: FormControl;
 
   focusInput = () => {
     this.isFocus = true;
-  }
+  };
 
-  getFocus = () => this.isError ? false : this.isFocus;
+  getFocus = () => (this.isError ? false : this.isFocus);
 
   getNameField = () => this.translateService.translate(this.label || '');
 
   getCaption = () => this.translateService.translate(this.guidance);
 
-
   constructor(private translateService: AitTranslationService) {
     this.inputCtrl = new FormControl('');
-    this.msgRequired = this.translateService.getMsg('E0001').replace('{0}', this.getNameField());
-
+    this.msgRequired = this.translateService
+      .getMsg('E0001')
+      .replace('{0}', this.getNameField());
   }
   ID(element: string) {
     const idx = this.id && this.id !== '' ? this.id : Date.now();
     return idx + '_' + element;
   }
 
-
-  messagesError = () => Array.from(new Set([...this.componentErrors, ...this.errorMessages]))
+  messagesError = () =>
+    Array.from(new Set([...this.componentErrors, ...this.errorMessages]));
 
   ngOnChanges(changes: SimpleChanges) {
     for (const key in changes) {
@@ -88,29 +99,28 @@ export class AitTextInputComponent implements OnChanges {
             this.checkMaxLength();
           }
           if (this.required) {
-            this.onError.emit({ isValid: this.defaultValue && this.defaultValue.length !== 0 });
+            this.onError.emit({
+              isValid: this.defaultValue && this.defaultValue.length !== 0,
+            });
           }
         }
         if (key === 'errorMessages') {
           if (this.messagesError().length !== 0) {
             this.isError = true;
             this.onError.emit({ isValid: false });
-          }
-          else {
+          } else {
             if (this.required) {
-              if (this.inputCtrl.value && (this.inputCtrl.value || '').length !== 0) {
-
-              }
-              else {
+              if (
+                this.inputCtrl.value &&
+                (this.inputCtrl.value || '').length !== 0
+              ) {
+              } else {
                 this.onError.emit({ isValid: false });
               }
             } else {
               this.isError = false;
               this.onError.emit({ isValid: true });
             }
-
-
-
           }
         }
         if (key === 'isSubmit') {
@@ -124,7 +134,6 @@ export class AitTextInputComponent implements OnChanges {
           }
         }
         if (key === 'isReset') {
-
           if (this.isReset) {
             this.reset();
             this.isError = false;
@@ -148,17 +157,21 @@ export class AitTextInputComponent implements OnChanges {
   checkMaxLength = (value?: string) => {
     const target = (value || '').length !== 0 ? value : this.defaultValue;
 
-    const maxlengthMsg = this.translateService.getMsg('E0003').replace('{0}', this.getNameField()).replace('{1}', this.length)
+    const maxlengthMsg = this.translateService
+      .getMsg('E0003')
+      .replace('{0}', this.getNameField())
+      .replace('{1}', this.length);
     if (target.length > this.length) {
       this.onError.emit({ isValid: false });
 
       this.componentErrors = [...this.componentErrors, maxlengthMsg];
-    }
-    else {
+    } else {
       this.onError.emit({ isValid: true });
-      this.componentErrors = [...this.componentErrors].filter(f => f !== maxlengthMsg);
+      this.componentErrors = [...this.componentErrors].filter(
+        (f) => f !== maxlengthMsg
+      );
     }
-  }
+  };
   public reset() {
     this.inputCtrl.reset();
   }
@@ -166,30 +179,14 @@ export class AitTextInputComponent implements OnChanges {
   focusout = () => {
     this.checkReq(this.inputCtrl.value);
     this.checkMaxLength(this.inputCtrl.value);
-  }
+  };
 
   checkReq = (value: string) => {
     if (this.required) {
       if (!value) {
-        const msg = this.translateService.getMsg('E0001').replace('{0}', this.getNameField());
-        this.isError = true;
-        this.componentErrors = [msg];
-        this.onError.emit({ isValid: false });
-      }
-      else {
-        this.componentErrors = [];
-        this.errorMessages = [];
-        if (this.messagesError().length === 0) {
-          this.isError = false;
-          this.onError.emit({ isValid: true });
-        }
-      }
-    }
-    
-    if (value && this.regex) {
-      const isValid = !!value.match(this.regex);
-      if (!isValid) {
-        const msg = this.translateService.getMsg('E0013') || 'Dữ liệu không hợp lệ';
+        const msg = this.translateService
+          .getMsg('E0001')
+          .replace('{0}', this.getNameField());
         this.isError = true;
         this.componentErrors = [msg];
         this.onError.emit({ isValid: false });
@@ -202,7 +199,25 @@ export class AitTextInputComponent implements OnChanges {
         }
       }
     }
-  }
+
+    if (value && this.regex) {
+      const isValid = !!value.match(this.regex);
+      if (!isValid) {
+        const msg =
+          this.translateService.getMsg('E0013') || 'Dữ liệu không hợp lệ';
+        this.isError = true;
+        this.componentErrors = [msg];
+        this.onError.emit({ isValid: false });
+      } else {
+        this.componentErrors = [];
+        this.errorMessages = [];
+        if (this.messagesError().length === 0) {
+          this.isError = false;
+          this.onError.emit({ isValid: true });
+        }
+      }
+    }
+  };
 
   getPlaceholder = () => this.translateService.translate(this.placeholder);
 
@@ -211,9 +226,14 @@ export class AitTextInputComponent implements OnChanges {
     this.checkReq(value);
     this.checkMaxLength(value);
     this.watchValue.emit(value);
-
   }
   toggleShowPass() {
     this.isShowPass = !this.isShowPass;
+  }
+
+  keyPress(e: any) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
   }
 }

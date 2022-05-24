@@ -67,7 +67,7 @@ export interface BaseInitData {
 })
 export class AitBaseComponent implements OnInit, OnDestroy {
   public module: string;
-  public lang = 'ja_JP';
+  public lang = 'en_US';
   public page: string;
   public sup = new Subscription();
   public type = '';
@@ -878,7 +878,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
           findSystem(request : {
             collection : "sys_${type}",
             company: "${this.company || this.env?.COMMON?.COMPANY_DEFAULT}",
-              lang: "ja_JP",
+              lang: "en_US",
             condition: {
               code : {
                 value : ["${code}"]
