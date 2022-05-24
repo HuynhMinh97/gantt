@@ -1,158 +1,63 @@
 <div [ngClass]="classContainer" cdkDropListGroup>
-  <ait-label
-    [label]="label"
-    [required]="required"
-    *ngIf="label && !hideLabel"
-    [id]="id"
-    [styleText]="styleLabel"
-  ></ait-label>
+  <ait-label [label]="label" [required]="required" *ngIf="label && !hideLabel" [id]="id" [styleText]="styleLabel">
+  </ait-label>
 
-  <div
-    style="display: flex; flex-wrap: wrap; flex-direction: column"
-    class="wrapper"
-  >
-    <div
-      class="input__container"
-      [ngStyle]="style"
-      style="margin-top: 8px; background-color: #fff"
-      [class.isError]="isError"
-      #inputContainer
-      [style.width]="width"
-      [style.height]="height"
-      [class.focus]="getFocus()"
-    >
-      <div cdkDropList
-        style="
+  <div style="display: flex; flex-wrap: wrap; flex-direction: column" class="wrapper">
+    <div class="input__container" [ngStyle]="style" style="margin-top: 8px; background-color: #fff"
+      [class.isError]="isError" #inputContainer [style.width]="width" [style.height]="height"
+      [class.focus]="getFocus()">
+      <div cdkDropList style="
           width: 100%;
           height: 100%;
           background-color: transparent;
           display: flex;
-        "
-        (click)="handleClick()"
-      >
-        <div
-          #myIdentifier
-          class="span"
-          *ngIf="optionSelected.length !== 0 && !isReadOnly && !isHideLabel"
-          nbPrefix
-        >
-          <p
-            [nbTooltip]="displayOptions()"
-            [ngStyle]="styleInput"
-            style="font-weight: bold; font-size: 12px; cursor: context-menu"
-            id="{{ ID('selected_items') }}"
-          >
+        " (click)="handleClick()">
+        <div #myIdentifier class="span" *ngIf="optionSelected.length !== 0 && !isReadOnly && !isHideLabel" nbPrefix>
+          <p [nbTooltip]="displayOptions()" [ngStyle]="styleInput"
+            style="font-weight: bold; font-size: 12px; cursor: context-menu" id="{{ ID('selected_items') }}">
             {{ getSelectedItems(optionSelected) }}
           </p>
         </div>
 
-        <input
-          id="{{ ID('input') }}"
-          fullWidth
-          nbInput
-          [value]="modifileOption(VALUE)"
-          type="text"
-          autocomplete="off"
-          class="search"
-          [ngStyle]="styleInput"
-          [placeholder]="getPlaceHolder()"
-          [disabled]="isReadOnly"
-          [readOnly]="isReadOnly"
-          *ngIf="isReadOnly"
-          style="font-size: 12px"
-          autocomplete="new-password"
-          #input
-          (blur)="this.isFocus = false"
-          (focus)="focusInput()"
-          tabindex="{{ tabIndex }}"
-        />
+        <input id="{{ ID('input') }}" fullWidth nbInput [value]="modifileOption(VALUE)" type="text" autocomplete="off"
+          class="search" [ngStyle]="styleInput" [placeholder]="getPlaceHolder()" [disabled]="isReadOnly"
+          [readOnly]="isReadOnly" *ngIf="isReadOnly" style="font-size: 12px" autocomplete="new-password" #input
+          (blur)="this.isFocus = false" (focus)="focusInput()" tabindex="{{ tabIndex }}" />
 
-        <input
-          id="{{ ID('input') }}"
-          *ngIf="!isReadOnly"
-          [formControl]="inputControl"
-          [placeholder]="PLACEHOLDER"
-          autocomplete="off"
-          fullWidth
-          nbInput
-          #input
-          (focus)="focusInput()"
-          type="text"
-          class="search"
-          style="padding-left: 10px; font-size: 12px"
-          [ngStyle]="styleInput"
-          (input)="handleInput($event.target.value)"
-          (focusout)="outFocus()"
-          (blur)="
+        <input id="{{ ID('input') }}" *ngIf="!isReadOnly" [formControl]="inputControl" [placeholder]="PLACEHOLDER"
+          autocomplete="off" fullWidth nbInput #input (focus)="focusInput()" type="text" class="search"
+          style="padding-left: 10px; font-size: 12px" [ngStyle]="styleInput" (input)="handleInput($event.target.value)"
+          (focusout)="outFocus()" (blur)="
             blur(input.value) ? (input.value = '') : null; this.isFocus = false
-          "
-          (keydown.tab)="onTab()"
-          (keydown.enter)="enter($event)"
-          tabindex="{{ tabIndex }}"
-        />
+          " (keydown.tab)="onTab()" (keydown.enter)="enter($event)" tabindex="{{ tabIndex }}" />
 
-        <div cdkDropList
-          class="autocompleteeeee emptyy"
-          *ngIf="MAXITEM !== 1 && isOpenAutocomplete && dataFilter.length !== 0"
-          (cdkDropListDropped)="drop($event)"
-        >
+        <div cdkDropList class="autocompleteeeee emptyy"
+          *ngIf="MAXITEM !== 1 && isOpenAutocomplete && dataFilter.length !== 0" (cdkDropListDropped)="drop($event)">
           <div cdkDrag [cdkDragDisabled]="allowCheckAll && i === 0 ? true : !allowDragDrop"
-            *ngFor="let option of filteredOptions$ | async; let i = index"
-            class="option__container"
-            style="cursor: pointer; position: relative; height: 37px"
-          >
-            <div 
-              (click)="optionClicked($event, option)"
-              style="
+            *ngFor="let option of filteredOptions$ | async; let i = index" class="option__container"
+            style="cursor: pointer; position: relative; height: 37px">
+            <div (click)="optionClicked($event, option)" style="
                 position: absolute;
                 height: 100%;
                 width: 100%;
                 z-index: 9999;
                 background-color: transparent;
-              "
-              nbTooltipPlacement="right"
-              [nbTooltip]="option?.value"
-            ></div>
-            <nb-checkbox
-              [(checked)]="option.isChecked"
-              style="cursor: pointer; margin-left: 15px"
-              [status]="'primary'"
-              [id]="ID('checkbox_' + i)"
-            >
-              <span
-                class="textx"
-                style="cursor: pointer; font-size: 12px"
-                id="{{ ID('selection_value') }}"
-                >{{ option?.value }}</span
-              >
+              " nbTooltipPlacement="right" [nbTooltip]="option?.value"></div>
+            <nb-checkbox [(checked)]="option.isChecked" style="cursor: pointer; margin-left: 15px" [status]="'primary'"
+              [id]="ID('checkbox_' + i)">
+              <span class="textx" style="cursor: pointer; font-size: 12px" id="{{ ID('selection_value') }}">{{
+                option?.value }}</span>
             </nb-checkbox>
-            <nb-icon
-              icon="close-outline"
-              nbTooltipPlacement="right"
-              [nbTooltip]="'削除'"
-              (click)="handleRemove(option)"
-              *ngIf="allowDelete && option?.is_matching"
-              style="position: absolute; z-index: 99991; right: 0"
-            ></nb-icon>
+            <nb-icon icon="close-outline" nbTooltipPlacement="right" [nbTooltip]="'削除'" (click)="handleRemove(option)"
+              *ngIf="allowDelete" style="position: absolute; z-index: 99991; right: 0"></nb-icon>
           </div>
         </div>
-        <div cdkDropList
-          class="autocompleteeeee emptyy"
-          *ngIf="MAXITEM === 1 && isOpenAutocomplete && dataFilter.length !== 0"
-          (cdkDropListDropped)="drop($event)"
-        >
-          <div
-            *ngFor="let option of filteredOptions$ | async"
-            class="option__container"
-            style="cursor: pointer"
-            [class.isSelect]="option?._key === selectOne?._key"
-            (click)="onSelectionChange(option)"
-            nbTooltipPlacement="right"
-            [nbTooltip]="option?.value"
-            cdkDrag [cdkDragDisabled]="!allowDragDrop"
-          >
-            <div
-              style="
+        <div cdkDropList class="autocompleteeeee emptyy"
+          *ngIf="MAXITEM === 1 && isOpenAutocomplete && dataFilter.length !== 0" (cdkDropListDropped)="drop($event)">
+          <div *ngFor="let option of filteredOptions$ | async" class="option__container" style="cursor: pointer"
+            [class.isSelect]="option?._key === selectOne?._key" (click)="onSelectionChange(option)"
+            nbTooltipPlacement="right" [nbTooltip]="option?.value" cdkDrag [cdkDragDisabled]="!allowDragDrop">
+            <div style="
                 cursor: pointer;
                 font-weight: 600;
                 font-size: 12px;
@@ -160,51 +65,30 @@
                 padding-left: 15px;
                 width: 100%;
                 padding-top: 0 !important;
-              "
-              class="textx"
-              id="{{ ID('selection_value') }}"
-            >
+              " class="textx" id="{{ ID('selection_value') }}">
               {{ option?.value }}
             </div>
-            <nb-icon
-              icon="close-outline"
-              nbTooltipPlacement="right"
-              [nbTooltip]="'削除'"
-              (click)="handleRemove(option)"
-              *ngIf="allowDelete && option?.is_matching === true"
-              style="position: absolute; z-index: 99991; right: 0"
-            ></nb-icon>
+            <nb-icon icon="close-outline" nbTooltipPlacement="right" [nbTooltip]="'削除'" (click)="handleRemove(option)"
+              *ngIf="allowDelete" style="position: absolute; z-index: 99991; right: 0"></nb-icon>
           </div>
         </div>
         <div class="cancle" [class.isCancel]="getCancelStatus()">
-          <nb-icon
-            style="color: gray; margin: 8px; cursor: pointer"
-            [icon]="'close-outline'"
-            pack="eva"
-            (click)="cancelResult()"
-            [nbTooltip]="'クリアー'"
-          ></nb-icon>
+          <nb-icon style="color: gray; margin: 8px; cursor: pointer" [icon]="'close-outline'" pack="eva"
+            (click)="cancelResult()" [nbTooltip]="'クリアー'"></nb-icon>
         </div>
         <div class="icon" (click)="handleClickIcon()">
           <div *ngIf="!isOpenAutocomplete">
-            <nb-icon
-              style="color: gray; margin: 8px; cursor: pointer"
-              [icon]="'arrow-ios-downward-outline'"
-              pack="eva"
-            ></nb-icon>
+            <nb-icon style="color: gray; margin: 8px; cursor: pointer" [icon]="'arrow-ios-downward-outline'" pack="eva">
+            </nb-icon>
           </div>
           <div *ngIf="isOpenAutocomplete">
-            <nb-icon
-              style="color: gray; margin: 8px; cursor: pointer"
-              [icon]="'arrow-ios-upward-outline'"
-              pack="eva"
-            ></nb-icon>
+            <nb-icon style="color: gray; margin: 8px; cursor: pointer" [icon]="'arrow-ios-upward-outline'" pack="eva">
+            </nb-icon>
           </div>
         </div>
       </div>
     </div>
-    <p
-      style="
+    <p style="
         word-break: break-word;
         color: #8f9bb3;
         font-size: 12px;
@@ -213,10 +97,7 @@
         display: flex;
         align-items: center;
         margin-left: 5px;
-      "
-      id="{{ ID('information') }}"
-      *ngIf="allowNew"
-    >
+      " id="{{ ID('information') }}" *ngIf="allowNew">
       {{ getAllowNewText() }}
     </p>
   </div>
@@ -226,15 +107,12 @@
       <nb-icon [icon]="guidanceIcon"></nb-icon>
     </div>
     <div class="info">
-      <p
-        style="
+      <p style="
           word-break: break-word;
           color: #8f9bb3;
           font-size: 12px;
           margin-bottom: 0;
-        "
-        id="{{ ID('caption') }}"
-      >
+        " id="{{ ID('caption') }}">
         {{ getCaptions() }}
       </p>
     </div>

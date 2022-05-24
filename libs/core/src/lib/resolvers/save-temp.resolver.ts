@@ -31,13 +31,13 @@ export class SaveTempResolver extends AitBaseService {
 
     const isDataExists = await this.isDataExist(request, data);
     data['user_id'] = request.user_id;
-    
+
     if (isDataExists) {
       this.setCommonUpdate(data);
     } else {
       this.setCommonInsert(data);
     }
-    
+
     let aqlStr = `
         LET data_saved = (
           UPSERT {
@@ -46,12 +46,12 @@ export class SaveTempResolver extends AitBaseService {
             module: "${data.module}",
             mode: "${data.mode}" `;
 
-    if (data.mode === "EDIT") {
+    if (data.mode === 'EDIT') {
       aqlStr += `,
             edit_id: "${data.edit_id}"`;
     }
-    
-    aqlStr +=`
+
+    aqlStr += `
           }
           INSERT ${JSON.stringify(data)}
           UPDATE ${JSON.stringify(data)}
@@ -87,7 +87,6 @@ export class SaveTempResolver extends AitBaseService {
               && data.page == "${data.page}"
               && data.module == "${data.module}"
               && data.mode == "${data.mode}"
-              && data.is_matching == true
               && data.del_flag == false `;
     if (data.mode === 'EDIT') {
       aqlStr += `
