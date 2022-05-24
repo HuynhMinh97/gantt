@@ -6,10 +6,18 @@
     'min-width': minWidth || null,
     width: width || null
   }"
-  style="overflow: hidden;height: 50px;"
+  style="overflow: hidden; height: 50px"
   id="drag-scroll-button"
 >
-  <button
+  <ait-chip
+  *ngFor="let skill of list"
+    [level]="skill?.level || 1"
+    [title]="skill?.name"
+    [isAllowEdit]="false"
+    [isEvaluate]="true"
+    [maxWidth]="'200px'"
+  ></ait-chip>
+  <!-- <button
     nbButton
     shape="round"
     size="small"
@@ -25,12 +33,13 @@
       cursor: grab;
       max-width: 200px;
     "
-    *ngFor="let skill of list"
+    *ngFor="let skill of list; let index = i"
     [ngStyle]="{ background: skill.isHightLight ? '#e0eeff' : '#fff' }"
     [nbTooltip]="skill[showField]"
     [nbTooltipTrigger]="'hover'"
-  >
-    <span
+    > -->
+  <!-- <span
+    class="a"
       style="
         text-transform: initial;
         font-weight: 600;
@@ -43,7 +52,22 @@
       >{{ skill[showField] }}</span
     >
 
-    <!-- {{skillList | json}} -->
-  </button>
-  <p *ngIf="list.length === 0" style="color: rgb(143, 155, 179);">{{errorList}} </p>
+    <span
+    class="b"
+    style="
+      text-transform: initial;
+      font-weight: 600;
+      font-size: 13px;
+      color: #10529d;
+      white-space: nowrap;
+      overflow: hidden !important;
+      text-overflow: ellipsis;
+    "
+    >test</span
+  > -->
+
+  <!-- </button> -->
+  <p *ngIf="list.length === 0" style="color: rgb(143, 155, 179)">
+    {{ errorList }}
+  </p>
 </drag-scroll>

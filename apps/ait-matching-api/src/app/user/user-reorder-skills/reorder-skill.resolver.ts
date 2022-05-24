@@ -36,7 +36,7 @@ export class ReorderSkillResolver extends AitBaseService {
         FILTER data.category == t._key && t.class == "SKILL_CATEGORY"
         RETURN {_key:t.code, value: t.name.${lang} ? t.name.${lang} : t.name }
       )
-      RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name, category:category[0]})
+      RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name, category:category[0], level : e.level})
     `;
       return await this.query(aqlQuery);
     } else {

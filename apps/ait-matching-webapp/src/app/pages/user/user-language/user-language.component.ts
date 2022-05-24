@@ -70,7 +70,6 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
   }
 
   public save = async (condition = {}) => {
-    debugger
     const userId = await this.authService.getUserID();
     const languages = await this.userLanguageService.findUserLanguageByUserId(userId);
     const language_list = languages.data;
