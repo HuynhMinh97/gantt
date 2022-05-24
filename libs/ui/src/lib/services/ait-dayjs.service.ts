@@ -41,8 +41,8 @@ export class AitDayJSService extends AitBaseService {
     store.pipe(select(getUserSetting)).subscribe(setting => {
       dayjs.extend(timezone);
       dayjs.extend(utc);
-      const locale = this.getLocale(setting?.site_language || 'ja_JP');
-      this.lang = setting?.site_language || 'ja_JP';
+      const locale = this.getLocale(setting?.site_language || 'en_US');
+      this.lang = setting?.site_language || 'en_US';
       this.offset = setting?.timezone || OFFSET[this.lang];
       this.dateFormat = (setting?.date_format_display?.value?.replace('yyyy', 'YYYY').replace('dd', 'DD') || 'YYYY/MM/DD') + ' HH:mm:ss';
       dayjs.locale(locale);// use locale
