@@ -104,6 +104,7 @@ export class UserProfileService extends AitBaseService {
         _key: true,
         category: true,
         name: true,
+        level: true,
       }
     );
   }

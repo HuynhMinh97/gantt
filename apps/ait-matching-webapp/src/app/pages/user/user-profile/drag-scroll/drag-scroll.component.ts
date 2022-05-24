@@ -8,13 +8,24 @@ import { AitTranslationService } from '@ait/ui';
 })
 export class DragScrollComponent implements OnChanges {
   @Input() list: any[];
+  @Input() showList: boolean[];
   @Input() showField: string;
   @Input() maxWidth: string;
   @Input() minWidth: string;
   @Input() width: string;
+  changeText = false;
   errorList = '';
   constructor(private translateService: AitTranslationService) {}
+  
   ngOnChanges(changes: SimpleChanges): void {
     this.errorList = this.translateService.translate('list empty');
+  }
+  ngOnInit(): void {
+    console.log(this.list);
+    if (this.list.length > 0) {
+      this.showList = new Array(this.list.length).fill(false);
+      // this.list.forEach((item) => );
+    }
+    
   }
 }

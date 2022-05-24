@@ -24,6 +24,7 @@ export class AitChipComponent implements OnChanges {
   @Input() status = 'primary'
   @Output() action = new EventEmitter();
   @Input() isChipInCard = false;
+  @Input() isAllowEdit = true;
   @Input() background = '#ffffff';
   @Input() colorText = '#10529D';
   @Input() is18n = true;
@@ -63,7 +64,9 @@ export class AitChipComponent implements OnChanges {
   onClickChipEvent = () => this.onClickChip.emit({ isClickChip: true });
 
   clickStar(val){
-    this.level = val + 1;
-    this.watchValue.emit(val + 1);
+    if (this.isAllowEdit) {
+      this.level = val + 1;
+      this.watchValue.emit(val + 1);
+    }
   }
 }

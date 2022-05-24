@@ -89,7 +89,6 @@ export class SkillDetailComponent extends AitBaseComponent implements OnInit {
     dataForm['numData'] = skill.numData;
     dataForm['numError'] = skill.numError;
     dataForm['status'] = skill.status;
-    debugger
     return dataForm;
   };
 
