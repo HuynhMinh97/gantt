@@ -636,9 +636,6 @@ export class AitBaseService {
     if (this.company) {
       data[KEYS.COMPANY] = this.company;
     }
-    if (this.env?.isMatching) {
-      data[KEYS.IS_MATCHING] = true;
-    }
     data[KEYS.DEL_FLAG] = false;
     data[KEYS.KEY] = AitUtils.guid;
     data[KEYS.CREATE_BY] = this.username;
