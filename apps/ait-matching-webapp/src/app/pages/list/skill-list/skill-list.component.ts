@@ -308,7 +308,9 @@ export class SkillListViewComponent extends AitBaseComponent implements OnInit {
             dataFormat['change_by'] = element?.change_by;
             dataFormat['create_at'] = this.getDateFormat(element?.create_at);
             dataFormat['change_at'] = this.getDateFormat(element?.change_at);
-            dataSearch.push(dataFormat);
+            if(dataFormat['name']){
+              dataSearch.push(dataFormat);
+            }
           });
         }
       }
