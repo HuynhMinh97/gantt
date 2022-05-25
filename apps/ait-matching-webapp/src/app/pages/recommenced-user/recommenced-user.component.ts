@@ -33,6 +33,7 @@ import { RecommencedUserService } from '../../services/recommenced-user.service'
 import { StoreKeywordsSearch } from '../../state/actions';
 import { SearchConditionService } from '../../services/search-condition.service';
 import { SetNameComponent } from './components/set-name/set-name.component';
+import _ from 'lodash';
 
 export enum StorageKey {
   KEYWORD = 'keyword',
@@ -270,7 +271,6 @@ export class RecommencedUserComponent
         start * 8,
         end
       );
-      console.log(res);
       if (res.status === RESULT_STATUS.OK) {
         if (res.data?.length === 0) {
           this.textDataNull = '021';
@@ -459,7 +459,6 @@ export class RecommencedUserComponent
     } catch (e) {
       console.log(e);
     } finally {
-      console.log(1);
       this.setSkeleton(false);
     }
   };
@@ -483,7 +482,6 @@ export class RecommencedUserComponent
     if (keyword) {
       this.isMatchingSearch = true;
       this.matchingService.matchingUser(keyword).then((res) => {
-        console.log(res);
         if (res?.data.length > 0) {
           const arr = res.data.map((e: { item: string }) => e.item);
           this.getDataByList(arr);
@@ -559,6 +557,7 @@ export class RecommencedUserComponent
     if (_key) {
       this.searchConditionService.remove(_key);
     }
+    this.dataFilter = [...this.dataFilterDf];
   }
 
   showQueryList() {
@@ -612,27 +611,33 @@ export class RecommencedUserComponent
   }
 
   filterMain(type: number) {
+    const isMatching = this.isMatchingSearch;
     try {
       const formValue = this.searchForm.value;
       const condition = Object.entries(formValue).reduce(
         (a, [k, v]) => (v == null ? a : ((a[k] = v), a)),
         {}
       );
+      isMatching && delete condition['keyword'];
+      const checkList = [];
+      for (const prop in condition) {
+        if (prop !== 'keyword') {
+          checkList.push(condition[prop].map((t: any) => t['_key']));
+        }
+      }
+      const keyList = _.flatten(checkList);
       if (isObjectFull(condition) && type === 0) {
-        const daveForFilter = [...this.dataFilterDf].filter((m) => {
+        const dataList = isMatching
+          ? [...this.dataMatchingDf]
+          : [...this.dataFilterDf];
+        const daveForFilter = dataList.filter((m) => {
           let isValid = true;
           for (const prop in condition) {
             if (isArrayFull(condition[prop]) && isArrayFull(m[prop])) {
-              const data = m[prop].map((t: any) => t['_key']);
-              isValid = condition[prop].every((z: any) =>
-                data.includes(z['_key'])
-              );
+              isValid = m[prop].some((z: any) => keyList.includes(z['_key']));
               if (!isValid) break;
-            } else if (isArrayFull(condition[prop]) && m[prop]) {
-              const data = [m[prop]].map((t: any) => t['_key']);
-              isValid = condition[prop].every((z: any) =>
-                data.includes(z['_key'])
-              );
+            } else if (isArrayFull(condition[prop]) && isObjectFull(m[prop])) {
+              isValid = [m[prop]].some((z: any) => keyList.includes(z['_key']));
               if (!isValid) break;
             } else {
               isValid = false;
@@ -641,9 +646,17 @@ export class RecommencedUserComponent
           }
           return isValid;
         });
-        this.dataFilter = daveForFilter;
+        if (isMatching) {
+          this.dataMatching = daveForFilter;
+        } else {
+          this.dataFilter = daveForFilter;
+        }
       } else {
-        this.dataFilter = [...this.dataFilterDf];
+        if (isMatching) {
+          this.dataMatching = [...this.dataMatchingDf];
+        } else {
+          this.dataFilter = [...this.dataFilterDf];
+        }
       }
     } catch (e) {
       console.log(e);
