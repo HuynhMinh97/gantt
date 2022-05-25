@@ -33,7 +33,7 @@
   <div class="list__skills" (click)="navigateProfile(cardH.user_id)">
     <div class="content">
       <ait-chip *ngFor="let p of cardH.skills" [title]="p.name" [icon]="'close-outline'" [is18n]="false"
-        [isHaveIcon]="false" tabindex="4" style="outline-color: #10529d"></ait-chip>
+        [isHaveIcon]="false" tabindex="4" style="outline-color: #10529d" [isEvaluate]="true"></ait-chip>
     </div>
   </div>
   <!-- </mat-chip-list> -->

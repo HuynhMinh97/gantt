@@ -40,16 +40,12 @@ import { AddSkillComponent } from './pages/list/skill-list/add-skill/add-skill.c
 import { CaptionListComponent } from './pages/list/caption-list/caption-list.component';
 import { CaptionDetailComponent } from './pages/list/caption-list/caption-detail/caption-detail.component';
 import { MasterDataListComponent } from './pages/master-data/master-data-list/master-data-list.component';
-import { MasterDataInputComponent } from './pages/master-data/master-data-input/master-data-input.component';
-import { MasterDataViewComponent } from './pages/master-data/master-data-view/master-data-view.component';
 import { UserAccountDetailComponent } from './pages/list/user-list/user-account-detail/user-account-detail.component';
-
-// Push your routes here one by one ?��
 
 export const routes: Routes = [
   {
     path: 'recommenced-user',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    canActivate: [AitAuthGuardService],
     component: RecommencedUserComponent,
   },
   {
@@ -64,7 +60,7 @@ export const routes: Routes = [
   },
   {
     path: 'user-skills',
-    canActivate: [AitAuthGuardService], // must have this line for auth guard on this page
+    canActivate: [AitAuthGuardService],
     component: UserSkillsComponent,
   },
   {
@@ -306,26 +302,6 @@ export const routes: Routes = [
     path: 'master-data',
     canActivate: [AitAuthGuardService],
     component: MasterDataListComponent,
-  },
-  {
-    path: 'master-data/:id',
-    canActivate: [AitAuthGuardService],
-    component: MasterDataInputComponent,
-  },
-  {
-    path: 'master-detail/:id',
-    canActivate: [AitAuthGuardService],
-    component: MasterDataViewComponent,
-  },
-  {
-    path: 'register-project',
-    canActivate: [AitAuthGuardService],
-    component: RegisterProjectComponent,
-  },
-  {
-    path: 'register-project/:id',
-    canActivate: [AitAuthGuardService],
-    component: RegisterProjectComponent,
   },
   {
     path: '',
