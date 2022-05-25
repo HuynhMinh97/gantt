@@ -21,7 +21,7 @@ export class DragScrollComponent implements OnChanges {
     this.errorList = this.translateService.translate('list empty');
   }
   ngOnInit(): void {
-    console.log(this.list);
+    
     if (this.list.length > 0) {
       this.showList = new Array(this.list.length).fill(false);
       // this.list.forEach((item) => );

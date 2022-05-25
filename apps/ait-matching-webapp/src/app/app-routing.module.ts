@@ -1,3 +1,4 @@
+import { RegisterProjectComponent } from './pages/register-project/register-project.component';
 import { SkillDetailComponent } from './pages/list/skill-list/skill-detail/skill-detail.component';
 import { AddCationComponent } from './pages/list/caption-list/add-caption/add-caption.component';
 import { CreateUserComponent } from './pages/list/user-list/create-user/create-user.component';

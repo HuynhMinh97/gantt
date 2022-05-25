@@ -167,7 +167,7 @@ export class UserOnboardingService extends AitBaseService {
       user_id: user_id,
       del_flag: false,
     }
-    return await this.query('findSkillJobSetting', { collection: 'setting', condition },
+    return await this.query('findSkillJobSetting', { collection: 'user_job_setting', condition },
       {
         skills: {
           _key: true,
