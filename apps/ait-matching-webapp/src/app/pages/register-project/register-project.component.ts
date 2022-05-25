@@ -1,3 +1,4 @@
+import { RegisterProjectService } from './../../services/register-project.service';
 import { UserOnboardingService } from './../../services/user-onboarding.service';
 import { AitAuthService, AitBaseComponent, AitEnvironmentService, AppState } from '@ait/ui';
 import { Component, OnInit } from '@angular/core';
@@ -23,7 +24,7 @@ export class RegisterProjectComponent extends AitBaseComponent implements OnInit
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
     private userOnbService: UserOnboardingService,
-
+    private registerProjectService: RegisterProjectService,
 
 
     env: AitEnvironmentService,
@@ -44,11 +45,12 @@ export class RegisterProjectComponent extends AitBaseComponent implements OnInit
     );
 
     this.projectForm = this.formBuilder.group({
+      ait_project_name: new FormControl(null),
       _key: new FormControl(null),
       location: new FormControl(null),
       title: new FormControl(null, [Validators.required]),
-      valid_date_from: new FormControl(null, [Validators.required]),
-      valid_date_to: new FormControl(null, [Validators.required]),
+      valid_time_from: new FormControl(null, [Validators.required]),
+      valid_time_to: new FormControl(null, [Validators.required]),
       level: new FormControl(null, [Validators.required]),
       industry: new FormControl(null, [
         Validators.required,
@@ -76,29 +78,26 @@ export class RegisterProjectComponent extends AitBaseComponent implements OnInit
       const dataFind = [];
       await this.findProjectByKey();
       await this.findSkillProject();
-      dataFind.push(this.projectForm.value);
+      await dataFind.push(this.projectForm.value);
+      
       return { data: dataFind };
     } catch (error) {}
   };
 
   async findProjectByKey() {
-    // // const res = await this.userProjectService.find(this.project_key);
-    // const data = res.data[0];
-    // if (res.data.length > 0) {
-    //   this.projectForm.patchValue({ ...data });
-    //   this.userProjectClone = this.projectForm.value;
-    //   if (data.user_id != this.user_id) {
-    //     this.router.navigate([`/404`]);
-    //   }
-    // } else {
-    //   this.router.navigate([`/404`]);
-    // }
+    const res = await this.registerProjectService.findProjectAitByKey(this.project_key);
+    const data = res.data[0];
+    if (res.data.length > 0) {
+    await  this.projectForm.patchValue({ ...data });
+      this.userProjectClone = this.projectForm.value;
+    } else {
+      this.router.navigate([`/404`]);
+    }
   }
 
   async findSkillProject() {
-   
-    const from = this.user_id;
-    await this.userOnbService.findSkillJobSetting(from).then(async (res) => {
+    const _key = this.project_key;
+    await this.registerProjectService.findSkillProject(_key).then(async (res) => {
       const listSkills = [];
       for (const skill of res.data) {
         listSkills.push({
@@ -108,7 +107,7 @@ export class RegisterProjectComponent extends AitBaseComponent implements OnInit
       }
       if(listSkills[0]['_key']){
         this.project_skill = listSkills;
-        this.projectForm.controls['skills'].setValue([
+        await this.projectForm.controls['skills'].setValue([
           ...listSkills,
         ]);
       }
