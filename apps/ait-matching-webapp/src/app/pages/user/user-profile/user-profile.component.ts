@@ -282,7 +282,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
                 categoryOther_index = index;
               }
               this.skillByCategory[index].data.push(item);
-              
+
               isCategory = true;
             }
           });
@@ -299,10 +299,8 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
             this.skillByCategory.push(skillsGroup);
           }
         });
-       
       }
     });
-   
   }
 
   async getProjectByUserId() {
