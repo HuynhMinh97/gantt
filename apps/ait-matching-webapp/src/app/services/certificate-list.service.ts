@@ -14,14 +14,14 @@ export class CertificateListService extends AitBaseService {
     }
     condition['name']['attribute'] = 'certificate_name';
     condition['name']['ref_collection'] = 'm_certificate_award';
-    condition['name']['ref_attribute'] = 'code';
+    condition['name']['ref_attribute'] = '_key';
 
     if (!condition['issue_by']){
       condition['issue_by'] = {}
     }
     condition['issue_by']['attribute'] = 'issue_by';
     condition['issue_by']['ref_collection'] = 'm_training_center';
-    condition['issue_by']['ref_attribute'] = 'code';
+    condition['issue_by']['ref_attribute'] = '_key';
 
     if (!condition['create_by']) {
       condition['create_by'] = {};

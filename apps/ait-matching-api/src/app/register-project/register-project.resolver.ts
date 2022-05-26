@@ -70,9 +70,7 @@ export class RegisterProjectResolver extends AitBaseService {
    if (result.data[0]){
      for (const skill of result.data[0])
      {
-      ;
        const skillName = await this.getNameOfSkill(skill, lang);
-       
        const skills = {
          _key:skill,
          value:skillName.data[0]

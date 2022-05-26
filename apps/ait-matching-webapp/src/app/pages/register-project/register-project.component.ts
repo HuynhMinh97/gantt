@@ -45,7 +45,7 @@ export class RegisterProjectComponent extends AitBaseComponent implements OnInit
     );
 
     this.projectForm = this.formBuilder.group({
-      ait_project_name: new FormControl(null),
+      project_ait_name: new FormControl(null),
       _key: new FormControl(null),
       location: new FormControl(null),
       title: new FormControl(null, [Validators.required]),

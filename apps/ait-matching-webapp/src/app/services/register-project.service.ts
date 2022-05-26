@@ -11,7 +11,7 @@ export class RegisterProjectService extends AitBaseService{
       _key: true,
       valid_time_from: true,
       valid_time_to: true,
-      ait_project_name: true,
+      project_ait_name: true,
       location: {
         _key: true,
         value: true

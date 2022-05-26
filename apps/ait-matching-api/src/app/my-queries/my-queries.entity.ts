@@ -1,44 +1,40 @@
-import { BaseEntity, KeyValueEntity, } from '@ait/core';
-import { Field, Float, ID, Int, ObjectType } from '@nestjs/graphql';
+import { BaseEntity, KeyValueEntity, } from "@ait/core";
+import { Field, Float, ID, ObjectType } from "@nestjs/graphql";
 
 
 
 @ObjectType()
-export class RegisterProjectEntity extends BaseEntity {
-
-    @Field(() => Boolean, { nullable: true })
-    active_flag?: boolean;
-
+export class MyQueriesEntity extends BaseEntity{
     @Field(() => ID, { nullable: true })
     _key: string;
-  
-    @Field(() => String, { nullable: true })
-    description?: string;
-
+    
     @Field(() => String, { nullable: true })
     project_ait_name?: string;
+    
+    @Field(() => String, { nullable: true })
+    skill?: string;
   
     @Field(() => KeyValueEntity, { nullable: true })
     industry?: KeyValueEntity; 
 
     @Field(() => KeyValueEntity, { nullable: true })
-    title?: KeyValueEntity;
+    title?: KeyValueEntity; 
 
     @Field(() => KeyValueEntity, { nullable: true })
-    level?: KeyValueEntity;
+    level?: KeyValueEntity; 
 
     @Field(() => KeyValueEntity, { nullable: true })
-    skills?: KeyValueEntity;
+    location?: KeyValueEntity; 
 
     @Field(() => KeyValueEntity, { nullable: true })
-    location?: KeyValueEntity;
+    skills?: KeyValueEntity; 
 
     @Field(() => Float, { nullable: true })
     valid_time_from?: number;
 
     @Field(() => Float, { nullable: true })
     valid_time_to?: number;
-    
+
+    @Field(() => Boolean, { nullable: true })
+    active_flag?: boolean;
 }
-
-

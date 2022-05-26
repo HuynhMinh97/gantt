@@ -27,6 +27,7 @@ import { SaveRecommendUserResolver } from './save-recommend-user/save-recommend-
 import { RecommencedUserController } from './recommenced-user/recommenced-user.controller';
 import { UserListResolver } from './list/user-list/user-list.resolver';
 import { CaptionListResolver } from './list/caption-list/caption-list.resolver';
+import { MyQueriesResolver } from './my-queries/my-queries.resolver';
 
 const RESOLVERS = [
   UserExperienceInfoResolver,
@@ -54,6 +55,7 @@ const RESOLVERS = [
   CaptionListResolver,
   CaptionRegisterResolver,
   RegisterProjectResolver,
+  MyQueriesResolver,
   {
     provide: 'ENVIRONMENT',
     useValue: environment,

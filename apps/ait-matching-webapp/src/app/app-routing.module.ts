@@ -34,7 +34,7 @@ import { UserCourseDetailComponent } from './pages/user/user-course-detail/user-
 import { LanguageListComponent } from './pages/list/language-list/language-list.component';
 import { RecommencedJobComponent } from './pages/recommenced/recommenced-job/recommenced-job.component';
 import { AddRoleComponent } from './pages/group-role/add-role/add-role.component';
-import { MyProjectQueriesComponent } from './pages/my-project-queries/my-project-queries.component';
+import { MyQueriesComponent } from './pages/my-queries/my-queries.component';
 import { UserListComponent } from './pages/list/user-list/user-list.component';
 import { AddSkillComponent } from './pages/list/skill-list/add-skill/add-skill.component';
 import { CaptionListComponent } from './pages/list/caption-list/caption-list.component';
@@ -228,9 +228,9 @@ export const routes: Routes = [
     component: EducationListComponent,
   },
   {
-    path: 'my-project-queries',
+    path: 'my-queries',
     canActivate: [AitAuthGuardService],
-    component: MyProjectQueriesComponent,
+    component: MyQueriesComponent,
   },
   {
     path: 'role',
