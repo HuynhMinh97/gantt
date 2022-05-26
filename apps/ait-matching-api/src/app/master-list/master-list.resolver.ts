@@ -15,12 +15,4 @@ export class MasterListResolver extends AitBaseService {
     const result = await this.find(request, user);
     return result
   }
-
-//  async getAllRecordOfMaster(collection: string) {
-//     const aqlQuery = `
-//      FOR v IN "${collection}"
-//      RETURN v
-//      `;
-//     return await this.query(aqlQuery);
-//   }
 }

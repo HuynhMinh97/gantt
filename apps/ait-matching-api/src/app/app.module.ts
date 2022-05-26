@@ -29,6 +29,7 @@ import { UserListResolver } from './list/user-list/user-list.resolver';
 import { CaptionListResolver } from './list/caption-list/caption-list.resolver';
 import { MyQueriesResolver } from './my-queries/my-queries.resolver';
 import { MasterListResolver } from './master-list/master-list.resolver';
+import { DataMasterResolver } from './edit-data-master/edit-data-master.resolver';
 
 const RESOLVERS = [
   UserExperienceInfoResolver,
@@ -58,6 +59,7 @@ const RESOLVERS = [
   RegisterProjectResolver,
   MyQueriesResolver,
   MasterListResolver,
+  DataMasterResolver,
   {
     provide: 'ENVIRONMENT',
     useValue: environment,

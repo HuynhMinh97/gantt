@@ -1,3 +1,4 @@
+import { EditDataMasterComponent } from './pages/edit-data-master/edit-data-master.component';
 import { RegisterProjectComponent } from './pages/register-project/register-project.component';
 import { SkillDetailComponent } from './pages/list/skill-list/skill-detail/skill-detail.component';
 import { AddCationComponent } from './pages/list/caption-list/add-caption/add-caption.component';
@@ -308,6 +309,11 @@ export const routes: Routes = [
     path: 'master-list',
     canActivate: [AitAuthGuardService],
     component: MasterListComponent,
+  },
+  {
+    path: 'edit-data-master/:id',
+    canActivate: [AitAuthGuardService],
+    component: EditDataMasterComponent,
   },
   {
     path: '',

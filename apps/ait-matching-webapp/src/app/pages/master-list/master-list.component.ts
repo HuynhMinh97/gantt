@@ -186,7 +186,6 @@ export class MasterListComponent extends AitBaseComponent implements OnInit {
           }
         }
       });
-        debugger
       if (isObjectFull(object)) {
         const data = await this.getData(object);
         return { data: data };
