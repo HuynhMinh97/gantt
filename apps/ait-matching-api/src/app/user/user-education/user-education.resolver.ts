@@ -22,16 +22,19 @@ export class UserEducationInfoResolver extends AitBaseService {
     const res = await this.find(rq);
     const userList = res.data || [];
     const userArr = [];
-    listData.forEach((data) => {
-      const obj = userList.find((u) => u.user_id === data.user_id);
-        if (obj) {
-          userArr.push({
-            ...data,
-            first_name: obj.first_name,
-            last_name: obj.last_name,
-          });
-        }
+    if(listData){
+      listData.forEach((data) => {
+        const obj = userList.find((u) => u.user_id === data.user_id);
+      if (obj) {
+        userArr.push({
+          ...data,
+          first_name: obj.first_name,
+          last_name: obj.last_name,
+        });
+      }
     });
+  }
+    
     
     const response = new UserEducationInfoResponse(
       200,

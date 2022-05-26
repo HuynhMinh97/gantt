@@ -28,6 +28,7 @@ import { RecommencedUserController } from './recommenced-user/recommenced-user.c
 import { UserListResolver } from './list/user-list/user-list.resolver';
 import { CaptionListResolver } from './list/caption-list/caption-list.resolver';
 import { MyQueriesResolver } from './my-queries/my-queries.resolver';
+import { MasterListResolver } from './master-list/master-list.resolver';
 
 const RESOLVERS = [
   UserExperienceInfoResolver,
@@ -56,6 +57,7 @@ const RESOLVERS = [
   CaptionRegisterResolver,
   RegisterProjectResolver,
   MyQueriesResolver,
+  MasterListResolver,
   {
     provide: 'ENVIRONMENT',
     useValue: environment,

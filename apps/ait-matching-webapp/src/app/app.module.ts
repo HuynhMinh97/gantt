@@ -84,6 +84,7 @@ import { MasterDataInputComponent } from './pages/master-data/master-data-input/
 import { MasterDataViewComponent } from './pages/master-data/master-data-view/master-data-view.component';
 import { UserAccountDetailComponent } from './pages/list/user-list/user-account-detail/user-account-detail.component';
 import { RegisterProjectComponent } from './pages/register-project/register-project.component';
+import { MasterListComponent } from './pages/master-list/master-list.component';
 
 const AIT_UI_MODULES = [AitChipModule, AitTabsModule, AitTocMenuModule];
 
@@ -161,6 +162,7 @@ const PAGES = [
     MasterDataViewComponent,
     UserAccountDetailComponent,
     RegisterProjectComponent,
+    MasterListComponent,
   ],
   imports: [
     Ng2SmartTableModule,

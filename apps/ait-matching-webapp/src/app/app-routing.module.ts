@@ -41,6 +41,7 @@ import { CaptionListComponent } from './pages/list/caption-list/caption-list.com
 import { CaptionDetailComponent } from './pages/list/caption-list/caption-detail/caption-detail.component';
 import { MasterDataListComponent } from './pages/master-data/master-data-list/master-data-list.component';
 import { UserAccountDetailComponent } from './pages/list/user-list/user-account-detail/user-account-detail.component';
+import { MasterListComponent } from './pages/master-list/master-list.component';
 
 export const routes: Routes = [
   {
@@ -302,6 +303,11 @@ export const routes: Routes = [
     path: 'master-data',
     canActivate: [AitAuthGuardService],
     component: MasterDataListComponent,
+  },
+  {
+    path: 'master-list',
+    canActivate: [AitAuthGuardService],
+    component: MasterListComponent,
   },
   {
     path: '',

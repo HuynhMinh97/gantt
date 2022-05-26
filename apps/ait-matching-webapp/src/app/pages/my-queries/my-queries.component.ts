@@ -98,6 +98,10 @@ export class MyQueriesComponent
     });
   }
 
+  ngOnInit(): void {
+    this.callLoadingApp();
+  }
+
   getVales(data: KeyValueDto[]): string {
     if (isArrayFull(data)) {
       const result = [];
