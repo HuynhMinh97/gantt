@@ -17,7 +17,6 @@ export class CompanyInfo {
   acceptance_remark: string;
   agreement: string[];
   agreement_file: string;
-  is_matching: boolean;
 }
 
 export class CompanyInfoErrorsMessage {

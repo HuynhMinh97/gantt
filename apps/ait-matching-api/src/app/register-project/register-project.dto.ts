@@ -20,6 +20,9 @@ export class RegisterProjectDto extends BaseDto {
   description?: string;
 
   @Field(() => String, { nullable: true })
+  remark?: string;
+
+  @Field(() => String, { nullable: true })
   project_ait_name?: string;
 
   @Field(() => Float, { nullable: true })
@@ -48,6 +51,9 @@ export class RegisterProjectSaveDto extends BaseDto {
 
   @Field(() => String, { nullable: true })
   description?: string;
+
+  @Field(() => String, { nullable: true })
+  remark?: string;
 
   @Field(() => Float, { nullable: true })
   valid_time_from?: number;

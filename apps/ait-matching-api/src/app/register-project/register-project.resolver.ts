@@ -41,8 +41,8 @@ export class RegisterProjectResolver extends AitBaseService {
     
     // return this.query(gql);
   }
-  @Mutation(() => RegisterProjectResponse, { name: 'saveCaption' })
-  saveCaption(
+  @Mutation(() => RegisterProjectResponse, { name: 'saveCompanyProject' })
+  saveCompanyProject(
     @AitCtxUser() user: SysUser,
     @Args('request', { type: () => RegisterProjectRequest })
     request: RegisterProjectRequest

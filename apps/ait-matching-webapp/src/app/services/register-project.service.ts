@@ -28,7 +28,7 @@ export class RegisterProjectService extends AitBaseService{
         _key: true,
         value: true
       },
-     
+      remark: true,
       description:true
     };
     const request = {};

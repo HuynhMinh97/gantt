@@ -16,6 +16,9 @@ export class RegisterProjectEntity extends BaseEntity {
     description?: string;
 
     @Field(() => String, { nullable: true })
+    remark?: string;
+
+    @Field(() => String, { nullable: true })
     project_ait_name?: string;
   
     @Field(() => KeyValueEntity, { nullable: true })

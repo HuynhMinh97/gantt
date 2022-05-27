@@ -100,7 +100,6 @@ export class EditDataMasterComponent
   };
 
   public save = async (condition = {}) => {
-    debugger
     const saveData = {};
     const collection = condition['collection'];
     saveData['name'] = {};
@@ -117,6 +116,7 @@ export class EditDataMasterComponent
       }
 
     });
+    saveData['_key'] = this._key;
     saveData['active_flag'] = condition['active_flag'] ? condition['active_flag'] : false;
     return  await this.editDataMasterService.saveDataMaster(saveData, collection);
   };

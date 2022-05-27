@@ -43,6 +43,7 @@ import { CaptionDetailComponent } from './pages/list/caption-list/caption-detail
 import { MasterDataListComponent } from './pages/master-data/master-data-list/master-data-list.component';
 import { UserAccountDetailComponent } from './pages/list/user-list/user-account-detail/user-account-detail.component';
 import { MasterListComponent } from './pages/master-list/master-list.component';
+import { ViewDataMasterComponent } from './pages/view-data-master/view-data-master.component';
 
 export const routes: Routes = [
   {
@@ -314,6 +315,21 @@ export const routes: Routes = [
     path: 'edit-data-master/:id',
     canActivate: [AitAuthGuardService],
     component: EditDataMasterComponent,
+  },
+  {
+    path: 'view-data-master/:id',
+    canActivate: [AitAuthGuardService],
+    component: ViewDataMasterComponent,
+  },
+  {
+    path: 'register-project/:id',
+    canActivate: [AitAuthGuardService],
+    component: RegisterProjectComponent,
+  },
+  {
+    path: 'register-project',
+    canActivate: [AitAuthGuardService],
+    component: RegisterProjectComponent,
   },
   {
     path: '',
