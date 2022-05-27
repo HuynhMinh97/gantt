@@ -93,7 +93,6 @@ export class RegisterProjectComponent extends AitBaseComponent implements OnInit
     const data = res.data[0];
     if (res.data.length > 0) {
     await  this.projectForm.patchValue({ ...data });
-    debugger
       this.userProjectClone = this.projectForm.value;
     } else {
       this.router.navigate([`/404`]);

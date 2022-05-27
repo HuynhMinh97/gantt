@@ -44,6 +44,7 @@ import { MasterDataListComponent } from './pages/master-data/master-data-list/ma
 import { UserAccountDetailComponent } from './pages/list/user-list/user-account-detail/user-account-detail.component';
 import { MasterListComponent } from './pages/master-list/master-list.component';
 import { ViewDataMasterComponent } from './pages/view-data-master/view-data-master.component';
+import { ProjectRequirementDetailComponent } from './pages/project-requirement-detail/project-requirement-detail.component';
 
 export const routes: Routes = [
   {
@@ -331,6 +332,12 @@ export const routes: Routes = [
     canActivate: [AitAuthGuardService],
     component: RegisterProjectComponent,
   },
+  {
+    path: 'project-requirement-detail/:id',
+    canActivate: [AitAuthGuardService],
+    component: ProjectRequirementDetailComponent,
+  },
+  
   {
     path: '',
     pathMatch: 'full',

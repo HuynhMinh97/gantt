@@ -13,33 +13,17 @@ export class MyQueriesResolver extends AitBaseService {
   ) {
     return this.find(request, user);
   }
-
-  // @Mutation(() => SkillListResponse, { name: 'removeSkillByKey' })
-  // removeSkillByKey(
-  //   @AitCtxUser() user: SysUser,
-  //   @Args('request', { type: () => SkillListRequest }) request: SkillListRequest
-  // ) {
-  //   return this.remove(request, user);
-  // }
-
   @Query(() => MyQueriesResponse, { name: 'searchProjectCompany' })
   async searchProjectCompany(
     @AitCtxUser() user: SysUser,
     @Args('request', { type: () => MyQueriesSearchRequest })
     request: MyQueriesSearchRequest
   ) {
-    // return this.find(request, user);
+   
     const lang = request.lang;
     const skill = request?.condition?.skill.value[0];
     delete request.condition?.skill;
-    // const change_by_name = request.condition?.change_by?.valueAsString
-    //   .toLocaleLowerCase()
-    //   .trim();
-    // const create_by_name = request.condition?.create_by?.valueAsString
-    //     .toLocaleLowerCase()
-    //     .trim();
-    // delete request.condition?.change_by;
-    // delete request.condition?.create_by;
+    
     const result = await this.find(request, user);
     const data = result.data;
     const project_list = [];
@@ -52,28 +36,9 @@ export class MyQueriesResolver extends AitBaseService {
       }
       const listNameSkill = nameSkill.join(', ');
       const project = { ...pro };
-      const changeBy = await this.getNameUserByKey(project['change_by']);
-      const createBy = await this.getNameUserByKey(project['create_by']);
-      project['create_by'] = createBy.data[0];
-      project['change_by'] = changeBy.data[0];
+     
       project['skill'] = listNameSkill
-      // if (change_by_name) {
-      //   if (project['change_by'].includes(change_by_name)) {
-      //     if (create_by_name) {
-      //       if (project['create_by'].includes(create_by_name)) {
-      //         project_list.push({ ...project });
-      //       }
-      //     } else {
-      //       project_list.push({ ...project });
-      //     }
-      //   }
-      // } else if (create_by_name) {
-      //   if (project['create_by'].includes(create_by_name)) {
-      //     project_list.push({ ...project });
-      //   }
-      // } else {
-      //   project_list.push({ ...project });
-      // }
+      
       if (skill) {
         
         if (listNameSkill.includes(skill)) {
