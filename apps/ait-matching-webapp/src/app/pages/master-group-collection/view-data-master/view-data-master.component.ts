@@ -12,7 +12,8 @@ import { ActivatedRoute } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import dayjs from 'dayjs';
-import { EditDataMasterService } from '../../services/edit-data-master.service';
+import { EditDataMasterService } from '../../../services/edit-data-master.service';
+import { MasterListService } from '../../../services/master-list.service';
 
 @Component({
   selector: 'ait-view-data-master',
@@ -24,20 +25,13 @@ export class ViewDataMasterComponent
   implements OnInit {
   _key: string;
   dateFormat: string;
-  collections = [
-    'm_certificate_award',
-    'm_company',
-    'm_industry',
-    'm_project',
-    'm_title',
-    'm_training_center',
-    'm_school',
-    'm_skill',
-  ];
+  collections = [];
 
   constructor(
     public activeRouter: ActivatedRoute,
     private editDataMasterService: EditDataMasterService,
+    private masterListService: MasterListService,
+
 
     store: Store<AppState>,
     apollo: Apollo,
@@ -63,8 +57,13 @@ export class ViewDataMasterComponent
     });
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this._key = this.activeRouter.snapshot.paramMap.get('id');
+    try {
+      await this.getMasterTableCollection();
+    } catch {
+      this.callLoadingApp();
+    }
     this.callLoadingApp();
   }
   getDateFormat(time: number) {
@@ -113,4 +112,12 @@ export class ViewDataMasterComponent
 
     return Data;
   };
+
+  async getMasterTableCollection () {
+    const result = await this.masterListService.getMasterTable();
+    const obj = result.data;
+    obj.forEach(item => {
+      this.collections.push(item.code)
+    });
+  }
 }

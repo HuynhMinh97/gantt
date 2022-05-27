@@ -15,8 +15,8 @@ import { ActivatedRoute } from '@angular/router';
 import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
-import { EditDataMasterService } from '../../services/edit-data-master.service';
-import { MasterListService } from '../../services/master-list.service';
+import { EditDataMasterService } from '../../../services/edit-data-master.service';
+import { MasterListService } from '../../../services/master-list.service';
 
 @Component({
   selector: 'ait-edit-data-master',
@@ -29,20 +29,13 @@ export class EditDataMasterComponent
   _key: string;
   dataForm: FormGroup;
   obj = {};
-  collections = [
-    'm_certificate_award',
-    'm_company',
-    'm_industry',
-    'm_project',
-    'm_title',
-    'm_training_center',
-    'm_school',
-    'm_skill',
-  ];
+  collections = [];
   constructor(
     public activeRouter: ActivatedRoute,
     private formBuilder: FormBuilder,
     private editDataMasterService: EditDataMasterService,
+    private masterListService: MasterListService,
+
 
     env: AitEnvironmentService,
     store: Store<AppState>,
@@ -69,9 +62,14 @@ export class EditDataMasterComponent
     });
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this._key = this.activeRouter.snapshot.paramMap.get('id');
-    this.cancelLoadingApp();
+    try {
+      await this.getMasterTableCollection();
+    } catch {
+      this.callLoadingApp();
+    }
+    this.callLoadingApp();
   }
 
   public find = async () => {
@@ -120,4 +118,12 @@ export class EditDataMasterComponent
     saveData['active_flag'] = condition['active_flag'] ? condition['active_flag'] : false;
     return  await this.editDataMasterService.saveDataMaster(saveData, collection);
   };
+
+  async getMasterTableCollection () {
+    const result = await this.masterListService.getMasterTable();
+    const obj = result.data;
+    obj.forEach(item => {
+      this.collections.push(item.code)
+    });
+  }
 }

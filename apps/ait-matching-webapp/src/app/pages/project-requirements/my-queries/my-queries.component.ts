@@ -18,11 +18,11 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
-import { ProjectListService } from '../../services/project-list.service';
+import { ProjectListService } from '../../../services/project-list.service';
 import dayjs from 'dayjs';
 import { LocalDataSource } from 'ng2-smart-table';
-import { SearchConditionService } from '../../services/search-condition.service';
-import { MyQueriesService } from '../../services/my-queries.service';
+import { SearchConditionService } from '../../../services/search-condition.service';
+import { MyQueriesService } from '../../../services/my-queries.service';
 
 @Component({
   selector: 'ait-project-list',

@@ -1,5 +1,5 @@
-import { RegisterProjectService } from './../../services/register-project.service';
-import { UserOnboardingService } from './../../services/user-onboarding.service';
+import { RegisterProjectService } from '../../../services/register-project.service';
+import { UserOnboardingService } from '../../../services/user-onboarding.service';
 import { AitAuthService, AitBaseComponent, AitEnvironmentService, AppState } from '@ait/ui';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';

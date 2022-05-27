@@ -65,7 +65,7 @@ import { LanguageListComponent } from './pages/list/language-list/language-list.
 import { EducationListComponent } from './pages/list/education-list/education-list.component';
 import { CertificateListComponent } from './pages/list/certificate-list/certificate-list.component';
 import { SkillListViewComponent } from './pages/list/skill-list/skill-list.component';
-import { MyQueriesComponent } from './pages/my-queries/my-queries.component';
+import { MyQueriesComponent } from './pages/project-requirements/my-queries/my-queries.component';
 import { AddRoleComponent } from './pages/group-role/add-role/add-role.component';
 import { GroupRoleRegisterComponent } from './pages/group-role/group-role-register/group-role-register.component';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
@@ -83,11 +83,11 @@ import { MasterDataListComponent } from './pages/master-data/master-data-list/ma
 import { MasterDataInputComponent } from './pages/master-data/master-data-input/master-data-input.component';
 import { MasterDataViewComponent } from './pages/master-data/master-data-view/master-data-view.component';
 import { UserAccountDetailComponent } from './pages/list/user-list/user-account-detail/user-account-detail.component';
-import { RegisterProjectComponent } from './pages/register-project/register-project.component';
-import { MasterListComponent } from './pages/master-list/master-list.component';
-import { EditDataMasterComponent } from './pages/edit-data-master/edit-data-master.component';
-import { ViewDataMasterComponent } from './pages/view-data-master/view-data-master.component';
-import { ProjectRequirementDetailComponent } from './pages/project-requirement-detail/project-requirement-detail.component';
+import { RegisterProjectComponent } from './pages/project-requirements/register-project/register-project.component';
+import { MasterListComponent } from './pages/master-group-collection/master-list/master-list.component';
+import { EditDataMasterComponent } from './pages/master-group-collection/edit-data-master/edit-data-master.component';
+import { ViewDataMasterComponent } from './pages/master-group-collection/view-data-master/view-data-master.component';
+import { ProjectRequirementDetailComponent } from './pages/project-requirements/project-detail/project-requirement-detail.component';
 
 const AIT_UI_MODULES = [AitChipModule, AitTabsModule, AitTocMenuModule];
 

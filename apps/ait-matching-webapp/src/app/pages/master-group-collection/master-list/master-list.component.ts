@@ -1,4 +1,4 @@
-import { MasterListService } from './../../services/master-list.service';
+import { MasterListService } from '../../../services/master-list.service';
 import { Apollo } from 'apollo-angular';
 import {
   AitAuthService,
@@ -25,16 +25,7 @@ export class MasterListComponent extends AitBaseComponent implements OnInit {
   dateFormat: string;
   searchMaster: FormGroup;
 
-  collections = [
-    'm_certificate_award',
-    'm_company',
-    'm_industry',
-    'm_project',
-    'm_title',
-    'm_training_center',
-    'm_school',
-    'm_skill',
-  ];
+  collections = [];
 
   dateAtributes = [
     'create_at_from',
@@ -84,8 +75,15 @@ export class MasterListComponent extends AitBaseComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.callLoadingApp();
+    try {
+      await this.getMasterTableCollection();
+    } catch {
+      this.callLoadingApp();
+    }
+    this.callLoadingApp();
+
   }
 
   getDateFormat(time: number) {
@@ -199,4 +197,12 @@ export class MasterListComponent extends AitBaseComponent implements OnInit {
       return { data: data };
     }
   };
+
+  async getMasterTableCollection () {
+    const result = await this.masterListService.getMasterTable();
+    const obj = result.data;
+    obj.forEach(item => {
+      this.collections.push(item.code)
+    });
+  }
 }

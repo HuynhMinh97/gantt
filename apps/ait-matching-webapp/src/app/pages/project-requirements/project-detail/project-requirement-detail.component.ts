@@ -12,7 +12,7 @@ import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import dayjs from 'dayjs';
-import { RegisterProjectService } from '../../services/register-project.service';
+import { RegisterProjectService } from '../../../services/register-project.service';
 
 @Component({
   selector: 'ait-project-requirement-detail',

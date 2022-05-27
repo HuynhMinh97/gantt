@@ -15,4 +15,13 @@ export class MasterListResolver extends AitBaseService {
     const result = await this.find(request, user);
     return result
   }
+
+  @Query(() => MasterListResponse, { name: 'getMasterTableCollection' })
+  async getMasterTableCollection(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => MasterListRequest }) request: MasterListRequest
+  ) {
+    const result = await this.find(request, user);
+    return result
+  }
 }

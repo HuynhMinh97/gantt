@@ -9,6 +9,9 @@ export class MasterListDto extends BaseDto  {
   name?: string;
 
   @Field(() => String, { nullable: true })
+  code?: string;
+
+  @Field(() => String, { nullable: true })
   collection?: string;
 
   @Field(() => String, { nullable: true })
@@ -22,6 +25,9 @@ export class SearchMasterListDto extends BaseDto  {
   
   @Field(() => ConditionDto, { nullable: true })
   name?: ConditionDto;
+
+  @Field(() => ConditionDto, { nullable: true })
+  class?: ConditionDto;
 
   @Field(() => ConditionDto, { nullable: true })
   _id?: ConditionDto;
