@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { AitTranslationService } from '../../services';
 import { AppState, getCaption } from '../../state/selectors';
@@ -9,9 +16,9 @@ import { AppState, getCaption } from '../../state/selectors';
   templateUrl: 'ait-chip.component.html',
   styles: [
     `
-    max-width : '100%'
-    `
-  ]
+      max-width: '100%';
+    `,
+  ],
 })
 export class AitChipComponent implements OnChanges {
   // eslint-disable-next-line @angular-eslint/no-output-on-prefix
@@ -21,7 +28,7 @@ export class AitChipComponent implements OnChanges {
   @Input() isTooltip = false;
   @Input() isHaveIcon = true;
   @Input() icon = '';
-  @Input() status = 'primary'
+  @Input() status = 'primary';
   @Output() action = new EventEmitter();
   @Input() isChipInCard = false;
   @Input() isAllowEdit = true;
@@ -33,15 +40,15 @@ export class AitChipComponent implements OnChanges {
   @Input() isEvaluate = false;
   @Output() watchValue = new EventEmitter();
   @Input() maxWidth = '100%';
-  STAR = [1,2,3,4,5]
+  STAR = [1, 2, 3, 4, 5];
   ID(element: string) {
     const idx = this.id && this.id !== '' ? this.id : Date.now();
     return element + '_' + idx;
   }
-  constructor(private translateService: AitTranslationService, private store: Store<AppState>) {
-
-  }
-
+  constructor(
+    private translateService: AitTranslationService,
+    private store: Store<AppState>
+  ) {}
 
   ngOnChanges(changes: SimpleChanges) {
     for (const key in changes) {
@@ -50,7 +57,7 @@ export class AitChipComponent implements OnChanges {
           if (this.is18n) {
             this.store.pipe(select(getCaption)).subscribe(() => {
               this.title = this.translateService.translate(this.title);
-            })
+            });
           }
         }
       }
@@ -59,11 +66,11 @@ export class AitChipComponent implements OnChanges {
 
   iconAction = () => {
     this.action.emit({ isAction: true });
-  }
+  };
 
   onClickChipEvent = () => this.onClickChip.emit({ isClickChip: true });
 
-  clickStar(val){
+  clickStar(val: number) {
     if (this.isAllowEdit) {
       this.level = val + 1;
       this.watchValue.emit(val + 1);
