@@ -170,7 +170,7 @@ export class UserProfileResolver extends AitBaseService {
     const end = request.condition['end'];
     const isSaved = !!request.condition['is_saved'];
 
-    let aqlStr1 = `
+    const aqlStr1 = `
     LET current_data = (
       FOR data IN user_profile
       FILTER data.company == "${company}" &&
@@ -252,16 +252,11 @@ export class UserProfileResolver extends AitBaseService {
        })
      )
      
-     FOR data IN result `;
+     FOR data IN result
 
-    // if (!isSaved) {
-    //   aqlStr1 += `
-    //     LIMIT ${+start}, ${+end}
-    //    `;
-    // }
+     LIMIT ${+start}, ${+end}
 
-    aqlStr1 += `
-      RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name })
+     RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name })
     `;
 
     const aqlStr2 = `
