@@ -972,7 +972,7 @@ export class AitAutoCompleteMasterDataComponent
     const values = this.dataSourceDf.find(
       (m) => m?.value === this.inputControl.value
     );
-    if (!values) {
+    if (!values && this.optionSelected.length === 0) {
       this.inputControl.reset();
       this.watchValue.emit({
         value: [],

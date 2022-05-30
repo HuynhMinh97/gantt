@@ -2,15 +2,16 @@
   nbButton
   shape="round"
   size="small"
-  [ngStyle]="{ background: background, color: colorText, 'max-width': maxWidth }"
+  [ngStyle]="{
+    background: background,
+    color: colorText,
+    'max-width': maxWidth
+  }"
   [ngClass]="isChipInCard ? 'chipInCard' : 'chip'"
   [nbTooltip]="title"
   (click)="onClickChipEvent()"
   *ngIf="title"
-  [id]="ID('chip')"
 >
-  
-<!-- [nbTooltipTrigger]="isTooltip ? 'hover' : 'noop'" -->
   <span
     [ngClass]="isEvaluate ? 'chip1' : ''"
     style="
@@ -20,12 +21,7 @@
       justify-content: center;
     "
   >
-    <span
-      [ngClass]="isEvaluate ? 'chip2' : ''"
-      [id]="ID('chip_title')"
-      [innerHTML]="title"
-    ></span>
-
+    <span [ngClass]="isEvaluate ? 'chip2' : ''" [innerHTML]="title"></span>
     <div class="star_list" *ngIf="isEvaluate">
       <div class="star">
         <nb-icon
@@ -33,14 +29,13 @@
           nbSuffix
           icon="star"
           pack="eva"
-          [ngStyle]="{color: index < level ? '#ffdf00' : '#dad7cd'}"
+          [ngStyle]="{ color: index < level ? '#ffdf00' : '#dad7cd' }"
           (click)="clickStar(index)"
         ></nb-icon>
       </div>
     </div>
   </span>
   <nb-icon
-    [id]="ID('chip_icon')"
     *ngIf="isHaveIcon && icon"
     [icon]="icon"
     (click)="iconAction()"
