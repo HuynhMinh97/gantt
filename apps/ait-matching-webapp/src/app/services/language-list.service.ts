@@ -14,14 +14,14 @@ export class LanguageListService extends AitBaseService {
     }
     condition['language']['attribute'] = 'language';
     condition['language']['ref_collection'] = 'sys_master_data';
-    condition['language']['ref_attribute'] = 'code';
+    condition['language']['ref_attribute'] = '_key';
 
     if (!condition['proficiency']){
       condition['proficiency'] = {}
     }
     condition['proficiency']['attribute'] = 'proficiency';
     condition['proficiency']['ref_collection'] = 'sys_master_data';
-    condition['proficiency']['ref_attribute'] = 'code';
+    condition['proficiency']['ref_attribute'] = '_key';
 
     if (!condition['create_by']) {
       condition['create_by'] = {};

@@ -1,4 +1,5 @@
-import { RegisterProjectComponent } from './pages/register-project/register-project.component';
+import { EditDataMasterComponent } from './pages/master-group-collection/edit-data-master/edit-data-master.component';
+import { RegisterProjectComponent } from './pages/project-requirements/register-project/register-project.component';
 import { SkillDetailComponent } from './pages/list/skill-list/skill-detail/skill-detail.component';
 import { AddCationComponent } from './pages/list/caption-list/add-caption/add-caption.component';
 import { CreateUserComponent } from './pages/list/user-list/create-user/create-user.component';
@@ -34,13 +35,15 @@ import { UserCourseDetailComponent } from './pages/user/user-course-detail/user-
 import { LanguageListComponent } from './pages/list/language-list/language-list.component';
 import { RecommencedJobComponent } from './pages/recommenced/recommenced-job/recommenced-job.component';
 import { AddRoleComponent } from './pages/group-role/add-role/add-role.component';
-import { MyProjectQueriesComponent } from './pages/my-project-queries/my-project-queries.component';
 import { UserListComponent } from './pages/list/user-list/user-list.component';
 import { AddSkillComponent } from './pages/list/skill-list/add-skill/add-skill.component';
 import { CaptionListComponent } from './pages/list/caption-list/caption-list.component';
 import { CaptionDetailComponent } from './pages/list/caption-list/caption-detail/caption-detail.component';
 import { MasterDataListComponent } from './pages/master-data/master-data-list/master-data-list.component';
 import { UserAccountDetailComponent } from './pages/list/user-list/user-account-detail/user-account-detail.component';
+import { MasterListComponent } from './pages/master-group-collection/master-list/master-list.component';
+import { ViewDataMasterComponent } from './pages/master-group-collection/view-data-master/view-data-master.component';
+import { ProjectRequirementDetailComponent } from './pages/project-requirements/project-detail/project-requirement-detail.component';
 
 export const routes: Routes = [
   {
@@ -224,11 +227,6 @@ export const routes: Routes = [
     component: EducationListComponent,
   },
   {
-    path: 'my-project-queries',
-    canActivate: [AitAuthGuardService],
-    component: MyProjectQueriesComponent,
-  },
-  {
     path: 'role',
     canActivate: [AitAuthGuardService],
     component: AddRoleComponent,
@@ -303,6 +301,42 @@ export const routes: Routes = [
     canActivate: [AitAuthGuardService],
     component: MasterDataListComponent,
   },
+  {
+    path: 'master-list',
+    canActivate: [AitAuthGuardService],
+    component: MasterListComponent,
+  },
+  {
+    path: 'add-data-master/:id',
+    canActivate: [AitAuthGuardService],
+    component: EditDataMasterComponent,
+  },
+  {
+    path: 'add-data-master',
+    canActivate: [AitAuthGuardService],
+    component: EditDataMasterComponent,
+  },
+  {
+    path: 'view-data-master/:id',
+    canActivate: [AitAuthGuardService],
+    component: ViewDataMasterComponent,
+  },
+  {
+    path: 'register-project/:id',
+    canActivate: [AitAuthGuardService],
+    component: RegisterProjectComponent,
+  },
+  {
+    path: 'register-project',
+    canActivate: [AitAuthGuardService],
+    component: RegisterProjectComponent,
+  },
+  {
+    path: 'project-requirement-detail/:id',
+    canActivate: [AitAuthGuardService],
+    component: ProjectRequirementDetailComponent,
+  },
+
   {
     path: '',
     pathMatch: 'full',

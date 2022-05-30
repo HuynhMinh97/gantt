@@ -104,7 +104,6 @@ export class AddCationComponent extends AitBaseComponent implements OnInit {
     const module = await this.addCaptionService.findModuleByKey(module_key);
     saveData['page'] = page.data[0].code;
     saveData['module'] = module.data[0].code;
-    saveData['active_flag'] = true;
     if(this.caption_key){
       saveData['_key'] = this.caption_key;
     }

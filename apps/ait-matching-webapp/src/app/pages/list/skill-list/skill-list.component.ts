@@ -85,7 +85,7 @@ export class SkillListViewComponent extends AitBaseComponent implements OnInit {
     'desired_salary_to',
   ];
   userAttribute = ['create_by', 'change_by'];
-
+  comboboxSearch = ['category']
   columns = [
     { value: 'Name', _key: 'name' },
     { value: 'Code', _key: 'code' },
@@ -343,7 +343,16 @@ export class SkillListViewComponent extends AitBaseComponent implements OnInit {
               }
               object[key]['value'] = value;
             } catch (e) {}
-          } else {
+          } else if (this.comboboxSearch.includes(key)) {
+            try {
+              if (!object[key]) {
+                object[key] = { operator: OPERATOR.LIKE };
+              }
+              object[key]['value'] = value._key;
+              const isStr = isString(value);
+              object[key]['operator'] = isStr ? OPERATOR.LIKE : OPERATOR.IN;
+            } catch (e) {}
+          } else{
             const isStr = isString(value);
             object[key] = {
               operator: isStr ? OPERATOR.LIKE : OPERATOR.IN,
@@ -354,6 +363,7 @@ export class SkillListViewComponent extends AitBaseComponent implements OnInit {
           }
         }
       });
+     
 
       if (isObjectFull(object)) {
         const data = await this.getData(object);

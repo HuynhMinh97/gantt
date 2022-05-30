@@ -9,9 +9,14 @@ export class RegisterProjectService extends AitBaseService{
   async findProjectAitByKey(_key?:string) {
     const returnFields = { 
       _key: true,
+      active_flag: true,
       valid_time_from: true,
       valid_time_to: true,
-      ait_project_name: true,
+      project_ait_name: true,
+      create_by: true,
+      change_by: true,
+      create_at: true,
+      change_at: true,
       location: {
         _key: true,
         value: true
@@ -28,7 +33,7 @@ export class RegisterProjectService extends AitBaseService{
         _key: true,
         value: true
       },
-     
+      remark: true,
       description:true
     };
     const request = {};
@@ -68,6 +73,10 @@ export class RegisterProjectService extends AitBaseService{
     };
 
     request['condition']['_key'] = _key;
+    request['condition']['create_by'] = {};
+    request['condition']['change_by'] = {};
+    request['condition']['create_by']['type'] = 'matching';
+    request['condition']['change_by']['type'] = 'matching';
     return await this.query('findProjectAitByKey', request, returnFields);
   }
 

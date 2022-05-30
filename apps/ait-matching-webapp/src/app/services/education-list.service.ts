@@ -14,7 +14,7 @@ export class EducationListService extends AitBaseService {
     }
     condition['school']['attribute'] = 'school';
     condition['school']['ref_collection'] = 'm_school';
-    condition['school']['ref_attribute'] = 'code';
+    condition['school']['ref_attribute'] = '_key';
 
     if (!condition['create_by']) {
       condition['create_by'] = {};
