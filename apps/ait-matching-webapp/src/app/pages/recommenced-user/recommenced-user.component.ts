@@ -145,16 +145,11 @@ export class RecommencedUserComponent
   dataFilter = [];
   dataFilterDf = [];
 
-  dataMatching = [];
-  dataMatchingDf = [];
-
   dataFilterSave = [];
   dataFilterSaveDf = [];
 
-  dataMatchingSave = [];
-  dataMatchingSaveDf = [];
-
   dataIncludesIdSave = [];
+  matchingList = [];
 
   messageSearch = '';
 
@@ -169,7 +164,6 @@ export class RecommencedUserComponent
   currentRound = 0;
   textDataEnd = '';
   disableTab = false;
-  isMatchingSearch = false;
   isSubmit = false;
 
   getNummberMode8 = (target: number) => {
@@ -233,12 +227,12 @@ export class RecommencedUserComponent
       if (isButton) {
         this.isExpan = true;
         this.setSkeleton(true);
-        this.callSearchAll();
+        this.callSearch();
       }
     } else {
       this.isExpan = true;
       this.setSkeleton(true);
-      this.callSearchAll();
+      this.callSearch();
     }
   };
 
@@ -252,6 +246,7 @@ export class RecommencedUserComponent
     start = 0,
     end = 8
   ) => {
+    console.log(list);
     if (list.length === 0) {
       const res = await this.matchingService.getDetailMatching(
         onlySaved,
@@ -260,7 +255,7 @@ export class RecommencedUserComponent
       );
       if (res.status === RESULT_STATUS.OK) {
         if (res.data?.length === 0) {
-          this.textDataNull = '021';
+          this.textDataNull = 'There is no data to search';
         }
         return res.data;
       }
@@ -273,7 +268,7 @@ export class RecommencedUserComponent
       );
       if (res.status === RESULT_STATUS.OK) {
         if (res.data?.length === 0) {
-          this.textDataNull = '021';
+          this.textDataNull = 'There is no data to search';
         }
         return res.data;
       }
@@ -342,7 +337,7 @@ export class RecommencedUserComponent
         localStorage.setItem('my-project-queries', null);
       });
     }
-    this.callSearchAll();
+    this.callSearch();
   }
 
   preventScroll = () => {
@@ -355,17 +350,14 @@ export class RecommencedUserComponent
     }
   };
 
-  private callSearchAll() {
+  private callSearch(list = []) {
     this.isExpan = true;
-    this.getDataByRound().then(() => {
+    this.getDataByRound(false, list).then(() => {
       this.setSkeleton(false);
     });
   }
 
-  loadNext = (event) => {
-    if (this.isMatchingSearch) {
-      return;
-    }
+  loadNext = (event: any) => {
     if (this.cardSkeleton.length === 0 || this.dataFilter.length !== 0) {
       const pos =
         (event.target.scrollTop || document.body.scrollTop) +
@@ -376,17 +368,16 @@ export class RecommencedUserComponent
         if (!this.spinnerLoading) {
           // Coding something 😋😋😋
           if (this.currentTab === 'R' && this.textDataEnd === '') {
-            if (this.dataFilter.length >= 8) {
+            if (this.dataFilterDf.length >= 8) {
               this.setSkeleton(true);
-              this.getDataByRound().then(() => this.setSkeleton(false));
+              this.getDataByRound(false, this.matchingList).then(() => {
+                this.filterMain();
+                this.setSkeleton(false);
+              });
             } else {
-              this.textDataEnd = '022';
-            }
-          } else {
-            if (this.dataIncludesIdSave.length >= 8) {
-              this.setSkeleton(true);
-            } else {
-              this.textDataEnd = '022';
+              console.log(8);
+              console.log(this.dataFilterDf);
+              this.textDataEnd = 'Out of data';
             }
           }
         }
@@ -400,17 +391,18 @@ export class RecommencedUserComponent
   getTitlePlaceholderSearch = () => this.translateService.translate('001');
 
   // Get Data by round and base on all of result
-  getDataByRound = async (onlySaved = false) => {
+  getDataByRound = async (onlySaved = false, list = []) => {
     try {
+      console.log(this.currentCount);
       const detail = await this.getDetailMatching(
-        [],
+        list,
         onlySaved,
         this.currentCount
       );
       if (isArrayFull(detail) && !onlySaved) {
-        this.dataFilter = this.dataFilter.concat(detail);
+        this.dataFilter = this.dataFilterDf.concat(detail);
         this.dataFilterDf = [...this.dataFilter];
-        this.currentCount = Math.ceil(this.dataFilter.length / 8);
+        this.currentCount = Math.ceil(this.dataFilterDf.length / 8);
       }
       if (isArrayFull(detail) && onlySaved) {
         this.dataFilterSave = this.dataFilterSave.concat(detail);
@@ -423,7 +415,8 @@ export class RecommencedUserComponent
       ) {
         this.textDataNull = '';
         this.textDataNullSave = '';
-        this.textDataEnd = '022';
+        console.log(8);
+        this.textDataEnd = 'Out of data';
         this.setSkeleton(false);
       }
     } catch (e) {
@@ -431,67 +424,31 @@ export class RecommencedUserComponent
     }
   };
 
-  getDataByList = async (list: string[], onlySaved = false) => {
-    try {
-      const detail = await this.getDetailMatching(
-        list,
-        onlySaved,
-        this.currentMatchingCount
-      );
-      if (isArrayFull(detail) && !onlySaved) {
-        this.dataMatching = this.dataMatching.concat(detail);
-        this.dataMatchingDf = [...this.dataMatching];
-        this.currentMatchingCount = Math.ceil(this.dataMatching.length / 8);
-      }
-      if (isArrayFull(detail) && onlySaved) {
-        this.dataMatchingSave = this.dataMatchingSave.concat(detail);
-        this.currentMatchingCount = Math.ceil(this.dataMatchingSave.length / 8);
-      }
-      if (
-        detail.length === 0 &&
-        ((this.dataMatching.length !== 0 && !onlySaved) ||
-          (this.dataMatchingSave.length !== 0 && onlySaved))
-      ) {
-        this.textDataNull = '';
-        this.textDataNullSave = '';
-        this.textDataEnd = '022';
-      }
-    } catch (e) {
-      console.log(e);
-    } finally {
-      this.setSkeleton(false);
-    }
-  };
-
   search() {
     this.isSubmit = true;
-    const keyword = this.searchForm.controls['keyword'].value;
+    const keyword = this.searchForm.controls['keyword'].value || '';
+    this.dataFilter = [];
+    this.dataFilterDf = [];
+    this.matchingList = [];
+    this.currentCount = 0;
+    this.textDataEnd = '';
     if (!keyword) {
-      this.isMatchingSearch = false;
-      this.dataFilter = [];
-      this.dataFilterDf = [];
-
       this.setSkeleton(true);
-      this.callSearchAll();
+      this.callSearch();
       setTimeout(() => {
         this.setSkeleton(false);
       }, 500);
       return;
     }
     this.setSkeleton(true);
-    if (keyword) {
-      this.isMatchingSearch = true;
-      this.matchingService.matchingUser(keyword).then((res) => {
-        if (res?.data.length > 0) {
-          const arr = res.data.map((e: { item: string }) => e.item);
-          this.getDataByList(arr);
-          return;
-          this.matchingFilter(arr);
-        }
-      });
-    } else {
-      this.dataFilter = this.dataFilterDf;
-    }
+    this.matchingService.matchingUser(keyword).then((res) => {
+      if (res?.data.length > 0) {
+        const arr = res.data.map((e: { item: string }) => e.item);
+        console.log(arr.length);
+        this.matchingList = arr || [];
+        this.callSearch(arr);
+      }
+    });
   }
 
   // thêm nút scroll to top : TODO
@@ -610,15 +567,14 @@ export class RecommencedUserComponent
       });
   }
 
-  filterMain(type: number) {
-    const isMatching = this.isMatchingSearch;
+  filterMain(type = 0) {
     try {
       const formValue = this.searchForm.value;
       const condition = Object.entries(formValue).reduce(
         (a, [k, v]) => (v == null ? a : ((a[k] = v), a)),
         {}
       );
-      isMatching && delete condition['keyword'];
+      condition['keyword'] && delete condition['keyword'];
       const checkList = [];
       for (const prop in condition) {
         if (prop !== 'keyword') {
@@ -627,9 +583,7 @@ export class RecommencedUserComponent
       }
       const keyList = _.flatten(checkList);
       if (isObjectFull(condition) && type === 0) {
-        const dataList = isMatching
-          ? [...this.dataMatchingDf]
-          : [...this.dataFilterDf];
+        const dataList = [...this.dataFilterDf];
         const daveForFilter = dataList.filter((m) => {
           let isValid = true;
           for (const prop in condition) {
@@ -646,17 +600,9 @@ export class RecommencedUserComponent
           }
           return isValid;
         });
-        if (isMatching) {
-          this.dataMatching = daveForFilter;
-        } else {
-          this.dataFilter = daveForFilter;
-        }
+        this.dataFilter = daveForFilter;
       } else {
-        if (isMatching) {
-          this.dataMatching = [...this.dataMatchingDf];
-        } else {
-          this.dataFilter = [...this.dataFilterDf];
-        }
+        this.dataFilter = [...this.dataFilterDf];
       }
     } catch (e) {
       console.log(e);
