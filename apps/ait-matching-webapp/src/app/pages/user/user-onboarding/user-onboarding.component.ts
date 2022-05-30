@@ -688,7 +688,6 @@ export class UserOnboardingComponent
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
-    debugger
     if (
       this.userOnboardingInfo.valid &&
       this.userJobSettingInfo.valid &&
@@ -1084,16 +1083,13 @@ export class UserOnboardingComponent
         ?.then(async (r) => {
           if (r.status === RESULT_STATUS.OK) {
             let isUserExist = false;
-            
             const userInfo = {...r.data[0]}
             Object.keys(r.data[0]).forEach(key => {
               if (key == 'gender' && !r.data[0].gender ) {
-                debugger
                 userInfo['gender'] = {
                   value: 'Others',
                   _key: this.gender_other_key
                 }
-                console.log(userInfo)
               }
             })
             this.dataCountry = userInfo;
