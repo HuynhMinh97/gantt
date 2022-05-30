@@ -179,7 +179,7 @@ export class UserOnboardingComponent
   dataCountry: any;
   jobSettingData: any;
   isLoad = false;
-  gender_other_key = '14034803'
+  gender_other_key : string;
   constructor(
     router: Router,
     private element: ElementRef,
@@ -296,6 +296,8 @@ export class UserOnboardingComponent
       this.mode = MODE.EDIT;
     }
     if (this.user_key) {
+      const result = await this.userOnbService.getKeyGenderOther();
+      this.gender_other_key = result?.data[0]?._key ? result?.data[0]?._key : null;
       if (this.user_key !== this.user_id_profile) {
         this.callLoadingApp();
         this.router.navigate([`user-detail/${this.user_key}`]);

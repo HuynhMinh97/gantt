@@ -79,7 +79,6 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
         isExist = true;
       }
     })
-    debugger
     if (!isExist) {
       const saveData = {};
       saveData['user_id'] = userId;
