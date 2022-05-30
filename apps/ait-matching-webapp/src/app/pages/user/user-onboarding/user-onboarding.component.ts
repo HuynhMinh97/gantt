@@ -179,6 +179,7 @@ export class UserOnboardingComponent
   dataCountry: any;
   jobSettingData: any;
   isLoad = false;
+  gender_other_key = '14034803'
   constructor(
     router: Router,
     private element: ElementRef,
@@ -636,7 +637,7 @@ export class UserOnboardingComponent
     saveData.province_city = saveData.province_city
       ? saveData.province_city?._key
       : null;
-    saveData.gender = saveData.gender._key;
+    saveData.gender = saveData.gender._key ? saveData.gender._key  : this.gender_other_key;
     saveData.country_region = saveData.country_region
       ? saveData.country_region?._key
       : null;
@@ -687,7 +688,7 @@ export class UserOnboardingComponent
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
-
+    debugger
     if (
       this.userOnboardingInfo.valid &&
       this.userJobSettingInfo.valid &&
@@ -1083,9 +1084,22 @@ export class UserOnboardingComponent
         ?.then(async (r) => {
           if (r.status === RESULT_STATUS.OK) {
             let isUserExist = false;
-            this.dataCountry = r.data[0];
+            
+            const userInfo = {...r.data[0]}
+            Object.keys(r.data[0]).forEach(key => {
+              if (key == 'gender' && !r.data[0].gender ) {
+                debugger
+                userInfo['gender'] = {
+                  value: 'Others',
+                  _key: this.gender_other_key
+                }
+                console.log(userInfo)
+              }
+            })
+            this.dataCountry = userInfo;
             if (r.data.length > 0 && !this.dataCountry.del_flag) {
               this.userOnboardingInfo.patchValue({ ...this.dataCountry });
+              
               this.userOnboardingInfoClone = this.userOnboardingInfo.value;
 
               this.user_id_profile = this.dataCountry.user_id;
