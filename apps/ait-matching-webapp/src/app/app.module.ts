@@ -65,7 +65,6 @@ import { LanguageListComponent } from './pages/list/language-list/language-list.
 import { EducationListComponent } from './pages/list/education-list/education-list.component';
 import { CertificateListComponent } from './pages/list/certificate-list/certificate-list.component';
 import { SkillListViewComponent } from './pages/list/skill-list/skill-list.component';
-import { MyProjectQueriesComponent } from './pages/my-project-queries/my-project-queries.component';
 import { AddRoleComponent } from './pages/group-role/add-role/add-role.component';
 import { GroupRoleRegisterComponent } from './pages/group-role/group-role-register/group-role-register.component';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
@@ -83,7 +82,11 @@ import { MasterDataListComponent } from './pages/master-data/master-data-list/ma
 import { MasterDataInputComponent } from './pages/master-data/master-data-input/master-data-input.component';
 import { MasterDataViewComponent } from './pages/master-data/master-data-view/master-data-view.component';
 import { UserAccountDetailComponent } from './pages/list/user-list/user-account-detail/user-account-detail.component';
-import { RegisterProjectComponent } from './pages/register-project/register-project.component';
+import { RegisterProjectComponent } from './pages/project-requirements/register-project/register-project.component';
+import { MasterListComponent } from './pages/master-group-collection/master-list/master-list.component';
+import { EditDataMasterComponent } from './pages/master-group-collection/edit-data-master/edit-data-master.component';
+import { ViewDataMasterComponent } from './pages/master-group-collection/view-data-master/view-data-master.component';
+import { ProjectRequirementDetailComponent } from './pages/project-requirements/project-detail/project-requirement-detail.component';
 
 const AIT_UI_MODULES = [AitChipModule, AitTabsModule, AitTocMenuModule];
 
@@ -144,7 +147,6 @@ const PAGES = [
     ...COMPONENTS,
     ...PAGES,
     DragScrollComponent,
-    MyProjectQueriesComponent,
     AddRoleComponent,
     GroupRoleRegisterComponent,
     GroupRoleListComponent,
@@ -161,6 +163,10 @@ const PAGES = [
     MasterDataViewComponent,
     UserAccountDetailComponent,
     RegisterProjectComponent,
+    MasterListComponent,
+    EditDataMasterComponent,
+    ViewDataMasterComponent,
+    ProjectRequirementDetailComponent,
   ],
   imports: [
     Ng2SmartTableModule,

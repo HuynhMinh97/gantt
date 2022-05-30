@@ -1,5 +1,5 @@
-import { RegisterProjectService } from './../../services/register-project.service';
-import { UserOnboardingService } from './../../services/user-onboarding.service';
+import { RegisterProjectService } from '../../../services/register-project.service';
+import { UserOnboardingService } from '../../../services/user-onboarding.service';
 import { AitAuthService, AitBaseComponent, AitEnvironmentService, AppState } from '@ait/ui';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -45,7 +45,7 @@ export class RegisterProjectComponent extends AitBaseComponent implements OnInit
     );
 
     this.projectForm = this.formBuilder.group({
-      ait_project_name: new FormControl(null),
+      project_ait_name: new FormControl(null),
       _key: new FormControl(null),
       location: new FormControl(null),
       title: new FormControl(null, [Validators.required]),
@@ -61,6 +61,10 @@ export class RegisterProjectComponent extends AitBaseComponent implements OnInit
         Validators.maxLength(10),
       ]),
       description: new FormControl(null, [
+        Validators.required,
+        Validators.maxLength(4000),
+      ]),
+      remark: new FormControl(null, [
         Validators.required,
         Validators.maxLength(4000),
       ]),

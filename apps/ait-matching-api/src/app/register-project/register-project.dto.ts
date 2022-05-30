@@ -1,13 +1,9 @@
 import { Float } from '@nestjs/graphql';
-import { BaseDto, ConditionDto,  } from '@ait/core';
+import { BaseDto, ConditionDto } from '@ait/core';
 import { Field, InputType, Int } from '@nestjs/graphql';
-
-
-
 
 @InputType()
 export class RegisterProjectDto extends BaseDto {
-
   @Field(() => ConditionDto, { nullable: true })
   industry?: ConditionDto;
 
@@ -23,9 +19,15 @@ export class RegisterProjectDto extends BaseDto {
   @Field(() => String, { nullable: true })
   description?: string;
 
+  @Field(() => String, { nullable: true })
+  remark?: string;
+
+  @Field(() => String, { nullable: true })
+  project_ait_name?: string;
+
   @Field(() => Float, { nullable: true })
   valid_time_from?: number;
-  
+
   @Field(() => Float, { nullable: true })
   valid_time_to?: number;
 
@@ -35,8 +37,6 @@ export class RegisterProjectDto extends BaseDto {
 
 @InputType()
 export class RegisterProjectSaveDto extends BaseDto {
-  
-
   @Field(() => String, { nullable: true })
   industry?: string;
 
@@ -52,12 +52,18 @@ export class RegisterProjectSaveDto extends BaseDto {
   @Field(() => String, { nullable: true })
   description?: string;
 
+  @Field(() => String, { nullable: true })
+  remark?: string;
+
   @Field(() => Float, { nullable: true })
   valid_time_from?: number;
-  
+
   @Field(() => Float, { nullable: true })
   valid_time_to?: number;
 
   @Field(() => [String], { nullable: true })
   skills?: string[];
+
+  @Field(() => String, { nullable: true })
+  project_ait_name?: string;
 }
