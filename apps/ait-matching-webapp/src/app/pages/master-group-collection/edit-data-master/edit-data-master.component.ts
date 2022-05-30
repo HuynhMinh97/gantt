@@ -114,7 +114,9 @@ export class EditDataMasterComponent
       }
 
     });
-    saveData['_key'] = this._key;
+    if (this._key){
+      saveData['_key'] = this._key;
+    }
     saveData['active_flag'] = condition['active_flag'] ? condition['active_flag'] : false;
     return  await this.editDataMasterService.saveDataMaster(saveData, collection);
   };
