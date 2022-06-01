@@ -169,7 +169,7 @@ async findUserExperienceByUserId(user_id?: string) {
     {
       collection: this.collection,
       condition,
-      options: { sort_by: { value: 'start_date_to', order_by: 'DESC' } }
+      options: { sort_by: { value: 'start_date_from', order_by: 'DESC' } }
     }, 
     returnFields);
   }
