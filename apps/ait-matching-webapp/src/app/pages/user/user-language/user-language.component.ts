@@ -75,7 +75,7 @@ export class UserLanguageComponent extends AitBaseComponent implements OnInit {
     const language_list = languages.data;
     let isExist = false;
     language_list.forEach((lang) => {
-      if(lang['language']._key.includes(condition['language'])){
+      if(lang['language']._key.includes(condition['language']) && lang['_key'] !== condition['_key']){
         isExist = true;
       }
     })

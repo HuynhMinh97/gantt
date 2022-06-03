@@ -354,4 +354,14 @@ export class UserOnboardingService extends AitBaseService {
     request['condition'] = condition;
     return await this.query('findSkillOnboarding', request, returnFields);
   }
+
+  async getKeyGenderOther() {
+    
+    const returnFields = {
+      _key: true,
+    };
+    const request = {};
+    request['collection'] = 'sys_master_data';
+    return await this.query('getKeyGenderOther', request, returnFields);
+  }
 }

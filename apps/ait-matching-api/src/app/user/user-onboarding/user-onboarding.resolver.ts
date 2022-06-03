@@ -109,9 +109,24 @@ export class UserOnboardingInfoResolver extends AitBaseService {
           FILTER  v._key == ${parentKey}
           RETURN v.code 
       `;
-    const result = await this.query(aqlQuery);
     return await this.query(aqlQuery);
   }
+
+  @Query(() => UserOnboardingInfoResponse, { name: 'getKeyGenderOther' })
+  async getKeyGenderOther(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => UserOnboardingInfoRequest })
+    request: UserOnboardingInfoRequest
+  ) {
+    const aqlQuery = `
+    for data in sys_master_data
+    filter data.code == "Other"
+    return {_key: data._key}
+      `;
+    return await this.query(aqlQuery);
+  }
+
+ 
 
   async getJobSettingSkill(user_id: string) {
     const aqlQuery = `

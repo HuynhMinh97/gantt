@@ -44,10 +44,10 @@ export class CaptionListService extends AitBaseService {
     }
     condition['module']['attribute'] = 'module';
     condition['module']['ref_collection'] = 'sys_module';
-    condition['module']['ref_attribute'] = 'code';
+    condition['module']['ref_attribute'] = '_key';
     condition['page']['attribute'] = 'page';
     condition['page']['ref_collection'] = 'sys_page';
-    condition['page']['ref_attribute'] = 'code';
+    condition['page']['ref_attribute'] = '_key';
     condition['create_by']['type'] = 'matching';
     condition['change_by']['type'] = 'matching';
 
