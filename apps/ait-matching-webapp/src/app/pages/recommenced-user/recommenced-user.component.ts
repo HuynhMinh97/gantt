@@ -246,7 +246,6 @@ export class RecommencedUserComponent
     start = 0,
     end = 8
   ) => {
-    console.log(list);
     if (list.length === 0) {
       const res = await this.matchingService.getDetailMatching(
         onlySaved,
@@ -375,8 +374,6 @@ export class RecommencedUserComponent
                 this.setSkeleton(false);
               });
             } else {
-              console.log(8);
-              console.log(this.dataFilterDf);
               this.textDataEnd = 'Out of data';
             }
           }
@@ -393,7 +390,6 @@ export class RecommencedUserComponent
   // Get Data by round and base on all of result
   getDataByRound = async (onlySaved = false, list = []) => {
     try {
-      console.log(this.currentCount);
       const detail = await this.getDetailMatching(
         list,
         onlySaved,
@@ -415,7 +411,6 @@ export class RecommencedUserComponent
       ) {
         this.textDataNull = '';
         this.textDataNullSave = '';
-        console.log(8);
         this.textDataEnd = 'Out of data';
         this.setSkeleton(false);
       }
@@ -444,7 +439,6 @@ export class RecommencedUserComponent
     this.matchingService.matchingUser(keyword).then((res) => {
       if (res?.data.length > 0) {
         const arr = res.data.map((e: { item: string }) => e.item);
-        console.log(arr.length);
         this.matchingList = arr || [];
         this.callSearch(arr);
       }
@@ -496,7 +490,7 @@ export class RecommencedUserComponent
     } else {
       this.searchForm.controls[form].setValue(null);
     }
-    // this.filterMain();
+    this.filterMain();
   }
 
   reset(): void {
@@ -567,6 +561,10 @@ export class RecommencedUserComponent
       });
   }
 
+  setHours0(time: number) {
+    return new Date(time).setHours(0, 0, 0, 0);
+  }
+
   filterMain(type = 0) {
     try {
       const formValue = this.searchForm.value;
@@ -575,9 +573,14 @@ export class RecommencedUserComponent
         {}
       );
       condition['keyword'] && delete condition['keyword'];
+      console.log(condition);
       const checkList = [];
       for (const prop in condition) {
-        if (prop !== 'keyword') {
+        if (
+          prop !== 'keyword' &&
+          prop !== 'valid_time_from' &&
+          prop !== 'valid_time_to'
+        ) {
           checkList.push(condition[prop].map((t: any) => t['_key']));
         }
       }
@@ -593,6 +596,28 @@ export class RecommencedUserComponent
             } else if (isArrayFull(condition[prop]) && isObjectFull(m[prop])) {
               isValid = [m[prop]].some((z: any) => keyList.includes(z['_key']));
               if (!isValid) break;
+            } else if (prop === 'valid_time_from' || prop === 'valid_time_to') {
+              if (condition['valid_time_from'] && !condition['valid_time_to']) {
+                isValid =
+                  this.setHours0(condition['valid_time_from']) <=
+                  this.setHours0(m['create_at']);
+                if (!isValid) break;
+              } else if (
+                !condition['valid_time_from'] &&
+                condition['valid_time_to']
+              ) {
+                isValid =
+                  this.setHours0(condition['valid_time_to']) >=
+                  this.setHours0(m['create_at']);
+                if (!isValid) break;
+              } else {
+                isValid =
+                  this.setHours0(condition['valid_time_from']) <=
+                    this.setHours0(m['create_at']) &&
+                  this.setHours0(condition['valid_time_to']) >=
+                    this.setHours0(m['create_at']);
+                if (!isValid) break;
+              }
             } else {
               isValid = false;
               break;

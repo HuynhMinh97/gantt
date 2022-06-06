@@ -37,6 +37,10 @@ export class RecommencedUserService extends AitBaseService {
       level: true,
     },
     is_saved: true,
+    create_by: true,
+    change_by: true,
+    create_at: true,
+    change_at: true,
   };
   // returnFi
   async matchingUser(keyword: string) {
@@ -64,7 +68,11 @@ export class RecommencedUserService extends AitBaseService {
     if (onlySaved) {
       condition[KEYS.CONDITION]['is_saved'] = true;
     }
-    return await this.query('findProfileByCondition', condition, this.returnFields);
+    return await this.query(
+      'findProfileByCondition',
+      condition,
+      this.returnFields
+    );
   }
 
   async saveRecommendUser(_from: string, _to: string) {
