@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AitBaseService } from '@ait/ui';
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CaptionListService extends AitBaseService {
   collection = 'sys_caption';
@@ -33,13 +32,11 @@ export class CaptionListService extends AitBaseService {
     if (!condition['change_by']) {
       condition['change_by'] = {};
     }
-    if (!condition['module'])
-    {
+    if (!condition['module']) {
       condition['module'] = {};
     }
 
-    if (!condition['page'])
-    {
+    if (!condition['page']) {
       condition['page'] = {};
     }
     condition['module']['attribute'] = 'module';
@@ -62,5 +59,3 @@ export class CaptionListService extends AitBaseService {
     );
   }
 }
-
-
