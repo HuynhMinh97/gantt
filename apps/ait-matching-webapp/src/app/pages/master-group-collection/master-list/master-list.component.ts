@@ -133,7 +133,6 @@ export class MasterListComponent extends AitBaseComponent implements OnInit {
           }
         });
     }
-    console.log(dataSearch);
     this.source = new LocalDataSource(dataSearch);
     return dataSearch;
   }
@@ -193,7 +192,6 @@ export class MasterListComponent extends AitBaseComponent implements OnInit {
       }
     } else {
       const data = await this.getData();
-      // const result = await this.getData();
       return { data: data };
     }
   };

@@ -239,14 +239,14 @@ export class ProjectListComponent extends AitBaseComponent implements OnInit {
             const dataFormat = {};
             dataFormat['employeeName'] =
               element.first_name + ' ' + element.last_name;
-            dataFormat['projectName'] = element?.name;
+            dataFormat['projectName'] = element?.project_name?.value;
             dataFormat['_key'] = element?._key;
             dataFormat['skill'] = element?.skills;
             dataFormat['description'] = element?.description;
             dataFormat['responsibility'] = element?.responsibility;
             dataFormat['achievement'] = element?.achievement;
-            dataFormat['company'] = element?.company_working.value;
-            dataFormat['title'] = element?.title.value;
+            dataFormat['company'] = element?.company_working?.value;
+            dataFormat['title'] = element?.title?.value;
             dataFormat['create_by'] = element?.create_by;
             dataFormat['change_by'] = element?.change_by;
             dataFormat['create_at'] = this.getDateFormat(element?.create_at);

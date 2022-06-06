@@ -80,9 +80,9 @@ export class ProjectListResolver extends AitBaseService {
   }
 
   async getSkills(element: any, lang: string) {
-    const _from = 'biz_project/' + element._key;
+    const _from = 'user_project/' + element._key;
     const aqlQuery = `
-        FOR v IN 1..1 OUTBOUND "${_from}" biz_project_skill
+        FOR v IN 1..1 OUTBOUND "${_from}" user_project_skill
         RETURN v.name.${lang}
       `;
 

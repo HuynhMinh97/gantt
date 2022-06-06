@@ -252,11 +252,11 @@ export const routes: Routes = [
     canActivate: [AitAuthGuardService],
     component: CreateUserComponent,
   },
-  {
-    path: 'create-user/:id',
-    canActivate: [AitAuthGuardService],
-    component: CreateUserComponent,
-  },
+  // {
+  //   path: 'create-user/:id',
+  //   canActivate: [AitAuthGuardService],
+  //   component: CreateUserComponent,
+  // },
   {
     path: 'user-account-detail/:id',
     canActivate: [AitAuthGuardService],

@@ -12,18 +12,24 @@ export class ProjectListService extends AitBaseService {
     
     condition['del_flag'] = false;
 
+    if (!condition['project_name']){
+      condition['project_name'] = {}
+    }
+    condition['project_name']['attribute'] = 'project_name';
+    condition['project_name']['ref_collection'] = 'm_project';
+    condition['project_name']['ref_attribute'] = '_key';
     if (!condition['company_working']){
       condition['company_working'] = {}
     }
     condition['company_working']['attribute'] = 'company_working';
     condition['company_working']['ref_collection'] = 'm_company';
-    condition['company_working']['ref_attribute'] = 'code';
+    condition['company_working']['ref_attribute'] = '_key';
     if (!condition['title']) {
       condition['title'] = {}
     }
     condition['title']['attribute'] = 'title';
     condition['title']['ref_collection'] = 'm_title';
-    condition['title']['ref_attribute'] = 'code';
+    condition['title']['ref_attribute'] = '_key';
     if (!condition['create_by']) {
       condition['create_by'] = {};
     }
@@ -37,7 +43,7 @@ export class ProjectListService extends AitBaseService {
     return await this.query(
       'GetProjectList',
       {
-        collection: 'biz_project',
+        collection: 'user_project',
         condition
       },
       {
@@ -50,7 +56,10 @@ export class ProjectListService extends AitBaseService {
         create_by: true,
         change_at: true,
         change_by: true,
-        name: true,
+        project_name: {
+          _key: true,
+          value: true
+        },
         start_date_from: true,
         company_working: {
           _key: true,
