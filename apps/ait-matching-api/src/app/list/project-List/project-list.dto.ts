@@ -19,7 +19,7 @@ export class ProjectListDto extends BaseDto {
   username: ConditionDto;
 
   @Field(() => String, { nullable: true })
-  name?: string;
+  project_name?: string;
 
   @Field(() => Float, { nullable: true })
   start_date_from?: number;
@@ -75,7 +75,7 @@ export class SearchProjectDto {
   username?: ConditionDto;
 
   @Field(() => ConditionDto, { nullable: true })
-  name?: ConditionDto;
+  project_name?: ConditionDto;
 
   @Field(() => ConditionDto, { nullable: true })
   start_date_from?: ConditionDto;

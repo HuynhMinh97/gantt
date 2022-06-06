@@ -272,6 +272,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         }
         this.skillByCategory.push(top5);
         data.forEach((item) => {
+          
           let isCategory = false;
           this.skillByCategory.forEach((element, index) => {
             if (
@@ -281,24 +282,40 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
               if (element.name === 'Others') {
                 categoryOther_index = index;
               }
-              this.skillByCategory[index].data.push(item);
+              
 
               isCategory = true;
             }
           });
           if (!isCategory) {
             const skillsGroup = {} as OrderSkill;
+            if (!item.category?.value){
+              this.skillByCategory.forEach((element, index) => {
+                if (element.name === 'Others') {
+                  categoryOther_index = index;
+                }
+              })
+            }
             skillsGroup.name = item.category?.value
               ? item.category?.value
               : 'Others';
             skillsGroup.code = item.category?._key
               ? item.category?._key
               : this.categoryOther_key;
+              
             skillsGroup.data = [];
             skillsGroup.data.push(item);
-            this.skillByCategory.push(skillsGroup);
+            if (categoryOther_index > 0)
+            {
+              debugger
+              this.skillByCategory[categoryOther_index].data.push(item);
+            } else {
+             
+              this.skillByCategory.push(skillsGroup);
+            }
           }
         });
+        
       }
     });
   }
@@ -361,6 +378,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
           ).filter((f) => !!f);
           const companyUserExps = this.groupBy(
             res.data,
+            
             (p) => p.company_working?.value
           );
           const datacompany = company_values.map((element) => {
