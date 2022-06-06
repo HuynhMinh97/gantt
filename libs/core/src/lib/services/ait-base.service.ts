@@ -433,14 +433,14 @@ export class AitBaseService {
     //custom
     this.mappingUser.forEach((prop) => {
       aqlStr += `\r\n ${prop.type}: (`;
-      aqlStr += `\r\n data.is_matching == true ? (`;
+      aqlStr += `\r\n data.is_matching != true ? (`;
       aqlStr += `\r\n LET item = (`;
       aqlStr += `\r\n FOR record IN user_profile`;
       aqlStr += `\r\n FILTER record.user_id == data.${prop.type}`;
       aqlStr += `\r\n RETURN record`;
       aqlStr += `\r\n )[0]`;
       if (this.type === TYPE.MATCHING) {
-        aqlStr += `\r\n RETURN CONCAT(item.first_name, " ", item.last_name) `;
+        aqlStr += `\r\n RETURN (LENGTH(item.first_name > 0) ? CONCAT(item.first_name, " ", item.last_name) : data.${prop.type})`;
       } else {
         aqlStr += `\r\n RETURN item.name `;
       }
