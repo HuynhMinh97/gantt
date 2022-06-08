@@ -7,7 +7,7 @@
 >
 <!-- <div bottom class="template__container card__content_container"> -->
   <ait-card-content
-   bottom 
+   area 
    [styleDivider]="{'margin-left':'10px'}"
           [styleLabel]="{ 'font-size': '26px' }"
           tabindex="2"
@@ -26,13 +26,11 @@
                 'margin-left': '10px'
               }">
                 <div style="width: 100%" [ngStyle]="{ 'display': isTableExpan ? 'block' : 'none' }">
-                    
+                    <div class="table__area" #area style="width: 900px; overflow-x:scroll" >
+                      <ait-table-inline-edit>
 
-                    <div class="table__area" #area>
-                        <ng2-smart-table [settings]="settings" [source]="data" (editConfirm)="onSaveConfirm($event)"
-                        (createConfirm)="onCreateConfirm($event)"
-                        #table
-                           ></ng2-smart-table>
+                      </ait-table-inline-edit>
+                       
                     </div>
                     <div *ngIf="totalRows > 0 && done" [ngClass]="isValidPage? 'per_page':'per_page2'">
                         <nb-select placeholder="Select Showcase" [(selected)]="perPage"

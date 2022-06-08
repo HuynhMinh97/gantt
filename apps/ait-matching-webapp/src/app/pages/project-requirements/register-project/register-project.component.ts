@@ -5,6 +5,7 @@ import {
   AitBaseComponent,
   AitEnvironmentService,
   AppState,
+  getUserSetting,
 } from '@ait/ui';
 import { Component, OnInit } from '@angular/core';
 import {
@@ -15,8 +16,11 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
+import { UserListService } from '../../../services/user-list.service';
+import { isObjectFull, RESULT_STATUS } from '@ait/shared';
+import dayjs from 'dayjs';
 
 @Component({
   selector: 'ait-register-project',
@@ -29,56 +33,63 @@ export class RegisterProjectComponent
   project_key: string;
   projectForm: FormGroup;
   project_skill = [];
+  dateFormat: string;
+
   userProjectClone: any;
   tableComponents: any[] = [1]
   isTableIncluded = true;
   isExpandIncluded = true;
   isExpan = true;
   isTableExpan = true;
+  user_list = [];
 
-  settings = {
-    selectMode: 'multi',
-    edit: {
-      editButtonContent: '<i class="fas fa-edit" ></i>',
-      saveButtonContent: '<i class="fas fa-save"></i> ',
-      cancelButtonContent: '<i class="far fa-times" ></i>  ',
-      confirmSave: true,
-    },
-    /**
-     * TODO: Enable add/delete actions
-     */
-    actions: {
-      add: false,
-      delete: false,
-      columnTitle: '', // minimize the actions column size
-    },
-    columns: {
-      id: {
-        title: 'Name',
-        editor: {
-          type: 'input',
-        },
-      },
-      name: {
-        title: 'Start plan',
-        editor: {
-          type: 'input',
-        },
-      },
-      username: {
-        title: 'End Plan',
-        editor: {
-          type: 'input',
-        },
-      },
-      email: {
-        title: 'Remark',
-        editor: {
-          type: 'input',
-        },
-      },
-    },
-  };
+  // settings = {
+  //   selectMode: 'multi',
+  //   edit: {
+  //     editButtonContent: '<span>Edit</span>',
+  //     saveButtonContent: '<span>Save</span>',
+  //     cancelButtonContent: '<span>Cancel</span>',
+  //     confirmSave: true,
+  //   },
+  //   /**
+  //    * TODO: Enable add/delete actions
+  //    */
+  //   actions: {
+  //     add: false,
+  //     delete: false,
+  //     columnTitle: '', // minimize the actions column size
+  //   },
+  //   columns: {
+  //     name: {
+  //       title: 'Name',
+  //       type: 'html',
+  //     editor: {
+  //       type: 'list',
+  //       config: {
+  //         list: [...this.user_list]
+  //       },
+  //     }
+  //     },
+  //     start_plan: {
+  //       title: 'Start plan',
+  //       editor: {
+  //         type: 'input',
+  //       },
+  //     },
+  //     end_plan: {
+  //       title: 'End Plan',
+  //       editor: {
+  //         type: 'input',
+  //       },
+  //     },
+  //     remark: {
+  //       title: 'Remark',
+  //       editor: {
+  //         type: 'input',
+  //       },
+  //     },
+  //   },
+  // };
 
   data = [
     {
@@ -112,6 +123,8 @@ export class RegisterProjectComponent
     public activeRouter: ActivatedRoute,
     private userOnbService: UserOnboardingService,
     private registerProjectService: RegisterProjectService,
+    private userListService: UserListService,
+
 
     env: AitEnvironmentService,
     store: Store<AppState>,
@@ -129,6 +142,13 @@ export class RegisterProjectComponent
       layoutScrollService,
       toastrService
     );
+
+
+    store.pipe(select(getUserSetting)).subscribe((setting) => {
+      if (isObjectFull(setting) && setting['date_format_display']) {
+        this.dateFormat = setting['date_format_display'];
+      }
+    });
 
     this.projectForm = this.formBuilder.group({
       project_ait_name: new FormControl(null),
@@ -157,9 +177,10 @@ export class RegisterProjectComponent
     });
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.project_key = this.activeRouter.snapshot.paramMap.get('id');
-
+    await this.getAllUser();
+    console.log(this.user_list)
     this.cancelLoadingApp();
   }
 
@@ -222,4 +243,31 @@ export class RegisterProjectComponent
 
   toggleExpan = () => (this.isExpan = !this.isExpan);
   toggleTableExpan = () => (this.isTableExpan = !this.isTableExpan);
+
+  async getAllUser() {
+    const dataSearch = [];
+    await this.userListService.find().then((res) => {
+      if (res.status === RESULT_STATUS.OK) {
+        const data = res.data;
+        if (data.length > 0) {
+          data.forEach(async (element) => {
+            const dataFormat = {};
+            dataFormat['title'] = element?.username;
+            dataFormat['value'] = element?._key;
+            dataSearch.push(dataFormat);
+          });
+        }
+      }
+    });
+    this.user_list = dataSearch;
+    return dataSearch;
+  }
+
+  // getDateFormat(time: number) {
+  //   if (!time) {
+  //     return '';
+  //   } else {
+  //     return dayjs(time).format(this.dateFormat.toUpperCase() + ' HH:mm');
+  //   }
+  // }
 }

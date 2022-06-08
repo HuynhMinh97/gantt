@@ -88,6 +88,8 @@ import { EditDataMasterComponent } from './pages/master-group-collection/edit-da
 import { ViewDataMasterComponent } from './pages/master-group-collection/view-data-master/view-data-master.component';
 import { ProjectRequirementDetailComponent } from './pages/project-requirements/project-detail/project-requirement-detail.component';
 import { RequirementListComponent } from './pages/requirement-list/requirement-list.component';
+import { TableInlineEditComponent } from './components/table-inline-edit/table-inline-edit.component';
+import { SelectUserComponent } from './components/table-inline-edit/select-user/select-user.component';
 
 const AIT_UI_MODULES = [AitChipModule, AitTabsModule, AitTocMenuModule];
 
@@ -169,6 +171,8 @@ const PAGES = [
     ViewDataMasterComponent,
     ProjectRequirementDetailComponent,
     RequirementListComponent,
+    TableInlineEditComponent,
+    SelectUserComponent,
   ],
   imports: [
     Ng2SmartTableModule,

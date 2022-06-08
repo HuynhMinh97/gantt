@@ -1,0 +1,250 @@
+<ng-container>
+  <table class="table table-striped" style="width: 100%">
+    <colgroup>
+      <col style="min-width: 100px" />
+      <col style="min-width: 250px" />
+      <col style="min-width: 250px" />
+      <col style="min-width: 250px" />
+      <col style="min-width: 100px" />
+      <col style="min-width: 100px" />
+      <col style="min-width: 100px" />
+      <col style="min-width: 200px" />
+    </colgroup>
+    <tr>
+      <th class="header_th"></th>
+      <th class="header_th">
+        <span class="style_title">Name</span>
+      </th>
+      <th class="header_th">
+        <span class="style_title">Start plan</span>
+      </th>
+      <th class="header_th">
+        <span class="style_title">End plan</span>
+      </th>
+      <th class="header_th">
+        <span class="style_title">Hours</span>
+      </th>
+      <th class="header_th">
+        <span class="style_title">MD</span>
+      </th>
+      <th class="header_th">
+        <span class="style_title">MM</span>
+      </th>
+      <th class="header_th">
+        <span class="style_title">Remark</span>
+      </th>
+    </tr>
+    <tr class="filter_row">
+      <th></th>
+      <th><input type="text" class="filter" placeholder="Filter" /></th>
+      <th><input type="text" class="filter" placeholder="Filter" /></th>
+      <th><input type="text" class="filter" placeholder="Filter" /></th>
+      <th><input type="text" class="filter" placeholder="Filter" /></th>
+      <th><input type="text" class="filter" placeholder="Filter" /></th>
+      <th><input type="text" class="filter" placeholder="Filter" /></th>
+      <th><input type="text" class="filter" placeholder="Filter" /></th>
+    </tr>
+    <tr *ngFor="let item of data" class="row_style">
+      <td class="action">
+        <button
+          (click)="handleClickEdit(item.id)"
+          *ngIf="!isEdit && item.id != id; else saveCancel"
+          class="btn_table"
+        >
+          <nb-icon
+            icon="pen"
+            pack="font-awesome-fas"
+            _nghost-rdx-c86=""
+            ng-reflect-icon="pen"
+            ng-reflect-pack="font-awesome-fas"
+            class="fas fa-pen"
+          ></nb-icon>
+          
+        </button>
+        <ng-template #saveCancel>
+          <ng-container *ngIf="item.id === id; else cancelSave">
+            <div class="group_btn_save_cancel">
+              <button (click)="handleClickEdit()" class="btn_table">
+                <nb-icon
+                icon="pen"
+                pack="font-awesome-fas"
+                _nghost-rdx-c86=""
+                ng-reflect-icon="save"
+                ng-reflect-pack="font-awesome-fas"
+                class="fas fa-save"
+              ></nb-icon>
+               
+              </button>
+              <button (click)="handleClickCancel()" class="btn_table">
+                <nb-icon
+                icon="pen"
+                pack="font-awesome-fas"
+                _nghost-rdx-c86=""
+                ng-reflect-icon="times"
+                ng-reflect-pack="font-awesome-fas"
+                class="fas fa-times"
+              ></nb-icon>
+                
+              </button>
+            </div>
+            </ng-container
+          >
+        </ng-template>
+        <ng-template #cancelSave>
+          <button
+            (click)="handleClickEdit(item.id)"
+            *ngIf="!isEdit || item.id != id; else saveCancel"
+            class="btn_table"
+          >
+            <nb-icon
+              icon="pen"
+              pack="font-awesome-fas"
+              _nghost-rdx-c86=""
+              ng-reflect-icon="pen"
+              ng-reflect-pack="font-awesome-fas"
+              class="fas fa-pen"
+            ></nb-icon>
+          </button></ng-template
+        >
+      </td>
+      <!-- <td>
+        <button
+          (click)="handleClickEdit(item.id)"
+          *ngIf="!isEdit ; else saveCancel"
+          class="btn_table"
+        >
+          <nb-icon
+            icon="pen"
+            pack="font-awesome-fas"
+            _nghost-rdx-c86=""
+            ng-reflect-icon="pen"
+            ng-reflect-pack="font-awesome-fas"
+            class="fas fa-pen"
+          ></nb-icon>
+          <span class="icon_text">edit</span>
+        </button>
+        <ng-template #saveCancel>
+        <div class="group_btn_save_cancel">
+            <button (click)="handleClickEdit()" class="btn_table">save</button>
+            <button (click)="handleClickCancel()" class="btn_table">cancel</button>
+        </div>    
+         
+        </ng-template>
+      </td> -->
+      <td>
+        <span *ngIf="!isEdit && item.id != id; else elseEdit">
+          {{ item.name }}
+        </span>
+
+        <ng-template #elseEdit>
+          <ng-container *ngIf="item.id === id; else nameEdit"
+            ><ait-autocomplete-master-data
+              *ngIf="employeeList.length > 0"
+              [id]="'employee_name'"
+              [width]="'200px'"
+              [required]="true"
+              [maxItem]="1"
+              [isReset]="isReset"
+              [isSubmit]="isSubmit"
+              [placeholder]="'please select employee'"
+              [dataSource]="employeeList"
+              [disableOutputDefault]="true"
+            ></ait-autocomplete-master-data
+          ></ng-container>
+        </ng-template>
+        <ng-template #nameEdit>
+          <span>{{ item.name }}</span></ng-template
+        >
+      </td>
+      <td>
+        <span *ngIf="!isEdit && item.id != id; else editStartPlan">
+          {{ item.start_plan }}
+        </span>
+        <ng-template #editStartPlan>
+          <ng-container *ngIf="item.id === id; else startPlanEdit">
+            <ait-datepicker
+              [placeholder]="'yyyyy/MM/dd'"
+              [id]="'create_at_from'"
+              [style]="{ width: '170px', marginTop: '-10px' }"
+              [isReset]="isReset"
+              [defaultValue]="item.start_plan"
+            ></ait-datepicker
+          ></ng-container>
+        </ng-template>
+        <ng-template #startPlanEdit>
+          <span>{{ item.start_plan }}</span></ng-template
+        >
+      </td>
+      <td>
+        <span *ngIf="!isEdit && item.id != id; else editEndPlan">
+          {{ item.end_plan }}
+        </span>
+        <ng-template #editEndPlan>
+          <ng-container *ngIf="item.id === id; else endPlanEdit">
+            <ait-datepicker
+              [placeholder]="'yyyyy/MM/dd'"
+              [id]="'create_at_from'"
+              [style]="{ width: '170px', marginTop: '-10px' }"
+              [isReset]="isReset"
+              [defaultValue]="item.end_plan"
+            ></ait-datepicker
+          ></ng-container>
+        </ng-template>
+        <ng-template #endPlanEdit>
+          <span>{{ item.end_plan }}</span></ng-template
+        >
+      </td>
+
+      <td>
+        <span *ngIf="!isEdit && item.id != id; else editHours">
+          {{ item.hours }}
+        </span>
+        <ng-template #editHours>
+          <ng-container *ngIf="item.id === id; else HoursEdit">
+            <ait-input-text [defaultValue]="item.hours"></ait-input-text
+          ></ng-container>
+        </ng-template>
+        <ng-template #HoursEdit>
+          <span>{{ item.hours }}</span></ng-template
+        >
+      </td>
+      <td>
+        <span *ngIf="!isEdit && item.id != id; else editMd">
+          {{ item.md }}
+        </span>
+        <ng-template #editMd>
+          <ng-container *ngIf="item.id === id; else mdEdit">
+            <ait-input-text [defaultValue]="item.md"></ait-input-text
+          ></ng-container>
+        </ng-template>
+        <ng-template #mdEdit>
+          <span>{{ item.md }}</span></ng-template
+        >
+      </td>
+      <td>
+        <span *ngIf="!isEdit && item.id != id; else editMm">
+          {{ item.mm }}
+        </span>
+        <ng-template #editMm>
+          <ng-container *ngIf="item.id === id; else mmEdit">
+            <ait-input-text [defaultValue]="item.mm"></ait-input-text
+          ></ng-container>
+        </ng-template>
+        <ng-template #mmEdit>
+          <span>{{ item.mm }}</span></ng-template
+        >
+      </td>
+      <td>
+        <span *ngIf="!isEdit; else editRemark"> {{ item.remark }} </span>
+        <ng-template #editRemark>
+          <ng-container *ngIf="item.id === id; else remarkEdit">
+            <ait-input-text [defaultValue]="item.remark"></ait-input-text
+          ></ng-container>
+        </ng-template>
+        <ng-template #remarkEdit>
+          <span>{{ item.remark }}</span></ng-template
+        >
+      </td>
+    </tr>
+  </table>
+</ng-container>

@@ -1,7 +1,8 @@
 
 
-:host ::ng-deep ng2-smart-table .ng2-smart-actions a.ng2-smart-action {
-  font-size: 1rem;
+:host ::ng-deep ng2-smart-table .ng2-smart-actions a span {
+  font-size: 14px;
+  
 }
 
 .filter__container {
@@ -251,4 +252,13 @@
 :host ::ng-deep .check-form nb-checkbox.status-basic .custom-checkbox {
   background: #fff !important;
   border-color: #8f9bb3 !important;
+}
+
+.table__area::-webkit-scrollbar-thumb {
+  background-color: #10529D;
+  outline: 1px solid transparent;
+  border-radius: 3px;
+}
+.table__area::-webkit-scrollbar:horizontal {
+  height: 10px;
 }

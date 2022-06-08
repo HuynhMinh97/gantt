@@ -307,7 +307,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
             skillsGroup.data.push(item);
             if (categoryOther_index > 0)
             {
-              debugger
               this.skillByCategory[categoryOther_index].data.push(item);
             } else {
              
