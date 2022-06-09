@@ -30,7 +30,6 @@ import {
 } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
 import { RecommencedUserService } from '../../services/recommenced-user.service';
-import { StoreKeywordsSearch } from '../../state/actions';
 import { SearchConditionService } from '../../services/search-condition.service';
 import { SetNameComponent } from './components/set-name/set-name.component';
 import _ from 'lodash';
@@ -127,6 +126,11 @@ export class RecommencedUserComponent
       type: 'R',
     },
     {
+      title: 'Candidates',
+      tabIcon: 'list',
+      type: 'C',
+    },
+    {
       title: 'Save',
       tabIcon: 'bookmark',
       type: 'S',
@@ -139,7 +143,6 @@ export class RecommencedUserComponent
   textDataNullSave = '';
   isExpan = false;
   currentTab = 'R';
-  isShowViewBtn = true;
   isReset = false;
 
   dataFilter = [];
@@ -148,23 +151,22 @@ export class RecommencedUserComponent
   dataFilterSave = [];
   dataFilterSaveDf = [];
 
-  dataIncludesIdSave = [];
   matchingList = [];
-
-  messageSearch = '';
 
   isLoading = true;
   spinnerLoading = false;
   isExpan1 = true;
   round = 1;
-  currentSearch: any = {};
-  companyName = '';
-  filterCommon: any = {};
-  filterCommonAppended: any = {};
-  currentRound = 0;
   textDataEnd = '';
   disableTab = false;
   isSubmit = false;
+
+  getResultCount() {
+    if (this.matchingList.length > 0) {
+      return `About ${this.matchingList.length} results`;
+    }
+    return '';
+  }
 
   getNummberMode8 = (target: number) => {
     if (target === 0) {
@@ -200,53 +202,12 @@ export class RecommencedUserComponent
     }
   };
 
-  isObjectEmpty = (obj) => Object.keys(obj || {}).length === 0;
-
-  removeSearch = (isPrevented = false, isButton = false) => {
-    this.dataFilter = [];
-    this.dataIncludesIdSave = [];
-    this.dataFilterSave = [];
-    this.dataFilterSaveDf = [];
-    this.dataFilterDf = [];
-    this.textDataNull = '';
-    this.textDataNullSave = '';
-    this.textDataEnd = '';
-    this.currentRound = 0;
-    this.resetRound();
-    this.store.dispatch(new StoreKeywordsSearch({}));
-    localStorage.removeItem(StorageKey.KEYWORD + `_${this.user_id}`);
-    localStorage.removeItem(StorageKey.FILTER + `_${this.user_id}`);
-    this.currentTab = 'R';
-    this.disableTab = true;
-    setTimeout(() => {
-      this.disableTab = false;
-    }, 200);
-
-    if (!isPrevented) {
-      this.currentSearch = {};
-      if (isButton) {
-        this.isExpan = true;
-        this.setSkeleton(true);
-        this.callSearch();
-      }
-    } else {
-      this.isExpan = true;
-      this.setSkeleton(true);
-      this.callSearch();
-    }
-  };
-
-  goTop = () => {
-    this.gotoTop();
-  };
-
   private getDetailMatching = async (
     list = [],
     onlySaved = false,
     start = 0,
     end = 8
   ) => {
-    console.log(list);
     if (list.length === 0) {
       const res = await this.matchingService.getDetailMatching(
         onlySaved,
@@ -275,10 +236,6 @@ export class RecommencedUserComponent
     }
   };
 
-  getDataClone = (data) => {
-    return AitAppUtils.deepCloneArray(data || []);
-  };
-
   handleSyncData = ($event) => {
     const { user_id, is_saved } = $event;
     const find = this.dataFilterDf.find((f) => f.user_id === user_id);
@@ -297,36 +254,6 @@ export class RecommencedUserComponent
     this.isExpan1 = !this.isExpan1;
   };
 
-  submitSearch = () => {
-    this.isLoading = true;
-    // this.setSkeleton(true);
-  };
-
-  handleClickChipInput(e) {
-    e.preventDefault();
-  }
-
-  filterByCondition = (val: any, type: string) => {
-    const value = val?.value || [];
-    const target = this.getValueFromMaster(value);
-    this.filterCommon = { ...this.filterCommon, [type]: target };
-    // this.filterMain();
-  };
-
-  getValueFromMaster(value: any[]) {
-    if (value.length === 0) {
-      return [];
-    } else {
-      const result = [];
-      (value || []).forEach((e) => {
-        if (e?._key) {
-          result.push(e?._key);
-        }
-      });
-      return result;
-    }
-  }
-
   getTitle = (name: string) => this.translateService.translate(name);
 
   async ngOnInit() {
@@ -337,18 +264,7 @@ export class RecommencedUserComponent
         localStorage.setItem('my-project-queries', null);
       });
     }
-    this.callSearch();
   }
-
-  preventScroll = () => {
-    window.onunload = function () {
-      window.scrollTo(0, 500);
-    };
-
-    if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'manual';
-    }
-  };
 
   private callSearch(list = []) {
     this.isExpan = true;
@@ -375,8 +291,6 @@ export class RecommencedUserComponent
                 this.setSkeleton(false);
               });
             } else {
-              console.log(8);
-              console.log(this.dataFilterDf);
               this.textDataEnd = 'Out of data';
             }
           }
@@ -393,7 +307,6 @@ export class RecommencedUserComponent
   // Get Data by round and base on all of result
   getDataByRound = async (onlySaved = false, list = []) => {
     try {
-      console.log(this.currentCount);
       const detail = await this.getDetailMatching(
         list,
         onlySaved,
@@ -405,8 +318,11 @@ export class RecommencedUserComponent
         this.currentCount = Math.ceil(this.dataFilterDf.length / 8);
       }
       if (isArrayFull(detail) && onlySaved) {
+        this.textDataNullSave = '';
         this.dataFilterSave = this.dataFilterSave.concat(detail);
         this.currentCount = Math.ceil(this.dataFilterSave.length / 8);
+      } else {
+        this.textDataNullSave = 'There is no data';
       }
       if (
         detail.length === 0 &&
@@ -415,7 +331,6 @@ export class RecommencedUserComponent
       ) {
         this.textDataNull = '';
         this.textDataNullSave = '';
-        console.log(8);
         this.textDataEnd = 'Out of data';
         this.setSkeleton(false);
       }
@@ -425,28 +340,26 @@ export class RecommencedUserComponent
   };
 
   search() {
-    this.isSubmit = true;
     const keyword = this.searchForm.controls['keyword'].value || '';
+    if (!keyword) {
+      this.showToastr('', this.getMsg('Please input your keyword!'), 'warning');
+      return;
+    }
+    this.isSubmit = true;
     this.dataFilter = [];
     this.dataFilterDf = [];
     this.matchingList = [];
     this.currentCount = 0;
     this.textDataEnd = '';
-    if (!keyword) {
-      this.setSkeleton(true);
-      this.callSearch();
-      setTimeout(() => {
-        this.setSkeleton(false);
-      }, 500);
-      return;
-    }
     this.setSkeleton(true);
     this.matchingService.matchingUser(keyword).then((res) => {
       if (res?.data.length > 0) {
         const arr = res.data.map((e: { item: string }) => e.item);
-        console.log(arr.length);
         this.matchingList = arr || [];
         this.callSearch(arr);
+      } else {
+        this.textDataNull = 'There is no data to search';
+        this.setSkeleton(false);
       }
     });
   }
@@ -454,7 +367,7 @@ export class RecommencedUserComponent
   // thêm nút scroll to top : TODO
   resetRound = () => (this.round = 1);
 
-  getTabSelect = (tab) => {
+  getTabSelect = (tab: any) => {
     this.dataFilterSave = [];
     this.dataFilterSaveDf = [];
     this.dataFilterDf = [];
@@ -462,14 +375,15 @@ export class RecommencedUserComponent
     this.textDataNull = '';
     this.textDataNullSave = '';
     this.textDataEnd = '';
-    this.currentRound = 0;
     this.cardSkeleton = [];
     this.isLoading = true;
     this.resetRound();
+    this.currentCount = 0;
+    this.currentMatchingCount = 0;
     this.currentTab = tab.value;
     if (this.currentTab === 'R') {
       this.setSkeleton(true);
-      this.getDataByRound().then(() => this.setSkeleton(false));
+      this.callSearch(this.matchingList || []);
     } else {
       this.setSkeleton(true);
       this.getDataByRound(true).then(() => this.setSkeleton(false));
@@ -496,7 +410,7 @@ export class RecommencedUserComponent
     } else {
       this.searchForm.controls[form].setValue(null);
     }
-    // this.filterMain();
+    this.filterMain();
   }
 
   reset(): void {
@@ -518,11 +432,7 @@ export class RecommencedUserComponent
   }
 
   showQueryList() {
-    this.router.navigate([`/my-project-queries`]);
-  }
-
-  matchingFilter(arr: string[]) {
-    this.dataFilter = this.dataFilter.filter((e) => arr.includes(e.user_id));
+    this.router.navigate([`/requirement-list`]);
   }
 
   save(): void {
@@ -567,6 +477,10 @@ export class RecommencedUserComponent
       });
   }
 
+  setHours0(time: number) {
+    return new Date(time).setHours(0, 0, 0, 0);
+  }
+
   filterMain(type = 0) {
     try {
       const formValue = this.searchForm.value;
@@ -577,7 +491,11 @@ export class RecommencedUserComponent
       condition['keyword'] && delete condition['keyword'];
       const checkList = [];
       for (const prop in condition) {
-        if (prop !== 'keyword') {
+        if (
+          prop !== 'keyword' &&
+          prop !== 'valid_time_from' &&
+          prop !== 'valid_time_to'
+        ) {
           checkList.push(condition[prop].map((t: any) => t['_key']));
         }
       }
@@ -593,6 +511,28 @@ export class RecommencedUserComponent
             } else if (isArrayFull(condition[prop]) && isObjectFull(m[prop])) {
               isValid = [m[prop]].some((z: any) => keyList.includes(z['_key']));
               if (!isValid) break;
+            } else if (prop === 'valid_time_from' || prop === 'valid_time_to') {
+              if (condition['valid_time_from'] && !condition['valid_time_to']) {
+                isValid =
+                  this.setHours0(condition['valid_time_from']) <=
+                  this.setHours0(m['create_at']);
+                if (!isValid) break;
+              } else if (
+                !condition['valid_time_from'] &&
+                condition['valid_time_to']
+              ) {
+                isValid =
+                  this.setHours0(condition['valid_time_to']) >=
+                  this.setHours0(m['create_at']);
+                if (!isValid) break;
+              } else {
+                isValid =
+                  this.setHours0(condition['valid_time_from']) <=
+                    this.setHours0(m['create_at']) &&
+                  this.setHours0(condition['valid_time_to']) >=
+                    this.setHours0(m['create_at']);
+                if (!isValid) break;
+              }
             } else {
               isValid = false;
               break;

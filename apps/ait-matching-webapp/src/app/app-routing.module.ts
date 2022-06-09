@@ -44,6 +44,7 @@ import { UserAccountDetailComponent } from './pages/list/user-list/user-account-
 import { MasterListComponent } from './pages/master-group-collection/master-list/master-list.component';
 import { ViewDataMasterComponent } from './pages/master-group-collection/view-data-master/view-data-master.component';
 import { ProjectRequirementDetailComponent } from './pages/project-requirements/project-detail/project-requirement-detail.component';
+import { RequirementListComponent } from './pages/requirement-list/requirement-list.component';
 
 export const routes: Routes = [
   {
@@ -251,11 +252,11 @@ export const routes: Routes = [
     canActivate: [AitAuthGuardService],
     component: CreateUserComponent,
   },
-  {
-    path: 'create-user/:id',
-    canActivate: [AitAuthGuardService],
-    component: CreateUserComponent,
-  },
+  // {
+  //   path: 'create-user/:id',
+  //   canActivate: [AitAuthGuardService],
+  //   component: CreateUserComponent,
+  // },
   {
     path: 'user-account-detail/:id',
     canActivate: [AitAuthGuardService],
@@ -336,7 +337,11 @@ export const routes: Routes = [
     canActivate: [AitAuthGuardService],
     component: ProjectRequirementDetailComponent,
   },
-
+  {
+    path: 'requirement-list',
+    canActivate: [AitAuthGuardService],
+    component: RequirementListComponent,
+  },
   {
     path: '',
     pathMatch: 'full',

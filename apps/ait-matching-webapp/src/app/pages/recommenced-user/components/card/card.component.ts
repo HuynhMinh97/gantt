@@ -23,41 +23,6 @@ export const color = {
   blue: 'linear-gradient(89.75deg, #002B6E 0.23%, #2288CC 99.81%)',
 };
 
-export const fields = [
-  '実習生名',
-  '性別', //性別
-  '生年月日', // 生年月日
-  '都道府県',
-  '職種', //職種,
-  '在留資格', //在留資格
-  '希望の給料', //希望の給料
-  '希望の職種（分野）',
-];
-
-export enum FIELD {
-  '実習生名' = 'name',
-  '性別' = 'gender',
-  '生年月日' = 'dob',
-  '生年月日（和暦）' = 'dob_jp',
-  'パスポート番号' = 'passport_number',
-  '受入企業名' = 'accepting_company',
-  '現住所' = 'address',
-  '入国日' = 'immigration_date',
-  '雇用開始日' = 'employment_start_date',
-  '許可年月日（2号移行（予定）年月日）' = 'no2_permit_date',
-  '3号試験学科' = 'no3_exam_dept_date',
-  '3号試験学科合否' = 'no3_exam_dept_pass',
-  '3号試験実技' = 'no3_exam_practice_date',
-  '3号試験実技合否' = 'no3_exam_practice_pass',
-  '許可年月日（3号移行(予定)年月日）' = 'no3_permit_date',
-  '職種' = 'occupation', //update for industry,
-  '実習生名（カナ）' = 'name_kana', // name on header card
-  '在留資格' = 'residence_status',
-  '希望の給料' = 'current_salary',
-  '希望の職種（分野）' = 'business',
-  '都道府県' = 'prefecture',
-}
-
 @Component({
   selector: 'ait-card',
   templateUrl: './card.component.html',
@@ -70,7 +35,6 @@ export class AitCardComponent implements OnInit {
   colorCard = COLOR.color1;
   backgroundCard = color.green;
   userId = '';
-  fieldCard: any[] = fields;
   @Input() addressSearch = '';
   @Input() company_key = '';
   @Output() actionSaveEvent = new EventEmitter();
@@ -181,15 +145,12 @@ export class AitCardComponent implements OnInit {
 
   ngOnInit() {
     try {
-      this.cardH = { ...this.card };
+      this.cardH = { ...this.card, is_team_member: false };
       this.cardH.skills = this.cardH.skills
         .slice()
         .sort((a, b) => b.level - a.level);
       this.getAvatar();
       this.addColor();
-      this.fieldCard = this.fieldCard
-        .map((m) => ({ key: m, value: this.cardH[FIELD[m]], field: FIELD[m] }))
-        .filter((v) => v.value);
     } catch (e) {
       console.log(e);
     }
@@ -263,5 +224,9 @@ export class AitCardComponent implements OnInit {
           }
         });
     }
+  };
+
+  actionButtonAdd = (key: string) => {
+    this.cardH.is_team_member = !this.cardH?.is_team_member;
   };
 }

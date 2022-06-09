@@ -1,8 +1,18 @@
 import { RegisterProjectService } from '../../../services/register-project.service';
 import { UserOnboardingService } from '../../../services/user-onboarding.service';
-import { AitAuthService, AitBaseComponent, AitEnvironmentService, AppState } from '@ait/ui';
+import {
+  AitAuthService,
+  AitBaseComponent,
+  AitEnvironmentService,
+  AppState,
+} from '@ait/ui';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
@@ -11,14 +21,91 @@ import { Apollo } from 'apollo-angular';
 @Component({
   selector: 'ait-register-project',
   templateUrl: './register-project.component.html',
-  styleUrls: ['./register-project.component.scss']
+  styleUrls: ['./register-project.component.scss'],
 })
-export class RegisterProjectComponent extends AitBaseComponent implements OnInit {
+export class RegisterProjectComponent
+  extends AitBaseComponent
+  implements OnInit {
   project_key: string;
   projectForm: FormGroup;
   project_skill = [];
   userProjectClone: any;
+  tableComponents: any[] = [1]
+  isTableIncluded = true;
+  isExpandIncluded = true;
+  isExpan = true;
+  isTableExpan = true;
 
+  settings = {
+    selectMode: 'multi',
+    edit: {
+      editButtonContent: '<i class="fas fa-edit" ></i>',
+      saveButtonContent: '<i class="fas fa-save"></i> ',
+      cancelButtonContent: '<i class="far fa-times" ></i>  ',
+      confirmSave: true,
+    },
+    /**
+     * TODO: Enable add/delete actions
+     */
+    actions: {
+      add: false,
+      delete: false,
+      columnTitle: '', // minimize the actions column size
+    },
+    columns: {
+      id: {
+        title: 'Name',
+        editor: {
+          type: 'input',
+        },
+      },
+      name: {
+        title: 'Start plan',
+        editor: {
+          type: 'input',
+        },
+      },
+      username: {
+        title: 'End Plan',
+        editor: {
+          type: 'input',
+        },
+      },
+      email: {
+        title: 'Remark',
+        editor: {
+          type: 'input',
+        },
+      },
+    },
+  };
+
+  data = [
+    {
+      id: 1,
+      name: 'Leanne Graham',
+      username: 'Bret',
+      email: 'Sincere@april.biz',
+    },
+    {
+      id: 2,
+      name: 'Leanne Graham',
+      username: 'Bret',
+      email: 'Sincere@april.biz',
+    },
+    {
+      id: 3,
+      name: 'Leanne Graham',
+      username: 'Bret',
+      email: 'Sincere@april.biz',
+    },
+    {
+      id: 4,
+      name: 'Leanne Graham',
+      username: 'Bret',
+      email: 'Sincere@april.biz',
+    },
+  ];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -26,14 +113,13 @@ export class RegisterProjectComponent extends AitBaseComponent implements OnInit
     private userOnbService: UserOnboardingService,
     private registerProjectService: RegisterProjectService,
 
-
     env: AitEnvironmentService,
     store: Store<AppState>,
     apollo: Apollo,
     authService: AitAuthService,
     toastrService: NbToastrService,
     layoutScrollService: NbLayoutScrollService
-  ) { 
+  ) {
     super(
       store,
       authService,
@@ -77,22 +163,36 @@ export class RegisterProjectComponent extends AitBaseComponent implements OnInit
     this.cancelLoadingApp();
   }
 
+  onCreateConfirm(event) {
+    console.log('Create Event In Console');
+    console.log(event);
+    event.confirm.resolve();
+  }
+
+  onSaveConfirm(event) {
+    console.log('Edit Event In Console');
+    console.log(event);
+    event.confirm.resolve();
+  }
+
   public find = async (data = {}) => {
     try {
       const dataFind = [];
       await this.findProjectByKey();
       await this.findSkillProject();
       await dataFind.push(this.projectForm.value);
-      
+
       return { data: dataFind };
     } catch (error) {}
   };
 
   async findProjectByKey() {
-    const res = await this.registerProjectService.findProjectAitByKey(this.project_key);
+    const res = await this.registerProjectService.findProjectAitByKey(
+      this.project_key
+    );
     const data = res.data[0];
     if (res.data.length > 0) {
-    await  this.projectForm.patchValue({ ...data });
+      await this.projectForm.patchValue({ ...data });
       this.userProjectClone = this.projectForm.value;
     } else {
       this.router.navigate([`/404`]);
@@ -101,23 +201,25 @@ export class RegisterProjectComponent extends AitBaseComponent implements OnInit
 
   async findSkillProject() {
     const _key = this.project_key;
-    await this.registerProjectService.findSkillProject(_key).then(async (res) => {
-      const listSkills = [];
-      for (const skill of res.data) {
-        listSkills.push({
-          _key: skill?.skills?._key,
-          value: skill?.skills?.value,
-        });
-      }
-      if(listSkills[0]['_key']){
-        this.project_skill = listSkills;
-        await this.projectForm.controls['skills'].setValue([
-          ...listSkills,
-        ]);
-      }
-    
-      this.cancelLoadingApp();
-    });
+    await this.registerProjectService
+      .findSkillProject(_key)
+      .then(async (res) => {
+        const listSkills = [];
+        for (const skill of res.data) {
+          listSkills.push({
+            _key: skill?.skills?._key,
+            value: skill?.skills?.value,
+          });
+        }
+        if (listSkills[0]['_key']) {
+          this.project_skill = listSkills;
+          await this.projectForm.controls['skills'].setValue([...listSkills]);
+        }
+
+        this.cancelLoadingApp();
+      });
   }
 
+  toggleExpan = () => (this.isExpan = !this.isExpan);
+  toggleTableExpan = () => (this.isTableExpan = !this.isTableExpan);
 }

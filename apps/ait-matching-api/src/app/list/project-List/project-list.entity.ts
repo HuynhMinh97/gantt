@@ -10,8 +10,8 @@ export class ProjectListEntity extends BaseEntity {
   @Field(() => String, { nullable: true })
   username?: string;
 
-  @Field(() => String, { nullable: true })
-  name?: string;
+  @Field(() => KeyValueEntity, { nullable: true })
+  project_name?: KeyValueEntity;
 
   @Field(() => Float, { nullable: true })
   start_date_from?: number;
