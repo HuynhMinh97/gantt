@@ -34,7 +34,7 @@ export class RegisterProjectComponent
   projectForm: FormGroup;
   project_skill = [];
   dateFormat: string;
-
+  candidate_list = [];
   userProjectClone: any;
   tableComponents: any[] = [1]
   isTableIncluded = true;
@@ -42,82 +42,7 @@ export class RegisterProjectComponent
   isExpan = true;
   isTableExpan = true;
   user_list = [];
-
-  // settings = {
-  //   selectMode: 'multi',
-  //   edit: {
-  //     editButtonContent: '<span>Edit</span>',
-  //     saveButtonContent: '<span>Save</span>',
-  //     cancelButtonContent: '<span>Cancel</span>',
-  //     confirmSave: true,
-  //   },
-  //   /**
-  //    * TODO: Enable add/delete actions
-  //    */
-  //   actions: {
-  //     add: false,
-  //     delete: false,
-  //     columnTitle: '', // minimize the actions column size
-  //   },
-  //   columns: {
-  //     name: {
-  //       title: 'Name',
-  //       type: 'html',
-  //     editor: {
-  //       type: 'list',
-  //       config: {
-  //         list: [...this.user_list]
-  //       },
-  //     }
-  //     },
-  //     start_plan: {
-  //       title: 'Start plan',
-  //       editor: {
-  //         type: 'input',
-  //       },
-  //     },
-  //     end_plan: {
-  //       title: 'End Plan',
-  //       editor: {
-  //         type: 'input',
-  //       },
-  //     },
-  //     remark: {
-  //       title: 'Remark',
-  //       editor: {
-  //         type: 'input',
-  //       },
-  //     },
-  //   },
-  // };
-
-  data = [
-    {
-      id: 1,
-      name: 'Leanne Graham',
-      username: 'Bret',
-      email: 'Sincere@april.biz',
-    },
-    {
-      id: 2,
-      name: 'Leanne Graham',
-      username: 'Bret',
-      email: 'Sincere@april.biz',
-    },
-    {
-      id: 3,
-      name: 'Leanne Graham',
-      username: 'Bret',
-      email: 'Sincere@april.biz',
-    },
-    {
-      id: 4,
-      name: 'Leanne Graham',
-      username: 'Bret',
-      email: 'Sincere@april.biz',
-    },
-  ];
-
+  
   constructor(
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
@@ -175,12 +100,13 @@ export class RegisterProjectComponent
         Validators.maxLength(4000),
       ]),
     });
+
+    
   }
 
   async ngOnInit(): Promise<void> {
     this.project_key = this.activeRouter.snapshot.paramMap.get('id');
     await this.getAllUser();
-    console.log(this.user_list)
     this.cancelLoadingApp();
   }
 
@@ -206,6 +132,11 @@ export class RegisterProjectComponent
       return { data: dataFind };
     } catch (error) {}
   };
+
+  async getCandidate(){
+   const result = await this.registerProjectService.getBizProjectUser(this.project_key);
+   this.candidate_list = result.data
+  }
 
   async findProjectByKey() {
     const res = await this.registerProjectService.findProjectAitByKey(

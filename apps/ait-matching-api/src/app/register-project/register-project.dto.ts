@@ -67,3 +67,27 @@ export class RegisterProjectSaveDto extends BaseDto {
   @Field(() => String, { nullable: true })
   project_ait_name?: string;
 }
+
+@InputType()
+export class CandidateDto extends BaseDto {
+  @Field(() => String, { nullable: true })
+  employee_name?: string;
+
+  @Field(() => Float, { nullable: true })
+  start_plan?: number;
+
+  @Field(() => Float, { nullable: true })
+  end_plan?: number;
+
+  @Field(() => Float, { nullable: true })
+  hours_plan?: number;
+
+  @Field(() => Float, { nullable: true })
+  manday_plan?: number;
+  
+  @Field(() => Float, { nullable: true })
+  manmonth_plan?: number;
+
+  @Field(() => String, { nullable: true })
+  remark?: string;
+}

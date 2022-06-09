@@ -94,4 +94,24 @@ export class RegisterProjectService extends AitBaseService{
       })
    }
 
+   async getBizProjectUser(_key: string){
+    const condition = {
+      _key: _key,
+      del_flag: false,
+    }
+    return await this.query('getBizProjectUser', { collection: 'biz_project_user', condition },
+      {
+        first_name: true,
+        last_name: true,
+        start_plan: true,
+        end_plan: true,
+        hours_plan: true,
+        manday_plan: true,
+        manmonth_plan: true,
+        remark: true,
+        _key: true,
+        user_id: true
+      })
+   }
+
 }

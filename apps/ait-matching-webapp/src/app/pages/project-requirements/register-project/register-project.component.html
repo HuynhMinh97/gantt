@@ -5,112 +5,147 @@
   [_key]="project_key"
   [find]="find"
 >
-<!-- <div bottom class="template__container card__content_container"> -->
+  <!-- project detail -->
   <ait-card-content
-   area 
-   [styleDivider]="{'margin-left':'10px'}"
-          [styleLabel]="{ 'font-size': '26px' }"
-          tabindex="2"
-          [isOpen]="true"
-          [isStart]="true"
-          [id]="'メニュー'"
-          [label]="'candidate list' | translate"
-          [disableHeader]="false"
-          padding="'10px'">
-    <ng-container  *ngFor="let element of tableComponents">
-        <div  class="filter_container" [ngStyle]="{'width': '100%'}">
-            <div class="input__area" [ngStyle]="{
-                'height': isTableExpan ? 'auto' : '0px',    
-                'margin-bottom': isTableExpan ? null : '0px',
-                'margin-top': isTableExpan ? null : '0px',
-                'margin-left': '10px'
-              }">
-                <div style="width: 100%" [ngStyle]="{ 'display': isTableExpan ? 'block' : 'none' }">
-                    <div class="table__area" #area style="width: 900px; overflow-x:scroll" >
-                      <ait-table-inline-edit>
+    area
+    [styleDivider]="{ 'margin-left': '10px' }"
+    [styleLabel]="{ 'font-size': '26px' }"
+    tabindex="2"
+    [isOpen]="true"
+    [isStart]="true"
+    [id]="'project_detail'"
+    [label]="'project detail' | translate"
+    [disableHeader]="false"
+    padding="'10px'"
+  >
+    
+      <div class="left__side">
+        <ng-container>
+          <ait-autocomplete-master-data
+            [width]="'400px'"
+            [id]="'customer'"
+            [label]="'customer'"
+            [isSubmit]="false"
+            [allowNew]="true"
+            [maxItem]="1"
+            [class]="'EMPLOYEE_LEVEL'"
+            [placeholder]="'please select customer'"
+            [collection]="'sys_master_data'"
+            [disableOutputDefault]="true"
+            [isReset]="false"
+            [defaultValue]=""
+          ></ait-autocomplete-master-data>
 
-                      </ait-table-inline-edit>
-                       
-                    </div>
-                    <div *ngIf="totalRows > 0 && done" [ngClass]="isValidPage? 'per_page':'per_page2'">
-                        <nb-select placeholder="Select Showcase" [(selected)]="perPage"
-                            (selectedChange)="changePage()">
-                            <nb-option value="10">10</nb-option>
-                            <nb-option value="20">20</nb-option>
-                            <nb-option value="30">30</nb-option>
-                            <nb-option value="50">50</nb-option>
-                            <nb-option value="100">100</nb-option>
-                        </nb-select>
-                    </div>
-                    <div class="num_page" *ngIf="pageDetail && totalRows > 0  && done"
-                        [ngStyle]="{'left': isValidPage? left + 'px' : '0px', 'margin-top': isValidPage ? '-67px' : '10px'}">
-                        {{ pageDetail }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </ng-container>
-    <!-- <div
-      
-      class="template__filter__container radius"
-      *ngIf="isTableIncluded"
-    >
-      <div
-        class="template__header__filter"
-        (click)="toggleTableExpan()"
-        [ngStyle]="!isTableExpan ? { border: 'none' } : null"
-      >
-        <ait-text-gradient
-          [content]="tableTitle"
-          [id]="'title'"
-          [fontsize]="'21px'"
-          style="width: 100%"
-        ></ait-text-gradient>
-        <ng-content select="[searchButtonArea]"></ng-content>
-        <div class="icon__expan" (click)="toggleTableExpan()">
-          <nb-icon
-            icon="arrow-ios-upward-outline"
-            *ngIf="isTableExpan"
-            (click)="toggleTableExpan()"
-          >
-          </nb-icon>
-          <nb-icon
-            icon="arrow-ios-downward-outline"
-            *ngIf="!isTableExpan"
-            (click)="toggleTableExpan()"
-          >
-          </nb-icon>
-        </div>
+          <ait-autocomplete-master-data
+            [width]="'400px'"
+            [id]="'person_in_charge'"
+            [label]="'Person in charge'"
+            [isSubmit]="false"
+            [maxItem]="1"
+            [placeholder]="'please select employee'"
+            [collection]="'user_profile'"
+            [disableOutputDefault]="true"
+            [isReset]="false"
+            [defaultValue]=""
+          ></ait-autocomplete-master-data>
+        </ng-container>
       </div>
-
-      <div
-        class="template__input__area"
-        [ngStyle]="{
-          height: isTableExpan ? 'auto' : '0px',
-          'margin-bottom': isTableExpan ? null : '0px',
-          'margin-top': isTableExpan ? null : '0px'
-        }"
-      >
-        <div
-          style="width: 100%"
-          [ngStyle]="{ visibility: isTableExpan ? 'visible' : 'collapse' }"
-        >
-          <ng-content select="[tableArea]"></ng-content>
-          <ng2-smart-table
-            [settings]="settings"
-            [source]="data"
-            (editConfirm)="onSaveConfirm($event)"
-            (createConfirm)="onCreateConfirm($event)"
-          ></ng2-smart-table>
-        </div>
+      <div class="right__side">
+        <ng-container>
+          <ait-input-text
+            [id]="'project_code'"
+            [label]="'project code'"
+            [length]="200"
+            [width]="'400px'"
+            [isSubmit]="false"
+            [isReset]="false"
+            [placeholder]="'please input project code'"
+            [defaultValue]=""
+          ></ait-input-text>
+          <ait-space [margin]="'13.9px'"></ait-space>
+          <ait-autocomplete-master-data
+            [width]="'400px'"
+            [id]="'status'"
+            [label]="'status'"
+            [isSubmit]="false"
+            [maxItem]="1"
+            [class]="'EMPLOYEE_LEVEL'"
+            [placeholder]="'please select status'"
+            [collection]="'sys_master_data'"
+            [disableOutputDefault]="true"
+            [isReset]="false"
+            [defaultValue]=""
+          ></ait-autocomplete-master-data>
+        </ng-container>
       </div>
-    </div> -->
+    
   </ait-card-content>
 
-  
-<!-- </div> -->
-  <!-- <div bottom>
-        <ng2-smart-table [settings]="settings" [source]="data"  (editConfirm)="onSaveConfirm($event)"
- (createConfirm)="onCreateConfirm($event)"></ng2-smart-table>
-    </div> -->
+  <!-- cadidate list -->
+  <ait-card-content
+    area
+    [styleDivider]="{ 'margin-left': '10px' }"
+    [styleLabel]="{ 'font-size': '26px' }"
+    tabindex="2"
+    [isOpen]="true"
+    [isStart]="true"
+    [id]="'candidate_list'"
+    [label]="'candidate list' | translate"
+    [disableHeader]="false"
+    padding="'10px'"
+  >
+    <ng-container *ngFor="let element of tableComponents">
+      <div class="filter_container" [ngStyle]="{ width: '100%' }">
+        <div
+          class="input__area"
+          [ngStyle]="{
+            height: isTableExpan ? 'auto' : '0px',
+            'margin-bottom': isTableExpan ? null : '0px',
+            'margin-top': isTableExpan ? null : '0px',
+            'margin-left': '10px'
+          }"
+        >
+          <div
+            style="width: 100%"
+            [ngStyle]="{ display: isTableExpan ? 'block' : 'none' }"
+          >
+            <div
+              class="table__area"
+              #area
+              style="width: 900px; overflow-x: scroll"
+            >
+              <ait-table-inline-edit 
+              [project_key]="project_key"> </ait-table-inline-edit>
+            </div>
+            <div
+              *ngIf="totalRows > 0 && done"
+              [ngClass]="isValidPage ? 'per_page' : 'per_page2'"
+            >
+              <nb-select
+                placeholder="Select Showcase"
+                [(selected)]="perPage"
+                (selectedChange)="changePage()"
+              >
+                <nb-option value="10">10</nb-option>
+                <nb-option value="20">20</nb-option>
+                <nb-option value="30">30</nb-option>
+                <nb-option value="50">50</nb-option>
+                <nb-option value="100">100</nb-option>
+              </nb-select>
+            </div>
+            <div
+              class="num_page"
+              *ngIf="pageDetail && totalRows > 0 && done"
+              [ngStyle]="{
+                left: isValidPage ? left + 'px' : '0px',
+                'margin-top': isValidPage ? '-67px' : '10px'
+              }"
+            >
+              {{ pageDetail }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </ait-card-content>
 </ait-group-input>

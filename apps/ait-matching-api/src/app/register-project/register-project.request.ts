@@ -1,6 +1,10 @@
-import { BaseRequest } from "@ait/core";
-import { Field, InputType } from "@nestjs/graphql";
-import {  RegisterProjectDto, RegisterProjectSaveDto } from "./register-project.dto";
+import { BaseRequest } from '@ait/core';
+import { Field, InputType } from '@nestjs/graphql';
+import {
+  CandidateDto,
+  RegisterProjectDto,
+  RegisterProjectSaveDto,
+} from './register-project.dto';
 
 @InputType()
 export class RegisterProjectRequest extends BaseRequest {
@@ -11,11 +15,11 @@ export class RegisterProjectRequest extends BaseRequest {
   data: RegisterProjectSaveDto;
 }
 
-// @InputType()
-// export class CaptionRegisterSaveRequest extends BaseRequest{
-//     @Field(() => CaptionRegisterSaveDto, { nullable: true })
-//     condition: CaptionRegisterSaveDto;
+@InputType()
+export class CandidateRequest extends BaseRequest {
+  @Field(() => CandidateDto, { nullable: true })
+  condition: CandidateDto;
 
-//     @Field(() => [CaptionRegisterSaveDto], { nullable: true })
-//   data: CaptionRegisterSaveDto;
-// }
+  @Field(() => [CandidateDto], { nullable: true })
+  data: CandidateDto;
+}
