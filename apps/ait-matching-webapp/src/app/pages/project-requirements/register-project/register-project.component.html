@@ -7,6 +7,7 @@
 >
   <!-- project detail -->
   <ait-card-content
+    *ngIf="mode === 'EDIT'"
     area
     [styleDivider]="{ 'margin-left': '10px' }"
     [styleLabel]="{ 'font-size': '26px' }"
@@ -18,71 +19,69 @@
     [disableHeader]="false"
     padding="'10px'"
   >
-    
-      <div class="left__side">
-        <ng-container>
-          <ait-autocomplete-master-data
-            [width]="'400px'"
-            [id]="'customer'"
-            [label]="'customer'"
-            [isSubmit]="false"
-            [allowNew]="true"
-            [maxItem]="1"
-            [class]="'EMPLOYEE_LEVEL'"
-            [placeholder]="'please select customer'"
-            [collection]="'sys_master_data'"
-            [disableOutputDefault]="true"
-            [isReset]="false"
-            [defaultValue]=""
-          ></ait-autocomplete-master-data>
+    <div class="left__side">
+      <ng-container>
+        <ait-autocomplete-master-data
+          [width]="'400px'"
+          [id]="'customer'"
+          [label]="'customer'"
+          [isSubmit]="false"
+          [allowNew]="true"
+          [maxItem]="1"
+          [placeholder]="'please select customer'"
+          [collection]="'m_company'"
+          [disableOutputDefault]="true"
+          [isReset]="false"
+          [defaultValue]=""
+        ></ait-autocomplete-master-data>
 
-          <ait-autocomplete-master-data
-            [width]="'400px'"
-            [id]="'person_in_charge'"
-            [label]="'Person in charge'"
-            [isSubmit]="false"
-            [maxItem]="1"
-            [placeholder]="'please select employee'"
-            [collection]="'user_profile'"
-            [disableOutputDefault]="true"
-            [isReset]="false"
-            [defaultValue]=""
-          ></ait-autocomplete-master-data>
-        </ng-container>
-      </div>
-      <div class="right__side">
-        <ng-container>
-          <ait-input-text
-            [id]="'project_code'"
-            [label]="'project code'"
-            [length]="200"
-            [width]="'400px'"
-            [isSubmit]="false"
-            [isReset]="false"
-            [placeholder]="'please input project code'"
-            [defaultValue]=""
-          ></ait-input-text>
-          <ait-space [margin]="'13.9px'"></ait-space>
-          <ait-autocomplete-master-data
-            [width]="'400px'"
-            [id]="'status'"
-            [label]="'status'"
-            [isSubmit]="false"
-            [maxItem]="1"
-            [class]="'EMPLOYEE_LEVEL'"
-            [placeholder]="'please select status'"
-            [collection]="'sys_master_data'"
-            [disableOutputDefault]="true"
-            [isReset]="false"
-            [defaultValue]=""
-          ></ait-autocomplete-master-data>
-        </ng-container>
-      </div>
-    
+        <ait-autocomplete-master-data
+          [width]="'400px'"
+          [id]="'person_in_charge'"
+          [label]="'Person in charge'"
+          [isSubmit]="false"
+          [maxItem]="1"
+          [placeholder]="'please select employee'"
+          [disableOutputDefault]="true"
+          [dataSource]="employeeList"
+          [isReset]="false"
+          [defaultValue]=""
+        ></ait-autocomplete-master-data>
+      </ng-container>
+    </div>
+    <div class="right__side">
+      <ng-container>
+        <ait-input-text
+          [id]="'project_code'"
+          [label]="'project code'"
+          [length]="200"
+          [width]="'400px'"
+          [isSubmit]="false"
+          [isReset]="false"
+          [placeholder]="'please input project code'"
+          [defaultValue]=""
+        ></ait-input-text>
+        <ait-space [margin]="'13.9px'"></ait-space>
+        <ait-autocomplete-master-data
+          [width]="'400px'"
+          [id]="'status'"
+          [label]="'status'"
+          [isSubmit]="false"
+          [maxItem]="1"
+          [class]="'PROJECT_STATUS'"
+          [placeholder]="'please select status'"
+          [collection]="'sys_master_data'"
+          [disableOutputDefault]="true"
+          [isReset]="false"
+          [defaultValue]=""
+        ></ait-autocomplete-master-data>
+      </ng-container>
+    </div>
   </ait-card-content>
 
   <!-- cadidate list -->
   <ait-card-content
+    *ngIf="mode === 'EDIT'"
     area
     [styleDivider]="{ 'margin-left': '10px' }"
     [styleLabel]="{ 'font-size': '26px' }"
@@ -114,8 +113,8 @@
               #area
               style="width: 900px; overflow-x: scroll"
             >
-              <ait-table-inline-edit 
-              [project_key]="project_key"> </ait-table-inline-edit>
+              <ait-table-inline-edit [project_key]="project_key">
+              </ait-table-inline-edit>
             </div>
             <div
               *ngIf="totalRows > 0 && done"

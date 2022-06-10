@@ -19,6 +19,7 @@ export class TableInlineEditComponent extends AitBaseComponent implements OnInit
   isEdit = false;
   _key = '';
   list_candidate = []
+  list_candidate_clone = []
   candidateEdit: FormGroup;
   
   @Input() project_key: string
@@ -86,10 +87,11 @@ export class TableInlineEditComponent extends AitBaseComponent implements OnInit
   handleClickSave() {
     const data_save = this.candidateEdit.value;
     data_save['employee_name'] = data_save['employee_name'].value;
-    data_save['user_id'] = data_save['employee_name']._key;
-    debugger
-    const list_candidate_clone = this.list_candidate
-    list_candidate_clone.forEach((item, index) => {
+    data_save['user_id'] = this.candidateEdit.controls['employee_name'].value._key;
+    data_save['start_plan_format'] = this.getDateFormat(data_save['start_plan']);
+    data_save['end_plan_format'] = this.getDateFormat(data_save['end_plan']);
+     this.list_candidate_clone = this.list_candidate
+    this.list_candidate_clone.forEach((item, index) => {
       if (item._key == data_save._key){
         this.list_candidate[index] = data_save;
         return true
@@ -131,7 +133,6 @@ export class TableInlineEditComponent extends AitBaseComponent implements OnInit
         this.employeeList = data;
       }
     });
-    console.log(this.employeeList)
   }
 
   getDateFormat(time: number) {

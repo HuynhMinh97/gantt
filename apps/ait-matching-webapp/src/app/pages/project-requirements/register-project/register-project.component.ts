@@ -6,6 +6,7 @@ import {
   AitEnvironmentService,
   AppState,
   getUserSetting,
+  MODE,
 } from '@ait/ui';
 import { Component, OnInit } from '@angular/core';
 import {
@@ -21,6 +22,7 @@ import { Apollo } from 'apollo-angular';
 import { UserListService } from '../../../services/user-list.service';
 import { isObjectFull, RESULT_STATUS } from '@ait/shared';
 import dayjs from 'dayjs';
+import { AddRoleService } from '../../../services/add-role.service';
 
 @Component({
   selector: 'ait-register-project',
@@ -42,6 +44,9 @@ export class RegisterProjectComponent
   isExpan = true;
   isTableExpan = true;
   user_list = [];
+  employeeList: any[] = [];
+  mode = MODE.NEW;
+
   
   constructor(
     private formBuilder: FormBuilder,
@@ -49,6 +54,7 @@ export class RegisterProjectComponent
     private userOnbService: UserOnboardingService,
     private registerProjectService: RegisterProjectService,
     private userListService: UserListService,
+    private addRoleService: AddRoleService,
 
 
     env: AitEnvironmentService,
@@ -106,7 +112,17 @@ export class RegisterProjectComponent
 
   async ngOnInit(): Promise<void> {
     this.project_key = this.activeRouter.snapshot.paramMap.get('id');
-    await this.getAllUser();
+    if (this.project_key){
+      this.mode = MODE.EDIT;
+    }
+    try{
+      await this.getEmployee();
+      await this.getAllUser();
+    }
+    catch{
+
+    }
+    
     this.cancelLoadingApp();
   }
 
@@ -192,6 +208,18 @@ export class RegisterProjectComponent
     });
     this.user_list = dataSearch;
     return dataSearch;
+  }
+
+  async getEmployee() {
+    await this.addRoleService.getEmployee().then((res) => {
+      if (res.status === RESULT_STATUS.OK) {
+        const data = [];
+        (res.data || []).forEach((e: any) =>
+          data.push({ _key: e?._key, value: e?.full_name })
+        );
+        this.employeeList = data;
+      }
+    });
   }
 
   // getDateFormat(time: number) {
