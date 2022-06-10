@@ -45,6 +45,8 @@ import { MasterListComponent } from './pages/master-group-collection/master-list
 import { ViewDataMasterComponent } from './pages/master-group-collection/view-data-master/view-data-master.component';
 import { ProjectRequirementDetailComponent } from './pages/project-requirements/project-detail/project-requirement-detail.component';
 import { RequirementListComponent } from './pages/requirement-list/requirement-list.component';
+import { MasterDataInputComponent } from './pages/master-data/master-data-input/master-data-input.component';
+import { MasterDataViewComponent } from './pages/master-data/master-data-view/master-data-view.component';
 
 export const routes: Routes = [
   {
@@ -252,11 +254,6 @@ export const routes: Routes = [
     canActivate: [AitAuthGuardService],
     component: CreateUserComponent,
   },
-  // {
-  //   path: 'create-user/:id',
-  //   canActivate: [AitAuthGuardService],
-  //   component: CreateUserComponent,
-  // },
   {
     path: 'user-account-detail/:id',
     canActivate: [AitAuthGuardService],
@@ -301,6 +298,16 @@ export const routes: Routes = [
     path: 'master-data',
     canActivate: [AitAuthGuardService],
     component: MasterDataListComponent,
+  },
+  {
+    path: 'master-data/:id',
+    canActivate: [AitAuthGuardService],
+    component: MasterDataInputComponent,
+  },
+  {
+    path: 'master-data-detail',
+    canActivate: [AitAuthGuardService],
+    component: MasterDataViewComponent,
   },
   {
     path: 'master-list',
