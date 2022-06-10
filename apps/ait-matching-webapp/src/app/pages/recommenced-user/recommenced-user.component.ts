@@ -152,6 +152,7 @@ export class RecommencedUserComponent
   dataFilterSaveDf = [];
 
   matchingList = [];
+  matchingSkill = [];
 
   isLoading = true;
   spinnerLoading = false;
@@ -353,8 +354,33 @@ export class RecommencedUserComponent
     this.textDataEnd = '';
     this.setSkeleton(true);
     this.matchingService.matchingUser(keyword).then((res) => {
-      if (res?.data.length > 0) {
-        const arr = res.data.map((e: { item: string }) => e.item);
+      if (res?.data[0].data.length > 0) {
+        const arr = res.data[0].data.map((e: { item: string }) => e.item);
+        const matchingSkill = res.data[0].matching_input_data.skill.map(
+          (e: any) => Object.assign({ ...e, count: 0, name: '' })
+        ) as any[];
+        matchingSkill.length = 4;
+        const checkArr = [];
+        res.data[0].data.forEach((e: any) => {
+          checkArr.push(
+            e.matching_attributes[0]?.matching_detail?.item_values || []
+          );
+        });
+        checkArr.forEach((e: any[]) => {
+          matchingSkill.forEach((z, i) => {
+            const index = e.findIndex((w) => w === z.item);
+            if (~index) {
+              matchingSkill[i].count += 1;
+            }
+          });
+        });
+        matchingSkill.forEach(async (e, i) => {
+          const name = await this.matchingService.findSkillName(e.item);
+          matchingSkill[i].name = name;
+        });
+        this.matchingSkill = [{ name: 'All', count: arr.length }].concat(
+          matchingSkill
+        );
         this.matchingList = arr || [];
         this.callSearch(arr);
       } else {
@@ -366,6 +392,12 @@ export class RecommencedUserComponent
 
   // thêm nút scroll to top : TODO
   resetRound = () => (this.round = 1);
+
+  getText = (p: any) => {
+    if (p.name && p.count > 0) {
+      return `${p.name} (${p.count})`;
+    }
+  };
 
   getTabSelect = (tab: any) => {
     this.dataFilterSave = [];

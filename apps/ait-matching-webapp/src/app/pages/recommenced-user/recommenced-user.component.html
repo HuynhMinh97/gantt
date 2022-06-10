@@ -209,7 +209,18 @@
             [content]="getTitle('Recommendation for you')"
           >
           </ait-text-gradient>
-          <div class="count-text">{{ getResultCount() }}</div>
+          <!-- <div class="count-text">{{ getResultCount() }}</div> -->
+          <div class="content">
+            <ait-chip
+              *ngFor="let p of matchingSkill"
+              [title]="getText(p)"
+              [icon]="'close-outline'"
+              [is18n]="false"
+              [isHaveIcon]="false"
+              tabindex="4"
+              style="outline-color: #10529d"
+            ></ait-chip>
+          </div>
         </div>
         <div class="actionGroup" tabindex="24" style="outline-color: #10529d">
           <ait-tabs
@@ -220,6 +231,42 @@
             [disabled]="cardSkeleton.length !== 0"
             (onTabSelect)="getTabSelect($event)"
           ></ait-tabs>
+        </div>
+      </div>
+      <div class="color">
+        <div
+          class="cardR"
+          style="
+            background: linear-gradient(
+              90deg,
+              rgba(255, 141, 3, 0.8) 28%,
+              #ed9d3c 67%
+            );
+          "
+        >
+          Highly recommended
+        </div>
+        <div
+          class="cardR"
+          style="
+            background: linear-gradient(90deg, #78c047 50%, #97d791 84%);
+            transform: rotate(-0.05deg);
+          "
+        >
+          Recommended
+        </div>
+        <div
+          class="cardR"
+          style="
+            background: linear-gradient(
+              89.75deg,
+              #002b6e 0.23%,
+              #2288cc 99.81%
+            );
+            transform: rotate(-0.05deg);
+          "
+        >
+          Normal
         </div>
       </div>
       <div class="divider"></div>
