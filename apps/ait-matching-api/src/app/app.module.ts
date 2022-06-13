@@ -22,13 +22,13 @@ import { LanguageListResolver } from './list/language-list/language-list.resolve
 import { EducationListResolver } from './list/education-list/education-list.resolver';
 import { CertificateResolver } from './list/certificate-list/certificate-list.resolver';
 import { GetEmployeeResolver } from './group-role/add-role/add-role.resolver';
-import { SearchConditionResolver } from './search-condition/search-condition.resolver';
 import { SaveRecommendUserResolver } from './save-recommend-user/save-recommend-user.resolver';
 import { RecommencedUserController } from './recommenced-user/recommenced-user.controller';
 import { UserListResolver } from './list/user-list/user-list.resolver';
 import { CaptionListResolver } from './list/caption-list/caption-list.resolver';
 import { MasterListResolver } from './master-list/master-list.resolver';
 import { DataMasterResolver } from './edit-data-master/edit-data-master.resolver';
+import { BizProjectResolver } from './biz_project/biz_project.resolver';
 
 const RESOLVERS = [
   UserExperienceInfoResolver,
@@ -50,7 +50,6 @@ const RESOLVERS = [
   CertificateResolver,
   GetEmployeeResolver,
   GroupRoleListResolver,
-  SearchConditionResolver,
   SaveRecommendUserResolver,
   UserListResolver,
   CaptionListResolver,
@@ -58,6 +57,7 @@ const RESOLVERS = [
   RegisterProjectResolver,
   MasterListResolver,
   DataMasterResolver,
+  BizProjectResolver,
   {
     provide: 'ENVIRONMENT',
     useValue: environment,

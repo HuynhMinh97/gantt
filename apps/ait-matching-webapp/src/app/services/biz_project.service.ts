@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
-export class SearchConditionService extends AitBaseService {
+export class BizProjectService extends AitBaseService {
   collection = 'save_recommend_user_query';
   specialFields = ['skills', 'title', 'location', 'industry', 'level'];
   returnFields = {
@@ -59,7 +59,7 @@ export class SearchConditionService extends AitBaseService {
       attribute: 'skills',
       ref_collection: 'm_skill',
       ref_attribute: '_key',
-      get_by: '_key'
+      get_by: '_key',
     };
 
     condition['industry_working'] = {
@@ -75,13 +75,13 @@ export class SearchConditionService extends AitBaseService {
     };
 
     condition['create_by'] = {
-      type: 'matching'
+      type: 'matching',
     };
 
     condition['change_by'] = {
-      type: 'matching'
-    }
-    
+      type: 'matching',
+    };
+
     if (!condition['user_id']) {
       condition['user_id'] = this.user_id || '';
     }
@@ -97,18 +97,12 @@ export class SearchConditionService extends AitBaseService {
   }
 
   async save(data: any) {
-    this.specialFields.forEach((e) => {
-      if (isArrayFull(data[e])) {
-        data[e] = Utils.getKeys(data[e]);
-      }
-    });
     !data[KEYS.KEY] && delete data[KEYS.KEY];
     data[KEYS.USER_ID] = this.user_id || AitAppUtils.getUserId() || '';
     const returnField = { _key: true };
-    console.log(data);return
     return await this.mutation(
-      'saveSearchCondition',
-      this.collection,
+      'saveBizProject',
+      'biz_project',
       [data],
       returnField
     );

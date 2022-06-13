@@ -76,6 +76,7 @@
     >
       <div
         class="btn-card"
+        [ngStyle]="{ background: backgroundCard }"
         (click)="actionButtonAdd(cardH.user_id)"
         nbTooltip="{{
           cardH.is_team_member ? ('added' | translate) : ('add' | translate)
@@ -103,6 +104,7 @@
       <div style="background: 'white'; width: 1px; height: 100%"></div>
       <div
         class="btn-card"
+        [ngStyle]="{ background: backgroundCard }"
         (click)="actionButtonSave(cardH.user_id)"
         nbTooltip="{{
           cardH.is_saved ? ('saved' | translate) : ('save' | translate)

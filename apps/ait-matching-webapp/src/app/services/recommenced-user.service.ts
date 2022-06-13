@@ -49,6 +49,12 @@ export class RecommencedUserService extends AitBaseService {
     }).toPromise();
   }
 
+  async findSkillName(_key: string) {
+    const request = { condition: { _key }, collection: 'm_skill' };
+    const res = await this.query('findSystem', request, { name: true });
+    return res.data[0].name || '';
+  }
+
   async getUserByList(list: string[], onlySaved = false, start = 0, end = 8) {
     const condition = {};
 

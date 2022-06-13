@@ -30,7 +30,7 @@ import {
 } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
 import { RecommencedUserService } from '../../services/recommenced-user.service';
-import { SearchConditionService } from '../../services/search-condition.service';
+import { BizProjectService } from '../../services/biz_project.service';
 import { SetNameComponent } from './components/set-name/set-name.component';
 import _ from 'lodash';
 
@@ -53,7 +53,7 @@ export class RecommencedUserComponent
   constructor(
     layoutScrollService: NbLayoutScrollService,
     private matchingService: RecommencedUserService,
-    private searchConditionService: SearchConditionService,
+    private bizProjectService: BizProjectService,
     private translateService: AitTranslationService,
     private iconLibraries: NbIconLibraries,
     private formBuilder: FormBuilder,
@@ -79,7 +79,7 @@ export class RecommencedUserComponent
 
     this.searchForm = this.formBuilder.group({
       _key: new FormControl(null),
-      keyword: new FormControl(null),
+      keyword: new FormControl('window'),
       skills: new FormControl(null),
       current_job_title: new FormControl(null),
       province_city: new FormControl(null),
@@ -152,6 +152,8 @@ export class RecommencedUserComponent
   dataFilterSaveDf = [];
 
   matchingList = [];
+  matchingSkill = [];
+  matchingResult = [];
 
   isLoading = true;
   spinnerLoading = false;
@@ -259,7 +261,7 @@ export class RecommencedUserComponent
   async ngOnInit() {
     const queriesKey = localStorage.getItem('my-project-queries');
     if (queriesKey) {
-      this.searchConditionService.find({ _key: queriesKey }).then((e) => {
+      this.bizProjectService.find({ _key: queriesKey }).then((e) => {
         this.searchForm.patchValue(e.data[0]);
         localStorage.setItem('my-project-queries', null);
       });
@@ -304,6 +306,22 @@ export class RecommencedUserComponent
 
   getTitlePlaceholderSearch = () => this.translateService.translate('001');
 
+  getGroupNo(key: string) {
+    const obj = this.matchingResult.find((e) => e.item === key);
+    if (obj) {
+      const num = obj['total_score'] || 0.2;
+      if (num >= 0.6) {
+        return 1;
+      } else if (num >= 0.2) {
+        return 2;
+      } else {
+        return 3;
+      }
+    } else {
+      return 3;
+    }
+  }
+
   // Get Data by round and base on all of result
   getDataByRound = async (onlySaved = false, list = []) => {
     try {
@@ -313,8 +331,17 @@ export class RecommencedUserComponent
         this.currentCount
       );
       if (isArrayFull(detail) && !onlySaved) {
-        this.dataFilter = this.dataFilterDf.concat(detail);
-        this.dataFilterDf = [...this.dataFilter];
+        const temp = this.dataFilterDf
+          .concat(detail)
+          .map((e) =>
+            Object.assign({
+              ...e,
+              group_no: this.getGroupNo(e.user_id),
+            })
+          )
+          .sort((a, b) => a.group_no - b.group_no);
+        this.dataFilter = [...temp];
+        this.dataFilterDf = [...temp];
         this.currentCount = Math.ceil(this.dataFilterDf.length / 8);
       }
       if (isArrayFull(detail) && onlySaved) {
@@ -353,8 +380,35 @@ export class RecommencedUserComponent
     this.textDataEnd = '';
     this.setSkeleton(true);
     this.matchingService.matchingUser(keyword).then((res) => {
-      if (res?.data.length > 0) {
-        const arr = res.data.map((e: { item: string }) => e.item);
+      console.log(res);
+      this.matchingResult = res?.data[0].data || [];
+      if (this.matchingResult.length > 0) {
+        const arr = res.data[0].data.map((e: { item: string }) => e.item);
+        const matchingSkill = res.data[0].matching_input_data.skill.map(
+          (e: any) => Object.assign({ ...e, count: 0, name: '' })
+        ) as any[];
+        matchingSkill.length = 4;
+        const checkArr = [];
+        res.data[0].data.forEach((e: any) => {
+          checkArr.push(
+            e.matching_attributes[0]?.matching_detail?.item_values || []
+          );
+        });
+        checkArr.forEach((e: any[]) => {
+          matchingSkill.forEach((z, i) => {
+            const index = e.findIndex((w) => w === z.item);
+            if (~index) {
+              matchingSkill[i].count += 1;
+            }
+          });
+        });
+        matchingSkill.forEach(async (e, i) => {
+          const name = await this.matchingService.findSkillName(e.item);
+          matchingSkill[i].name = name;
+        });
+        this.matchingSkill = [{ name: 'All', count: arr.length }].concat(
+          matchingSkill
+        );
         this.matchingList = arr || [];
         this.callSearch(arr);
       } else {
@@ -366,6 +420,12 @@ export class RecommencedUserComponent
 
   // thêm nút scroll to top : TODO
   resetRound = () => (this.round = 1);
+
+  getText = (p: any) => {
+    if (p.name && p.count > 0) {
+      return `${p.name} (${p.count})`;
+    }
+  };
 
   getTabSelect = (tab: any) => {
     this.dataFilterSave = [];
@@ -426,7 +486,7 @@ export class RecommencedUserComponent
       console.log(e);
     }
     if (_key) {
-      this.searchConditionService.remove(_key);
+      this.bizProjectService.remove(_key);
     }
     this.dataFilter = [...this.dataFilterDf];
   }
@@ -446,6 +506,7 @@ export class RecommencedUserComponent
         try {
           if (name) {
             const data = this.searchForm.value;
+            console.log(data);
             const obj = { name };
             for (const prop in data) {
               if (data[prop]) {
@@ -460,11 +521,37 @@ export class RecommencedUserComponent
                 }
               }
             }
-            this.searchConditionService.save(obj).then((res) => {
+            console.log(obj);
+            const saveData = {
+              keyword: obj['keyword'],
+              name: obj['name'],
+            };
+            if (obj['current_job_level']) {
+              saveData['level'] = obj['current_job_level'];
+            }
+            if (obj['current_job_title']) {
+              saveData['title'] = obj['current_job_title'];
+            }
+            if (obj['industry_working']) {
+              saveData['industry'] = obj['industry_working'];
+            }
+            if (obj['province_city']) {
+              saveData['location'] = obj['province_city'];
+            }
+            if (obj['valid_time_from']) {
+              saveData['valid_time_from'] = obj['valid_time_from'];
+            }
+            if (obj['valid_time_to']) {
+              saveData['valid_time_to'] = obj['valid_time_to'];
+            }
+            if (obj['skills']) {
+              saveData['skills'] = obj['skills'];
+            }
+            this.bizProjectService.save(saveData).then((res) => {
               if (res.status === RESULT_STATUS.OK) {
-                this.searchForm.controls['_key'].setValue(
-                  res.data[0]?._key || ''
-                );
+                // this.searchForm.controls['_key'].setValue(
+                //   res.data[0]?._key || ''
+                // );
                 this.showToastr('', this.getMsg('I0005'));
               } else {
                 this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);

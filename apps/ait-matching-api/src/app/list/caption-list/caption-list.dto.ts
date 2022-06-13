@@ -1,13 +1,12 @@
 import { BaseDto, KeyValueDto } from '@ait/core';
-import {  ConditionDto, CreateByDto,ChangeByDto } from '@ait/core';
+import { ConditionDto } from '@ait/core';
 import { Field, ID, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
-export class CaptionListDto extends BaseDto  {
-
+export class CaptionListDto extends BaseDto {
   @Field(() => ID, { nullable: true })
   _key: string;
-  
+
   @Field(() => String, { nullable: true })
   name?: string;
 
@@ -24,13 +23,11 @@ export class CaptionListDto extends BaseDto  {
   group_no?: number;
 }
 
-
 @InputType()
 export class SearchCaptionListDto {
-
   @Field(() => ID, { nullable: true })
   _key: string;
-  
+
   @Field(() => ConditionDto, { nullable: true })
   name?: ConditionDto;
 
