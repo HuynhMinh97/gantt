@@ -151,6 +151,7 @@ export class AitCardComponent implements OnInit {
         .sort((a, b) => b.level - a.level);
       this.getAvatar();
       this.addColor();
+      console.log(this.cardH);
     } catch (e) {
       console.log(e);
     }
@@ -166,11 +167,11 @@ export class AitCardComponent implements OnInit {
 
   addColor = () => {
     if (this.cardH?.group_no === 1) {
-      this.backgroundCard = color.green;
-      this.colorCard = COLOR.color1;
-    } else if (this.cardH?.group_no === 2) {
       this.backgroundCard = color.orange;
       this.colorCard = COLOR.color2;
+    } else if (this.cardH?.group_no === 2) {
+      this.backgroundCard = color.green;
+      this.colorCard = COLOR.color1;
     } else {
       this.backgroundCard = color.blue;
       this.colorCard = COLOR.color3;

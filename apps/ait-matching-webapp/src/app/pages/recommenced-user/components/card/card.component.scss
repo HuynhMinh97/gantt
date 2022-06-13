@@ -67,9 +67,6 @@
     align-items: center;
     flex-direction: column;
     padding-bottom: 5px;
-    &:hover {
-      // opacity: 0.6;
-    }
     .words__for__project {
       width: 100%;
       display: flex;
@@ -102,12 +99,10 @@
       flex-direction: column;
       align-items: flex-start;
       justify-content: center;
-      // margin-left: 3px;
       .name {
         font-weight: bold;
         font-size: 12px;
         color: #222b45;
-        // letter-spacing: 0.4px;
         margin: 0;
         word-break: break-all;
         text-transform: uppercase;
@@ -118,10 +113,7 @@
         font-size: 9px;
         letter-spacing: 0.0015em;
         text-transform: uppercase;
-        /* Text Color / Hint */
-
         color: nb-theme(text-hint-color);
-        // margin-top: 3.5px;
       }
       .star__act {
         font-size: 19px;
@@ -146,15 +138,11 @@
 
   .list__skills::-webkit-scrollbar-thumb {
     background-color: gray;
-    // outline: 1px solid slategrey;
     border-radius: 5px;
     margin-right: 5px;
   }
   .list__skills {
     margin-bottom: 25px;
-    &:hover {
-      // opacity: 0.6;
-    }
     cursor: pointer;
     width: 100%;
     display: flex;
@@ -247,7 +235,6 @@
 
 .card__items::-webkit-scrollbar-thumb {
   background-color: #10529d;
-  // outline: 1px solid slategrey;
   border-radius: 2px;
 }
 
@@ -268,7 +255,6 @@
 }
 
 .btn-card {
-  background: linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%);
   width: 50%;
   height: 100%;
   display: flex;
