@@ -23,7 +23,7 @@ import {
 import { Apollo } from 'apollo-angular';
 import { RecommencedUserService } from '../../../services/recommenced-user.service';
 import { StoreKeywordsSearch } from '../../../state/actions';
-import { SearchConditionService } from '../../../services/search-condition.service';
+import { BizProjectService } from '../../../services/biz_project.service';
 
 export enum StorageKey {
   KEYWORD = 'keyword',
@@ -43,7 +43,7 @@ export class RecommencedJobComponent
   constructor(
     layoutScrollService: NbLayoutScrollService,
     private matchingCompanyService: RecommencedUserService,
-    private searchConditionService: SearchConditionService,
+    private bizProjectService: BizProjectService,
     private translateService: AitTranslationService,
     private iconLibraries: NbIconLibraries,
     private formBuilder: FormBuilder,
@@ -224,7 +224,12 @@ export class RecommencedJobComponent
     this.gotoTop();
   };
 
-  private getDetailMatching = async (list = [], onlySaved = false, start = 0, end = 8) => {
+  private getDetailMatching = async (
+    list = [],
+    onlySaved = false,
+    start = 0,
+    end = 8
+  ) => {
     const res = await this.matchingCompanyService.getDetailMatching(
       onlySaved,
       start * 8,
@@ -300,7 +305,7 @@ export class RecommencedJobComponent
   async ngOnInit() {
     // eslint-disable-next-line no-constant-condition
     if (false) {
-      this.searchConditionService.find().then((e) => {
+      this.bizProjectService.find().then((e) => {
         this.searchForm.patchValue(e.data[0]);
       });
     }
@@ -360,7 +365,11 @@ export class RecommencedJobComponent
 
   // Get Data by round and base on all of result
   getDataByRound = async (onlySaved = false) => {
-    const detail = await this.getDetailMatching([], onlySaved, this.currentCount);
+    const detail = await this.getDetailMatching(
+      [],
+      onlySaved,
+      this.currentCount
+    );
     if (isArrayFull(detail) && !onlySaved) {
       this.dataFilter = this.dataFilter.concat(detail);
       this.currentCount = Math.ceil(this.dataFilter.length / 8);
@@ -440,7 +449,7 @@ export class RecommencedJobComponent
       console.log(e);
     }
     if (_key) {
-      this.searchConditionService.remove(_key);
+      this.bizProjectService.remove(_key);
     }
   }
 
@@ -452,7 +461,7 @@ export class RecommencedJobComponent
         obj[prop] = data[prop];
       }
     }
-    this.searchConditionService.save(obj).then((res) => {
+    this.bizProjectService.save(obj).then((res) => {
       if (res.status === RESULT_STATUS.OK) {
         this.searchForm.controls['_key'].setValue(res.data[0]?._key || '');
       }

@@ -209,16 +209,19 @@
             [content]="getTitle('Recommendation for you')"
           >
           </ait-text-gradient>
-          <!-- <div class="count-text">{{ getResultCount() }}</div> -->
           <div class="content">
             <ait-chip
-              *ngFor="let p of matchingSkill"
+              *ngFor="let p of matchingSkill; let i = index"
               [title]="getText(p)"
               [icon]="'close-outline'"
               [is18n]="false"
               [isHaveIcon]="false"
               tabindex="4"
               style="outline-color: #10529d"
+              [style]="{
+                'max-width': '140px',
+                'margin-right': '5px'
+              }"
             ></ait-chip>
           </div>
         </div>
