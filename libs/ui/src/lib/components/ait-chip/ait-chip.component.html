@@ -5,7 +5,8 @@
   [ngStyle]="{
     background: background,
     color: colorText,
-    'max-width': maxWidth
+    'max-width': maxWidth,
+    border: isSelected ? '1px solid' : ''
   }"
   [ngClass]="isChipInCard ? 'chipInCard' : 'chip'"
   [nbTooltip]="title"
