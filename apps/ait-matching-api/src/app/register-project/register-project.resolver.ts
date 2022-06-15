@@ -33,19 +33,18 @@ export class RegisterProjectResolver extends AitBaseService {
   ) {
     const lang = request.lang;
     const _key = request.condition?._key;
-    
+    const collection = request.collection
     const aqlQuery = `
     FOR v IN biz_project
     filter v._key == "${_key}"
     RETURN v.skills
     `;
    const result =  await this.query(aqlQuery);
-  
    const Skills = [];
    if (result.data[0]){
      for (const skill of result.data[0])
      {
-       const skillName = await this.getNameOfSkill(skill, lang);
+       const skillName = await this.getNameByKey(skill, lang, collection);
        const skills = {
          _key:skill,
          value:skillName.data[0]
@@ -70,12 +69,108 @@ export class RegisterProjectResolver extends AitBaseService {
     return response;
   }
 
-  async getNameOfSkill(_key: string, lang: string) {
+  @Query(() => RegisterProjectResponse, { name: 'findTitleProject' })
+  async findTitleProject(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => RegisterProjectRequest })
+    request: RegisterProjectRequest
+  ) {
+    const lang = request.lang;
+    const _key = request.condition?._key;
+    const collection = request.collection
+    
     const aqlQuery = `
-     FOR v IN m_skill
+    FOR v IN biz_project
+    filter v._key == "${_key}"
+    RETURN v.title
+    `;
+   const result =  await this.query(aqlQuery);
+  
+   const Titles = [];
+   
+   if (result.data[0]){
+     for (const item of result.data[0])
+     {
+       const titleName = await this.getNameByKey(item, lang, collection);
+       const title = {
+         _key:item,
+         value:titleName.data[0]
+       }
+       Titles.push({title})
+     }
+   }
+   else {
+    const titles = {
+      _key:null,
+      value:null
+    }
+    Titles.push({titles})
+   }
+   
+    const response = new RegisterProjectResponse(
+      200,
+      Titles as RegisterProjectEntity[],
+      ''
+    );
+    
+    return response;
+  }
+
+  @Query(() => RegisterProjectResponse, { name: 'findIndustryProject' })
+  async findIndustryProject(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => RegisterProjectRequest })
+    request: RegisterProjectRequest
+  ) {
+    const lang = request.lang;
+    const _key = request.condition?._key;
+    const collection = request.collection
+    
+    const aqlQuery = `
+    FOR v IN biz_project
+    filter v._key == "${_key}"
+    RETURN v.industry
+    `;
+   const result =  await this.query(aqlQuery);
+  
+   const Industry = [];
+   
+   if (result.data[0]){
+     for (const item of result.data[0])
+     {
+       const Name = await this.getNameByKey(item, lang, collection);
+       const industry = {
+         _key:item,
+         value:Name.data[0]
+       }
+       Industry.push({industry})
+     }
+   }
+   else {
+    const industry = {
+      _key:null,
+      value:null
+    }
+    Industry.push({industry})
+   }
+   
+    const response = new RegisterProjectResponse(
+      200,
+      Industry as RegisterProjectEntity[],
+      ''
+    );
+    
+    return response;
+  }
+
+  async getNameByKey(_key: string, lang: string, collection: string) {
+    const aqlQuery = `
+     FOR v IN ${collection}
      filter v._key == "${_key}"
      RETURN v.name.${lang}
      `;
+     
+
     return await this.query(aqlQuery);
   }
 

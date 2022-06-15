@@ -5,14 +5,16 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class RegisterProjectService extends AitBaseService{
+    data_save = [];
 
+  
   async findProjectAitByKey(_key?:string) {
     const returnFields = { 
       _key: true,
       active_flag: true,
       valid_time_from: true,
       valid_time_to: true,
-      project_ait_name: true,
+      name: true,
       create_by: true,
       change_by: true,
       create_at: true,
@@ -80,14 +82,43 @@ export class RegisterProjectService extends AitBaseService{
     return await this.query('findProjectAitByKey', request, returnFields);
   }
 
-  async findSkillProject(_key: string){
+ 
+   async findSkillProject(_key: string){
     const condition = {
       _key: _key,
       del_flag: false,
     }
-    return await this.query('findSkillProject', { collection: 'biz_project', condition },
+    return await this.query('findSkillProject', { collection: 'm_skill', condition },
       {
         skills: {
+          _key: true,
+          value: true
+        }
+      })
+   }
+
+   async findIndustryProject(_key: string){
+    const condition = {
+      _key: _key,
+      del_flag: false,
+    }
+    return await this.query('findIndustryProject', { collection: 'm_industry', condition },
+      {
+        industry: {
+          _key: true,
+          value: true
+        }
+      })
+   }
+
+   async findTitleProject(_key: string){
+    const condition = {
+      _key: _key,
+      del_flag: false,
+    }
+    return await this.query('findTitleProject', { collection: 'm_title', condition },
+      {
+        title: {
           _key: true,
           value: true
         }

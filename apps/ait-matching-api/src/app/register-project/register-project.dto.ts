@@ -4,17 +4,17 @@ import { Field, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
 export class RegisterProjectDto extends BaseDto {
-  @Field(() => ConditionDto, { nullable: true })
-  industry?: ConditionDto;
+  @Field(() => [ConditionDto], { nullable: true })
+  industry?: ConditionDto[];
 
-  @Field(() => ConditionDto, { nullable: true })
-  title?: ConditionDto;
+  @Field(() => [ConditionDto], { nullable: true })
+  title?: ConditionDto[];
 
-  @Field(() => ConditionDto, { nullable: true })
-  level?: ConditionDto;
+  @Field(() => [ConditionDto], { nullable: true })
+  level?: ConditionDto[];
 
-  @Field(() => ConditionDto, { nullable: true })
-  location?: ConditionDto;
+  @Field(() => [ConditionDto], { nullable: true })
+  location?: ConditionDto[];
 
   @Field(() => String, { nullable: true })
   description?: string;

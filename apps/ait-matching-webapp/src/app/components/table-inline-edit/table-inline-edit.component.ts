@@ -1,5 +1,11 @@
 import { isObjectFull, KeyValueDto, RESULT_STATUS } from '@ait/shared';
-import { AitAuthService, AitBaseComponent, AitEnvironmentService, AppState, getUserSetting } from '@ait/ui';
+import {
+  AitAuthService,
+  AitBaseComponent,
+  AitEnvironmentService,
+  AppState,
+  getUserSetting,
+} from '@ait/ui';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
@@ -12,17 +18,27 @@ import { RegisterProjectService } from '../../services/register-project.service'
 @Component({
   selector: 'ait-table-inline-edit',
   templateUrl: './table-inline-edit.component.html',
-  styleUrls: ['./table-inline-edit.component.scss']
+  styleUrls: ['./table-inline-edit.component.scss'],
 })
-export class TableInlineEditComponent extends AitBaseComponent implements OnInit {
+export class TableInlineEditComponent
+  extends AitBaseComponent
+  implements OnInit {
   employeeList: any[] = [];
   isEdit = false;
   _key = '';
-  list_candidate = []
-  list_candidate_clone = []
+  list_candidate_perpage = [];
+  list_candidate = [];
+  list_candidate_clone = [];
+  save_data = [];
   candidateEdit: FormGroup;
-  
-  @Input() project_key: string
+  current_page = 1;
+  rows = 10;
+  totalRows: number;
+  listPage = [];
+  start: number;
+  end: number;
+
+  @Input() project_key: string;
   dateFormat: string;
 
   constructor(
@@ -30,14 +46,13 @@ export class TableInlineEditComponent extends AitBaseComponent implements OnInit
     private registerProjectService: RegisterProjectService,
     private formBuilder: FormBuilder,
 
-
     env: AitEnvironmentService,
     store: Store<AppState>,
     apollo: Apollo,
     authService: AitAuthService,
     toastrService: NbToastrService,
     layoutScrollService: NbLayoutScrollService
-  ) { 
+  ) {
     super(
       store,
       authService,
@@ -47,7 +62,7 @@ export class TableInlineEditComponent extends AitBaseComponent implements OnInit
       layoutScrollService,
       toastrService
     );
-    
+
     store.pipe(select(getUserSetting)).subscribe((setting) => {
       if (isObjectFull(setting) && setting['date_format_display']) {
         this.dateFormat = setting['date_format_display'];
@@ -66,62 +81,120 @@ export class TableInlineEditComponent extends AitBaseComponent implements OnInit
     });
   }
 
-
   async ngOnInit(): Promise<void> {
-    await this.getCandidate();
+    const data = await this.getCandidate();
+    await this.displayList(data, this.rows, this.current_page);
     await this.getEmployee();
-
   }
 
-  handleClickEdit(_key:string) {
+  handleClickEdit(_key: string) {
     this._key = _key;
     this.isEdit = true;
-    console.log(this.candidateEdit.value)
   }
 
-  handleClickCancel(){
+  handleClickCancel() {
     this._key = null;
     this.isEdit = false;
+  }
+
+  handleFilterName(column_search: string, numberOfCol: number) {
+    let td, i, txtValue;
+    const input = <HTMLInputElement>document.getElementById(column_search);
+    const filter = input.value.toLowerCase();
+    const table = document.getElementById('candidate_table');
+    const tr = table.getElementsByTagName('tr');
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName('td')[numberOfCol];
+      if (td) {
+        txtValue = td.children[0].textContent || td.children[0].innerText;
+        if (txtValue.toLowerCase().indexOf(filter) > -1) {
+          tr[i].style.display = '""';
+          tr[i].removeAttribute('style');
+        } else {
+          tr[i].style.display = 'none';
+        }
+      }
+    }
+  }
+
+  async onChangeRowPerpage(row) {
+    this.rows = row;
+    this.end = 0;
+    await this.displayList(this.list_candidate, row, 1);
   }
 
   handleClickSave() {
     const data_save = this.candidateEdit.value;
     data_save['employee_name'] = data_save['employee_name'].value;
-    data_save['user_id'] = this.candidateEdit.controls['employee_name'].value._key;
-    data_save['start_plan_format'] = this.getDateFormat(data_save['start_plan']);
+    data_save['user_id'] = this.candidateEdit.controls[
+      'employee_name'
+    ].value._key;
+    data_save['start_plan_format'] = this.getDateFormat(
+      data_save['start_plan']
+    );
     data_save['end_plan_format'] = this.getDateFormat(data_save['end_plan']);
-     this.list_candidate_clone = this.list_candidate
+    this.list_candidate_clone = this.list_candidate_perpage;
+    this.save_data = this.list_candidate;
     this.list_candidate_clone.forEach((item, index) => {
-      if (item._key == data_save._key){
-        this.list_candidate[index] = data_save;
-        return true
+      if (item._key == data_save._key) {
+        this.list_candidate_perpage[index] = data_save;
+        return true;
       }
-    })
+    });
+    this.save_data.splice(this.start, this.end, ...this.list_candidate_perpage);
+    this.registerProjectService.data_save = this.save_data;
     this.isEdit = false;
   }
 
-  async getCandidate(){
-    const result = await this.registerProjectService.getBizProjectUser(this.project_key);
-    const candidates = result.data
-    candidates.forEach(item =>{
-      const data = {}
+  async getCandidate(): Promise<any[]> {
+    const result = await this.registerProjectService.getBizProjectUser(
+      this.project_key
+    );
+    const candidates = result.data;
+    candidates.forEach((item) => {
+      const data = {};
       Object.keys(item).forEach((key) => {
-        if (key.includes('start') || key.includes('end')){
+        if (key.includes('start') || key.includes('end')) {
           const value = this.getDateFormat(item[key]);
-          data[key + '_format']= value;
+          data[key + '_format'] = value;
           data[key] = item[key];
         } else {
-          const value = item[key]
-          data[key]= value;
+          const value = item[key];
+          data[key] = value;
         }
         data['employee_name'] = item['first_name'] + ' ' + item['last_name'];
-        
-      })
-      this.list_candidate.push(data)
-    })
-    
-    
-   }
+      });
+      this.list_candidate.push(data);
+      this.totalRows = this.list_candidate.length;
+    });
+    const totalPage = Math.ceil(this.totalRows / this.rows);
+    for (let i = 1; i <= totalPage; i++) {
+      this.listPage.push(i);
+    }
+    return this.list_candidate;
+  }
+
+  async displayList(data, row_per_page, page) {
+    this.list_candidate_perpage = [];
+    this.current_page = page;
+    this.start = row_per_page * (page - 1);
+    this.end = this.start + row_per_page;
+    if (this.end > this.list_candidate.length) {
+      this.end = this.list_candidate.length;
+    }
+    const arr = data;
+    const paginatedItems = arr.slice(this.start, this.end);
+
+    for (let i = 0; i < paginatedItems.length; i++) {
+      const item = paginatedItems[i];
+      this.list_candidate_perpage.push(item);
+    }
+    console.log(this.end);
+  }
+
+  async clickPageNumber(page) {
+    await this.displayList(this.list_candidate, this.rows, page);
+  }
 
   async getEmployee() {
     await this.addRoleService.getEmployee().then((res) => {
@@ -161,7 +234,7 @@ export class TableInlineEditComponent extends AitBaseComponent implements OnInit
     }
   }
 
-  takeInputNumberValue(value: any, group: string, form: string) {  
+  takeInputNumberValue(value: any, group: string, form: string) {
     if (value !== '' && value !== null && !isNaN(value)) {
       this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(Number(value));
@@ -177,10 +250,55 @@ export class TableInlineEditComponent extends AitBaseComponent implements OnInit
       value = new Date(data).setHours(0, 0, 0, 0);
       this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(value);
-    }else{
+    } else {
       this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(null);
     }
   }
 
+  
+
+  calculaHoursDayMonthPlan( group: string, form_control: string) {
+    let remain_form_control1 = '';
+    let remain_form_control2 = '';
+    let remain_property1: number
+    let remain_property2: number
+    const input = <HTMLInputElement>(
+      document.getElementById(`${form_control}_input_number`)
+    );
+    const input_value = input.value;
+    if (form_control === 'hours_plan') {
+      remain_form_control1 = 'manday_plan';
+      remain_form_control2 = 'manmonth_plan';
+      remain_property1 = Math.round(Number(input_value) / 8 * 1000)/1000;
+      remain_property2 =  Math.round(Number(input_value) / 160 * 1000)/1000;
+    }
+    if (form_control === 'manday_plan') {
+      remain_form_control1 = 'hours_plan';
+      remain_form_control2 = 'manmonth_plan';
+      remain_property1 = Number(input_value) * 8;
+      remain_property2 = Math.round(Number(input_value) / 20 * 1000)/1000;
+    }
+    if (form_control === 'manmonth_plan') {
+      remain_form_control1 = 'hours_plan';
+      remain_form_control2 = 'manday_plan';
+      remain_property1 = Number(input_value) * 160;
+      remain_property2 = Number(input_value) * 20;
+    }
+    const remain_property_plan1 = <HTMLInputElement>(
+      document.querySelector(`#${remain_form_control1}_input_number`)
+    );
+    remain_property_plan1.value = String(remain_property1);
+    const remain_property_plan2 = <HTMLInputElement>(
+      document.querySelector(`#${remain_form_control2}_input_number`)
+    );
+    remain_property_plan2.value = String(remain_property2);
+
+    this[group].controls[form_control].markAsDirty();
+    this[group].controls[remain_form_control1].markAsDirty();
+    this[group].controls[remain_form_control2].markAsDirty();
+    this[group].controls[form_control].setValue(input_value);
+    this[group].controls[remain_form_control1].setValue(remain_property1);
+    this[group].controls[remain_form_control2].setValue(remain_property2);
+  }
 }

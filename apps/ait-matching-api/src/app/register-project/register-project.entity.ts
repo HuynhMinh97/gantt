@@ -49,7 +49,8 @@ export class RegisterProjectEntity extends BaseEntity {
   remark?: string;
 
   @Field(() => String, { nullable: true })
-  project_ait_name?: string;
+  name?: string;
+  
 
   @Field(() => KeyValueEntity, { nullable: true })
   industry?: KeyValueEntity;
@@ -61,10 +62,10 @@ export class RegisterProjectEntity extends BaseEntity {
   level?: KeyValueEntity;
 
   @Field(() => KeyValueEntity, { nullable: true })
-  skills?: KeyValueEntity;
+  location?: KeyValueEntity;
 
   @Field(() => KeyValueEntity, { nullable: true })
-  location?: KeyValueEntity;
+  skills?: KeyValueEntity;
 
   @Field(() => Float, { nullable: true })
   valid_time_from?: number;

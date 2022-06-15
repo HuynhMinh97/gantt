@@ -4,6 +4,7 @@
   style="margin-left: 10px"
   [_key]="project_key"
   [find]="find"
+  [save]="save"
 >
   <!-- project detail -->
   <ait-card-content
@@ -111,7 +112,7 @@
             <div
               class="table__area"
               #area
-              style="width: 900px; overflow-x: scroll"
+              style="width: 900px; "
             >
               <ait-table-inline-edit [project_key]="project_key">
               </ait-table-inline-edit>

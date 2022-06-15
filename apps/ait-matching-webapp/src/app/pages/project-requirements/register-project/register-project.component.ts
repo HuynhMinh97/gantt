@@ -20,9 +20,16 @@ import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { UserListService } from '../../../services/user-list.service';
-import { isObjectFull, RESULT_STATUS } from '@ait/shared';
+import {
+  isArrayFull,
+  isObjectFull,
+  KEYS,
+  KeyValueDto,
+  RESULT_STATUS,
+} from '@ait/shared';
 import dayjs from 'dayjs';
 import { AddRoleService } from '../../../services/add-role.service';
+import { BizProjectService } from '../../../services/biz_project.service';
 
 @Component({
   selector: 'ait-register-project',
@@ -35,10 +42,12 @@ export class RegisterProjectComponent
   project_key: string;
   projectForm: FormGroup;
   project_skill = [];
+  project_title = [];
+
   dateFormat: string;
   candidate_list = [];
   userProjectClone: any;
-  tableComponents: any[] = [1]
+  tableComponents: any[] = [1];
   isTableIncluded = true;
   isExpandIncluded = true;
   isExpan = true;
@@ -47,7 +56,6 @@ export class RegisterProjectComponent
   employeeList: any[] = [];
   mode = MODE.NEW;
 
-  
   constructor(
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
@@ -55,7 +63,7 @@ export class RegisterProjectComponent
     private registerProjectService: RegisterProjectService,
     private userListService: UserListService,
     private addRoleService: AddRoleService,
-
+    private bizProjectService: BizProjectService,
 
     env: AitEnvironmentService,
     store: Store<AppState>,
@@ -74,7 +82,6 @@ export class RegisterProjectComponent
       toastrService
     );
 
-
     store.pipe(select(getUserSetting)).subscribe((setting) => {
       if (isObjectFull(setting) && setting['date_format_display']) {
         this.dateFormat = setting['date_format_display'];
@@ -82,47 +89,30 @@ export class RegisterProjectComponent
     });
 
     this.projectForm = this.formBuilder.group({
-      project_ait_name: new FormControl(null),
+      name: new FormControl(null),
       _key: new FormControl(null),
       location: new FormControl(null),
-      title: new FormControl(null, [Validators.required]),
-      valid_time_from: new FormControl(null, [Validators.required]),
-      valid_time_to: new FormControl(null, [Validators.required]),
-      level: new FormControl(null, [Validators.required]),
-      industry: new FormControl(null, [
-        Validators.required,
-        Validators.maxLength(200),
-      ]),
-      skills: new FormControl(null, [
-        Validators.required,
-        Validators.maxLength(10),
-      ]),
-      description: new FormControl(null, [
-        Validators.required,
-        Validators.maxLength(4000),
-      ]),
-      remark: new FormControl(null, [
-        Validators.required,
-        Validators.maxLength(4000),
-      ]),
+      title: new FormControl(null),
+      valid_time_from: new FormControl(null),
+      valid_time_to: new FormControl(null),
+      level: new FormControl(null),
+      industry: new FormControl(null),
+      skills: new FormControl(null),
+      description: new FormControl(null),
+      remark: new FormControl(null),
     });
-
-    
   }
 
   async ngOnInit(): Promise<void> {
     this.project_key = this.activeRouter.snapshot.paramMap.get('id');
-    if (this.project_key){
+    if (this.project_key) {
       this.mode = MODE.EDIT;
     }
-    try{
+    try {
       await this.getEmployee();
       await this.getAllUser();
-    }
-    catch{
+    } catch {}
 
-    }
-    
     this.cancelLoadingApp();
   }
 
@@ -143,16 +133,22 @@ export class RegisterProjectComponent
       const dataFind = [];
       await this.findProjectByKey();
       await this.findSkillProject();
+      await this.findTitleProject();
+      await this.findIndustryProject();
       await dataFind.push(this.projectForm.value);
 
       return { data: dataFind };
     } catch (error) {}
   };
 
-  async getCandidate(){
-   const result = await this.registerProjectService.getBizProjectUser(this.project_key);
-   this.candidate_list = result.data
+  async getCandidate() {
+    const result = await this.registerProjectService.getBizProjectUser(
+      this.project_key
+    );
+    this.candidate_list = result.data;
   }
+
+  
 
   async findProjectByKey() {
     const res = await this.registerProjectService.findProjectAitByKey(
@@ -184,6 +180,45 @@ export class RegisterProjectComponent
           await this.projectForm.controls['skills'].setValue([...listSkills]);
         }
 
+        this.cancelLoadingApp();
+      });
+  }
+
+  async findIndustryProject() {
+    const _key = this.project_key;
+    await this.registerProjectService
+      .findIndustryProject(_key)
+      .then(async (res) => {
+        const listIndustry = [];
+        for (const item of res.data) {
+          listIndustry.push({
+            _key: item?.industry?._key,
+            value: item?.industry?.value,
+          });
+        }
+        if (listIndustry[0]['_key']) {
+          await this.projectForm.controls['industry'].setValue([...listIndustry]);
+        }
+        this.cancelLoadingApp();
+      });
+  }
+
+  async findTitleProject() {
+    const _key = this.project_key;
+    await this.registerProjectService
+      .findTitleProject(_key)
+      .then(async (res) => {
+        const listTitles = [];
+        for (const item of res.data) {
+          listTitles.push({
+            _key: item?.title?._key,
+            value: item?.title?.value,
+          });
+        }
+        if (listTitles[0]['_key']) {
+          this.project_title = listTitles;
+          await this.projectForm.controls['title'].setValue([...listTitles]);
+        }
         this.cancelLoadingApp();
       });
   }
@@ -222,11 +257,30 @@ export class RegisterProjectComponent
     });
   }
 
-  // getDateFormat(time: number) {
-  //   if (!time) {
-  //     return '';
-  //   } else {
-  //     return dayjs(time).format(this.dateFormat.toUpperCase() + ' HH:mm');
-  //   }
-  // }
+  public save = async (condition = {}) => {
+    const data = this.registerProjectService.data_save;
+    await this.saveBizProject(condition)
+  };
+
+  async saveBizProject(condition) {
+    debugger
+    try {
+      const saveData = condition;
+      if (!saveData['valid_time_to'] && saveData['valid_time_from']){
+        const start_plan = new Date(saveData['valid_time_from']);
+        const end_plan = new Date(start_plan.getFullYear(), start_plan.getMonth() + 1, 0);
+        saveData['valid_time_to'] =  end_plan.setMilliseconds(100); 
+      }
+      this.bizProjectService.save(saveData).then((res) => {
+        if (res.status === RESULT_STATUS.OK) {
+          
+          this.showToastr('', this.getMsg('I0005'));
+        } else {
+          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
 }
