@@ -231,7 +231,7 @@ export class RecommencedJobComponent
     end = 8
   ) => {
     const res = await this.matchingCompanyService.getDetailMatching(
-      onlySaved,
+      0,
       start * 8,
       end
     );

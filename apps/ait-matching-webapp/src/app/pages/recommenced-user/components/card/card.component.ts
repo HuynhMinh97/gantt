@@ -31,6 +31,7 @@ export const color = {
 export class AitCardComponent implements OnInit {
   @Input() card: any;
   @Input() user_id: any;
+  @Input() project_id: any;
   i18n = '';
   colorCard = COLOR.color1;
   backgroundCard = color.green;
@@ -38,6 +39,8 @@ export class AitCardComponent implements OnInit {
   @Input() addressSearch = '';
   @Input() company_key = '';
   @Output() actionSaveEvent = new EventEmitter();
+  @Output() actionAddEvent = new EventEmitter();
+  @Output() actionCreateEvent = new EventEmitter(false);
   @Input() tabIndex;
   @Input() isJob = false;
   fieldDate = ['生年月日'];
@@ -145,13 +148,12 @@ export class AitCardComponent implements OnInit {
 
   ngOnInit() {
     try {
-      this.cardH = { ...this.card, is_team_member: false };
+      this.cardH = { ...this.card };
       this.cardH.skills = this.cardH.skills
         .slice()
         .sort((a, b) => b.level - a.level);
       this.getAvatar();
       this.addColor();
-      console.log(this.cardH);
     } catch (e) {
       console.log(e);
     }
@@ -227,7 +229,34 @@ export class AitCardComponent implements OnInit {
     }
   };
 
-  actionButtonAdd = (key: string) => {
+  actionButtonAdd = (_key: string) => {
     this.cardH.is_team_member = !this.cardH?.is_team_member;
+    if (!this.project_id) {
+      this.actionCreateEvent.emit(this.cardH);
+      return;
+    }
+    if (!this.cardH.is_team_member) {
+      const _from = `biz_project/${this.project_id}`;
+      const _to = `sys_user/${_key}`;
+      this.recommencedService.removeTeamMember(_from, _to).then((r) => {
+        if (r.status === RESULT_STATUS.OK) {
+          this.actionAddEvent.emit({
+            user_id: this.card.user_id,
+            is_team_member: this.card.is_team_member,
+          });
+        }
+      });
+    } else {
+      this.recommencedService
+        .saveTeamMember(this.project_id, this.cardH?.user_id)
+        .then((r) => {
+          if (r.status === RESULT_STATUS.OK) {
+            this.actionAddEvent.emit({
+              user_id: this.card.user_id,
+              is_team_member: this.card.is_team_member,
+            });
+          }
+        });
+    }
   };
 }

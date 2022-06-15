@@ -10,7 +10,28 @@
         <div class="icon__look__up out_line" tabindex="3">
           <nb-icon
             icon="search"
-            style="font-size: 16px"
+            style="
+              font-size: 16px;
+              background: -moz-linear-gradient(
+                top,
+                #002b6e 0.23%,
+                #2288cc 99.81%
+              );
+              background: -webkit-linear-gradient(
+                top,
+                #002b6e 0.23%,
+                #2288cc 99.81%
+              );
+              background: linear-gradient(
+                to bottom,
+                #002b6e 0.23%,
+                #2288cc 99.81%
+              );
+              -webkit-background-clip: text;
+              -moz-background-clip: text;
+              background-clip: text;
+              -webkit-text-fill-color: transparent;
+            "
             pack="font-awesome-fas"
           ></nb-icon>
         </div>
@@ -216,12 +237,14 @@
               [icon]="'close-outline'"
               [is18n]="false"
               [isHaveIcon]="false"
+              [isHaveBorder]="true"
               tabindex="4"
               style="outline-color: #10529d"
               [style]="{
                 'max-width': '140px',
                 'margin-right': '5px'
               }"
+              (onClickChip)="filterSkill(p, $event)"
             ></ait-chip>
           </div>
         </div>
@@ -278,29 +301,7 @@
         tabindex="{{ 24 + tabs.length }}"
         style="outline-color: #10529d"
       >
-        <div
-          class="what"
-          style="display: flex; flex-direction: row; flex-wrap: wrap"
-          *ngIf="currentTab !== 'R'"
-        >
-          <p *ngIf="cardSkeleton.length === 0 && dataFilterSave.length === 0">
-            {{ textDataNullSave }}
-          </p>
-          <ait-card
-            *ngFor="let card of dataFilterSave; let i = index"
-            [card]="card"
-            [user_id]="user_id"
-            tabindex="{{ 30 + i + 1 }}"
-            style="outline-color: #10529d"
-            [addressSearch]="addressSearch"
-            [company_key]="company_key"
-            (actionSaveEvent)="handleSyncData($event)"
-          >
-          </ait-card>
-          <ait-card-skeleton
-            *ngFor="let card of cardSkeleton"
-          ></ait-card-skeleton>
-        </div>
+        <!-- R -->
         <div
           class="what"
           style="display: flex; flex-direction: row; flex-wrap: wrap"
@@ -313,11 +314,70 @@
             *ngFor="let card of dataFilter; let ix = index"
             [card]="card"
             [user_id]="user_id"
+            [project_id]="project_id"
             [addressSearch]="addressSearch"
             [company_key]="company_key"
             tabindex="{{ 30 + ix + 1 }}"
             style="outline-color: #10529d"
             (actionSaveEvent)="handleSyncData($event)"
+            (actionAddEvent)="handleSyncData($event)"
+            (actionCreateEvent)="handleCreateBizProject($event)"
+          >
+          </ait-card>
+          <ait-card-skeleton
+            *ngFor="let card of cardSkeleton"
+          ></ait-card-skeleton>
+        </div>
+        <!-- C -->
+        <div
+          class="what"
+          style="display: flex; flex-direction: row; flex-wrap: wrap"
+          *ngIf="currentTab === 'C'"
+        >
+          <p
+            *ngIf="
+              cardSkeleton.length === 0 && dataFilterTeamMember.length === 0
+            "
+          >
+            {{ textDataNullTeamMember }}
+          </p>
+          <ait-card
+            *ngFor="let card of dataFilterTeamMember; let i = index"
+            [card]="card"
+            [user_id]="user_id"
+            [project_id]="project_id"
+            tabindex="{{ 30 + i + 1 }}"
+            style="outline-color: #10529d"
+            [addressSearch]="addressSearch"
+            [company_key]="company_key"
+            (actionSaveEvent)="handleSyncData($event)"
+            (actionAddEvent)="handleSyncData($event)"
+          >
+          </ait-card>
+          <ait-card-skeleton
+            *ngFor="let card of cardSkeleton"
+          ></ait-card-skeleton>
+        </div>
+
+        <div
+          class="what"
+          style="display: flex; flex-direction: row; flex-wrap: wrap"
+          *ngIf="currentTab === 'S'"
+        >
+          <p *ngIf="cardSkeleton.length === 0 && dataFilterSave.length === 0">
+            {{ textDataNullSave }}
+          </p>
+          <ait-card
+            *ngFor="let card of dataFilterSave; let i = index"
+            [card]="card"
+            [user_id]="user_id"
+            [project_id]="project_id"
+            tabindex="{{ 30 + i + 1 }}"
+            style="outline-color: #10529d"
+            [addressSearch]="addressSearch"
+            [company_key]="company_key"
+            (actionSaveEvent)="handleSyncData($event)"
+            (actionAddEvent)="handleSyncData($event)"
           >
           </ait-card>
           <ait-card-skeleton
