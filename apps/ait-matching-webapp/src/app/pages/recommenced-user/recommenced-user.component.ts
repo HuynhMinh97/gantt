@@ -79,7 +79,7 @@ export class RecommencedUserComponent
 
     this.searchForm = this.formBuilder.group({
       _key: new FormControl(null),
-      keyword: new FormControl('window'),
+      keyword: new FormControl(),
       skills: new FormControl(null),
       current_job_title: new FormControl(null),
       province_city: new FormControl(null),
@@ -141,6 +141,7 @@ export class RecommencedUserComponent
   cardSkeleton = Array(8).fill(1);
   textDataNull = '';
   textDataNullSave = '';
+  textDataNullTeamMember = '';
   isExpan = false;
   currentTab = 'R';
   isReset = false;
@@ -151,10 +152,16 @@ export class RecommencedUserComponent
   dataFilterSave = [];
   dataFilterSaveDf = [];
 
+  dataFilterTeamMember = [];
+  dataFilterTeamMemberDf = [];
+
   matchingList = [];
   matchingSkill = [];
   matchingResult = [];
 
+  filterList = [];
+
+  isSelectAll = false;
   isLoading = true;
   spinnerLoading = false;
   isExpan1 = true;
@@ -162,6 +169,8 @@ export class RecommencedUserComponent
   textDataEnd = '';
   disableTab = false;
   isSubmit = false;
+
+  project_id = '';
 
   getResultCount() {
     if (this.matchingList.length > 0) {
@@ -193,10 +202,18 @@ export class RecommencedUserComponent
       } else {
         this.cardSkeleton = [];
       }
-    } else {
+    } else if (this.currentTab === 'S') {
       if (flag) {
         this.cardSkeleton = Array(
           this.getNummberMode8(this.dataFilterSave.length)
+        ).fill(1);
+      } else {
+        this.cardSkeleton = [];
+      }
+    } else {
+      if (flag) {
+        this.cardSkeleton = Array(
+          this.getNummberMode8(this.dataFilterTeamMember.length)
         ).fill(1);
       } else {
         this.cardSkeleton = [];
@@ -206,7 +223,7 @@ export class RecommencedUserComponent
 
   private getDetailMatching = async (
     list = [],
-    onlySaved = false,
+    onlySaved = 0,
     start = 0,
     end = 8
   ) => {
@@ -214,11 +231,16 @@ export class RecommencedUserComponent
       const res = await this.matchingService.getDetailMatching(
         onlySaved,
         start * 8,
-        end
+        end,
+        this.project_id
       );
       if (res.status === RESULT_STATUS.OK) {
         if (res.data?.length === 0) {
-          this.textDataNull = 'There is no data to search';
+          onlySaved === 0 && (this.textDataNull = 'There is no data to search');
+          onlySaved === 1 &&
+            (this.textDataNullTeamMember = 'There is no data to search');
+          onlySaved === 2 &&
+            (this.textDataNullSave = 'There is no data to search');
         }
         return res.data;
       }
@@ -227,11 +249,16 @@ export class RecommencedUserComponent
         list,
         onlySaved,
         start * 8,
-        end
+        end,
+        this.project_id
       );
       if (res.status === RESULT_STATUS.OK) {
         if (res.data?.length === 0) {
-          this.textDataNull = 'There is no data to search';
+          onlySaved === 0 && (this.textDataNull = 'There is no data to search');
+          onlySaved === 1 &&
+            (this.textDataNullTeamMember = 'There is no data to search');
+          onlySaved === 2 &&
+            (this.textDataNullSave = 'There is no data to search');
         }
         return res.data;
       }
@@ -239,15 +266,17 @@ export class RecommencedUserComponent
   };
 
   handleSyncData = ($event) => {
-    const { user_id, is_saved } = $event;
+    const { user_id, is_saved, is_team_member } = $event;
     const find = this.dataFilterDf.find((f) => f.user_id === user_id);
     const currentFind = this.dataFilter.find((f) => f.user_id === user_id);
     if (find) {
       find.is_saved = is_saved;
+      find.is_team_member = is_team_member;
     }
 
     if (currentFind) {
       currentFind.is_saved = is_saved;
+      currentFind.is_team_member = is_team_member;
     }
   };
 
@@ -270,7 +299,7 @@ export class RecommencedUserComponent
 
   private callSearch(list = []) {
     this.isExpan = true;
-    this.getDataByRound(false, list).then(() => {
+    this.getDataByRound(0, list).then(() => {
       this.setSkeleton(false);
     });
   }
@@ -288,7 +317,7 @@ export class RecommencedUserComponent
           if (this.currentTab === 'R' && this.textDataEnd === '') {
             if (this.dataFilterDf.length >= 8) {
               this.setSkeleton(true);
-              this.getDataByRound(false, this.matchingList).then(() => {
+              this.getDataByRound(0, this.matchingList).then(() => {
                 this.filterMain();
                 this.setSkeleton(false);
               });
@@ -323,41 +352,70 @@ export class RecommencedUserComponent
   }
 
   // Get Data by round and base on all of result
-  getDataByRound = async (onlySaved = false, list = []) => {
+  getDataByRound = async (onlySaved = 0, list = []) => {
     try {
       const detail = await this.getDetailMatching(
         list,
         onlySaved,
         this.currentCount
       );
-      if (isArrayFull(detail) && !onlySaved) {
-        const temp = this.dataFilterDf
+      if (isArrayFull(detail) && onlySaved === 0) {
+        this.textDataNull = '';
+        const temp = this.dataFilterDf.concat(detail).map((e) =>
+          Object.assign({
+            ...e,
+            group_no: this.getGroupNo(e.user_id),
+          })
+        );
+        if (this.currentCount === 0) {
+          const temp2 = temp.sort((a, b) => a.group_no - b.group_no);
+          this.dataFilter = [...temp2];
+          this.dataFilterDf = [...temp2];
+        } else {
+          this.dataFilter = [...temp];
+          this.dataFilterDf = [...temp];
+        }
+        this.currentCount = Math.ceil(this.dataFilterDf.length / 8);
+      } else {
+        this.textDataNull = 'There is no data';
+      }
+
+      if (isArrayFull(detail) && onlySaved === 1) {
+        this.textDataNullTeamMember = '';
+        this.dataFilterTeamMember = this.dataFilterTeamMember
           .concat(detail)
           .map((e) =>
             Object.assign({
               ...e,
               group_no: this.getGroupNo(e.user_id),
             })
-          )
-          .sort((a, b) => a.group_no - b.group_no);
-        this.dataFilter = [...temp];
-        this.dataFilterDf = [...temp];
-        this.currentCount = Math.ceil(this.dataFilterDf.length / 8);
+          );
+        this.currentCount = Math.ceil(this.dataFilterTeamMemberDf.length / 8);
+      } else {
+        this.textDataNullTeamMember = 'There is no data';
       }
-      if (isArrayFull(detail) && onlySaved) {
+
+      if (isArrayFull(detail) && onlySaved === 2) {
         this.textDataNullSave = '';
-        this.dataFilterSave = this.dataFilterSave.concat(detail);
+        this.dataFilterSave = this.dataFilterSave.concat(detail).map((e) =>
+          Object.assign({
+            ...e,
+            group_no: this.getGroupNo(e.user_id),
+          })
+        );
         this.currentCount = Math.ceil(this.dataFilterSave.length / 8);
       } else {
         this.textDataNullSave = 'There is no data';
       }
       if (
         detail.length === 0 &&
-        ((this.dataFilter.length !== 0 && !onlySaved) ||
-          (this.dataFilterSave.length !== 0 && onlySaved))
+        ((this.dataFilter.length !== 0 && onlySaved === 0) ||
+          (this.dataFilterSave.length !== 0 && onlySaved === 1) ||
+          (this.dataFilterTeamMember.length !== 0 && onlySaved === 2))
       ) {
         this.textDataNull = '';
         this.textDataNullSave = '';
+        this.textDataNullTeamMember = '';
         this.textDataEnd = 'Out of data';
         this.setSkeleton(false);
       }
@@ -380,7 +438,6 @@ export class RecommencedUserComponent
     this.textDataEnd = '';
     this.setSkeleton(true);
     this.matchingService.matchingUser(keyword).then((res) => {
-      console.log(res);
       this.matchingResult = res?.data[0].data || [];
       if (this.matchingResult.length > 0) {
         const arr = res.data[0].data.map((e: { item: string }) => e.item);
@@ -428,12 +485,15 @@ export class RecommencedUserComponent
   };
 
   getTabSelect = (tab: any) => {
+    this.dataFilter = [];
+    this.dataFilterDf = [];
+    this.dataFilterTeamMember = [];
+    this.dataFilterTeamMemberDf = [];
     this.dataFilterSave = [];
     this.dataFilterSaveDf = [];
-    this.dataFilterDf = [];
-    this.dataFilter = [];
     this.textDataNull = '';
     this.textDataNullSave = '';
+    this.textDataNullTeamMember = '';
     this.textDataEnd = '';
     this.cardSkeleton = [];
     this.isLoading = true;
@@ -444,9 +504,12 @@ export class RecommencedUserComponent
     if (this.currentTab === 'R') {
       this.setSkeleton(true);
       this.callSearch(this.matchingList || []);
+    } else if (this.currentTab === 'C') {
+      this.setSkeleton(true);
+      this.getDataByRound(1).then(() => this.setSkeleton(false));
     } else {
       this.setSkeleton(true);
-      this.getDataByRound(true).then(() => this.setSkeleton(false));
+      this.getDataByRound(2).then(() => this.setSkeleton(false));
     }
   };
 
@@ -475,6 +538,7 @@ export class RecommencedUserComponent
 
   reset(): void {
     const _key = this.searchForm.controls['_key'].value;
+    this.project_id = '';
     try {
       this.searchForm.reset();
       this.isReset = true;
@@ -495,7 +559,14 @@ export class RecommencedUserComponent
     this.router.navigate([`/requirement-list`]);
   }
 
-  save(): void {
+  handleCreateBizProject(event: any) {
+    if (event) {
+      this.save(event);
+    }
+  }
+
+  save(event = null): void {
+    this.project_id = '';
     this.dialogService
       .open(SetNameComponent, {
         closeOnBackdropClick: true,
@@ -506,7 +577,6 @@ export class RecommencedUserComponent
         try {
           if (name) {
             const data = this.searchForm.value;
-            console.log(data);
             const obj = { name };
             for (const prop in data) {
               if (data[prop]) {
@@ -521,7 +591,6 @@ export class RecommencedUserComponent
                 }
               }
             }
-            console.log(obj);
             const saveData = {
               keyword: obj['keyword'],
               name: obj['name'],
@@ -549,9 +618,16 @@ export class RecommencedUserComponent
             }
             this.bizProjectService.save(saveData).then((res) => {
               if (res.status === RESULT_STATUS.OK) {
-                // this.searchForm.controls['_key'].setValue(
-                //   res.data[0]?._key || ''
-                // );
+                this.project_id = res.data[0]._key;
+                if (event) {
+                  this.matchingService
+                    .saveTeamMember(this.project_id, event.user_id)
+                    .then((r) => {
+                      if (r.status === RESULT_STATUS.OK) {
+                        this.handleSyncData({ ...event, is_team_member: true });
+                      }
+                    });
+                }
                 this.showToastr('', this.getMsg('I0005'));
               } else {
                 this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
@@ -566,6 +642,21 @@ export class RecommencedUserComponent
 
   setHours0(time: number) {
     return new Date(time).setHours(0, 0, 0, 0);
+  }
+
+  filterSkill({ name, item }, { isSelected }) {
+    this.setSkeleton(true);
+    if (name === 'All') {
+      this.isSelectAll = isSelected;
+    } else if (isSelected) {
+      this.filterList.push(item);
+    } else {
+      this.filterList = this.filterList.filter((e) => e !== item);
+    }
+    this.filterMain();
+    setTimeout(() => {
+      this.setSkeleton(false);
+    }, 100);
   }
 
   filterMain(type = 0) {
@@ -627,12 +718,22 @@ export class RecommencedUserComponent
           }
           return isValid;
         });
-        this.dataFilter = daveForFilter;
+        this.dataFilter = this.filterItem(daveForFilter);
       } else {
-        this.dataFilter = [...this.dataFilterDf];
+        this.dataFilter = this.filterItem([...this.dataFilterDf]);
       }
     } catch (e) {
       console.log(e);
+    }
+  }
+
+  filterItem(data: any[]) {
+    if (this.isSelectAll || this.filterList.length === 0) {
+      return data;
+    } else {
+      return data.filter((e) =>
+        e.skills.some(({ _key }) => this.filterList.includes(_key))
+      );
     }
   }
 }

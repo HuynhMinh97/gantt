@@ -25,9 +25,11 @@ export class UserProfileResolver extends AitBaseService {
     const company = request.company;
     const lang = request.lang;
     const userId = request.user_id || '';
+    const projectId = request.condition['project_id'] || '';
     const start = request.condition['start'];
     const end = request.condition['end'];
     const isSaved = !!request.condition['is_saved'];
+    const isTeamMember = !!request.condition['is_team_member'];
 
     let aqlStr1 = `
     LET current_data = (
@@ -113,7 +115,7 @@ export class UserProfileResolver extends AitBaseService {
      
      FOR data IN result `;
 
-    if (!isSaved) {
+    if (!isSaved && !isTeamMember) {
       aqlStr1 += `
         LIMIT ${+start}, ${+end}
        `;
@@ -128,26 +130,36 @@ export class UserProfileResolver extends AitBaseService {
       RETURN e
     `;
 
+    const aqlStr3 = `
+      FOR v,e, p IN 1..1 OUTBOUND "biz_project/${projectId}" biz_project_user
+      RETURN e
+    `;
+
     const res = await this.query(aqlStr1);
     if (res.status === RESULT_STATUS.OK && res.data?.length > 0) {
       const savedUser = await this.query(aqlStr2);
+      const teamMember = await this.query(aqlStr3);
       const savedData: any[] = savedUser.data || [];
+      const teamMemberData: any[] = teamMember.data || [];
       const data = [];
       res.data.forEach((e: any) => {
         const i = savedData.findIndex((z) => z._to === `sys_user/${e.user_id}`);
+        const z = teamMemberData.findIndex(
+          (z) => z._to === `sys_user/${e.user_id}`
+        );
         if (isSaved) {
           if (i !== -1) {
-            const temp = { ...e, is_saved: true };
+            const temp = { ...e, is_saved: true, is_team_member: !!~z };
+            data.push(temp);
+          }
+        } else if (isTeamMember) {
+          if (z !== -1) {
+            const temp = { ...e, is_saved: !!~i, is_team_member: true };
             data.push(temp);
           }
         } else {
-          if (i !== -1) {
-            const temp = { ...e, is_saved: true };
-            data.push(temp);
-          } else {
-            const temp = { ...e, is_saved: false };
-            data.push(temp);
-          }
+          const temp = { ...e, is_saved: !!~i, is_team_member: !!~z };
+          data.push(temp);
         }
       });
       return new UserProfileResponse(200, data, '');
@@ -165,10 +177,12 @@ export class UserProfileResolver extends AitBaseService {
     const company = request.company;
     const lang = request.lang;
     const userId = request.user_id || '';
+    const projectId = request.condition['project_id'];
     const list = request.condition['list'];
     const start = request.condition['start'];
     const end = request.condition['end'];
     const isSaved = !!request.condition['is_saved'];
+    const isTeamMember = !!request.condition['is_team_member'];
 
     const aqlStr1 = `
     LET current_data = (
@@ -263,26 +277,37 @@ export class UserProfileResolver extends AitBaseService {
       FOR v,e, p IN 1..1 OUTBOUND "sys_user/${userId}" save_recommend_user
       RETURN e
     `;
+
+    const aqlStr3 = `
+      FOR v,e, p IN 1..1 OUTBOUND "biz_project/${projectId}" biz_project_user
+      RETURN e
+    `;
+
     const res = await this.query(aqlStr1);
     if (res.status === RESULT_STATUS.OK && res.data?.length > 0) {
       const savedUser = await this.query(aqlStr2);
+      const teamMember = await this.query(aqlStr3);
       const savedData: any[] = savedUser.data || [];
+      const teamMemberData: any[] = teamMember.data || [];
       const data = [];
       res.data.forEach((e: any) => {
         const i = savedData.findIndex((z) => z._to === `sys_user/${e.user_id}`);
+        const z = teamMemberData.findIndex(
+          (z) => z._to === `sys_user/${e.user_id}`
+        );
         if (isSaved) {
           if (i !== -1) {
-            const temp = { ...e, is_saved: true };
+            const temp = { ...e, is_saved: true, is_team_member: !!~z };
+            data.push(temp);
+          }
+        } else if (isTeamMember) {
+          if (z !== -1) {
+            const temp = { ...e, is_saved: !!~i, is_team_member: true };
             data.push(temp);
           }
         } else {
-          if (i !== -1) {
-            const temp = { ...e, is_saved: true };
-            data.push(temp);
-          } else {
-            const temp = { ...e, is_saved: false };
-            data.push(temp);
-          }
+          const temp = { ...e, is_saved: !!~i, is_team_member: !!~z };
+          data.push(temp);
         }
       });
       return new UserProfileResponse(200, data, '');
