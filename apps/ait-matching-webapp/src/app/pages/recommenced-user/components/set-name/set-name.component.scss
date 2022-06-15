@@ -16,9 +16,10 @@
   .title {
     min-height: 120px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: 0 40px;
+    margin: 0 40px 20px 40px;
     p {
       font-weight: bold;
       font-size: 30px;
@@ -27,10 +28,10 @@
       margin: 0;
     }
   }
-  
+
   .group {
     display: flex;
-    margin: 0 20px 30px 20px;
+    margin: 0 20px 20px 20px;
   }
   min-width: 200px;
   min-height: 160px;
