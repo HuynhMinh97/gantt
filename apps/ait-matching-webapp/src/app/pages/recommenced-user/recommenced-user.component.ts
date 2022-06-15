@@ -79,7 +79,7 @@ export class RecommencedUserComponent
 
     this.searchForm = this.formBuilder.group({
       _key: new FormControl(null),
-      keyword: new FormControl(),
+      keyword: new FormControl(''),
       skills: new FormControl(null),
       current_job_title: new FormControl(null),
       province_city: new FormControl(null),
@@ -288,11 +288,15 @@ export class RecommencedUserComponent
   getTitle = (name: string) => this.translateService.translate(name);
 
   async ngOnInit() {
-    const queriesKey = localStorage.getItem('my-project-queries');
+    const queriesKey = localStorage.getItem('biz_project_key');
     if (queriesKey) {
+      console.log(queriesKey);
       this.bizProjectService.find({ _key: queriesKey }).then((e) => {
+        this.isSubmit = true;
+        this.isExpan = true;
+        // console.log(e);
         this.searchForm.patchValue(e.data[0]);
-        localStorage.setItem('my-project-queries', null);
+        // localStorage.setItem('biz_project_key', null);
       });
     }
   }

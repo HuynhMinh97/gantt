@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { isArrayFull, KEYS, Utils } from '@ait/shared';
+import { KEYS } from '@ait/shared';
 import { AitAppUtils, AitBaseService } from '@ait/ui';
 import { Injectable } from '@angular/core';
 
@@ -7,7 +7,8 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class BizProjectService extends AitBaseService {
-  collection = 'save_recommend_user_query';
+  collection = 'biz_project';
+  detail = 'biz_project_detail';
   specialFields = ['skills', 'title', 'location', 'industry', 'level'];
   returnFields = {
     _key: true,
@@ -17,19 +18,19 @@ export class BizProjectService extends AitBaseService {
       _key: true,
       value: true,
     },
-    current_job_title: {
+    title: {
       _key: true,
       value: true,
     },
-    province_city: {
+    location: {
       _key: true,
       value: true,
     },
-    industry_working: {
+    industry: {
       _key: true,
       value: true,
     },
-    current_job_level: {
+    level: {
       _key: true,
       value: true,
     },
@@ -41,16 +42,36 @@ export class BizProjectService extends AitBaseService {
     change_by: true,
   };
 
+  returnDetail = {
+    _key: true,
+    project: true,
+    customer: {
+      _key: true,
+      value: true,
+    },
+    project_code: true,
+    person_in_charge: true,
+    status: {
+      _key: true,
+      value: true,
+    },
+    del_flag: true,
+    create_at: true,
+    create_by: true,
+    change_at: true,
+    change_by: true,
+  };
+
   async find(condition = {}) {
     condition[KEYS.USER_ID] = this.user_id || AitAppUtils.getUserId() || '';
-    condition['province_city'] = {
-      attribute: 'province_city',
+    condition['location'] = {
+      attribute: 'location',
       ref_collection: 'sys_master_data',
       ref_attribute: '_key',
     };
 
-    condition['current_job_level'] = {
-      attribute: 'current_job_level',
+    condition['level'] = {
+      attribute: 'level',
       ref_collection: 'sys_master_data',
       ref_attribute: '_key',
     };
@@ -62,14 +83,14 @@ export class BizProjectService extends AitBaseService {
       get_by: '_key',
     };
 
-    condition['industry_working'] = {
-      attribute: 'industry_working',
+    condition['industry'] = {
+      attribute: 'industry',
       ref_collection: 'm_industry',
       ref_attribute: '_key',
     };
 
-    condition['current_job_title'] = {
-      attribute: 'current_job_title',
+    condition['title'] = {
+      attribute: 'title',
       ref_collection: 'm_title',
       ref_attribute: '_key',
     };
@@ -87,12 +108,48 @@ export class BizProjectService extends AitBaseService {
     }
 
     return await this.query(
-      'findSearchCondition',
+      'findBizProject',
       {
         collection: this.collection,
         condition,
       },
       this.returnFields
+    );
+  }
+
+  async findDetail(condition = {}) {
+    condition[KEYS.USER_ID] = this.user_id || AitAppUtils.getUserId() || '';
+    condition['customer'] = {
+      attribute: 'customer',
+      ref_collection: 'm_company',
+      ref_attribute: '_key',
+    };
+
+    condition['status'] = {
+      attribute: 'status',
+      ref_collection: 'sys_master_data',
+      ref_attribute: '_key',
+    };
+
+    condition['create_by'] = {
+      type: 'matching',
+    };
+
+    condition['change_by'] = {
+      type: 'matching',
+    };
+
+    if (!condition['user_id']) {
+      condition['user_id'] = this.user_id || '';
+    }
+
+    return await this.query(
+      'findBizProjectDetail',
+      {
+        collection: this.detail,
+        condition,
+      },
+      this.returnDetail
     );
   }
 
@@ -102,7 +159,7 @@ export class BizProjectService extends AitBaseService {
     const returnField = { _key: true };
     return await this.mutation(
       'saveBizProject',
-      'biz_project',
+      this.collection,
       [data],
       returnField
     );

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -88,6 +89,14 @@ import { EditDataMasterComponent } from './pages/master-group-collection/edit-da
 import { ViewDataMasterComponent } from './pages/master-group-collection/view-data-master/view-data-master.component';
 import { ProjectRequirementDetailComponent } from './pages/project-requirements/project-detail/project-requirement-detail.component';
 import { RequirementListComponent } from './pages/requirement-list/requirement-list.component';
+import { BizProjectService } from './services/biz_project.service';
+
+if (environment.production) {
+  console.log = () => {};
+  console.error = () => {};
+}
+// console.log = () => {};
+console.error = () => {};
 
 const AIT_UI_MODULES = [AitChipModule, AitTabsModule, AitTocMenuModule];
 
@@ -196,7 +205,12 @@ const PAGES = [
     ...AIT_UI_MODULES,
     ...NB_UI_MODULES,
   ],
-  providers: [...AIT_UI_SERVICES, ReactionService, RecommencedUserService],
+  providers: [
+    ...AIT_UI_SERVICES,
+    ReactionService,
+    RecommencedUserService,
+    BizProjectService,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

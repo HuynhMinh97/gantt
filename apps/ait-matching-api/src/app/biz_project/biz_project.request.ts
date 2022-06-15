@@ -1,6 +1,6 @@
 import { BaseRequest } from '@ait/core';
 import { Field, InputType } from '@nestjs/graphql';
-import { BizProjectDto } from './biz_project.dto';
+import { BizProjectDto, BizProjectDetailDto } from './biz_project.dto';
 
 @InputType()
 export class BizProjectRequest extends BaseRequest {
@@ -8,4 +8,12 @@ export class BizProjectRequest extends BaseRequest {
   condition: BizProjectDto;
   @Field(() => [BizProjectDto], { nullable: true })
   data: BizProjectDto;
+}
+
+@InputType()
+export class BizProjectDetailRequest extends BaseRequest {
+  @Field(() => BizProjectDetailDto, { nullable: true })
+  condition: BizProjectDetailDto;
+  @Field(() => [BizProjectDetailDto], { nullable: true })
+  data: BizProjectDetailDto;
 }
