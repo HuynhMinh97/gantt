@@ -27,6 +27,7 @@ export class AitChipComponent implements OnChanges {
   @Input() title = 'default';
   @Input() isTooltip = false;
   @Input() isHaveIcon = true;
+  @Input() isHaveBorder = false;
   @Input() icon = '';
   @Input() status = 'primary';
   @Output() action = new EventEmitter();
@@ -40,6 +41,7 @@ export class AitChipComponent implements OnChanges {
   @Input() isEvaluate = false;
   @Output() watchValue = new EventEmitter();
   @Input() maxWidth = '100%';
+  isSelected = false;
   STAR = [1, 2, 3, 4, 5];
   ID(element: string) {
     const idx = this.id && this.id !== '' ? this.id : Date.now();
@@ -68,7 +70,14 @@ export class AitChipComponent implements OnChanges {
     this.action.emit({ isAction: true });
   };
 
-  onClickChipEvent = () => this.onClickChip.emit({ isClickChip: true });
+  onClickChipEvent = () => {
+    if (this.isHaveBorder) {
+      this.isSelected = !this.isSelected;
+      this.onClickChip.emit({ isClickChip: true, isSelected: this.isSelected });
+    } else {
+      this.onClickChip.emit({ isClickChip: true });
+    }
+  };
 
   clickStar(val: number) {
     if (this.isAllowEdit) {
