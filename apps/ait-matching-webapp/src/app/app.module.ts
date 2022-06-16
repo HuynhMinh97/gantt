@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -90,6 +91,14 @@ import { ProjectRequirementDetailComponent } from './pages/project-requirements/
 import { RequirementListComponent } from './pages/requirement-list/requirement-list.component';
 import { TableInlineEditComponent } from './components/table-inline-edit/table-inline-edit.component';
 import { UpdateProjectComponent } from './pages/project-requirements/update-project/update-project.component';
+import { BizProjectService } from './services/biz_project.service';
+
+if (environment.production) {
+  console.log = () => {};
+  console.error = () => {};
+}
+// console.log = () => {};
+console.error = () => {};
 
 const AIT_UI_MODULES = [AitChipModule, AitTabsModule, AitTocMenuModule];
 
@@ -200,7 +209,12 @@ const PAGES = [
     ...AIT_UI_MODULES,
     ...NB_UI_MODULES,
   ],
-  providers: [...AIT_UI_SERVICES, ReactionService, RecommencedUserService],
+  providers: [
+    ...AIT_UI_SERVICES,
+    ReactionService,
+    RecommencedUserService,
+    BizProjectService,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

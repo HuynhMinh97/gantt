@@ -77,3 +77,20 @@ export class GetProjectInforEntity extends BaseEntity {
   @Field(() => Float, { nullable: true })
   valid_time_to?: number;
 }
+@ObjectType()
+export class BizProjectDetailEntity extends BaseEntity {
+  @Field(() => String, { nullable: true })
+  project?: string;
+
+  @Field(() => String, { nullable: true })
+  project_code?: string;
+
+  @Field(() => String, { nullable: true })
+  person_in_charge?: string;
+
+  @Field(() => [KeyValueEntity], { nullable: true })
+  customer?: KeyValueEntity[];
+
+  @Field(() => [KeyValueEntity], { nullable: true })
+  status?: KeyValueEntity[];
+}
