@@ -76,6 +76,13 @@ export class RecommencedUserService extends AitBaseService {
     return await this.query('findProfileByList', condition, this.returnFields);
   }
 
+  async getUserByProjectId(project_id: string) {
+    const condition = {};
+    condition[KEYS.COLLECTION] = COLLECTIONS.USER_PROFILE;
+    condition[KEYS.CONDITION] = { project_id };
+    return await this.query('findUserByProject', condition, this.returnFields);
+  }
+
   async getDetailMatching(onlySaved = 0, start = 0, end = 8, project_id = '') {
     const condition = {};
     condition[KEYS.COLLECTION] = COLLECTIONS.USER_PROFILE;
