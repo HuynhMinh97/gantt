@@ -79,7 +79,7 @@ export class RecommencedUserComponent
 
     this.searchForm = this.formBuilder.group({
       _key: new FormControl(null),
-      keyword: new FormControl(''),
+      keyword: new FormControl('window'),
       skills: new FormControl(null),
       current_job_title: new FormControl(null),
       province_city: new FormControl(null),
@@ -124,6 +124,7 @@ export class RecommencedUserComponent
       title: 'Recommended',
       tabIcon: 'star',
       type: 'R',
+      padding: '0 15px',
     },
     {
       title: 'Candidates',
@@ -161,10 +162,12 @@ export class RecommencedUserComponent
 
   filterList = [];
 
-  isSelectAll = false;
+  countMember = [0, 0, 0];
+  memberChecked = [false, false, false];
+
+  isSelectAll = true;
   isLoading = true;
   spinnerLoading = false;
-  isExpan1 = true;
   round = 1;
   textDataEnd = '';
   disableTab = false;
@@ -281,28 +284,35 @@ export class RecommencedUserComponent
   };
 
   ToggleExpan = () => (this.isExpan = !this.isExpan);
-  ToggleExpan1 = () => {
-    this.isExpan1 = !this.isExpan1;
-  };
 
   getTitle = (name: string) => this.translateService.translate(name);
 
   async ngOnInit() {
     const queriesKey = localStorage.getItem('biz_project_key');
+    localStorage.removeItem('biz_project_key');
     if (queriesKey) {
-      console.log(queriesKey);
       this.bizProjectService.find({ _key: queriesKey }).then((e) => {
         this.isSubmit = true;
         this.isExpan = true;
-        // console.log(e);
-        this.searchForm.patchValue(e.data[0]);
-        // localStorage.setItem('biz_project_key', null);
+        const z = e.data[0];
+        const obj = {
+          keyword: z['keyword'],
+          skills: z['skills'],
+          province_city: z['location'],
+          industry_working: z['industry'],
+          current_job_level: z['level'],
+          current_job_title: z['title'],
+          valid_time_from: z['valid_time_from'],
+          valid_time_to: z['valid_time_to'],
+        };
+        this.searchForm.patchValue({ ...obj });
+        this.search();
       });
     }
   }
 
   private callSearch(list = []) {
-    this.isExpan = true;
+    // this.isExpan = true;
     this.getDataByRound(0, list).then(() => {
       this.setSkeleton(false);
     });
@@ -438,6 +448,9 @@ export class RecommencedUserComponent
     this.dataFilter = [];
     this.dataFilterDf = [];
     this.matchingList = [];
+    this.countMember = [0, 0, 0];
+    this.memberChecked = [false, false, false];
+
     this.currentCount = 0;
     this.textDataEnd = '';
     this.setSkeleton(true);
@@ -445,8 +458,18 @@ export class RecommencedUserComponent
       this.matchingResult = res?.data[0].data || [];
       if (this.matchingResult.length > 0) {
         const arr = res.data[0].data.map((e: { item: string }) => e.item);
+        this.matchingResult.forEach((e) => {
+          if (e?.total_score >= 0.6) {
+            this.countMember[0]++;
+          } else if (e?.total_score >= 0.2) {
+            this.countMember[1]++;
+          } else {
+            this.countMember[2]++;
+          }
+        });
         const matchingSkill = res.data[0].matching_input_data.skill.map(
-          (e: any) => Object.assign({ ...e, count: 0, name: '' })
+          (e: any) =>
+            Object.assign({ ...e, count: 0, name: '', isSelected: false })
         ) as any[];
         matchingSkill.length = 4;
         const checkArr = [];
@@ -467,9 +490,9 @@ export class RecommencedUserComponent
           const name = await this.matchingService.findSkillName(e.item);
           matchingSkill[i].name = name;
         });
-        this.matchingSkill = [{ name: 'All', count: arr.length }].concat(
-          matchingSkill
-        );
+        this.matchingSkill = [
+          { name: 'All', count: arr.length, isSelected: true },
+        ].concat(matchingSkill);
         this.matchingList = arr || [];
         this.callSearch(arr);
       } else {
@@ -534,6 +557,7 @@ export class RecommencedUserComponent
       value = new Date(data).setHours(0, 0, 0, 0);
       this.searchForm.controls[form].markAsDirty();
       this.searchForm.controls[form].setValue(value);
+      return;
     } else {
       this.searchForm.controls[form].setValue(null);
     }
@@ -648,14 +672,35 @@ export class RecommencedUserComponent
     return new Date(time).setHours(0, 0, 0, 0);
   }
 
-  filterSkill({ name, item }, { isSelected }) {
+  filterByType(index: number) {
+    this.memberChecked[index] = !this.memberChecked[index];
+    this.filterMain();
+  }
+
+  filterSkill({ name, item }, index: number): void {
+    this.matchingSkill[index].isSelected = !this.matchingSkill[index]
+      .isSelected;
     this.setSkeleton(true);
     if (name === 'All') {
-      this.isSelectAll = isSelected;
-    } else if (isSelected) {
+      this.isSelectAll = this.matchingSkill[index].isSelected;
+      if (this.isSelectAll) {
+        this.filterList = [];
+        this.matchingSkill.forEach((e, i) => {
+          if (i !== 0) {
+            this.matchingSkill[i].isSelected = false;
+          }
+        });
+      }
+    } else if (this.matchingSkill[index].isSelected) {
+      this.matchingSkill[0].isSelected = false;
+      this.isSelectAll = false;
       this.filterList.push(item);
     } else {
       this.filterList = this.filterList.filter((e) => e !== item);
+      if (this.filterList.length === 0) {
+        this.matchingSkill[0].isSelected = true;
+        this.isSelectAll = true;
+      }
     }
     this.filterMain();
     setTimeout(() => {
@@ -726,14 +771,25 @@ export class RecommencedUserComponent
       } else {
         this.dataFilter = this.filterItem([...this.dataFilterDf]);
       }
+      if (this.dataFilter.length === 0) {
+        this.textDataNull = 'There is no data';
+      } else {
+        this.textDataNull = '';
+      }
     } catch (e) {
       console.log(e);
     }
   }
 
   filterItem(data: any[]) {
+    const check = [];
+    this.memberChecked.forEach((e, i) => e && check.push(i + 1));
     if (this.isSelectAll || this.filterList.length === 0) {
-      return data;
+      if (check.length > 0) {
+        return data.filter((e) => check.includes(e.group_no));
+      } else {
+        return data;
+      }
     } else {
       return data.filter((e) =>
         e.skills.some(({ _key }) => this.filterList.includes(_key))

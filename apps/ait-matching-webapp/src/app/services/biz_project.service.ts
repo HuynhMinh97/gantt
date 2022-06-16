@@ -68,12 +68,14 @@ export class BizProjectService extends AitBaseService {
       attribute: 'location',
       ref_collection: 'sys_master_data',
       ref_attribute: '_key',
+      get_by: '_key',
     };
 
     condition['level'] = {
       attribute: 'level',
       ref_collection: 'sys_master_data',
       ref_attribute: '_key',
+      get_by: '_key',
     };
 
     condition['skills'] = {
@@ -87,12 +89,14 @@ export class BizProjectService extends AitBaseService {
       attribute: 'industry',
       ref_collection: 'm_industry',
       ref_attribute: '_key',
+      get_by: '_key',
     };
 
     condition['title'] = {
       attribute: 'title',
       ref_collection: 'm_title',
       ref_attribute: '_key',
+      get_by: '_key',
     };
 
     condition['create_by'] = {

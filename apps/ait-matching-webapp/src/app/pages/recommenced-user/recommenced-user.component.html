@@ -70,6 +70,7 @@
       [label]="'Filter'"
       *ngIf="isSubmit"
       [styleLabel]="{ 'font-size': '1.5vmax' }"
+      [isOpen]="isExpan"
     >
       <div class="content">
         <div class="left_side">
@@ -159,7 +160,7 @@
                 [width]="'170px'"
                 [placeholder]="'yyyy/MM/dd'"
                 [isReset]="isReset"
-                [dateInput]="searchForm.controls['valid_time_from'].value"
+                [defaultValue]="searchForm.controls['valid_time_from'].value"
                 (watchValue)="
                   takeDatePickerValue($event?.value, 'valid_time_from')
                 "
@@ -171,7 +172,7 @@
                 [styleLabel]="{ 'text-transform': 'initial' }"
                 [width]="'170px'"
                 [isReset]="isReset"
-                [dateInput]="searchForm.controls['valid_time_to'].value"
+                [defaultValue]="searchForm.controls['valid_time_to'].value"
                 (watchValue)="
                   takeDatePickerValue($event?.value, 'valid_time_to')
                 "
@@ -238,13 +239,14 @@
               [is18n]="false"
               [isHaveIcon]="false"
               [isHaveBorder]="true"
+              [isSelected]="!!p.isSelected"
               tabindex="4"
               style="outline-color: #10529d"
               [style]="{
                 'max-width': '140px',
                 'margin-right': '5px'
               }"
-              (onClickChip)="filterSkill(p, $event)"
+              (onClickChip)="filterSkill(p, i)"
             ></ait-chip>
           </div>
         </div>
@@ -261,38 +263,37 @@
       </div>
       <div class="color">
         <div
+          (click)="filterByType(0)"
           class="cardR"
-          style="
-            background: linear-gradient(
-              90deg,
-              rgba(255, 141, 3, 0.8) 28%,
-              #ed9d3c 67%
-            );
-          "
+          [ngStyle]="{
+            'min-width': '160px',
+            background:
+              'linear-gradient(90deg, rgba(255, 141, 3, 0.8) 28%, #ed9d3c 67%)',
+            transform: memberChecked[0] ? 'scale(1.1)' : 'scale(1)'
+          }"
         >
-          Highly recommended
+          {{ 'Highly recommended (' + countMember[0] + ')' }}
         </div>
         <div
+          (click)="filterByType(1)"
           class="cardR"
-          style="
-            background: linear-gradient(90deg, #78c047 50%, #97d791 84%);
-            transform: rotate(-0.05deg);
-          "
+          [ngStyle]="{
+            background: 'linear-gradient(90deg, #78c047 50%, #97d791 84%)',
+            transform: memberChecked[1] ? 'scale(1.1)' : 'scale(1)'
+          }"
         >
-          Recommended
+          {{ 'Recommended (' + countMember[1] + ')' }}
         </div>
         <div
+          (click)="filterByType(2)"
           class="cardR"
-          style="
-            background: linear-gradient(
-              89.75deg,
-              #002b6e 0.23%,
-              #2288cc 99.81%
-            );
-            transform: rotate(-0.05deg);
-          "
+          [ngStyle]="{
+            background:
+              'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)',
+            transform: memberChecked[2] ? 'scale(1.1)' : 'scale(1)'
+          }"
         >
-          Normal
+          {{ 'Normal (' + countMember[2] + ')' }}
         </div>
       </div>
       <div class="divider"></div>
