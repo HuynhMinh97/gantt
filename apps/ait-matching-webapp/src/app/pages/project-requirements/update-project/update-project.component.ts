@@ -10,7 +10,7 @@ import {
   getUserSetting,
   MODE,
 } from '@ait/ui';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -67,6 +67,18 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   isChanged = false;
   isDisplay = false;
   available_time_error = false;
+  resetProjectInfo = {
+    name: false,
+    industry: false,
+    title: true,
+    skill: false,
+    location: false,
+    level: false,
+    description: true,
+    valid_time_to: false,
+    valid_time_from: false,
+    remark: false,
+  };
 
   user_list = [];
   employeeList: any[] = [];
@@ -75,6 +87,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
+    private element: ElementRef,
     private userOnbService: UserOnboardingService,
     private registerProjectService: RegisterProjectService,
     private userListService: UserListService,
@@ -169,8 +182,16 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
       await this.findIndustryProject();
       await this.findLevelProject();
       await this.findLocationProject();
+      await this.fingProjectDetail();
       await dataFind.push(this.projectForm.value);
+      this.projectFormClone = this.projectForm.value;
+      this.projectDetailFormClone = this.projectDetailForm.value;
     } catch (error) {}
+  }
+
+  async fingProjectDetail(){
+    const result = await this.bizProjectService.findDetail();
+    this.projectDetailForm.patchValue({...result.data[0]})
   }
 
   async getCandidate() {
@@ -181,6 +202,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   }
 
   async findProjectByKey() {
+    
     const res = await this.registerProjectService.findProjectAitByKey(
       this.project_key
     );
@@ -194,9 +216,9 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   }
 
   async findSkillProject() {
-    debugger
-    const _key = this.project_key;
-    await this.registerProjectService
+    try {
+      const _key = this.project_key;
+      await this.registerProjectService
       .findSkillProject(_key)
       .then(async (res) => {
         const listSkills = [];
@@ -210,12 +232,14 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
           this.project_skill = listSkills;
           await this.projectForm.controls['skills'].setValue([...listSkills]);
         }
-
+        
         this.cancelLoadingApp();
       });
+    } catch{ this.cancelLoadingApp();}
   }
 
   async findLevelProject() {
+    try {
     const _key = this.project_key;
     await this.registerProjectService
       .findLevelProject(_key)
@@ -233,9 +257,11 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
         }
         this.cancelLoadingApp();
       });
+    } catch{ this.cancelLoadingApp();}
   }
 
   async findIndustryProject() {
+    try {
     const _key = this.project_key;
     await this.registerProjectService
       .findIndustryProject(_key)
@@ -255,10 +281,11 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
         }
         this.cancelLoadingApp();
       });
+    } catch{ this.cancelLoadingApp();}
   }
 
   async findTitleProject() {
-    debugger
+    try {
     const _key = this.project_key;
     await this.registerProjectService
       .findTitleProject(_key)
@@ -276,9 +303,11 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
         }
         this.cancelLoadingApp();
       });
+    } catch{ this.cancelLoadingApp();}
   }
 
   async findLocationProject() {
+    try {
     const _key = this.project_key;
     await this.registerProjectService
       .findLocationProject(_key)
@@ -297,6 +326,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
         }
         this.cancelLoadingApp();
       });
+    } catch{ this.cancelLoadingApp();}
   }
 
   toggleExpan = () => (this.isExpan = !this.isExpan);
@@ -334,8 +364,35 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   }
 
   async save() {
-   
-    await this.saveBizProject();
+    this.isSubmit = true;
+    setTimeout(() => {
+      this.isSubmit = false;
+    }, 100);
+   if(this.projectForm.valid){
+
+     await this.saveBizProject();
+   }
+   else {
+    this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+    this.scrollIntoError();
+  }
+  }
+
+  scrollIntoError() {
+    for (const key of Object.keys(this.projectForm.controls)) {
+      if (this.projectForm.controls[key].invalid) {
+        const invalidControl = this.element.nativeElement.querySelector(
+          `#${key}_input`
+        );
+        try {
+          invalidControl.scrollIntoView({
+            behavior: 'auto',
+            block: 'center',
+          });
+          break;
+        } catch {}
+      }
+    }
   }
 
   async saveBizProject() {
@@ -355,7 +412,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
                 }
               });
             })
-          }
+          }else { this.showToastr('', this.getMsg('I0005'));}
         } else {
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         }
@@ -365,12 +422,12 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     }
   }
 
-  takeInputValue(value: string, form: string): void {
+  takeInputValue(value: string,group: string, form: string): void {
     if (value) {
-      this.projectForm.controls[form].markAsDirty();
-      this.projectForm.controls[form].setValue(value);
+      this[group].controls[form].markAsDirty();
+      this[group].controls[form].setValue(value);
     } else {
-      this.projectForm.controls[form].setValue(null);
+      this[group].controls[form].setValue(null);
     }
   }
 
@@ -527,4 +584,24 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     }
     return saveData;
   }
+
+
+  clear() {
+    debugger
+    this.project_skill = [];
+    this.project_title = [];
+    this.project_industry = [];
+    this.project_level = [];
+    this.project_location = [];
+    this.projectForm.reset();
+    this.projectDetailForm.reset();
+    for (const index in this.resetProjectInfo) {
+      this.resetProjectInfo[index] = true;
+      setTimeout(() => {
+        this.resetProjectInfo[index] = false;
+      }, 100);
+    }
+    
+  }
+
 }

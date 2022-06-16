@@ -14,10 +14,12 @@
         [width]="'400px'"
         [rows]="1"
         [label]="'name'"
-        [required]="false"
+        [required]="true"
+        [isSubmit]="isSubmit"
+        [isReset]="resetProjectInfo.name"
         [placeholder]="'please input keyword'"
         [length]="200"
-        (watchValue)="takeInputValue($event, 'name')"
+        (watchValue)="takeInputValue($event,'projectForm', 'name')"
         [defaultValue]="projectForm?.controls['name']?.value"
       ></ait-input-text>
     </ng-container>
@@ -29,6 +31,7 @@
           [id]="'title'"
           [label]="'title'"
           [isSubmit]="isSubmit"
+          [isReset]="resetProjectInfo.title"
           [allowNew]="true"
           [required]="true"
           [maxItem]="10"
@@ -55,7 +58,7 @@
           [collection]="'sys_master_data'"
           [disableOutputDefault]="true"
           [class]="'ADDRESS'"
-          [isReset]="true"
+          [isReset]="resetProjectInfo.location"
           (watchValue)="
             takeMasterValues($event?.value, 'projectForm', 'location')
           "
@@ -73,8 +76,8 @@
           [label]="'description'"
           [width]="'400px'"
           [placeholder]="'please-input-project-information'"
-          [isReset]=""
-          (watchValue)="takeInputValue($event, 'description')"
+          [isReset]="resetProjectInfo.description"
+          (watchValue)="takeInputValue($event,'projectForm', 'description')"
           [defaultValue]="projectForm?.controls['description']?.value"
         >
         </ait-input-text>
@@ -93,7 +96,7 @@
           [style]="{ width: '400px' }"
           (watchValue)="takeMasterValueSkill($event, 'skills')"
           [defaultValue]="project_skill"
-          [isReset]="isReset"
+          [isReset]="resetProjectInfo.skill"
           [isSubmit]="isSubmit"
           [isEvaluate]="true"
         ></ait-autocomplete-master>
@@ -107,14 +110,14 @@
         [id]="'industry'"
         [width]="'400px'"
         [label]="'industry'"
-        [required]="false"
+        [required]="true"
         [allowNew]="true"
         [maxItem]="10"
         [collection]="'m_industry'"
         [placeholder]="'please select industry'"
         [disableOutputDefault]="true"
         [isSubmit]="isSubmit"
-        [isReset]="isReset"
+        [isReset]="resetProjectInfo.industry"
         (watchValue)="
           takeMasterValues($event?.value, 'projectForm', 'industry')
         "
@@ -137,7 +140,7 @@
           [placeholder]="'please select level'"
           [collection]="'sys_master_data'"
           [disableOutputDefault]="true"
-          [isReset]="true"
+          [isReset]="resetProjectInfo.level"
           (watchValue)="takeMasterValues($event?.value, 'projectForm', 'level')"
           [defaultValue]="project_level"
         ></ait-autocomplete-master-data>
@@ -149,9 +152,9 @@
         <ait-datepicker
           [placeholder]="'yyyyy/MM/dd'"
           [id]="'valid_time_from'"
-          [label]="'Change At'"
+          [label]="'Valid Time'"
           [style]="{ width: '170px' }"
-          [isReset]="isReset"
+          [isReset]="resetProjectInfo.valid_time_from"
           [defaultValue]="projectForm?.controls['valid_time_from']?.value"
           (watchValue)="
             takeDatePickerValue($event?.value, 'projectForm', 'valid_time_from')
@@ -165,7 +168,7 @@
           [id]="'valid_time_to'"
           [label]="''"
           [style]="{ width: '170px' }"
-          [isReset]="isReset"
+          [isReset]="resetProjectInfo.valid_time_to"
           [defaultValue]="projectForm?.controls['valid_time_to']?.value"
           (watchValue)="
             takeDatePickerValue($event?.value, 'projectForm', 'valid_time_to')
@@ -191,9 +194,10 @@
           [label]="'remark'"
           [width]="'400px'"
           [placeholder]="'please-input-about'"
-          [isReset]="true"
-          (watchValue)="takeInputValue($event, 'remark')"
+          [isReset]="resetProjectInfo.remark"
+          (watchValue)="takeInputValue($event,'projectForm', 'remark')"
           [defaultValue]="projectForm?.controls['remark']?.value"
+
         >
         </ait-input-text>
       </div>
@@ -209,7 +213,6 @@
           [label]="'customer'"
           [isSubmit]="isSubmit"
           [allowNew]="true"
-          [required]="true"
           [maxItem]="1"
           [placeholder]="'please select customer'"
           [collection]="'m_company'"
@@ -251,7 +254,7 @@
           [isSubmit]="false"
           [isReset]="false"
           [placeholder]="'please input project code'"
-          (watchValue)="takeInputValue($event, 'project_code')"
+          (watchValue)="takeInputValue($event,'projectDetailForm', 'project_code')"
           [defaultValue]="projectDetailForm?.controls['project_code']?.value"
         ></ait-input-text>
       </div>
@@ -307,6 +310,7 @@
             [width]="'150px'"
             [title]="'clear'"
             [isDefault]="true"
+            (click)="clear()"
           >
           </ait-button>
 
@@ -319,7 +323,6 @@
           </ait-button>
 
           <ait-button
-            *ngIf="isChanged"
             [id]="'save'"
             [width]="'150px'"
             [title]="'save'"
@@ -328,14 +331,14 @@
           >
           </ait-button>
 
-          <ait-button
+          <!-- <ait-button
             *ngIf="!isChanged"
             [id]="'disabled'"
             [width]="'150px'"
             [title]="'save'"
             [style]="'disabled'"
           >
-          </ait-button>
+          </ait-button> -->
         </div>
       </div>
     </div>

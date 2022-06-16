@@ -2,13 +2,15 @@ import { isArrayFull, isObjectFull, KeyValueDto, RESULT_STATUS } from '@ait/shar
 import {
   AitAuthService,
   AitBaseComponent,
+  AitConfirmDialogComponent,
   AitEnvironmentService,
+  AitTranslationService,
   AppState,
   getUserSetting,
 } from '@ait/ui';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
+import { NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import dayjs from 'dayjs';
@@ -37,6 +39,8 @@ export class TableInlineEditComponent
   listPage = [];
   start: number;
   end: number;
+  isDialogOpen = false;
+
 
   @Input() project_key: string;
   dateFormat: string;
@@ -45,6 +49,8 @@ export class TableInlineEditComponent
     private addRoleService: AddRoleService,
     private registerProjectService: RegisterProjectService,
     private formBuilder: FormBuilder,
+    private dialogService: NbDialogService,
+    private translateService: AitTranslationService,
 
     env: AitEnvironmentService,
     store: Store<AppState>,
@@ -93,8 +99,21 @@ export class TableInlineEditComponent
   }
 
   handleClickCancel() {
-    this._key = null;
-    this.isEdit = false;
+    this.isDialogOpen = true;
+    this.dialogService
+      .open(AitConfirmDialogComponent, {
+        context: {
+          title: this.translateService.translate('Do you want cancel.'),
+        },
+      })
+      .onClose.subscribe(async (event) => {
+        this.isDialogOpen = false;
+        if (event) {
+          this._key = null;
+          this.isEdit = false;
+        }
+      });
+    
   }
 
   handleFilterName(column_search: string, numberOfCol: number) {

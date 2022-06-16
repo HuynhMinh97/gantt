@@ -24,11 +24,12 @@ export class BizProjectResolver extends AitBaseService {
   }
 
   @Query(() => BizProjectDetailResponse, { name: 'findBizProjectDetail' })
-  findBizProjectDetail(
+  async findBizProjectDetail(
     @AitCtxUser() user: SysUser,
     @Args('request', { type: () => BizProjectDetailRequest })
     request: BizProjectDetailRequest
   ) {
+    console.log(await this.find(request, user))
     return this.find(request, user);
   }
 

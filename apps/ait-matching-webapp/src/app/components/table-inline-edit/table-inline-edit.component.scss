@@ -88,6 +88,18 @@ button {
     box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
 }
 
+.action button nb-icon.fa-pen, .action button nb-icon.fa-save{
+    background: linear-gradient( to bottom, #002b6e 0.23%, #2288cc 99.81% );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+
+.action button nb-icon.fa-times{
+    background: linear-gradient( to bottom, #f30505 0.23%, #f83d04 99.81% );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
 .numberPage{
     display: flex;
