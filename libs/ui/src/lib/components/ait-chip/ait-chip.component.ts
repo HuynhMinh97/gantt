@@ -41,7 +41,7 @@ export class AitChipComponent implements OnChanges {
   @Input() isEvaluate = false;
   @Output() watchValue = new EventEmitter();
   @Input() maxWidth = '100%';
-  isSelected = false;
+  @Input() isSelected = false;
   STAR = [1, 2, 3, 4, 5];
   ID(element: string) {
     const idx = this.id && this.id !== '' ? this.id : Date.now();
@@ -72,7 +72,6 @@ export class AitChipComponent implements OnChanges {
 
   onClickChipEvent = () => {
     if (this.isHaveBorder) {
-      this.isSelected = !this.isSelected;
       this.onClickChip.emit({ isClickChip: true, isSelected: this.isSelected });
     } else {
       this.onClickChip.emit({ isClickChip: true });

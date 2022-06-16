@@ -175,6 +175,9 @@ export class RecommencedUserComponent
 
   project_id = '';
 
+  // ngDoCheck() {
+  // }
+
   getResultCount() {
     if (this.matchingList.length > 0) {
       return `About ${this.matchingList.length} results`;
@@ -220,6 +223,26 @@ export class RecommencedUserComponent
         ).fill(1);
       } else {
         this.cardSkeleton = [];
+      }
+    }
+  };
+
+  private getDataByProjectId = async (project_id: string) => {
+    const res = await this.matchingService.getUserByProjectId(project_id);
+    if (res.status === RESULT_STATUS.OK) {
+      if (res.data?.length === 0) {
+        this.textDataNullTeamMember = 'There is no data to search';
+      } else {
+        this.textDataNullTeamMember = '';
+        this.dataFilterTeamMember = this.dataFilterTeamMember
+          .concat(res.data)
+          .map((e) =>
+            Object.assign({
+              ...e,
+              group_no: this.getGroupNo(e.user_id),
+            })
+          );
+        this.currentCount = Math.ceil(this.dataFilterTeamMemberDf.length / 8);
       }
     }
   };
@@ -289,8 +312,9 @@ export class RecommencedUserComponent
 
   async ngOnInit() {
     const queriesKey = localStorage.getItem('biz_project_key');
-    localStorage.removeItem('biz_project_key');
     if (queriesKey) {
+      this.project_id = queriesKey;
+      localStorage.removeItem('biz_project_key');
       this.bizProjectService.find({ _key: queriesKey }).then((e) => {
         this.isSubmit = true;
         this.isExpan = true;
@@ -471,7 +495,7 @@ export class RecommencedUserComponent
           (e: any) =>
             Object.assign({ ...e, count: 0, name: '', isSelected: false })
         ) as any[];
-        matchingSkill.length = 4;
+        matchingSkill.length > 4 && (matchingSkill.length = 4);
         const checkArr = [];
         res.data[0].data.forEach((e: any) => {
           checkArr.push(
@@ -532,8 +556,14 @@ export class RecommencedUserComponent
       this.setSkeleton(true);
       this.callSearch(this.matchingList || []);
     } else if (this.currentTab === 'C') {
-      this.setSkeleton(true);
-      this.getDataByRound(1).then(() => this.setSkeleton(false));
+      if (this.project_id) {
+        this.setSkeleton(true);
+        this.getDataByProjectId(this.project_id).then(() =>
+          this.setSkeleton(false)
+        );
+      } else {
+        this.textDataNullTeamMember = 'There is no data to search';
+      }
     } else {
       this.setSkeleton(true);
       this.getDataByRound(2).then(() => this.setSkeleton(false));
