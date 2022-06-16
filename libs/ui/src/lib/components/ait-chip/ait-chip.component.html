@@ -22,7 +22,10 @@
       justify-content: center;
     "
   >
-    <span [ngClass]="isEvaluate ? 'chip2' : ''" [innerHTML]="title"></span>
+    <span
+      [ngClass]="isEvaluate ? 'chip2' : ''"
+      [innerHTML]="getTitle(title)"
+    ></span>
     <div class="star_list" *ngIf="isEvaluate">
       <div class="star">
         <nb-icon

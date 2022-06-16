@@ -85,4 +85,12 @@ export class AitChipComponent implements OnChanges {
       this.watchValue.emit(val + 1);
     }
   }
+
+  getTitle(title: string) {
+    if (!this.isHaveBorder || title.length < 12) {
+      return title;
+    } else {
+      return title.substring(0, 7) + '...' + title.substring(title.length - 5);
+    }
+  }
 }
