@@ -9,6 +9,7 @@ export class AitTemplatePageComponent {
   @Input() pageTitle = '';
   @Input() searchTitle = '';
   @Input() tableTitle = '';
+  @Input() midleAreaTitle = '';
   @Input() isTableIncluded = true;
   @Input() isExpandIncluded = true;
   @Input() isExpan = true;
