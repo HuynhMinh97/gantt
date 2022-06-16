@@ -79,7 +79,7 @@ export class RecommencedUserComponent
 
     this.searchForm = this.formBuilder.group({
       _key: new FormControl(null),
-      keyword: new FormControl('window'),
+      keyword: new FormControl(''),
       skills: new FormControl(null),
       current_job_title: new FormControl(null),
       province_city: new FormControl(null),
