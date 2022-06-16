@@ -32,11 +32,22 @@ export class AppComponent extends AitBaseComponent implements OnInit {
     apollo: Apollo,
     router: Router
   ) {
-    super(store, authService, apollo, userService, _env, null, null, null, router);
+    super(
+      store,
+      authService,
+      apollo,
+      userService,
+      _env,
+      null,
+      null,
+      null,
+      router
+    );
     layoutService.menuUserInput = MENU_ITEMS;
   }
 
   ngOnInit() {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     this.initBaseComponent();
 
     setTimeout(() => {

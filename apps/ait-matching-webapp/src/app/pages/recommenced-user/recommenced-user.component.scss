@@ -378,13 +378,14 @@
   margin-left: 50px;
   .cardR {
     display: flex;
+    cursor: pointer;
     place-content: center;
     align-items: center;
     font-weight: 400;
     font-size: 12px;
     line-height: 16px;
     color: white;
-    width: 150px;
+    min-width: 150px;
     height: 21px;
   }
   .cardR + .cardR {
