@@ -72,7 +72,6 @@ export class AitChipComponent implements OnChanges {
 
   onClickChipEvent = () => {
     if (this.isHaveBorder) {
-      /* this.isSelected = !this.isSelected; */
       this.onClickChip.emit({ isClickChip: true, isSelected: this.isSelected });
     } else {
       this.onClickChip.emit({ isClickChip: true });
