@@ -30,6 +30,7 @@ import {
 import dayjs from 'dayjs';
 import { AddRoleService } from '../../../services/add-role.service';
 import { BizProjectService } from '../../../services/biz_project.service';
+import { RecommencedUserService } from '../../../services/recommenced-user.service';
 
 @Component({
   selector: 'ait-register-project',
@@ -64,6 +65,7 @@ export class RegisterProjectComponent
     private userListService: UserListService,
     private addRoleService: AddRoleService,
     private bizProjectService: BizProjectService,
+    private recommencedService: RecommencedUserService,
 
     env: AitEnvironmentService,
     store: Store<AppState>,
@@ -263,8 +265,9 @@ export class RegisterProjectComponent
   };
 
   async saveBizProject(condition) {
-    debugger
     try {
+      const data = this.registerProjectService.data_save;
+      console.log(data[0]['user_id']);
       const saveData = condition;
       if (!saveData['valid_time_to'] && saveData['valid_time_from']){
         const start_plan = new Date(saveData['valid_time_from']);
@@ -273,7 +276,14 @@ export class RegisterProjectComponent
       }
       this.bizProjectService.save(saveData).then((res) => {
         if (res.status === RESULT_STATUS.OK) {
-          
+          const obj = {}
+          this.registerProjectService
+          .saveTeamMember(this.project_key)
+          .then((r) => {
+            if (r.status === RESULT_STATUS.OK) {
+              
+            }
+          });
           this.showToastr('', this.getMsg('I0005'));
         } else {
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);

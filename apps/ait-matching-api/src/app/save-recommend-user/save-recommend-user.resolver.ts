@@ -1,6 +1,7 @@
 import { AitBaseService, AitCtxUser, SysUser } from '@ait/core';
 import { KEYS } from '@ait/shared';
 import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
+import { SaveRecommendUserEntity } from './save-recommend-user.entity';
 import {
   SaveRecommendUserRequest,
   SkillForUserRequest,
@@ -76,13 +77,28 @@ export class SaveRecommendUserResolver extends AitBaseService {
     request: SaveRecommendUserRequest
   ) {
     this.initialize(request, user);
-    const dataSave = {};
-    this.setCommonInsert(dataSave);
+    
+    
+    
+    const dataSave = {...request.data[0]};
+    delete dataSave['_from'];
+    delete dataSave['_to'];
+    
+    
     dataSave['_from'] = 'biz_project/' + request.data[0]['_from'];
     dataSave['_to'] = 'sys_user/' + request.data[0]['_to'];
-    const aqlStr = `FOR data IN ${JSON.stringify([dataSave] || [])}
-    INSERT data INTO biz_project_user RETURN data`;
-    return this.query(aqlStr);
+    console.log(dataSave)
+    if (!dataSave['_key']){
+      this.setCommonInsert(dataSave);
+      const aqlStr = `FOR data IN ${JSON.stringify([dataSave] || [])}
+      INSERT data INTO biz_project_user RETURN data`;
+      return this.query(aqlStr);
+    }else {
+      const aqlStr = `FOR data IN ${JSON.stringify([dataSave] || [])}
+      UPDATE data WITH data IN biz_project_user RETURN data._key`;
+      console.log(aqlStr)
+      return this.query(aqlStr);
+    }
   }
 
   @Mutation(() => SaveRecommendUserResponse, {
@@ -127,5 +143,56 @@ export class SaveRecommendUserResolver extends AitBaseService {
     RETURN removed
     `;
     return this.query(aqlStr);
+  }
+
+
+  @Query(() => SaveRecommendUserResponse, { name: 'getBizProjectUser' })
+  async getBizProjectUser(
+    @Args('request', { type: () => SaveRecommendUserRequest })
+    request: SaveRecommendUserRequest
+  ) {
+    const biz_project_key = request.condition?._key
+    delete request.condition?._key;
+    const _from = 'biz_project/' + biz_project_key;
+    const aqlQuery = `
+    FOR a,e,v IN 1..1 OUTBOUND "${_from}" biz_project_user
+        RETURN e`
+    const result = await this.query(aqlQuery);
+    const listData = result.data;
+    
+    const rq = { ...request };
+    rq['collection'] = 'user_profile';
+    delete rq.condition;
+    const res = await this.find(rq);
+    const userList = res.data || [];
+    const userArr = [];
+    for (const data of listData) {
+      const user_id = data._to.split("/").splice(1,1);
+      
+      let first_name = '';
+      let last_name = '';
+      for (const user of userList) {
+        
+        if (user.user_id == user_id) {
+          first_name = user.first_name;
+          last_name = user.last_name;
+          
+          break;
+        }
+      }
+          userArr.push({
+            ...data,
+            first_name: first_name,
+            last_name: last_name,
+            user_id : user_id[0],
+          });
+        
+    }
+    const response = new SaveRecommendUserResponse(
+      200,
+      userArr as SaveRecommendUserEntity[],
+      ''
+    );
+    return response;
   }
 }

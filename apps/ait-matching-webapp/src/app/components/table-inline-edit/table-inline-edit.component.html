@@ -1,4 +1,4 @@
-<div class="table__area" #area style="width: 900px; overflow-x: scroll; ">
+<div class="table__area" #area style=" overflow-x: scroll; ">
   <ng-container>
     <table id="candidate_table" class="table table-striped" style="width: 100%;" [ngStyle]="{'margin-bottom':list_candidate_perpage.length > 0 ? '65px' : '0' }">
       <colgroup>
@@ -203,24 +203,24 @@
   
           <td>
             <span class="candidate_value" *ngIf="!isEdit && item._key != _key; else editHours">
-              {{ item.hours_plan }}
+              {{ item.hour_plan }}
             </span>
             <ng-template #editHours>
               <ng-container *ngIf="item._key === _key && isEdit; else HoursEdit">
                 <ait-input-number
-                  [defaultValue]="item.hours_plan"
-                  [id]="'hours_plan'"
+                  [defaultValue]="item.hour_plan"
+                  [id]="'hour_plan'"
                   [styleInput]="{ background: '#ffffff' }"
                   [widthInput]="'100px'"
                   (watchValue)="
-                    takeInputNumberValue($event, 'candidateEdit', 'hours_plan')
+                    takeInputNumberValue($event, 'candidateEdit', 'hour_plan')
                   "
-                  (keyup)="calculaHoursDayMonthPlan('candidateEdit', 'hours_plan')"
+                  (keyup)="calculaHoursDayMonthPlan('candidateEdit', 'hour_plan')"
                 ></ait-input-number>
               </ng-container>
             </ng-template>
             <ng-template #HoursEdit>
-              <span class="candidate_value">{{ item.hours_plan }}</span></ng-template
+              <span class="candidate_value">{{ item.hour_plan }}</span></ng-template
             >
           </td>
           <td>

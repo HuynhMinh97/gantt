@@ -1,4 +1,4 @@
-import { isObjectFull, KeyValueDto, RESULT_STATUS } from '@ait/shared';
+import { isArrayFull, isObjectFull, KeyValueDto, RESULT_STATUS } from '@ait/shared';
 import {
   AitAuthService,
   AitBaseComponent,
@@ -74,7 +74,7 @@ export class TableInlineEditComponent
       _key: new FormControl(null),
       start_plan: new FormControl(null),
       end_plan: new FormControl(null),
-      hours_plan: new FormControl(null),
+      hour_plan: new FormControl(null),
       manday_plan: new FormControl(null),
       manmonth_plan: new FormControl(null),
       remark: new FormControl(null),
@@ -124,6 +124,7 @@ export class TableInlineEditComponent
   }
 
   handleClickSave() {
+    const lis_data_save = this.registerProjectService.data_save
     const data_save = this.candidateEdit.value;
     data_save['employee_name'] = data_save['employee_name'].value;
     data_save['user_id'] = this.candidateEdit.controls[
@@ -142,7 +143,19 @@ export class TableInlineEditComponent
       }
     });
     this.save_data.splice(this.start, this.end, ...this.list_candidate_perpage);
-    this.registerProjectService.data_save = this.save_data;
+    if(isArrayFull(lis_data_save)){
+      lis_data_save.forEach((item, index) => {
+        if (item._key == data_save._key){
+          lis_data_save.splice(index,1, data_save)
+        }
+        else {
+          lis_data_save.push(data_save);
+        }
+      })
+    } else {
+      lis_data_save.push(data_save);
+    }
+    this.registerProjectService.data_save = lis_data_save;
     this.isEdit = false;
   }
 
@@ -189,7 +202,6 @@ export class TableInlineEditComponent
       const item = paginatedItems[i];
       this.list_candidate_perpage.push(item);
     }
-    console.log(this.end);
   }
 
   async clickPageNumber(page) {
@@ -267,20 +279,20 @@ export class TableInlineEditComponent
       document.getElementById(`${form_control}_input_number`)
     );
     const input_value = input.value;
-    if (form_control === 'hours_plan') {
+    if (form_control === 'hour_plan') {
       remain_form_control1 = 'manday_plan';
       remain_form_control2 = 'manmonth_plan';
       remain_property1 = Math.round(Number(input_value) / 8 * 1000)/1000;
       remain_property2 =  Math.round(Number(input_value) / 160 * 1000)/1000;
     }
     if (form_control === 'manday_plan') {
-      remain_form_control1 = 'hours_plan';
+      remain_form_control1 = 'hour_plan';
       remain_form_control2 = 'manmonth_plan';
       remain_property1 = Number(input_value) * 8;
       remain_property2 = Math.round(Number(input_value) / 20 * 1000)/1000;
     }
     if (form_control === 'manmonth_plan') {
-      remain_form_control1 = 'hours_plan';
+      remain_form_control1 = 'hour_plan';
       remain_form_control2 = 'manday_plan';
       remain_property1 = Number(input_value) * 160;
       remain_property2 = Number(input_value) * 20;
