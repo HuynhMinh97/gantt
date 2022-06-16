@@ -39,6 +39,8 @@ export class UserProfileResolver extends AitBaseService {
         }
       });
       request.condition['list'] = userIds;
+      request.condition['start'] = 0;
+      request.condition['end'] = 9999999;
       return this.findProfileByList(user, request);
     }
   }
@@ -211,7 +213,7 @@ export class UserProfileResolver extends AitBaseService {
     const isSaved = !!request.condition['is_saved'];
     const isTeamMember = !!request.condition['is_team_member'];
 
-    let aqlStr1 = `
+    const aqlStr1 = `
     LET current_data = (
       FOR data IN user_profile
       FILTER data.company == "${company}" &&
@@ -294,13 +296,9 @@ export class UserProfileResolver extends AitBaseService {
      )
      
      FOR data IN result
-       `;
+     LIMIT ${+start}, ${+end}
 
-    if (start && end) {
-      aqlStr1 += `LIMIT ${+start}, ${+end}`;
-    }
-
-    aqlStr1 += ` RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name })
+    RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name })
     `;
 
     const aqlStr2 = `
