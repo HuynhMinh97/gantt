@@ -1,19 +1,10 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { RESULT_STATUS } from '@ait/shared';
-import {
-  AitBinaryDataService,
-  AitCurrencySymbolService,
-  AitDateFormatService,
-  AitNumberFormatPipe,
-  AitTranslationService,
-  AppState,
-  getEmpId,
-} from '@ait/ui';
+import { AitBinaryDataService, AppState, getEmpId } from '@ait/ui';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import { ReactionService } from 'apps/ait-matching-webapp/src/app/services/reaction.service';
 import { RecommencedUserService } from 'apps/ait-matching-webapp/src/app/services/recommenced-user.service';
 import { COLOR } from '../../../interface';
 
@@ -32,33 +23,19 @@ export class AitCardComponent implements OnInit {
   @Input() card: any;
   @Input() user_id: any;
   @Input() project_id: any;
-  i18n = '';
   colorCard = COLOR.color1;
   backgroundCard = color.green;
   userId = '';
-  @Input() addressSearch = '';
-  @Input() company_key = '';
   @Output() actionSaveEvent = new EventEmitter();
   @Output() actionAddEvent = new EventEmitter();
   @Output() actionCreateEvent = new EventEmitter(false);
-  @Input() tabIndex;
-  @Input() isJob = false;
-  fieldDate = ['生年月日'];
+  @Input() tabIndex: any;
   avatarURL = 'https://ui-avatars.com/api/?name=';
   avatar = '';
   isLoadingAvatar = true;
-  cardH;
+  cardH: any;
   skills = [];
   originUrl = location.origin + this.binaryService.downloadUrl;
-  master_data_fields = [
-    'gender',
-    'occupation',
-    'prefecture',
-    'residence_status',
-    'work',
-    'bussiness',
-  ];
-  key_avatar = '';
 
   imageNotFound() {
     this.isLoadingAvatar = false;
@@ -87,60 +64,10 @@ export class AitCardComponent implements OnInit {
       : this.avatarURL + '';
   };
 
-  getContent(data) {
-    if (this.master_data_fields.includes(data?.field)) {
-      if (data?.value?.value) {
-        return `・${this.translateService.translate(
-          this.i18n + data?.field
-        )}：${data.value?.value}`;
-      }
-      return '';
-    } else if (data?.field === 'dob') {
-      if (data.value) {
-        return `・${this.translateService.translate(
-          this.i18n + data?.field
-        )}：${this.dateFormatService.formatDate(data.value, 'display')}`;
-      }
-      return '';
-    } else if (data?.field === 'current_salary') {
-      if (data.value) {
-        return `・${this.translateService.translate(
-          this.i18n + data?.field
-        )}：${this.getNumberValue(data.value)}`;
-      }
-      return '';
-    } else if (data?.field === 'business') {
-      if (data?.value?.value) {
-        return `・${this.translateService.translate(
-          this.i18n + data?.field
-        )}：${data.value?.value}`;
-      }
-      return '';
-    } else {
-      return data.value
-        ? `・${this.translateService.translate(this.i18n + data?.field)}：${
-            data.value
-          }`
-        : '';
-    }
-  }
-
-  getNumberValue = (data) => {
-    return (
-      this.numberFormatService.transform(data) +
-      this.currencySymbolService.getCurrencyByLocale()
-    );
-  };
-
   constructor(
     store: Store<AppState>,
-    private reactionService: ReactionService,
     private router: Router,
     private binaryService: AitBinaryDataService,
-    private translateService: AitTranslationService,
-    private dateFormatService: AitDateFormatService,
-    private numberFormatService: AitNumberFormatPipe,
-    private currencySymbolService: AitCurrencySymbolService,
     private recommencedService: RecommencedUserService
   ) {
     store.pipe(select(getEmpId)).subscribe((id) => (this.userId = id));
@@ -151,17 +78,15 @@ export class AitCardComponent implements OnInit {
       this.cardH = { ...this.card };
       this.cardH.skills = this.cardH.skills
         .slice()
-        .sort((a, b) => b.level - a.level);
+        .sort(
+          (a: { level: number }, b: { level: number }) => b.level - a.level
+        );
       this.getAvatar();
       this.addColor();
     } catch (e) {
       console.log(e);
     }
   }
-
-  getDateField = (key) => {
-    return `・${key}：`;
-  };
 
   navigateProfile = (user_id: string) => {
     this.router.navigateByUrl('/user/' + user_id);
@@ -178,24 +103,6 @@ export class AitCardComponent implements OnInit {
       this.backgroundCard = color.blue;
       this.colorCard = COLOR.color3;
     }
-  };
-
-  // Highlight name option when user type
-  highlightName = (name) => {
-    const res = name.replace(
-      new RegExp(this.addressSearch.trim(), 'gmi'),
-      (match) => {
-        return `<b class="hightlighted" style="background:yellow">${match}</b>`;
-      }
-    );
-    return res;
-  };
-
-  getIndustry = () => {
-    return this.cardH.company
-      .replace('（', ',')
-      .replace('）', '')
-      .split(',')[1];
   };
 
   routerToProfile() {

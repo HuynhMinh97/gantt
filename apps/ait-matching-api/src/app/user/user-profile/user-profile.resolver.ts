@@ -16,6 +16,33 @@ export class UserProfileResolver extends AitBaseService {
     return this.find(request, user);
   }
 
+  @Query(() => UserProfileResponse, { name: 'findUserByProject' })
+  async findUserByProject(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => UserProfileRequest })
+    request: UserProfileRequest
+  ) {
+    const projectId = request.condition['project_id'] || '';
+    const aqlStr = `
+      FOR v,e, p IN 1..1 OUTBOUND "biz_project/${projectId}" biz_project_user
+      RETURN e
+    `;
+    const res = await this.query(aqlStr);
+    const userIds = [];
+    if (res.numData === 0) {
+      return new UserProfileResponse(200, [], '');
+    } else {
+      const data = res.data;
+      data.forEach((e: { _to: string }) => {
+        if (e?._to) {
+          userIds.push(e._to.substring(9));
+        }
+      });
+      request.condition['list'] = userIds;
+      return this.findProfileByList(user, request);
+    }
+  }
+
   @Query(() => UserProfileResponse, { name: 'findProfileByCondition' })
   async findProfileByCondition(
     @AitCtxUser() user: SysUser,
@@ -184,7 +211,7 @@ export class UserProfileResolver extends AitBaseService {
     const isSaved = !!request.condition['is_saved'];
     const isTeamMember = !!request.condition['is_team_member'];
 
-    const aqlStr1 = `
+    let aqlStr1 = `
     LET current_data = (
       FOR data IN user_profile
       FILTER data.company == "${company}" &&
@@ -267,10 +294,13 @@ export class UserProfileResolver extends AitBaseService {
      )
      
      FOR data IN result
+       `;
 
-     LIMIT ${+start}, ${+end}
+    if (start && end) {
+      aqlStr1 += `LIMIT ${+start}, ${+end}`;
+    }
 
-     RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name })
+    aqlStr1 += ` RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name })
     `;
 
     const aqlStr2 = `

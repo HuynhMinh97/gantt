@@ -79,7 +79,7 @@
         [ngStyle]="{ background: backgroundCard }"
         (click)="actionButtonAdd(cardH.user_id)"
         nbTooltip="{{
-          cardH.is_team_member ? ('added' | translate) : ('add' | translate)
+          cardH.is_team_member ? ('remove' | translate) : ('add' | translate)
         }}"
       >
         <nb-icon
@@ -96,7 +96,7 @@
           "
         >
           {{
-            cardH.is_team_member ? ('added' | translate) : ('add' | translate)
+            cardH.is_team_member ? ('remove' | translate) : ('add' | translate)
           }}
         </p>
       </div>
