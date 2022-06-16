@@ -64,6 +64,7 @@ export class AitGroupSearchComponent
   @Output() toggle = new EventEmitter();
   @Output() toggleTable = new EventEmitter();
   @Output() watchKey = new EventEmitter();
+  @Output() viewKey = new EventEmitter();
 
   searchForm: FormGroup;
   totalRows: number;
@@ -249,7 +250,12 @@ export class AitGroupSearchComponent
 
   detail(data: any) {
     if (this.pageRouter) {
-      this.router.navigate([`${this.pageRouter?.view || ''}/${data}`]);
+      this.viewKey.emit(data);
+      if (this.pageRouter?.view !== 'recommenced-user') {
+        this.router.navigate([`${this.pageRouter?.view || ''}/${data}`]);
+      } else {
+        this.router.navigate([this.pageRouter?.view]);
+      }
     }
   }
 
