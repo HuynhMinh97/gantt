@@ -72,6 +72,39 @@ export class BizProjectSaveDto extends BaseDto {
   @Field(() => String, { nullable: true })
   remark?: string;
 }
+
+@InputType()
+export class GetProjectInfoDto extends BaseDto {
+  @Field(() => [ConditionDto], { nullable: true })
+  industry?: ConditionDto[];
+
+  @Field(() => [ConditionDto], { nullable: true })
+  title?: ConditionDto[];
+
+  @Field(() => [ConditionDto], { nullable: true })
+  level?: ConditionDto[];
+
+  @Field(() => [ConditionDto], { nullable: true })
+  location?: ConditionDto[];
+
+  @Field(() => String, { nullable: true })
+  description?: string;
+
+  @Field(() => String, { nullable: true })
+  remark?: string;
+
+  @Field(() => String, { nullable: true })
+  name?: string;
+
+  @Field(() => Float, { nullable: true })
+  valid_time_from?: number;
+
+  @Field(() => Float, { nullable: true })
+  valid_time_to?: number;
+
+  @Field(() => [ConditionDto], { nullable: true })
+  skills?: ConditionDto[];
+}
 @InputType()
 export class BizProjectDetailDto extends BaseDto {
   @Field(() => String, { nullable: true })
@@ -88,4 +121,38 @@ export class BizProjectDetailDto extends BaseDto {
 
   @Field(() => ConditionDto, { nullable: true })
   status?: ConditionDto;
+}
+
+@InputType()
+export class BizProjectDetailSaveDto extends BaseDto {
+  @Field(() => String, { nullable: true })
+  project?: string;
+
+  @Field(() => String, { nullable: true })
+  project_code?: string;
+
+  @Field(() => String, { nullable: true })
+  person_in_charge?: string;
+
+  @Field(() => String, { nullable: true })
+  customer?: string;
+
+  @Field(() => String, { nullable: true })
+  status?: string;
+}
+
+@InputType()
+export class BizProjectSkillDto extends BaseDto {
+
+  @Field(() => String, { nullable: true })
+  _from?: string;
+
+  @Field(() => String, { nullable: true })
+  _to?: string;
+
+  @Field(() => Float, { nullable: true })
+  level?: number;
+
+  @Field(() => ConditionDto, { nullable: true })
+  skill?: ConditionDto;
 }
