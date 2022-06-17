@@ -122,3 +122,37 @@ export class BizProjectDetailDto extends BaseDto {
   @Field(() => ConditionDto, { nullable: true })
   status?: ConditionDto;
 }
+
+@InputType()
+export class BizProjectDetailSaveDto extends BaseDto {
+  @Field(() => String, { nullable: true })
+  project?: string;
+
+  @Field(() => String, { nullable: true })
+  project_code?: string;
+
+  @Field(() => String, { nullable: true })
+  person_in_charge?: string;
+
+  @Field(() => String, { nullable: true })
+  customer?: string;
+
+  @Field(() => String, { nullable: true })
+  status?: string;
+}
+
+@InputType()
+export class BizProjectSkillDto extends BaseDto {
+
+  @Field(() => String, { nullable: true })
+  _from?: string;
+
+  @Field(() => String, { nullable: true })
+  _to?: string;
+
+  @Field(() => Float, { nullable: true })
+  level?: number;
+
+  @Field(() => ConditionDto, { nullable: true })
+  skill?: ConditionDto;
+}

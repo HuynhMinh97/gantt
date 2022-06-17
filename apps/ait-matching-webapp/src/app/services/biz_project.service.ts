@@ -121,6 +121,34 @@ export class BizProjectService extends AitBaseService {
     );
   }
 
+
+  async findDetailByProject_key(project_key: string){
+    const condition = {};
+    condition['project']= project_key;
+    condition['customer'] = {
+      attribute: 'customer',
+      ref_collection: 'm_company',
+      ref_attribute: '_key',
+      get_by: '_key',
+    };
+
+    condition['status'] = {
+      attribute: 'status',
+      ref_collection: 'sys_master_data',
+      ref_attribute: '_key',get_by: '_key',
+    };
+
+    return await this.query(
+      'findBizProjectDetail',
+      {
+        collection: this.detail,
+        condition,
+      },
+      this.returnDetail
+    );
+
+  }
+
   async findDetail(condition = {}) {
     condition[KEYS.USER_ID] = this.user_id || AitAppUtils.getUserId() || '';
     condition['customer'] = {
@@ -169,6 +197,16 @@ export class BizProjectService extends AitBaseService {
     );
   }
 
+  async saveBizProjectDetail(data: any){
+    const returnField = { _key: true };
+    return await this.mutation(
+      'saveBizProjectDetail',
+      'biz_project_detail',
+      [data],
+      returnField
+    );
+  }
+
   async remove(_key: string) {
     const returnFields = { _key: true };
     const data = { _key };
@@ -177,6 +215,26 @@ export class BizProjectService extends AitBaseService {
       this.collection,
       [data],
       returnFields
+    );
+  }
+
+  async removeBizProjectSkill(data: any[]) {
+    const returnFields = { _key: true };
+    return await this.mutation(
+      'removeBizProjectSkillByKey',
+      'biz_project_skill',
+      data,
+      returnFields
+    );
+  }
+
+  async saveBizProjectSkill(data: any[]) {
+    const returnField = { _key: true, del_flag: true };
+    return await this.mutation(
+      'saveBizProjectSkill',
+      'biz_project_skill',
+      data,
+      returnField
     );
   }
 }

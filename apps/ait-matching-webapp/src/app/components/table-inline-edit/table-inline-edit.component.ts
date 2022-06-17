@@ -96,6 +96,7 @@ export class TableInlineEditComponent
   handleClickEdit(_key: string) {
     this._key = _key;
     this.isEdit = true;
+    console.log(this.candidateEdit.value)
   }
 
   handleClickCancel() {
@@ -152,7 +153,20 @@ export class TableInlineEditComponent
     data_save['start_plan_format'] = this.getDateFormat(
       data_save['start_plan']
     );
-    data_save['end_plan_format'] = this.getDateFormat(data_save['end_plan']);
+    if (data_save['end_plan']){
+      data_save['end_plan_format'] = this.getDateFormat(data_save['end_plan']);
+    }
+    else {
+      // const start_plan = new Date(data_save['valid_time_from']);
+      const end_plan = new Date(
+        data_save['start_plan_format'].getFullYear(),
+        data_save['start_plan_format'].getMonth() + 1,
+        0
+      );
+      data_save['end_plan_format'] = end_plan;
+      data_save['end_plan'] = end_plan.setMilliseconds(100);
+    }
+    
     this.list_candidate_clone = this.list_candidate_perpage;
     this.save_data = this.list_candidate;
     this.list_candidate_clone.forEach((item, index) => {
@@ -199,18 +213,16 @@ export class TableInlineEditComponent
       this.list_candidate.push(data);
       this.totalRows = this.list_candidate.length;
     });
-    const totalPage = Math.ceil(this.totalRows / this.rows);
-    for (let i = 1; i <= totalPage; i++) {
-      this.listPage.push(i);
-    }
+   
     return this.list_candidate;
   }
 
   async displayList(data, row_per_page, page) {
+    this.listPage = []
     this.list_candidate_perpage = [];
-    this.current_page = page;
-    this.start = row_per_page * (page - 1);
-    this.end = this.start + row_per_page;
+    this.current_page = Number(page);
+    this.start = Number(row_per_page) * (Number(page) - 1);
+    this.end = this.start +  Number(row_per_page);
     if (this.end > this.list_candidate.length) {
       this.end = this.list_candidate.length;
     }
@@ -221,6 +233,11 @@ export class TableInlineEditComponent
       const item = paginatedItems[i];
       this.list_candidate_perpage.push(item);
     }
+    const totalPage = Math.ceil(this.totalRows / this.rows);
+    for (let i = 1; i <= totalPage; i++) {
+      this.listPage.push(i);
+    }
+    return this.list_candidate;
   }
 
   async clickPageNumber(page) {

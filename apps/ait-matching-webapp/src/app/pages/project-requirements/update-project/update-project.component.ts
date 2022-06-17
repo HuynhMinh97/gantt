@@ -17,7 +17,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
@@ -43,6 +43,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   project_key: string;
   projectForm: FormGroup;
   projectDetailForm: FormGroup;
+  project_skill_save : any;
   project_skill = [];
   project_title = [];
   project_industry = [];
@@ -79,12 +80,17 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     valid_time_from: false,
     remark: false,
   };
-
+  projectSkillSave = {
+    _from: '',
+    _to: '',
+    level: '',
+  };
   user_list = [];
   employeeList: any[] = [];
   mode = MODE.NEW;
 
   constructor(
+    public router: Router,
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
     private element: ElementRef,
@@ -134,6 +140,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     });
 
     this.projectDetailForm = this.formBuilder.group({
+      _key: new FormControl(null),
       customer: new FormControl(null),
       project_code: new FormControl(null),
       person_in_charge: new FormControl(null),
@@ -151,7 +158,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
       await this.getEmployee();
       await this.getAllUser();
     } catch {}
-   
+
     await this.projectForm.valueChanges.subscribe((data) => {
       this.checkAllowSave();
     });
@@ -161,17 +168,17 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     this.cancelLoadingApp();
   }
 
-  onCreateConfirm(event) {
-    console.log('Create Event In Console');
-    console.log(event);
-    event.confirm.resolve();
-  }
+  // onCreateConfirm(event) {
+  //   console.log('Create Event In Console');
+  //   console.log(event);
+  //   event.confirm.resolve();
+  // }
 
-  onSaveConfirm(event) {
-    console.log('Edit Event In Console');
-    console.log(event);
-    event.confirm.resolve();
-  }
+  // onSaveConfirm(event) {
+  //   console.log('Edit Event In Console');
+  //   console.log(event);
+  //   event.confirm.resolve();
+  // }
 
   async find(data = {}) {
     try {
@@ -182,16 +189,16 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
       await this.findIndustryProject();
       await this.findLevelProject();
       await this.findLocationProject();
-      await this.fingProjectDetail();
+      await this.findProjectDetail();
       await dataFind.push(this.projectForm.value);
       this.projectFormClone = this.projectForm.value;
       this.projectDetailFormClone = this.projectDetailForm.value;
     } catch (error) {}
   }
 
-  async fingProjectDetail(){
-    const result = await this.bizProjectService.findDetail();
-    this.projectDetailForm.patchValue({...result.data[0]})
+  async findProjectDetail() {
+    const result = await this.bizProjectService.findDetailByProject_key(this.project_key);
+    this.projectDetailForm.patchValue({ ...result.data[0] });
   }
 
   async getCandidate() {
@@ -202,7 +209,6 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   }
 
   async findProjectByKey() {
-    
     const res = await this.registerProjectService.findProjectAitByKey(
       this.project_key
     );
@@ -219,114 +225,125 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     try {
       const _key = this.project_key;
       await this.registerProjectService
-      .findSkillProject(_key)
-      .then(async (res) => {
-        const listSkills = [];
-        for (const skill of res.data) {
-          listSkills.push({
-            _key: skill?.skills?._key,
-            value: skill?.skills?.value,
-          });
-        }
-        if (listSkills[0]['_key']) {
-          this.project_skill = listSkills;
-          await this.projectForm.controls['skills'].setValue([...listSkills]);
-        }
-        
-        this.cancelLoadingApp();
-      });
-    } catch{ this.cancelLoadingApp();}
+        .findSkillProject(_key)
+        .then(async (res) => {
+          const listSkills = [];
+          for (const skill of res.data) {
+            listSkills.push({
+              _key: skill?.skill?._key,
+              value: skill?.skill?.value,
+            });
+          }
+          if (listSkills[0]['_key']) {
+            this.project_skill = listSkills;
+            await this.projectForm.controls['skills'].setValue([...listSkills]);
+          }
+
+          this.cancelLoadingApp();
+        });
+    } catch {
+      this.cancelLoadingApp();
+    }
   }
 
   async findLevelProject() {
     try {
-    const _key = this.project_key;
-    await this.registerProjectService
-      .findLevelProject(_key)
-      .then(async (res) => {
-        const listLevel = [];
-        for (const item of res.data) {
-          listLevel.push({
-            _key: item?.level?._key,
-            value: item?.level?.value,
-          });
-        }
-        if (listLevel[0]['_key']) {
-          this.project_level = listLevel;
-          await this.projectForm.controls['level'].setValue([...listLevel]);
-        }
-        this.cancelLoadingApp();
-      });
-    } catch{ this.cancelLoadingApp();}
+      const _key = this.project_key;
+      await this.registerProjectService
+        .findLevelProject(_key)
+        .then(async (res) => {
+          const listLevel = [];
+          for (const item of res.data) {
+            listLevel.push({
+              _key: item?.level?._key,
+              value: item?.level?.value,
+            });
+          }
+          if (listLevel[0]['_key']) {
+            this.project_level = listLevel;
+            await this.projectForm.controls['level'].setValue([...listLevel]);
+          }
+          this.cancelLoadingApp();
+        });
+    } catch {
+      this.cancelLoadingApp();
+    }
   }
 
   async findIndustryProject() {
     try {
-    const _key = this.project_key;
-    await this.registerProjectService
-      .findIndustryProject(_key)
-      .then(async (res) => {
-        const listIndustry = [];
-        for (const item of res.data) {
-          listIndustry.push({
-            _key: item?.industry?._key,
-            value: item?.industry?.value,
-          });
-        }
-        if (listIndustry[0]['_key']) {
-          this.project_industry = listIndustry;
-          await this.projectForm.controls['industry'].setValue([
-            ...listIndustry,
-          ]);
-        }
-        this.cancelLoadingApp();
-      });
-    } catch{ this.cancelLoadingApp();}
+      const _key = this.project_key;
+      await this.registerProjectService
+        .findIndustryProject(_key)
+        .then(async (res) => {
+          const listIndustry = [];
+          for (const item of res.data) {
+            listIndustry.push({
+              _key: item?.industry?._key,
+              value: item?.industry?.value,
+            });
+          }
+          if (listIndustry[0]['_key']) {
+            this.project_industry = listIndustry;
+            await this.projectForm.controls['industry'].setValue([
+              ...listIndustry,
+            ]);
+          }
+          this.cancelLoadingApp();
+        });
+    } catch {
+      this.cancelLoadingApp();
+    }
   }
 
   async findTitleProject() {
     try {
-    const _key = this.project_key;
-    await this.registerProjectService
-      .findTitleProject(_key)
-      .then(async (res) => {
-        const listTitles = [];
-        for (const item of res.data) {
-          listTitles.push({
-            _key: item?.title?._key,
-            value: item?.title?.value,
-          });
-        }
-        if (listTitles[0]['_key']) {
-          this.project_title = listTitles;
-          await this.projectForm.controls['title'].setValue([...listTitles]);
-        }
-        this.cancelLoadingApp();
-      });
-    } catch{ this.cancelLoadingApp();}
+      const _key = this.project_key;
+      await this.registerProjectService
+        .findTitleProject(_key)
+        .then(async (res) => {
+          const listTitles = [];
+          for (const item of res.data) {
+            listTitles.push({
+              _key: item?.title?._key,
+              value: item?.title?.value,
+            });
+          }
+          if (listTitles[0]['_key']) {
+            this.project_title = listTitles;
+            await this.projectForm.controls['title'].setValue([...listTitles]);
+          }
+          this.cancelLoadingApp();
+        });
+    } catch {
+      this.cancelLoadingApp();
+    }
   }
 
   async findLocationProject() {
     try {
-    const _key = this.project_key;
-    await this.registerProjectService
-      .findLocationProject(_key)
-      .then(async (res) => {
-        const listLocation = [];
-        for (const item of res.data) {
-          listLocation.push({
-            _key: item?.location?._key,
-            value: item?.location?.value,
-          });
-        }
-        if (listLocation[0]['_key']) {
-          console.log(listLocation)
-          this.project_location = listLocation;
-          await this.projectForm.controls['location'].setValue([...listLocation]);
-        }
-        this.cancelLoadingApp();
-      });
-    } catch{ this.cancelLoadingApp();}
+      const _key = this.project_key;
+      await this.registerProjectService
+        .findLocationProject(_key)
+        .then(async (res) => {
+          const listLocation = [];
+          for (const item of res.data) {
+            listLocation.push({
+              _key: item?.location?._key,
+              value: item?.location?.value,
+            });
+          }
+          if (listLocation[0]['_key']) {
+            this.project_location = listLocation;
+            await this.projectForm.controls['location'].setValue([
+              ...listLocation,
+            ]);
+          }
+          this.cancelLoadingApp();
+        });
+    } catch {
+      this.cancelLoadingApp();
+    }
   }
 
   toggleExpan = () => (this.isExpan = !this.isExpan);
@@ -368,14 +385,12 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
-   if(this.projectForm.valid){
-
-     await this.saveBizProject();
-   }
-   else {
-    this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-    this.scrollIntoError();
-  }
+    if (this.projectForm.valid) {
+      await this.saveBizProject();
+    } else {
+      this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+      this.scrollIntoError();
+    }
   }
 
   scrollIntoError() {
@@ -397,32 +412,42 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
 
   async saveBizProject() {
     try {
+      
       const projectUser = this.registerProjectService.data_save;
       const saveProjectDetail = this.projectDetailForm.value;
-      await this.bizProjectService.save(this.saveDataProject()).then((res) => {
+      await this.bizProjectService.save(this.saveDataProject()).then(async (res) => {
+        await this.saveProjectSkill()
         if (res.status === RESULT_STATUS.OK) {
+          if (isObjectFull(saveProjectDetail)) {
+            await this.saveProjectDetail();
+          }
+
           if (isArrayFull(projectUser)) {
             projectUser.forEach((item) => {
               item['project_key'] = this.project_key;
               this.registerProjectService.saveTeamMember(item).then((r) => {
                 if (r.status === RESULT_STATUS.OK) {
                   this.showToastr('', this.getMsg('I0005'));
+                  localStorage.setItem('biz_project_key', this.project_key);
+                  this.router.navigate([`/requirement-list`]);
                 } else {
                   this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
                 }
               });
-            })
-          }else { this.showToastr('', this.getMsg('I0005'));}
+            });
+          } else {
+            this.showToastr('', this.getMsg('I0005'));
+            localStorage.setItem('biz_project_key', this.project_key);
+            this.router.navigate([`/requirement-list`]);
+          }
         } else {
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         }
       });
-    } catch (e) {
-      console.log(e);
-    }
+    } catch (e) { }
   }
 
-  takeInputValue(value: string,group: string, form: string): void {
+  takeInputValue(value: string, group: string, form: string): void {
     if (value) {
       this[group].controls[form].markAsDirty();
       this[group].controls[form].setValue(value);
@@ -438,6 +463,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     } else {
       this.projectDetailForm.controls[target].setValue(null);
     }
+    
   }
 
   takeMasterValues(value: KeyValueDto[], group: string, form: string): void {
@@ -524,9 +550,10 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
       { ...projectDetailInfoClone }
     );
   }
- 
+
   saveDataProject() {
     const saveData = this.projectForm.value;
+    this.project_skill_save =saveData.skills;
     delete saveData.skills;
     if (!saveData['valid_time_to'] && saveData['valid_time_from']) {
       const start_plan = new Date(saveData['valid_time_from']);
@@ -585,9 +612,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     return saveData;
   }
 
-
   clear() {
-    debugger
     this.project_skill = [];
     this.project_title = [];
     this.project_industry = [];
@@ -599,9 +624,66 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
       this.resetProjectInfo[index] = true;
       setTimeout(() => {
         this.resetProjectInfo[index] = false;
-      }, 100);
+      }, 150);
     }
-    
   }
 
+  async resetForm() {
+    for (const index in this.resetProjectInfo) {
+      this.resetProjectInfo[index] = true;
+      setTimeout(() => {
+        this.resetProjectInfo[index] = false;
+      }, 150);
+    }
+    await this.find();
+  }
+
+  async findCandidates() {
+    localStorage.setItem('biz_project_key', this.project_key);
+    this.router.navigate([`/recommenced-user`]);
+  }
+
+  async saveProjectDetail() {
+    const saveData = this.projectDetailForm.value;
+    if( saveData.person_in_charge._key)
+    {
+      saveData.person_in_charge = saveData.person_in_charge._key;
+    }
+    if (isObjectFull(saveData)) {
+      const projectDetial = {};
+      if(saveData._key){
+        projectDetial['_key'] = saveData._key
+      }
+      projectDetial['project'] = this.project_key;
+      projectDetial['customer'] = saveData.customer?._key || null;
+      projectDetial['project_code'] = saveData.project_code || null;
+      projectDetial['person_in_charge'] = saveData.person_in_charge;
+      projectDetial['status'] = saveData.status?._key;
+      await this.bizProjectService.saveBizProjectDetail(projectDetial);
+    }
+  }
+
+
+  async saveProjectSkill() {
+    this.projectSkillSave._from = 'biz_project/' + this.project_key;
+    const skills = this.project_skill_save;   
+    ;
+
+    if (this.project_key) {
+      const _fromSkill = [{ _from: 'biz_project/' + this.project_key }];
+      try{
+
+        await this.bizProjectService.removeBizProjectSkill(_fromSkill);
+      }catch{}
+    }
+    try{
+
+      for (const skill of skills) {
+        this.projectSkillSave._to = 'm_skill/' + skill._key;
+        this.projectSkillSave.level = skill.level;
+        await this.bizProjectService.saveBizProjectSkill([this.projectSkillSave]);
+      }
+    }catch{}
+    this.cancelLoadingApp();
+  }
 }

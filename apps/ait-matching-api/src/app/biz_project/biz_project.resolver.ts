@@ -1,14 +1,18 @@
 import { AitBaseService, AitCtxUser, SysUser } from '@ait/core';
+import { RESULT_STATUS } from '@ait/shared';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GetProjectInforEntity } from './biz_project.entity';
 import {
   BizProjectRequest,
   BizProjectDetailRequest,
-  GetBizProjectInfoRequest
+  GetBizProjectInfoRequest,
+  BizProjectDetailSaveRequest,
+  BizProjectSkillRequest
 } from './biz_project.request';
 import {
   BizProjectDetailResponse,
   BizProjectResponse,
+  BizProjectSkillResponse,
   GetBizProjectInforResponse
 } from './biz_project.response';
 
@@ -42,12 +46,43 @@ export class BizProjectResolver extends AitBaseService {
     return this.save(request, user);
   }
 
+
+  @Mutation(() => BizProjectDetailResponse, { name: 'saveBizProjectDetail' })
+  saveBizProjectDetail(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => BizProjectDetailSaveRequest })
+    request: BizProjectDetailSaveRequest
+  ) {
+    return this.save(request, user);
+  }
+
   @Query(() => BizProjectResponse, { name: 'findProjectAitByKey' })
   async findProjectAitByKey(
     @Args('request', { type: () => GetBizProjectInfoRequest })
     request: GetBizProjectInfoRequest
   ) {
     return await this.find(request);
+  }
+
+  @Query(() => BizProjectSkillResponse, { name: 'findBizProjectSkillByFrom' })
+  async findBizProjectSkillByFrom(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => BizProjectSkillRequest }) request: BizProjectSkillRequest
+  ) {
+    const lang = request.lang;
+    const from = request.condition._from as string;
+    const collection = request.collection;
+    
+      const aqlQuery = `
+          FOR v,e, p IN 1..1 OUTBOUND "${from}" ${collection}
+          FILTER  e.del_flag != true
+          let skill = {_key: v._key, value:  v.name.${lang} ? v.name.${lang} : v.name}
+          RETURN {_key: v._key, skill:skill, level: e.level} 
+      `;
+      console.log(aqlQuery)
+      const result = await this.query(aqlQuery);
+      return result;
+   
   }
 
   @Query(() => GetBizProjectInforResponse, { name: 'findSkillProject' })
@@ -292,6 +327,34 @@ export class BizProjectResolver extends AitBaseService {
     return await this.query(aqlQuery);
   }
 
- 
+  @Mutation(() => BizProjectSkillResponse, { name: 'removeBizProjectSkillByKey' })
+  async removeBizProjectSkillByKey(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => BizProjectSkillRequest }) request: BizProjectSkillRequest
+  ) {
+    //return this.remove(request, user);
+    const user_id = request.user_id;
+    const from = JSON.stringify(request.data[0]._from);
+    if (user_id) {
+      const aqlQuery = `
+        FOR data IN biz_project_skill
+        FILTER data._from == ${from}
+        REMOVE { _key: data._key } IN biz_project_skill
+        LET removed = OLD
+        RETURN removed
+      `;
+      return await this.query(aqlQuery);
+    } else {
+      return new BizProjectSkillResponse(RESULT_STATUS.ERROR, [], 'error');
+    }
+  }
+
+  @Mutation(() => BizProjectSkillResponse, { name: 'saveBizProjectSkill' })
+  saveBizProjectSkill(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => BizProjectSkillRequest }) request: BizProjectSkillRequest
+  ) {
+    return this.save(request, user);
+  }
 
 }

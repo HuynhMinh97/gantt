@@ -82,14 +82,14 @@ export class RegisterProjectService extends AitBaseService {
 
   async findSkillProject(_key: string) {
     const condition = {
-      _key: _key,
+      _from: 'biz_project/' + _key,
       del_flag: false,
     };
     return await this.query(
-      'findSkillProject',
-      { collection: 'm_skill', condition },
+      'findBizProjectSkillByFrom',
+      { collection: 'biz_project_skill', condition },
       {
-        skills: {
+        skill: {
           _key: true,
           value: true,
         },

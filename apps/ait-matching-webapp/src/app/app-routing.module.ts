@@ -316,17 +316,17 @@ export const routes: Routes = [
     component: MasterListComponent,
   },
   {
-    path: 'add-data-master/:id',
+    path: 'master/:id',
     canActivate: [AitAuthGuardService],
     component: EditDataMasterComponent,
   },
   {
-    path: 'add-data-master',
+    path: 'master',
     canActivate: [AitAuthGuardService],
     component: EditDataMasterComponent,
   },
   {
-    path: 'view-data-master/:id',
+    path: 'master-detail/:id',
     canActivate: [AitAuthGuardService],
     component: ViewDataMasterComponent,
   },

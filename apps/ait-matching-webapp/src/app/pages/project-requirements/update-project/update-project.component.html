@@ -27,20 +27,25 @@
     <ng-container>
       <div class="input_inline">
         <ait-autocomplete-master-data
-          [width]="'400px'"
-          [id]="'title'"
-          [label]="'title'"
-          [isSubmit]="isSubmit"
-          [isReset]="resetProjectInfo.title"
-          [allowNew]="true"
-          [required]="true"
-          [maxItem]="10"
-          [placeholder]="'please select title'"
-          [collection]="'m_title'"
-          [disableOutputDefault]="true"
-          (watchValue)="takeMasterValues($event?.value, 'projectForm', 'title')"
-          [defaultValue]="project_title"
-        ></ait-autocomplete-master-data>
+        [id]="'title'"
+        [width]="'400px'"
+        [label]="'title'"
+        [required]="true"
+        [allowNew]="true"
+        [maxItem]="10"
+        [collection]="'m_title'"
+        [placeholder]="'please select title'"
+        [disableOutputDefault]="true"
+        [isSubmit]="isSubmit"
+        [isReset]="resetProjectInfo.title"
+        (watchValue)="
+          takeMasterValues($event?.value, 'projectForm', 'title')
+        "
+        [defaultValue]="project_title"
+      >
+      </ait-autocomplete-master-data>
+
+
       </div>
     </ng-container>
     <ait-space [margin]="'7.25px'"></ait-space>
@@ -218,7 +223,9 @@
           [collection]="'m_company'"
           [disableOutputDefault]="true"
           (watchValue)="takeMasterValue($event, 'customer')"
-          [defaultValue]="[projectDetailForm?.controls['customer']?.value]"
+          [defaultValue]="
+          [projectDetailForm?.controls['customer']?.value
+          ]"
         ></ait-autocomplete-master-data>
       </div>
     </ng-container>
@@ -274,7 +281,9 @@
           [disableOutputDefault]="true"
           [isReset]="false"
           (watchValue)="takeMasterValue($event, 'status')"
-          [defaultValue]="[projectDetailForm?.controls['status']?.value]"
+          [defaultValue]="[
+          projectDetailForm?.controls['status']?.value
+          ]"
         ></ait-autocomplete-master-data>
       </div>
     </ng-container>
@@ -288,12 +297,10 @@
       <div class="action-row">
         <div class="block">
           <ait-button
-            *ngIf="isAllowDelete"
             [id]="'remove'"
             [width]="'150px'"
             [title]="'delete'"
             [isDefault]="true"
-            (click)="remove()"
           >
           </ait-button>
 
@@ -319,6 +326,7 @@
             [width]="'150px'"
             [title]="'reset'"
             [isDefault]="true"
+            (click)="resetForm()"
           >
           </ait-button>
 
@@ -331,14 +339,14 @@
           >
           </ait-button>
 
-          <!-- <ait-button
-            *ngIf="!isChanged"
-            [id]="'disabled'"
+          <ait-button
+            [id]="'find_candidates'"
             [width]="'150px'"
-            [title]="'save'"
-            [style]="'disabled'"
+            [title]="'find_candidates'"
+            (click)="findCandidates()"
+            [isDefault]="true"
           >
-          </ait-button> -->
+          </ait-button>
         </div>
       </div>
     </div>

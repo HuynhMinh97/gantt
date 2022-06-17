@@ -54,7 +54,6 @@ export class GetProjectInforEntity extends BaseEntity {
 
   @Field(() => String, { nullable: true })
   name?: string;
-  
 
   @Field(() => KeyValueEntity, { nullable: true })
   industry?: KeyValueEntity;
@@ -88,9 +87,26 @@ export class BizProjectDetailEntity extends BaseEntity {
   @Field(() => String, { nullable: true })
   person_in_charge?: string;
 
-  @Field(() => [KeyValueEntity], { nullable: true })
+  @Field(() => KeyValueEntity, { nullable: true })
   customer?: KeyValueEntity[];
 
-  @Field(() => [KeyValueEntity], { nullable: true })
+  @Field(() => KeyValueEntity, { nullable: true })
   status?: KeyValueEntity[];
+}
+
+@ObjectType()
+export class BizProjectSkillEntity extends BaseEntity {
+
+  @Field(() => String, { nullable: true })
+  _from?: string;
+
+  @Field(() => String, { nullable: true })
+  _to?: string;
+
+  @Field(() => Float, { nullable: true })
+  level?: number;
+  
+  @Field(() => KeyValueEntity, { nullable: true })
+  skill?: KeyValueEntity;
+  
 }

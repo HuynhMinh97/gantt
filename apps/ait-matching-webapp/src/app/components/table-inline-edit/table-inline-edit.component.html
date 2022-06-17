@@ -324,17 +324,17 @@
       </li>
     </ul>
     <div class="pageDetail">
-      {{totalRows + 'case' +  start + ' - ' + end}}
+      {{totalRows + ' case ' +  start + ' - ' + end}}
     </div>
   </div>
 
    <div class="show_case">
     <select (select)="rows" (change)="onChangeRowPerpage($event.target.value)">
-      <option value="10">10{{'case' | translate}}</option>
-      <option value="20">20{{'case' | translate}}</option>
-      <option value="30">30{{'case' | translate}}</option>
-      <option value="50">50{{'case' | translate}}</option>
-      <option value="100">100{{'case' | translate}}</option>
+      <option value="10">10{{' case' | translate}}</option>
+      <option value="20">20{{' case' | translate}}</option>
+      <option value="30">30{{' case' | translate}}</option>
+      <option value="50">50{{' case' | translate}}</option>
+      <option value="100">100{{' case' | translate}}</option>
     </select>
    </div>
 
