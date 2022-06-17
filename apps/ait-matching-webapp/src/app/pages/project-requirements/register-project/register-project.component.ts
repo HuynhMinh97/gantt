@@ -119,14 +119,10 @@ export class RegisterProjectComponent
   }
 
   onCreateConfirm(event) {
-    console.log('Create Event In Console');
-    console.log(event);
     event.confirm.resolve();
   }
 
   onSaveConfirm(event) {
-    console.log('Edit Event In Console');
-    console.log(event);
     event.confirm.resolve();
   }
 
@@ -149,8 +145,6 @@ export class RegisterProjectComponent
     );
     this.candidate_list = result.data;
   }
-
-  
 
   async findProjectByKey() {
     const res = await this.registerProjectService.findProjectAitByKey(
@@ -199,7 +193,9 @@ export class RegisterProjectComponent
           });
         }
         if (listIndustry[0]['_key']) {
-          await this.projectForm.controls['industry'].setValue([...listIndustry]);
+          await this.projectForm.controls['industry'].setValue([
+            ...listIndustry,
+          ]);
         }
         this.cancelLoadingApp();
       });
@@ -261,29 +257,31 @@ export class RegisterProjectComponent
 
   public save = async (condition = {}) => {
     const data = this.registerProjectService.data_save;
-    await this.saveBizProject(condition)
+    await this.saveBizProject(condition);
   };
 
   async saveBizProject(condition) {
     try {
       const data = this.registerProjectService.data_save;
-      console.log(data[0]['user_id']);
       const saveData = condition;
-      if (!saveData['valid_time_to'] && saveData['valid_time_from']){
+      if (!saveData['valid_time_to'] && saveData['valid_time_from']) {
         const start_plan = new Date(saveData['valid_time_from']);
-        const end_plan = new Date(start_plan.getFullYear(), start_plan.getMonth() + 1, 0);
-        saveData['valid_time_to'] =  end_plan.setMilliseconds(100); 
+        const end_plan = new Date(
+          start_plan.getFullYear(),
+          start_plan.getMonth() + 1,
+          0
+        );
+        saveData['valid_time_to'] = end_plan.setMilliseconds(100);
       }
       this.bizProjectService.save(saveData).then((res) => {
         if (res.status === RESULT_STATUS.OK) {
-          const obj = {}
+          const obj = {};
           this.registerProjectService
-          .saveTeamMember(this.project_key)
-          .then((r) => {
-            if (r.status === RESULT_STATUS.OK) {
-              
-            }
-          });
+            .saveTeamMember(this.project_key)
+            .then((r) => {
+              if (r.status === RESULT_STATUS.OK) {
+              }
+            });
           this.showToastr('', this.getMsg('I0005'));
         } else {
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);

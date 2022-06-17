@@ -176,9 +176,9 @@ export class RecommencedUserComponent
 
   project_id = '';
 
-  ngDoCheck() {
-    console.log(this.dataFilter);
-  }
+  // ngDoCheck() {
+  //   console.log(this.dataFilter);
+  // }
 
   getResultCount() {
     if (this.matchingList.length > 0) {

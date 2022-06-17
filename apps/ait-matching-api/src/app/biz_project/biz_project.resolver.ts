@@ -7,13 +7,13 @@ import {
   BizProjectDetailRequest,
   GetBizProjectInfoRequest,
   BizProjectDetailSaveRequest,
-  BizProjectSkillRequest
+  BizProjectSkillRequest,
 } from './biz_project.request';
 import {
   BizProjectDetailResponse,
   BizProjectResponse,
   BizProjectSkillResponse,
-  GetBizProjectInforResponse
+  GetBizProjectInforResponse,
 } from './biz_project.response';
 
 @Resolver()
@@ -33,7 +33,6 @@ export class BizProjectResolver extends AitBaseService {
     @Args('request', { type: () => BizProjectDetailRequest })
     request: BizProjectDetailRequest
   ) {
-    console.log(await this.find(request, user))
     return this.find(request, user);
   }
 
@@ -45,7 +44,6 @@ export class BizProjectResolver extends AitBaseService {
   ) {
     return this.save(request, user);
   }
-
 
   @Mutation(() => BizProjectDetailResponse, { name: 'saveBizProjectDetail' })
   saveBizProjectDetail(
@@ -67,22 +65,21 @@ export class BizProjectResolver extends AitBaseService {
   @Query(() => BizProjectSkillResponse, { name: 'findBizProjectSkillByFrom' })
   async findBizProjectSkillByFrom(
     @AitCtxUser() user: SysUser,
-    @Args('request', { type: () => BizProjectSkillRequest }) request: BizProjectSkillRequest
+    @Args('request', { type: () => BizProjectSkillRequest })
+    request: BizProjectSkillRequest
   ) {
     const lang = request.lang;
     const from = request.condition._from as string;
     const collection = request.collection;
-    
-      const aqlQuery = `
+
+    const aqlQuery = `
           FOR v,e, p IN 1..1 OUTBOUND "${from}" ${collection}
           FILTER  e.del_flag != true
           let skill = {_key: v._key, value:  v.name.${lang} ? v.name.${lang} : v.name}
           RETURN {_key: v._key, skill:skill, level: e.level} 
       `;
-      console.log(aqlQuery)
-      const result = await this.query(aqlQuery);
-      return result;
-   
+    const result = await this.query(aqlQuery);
+    return result;
   }
 
   @Query(() => GetBizProjectInforResponse, { name: 'findSkillProject' })
@@ -93,39 +90,37 @@ export class BizProjectResolver extends AitBaseService {
   ) {
     const lang = request.lang;
     const _key = request.condition?._key;
-    const collection = request.collection
+    const collection = request.collection;
     const aqlQuery = `
     FOR v IN biz_project
     filter v._key == "${_key}"
     RETURN v.skills
     `;
-   const result =  await this.query(aqlQuery);
-   const Skills = [];
-   if (result.data[0]){
-     for (const skill of result.data[0])
-     {
-       const skillName = await this.getNameByKey(skill, lang, collection);
-       const skills = {
-         _key:skill,
-         value:skillName.data[0]
-       }
-       Skills.push({skills})
-     }
-   }
-   else {
-    const skills = {
-      _key:null,
-      value:null
+    const result = await this.query(aqlQuery);
+    const Skills = [];
+    if (result.data[0]) {
+      for (const skill of result.data[0]) {
+        const skillName = await this.getNameByKey(skill, lang, collection);
+        const skills = {
+          _key: skill,
+          value: skillName.data[0],
+        };
+        Skills.push({ skills });
+      }
+    } else {
+      const skills = {
+        _key: null,
+        value: null,
+      };
+      Skills.push({ skills });
     }
-    Skills.push({skills})
-   }
-   
+
     const response = new GetBizProjectInforResponse(
       200,
       Skills as GetProjectInforEntity[],
       ''
     );
-    
+
     return response;
   }
 
@@ -137,42 +132,40 @@ export class BizProjectResolver extends AitBaseService {
   ) {
     const lang = request.lang;
     const _key = request.condition?._key;
-    const collection = request.collection
-    
+    const collection = request.collection;
+
     const aqlQuery = `
     FOR v IN biz_project
     filter v._key == "${_key}"
     RETURN v.title
     `;
-   const result =  await this.query(aqlQuery);
-  
-   const Titles = [];
-   
-   if (result.data[0]){
-     for (const item of result.data[0])
-     {
-       const titleName = await this.getNameByKey(item, lang, collection);
-       const title = {
-         _key:item,
-         value:titleName.data[0]
-       }
-       Titles.push({title})
-     }
-   }
-   else {
-    const titles = {
-      _key:null,
-      value:null
+    const result = await this.query(aqlQuery);
+
+    const Titles = [];
+
+    if (result.data[0]) {
+      for (const item of result.data[0]) {
+        const titleName = await this.getNameByKey(item, lang, collection);
+        const title = {
+          _key: item,
+          value: titleName.data[0],
+        };
+        Titles.push({ title });
+      }
+    } else {
+      const titles = {
+        _key: null,
+        value: null,
+      };
+      Titles.push({ titles });
     }
-    Titles.push({titles})
-   }
-   
+
     const response = new GetBizProjectInforResponse(
       200,
       Titles as GetProjectInforEntity[],
       ''
     );
-    
+
     return response;
   }
 
@@ -184,42 +177,40 @@ export class BizProjectResolver extends AitBaseService {
   ) {
     const lang = request.lang;
     const _key = request.condition?._key;
-    const collection = request.collection
-    
+    const collection = request.collection;
+
     const aqlQuery = `
     FOR v IN biz_project
     filter v._key == "${_key}"
     RETURN v.industry
     `;
-   const result =  await this.query(aqlQuery);
-  
-   const Industry = [];
-   
-   if (result.data[0]){
-     for (const item of result.data[0])
-     {
-       const Name = await this.getNameByKey(item, lang, collection);
-       const industry = {
-         _key:item,
-         value:Name.data[0]
-       }
-       Industry.push({industry})
-     }
-   }
-   else {
-    const industry = {
-      _key:null,
-      value:null
+    const result = await this.query(aqlQuery);
+
+    const Industry = [];
+
+    if (result.data[0]) {
+      for (const item of result.data[0]) {
+        const Name = await this.getNameByKey(item, lang, collection);
+        const industry = {
+          _key: item,
+          value: Name.data[0],
+        };
+        Industry.push({ industry });
+      }
+    } else {
+      const industry = {
+        _key: null,
+        value: null,
+      };
+      Industry.push({ industry });
     }
-    Industry.push({industry})
-   }
-   
+
     const response = new GetBizProjectInforResponse(
       200,
       Industry as GetProjectInforEntity[],
       ''
     );
-    
+
     return response;
   }
 
@@ -231,42 +222,40 @@ export class BizProjectResolver extends AitBaseService {
   ) {
     const lang = request.lang;
     const _key = request.condition?._key;
-    const collection = request.collection
-    
+    const collection = request.collection;
+
     const aqlQuery = `
     FOR v IN biz_project
     filter v._key == "${_key}"
     RETURN v.level
     `;
-   const result =  await this.query(aqlQuery);
-  
-   const Level = [];
-   
-   if (result.data[0]){
-     for (const item of result.data[0])
-     {
-       const Name = await this.getNameByKey(item, lang, collection);
-       const level = {
-         _key:item,
-         value:Name.data[0]
-       }
-       Level.push({level})
-     }
-   }
-   else {
-    const level = {
-      _key:null,
-      value:null
+    const result = await this.query(aqlQuery);
+
+    const Level = [];
+
+    if (result.data[0]) {
+      for (const item of result.data[0]) {
+        const Name = await this.getNameByKey(item, lang, collection);
+        const level = {
+          _key: item,
+          value: Name.data[0],
+        };
+        Level.push({ level });
+      }
+    } else {
+      const level = {
+        _key: null,
+        value: null,
+      };
+      Level.push({ level });
     }
-    Level.push({level})
-   }
-   
+
     const response = new GetBizProjectInforResponse(
       200,
       Level as GetProjectInforEntity[],
       ''
     );
-    
+
     return response;
   }
 
@@ -278,42 +267,40 @@ export class BizProjectResolver extends AitBaseService {
   ) {
     const lang = request.lang;
     const _key = request.condition?._key;
-    const collection = request.collection
-    
+    const collection = request.collection;
+
     const aqlQuery = `
     FOR v IN biz_project
     filter v._key == "${_key}"
     RETURN v.location
     `;
-   const result =  await this.query(aqlQuery);
-  
-   const Location = [];
-   
-   if (result.data[0]){
-     for (const item of result.data[0])
-     {
-       const Name = await this.getNameByKey(item, lang, collection);
-       const location = {
-         _key:item,
-         value:Name.data[0]
-       }
-       Location.push({location})
-     }
-   }
-   else {
-    const location = {
-      _key:null,
-      value:null
+    const result = await this.query(aqlQuery);
+
+    const Location = [];
+
+    if (result.data[0]) {
+      for (const item of result.data[0]) {
+        const Name = await this.getNameByKey(item, lang, collection);
+        const location = {
+          _key: item,
+          value: Name.data[0],
+        };
+        Location.push({ location });
+      }
+    } else {
+      const location = {
+        _key: null,
+        value: null,
+      };
+      Location.push({ location });
     }
-    Location.push({location})
-   }
-   
+
     const response = new GetBizProjectInforResponse(
       200,
       Location as GetProjectInforEntity[],
       ''
     );
-    
+
     return response;
   }
 
@@ -323,14 +310,17 @@ export class BizProjectResolver extends AitBaseService {
      filter v._key == "${_key}"
      RETURN v.name.${lang}
      `;
-     
+
     return await this.query(aqlQuery);
   }
 
-  @Mutation(() => BizProjectSkillResponse, { name: 'removeBizProjectSkillByKey' })
+  @Mutation(() => BizProjectSkillResponse, {
+    name: 'removeBizProjectSkillByKey',
+  })
   async removeBizProjectSkillByKey(
     @AitCtxUser() user: SysUser,
-    @Args('request', { type: () => BizProjectSkillRequest }) request: BizProjectSkillRequest
+    @Args('request', { type: () => BizProjectSkillRequest })
+    request: BizProjectSkillRequest
   ) {
     //return this.remove(request, user);
     const user_id = request.user_id;
@@ -352,9 +342,9 @@ export class BizProjectResolver extends AitBaseService {
   @Mutation(() => BizProjectSkillResponse, { name: 'saveBizProjectSkill' })
   saveBizProjectSkill(
     @AitCtxUser() user: SysUser,
-    @Args('request', { type: () => BizProjectSkillRequest }) request: BizProjectSkillRequest
+    @Args('request', { type: () => BizProjectSkillRequest })
+    request: BizProjectSkillRequest
   ) {
     return this.save(request, user);
   }
-
 }
