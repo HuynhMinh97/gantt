@@ -53,7 +53,6 @@ export class SystemResolver extends AitBaseService {
     @Args('request', { type: () => SystemAllLangRequest })
     request: SystemAllLangRequest
   ) {
-    console.log(1);
     const aqlStr = `
     FOR data IN sys_master_data
     RETURN data`;
