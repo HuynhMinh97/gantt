@@ -79,7 +79,7 @@ export class RecommencedUserComponent
 
     this.searchForm = this.formBuilder.group({
       _key: new FormControl(null),
-      keyword: new FormControl(''),
+      keyword: new FormControl('java'),
       skills: new FormControl(null),
       current_job_title: new FormControl(null),
       province_city: new FormControl(null),
@@ -162,6 +162,7 @@ export class RecommencedUserComponent
 
   filterList = [];
 
+  countMemberDf = [0, 0, 0];
   countMember = [0, 0, 0];
   memberChecked = [false, false, false];
 
@@ -176,6 +177,7 @@ export class RecommencedUserComponent
   project_id = '';
 
   // ngDoCheck() {
+  //   // console.log(this.dataFilter);
   // }
 
   getResultCount() {
@@ -232,9 +234,10 @@ export class RecommencedUserComponent
     if (res.status === RESULT_STATUS.OK) {
       if (res.data?.length === 0) {
         this.textDataNullTeamMember = 'There is no data to search';
+        this.countMember = [0, 0, 0];
       } else {
         this.textDataNullTeamMember = '';
-        this.dataFilterTeamMember = this.dataFilterTeamMember
+        this.dataFilterTeamMemberDf = this.dataFilterTeamMemberDf
           .concat(res.data)
           .map((e) =>
             Object.assign({
@@ -242,6 +245,8 @@ export class RecommencedUserComponent
               group_no: this.getGroupNo(e.user_id),
             })
           );
+        this.dataFilterTeamMember = [...this.dataFilterTeamMemberDf];
+        this.setCountMember(this.dataFilterTeamMemberDf);
         this.currentCount = Math.ceil(this.dataFilterTeamMemberDf.length / 8);
       }
     }
@@ -405,14 +410,8 @@ export class RecommencedUserComponent
             group_no: this.getGroupNo(e.user_id),
           })
         );
-        if (this.currentCount === 0) {
-          const temp2 = temp.sort((a, b) => a.group_no - b.group_no);
-          this.dataFilter = [...temp2];
-          this.dataFilterDf = [...temp2];
-        } else {
-          this.dataFilter = [...temp];
-          this.dataFilterDf = [...temp];
-        }
+        this.dataFilter = [...temp];
+        this.dataFilterDf = [...temp];
         this.currentCount = Math.ceil(this.dataFilterDf.length / 8);
       } else {
         this.textDataNull = 'There is no data';
@@ -472,6 +471,7 @@ export class RecommencedUserComponent
     this.dataFilter = [];
     this.dataFilterDf = [];
     this.matchingList = [];
+    this.countMemberDf = [0, 0, 0];
     this.countMember = [0, 0, 0];
     this.memberChecked = [false, false, false];
 
@@ -484,13 +484,14 @@ export class RecommencedUserComponent
         const arr = res.data[0].data.map((e: { item: string }) => e.item);
         this.matchingResult.forEach((e) => {
           if (e?.total_score >= 0.6) {
-            this.countMember[0]++;
+            this.countMemberDf[0]++;
           } else if (e?.total_score >= 0.2) {
-            this.countMember[1]++;
+            this.countMemberDf[1]++;
           } else {
-            this.countMember[2]++;
+            this.countMemberDf[2]++;
           }
         });
+        this.countMember = [...this.countMemberDf];
         const matchingSkill = res.data[0].matching_input_data.skill.map(
           (e: any) =>
             Object.assign({ ...e, count: 0, name: '', isSelected: false })
@@ -555,6 +556,7 @@ export class RecommencedUserComponent
     if (this.currentTab === 'R') {
       this.setSkeleton(true);
       this.callSearch(this.matchingList || []);
+      this.countMember = [...this.countMemberDf];
     } else if (this.currentTab === 'C') {
       if (this.project_id) {
         this.setSkeleton(true);
@@ -706,7 +708,7 @@ export class RecommencedUserComponent
     this.memberChecked[index] = !this.memberChecked[index];
     this.filterMain();
   }
-
+  //TODO
   filterSkill({ name, item }, index: number): void {
     this.matchingSkill[index].isSelected = !this.matchingSkill[index]
       .isSelected;
@@ -722,7 +724,13 @@ export class RecommencedUserComponent
         });
       }
     } else if (this.matchingSkill[index].isSelected) {
-      this.matchingSkill[0].isSelected = false;
+      // this.matchingSkill[0].isSelected = false;
+      this.filterList = [];
+      this.matchingSkill.forEach((e, i) => {
+        if (i !== index) {
+          this.matchingSkill[i].isSelected = false;
+        }
+      });
       this.isSelectAll = false;
       this.filterList.push(item);
     } else {
@@ -739,91 +747,141 @@ export class RecommencedUserComponent
   }
 
   filterMain(type = 0) {
-    try {
-      const formValue = this.searchForm.value;
-      const condition = Object.entries(formValue).reduce(
-        (a, [k, v]) => (v == null ? a : ((a[k] = v), a)),
-        {}
-      );
-      condition['keyword'] && delete condition['keyword'];
-      const checkList = [];
-      for (const prop in condition) {
-        if (
-          prop !== 'keyword' &&
-          prop !== 'valid_time_from' &&
-          prop !== 'valid_time_to'
-        ) {
-          checkList.push(condition[prop].map((t: any) => t['_key']));
+    if (this.currentTab === 'R') {
+      try {
+        const formValue = this.searchForm.value;
+        const condition = Object.entries(formValue).reduce(
+          (a, [k, v]) => (v == null ? a : ((a[k] = v), a)),
+          {}
+        );
+        condition['keyword'] && delete condition['keyword'];
+        const checkList = [];
+        for (const prop in condition) {
+          if (
+            prop !== 'keyword' &&
+            prop !== 'valid_time_from' &&
+            prop !== 'valid_time_to'
+          ) {
+            checkList.push(condition[prop].map((t: any) => t['_key']));
+          }
         }
-      }
-      const keyList = _.flatten(checkList);
-      if (isObjectFull(condition) && type === 0) {
-        const dataList = [...this.dataFilterDf];
-        const daveForFilter = dataList.filter((m) => {
-          let isValid = true;
-          for (const prop in condition) {
-            if (isArrayFull(condition[prop]) && isArrayFull(m[prop])) {
-              isValid = m[prop].some((z: any) => keyList.includes(z['_key']));
-              if (!isValid) break;
-            } else if (isArrayFull(condition[prop]) && isObjectFull(m[prop])) {
-              isValid = [m[prop]].some((z: any) => keyList.includes(z['_key']));
-              if (!isValid) break;
-            } else if (prop === 'valid_time_from' || prop === 'valid_time_to') {
-              if (condition['valid_time_from'] && !condition['valid_time_to']) {
-                isValid =
-                  this.setHours0(condition['valid_time_from']) <=
-                  this.setHours0(m['create_at']);
+        const keyList = _.flatten(checkList);
+        if (isObjectFull(condition) && type === 0) {
+          const dataList = [...this.dataFilterDf];
+          const daveForFilter = dataList.filter((m) => {
+            let isValid = true;
+            for (const prop in condition) {
+              if (isArrayFull(condition[prop]) && isArrayFull(m[prop])) {
+                isValid = m[prop].some((z: any) => keyList.includes(z['_key']));
                 if (!isValid) break;
               } else if (
-                !condition['valid_time_from'] &&
-                condition['valid_time_to']
+                isArrayFull(condition[prop]) &&
+                isObjectFull(m[prop])
               ) {
-                isValid =
-                  this.setHours0(condition['valid_time_to']) >=
-                  this.setHours0(m['create_at']);
+                isValid = [m[prop]].some((z: any) =>
+                  keyList.includes(z['_key'])
+                );
                 if (!isValid) break;
-              } else {
-                isValid =
-                  this.setHours0(condition['valid_time_from']) <=
-                    this.setHours0(m['create_at']) &&
-                  this.setHours0(condition['valid_time_to']) >=
+              } else if (
+                prop === 'valid_time_from' ||
+                prop === 'valid_time_to'
+              ) {
+                if (
+                  condition['valid_time_from'] &&
+                  !condition['valid_time_to']
+                ) {
+                  isValid =
+                    this.setHours0(condition['valid_time_from']) <=
                     this.setHours0(m['create_at']);
-                if (!isValid) break;
+                  if (!isValid) break;
+                } else if (
+                  !condition['valid_time_from'] &&
+                  condition['valid_time_to']
+                ) {
+                  isValid =
+                    this.setHours0(condition['valid_time_to']) >=
+                    this.setHours0(m['create_at']);
+                  if (!isValid) break;
+                } else {
+                  isValid =
+                    this.setHours0(condition['valid_time_from']) <=
+                      this.setHours0(m['create_at']) &&
+                    this.setHours0(condition['valid_time_to']) >=
+                      this.setHours0(m['create_at']);
+                  if (!isValid) break;
+                }
+              } else {
+                isValid = false;
+                break;
               }
-            } else {
-              isValid = false;
-              break;
             }
-          }
-          return isValid;
-        });
-        this.dataFilter = this.filterItem(daveForFilter);
-      } else {
-        this.dataFilter = this.filterItem([...this.dataFilterDf]);
+            return isValid;
+          });
+          this.dataFilter = this.filterItem(daveForFilter);
+        } else {
+          this.dataFilter = this.filterItem([...this.dataFilterDf]);
+        }
+        if (this.dataFilter.length === 0) {
+          this.textDataNull = 'There is no data';
+        } else {
+          this.textDataNull = '';
+        }
+      } catch (e) {
+        console.log(e);
       }
-      if (this.dataFilter.length === 0) {
-        this.textDataNull = 'There is no data';
+    } else if (this.currentTab === 'C') {
+      const check = [];
+      this.memberChecked.forEach((e, i) => e && check.push(i + 1));
+      if (check.length > 0) {
+        this.dataFilterTeamMember = this.dataFilterTeamMember.filter((e) =>
+          check.includes(e.group_no)
+        );
+        if (this.dataFilterTeamMember.length === 0) {
+          this.textDataNullTeamMember = 'There is no data';
+        } else {
+          this.textDataNullTeamMember = '';
+        }
       } else {
-        this.textDataNull = '';
+        this.dataFilterTeamMember = [...this.dataFilterTeamMemberDf];
       }
-    } catch (e) {
-      console.log(e);
     }
   }
+
+  setCountMember = (arr: any[]) => {
+    this.countMember = [0, 0, 0];
+    arr.forEach((e) => {
+      if (e?.group_no === 1) {
+        this.countMember[0]++;
+      } else if (e?.group_no === 0.2) {
+        this.countMember[1]++;
+      } else {
+        this.countMember[2]++;
+      }
+    });
+  };
 
   filterItem(data: any[]) {
     const check = [];
     this.memberChecked.forEach((e, i) => e && check.push(i + 1));
-    if (this.isSelectAll || this.filterList.length === 0) {
-      if (check.length > 0) {
-        return data.filter((e) => check.includes(e.group_no));
-      } else {
-        return data;
-      }
-    } else {
-      return data.filter((e) =>
-        e.skills.some(({ _key }) => this.filterList.includes(_key))
-      );
+    if (check.length === 0 && this.filterList.length === 0) {
+      return data;
     }
+
+    return data.filter((e) => {
+      let isValid = true;
+      if (check.length > 0) {
+        isValid = check.includes(e.group_no);
+        if (!isValid) {
+          return;
+        }
+      }
+      if (this.filterList.length > 0) {
+        isValid = e.skills.some(({ _key }) => this.filterList.includes(_key));
+        if (!isValid) {
+          return;
+        }
+      }
+      return isValid;
+    });
   }
 }

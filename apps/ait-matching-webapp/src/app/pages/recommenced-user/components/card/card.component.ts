@@ -4,8 +4,10 @@ import { RESULT_STATUS } from '@ait/shared';
 import { AitBinaryDataService, AppState, getEmpId } from '@ait/ui';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { NbIconLibraries } from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { RecommencedUserService } from 'apps/ait-matching-webapp/src/app/services/recommenced-user.service';
+import _ from 'lodash';
 import { COLOR } from '../../../interface';
 
 export const color = {
@@ -23,6 +25,8 @@ export class AitCardComponent implements OnInit {
   @Input() card: any;
   @Input() user_id: any;
   @Input() project_id: any;
+  @Input() isSaveMode = false;
+  @Input() isAddMode = false;
   colorCard = COLOR.color1;
   backgroundCard = color.green;
   userId = '';
@@ -68,19 +72,31 @@ export class AitCardComponent implements OnInit {
     store: Store<AppState>,
     private router: Router,
     private binaryService: AitBinaryDataService,
-    private recommencedService: RecommencedUserService
+    private recommencedService: RecommencedUserService,
+    private iconLibraries: NbIconLibraries
   ) {
     store.pipe(select(getEmpId)).subscribe((id) => (this.userId = id));
+    this.iconLibraries.registerFontPack('font-awesome', {
+      packClass: 'far',
+      iconClassPrefix: 'fa',
+    });
+    this.iconLibraries.registerFontPack('font-awesome-fas', {
+      packClass: 'fas',
+      iconClassPrefix: 'fa',
+    });
   }
 
   ngOnInit() {
     try {
       this.cardH = { ...this.card };
-      this.cardH.skills = this.cardH.skills
-        .slice()
-        .sort(
-          (a: { level: number }, b: { level: number }) => b.level - a.level
-        );
+      this.cardH.skills = _.uniqBy(
+        this.cardH.skills
+          .slice()
+          .sort(
+            (a: { level: number }, b: { level: number }) => b.level - a.level
+          ),
+        '_key'
+      );
       this.getAvatar();
       this.addColor();
     } catch (e) {
@@ -134,6 +150,10 @@ export class AitCardComponent implements OnInit {
           }
         });
     }
+  };
+
+  actionButtonPlan = (_key: string) => {
+    //
   };
 
   actionButtonAdd = (_key: string) => {

@@ -212,93 +212,81 @@ export class UserProfileResolver extends AitBaseService {
     const end = request.condition['end'];
     const isSaved = !!request.condition['is_saved'];
     const isTeamMember = !!request.condition['is_team_member'];
+    const checkList = [];
+    if (list && start !== null && end !== null) {
+      checkList.push(...list.slice(start, start + end));
+    }
 
-    const aqlStr1 = `
-    LET current_data = (
-      FOR data IN user_profile
-      FILTER data.company == "${company}" &&
-      data.user_id IN ${JSON.stringify(list)} &&
-      data.del_flag != true
-      RETURN MERGE(
-      data, {
-       name:  data.name.${lang} ? data.name.${lang} : data.name,
-
-      company_working : (
-        IS_ARRAY(data.company_working) == true ? (
-        FOR doc IN m_company
-        FILTER doc._key IN TO_ARRAY(data.company_working)
-        RETURN
-        { _key: doc.code, value: doc.name.${lang} } ) :
-        (FOR doc IN m_company
-        FILTER doc._key == data.company_working
-        RETURN
-        { _key: doc.code, value: doc.name.${lang} })[0] ),
-
-      industry_working : (
-        IS_ARRAY(data.industry_working) == true ? (
-        FOR doc IN m_industry
-        FILTER doc._key IN TO_ARRAY(data.industry_working)
-        RETURN
-        { _key: doc.code, value: doc.name.${lang} } ) :
-         (FOR doc IN m_industry
-         FILTER doc._key == data.industry_working
-        RETURN
-        { _key: doc.code, value: doc.name.${lang} })[0] ),
-
-      current_job_title : (
-        IS_ARRAY(data.current_job_title) == true ? (
-        FOR doc IN m_title
-        FILTER doc._key IN TO_ARRAY(data.current_job_title)
-        RETURN
-        { _key: doc.code, value: doc.name.${lang} } ) :
-         (FOR doc IN m_title
-         FILTER doc._key == data.current_job_title
-        RETURN
-        { _key: doc.code, value: doc.name.${lang} })[0] ),
-
-      current_job_level : (
-        IS_ARRAY(data.current_job_level) == true ? (
-        FOR doc IN sys_master_data
-        FILTER doc._key IN TO_ARRAY(data.current_job_level)
-        RETURN
-        { _key: doc.code, value: doc.name.${lang} } ) :
-         (FOR doc IN sys_master_data
-         FILTER doc._key == data.current_job_level
-        RETURN
-        { _key: doc.code, value: doc.name.${lang} })[0] ),
-
-      province_city : (
-        IS_ARRAY(data.province_city) == true ? (
-        FOR doc IN sys_master_data
-        FILTER doc._key IN TO_ARRAY(data.province_city)
-        RETURN
-        { _key: doc.code, value: doc.name.${lang} } ) :
-         (FOR doc IN sys_master_data
-         FILTER doc._key == data.province_city
-        RETURN
-        { _key: doc.code, value: doc.name.${lang} })[0] ),
-      
-      skills: (
-      FOR v,e, p IN 1..1 OUTBOUND CONCAT("sys_user/",data.user_id) user_skill
-           RETURN { _key: v._key, name: v.name.${lang}, level: e.level }
-      )
-      })
-     )
-     
-     LET result = LENGTH(current_data) > 0 ? current_data : (
-      FOR data IN user_profile
-      FILTER data.company == "000000000000000000000000000000000000" &&
-      data.del_flag != true
-      RETURN MERGE(
-      data, {
-       name: data.name.${lang} ? data.name.${lang} : data.name,
-       })
-     )
-     
-     FOR data IN result
-     LIMIT ${+start}, ${+end}
-
-    RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : data.name })
+    const aqlStr = `
+    FOR user_id IN ${JSON.stringify(checkList)}
+        FOR data IN user_profile
+                FILTER data.company == "${company}"
+                FILTER data.del_flag != true
+                FILTER data.user_id == user_id
+                RETURN MERGE(
+                  data, {
+                   name:  data.name.${lang} ? data.name.${lang} : data.name,
+            
+                  company_working : (
+                    IS_ARRAY(data.company_working) == true ? (
+                    FOR doc IN m_company
+                    FILTER doc._key IN TO_ARRAY(data.company_working)
+                    RETURN
+                    { _key: doc.code, value: doc.name.${lang} } ) :
+                    (FOR doc IN m_company
+                    FILTER doc._key == data.company_working
+                    RETURN
+                    { _key: doc.code, value: doc.name.${lang} })[0] ),
+            
+                  industry_working : (
+                    IS_ARRAY(data.industry_working) == true ? (
+                    FOR doc IN m_industry
+                    FILTER doc._key IN TO_ARRAY(data.industry_working)
+                    RETURN
+                    { _key: doc.code, value: doc.name.${lang} } ) :
+                     (FOR doc IN m_industry
+                     FILTER doc._key == data.industry_working
+                    RETURN
+                    { _key: doc.code, value: doc.name.${lang} })[0] ),
+            
+                  current_job_title : (
+                    IS_ARRAY(data.current_job_title) == true ? (
+                    FOR doc IN m_title
+                    FILTER doc._key IN TO_ARRAY(data.current_job_title)
+                    RETURN
+                    { _key: doc.code, value: doc.name.${lang} } ) :
+                     (FOR doc IN m_title
+                     FILTER doc._key == data.current_job_title
+                    RETURN
+                    { _key: doc.code, value: doc.name.${lang} })[0] ),
+            
+                  current_job_level : (
+                    IS_ARRAY(data.current_job_level) == true ? (
+                    FOR doc IN sys_master_data
+                    FILTER doc._key IN TO_ARRAY(data.current_job_level)
+                    RETURN
+                    { _key: doc.code, value: doc.name.${lang} } ) :
+                     (FOR doc IN sys_master_data
+                     FILTER doc._key == data.current_job_level
+                    RETURN
+                    { _key: doc.code, value: doc.name.${lang} })[0] ),
+            
+                  province_city : (
+                    IS_ARRAY(data.province_city) == true ? (
+                    FOR doc IN sys_master_data
+                    FILTER doc._key IN TO_ARRAY(data.province_city)
+                    RETURN
+                    { _key: doc.code, value: doc.name.${lang} } ) :
+                     (FOR doc IN sys_master_data
+                     FILTER doc._key == data.province_city
+                    RETURN
+                    { _key: doc.code, value: doc.name.${lang} })[0] ),
+                  
+                  skills: (
+                  FOR v,e, p IN 1..1 OUTBOUND CONCAT("sys_user/",data.user_id) user_skill
+                       RETURN { _key: v._key, name: v.name.${lang}, level: e.level }
+                  )
+                  })
     `;
 
     const aqlStr2 = `
@@ -311,7 +299,7 @@ export class UserProfileResolver extends AitBaseService {
       RETURN e
     `;
 
-    const res = await this.query(aqlStr1);
+    const res = await this.query(aqlStr);
     if (res.status === RESULT_STATUS.OK && res.data?.length > 0) {
       const savedUser = await this.query(aqlStr2);
       const teamMember = await this.query(aqlStr3);
