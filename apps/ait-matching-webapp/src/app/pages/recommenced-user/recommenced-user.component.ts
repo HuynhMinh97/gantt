@@ -565,6 +565,7 @@ export class RecommencedUserComponent
         );
       } else {
         this.textDataNullTeamMember = 'There is no data to search';
+        this.countMember = [0, 0, 0];
       }
     } else {
       this.setSkeleton(true);
