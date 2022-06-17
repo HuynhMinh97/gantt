@@ -354,7 +354,7 @@ export const routes: Routes = [
     path: '',
     pathMatch: 'full',
     redirectTo: localStorage.getItem('access_token')
-      ? 'user-profile'
+      ? 'recommenced-user'
       : 'sign-in',
   },
 ];
