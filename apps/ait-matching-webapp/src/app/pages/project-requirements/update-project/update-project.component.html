@@ -1,0 +1,354 @@
+<ait-template-page
+  [pageTitle]="'Update project requirements'"
+  [tableTitle]="'Candidate list'"
+  [searchTitle]="'Project Requirement'"
+  [midleAreaTitle]="'Project detail'"
+  [isTableExpan]="isTableExpan"
+  [isExpan]="isExpan"
+>
+  <div leftArea1>
+    <ng-container>
+      <ait-input-text
+        [id]="'name'"
+        [height]="'40px'"
+        [width]="'400px'"
+        [rows]="1"
+        [label]="'name'"
+        [required]="true"
+        [isSubmit]="isSubmit"
+        [isReset]="resetProjectInfo.name"
+        [placeholder]="'please input keyword'"
+        [length]="200"
+        (watchValue)="takeInputValue($event,'projectForm', 'name')"
+        [defaultValue]="projectForm?.controls['name']?.value"
+      ></ait-input-text>
+    </ng-container>
+    <ait-space [margin]="'22.25px'"></ait-space>
+    <ng-container>
+      <div class="input_inline">
+        <ait-autocomplete-master-data
+        [id]="'title'"
+        [width]="'400px'"
+        [label]="'title'"
+        [required]="true"
+        [allowNew]="true"
+        [maxItem]="10"
+        [collection]="'m_title'"
+        [placeholder]="'please select title'"
+        [disableOutputDefault]="true"
+        [isSubmit]="isSubmit"
+        [isReset]="resetProjectInfo.title"
+        (watchValue)="
+          takeMasterValues($event?.value, 'projectForm', 'title')
+        "
+        [defaultValue]="project_title"
+      >
+      </ait-autocomplete-master-data>
+
+
+      </div>
+    </ng-container>
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
+      <div class="input_inline">
+        <ait-autocomplete-master-data
+          [width]="'400px'"
+          [id]="'location'"
+          [label]="'location'"
+          [isSubmit]="isSubmit"
+          [required]="true"
+          [maxItem]="10"
+          [parentCodeExternal]="'VIETNAM'"
+          [placeholder]="'please select location'"
+          [collection]="'sys_master_data'"
+          [disableOutputDefault]="true"
+          [class]="'ADDRESS'"
+          [isReset]="resetProjectInfo.location"
+          (watchValue)="
+            takeMasterValues($event?.value, 'projectForm', 'location')
+          "
+          [defaultValue]="project_location"
+        ></ait-autocomplete-master-data>
+      </div>
+    </ng-container>
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
+      <div class="input_inline">
+        <ait-input-text
+          [rows]="4"
+          [id]="'description'"
+          [length]="4000"
+          [label]="'description'"
+          [width]="'400px'"
+          [placeholder]="'please-input-project-information'"
+          [isReset]="resetProjectInfo.description"
+          (watchValue)="takeInputValue($event,'projectForm', 'description')"
+          [defaultValue]="projectForm?.controls['description']?.value"
+        >
+        </ait-input-text>
+      </div>
+    </ng-container>
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
+      <div class="input_inline">
+        <ait-autocomplete-master
+          [id]="'skills'"
+          [label]="'skills'"
+          [required]="true"
+          [collection]="'m_skill'"
+          [maxItem]="50"
+          [placeholder]="'Fill name and enter to add your skill' | translate"
+          [style]="{ width: '400px' }"
+          (watchValue)="takeMasterValueSkill($event, 'skills')"
+          [defaultValue]="project_skill"
+          [isReset]="resetProjectInfo.skill"
+          [isSubmit]="isSubmit"
+          [isEvaluate]="true"
+        ></ait-autocomplete-master>
+      </div>
+    </ng-container>
+  </div>
+  <!-- end left -->
+  <div rightArea1>
+    <ng-container>
+      <ait-autocomplete-master-data
+        [id]="'industry'"
+        [width]="'400px'"
+        [label]="'industry'"
+        [required]="true"
+        [allowNew]="true"
+        [maxItem]="10"
+        [collection]="'m_industry'"
+        [placeholder]="'please select industry'"
+        [disableOutputDefault]="true"
+        [isSubmit]="isSubmit"
+        [isReset]="resetProjectInfo.industry"
+        (watchValue)="
+          takeMasterValues($event?.value, 'projectForm', 'industry')
+        "
+        [defaultValue]="project_industry"
+      >
+      </ait-autocomplete-master-data>
+    </ng-container>
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
+      <div class="input_inline">
+        <ait-autocomplete-master-data
+          [id]="'level'"
+          [width]="'400px'"
+          [label]="'level'"
+          [required]="true"
+          [isSubmit]="isSubmit"
+          [allowNew]="true"
+          [maxItem]="10"
+          [class]="'EMPLOYEE_LEVEL'"
+          [placeholder]="'please select level'"
+          [collection]="'sys_master_data'"
+          [disableOutputDefault]="true"
+          [isReset]="resetProjectInfo.level"
+          (watchValue)="takeMasterValues($event?.value, 'projectForm', 'level')"
+          [defaultValue]="project_level"
+        ></ait-autocomplete-master-data>
+      </div>
+    </ng-container>
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
+      <div style="display: flex">
+        <ait-datepicker
+          [placeholder]="'yyyyy/MM/dd'"
+          [id]="'valid_time_from'"
+          [label]="'Valid Time'"
+          [style]="{ width: '170px' }"
+          [isReset]="resetProjectInfo.valid_time_from"
+          [defaultValue]="projectForm?.controls['valid_time_from']?.value"
+          (watchValue)="
+            takeDatePickerValue($event?.value, 'projectForm', 'valid_time_from')
+          "
+          [isSubmit]="isSubmit"
+        ></ait-datepicker>
+
+        <span class="center_span">~</span>
+        <ait-datepicker
+          [placeholder]="'yyyyy/MM/dd'"
+          [id]="'valid_time_to'"
+          [label]="''"
+          [style]="{ width: '170px' }"
+          [isReset]="resetProjectInfo.valid_time_to"
+          [defaultValue]="projectForm?.controls['valid_time_to']?.value"
+          (watchValue)="
+            takeDatePickerValue($event?.value, 'projectForm', 'valid_time_to')
+          "
+          [isSubmit]="isSubmit"
+        ></ait-datepicker>
+      </div>
+      <div [style.width]="'420px'">
+        <ait-error-message
+          *ngIf="available_time_error"
+          [errors]="availableTimeErrorMessage"
+        >
+        </ait-error-message>
+      </div>
+    </ng-container>
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
+      <div class="input_inline">
+        <ait-input-text
+          [rows]="4"
+          [id]="'remark'"
+          [length]="4000"
+          [label]="'remark'"
+          [width]="'400px'"
+          [placeholder]="'please-input-about'"
+          [isReset]="resetProjectInfo.remark"
+          (watchValue)="takeInputValue($event,'projectForm', 'remark')"
+          [defaultValue]="projectForm?.controls['remark']?.value"
+
+        >
+        </ait-input-text>
+      </div>
+    </ng-container>
+  </div>
+  <!-- project detail -->
+  <div leftArea3>
+    <ng-container>
+      <div class="input_inline">
+        <ait-autocomplete-master-data
+          [width]="'400px'"
+          [id]="'customer'"
+          [label]="'customer'"
+          [isSubmit]="isSubmit"
+          [allowNew]="true"
+          [maxItem]="1"
+          [placeholder]="'please select customer'"
+          [collection]="'m_company'"
+          [disableOutputDefault]="true"
+          (watchValue)="takeMasterValue($event, 'customer')"
+          [defaultValue]="
+          [projectDetailForm?.controls['customer']?.value
+          ]"
+        ></ait-autocomplete-master-data>
+      </div>
+    </ng-container>
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
+      <div class="input_inline">
+        <ait-autocomplete-master-data
+          [width]="'400px'"
+          [id]="'person_in_charge'"
+          [label]="'Person in charge'"
+          [isSubmit]="false"
+          [maxItem]="1"
+          [placeholder]="'please select employee'"
+          [disableOutputDefault]="true"
+          [dataSource]="employeeList"
+          [isReset]="false"
+          (watchValue)="takeMasterValue($event, 'person_in_charge')"
+          [defaultValue]="[
+            projectDetailForm?.controls['person_in_charge']?.value
+          ]"
+        ></ait-autocomplete-master-data>
+      </div>
+    </ng-container>
+  </div>
+  <div rightArea3>
+    <ng-container>
+      <div class="input_inline">
+        <ait-input-text
+          [id]="'project_code'"
+          [label]="'project code'"
+          [length]="200"
+          [width]="'400px'"
+          [isSubmit]="false"
+          [isReset]="false"
+          [placeholder]="'please input project code'"
+          (watchValue)="takeInputValue($event,'projectDetailForm', 'project_code')"
+          [defaultValue]="projectDetailForm?.controls['project_code']?.value"
+        ></ait-input-text>
+      </div>
+    </ng-container>
+    <ait-space [margin]="'22.25px'"></ait-space>
+    <ng-container>
+      <div class="input_inline">
+        <ait-autocomplete-master-data
+          [width]="'400px'"
+          [id]="'status'"
+          [label]="'status'"
+          [isSubmit]="false"
+          [maxItem]="1"
+          [class]="'PROJECT_STATUS'"
+          [placeholder]="'please select status'"
+          [collection]="'sys_master_data'"
+          [disableOutputDefault]="true"
+          [isReset]="false"
+          (watchValue)="takeMasterValue($event, 'status')"
+          [defaultValue]="[
+          projectDetailForm?.controls['status']?.value
+          ]"
+        ></ait-autocomplete-master-data>
+      </div>
+    </ng-container>
+  </div>
+  <!-- cadidate list -->
+  <div tableArea>
+    <ait-table-inline-edit [project_key]="project_key"> </ait-table-inline-edit>
+  </div>
+  <div groupButtonArea>
+    <div class="sticky">
+      <div class="action-row">
+        <div class="block">
+          <ait-button
+            [id]="'remove'"
+            [width]="'150px'"
+            [title]="'delete'"
+            [isDefault]="true"
+          >
+          </ait-button>
+
+          <ait-button
+            [id]="'copy'"
+            [width]="'150px'"
+            [title]="'copy'"
+            [isDefault]="true"
+          >
+          </ait-button>
+
+          <ait-button
+            [id]="'clear'"
+            [width]="'150px'"
+            [title]="'clear'"
+            [isDefault]="true"
+            (click)="clear()"
+          >
+          </ait-button>
+
+          <ait-button
+            [id]="'reset'"
+            [width]="'150px'"
+            [title]="'reset'"
+            [isDefault]="true"
+            (click)="resetForm()"
+          >
+          </ait-button>
+
+          <ait-button
+            [id]="'save'"
+            [width]="'150px'"
+            [title]="'save'"
+            [isDefault]="true"
+            (click)="save()"
+          >
+          </ait-button>
+
+          <ait-button
+            [id]="'find_candidates'"
+            [width]="'150px'"
+            [title]="'find_candidates'"
+            (click)="findCandidates()"
+            [isDefault]="true"
+          >
+          </ait-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ait-template-page>

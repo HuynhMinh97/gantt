@@ -89,6 +89,8 @@ import { EditDataMasterComponent } from './pages/master-group-collection/edit-da
 import { ViewDataMasterComponent } from './pages/master-group-collection/view-data-master/view-data-master.component';
 import { ProjectRequirementDetailComponent } from './pages/project-requirements/project-detail/project-requirement-detail.component';
 import { RequirementListComponent } from './pages/requirement-list/requirement-list.component';
+import { TableInlineEditComponent } from './components/table-inline-edit/table-inline-edit.component';
+import { UpdateProjectComponent } from './pages/project-requirements/update-project/update-project.component';
 import { BizProjectService } from './services/biz_project.service';
 
 if (environment.production) {
@@ -178,6 +180,8 @@ const PAGES = [
     ViewDataMasterComponent,
     ProjectRequirementDetailComponent,
     RequirementListComponent,
+    TableInlineEditComponent,
+    UpdateProjectComponent,
   ],
   imports: [
     Ng2SmartTableModule,

@@ -1,0 +1,342 @@
+<div class="table__area" #area style=" overflow-x: scroll; ">
+  <ng-container>
+    <table id="candidate_table" class="table table-striped" style="width: 100%;" [ngStyle]="{'margin-bottom':list_candidate_perpage.length > 0 ? '65px' : '0' }">
+      <colgroup>
+        <col style="min-width: 100px" />
+        <col style="min-width: 250px" />
+        <col style="min-width: 250px" />
+        <col style="min-width: 250px" />
+        <col style="min-width: 100px" />
+        <col style="min-width: 100px" />
+        <col style="min-width: 100px" />
+        <col style="min-width: 200px" />
+      </colgroup>
+      <tr>
+        <th class="header_th"></th>
+        <th class="header_th" hidden></th>
+        <th class="header_th">
+          <span class="style_title">Name</span>
+        </th>
+        <th class="header_th">
+          <span class="style_title">Start plan</span>
+        </th>
+        <th class="header_th">
+          <span class="style_title">End plan</span>
+        </th>
+        <th class="header_th">
+          <span class="style_title">Hours</span>
+        </th>
+        <th class="header_th">
+          <span class="style_title">MD</span>
+        </th>
+        <th class="header_th">
+          <span class="style_title">MM</span>
+        </th>
+        <th class="header_th">
+          <span class="style_title">Remark</span>
+        </th>
+      </tr>
+      <tr class="filter_row">
+        <th></th>
+        <th hidden></th>
+        <th><input id="search_employee" type="text" class="filter" placeholder="Filter" (keyup)="handleFilterName('search_employee',2)"/></th>
+        <th><input id="search_start" type="text" class="filter" placeholder="Filter" (keyup)="handleFilterName('search_start',3)"/></th>
+        <th><input id="search_end" type="text" class="filter" placeholder="Filter" (keyup)="handleFilterName('search_end',4)"/></th>
+        <th><input id="search_hours" type="text" class="filter" placeholder="Filter" (keyup)="handleFilterName('search_hours',5)"/></th>
+        <th><input id="search_manday" type="text" class="filter" placeholder="Filter" (keyup)="handleFilterName('search_manday',6)"/></th>
+        <th><input id="search_manmonth" type="text" class="filter" placeholder="Filter" (keyup)="handleFilterName('search_manmonth',7)"/></th>
+        <th><input id="search_remark" type="text" class="filter" placeholder="Filter" (keyup)="handleFilterName('search_remark',8)"/></th>
+      </tr>
+      <ng-container *ngIf="list_candidate_perpage.length > 0; else dataIsNull">
+        <tr  *ngFor="let item of list_candidate_perpage" class="row_style" >
+          <td class="action">
+            <button
+              (click)="handleClickEdit(item._key)"
+              *ngIf="!isEdit && item._key != _key; else saveCancel"
+              class="btn_table"
+            >
+              <nb-icon
+                icon="pen"
+                pack="font-awesome-fas"
+                _nghost-rdx-c86=""
+                ng-reflect-icon="pen"
+                ng-reflect-pack="font-awesome-fas"
+                class="fas fa-pen"
+              ></nb-icon>
+            </button>
+            <ng-template #saveCancel>
+              <ng-container *ngIf="item._key === _key && isEdit; else cancelSave">
+                <div class="group_btn_save_cancel">
+                  <button (click)="handleClickSave()" class="btn_table">
+                    <nb-icon
+                      icon="pen"
+                      pack="font-awesome-fas"
+                      _nghost-rdx-c86=""
+                      ng-reflect-icon="save"
+                      ng-reflect-pack="font-awesome-fas"
+                      class="fas fa-save"
+                    ></nb-icon>
+                  </button>
+                  <button (click)="handleClickCancel()" class="btn_table">
+                    <nb-icon
+                      icon="pen"
+                      pack="font-awesome-fas"
+                      _nghost-rdx-c86=""
+                      ng-reflect-icon="times"
+                      ng-reflect-pack="font-awesome-fas"
+                      class="fas fa-times"
+                    ></nb-icon>
+                  </button>
+                </div>
+              </ng-container>
+            </ng-template>
+            <ng-template #cancelSave>
+              <button
+                (click)="handleClickEdit(item._key)"
+                *ngIf="!isEdit || item._key != _key; else saveCancel"
+                class="btn_table"
+              >
+                <nb-icon
+                  icon="pen"
+                  pack="font-awesome-fas"
+                  _nghost-rdx-c86=""
+                  ng-reflect-icon="pen"
+                  ng-reflect-pack="font-awesome-fas"
+                  class="fas fa-pen"
+                ></nb-icon></button
+            ></ng-template>
+          </td>
+          <td hidden>
+            <ng-container *ngIf="item._key === _key">
+              <ait-input-text
+                [readonly]="true"
+                [defaultValue]="item._key"
+                [id]="'_key'"
+                (watchValue)="takeInputValue($event, '_key')"
+              >
+              </ait-input-text>
+            </ng-container>
+          </td>
+          <td>
+            <span class="candidate_value" *ngIf="!isEdit && item._key != _key; else elseEdit">{{
+                item.employee_name
+              }}
+            </span>
+  
+            <ng-template #elseEdit>
+              <ng-container *ngIf="item._key === _key && isEdit; else nameEdit"
+                ><ait-autocomplete-master-data
+                  *ngIf="employeeList.length > 0"
+                  [id]="'employee_name'"
+                  [width]="'200px'"
+                  [required]="true"
+                  [maxItem]="1"
+                  [isReset]="isReset"
+                  [isSubmit]="isSubmit"
+                  [placeholder]="'please select employee'"
+                  [dataSource]="employeeList"
+                  [defaultValue]="[item.user_id]"
+                  (watchValue)="takeMasterValue($event.value, 'employee_name')"
+                ></ait-autocomplete-master-data
+              ></ng-container>
+            </ng-template>
+            <ng-template #nameEdit>
+              <span class="candidate_value">{{ item.employee_name }}</span></ng-template
+            >
+          </td>
+          <td>
+            <span class="candidate_value" *ngIf="!isEdit && item._key != _key; else editStartPlan">
+              {{ item.start_plan_format }}
+            </span>
+            <ng-template #editStartPlan>
+              <ng-container
+                *ngIf="item._key === _key && isEdit; else startPlanEdit"
+              >
+                <ait-datepicker
+                  [placeholder]="'yyyyy/MM/dd'"
+                  [id]="'start_plan'"
+                  [style]="{ width: '170px', marginTop: '-10px' }"
+                  [isReset]="isReset"
+                  [defaultValue]="item.start_plan"
+                  (watchValue)="
+                    takeDatePickerValue(
+                      $event?.value,
+                      'candidateEdit',
+                      'start_plan'
+                    )
+                  "
+                ></ait-datepicker
+              ></ng-container>
+            </ng-template>
+            <ng-template #startPlanEdit>
+              <span class="candidate_value">{{ item.start_plan_format }}</span></ng-template
+            >
+          </td>
+          <td>
+            <span class="candidate_value" *ngIf="!isEdit && item._key != _key; else editEndPlan">
+              {{ item.end_plan_format }}
+            </span>
+            <ng-template #editEndPlan>
+              <ng-container
+                *ngIf="item._key === _key && isEdit; else endPlanEdit"
+              >
+                <ait-datepicker
+                  [placeholder]="'yyyyy/MM/dd'"
+                  [id]="'end_plan'"
+                  [style]="{ width: '170px', marginTop: '-10px' }"
+                  [isReset]="isReset"
+                  [defaultValue]="item.end_plan"
+                  (watchValue)="
+                    takeDatePickerValue(
+                      $event?.value,
+                      'candidateEdit',
+                      'end_plan'
+                    )
+                  "
+                ></ait-datepicker
+              ></ng-container>
+            </ng-template>
+            <ng-template #endPlanEdit>
+              <span class="candidate_value">{{ item.end_plan_format }}</span></ng-template
+            >
+          </td>
+  
+          <td>
+            <span class="candidate_value" *ngIf="!isEdit && item._key != _key; else editHours">
+              {{ item.hour_plan }}
+            </span>
+            <ng-template #editHours>
+              <ng-container *ngIf="item._key === _key && isEdit; else HoursEdit">
+                <ait-input-number
+                  [defaultValue]="item.hour_plan"
+                  [id]="'hour_plan'"
+                  [styleInput]="{ background: '#ffffff' }"
+                  [widthInput]="'100px'"
+                  (watchValue)="
+                    takeInputNumberValue($event, 'candidateEdit', 'hour_plan')
+                  "
+                  (keyup)="calculaHoursDayMonthPlan('candidateEdit', 'hour_plan')"
+                ></ait-input-number>
+              </ng-container>
+            </ng-template>
+            <ng-template #HoursEdit>
+              <span class="candidate_value">{{ item.hour_plan }}</span></ng-template
+            >
+          </td>
+          <td>
+            <span class="candidate_value" *ngIf="!isEdit && item._key != _key; else editMd">
+              {{ item.manday_plan }}
+            </span>
+            <ng-template #editMd>
+              <ng-container *ngIf="item._key === _key && isEdit; else mdEdit">
+                <ait-input-number
+                  [defaultValue]="item.manday_plan"
+                  [id]="'manday_plan'"
+                  [styleInput]="{ background: '#ffffff' }"
+                  [widthInput]="'100px'"
+                  (watchValue)="
+                    takeInputNumberValue($event, 'candidateEdit', 'manday_plan')
+                  "
+                  (keyup)="calculaHoursDayMonthPlan('candidateEdit', 'manday_plan')"
+                ></ait-input-number>
+              </ng-container>
+            </ng-template>
+            <ng-template #mdEdit>
+              <span class="candidate_value">{{ item.manday_plan }}</span></ng-template
+            >
+          </td>
+          <td>
+            <span class="candidate_value" *ngIf="!isEdit && item._key != _key; else editMm">
+              {{ item.manmonth_plan }}
+            </span>
+            <ng-template #editMm>
+              <ng-container *ngIf="item._key === _key && isEdit; else mmEdit">
+                <ait-input-number
+                  [defaultValue]="item.manmonth_plan"
+                  [id]="'manmonth_plan'"
+                  [styleInput]="{ background: '#ffffff' }"
+                  [widthInput]="'100px'"
+                  (watchValue)="
+                    takeInputNumberValue($event, 'candidateEdit', 'manmonth_plan')
+                  "
+                  (keyup)="calculaHoursDayMonthPlan('candidateEdit', 'manmonth_plan')"
+                ></ait-input-number>
+              </ng-container>
+            </ng-template>
+            <ng-template #mmEdit>
+              <span class="candidate_value">{{ item.manmonth_plan }}</span></ng-template
+            >
+          </td>
+          <td>
+            <span class="candidate_value" *ngIf="!isEdit && item._key != _key; else editRemark">
+              {{ item.remark }}
+            </span>
+            <ng-template #editRemark>
+              <ng-container *ngIf="item._key === _key && isEdit; else remarkEdit">
+                <ait-input-text
+                  [id]="'remark'"
+                  [length]="1000"
+                  [width]="'200px'"
+                  [isSubmit]="false"
+                  [isReset]="false"
+                  (watchValue)="takeInputValue($event, 'remark')"
+                  [defaultValue]="item.remark"
+                ></ait-input-text>
+              </ng-container>
+            </ng-template>
+            <ng-template #remarkEdit>
+              <span class="candidate_value">{{ item.remark }}</span></ng-template
+            >
+          </td>
+        </tr>
+      </ng-container>
+      <ng-template #dataIsNull>
+        <tr><td colspan="9"> データは空白となっています。</td></tr>
+      </ng-template>
+    </table>
+  </ng-container>
+</div>
+<div class="numberPage" *ngIf="list_candidate_perpage.length > 0 ">
+  <div style="display: inline-flex;" >
+    <ul class="pagination">
+      <li>
+        <button  *ngIf="current_page === 1; else dsButton " disabled>«</button>
+        <ng-template #dsButton><button (click)="clickPageNumber(1)">«</button></ng-template>
+      </li>
+      <li>
+        <button *ngIf="current_page === 1; else dsButtonPrev " disabled><span><</span></button>
+        <ng-template #dsButtonPrev><button (click)="clickPageNumber(current_page - 1)" ><</button></ng-template>
+      </li>
+      <li *ngFor="let page of listPage">
+        <button  *ngIf="page == current_page; else unActive"class="active">
+          <span >{{page}}</span>
+        </button>
+        <ng-template #unActive>  <button (click)="clickPageNumber(page)" ><span >{{page}}</span></button>
+        </ng-template>
+      </li>
+      <li>
+        <button  *ngIf="current_page === listPage.length; else dsButtonNext " disabled>></button>
+        <ng-template #dsButtonNext><button (click)="clickPageNumber(current_page + 1)">></button></ng-template>
+      </li>
+      <li>
+        <button  *ngIf="current_page === listPage.length; else dsButtonEnd " disabled>»</button>
+        <ng-template #dsButtonEnd><button (click)="clickPageNumber(listPage.length )">»</button></ng-template>
+      </li>
+    </ul>
+    <div class="pageDetail">
+      {{totalRows + ' case ' +  start + ' - ' + end}}
+    </div>
+  </div>
+
+   <div class="show_case">
+    <select (select)="rows" (change)="onChangeRowPerpage($event.target.value)">
+      <option value="10">10{{' case' | translate}}</option>
+      <option value="20">20{{' case' | translate}}</option>
+      <option value="30">30{{' case' | translate}}</option>
+      <option value="50">50{{' case' | translate}}</option>
+      <option value="100">100{{' case' | translate}}</option>
+    </select>
+   </div>
+
+</div>
+

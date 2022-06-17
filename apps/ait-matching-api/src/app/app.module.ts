@@ -1,4 +1,4 @@
-import { RegisterProjectResolver } from './register-project/register-project.resolver';
+
 import { SkillListResolver } from './list/skill-list/skill-list.resolver';
 import { CaptionRegisterResolver } from './list/caption-list/add-caption/add-caption.resolver';
 import { GroupRoleListResolver } from './group-role/group-role-list/group-role-list.resolver';
@@ -54,7 +54,6 @@ const RESOLVERS = [
   UserListResolver,
   CaptionListResolver,
   CaptionRegisterResolver,
-  RegisterProjectResolver,
   MasterListResolver,
   DataMasterResolver,
   BizProjectResolver,

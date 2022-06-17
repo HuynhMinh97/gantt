@@ -1,5 +1,5 @@
 import { BaseDto } from '@ait/core';
-import { InputType, Field } from '@nestjs/graphql';
+import { InputType, Field, Float } from '@nestjs/graphql';
 
 @InputType()
 export class SaveRecommendUserDto extends BaseDto {
@@ -8,6 +8,24 @@ export class SaveRecommendUserDto extends BaseDto {
 
   @Field(() => String, { nullable: true })
   _to: string;
+
+  @Field(() => String, { nullable: true })
+  remark: string;
+
+  @Field(() => Float, { nullable: true })
+  start_plan: number;
+
+  @Field(() => Float, { nullable: true })
+  end_plan: number;
+
+  @Field(() => Float, { nullable: true })
+  hour_plan: number;
+
+  @Field(() => Float, { nullable: true })
+  manday_plan: number;
+  
+  @Field(() => Float, { nullable: true })
+  manmonth_plan: number;
 }
 
 @InputType()
