@@ -7,10 +7,12 @@ import {
   AitUserService,
   AppState,
   DarkScreen,
+  getUserProfile,
+  getUserInfo,
 } from '@ait/ui';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { MENU_ITEMS } from './app-menu';
 
@@ -43,7 +45,19 @@ export class AppComponent extends AitBaseComponent implements OnInit {
       null,
       router
     );
-    layoutService.menuUserInput = MENU_ITEMS;
+    store.pipe(select(getUserInfo)).subscribe(({ type }) => {
+      if (type === 1) {
+        layoutService.menuUserInput = MENU_ITEMS;
+      } else if (type === 2) {
+        const MENU2 = [...MENU_ITEMS];
+        MENU2[1]['tabs'].length = 1;
+        layoutService.menuUserInput = MENU2;
+      } else {
+        const MENU3 = [...MENU_ITEMS];
+        MENU3.length = 1;
+        layoutService.menuUserInput = MENU3;
+      }
+    });
   }
 
   ngOnInit() {

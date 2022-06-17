@@ -43,7 +43,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   project_key: string;
   projectForm: FormGroup;
   projectDetailForm: FormGroup;
-  project_skill_save : any;
+  project_skill_save: any;
   project_skill = [];
   project_title = [];
   project_industry = [];
@@ -168,18 +168,6 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     this.cancelLoadingApp();
   }
 
-  // onCreateConfirm(event) {
-  //   console.log('Create Event In Console');
-  //   console.log(event);
-  //   event.confirm.resolve();
-  // }
-
-  // onSaveConfirm(event) {
-  //   console.log('Edit Event In Console');
-  //   console.log(event);
-  //   event.confirm.resolve();
-  // }
-
   async find(data = {}) {
     try {
       const dataFind = [];
@@ -197,7 +185,9 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   }
 
   async findProjectDetail() {
-    const result = await this.bizProjectService.findDetailByProject_key(this.project_key);
+    const result = await this.bizProjectService.findDetailByProject_key(
+      this.project_key
+    );
     this.projectDetailForm.patchValue({ ...result.data[0] });
   }
 
@@ -412,39 +402,40 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
 
   async saveBizProject() {
     try {
-      
       const projectUser = this.registerProjectService.data_save;
       const saveProjectDetail = this.projectDetailForm.value;
-      await this.bizProjectService.save(this.saveDataProject()).then(async (res) => {
-        await this.saveProjectSkill()
-        if (res.status === RESULT_STATUS.OK) {
-          if (isObjectFull(saveProjectDetail)) {
-            await this.saveProjectDetail();
-          }
+      await this.bizProjectService
+        .save(this.saveDataProject())
+        .then(async (res) => {
+          await this.saveProjectSkill();
+          if (res.status === RESULT_STATUS.OK) {
+            if (isObjectFull(saveProjectDetail)) {
+              await this.saveProjectDetail();
+            }
 
-          if (isArrayFull(projectUser)) {
-            projectUser.forEach((item) => {
-              item['project_key'] = this.project_key;
-              this.registerProjectService.saveTeamMember(item).then((r) => {
-                if (r.status === RESULT_STATUS.OK) {
-                  this.showToastr('', this.getMsg('I0005'));
-                  localStorage.setItem('biz_project_key', this.project_key);
-                  this.router.navigate([`/requirement-list`]);
-                } else {
-                  this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-                }
+            if (isArrayFull(projectUser)) {
+              projectUser.forEach((item) => {
+                item['project_key'] = this.project_key;
+                this.registerProjectService.saveTeamMember(item).then((r) => {
+                  if (r.status === RESULT_STATUS.OK) {
+                    this.showToastr('', this.getMsg('I0005'));
+                    localStorage.setItem('biz_project_key', this.project_key);
+                    this.router.navigate([`/requirement-list`]);
+                  } else {
+                    this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+                  }
+                });
               });
-            });
+            } else {
+              this.showToastr('', this.getMsg('I0005'));
+              localStorage.setItem('biz_project_key', this.project_key);
+              this.router.navigate([`/requirement-list`]);
+            }
           } else {
-            this.showToastr('', this.getMsg('I0005'));
-            localStorage.setItem('biz_project_key', this.project_key);
-            this.router.navigate([`/requirement-list`]);
+            this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
           }
-        } else {
-          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-        }
-      });
-    } catch (e) { }
+        });
+    } catch (e) {}
   }
 
   takeInputValue(value: string, group: string, form: string): void {
@@ -463,7 +454,6 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     } else {
       this.projectDetailForm.controls[target].setValue(null);
     }
-    
   }
 
   takeMasterValues(value: KeyValueDto[], group: string, form: string): void {
@@ -553,7 +543,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
 
   saveDataProject() {
     const saveData = this.projectForm.value;
-    this.project_skill_save =saveData.skills;
+    this.project_skill_save = saveData.skills;
     delete saveData.skills;
     if (!saveData['valid_time_to'] && saveData['valid_time_from']) {
       const start_plan = new Date(saveData['valid_time_from']);
@@ -645,14 +635,13 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
 
   async saveProjectDetail() {
     const saveData = this.projectDetailForm.value;
-    if( saveData.person_in_charge._key)
-    {
+    if (saveData.person_in_charge._key) {
       saveData.person_in_charge = saveData.person_in_charge._key;
     }
     if (isObjectFull(saveData)) {
       const projectDetial = {};
-      if(saveData._key){
-        projectDetial['_key'] = saveData._key
+      if (saveData._key) {
+        projectDetial['_key'] = saveData._key;
       }
       projectDetial['project'] = this.project_key;
       projectDetial['customer'] = saveData.customer?._key || null;
@@ -663,27 +652,24 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     }
   }
 
-
   async saveProjectSkill() {
     this.projectSkillSave._from = 'biz_project/' + this.project_key;
-    const skills = this.project_skill_save;   
-    ;
-
+    const skills = this.project_skill_save;
     if (this.project_key) {
       const _fromSkill = [{ _from: 'biz_project/' + this.project_key }];
-      try{
-
+      try {
         await this.bizProjectService.removeBizProjectSkill(_fromSkill);
-      }catch{}
+      } catch {}
     }
-    try{
-
+    try {
       for (const skill of skills) {
         this.projectSkillSave._to = 'm_skill/' + skill._key;
         this.projectSkillSave.level = skill.level;
-        await this.bizProjectService.saveBizProjectSkill([this.projectSkillSave]);
+        await this.bizProjectService.saveBizProjectSkill([
+          this.projectSkillSave,
+        ]);
       }
-    }catch{}
+    } catch {}
     this.cancelLoadingApp();
   }
 }
