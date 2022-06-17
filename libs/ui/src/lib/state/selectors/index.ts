@@ -1,4 +1,3 @@
-
 // USER
 
 // tslint:disable-next-line: variable-name
@@ -9,63 +8,55 @@ export const getLang_Company = (state: AppState) => ({
 
 export const getLang = (state: AppState) => {
   return state.commonReducer.language;
-}
+};
 
 export const getLoading = (state: AppState) => {
   return state.commonReducer.app_loading;
-}
+};
 
 export const getUserSetting = (state: AppState) => {
   return state.commonReducer.user_setting;
 };
 
-
 export const getRememberMe = (state: AppState) => {
   return state.commonReducer.isRemmemberMe;
-}
+};
 
 export const getCurrencySymbolByLocale = (state: AppState) => {
   return state.commonReducer.currencySymbol;
-}
-
-
+};
 
 export const getSettingLangTime = (state: AppState) => {
   return state.commonReducer.user_setting;
-}
+};
 
 export const getUFullName = (state: AppState) => {
   const user_profile = state?.commonReducer?.userInfo?.user_profile;
   return user_profile?.name;
 };
 
-
-
 export const getTitle = (state: AppState) => {
   const { userInfo } = state.commonReducer;
   return userInfo.user_profile.title;
-}
+};
 
 export const getUserProfile = (state: AppState) => {
   return state.commonReducer.userInfo?.user_profile;
-}
+};
 
 export const getUserInfo = (state: AppState) => {
   return state.commonReducer.userInfo;
-}
-
+};
 
 export const getEmpId = (state: AppState) => {
   const { userInfo } = state.commonReducer;
   return userInfo.user_id;
-}
+};
 
 export const getEmail = (state: AppState) => {
   const { userInfo } = state.commonReducer;
   return userInfo?.email;
-}
-
-
+};
 
 export const getAllInfoRequest = (state: AppState) => {
   const info: CommonReducer = state.commonReducer;
@@ -75,25 +66,24 @@ export const getAllInfoRequest = (state: AppState) => {
     user_id: info?.userInfo?._key,
     module: info?.requestInfo?.module,
     page: info?.requestInfo?.page,
-    username: info?.userInfo?.username
-  }
-}
-
+    username: info?.userInfo?.username,
+  };
+};
 
 export const getCaption = (state: AppState) => {
   return [
     ...state.commonReducer.commonCaptions.data,
-    ...state.commonReducer.captions.data
+    ...state.commonReducer.captions.data,
   ];
-}
+};
 
 export const getCommonCaption = (state: AppState) => {
   return state.commonReducer.commonCaptions;
-}
+};
 
 export const getEnvironment = (state: AppState) => {
   return state.commonReducer.env;
-}
+};
 
 export interface AppState {
   commonReducer: CommonReducer;
@@ -121,7 +111,6 @@ export interface CommonReducer {
   env?: any;
 }
 
-
 export interface ThemeReducer {
   theme: string;
 }
@@ -131,25 +120,26 @@ export interface UserInfo {
   user_id?: string;
   email?: string;
   company?: string;
+  type?: number;
   user_profile?: {
-    country_region?: any,
-    date_of_birth?: string,
-    district?: any,
-    first_name?: string,
-    floor_building?: any,
-    gender?: any,
-    industry?: any,
-    introduce?: string,
-    katakana?: string,
-    last_name?: string,
-    phone_number?: string,
-    postcode?: any
-    province_city?: any
-    romaji?: string
-    street?: any,
-    title?: any,
-    user_id?: string,
-    ward?: any,
+    country_region?: any;
+    date_of_birth?: string;
+    district?: any;
+    first_name?: string;
+    floor_building?: any;
+    gender?: any;
+    industry?: any;
+    introduce?: string;
+    katakana?: string;
+    last_name?: string;
+    phone_number?: string;
+    postcode?: any;
+    province_city?: any;
+    romaji?: string;
+    street?: any;
+    title?: any;
+    user_id?: string;
+    ward?: any;
     company_working?: any;
     position?: string;
     department?: any;
@@ -173,4 +163,3 @@ export interface DataCaption {
   page: string;
   group_no: string;
 }
-

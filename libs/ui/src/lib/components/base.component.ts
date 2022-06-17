@@ -285,6 +285,7 @@ export class AitBaseComponent implements OnInit, OnDestroy {
             username
             _key
             company
+            type
           }
         }
         `,

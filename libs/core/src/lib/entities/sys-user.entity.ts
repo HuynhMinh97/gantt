@@ -1,4 +1,4 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql';
+import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
 import { BaseRequest } from '../requests/base.request';
 
 @ObjectType()
@@ -17,6 +17,9 @@ export class SysUser {
 
   @Field(() => String, { nullable: true })
   _key?: string;
+
+  @Field(() => Int, { nullable: true })
+  type?: number;
 }
 
 @InputType()
