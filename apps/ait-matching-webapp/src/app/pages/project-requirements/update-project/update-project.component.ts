@@ -152,12 +152,12 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     this.project_key = this.activeRouter.snapshot.paramMap.get('id');
     if (this.project_key) {
       this.mode = MODE.EDIT;
+      try {
+        await this.find();
+        await this.getEmployee();
+        await this.getAllUser();
+      } catch {}
     }
-    try {
-      await this.find();
-      await this.getEmployee();
-      await this.getAllUser();
-    } catch {}
 
     await this.projectForm.valueChanges.subscribe((data) => {
       this.checkAllowSave();
@@ -168,17 +168,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     this.cancelLoadingApp();
   }
 
-  // onCreateConfirm(event) {
-  //   console.log('Create Event In Console');
-  //   console.log(event);
-  //   event.confirm.resolve();
-  // }
-
-  // onSaveConfirm(event) {
-  //   console.log('Edit Event In Console');
-  //   console.log(event);
-  //   event.confirm.resolve();
-  // }
+  
 
   async find(data = {}) {
     try {
@@ -232,7 +222,8 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
             listSkills.push({
               _key: skill?.skill?._key,
               value: skill?.skill?.value,
-            });
+              level: skill?.level,
+            } );
           }
           if (listSkills[0]['_key']) {
             this.project_skill = listSkills;
@@ -412,7 +403,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
 
   async saveBizProject() {
     try {
-      
+      if (this.mode == MODE.EDIT){
       const projectUser = this.registerProjectService.data_save;
       const saveProjectDetail = this.projectDetailForm.value;
       await this.bizProjectService.save(this.saveDataProject()).then(async (res) => {
@@ -444,6 +435,17 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
           this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
         }
       });
+    } else {
+      await this.bizProjectService.save(this.saveDataProject()).then(async (res) => {
+        if (res.status === RESULT_STATUS.OK) {
+          this.showToastr('', this.getMsg('I0005'));
+        }
+        else {
+          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+          this.router.navigate([`/requirement-list`]);
+        }
+      });
+    }
     } catch (e) { }
   }
 

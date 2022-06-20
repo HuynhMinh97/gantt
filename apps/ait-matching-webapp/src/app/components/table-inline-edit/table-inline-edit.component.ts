@@ -1,4 +1,9 @@
-import { isArrayFull, isObjectFull, KeyValueDto, RESULT_STATUS } from '@ait/shared';
+import {
+  isArrayFull,
+  isObjectFull,
+  KeyValueDto,
+  RESULT_STATUS,
+} from '@ait/shared';
 import {
   AitAuthService,
   AitBaseComponent,
@@ -10,11 +15,16 @@ import {
 } from '@ait/ui';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
+import {
+  NbDialogService,
+  NbLayoutScrollService,
+  NbToastrService,
+} from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import dayjs from 'dayjs';
 import { AddRoleService } from '../../services/add-role.service';
+import { RecommencedUserService } from '../../services/recommenced-user.service';
 import { RegisterProjectService } from '../../services/register-project.service';
 
 @Component({
@@ -41,7 +51,6 @@ export class TableInlineEditComponent
   end: number;
   isDialogOpen = false;
 
-
   @Input() project_key: string;
   dateFormat: string;
 
@@ -51,6 +60,7 @@ export class TableInlineEditComponent
     private formBuilder: FormBuilder,
     private dialogService: NbDialogService,
     private translateService: AitTranslationService,
+    private recommencedService: RecommencedUserService,
 
     env: AitEnvironmentService,
     store: Store<AppState>,
@@ -93,10 +103,13 @@ export class TableInlineEditComponent
     await this.getEmployee();
   }
 
-  handleClickEdit(_key: string) {
+  async handleClickEdit(_key: string) {
     this._key = _key;
     this.isEdit = true;
-    console.log(this.candidateEdit.value)
+    const biz_project_user =await this.list_candidate_perpage.find(
+      (item) => item._key === _key
+    );
+    this.candidateEdit.patchValue({ ...biz_project_user });
   }
 
   handleClickCancel() {
@@ -114,7 +127,35 @@ export class TableInlineEditComponent
           this.isEdit = false;
         }
       });
+  }
+
+  async handleClickDelete(_key: string) {
     
+    const biz_project_user =await this.list_candidate_perpage.find(
+      (item) => item._key === _key
+    );
+    const user_id = biz_project_user.user_id;
+    this.isDialogOpen = true;
+    this.dialogService
+      .open(AitConfirmDialogComponent, {
+        context: {
+          title: this.translateService.translate('Do you want remove.'),
+        },
+      })
+      .onClose.subscribe(async (event) => {
+        this.isDialogOpen = false;
+        if (event) {
+        const _from = `biz_project/${this.project_key}`;
+      const _to = `sys_user/${user_id}`;
+      this.recommencedService.removeTeamMember(_from, _to).then(async (r) => {
+        if (r.status === RESULT_STATUS.OK) {
+          await this.getCandidate();
+          await this.displayList(this.list_candidate, this.rows, this.current_page);
+          this.showToastr('', this.getMsg('I0005'));
+        }
+      })
+    }
+      });
   }
 
   handleFilterName(column_search: string, numberOfCol: number) {
@@ -144,29 +185,32 @@ export class TableInlineEditComponent
   }
 
   handleClickSave() {
-    const lis_data_save = this.registerProjectService.data_save
+    const lis_data_save = this.registerProjectService.data_save;
     const data_save = this.candidateEdit.value;
     data_save['employee_name'] = data_save['employee_name'].value;
     data_save['user_id'] = this.candidateEdit.controls[
       'employee_name'
     ].value._key;
-    data_save['start_plan_format'] = this.getDateFormat(
-      data_save['start_plan']
-    );
-    if (data_save['end_plan']){
-      data_save['end_plan_format'] = this.getDateFormat(data_save['end_plan']);
-    }
-    else {
-      // const start_plan = new Date(data_save['valid_time_from']);
-      const end_plan = new Date(
-        data_save['start_plan_format'].getFullYear(),
-        data_save['start_plan_format'].getMonth() + 1,
-        0
+    if (data_save['start_plan']) {
+      data_save['start_plan_format'] = this.getDateFormat(
+        data_save['start_plan']
       );
-      data_save['end_plan_format'] = end_plan;
-      data_save['end_plan'] = end_plan.setMilliseconds(100);
+      if (data_save['end_plan']) {
+        data_save['end_plan_format'] = this.getDateFormat(
+          data_save['end_plan']
+        );
+      } else {
+        const start_plan = new Date(data_save['start_plan']);
+        const end_plan = new Date(
+          start_plan.getFullYear(),
+          start_plan.getMonth() + 1,
+          0
+        );
+        data_save['end_plan'] = end_plan.setMilliseconds(100);
+        data_save['end_plan_format'] = this.getDateFormat(data_save['end_plan']);
+      }
     }
-    
+
     this.list_candidate_clone = this.list_candidate_perpage;
     this.save_data = this.list_candidate;
     this.list_candidate_clone.forEach((item, index) => {
@@ -176,15 +220,14 @@ export class TableInlineEditComponent
       }
     });
     this.save_data.splice(this.start, this.end, ...this.list_candidate_perpage);
-    if(isArrayFull(lis_data_save)){
+    if (isArrayFull(lis_data_save)) {
       lis_data_save.forEach((item, index) => {
-        if (item._key == data_save._key){
-          lis_data_save.splice(index,1, data_save)
-        }
-        else {
+        if (item._key == data_save._key) {
+          lis_data_save.splice(index, 1, data_save);
+        } else {
           lis_data_save.push(data_save);
         }
-      })
+      });
     } else {
       lis_data_save.push(data_save);
     }
@@ -193,6 +236,7 @@ export class TableInlineEditComponent
   }
 
   async getCandidate(): Promise<any[]> {
+    this.list_candidate = []
     const result = await this.registerProjectService.getBizProjectUser(
       this.project_key
     );
@@ -213,16 +257,16 @@ export class TableInlineEditComponent
       this.list_candidate.push(data);
       this.totalRows = this.list_candidate.length;
     });
-   
+
     return this.list_candidate;
   }
 
   async displayList(data, row_per_page, page) {
-    this.listPage = []
+    this.listPage = [];
     this.list_candidate_perpage = [];
     this.current_page = Number(page);
     this.start = Number(row_per_page) * (Number(page) - 1);
-    this.end = this.start +  Number(row_per_page);
+    this.end = this.start + Number(row_per_page);
     if (this.end > this.list_candidate.length) {
       this.end = this.list_candidate.length;
     }
@@ -304,13 +348,11 @@ export class TableInlineEditComponent
     }
   }
 
-  
-
-  calculaHoursDayMonthPlan( group: string, form_control: string) {
+  calculaHoursDayMonthPlan(group: string, form_control: string) {
     let remain_form_control1 = '';
     let remain_form_control2 = '';
-    let remain_property1: number
-    let remain_property2: number
+    let remain_property1: number;
+    let remain_property2: number;
     const input = <HTMLInputElement>(
       document.getElementById(`${form_control}_input_number`)
     );
@@ -318,14 +360,14 @@ export class TableInlineEditComponent
     if (form_control === 'hour_plan') {
       remain_form_control1 = 'manday_plan';
       remain_form_control2 = 'manmonth_plan';
-      remain_property1 = Math.round(Number(input_value) / 8 * 1000)/1000;
-      remain_property2 =  Math.round(Number(input_value) / 160 * 1000)/1000;
+      remain_property1 = Math.round((Number(input_value) / 8) * 1000) / 1000;
+      remain_property2 = Math.round((Number(input_value) / 160) * 1000) / 1000;
     }
     if (form_control === 'manday_plan') {
       remain_form_control1 = 'hour_plan';
       remain_form_control2 = 'manmonth_plan';
       remain_property1 = Number(input_value) * 8;
-      remain_property2 = Math.round(Number(input_value) / 20 * 1000)/1000;
+      remain_property2 = Math.round((Number(input_value) / 20) * 1000) / 1000;
     }
     if (form_control === 'manmonth_plan') {
       remain_form_control1 = 'hour_plan';

@@ -93,6 +93,7 @@ export class RegisterProjectService extends AitBaseService {
           _key: true,
           value: true,
         },
+        level: true
       }
     );
   }
@@ -169,6 +170,33 @@ export class RegisterProjectService extends AitBaseService {
   async getBizProjectUser(_key: string) {
     const condition = {
       _key: _key,
+      del_flag: false,
+    };
+    return await this.query(
+      'getBizProjectUser',
+      {
+        collection: 'biz_project_user',
+        condition,
+        options: { sort_by: { value: 'start_plan', order_by: 'ASC' } },
+      },
+      {
+        first_name: true,
+        last_name: true,
+        start_plan: true,
+        end_plan: true,
+        hour_plan: true,
+        manday_plan: true,
+        manmonth_plan: true,
+        remark: true,
+        _key: true,
+        user_id: true,
+      }
+    );
+  }
+
+  async findBizProjectUserByUser_id(user_id: string) {
+    const condition = {
+      user_id: user_id,
       del_flag: false,
     };
     return await this.query(
