@@ -86,10 +86,10 @@ export class AitChipComponent implements OnChanges {
   }
 
   getTitle(title: string) {
-    if (!this.isHaveBorder || title.length < 12) {
+    if (!this.isHaveBorder || title.length < 11) {
       return title;
     } else {
-      return title.substring(0, 7) + '...' + title.substring(title.length - 5);
+      return title.substring(0, 7) + '...' + title.substring(title.length - 4);
     }
   }
 }
