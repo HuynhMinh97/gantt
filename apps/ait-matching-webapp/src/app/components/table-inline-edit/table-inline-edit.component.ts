@@ -24,6 +24,7 @@ import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import dayjs from 'dayjs';
 import { AddRoleService } from '../../services/add-role.service';
+import { RecommencedUserService } from '../../services/recommenced-user.service';
 import { RegisterProjectService } from '../../services/register-project.service';
 
 @Component({
@@ -59,6 +60,7 @@ export class TableInlineEditComponent
     private formBuilder: FormBuilder,
     private dialogService: NbDialogService,
     private translateService: AitTranslationService,
+    private recommencedService: RecommencedUserService,
 
     env: AitEnvironmentService,
     store: Store<AppState>,
@@ -101,9 +103,13 @@ export class TableInlineEditComponent
     await this.getEmployee();
   }
 
-  handleClickEdit(_key: string) {
+  async handleClickEdit(_key: string) {
     this._key = _key;
     this.isEdit = true;
+    const biz_project_user =await this.list_candidate_perpage.find(
+      (item) => item._key === _key
+    );
+    this.candidateEdit.patchValue({ ...biz_project_user });
   }
 
   handleClickCancel() {
@@ -120,6 +126,35 @@ export class TableInlineEditComponent
           this._key = null;
           this.isEdit = false;
         }
+      });
+  }
+
+  async handleClickDelete(_key: string) {
+    
+    const biz_project_user =await this.list_candidate_perpage.find(
+      (item) => item._key === _key
+    );
+    const user_id = biz_project_user.user_id;
+    this.isDialogOpen = true;
+    this.dialogService
+      .open(AitConfirmDialogComponent, {
+        context: {
+          title: this.translateService.translate('Do you want remove.'),
+        },
+      })
+      .onClose.subscribe(async (event) => {
+        this.isDialogOpen = false;
+        if (event) {
+        const _from = `biz_project/${this.project_key}`;
+      const _to = `sys_user/${user_id}`;
+      this.recommencedService.removeTeamMember(_from, _to).then(async (r) => {
+        if (r.status === RESULT_STATUS.OK) {
+          await this.getCandidate();
+          await this.displayList(this.list_candidate, this.rows, this.current_page);
+          this.showToastr('', this.getMsg('I0005'));
+        }
+      })
+    }
       });
   }
 
@@ -156,20 +191,24 @@ export class TableInlineEditComponent
     data_save['user_id'] = this.candidateEdit.controls[
       'employee_name'
     ].value._key;
-    data_save['start_plan_format'] = this.getDateFormat(
-      data_save['start_plan']
-    );
-    if (data_save['end_plan']) {
-      data_save['end_plan_format'] = this.getDateFormat(data_save['end_plan']);
-    } else {
-      // const start_plan = new Date(data_save['valid_time_from']);
-      const end_plan = new Date(
-        data_save['start_plan_format'].getFullYear(),
-        data_save['start_plan_format'].getMonth() + 1,
-        0
+    if (data_save['start_plan']) {
+      data_save['start_plan_format'] = this.getDateFormat(
+        data_save['start_plan']
       );
-      data_save['end_plan_format'] = end_plan;
-      data_save['end_plan'] = end_plan.setMilliseconds(100);
+      if (data_save['end_plan']) {
+        data_save['end_plan_format'] = this.getDateFormat(
+          data_save['end_plan']
+        );
+      } else {
+        const start_plan = new Date(data_save['start_plan']);
+        const end_plan = new Date(
+          start_plan.getFullYear(),
+          start_plan.getMonth() + 1,
+          0
+        );
+        data_save['end_plan'] = end_plan.setMilliseconds(100);
+        data_save['end_plan_format'] = this.getDateFormat(data_save['end_plan']);
+      }
     }
 
     this.list_candidate_clone = this.list_candidate_perpage;
@@ -197,6 +236,7 @@ export class TableInlineEditComponent
   }
 
   async getCandidate(): Promise<any[]> {
+    this.list_candidate = []
     const result = await this.registerProjectService.getBizProjectUser(
       this.project_key
     );
