@@ -231,7 +231,7 @@
             [content]="getTitle('Recommendation for you')"
           >
           </ait-text-gradient>
-          <div class="content" *ngIf="currentTab === 'R'">
+          <div class="content" *ngIf="currentTab === 'R' && !isLoading">
             <ait-chip
               *ngFor="let p of matchingSkill; let i = index"
               [title]="getText(p)"
@@ -261,7 +261,7 @@
           ></ait-tabs>
         </div>
       </div>
-      <div class="color" *ngIf="currentTab !== 'S'">
+      <div class="color" *ngIf="currentTab !== 'S' && !isLoading">
         <div
           (click)="filterByType(0)"
           class="cardR"

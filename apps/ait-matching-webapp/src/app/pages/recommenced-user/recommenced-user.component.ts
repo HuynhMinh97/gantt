@@ -167,7 +167,7 @@ export class RecommencedUserComponent
   memberChecked = [false, false, false];
 
   isSelectAll = true;
-  isLoading = true;
+  isLoading = false;
   spinnerLoading = false;
   round = 1;
   textDataEnd = '';
@@ -344,6 +344,7 @@ export class RecommencedUserComponent
     this.getDataByRound(0, list).then(() => {
       this.setSkeleton(false);
       this.filterMain();
+      this.isLoading = false;
     });
   }
 
@@ -412,6 +413,8 @@ export class RecommencedUserComponent
         );
         this.dataFilter = [...temp];
         this.dataFilterDf = [...temp];
+        this.setCountMember(this.dataFilter);
+        this.setCountMatching(this.dataFilter);
         this.currentCount = Math.ceil(this.dataFilterDf.length / 8);
       } else {
         this.textDataNull = 'There is no data';
@@ -468,6 +471,7 @@ export class RecommencedUserComponent
       return;
     }
     this.isSubmit = true;
+    this.isLoading = true;
     this.dataFilter = [];
     this.dataFilterDf = [];
     this.matchingList = [];
@@ -482,47 +486,24 @@ export class RecommencedUserComponent
       this.matchingResult = res?.data[0].data || [];
       if (this.matchingResult.length > 0) {
         const arr = res.data[0].data.map((e: { item: string }) => e.item);
-        this.matchingResult.forEach((e) => {
-          if (e?.total_score >= 0.6) {
-            this.countMemberDf[0]++;
-          } else if (e?.total_score >= 0.2) {
-            this.countMemberDf[1]++;
-          } else {
-            this.countMemberDf[2]++;
-          }
-        });
-        this.countMember = [...this.countMemberDf];
         const matchingSkill = res.data[0].matching_input_data.skill.map(
           (e: any) =>
             Object.assign({ ...e, count: 0, name: '', isSelected: false })
         ) as any[];
         matchingSkill.length > 4 && (matchingSkill.length = 4);
-        const checkArr = [];
-        res.data[0].data.forEach((e: any) => {
-          checkArr.push(
-            e.matching_attributes[0]?.matching_detail?.item_values || []
-          );
-        });
-        checkArr.forEach((e: any[]) => {
-          matchingSkill.forEach((z, i) => {
-            const index = e.findIndex((w) => w === z.item);
-            if (~index) {
-              matchingSkill[i].count += 1;
-            }
-          });
-        });
         matchingSkill.forEach(async (e, i) => {
           const name = await this.matchingService.findSkillName(e.item);
           matchingSkill[i].name = name;
         });
         this.matchingSkill = [
-          { name: 'All', count: arr.length, isSelected: true },
+          { name: 'All', count: 0, isSelected: true, _key: '' },
         ].concat(matchingSkill);
         this.matchingList = arr || [];
         this.callSearch(arr);
       } else {
         this.textDataNull = 'There is no data to search';
         this.setSkeleton(false);
+        this.isLoading = false;
       }
     });
   }
@@ -548,7 +529,6 @@ export class RecommencedUserComponent
     this.textDataNullTeamMember = '';
     this.textDataEnd = '';
     this.cardSkeleton = [];
-    this.isLoading = true;
     this.resetRound();
     this.currentCount = 0;
     this.currentMatchingCount = 0;
@@ -614,6 +594,8 @@ export class RecommencedUserComponent
       this.bizProjectService.remove(_key);
     }
     this.dataFilter = [...this.dataFilterDf];
+    this.setCountMember(this.dataFilter);
+    this.setCountMatching(this.dataFilter);
   }
 
   showQueryList() {
@@ -822,6 +804,8 @@ export class RecommencedUserComponent
         } else {
           this.dataFilter = this.filterItem([...this.dataFilterDf]);
         }
+        this.setCountMember(this.dataFilter);
+        this.setCountMatching(this.dataFilter);
         if (this.dataFilter.length === 0) {
           this.textDataNull = 'There is no data';
         } else {
@@ -853,10 +837,26 @@ export class RecommencedUserComponent
     arr.forEach((e) => {
       if (e?.group_no === 1) {
         this.countMember[0]++;
-      } else if (e?.group_no === 0.2) {
+      } else if (e?.group_no === 2) {
         this.countMember[1]++;
       } else {
         this.countMember[2]++;
+      }
+    });
+  };
+
+  setCountMatching = (arr: any[]) => {
+    this.matchingSkill.map((e) => (e.count = 0));
+    this.matchingSkill.forEach(({ item }, i) => {
+      if (i === 0) {
+        this.matchingSkill[0].count = this.dataFilter.length;
+      } else {
+        arr.forEach(({ skills }) => {
+          const index = skills.findIndex(({ _key }) => _key === item);
+          if (~index) {
+            this.matchingSkill[i].count += 1;
+          }
+        });
       }
     });
   };
