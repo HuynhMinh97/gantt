@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   isArrayFull,
+  isNil,
   isObjectFull,
   KEYS,
   KeyValueDto,
   RESULT_STATUS,
 } from '@ait/shared';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
@@ -22,8 +23,10 @@ import {
   AitAuthService,
   AitBaseComponent,
   AitEnvironmentService,
+  AitSaveTempService,
   AitTranslationService,
   AppState,
+  MODE,
   MODULES,
   PAGES,
   TabView,
@@ -46,7 +49,7 @@ export enum StorageKey {
 })
 export class RecommencedUserComponent
   extends AitBaseComponent
-  implements OnInit {
+  implements OnInit, OnDestroy {
   searchForm: FormGroup;
   currentCount = 0;
   currentMatchingCount = 0;
@@ -58,6 +61,7 @@ export class RecommencedUserComponent
     private iconLibraries: NbIconLibraries,
     private formBuilder: FormBuilder,
     private dialogService: NbDialogService,
+    saveTempService: AitSaveTempService,
     store: Store<AppState | any>,
     authService: AitAuthService,
     router: Router,
@@ -73,12 +77,11 @@ export class RecommencedUserComponent
       env,
       layoutScrollService,
       toastrService,
-      null,
+      saveTempService,
       router
     );
 
     this.searchForm = this.formBuilder.group({
-      _key: new FormControl(null),
       keyword: new FormControl(''),
       skills: new FormControl(null),
       current_job_title: new FormControl(null),
@@ -175,6 +178,7 @@ export class RecommencedUserComponent
   isSubmit = false;
 
   project_id = '';
+  tempKey = '';
 
   // ngDoCheck() {
   //   console.log(this.dataFilter);
@@ -337,6 +341,45 @@ export class RecommencedUserComponent
         this.searchForm.patchValue({ ...obj });
         this.search();
       });
+    } else {
+      this.checkForTemp();
+    }
+  }
+
+  async checkForTemp() {
+    try {
+      const tempData = await this.findTempData(MODE.SEARCH);
+      if (
+        !isNil(tempData) &&
+        tempData.status === 200 &&
+        tempData.data.length > 0
+      ) {
+        const data = JSON.parse(tempData.data[0].data || {});
+
+        console.log(data);
+        if (isObjectFull(data)) {
+          this.tempKey = tempData.data[0]._key || '';
+          this.searchForm.patchValue(data);
+          this.isSubmit = true;
+          this.isExpan = true;
+          this.search();
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  saveTemp() {
+    try {
+      const currentData = this.searchForm.value;
+      const { keyword } = currentData;
+      if (keyword) {
+        const data = JSON.stringify(currentData || []);
+        this.saveTempData(MODE.SEARCH, data);
+      }
+    } catch (e) {
+      console.log(e);
     }
   }
 
@@ -496,7 +539,7 @@ export class RecommencedUserComponent
           matchingSkill[i].name = name;
         });
         this.matchingSkill = [
-          { name: 'All', count: 0, isSelected: true, _key: '' },
+          { name: keyword, count: 0, isSelected: true, _key: '' },
         ].concat(matchingSkill);
         this.matchingList = arr || [];
         this.callSearch(arr);
@@ -578,10 +621,10 @@ export class RecommencedUserComponent
   }
 
   reset(): void {
-    const _key = this.searchForm.controls['_key'].value;
     this.project_id = '';
     try {
       this.searchForm.reset();
+      this.removeTemp();
       this.isReset = true;
       setTimeout(() => {
         this.isReset = false;
@@ -590,12 +633,17 @@ export class RecommencedUserComponent
     } catch (e) {
       console.log(e);
     }
-    if (_key) {
-      this.bizProjectService.remove(_key);
-    }
+
     this.dataFilter = [...this.dataFilterDf];
     this.setCountMember(this.dataFilter);
     this.setCountMatching(this.dataFilter);
+  }
+
+  removeTemp() {
+    if (this.tempKey) {
+      this.removeTempData(this.tempKey);
+      this.tempKey = '';
+    }
   }
 
   showQueryList() {
@@ -691,12 +739,16 @@ export class RecommencedUserComponent
     this.memberChecked[index] = !this.memberChecked[index];
     this.filterMain();
   }
-  //TODO
+
   filterSkill({ name, item }, index: number): void {
+    const keyword = this.searchForm.controls['keyword'].value;
+    if (!keyword) {
+      return;
+    }
     this.matchingSkill[index].isSelected = !this.matchingSkill[index]
       .isSelected;
     this.setSkeleton(true);
-    if (name === 'All') {
+    if (name === keyword) {
       this.isSelectAll = this.matchingSkill[index].isSelected;
       if (this.isSelectAll) {
         this.filterList = [];
@@ -707,7 +759,6 @@ export class RecommencedUserComponent
         });
       }
     } else if (this.matchingSkill[index].isSelected) {
-      // this.matchingSkill[0].isSelected = false;
       this.filterList = [];
       this.matchingSkill.forEach((e, i) => {
         if (i !== index) {
@@ -724,6 +775,7 @@ export class RecommencedUserComponent
       }
     }
     this.filterMain();
+    this.setCountMatching(this.dataFilter);
     setTimeout(() => {
       this.setSkeleton(false);
     }, 100);
@@ -804,7 +856,7 @@ export class RecommencedUserComponent
         } else {
           this.dataFilter = this.filterItem([...this.dataFilterDf]);
         }
-        this.setCountMember(this.dataFilter);
+        // this.setCountMember(this.dataFilter);
         this.setCountMatching(this.dataFilter);
         if (this.dataFilter.length === 0) {
           this.textDataNull = 'There is no data';
@@ -884,5 +936,13 @@ export class RecommencedUserComponent
       }
       return isValid;
     });
+  }
+
+  ngOnDestroy() {
+    this.saveTemp();
+  }
+
+  @HostListener('window:beforeunload', ['$event']) unloadHandler() {
+    this.saveTemp();
   }
 }
