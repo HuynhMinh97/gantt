@@ -336,9 +336,9 @@ export const routes: Routes = [
     component: UpdateProjectComponent,
   },
   {
-    path: 'register-project',
+    path: 'project',
     canActivate: [AitAuthGuardService],
-    component: RegisterProjectComponent,
+    component: UpdateProjectComponent,
   },
   {
     path: 'project-requirement-detail/:id',

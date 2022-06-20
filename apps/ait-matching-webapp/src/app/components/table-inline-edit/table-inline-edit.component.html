@@ -64,6 +64,16 @@
                 class="fas fa-pen"
               ></nb-icon>
             </button>
+            <button *ngIf="!isEdit && item._key != _key;" (click)="handleClickDelete(item._key)" class="btn_table">
+              <nb-icon
+                icon="trash"
+                pack="font-awesome-fas"
+                _nghost-rdx-c86=""
+                ng-reflect-icon="trash"
+                ng-reflect-pack="font-awesome-fas"
+                class="fas fa-trash"
+              ></nb-icon>
+            </button>
             <ng-template #saveCancel>
               <ng-container *ngIf="item._key === _key && isEdit; else cancelSave">
                 <div class="group_btn_save_cancel">
@@ -104,7 +114,18 @@
                   ng-reflect-pack="font-awesome-fas"
                   class="fas fa-pen"
                 ></nb-icon></button
-            ></ng-template>
+            >
+            <button *ngIf="!isEdit || item._key != _key;" (click)="handleClickDelete(item._key)" class="btn_table">
+              <nb-icon
+                icon="trash"
+                pack="font-awesome-fas"
+                _nghost-rdx-c86=""
+                ng-reflect-icon="trash"
+                ng-reflect-pack="font-awesome-fas"
+                class="fas fa-trash"
+              ></nb-icon>
+            </button>
+          </ng-template>
           </td>
           <td hidden>
             <ng-container *ngIf="item._key === _key">

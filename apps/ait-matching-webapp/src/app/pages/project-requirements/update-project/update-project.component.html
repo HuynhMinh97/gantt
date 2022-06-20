@@ -5,6 +5,9 @@
   [midleAreaTitle]="'Project detail'"
   [isTableExpan]="isTableExpan"
   [isExpan]="isExpan"
+  [isShowArea3]="mode === 'EDIT' ? true : false"
+  [isShowTableArea]="mode === 'EDIT' ? true : false"
+
 >
   <div leftArea1>
     <ng-container>
@@ -209,7 +212,7 @@
     </ng-container>
   </div>
   <!-- project detail -->
-  <div leftArea3>
+  <div leftArea3 *ngIf="mode === 'EDIT'">
     <ng-container>
       <div class="input_inline">
         <ait-autocomplete-master-data
@@ -250,7 +253,7 @@
       </div>
     </ng-container>
   </div>
-  <div rightArea3>
+  <div rightArea3 *ngIf="mode === 'EDIT'">
     <ng-container>
       <div class="input_inline">
         <ait-input-text
@@ -289,14 +292,14 @@
     </ng-container>
   </div>
   <!-- cadidate list -->
-  <div tableArea>
+  <div tableArea *ngIf="mode === 'EDIT'">
     <ait-table-inline-edit [project_key]="project_key"> </ait-table-inline-edit>
   </div>
-  <div groupButtonArea>
-    <div class="sticky">
+    <div groupButtonArea class="sticky">
       <div class="action-row">
         <div class="block">
           <ait-button
+          *ngIf="mode === 'EDIT'"
             [id]="'remove'"
             [width]="'150px'"
             [title]="'delete'"
@@ -305,6 +308,7 @@
           </ait-button>
 
           <ait-button
+          *ngIf="mode === 'EDIT'"
             [id]="'copy'"
             [width]="'150px'"
             [title]="'copy'"
@@ -340,6 +344,7 @@
           </ait-button>
 
           <ait-button
+          *ngIf="mode === 'EDIT'"
             [id]="'find_candidates'"
             [width]="'150px'"
             [title]="'find_candidates'"
@@ -350,5 +355,4 @@
         </div>
       </div>
     </div>
-  </div>
 </ait-template-page>
