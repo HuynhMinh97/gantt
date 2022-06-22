@@ -72,7 +72,10 @@
       </div>
     </div>
 
-    <div class="template__filter__container radius" *ngIf="isExpandIncluded && isShowArea3">
+    <div
+      class="template__filter__container radius"
+      *ngIf="isExpandIncluded && isShowArea3"
+    >
       <div
         class="template__header__filter"
         (click)="toggleExpanArea3()"
@@ -124,7 +127,10 @@
       </div>
     </div>
 
-    <div class="template__filter__container radius" *ngIf="isTableIncluded && isShowTableArea">
+    <div
+      class="template__filter__container radius"
+      *ngIf="isTableIncluded && isShowTableArea"
+    >
       <div
         class="template__header__filter"
         [ngStyle]="!isTableExpan ? { border: 'none' } : null"
