@@ -35,12 +35,14 @@ import { RegisterProjectService } from '../../services/register-project.service'
 export class TableInlineEditComponent
   extends AitBaseComponent
   implements OnInit {
+    @Input() isView = false;
   @Input() isNew = false;
   @Input() project_key: string;
   @Output() saveInline: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() changeData: EventEmitter<boolean> = new EventEmitter<boolean>();
   employeeList: any[] = [];
   isEdit = false;
+  
   _key = '';
   list_candidate_perpage = [];
   list_perpage_clone = [];
@@ -108,6 +110,7 @@ export class TableInlineEditComponent
     await this.displayList(data, this.rows, this.current_page);
     await this.getEmployee();
   }
+  
 
   async ngOnChanges(): Promise<void> {
     if (this.isNew) {
@@ -306,7 +309,6 @@ export class TableInlineEditComponent
     this._key = '';
     this.saveInline.emit(false);
     this.changeData.emit(true);
-    console.log(this.list_candidate_perpage);
   }else {
     this.isDialogOpen = true;
     this.dialogService
@@ -488,7 +490,6 @@ export class TableInlineEditComponent
 
 
   onUserChange(value: any, index: number, control: string) {
-    debugger
     if (this.list_candidate_perpage[index] == ''){
       this.list_candidate_perpage[index] = {}
     }

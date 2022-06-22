@@ -70,8 +70,9 @@ export class ProjectRequirementDetailComponent
 
   async ngOnInit(): Promise<void> {
     this.project_key = this.activeRouter.snapshot.paramMap.get('id');
-    this.callLoadingApp();
     await this.find();
+    // this.callLoadingApp();
+    console.log(1)
   }
   getDateFormat(time: number) {
     if (!time) {
@@ -81,9 +82,8 @@ export class ProjectRequirementDetailComponent
     }
   }
   
-  async find(data = {}) {
+  async find() {
     try {
-      const dataFind = [];
       await this.findProjectByKey();
       await this.findSkillProject();
       await this.findTitleProject();
@@ -91,7 +91,9 @@ export class ProjectRequirementDetailComponent
       await this.findLevelProject();
       await this.findLocationProject();
       await this.findProjectDetail();
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async findProjectByKey() {
@@ -180,83 +182,35 @@ export class ProjectRequirementDetailComponent
   }
 
   async findProjectDetail() {
-    debugger
-    const result = await this.bizProjectService.findDetailByProject_key(
-      this.project_key
-    );
-    const data = result.data[0];
-    if (result.data.length > 0) {
-      
-      const user = this.getEmployee(data.person_in_charge)
-      this.projectDetail.customer = data.customer.value
-      this.projectDetail.project_code = data.project_code
-      this.projectDetail.status = data.status.value
-    }
+    try{
+
+      const result = await this.bizProjectService.findDetailByProject_key(
+        this.project_key
+        );
+        const data = result.data[0];
+        if (result.data.length > 0) {
+          const user = await this.getEmployee(data.person_in_charge)
+          this.projectDetail.customer = data.customer.value
+          this.projectDetail.project_code = data.project_code
+          this.projectDetail.status = data.status.value
+          this.projectDetail.person_in_charge = user.value;
+        }
+      }catch {}
   }
 
   async getEmployee(_key: string) {
     const data = [];
     await this.addRoleService.getEmployee().then((res) => {
       if (res.status === RESULT_STATUS.OK) {
-        
-        (res.data || []).forEach((e: any) =>
+          (res.data || []).forEach((e: any) =>
           data.push({ _key: e?._key, value: e?.full_name })
         );
       }
     });
-    return data.find(u => u._key === _key).full_name
+    console.log(data)
+    const user = data.find(u => u._key === _key)
+    return user
   }
 
-  // public find = async () => {
-  //   const res = await this.registerProjectService.findProjectAitByKey(
-  //     this._key
-  //   );
-  //   const dataForm = {
-  //     data: [],
-  //   };
-
-  //   dataForm['data'][0] = {};
-  //   Object.keys(res.data[0]).forEach((key) => {
-  //     if (key === 'change_at' || key === 'create_at') {
-  //       const value = res.data[0][key];
-  //       dataForm['data'][0][key] = this.getDateFormat(value);
-  //     } else if (key === 'active_flag') {
-  //       const value = res.data[0][key];
-  //       dataForm['data'][0][key] = value ? 'active' : 'inactive';
-  //     } else if (this.comboboxValue.includes(key)) {
-  //       const value = res.data[0][key];
-  //       dataForm['data'][0][key] = value.value;
-  //     } else {
-  //       const value = res.data[0][key];
-  //       dataForm['data'][0][key] = value;
-  //     }
-  //   });
-  //   if (dataForm['data'][0]['valid_time_to']) {
-  //     dataForm['data'][0]['valid_time'] =
-  //       this.getDateFormat(dataForm['data'][0]['valid_time_from']) +
-  //       ' - ' +
-  //       this.getDateFormat(dataForm['data'][0]['valid_time_to']);
-  //   } else {
-  //     dataForm['data'][0]['valid_time'] = this.getDateFormat(
-  //       dataForm['data'][0]['valid_time_from']
-  //     );
-  //   }
-  //   await this.registerProjectService.findSkillProject(this._key).then(async (res) => {
-  //     const listSkills = [];
-  //     for (const skill of res.data) {
-  //       listSkills.push(skill?.skills?.value);
-  //     }
-  //     if(listSkills.length > 0){
-  //       dataForm['data'][0]['skills'] = listSkills.join(', ');
-  //     }
-    
-  //     this.cancelLoadingApp();
-  //   });
-  //   dataForm['errors'] = res.errors;
-  //   dataForm['message'] = res.message;
-  //   dataForm['numData'] = res.numData;
-  //   dataForm['numError'] = res.numError;
-  //   dataForm['status'] = res.status;
-  //   return dataForm;
-  // };
+  
 }
