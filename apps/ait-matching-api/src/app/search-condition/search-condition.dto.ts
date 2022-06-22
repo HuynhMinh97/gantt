@@ -25,10 +25,10 @@ export class SearchConditionDto extends BaseDto {
   current_job_level?: ConditionDto;
 
   @Field(() => Float, { nullable: true })
-  valid_time_from?: number;
+  capacity_time_from?: number;
 
   @Field(() => Float, { nullable: true })
-  valid_time_to?: number;
+  capacity_time_to?: number;
 }
 
 @InputType()
@@ -38,7 +38,7 @@ export class SaveSearchConditionDto extends BaseDto {
 
   @Field(() => String, { nullable: true })
   keyword?: string;
-  
+
   @Field(() => [String], { nullable: true })
   skills?: string[];
 
@@ -55,8 +55,8 @@ export class SaveSearchConditionDto extends BaseDto {
   current_job_level?: string[];
 
   @Field(() => Float, { nullable: true })
-  valid_time_from?: number;
+  capacity_time_from?: number;
 
   @Field(() => Float, { nullable: true })
-  valid_time_to?: number;
+  capacity_time_to?: number;
 }

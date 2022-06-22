@@ -6,7 +6,7 @@ import {
   BizProjectDetailDto,
   GetProjectInfoDto,
   BizProjectDetailSaveDto,
-  BizProjectSkillDto
+  BizProjectSkillDto,
 } from './biz_project.dto';
 
 @InputType()
@@ -14,7 +14,7 @@ export class BizProjectRequest extends BaseRequest {
   @Field(() => BizProjectDto, { nullable: true })
   condition: BizProjectDto;
   @Field(() => [BizProjectSaveDto], { nullable: true })
-  data: BizProjectSaveDto;
+  data: BizProjectSaveDto[];
 }
 
 @InputType()
@@ -22,7 +22,7 @@ export class BizProjectDetailRequest extends BaseRequest {
   @Field(() => BizProjectDetailDto, { nullable: true })
   condition: BizProjectDetailDto;
   @Field(() => [BizProjectDetailDto], { nullable: true })
-  data: BizProjectDetailDto;
+  data: BizProjectDetailDto[];
 }
 
 @InputType()
@@ -30,7 +30,7 @@ export class BizProjectDetailSaveRequest extends BaseRequest {
   @Field(() => BizProjectDetailSaveDto, { nullable: true })
   condition: BizProjectDetailSaveDto;
   @Field(() => [BizProjectDetailSaveDto], { nullable: true })
-  data: BizProjectDetailSaveDto;
+  data: BizProjectDetailSaveDto[];
 }
 
 @InputType()
@@ -38,7 +38,7 @@ export class GetBizProjectInfoRequest extends BaseRequest {
   @Field(() => GetProjectInfoDto, { nullable: true })
   condition: GetProjectInfoDto;
   @Field(() => [BizProjectDto], { nullable: true })
-  data: BizProjectDto;
+  data: BizProjectDto[];
 }
 
 @InputType()
@@ -49,5 +49,3 @@ export class BizProjectSkillRequest extends BaseRequest {
   @Field(() => [BizProjectSkillDto], { nullable: true })
   data: BizProjectSkillDto[];
 }
-
-

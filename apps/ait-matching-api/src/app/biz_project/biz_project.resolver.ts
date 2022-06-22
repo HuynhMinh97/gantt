@@ -165,12 +165,14 @@ export class BizProjectResolver extends AitBaseService {
   }
 
   @Query(() => BizProjectResponse, { name: 'findBizProject' })
-  findBizProject(
+  async findBizProject(
     @AitCtxUser() user: SysUser,
     @Args('request', { type: () => BizProjectRequest })
     request: BizProjectRequest
   ) {
-    return this.find(request, user);
+    const res = await this.find(request, user);
+    // console.log(JSON.stringify(res));
+    return res;
   }
 
   @Query(() => BizProjectDetailResponse, { name: 'findBizProjectDetail' })
@@ -183,12 +185,35 @@ export class BizProjectResolver extends AitBaseService {
   }
 
   @Mutation(() => BizProjectResponse, { name: 'saveBizProject' })
-  saveBizProject(
+  async saveBizProject(
     @AitCtxUser() user: SysUser,
     @Args('request', { type: () => BizProjectRequest })
     request: BizProjectRequest
   ) {
-    return this.save(request, user);
+    const saveSkill = [];
+    const requestSaveSkill = { ...request };
+    requestSaveSkill.data = [];
+    const arrSkill = request.data[0]?.skills || [];
+    if (arrSkill.length > 0) {
+      delete request.data[0]?.skills;
+    }
+    const res = await this.save(request, user);
+    if (res.status === RESULT_STATUS.OK) {
+      const projectKey = res.data[0]?._key || '';
+      if (Array.isArray(arrSkill) && arrSkill.length > 0 && projectKey) {
+        arrSkill.forEach((e) =>
+          saveSkill.push({
+            _from: `biz_project/${projectKey}`,
+            _to: `m_skill/${e}`,
+            level: 1,
+          })
+        );
+        requestSaveSkill.data = saveSkill;
+        requestSaveSkill.collection = 'biz_project_skill';
+        this.save(requestSaveSkill, user);
+      }
+    }
+    return res;
   }
 
   @Mutation(() => BizProjectDetailResponse, { name: 'saveBizProjectDetail' })
