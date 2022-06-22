@@ -34,8 +34,8 @@ export class BizProjectService extends AitBaseService {
       _key: true,
       value: true,
     },
-    valid_time_from: true,
-    valid_time_to: true,
+    capacity_time_from: true,
+    capacity_time_to: true,
     create_at: true,
     create_by: true,
     change_at: true,
@@ -229,6 +229,27 @@ export class BizProjectService extends AitBaseService {
       'biz_project_skill',
       data,
       returnField
+    );
+  }
+
+
+  async removeBizProjectByKey(data: any[]) {
+    const returnFields = { _key: true };
+    return await this.mutation(
+      'removeBizProjectByKey',
+      'biz_project',
+      data,
+      returnFields
+    );
+  }
+
+  async removeBizProjectDetailByKey(data: any[]) {
+    const returnFields = { _key: true };
+    return await this.mutation(
+      'removeBizProjectDetailByKey',
+      'biz_project_detail',
+      data,
+      returnFields
     );
   }
 }

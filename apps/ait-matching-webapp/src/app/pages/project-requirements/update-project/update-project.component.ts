@@ -4,6 +4,7 @@ import {
   AitAppUtils,
   AitAuthService,
   AitBaseComponent,
+  AitConfirmDialogComponent,
   AitEnvironmentService,
   AitTranslationService,
   AppState,
@@ -18,12 +19,17 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NbLayoutScrollService, NbToastrService } from '@nebular/theme';
+import {
+  NbDialogService,
+  NbLayoutScrollService,
+  NbToastrService,
+} from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { UserListService } from '../../../services/user-list.service';
 import {
   isArrayFull,
+  isObject,
   isObjectFull,
   KEYS,
   KeyValueDto,
@@ -43,7 +49,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   project_key: string;
   projectForm: FormGroup;
   projectDetailForm: FormGroup;
-  project_skill_save : any;
+  project_skill_save: any;
   project_skill = [];
   project_title = [];
   project_industry = [];
@@ -57,10 +63,15 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   projectDetailFormClone: any;
   userProjectClone: any;
   tableComponents: any[] = [1];
+  isNewProjectUser = false;
   isTableIncluded = true;
   isExpandIncluded = true;
+  isDialogOpen = false;
   isExpan = true;
+  isExpanArea3 = true;
   isTableExpan = true;
+  isProjectDetailExits = false;
+  isCopy = false;
   isReset = false;
   isLangJP = false;
   isSubmit = false;
@@ -68,6 +79,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   isChanged = false;
   isDisplay = false;
   available_time_error = false;
+  isEditInline = false;
   resetProjectInfo = {
     name: false,
     industry: false,
@@ -76,8 +88,8 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     location: false,
     level: false,
     description: true,
-    valid_time_to: false,
-    valid_time_from: false,
+    capacity_time_to: false,
+    capacity_time_from: false,
     remark: false,
   };
   projectSkillSave = {
@@ -87,13 +99,14 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   };
   user_list = [];
   employeeList: any[] = [];
-  mode = MODE.NEW;
+  mode = 'NEW';
 
   constructor(
     public router: Router,
     private formBuilder: FormBuilder,
     public activeRouter: ActivatedRoute,
     private element: ElementRef,
+    private dialogService: NbDialogService,
     private userOnbService: UserOnboardingService,
     private registerProjectService: RegisterProjectService,
     private userListService: UserListService,
@@ -128,14 +141,14 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     this.projectForm = this.formBuilder.group({
       name: new FormControl(null, Validators.required),
       _key: new FormControl(null),
-      location: new FormControl(null, Validators.required),
-      title: new FormControl(null, Validators.required),
-      valid_time_from: new FormControl(null, Validators.required),
-      valid_time_to: new FormControl(null),
-      level: new FormControl(null, Validators.required),
-      industry: new FormControl(null, Validators.required),
+      location: new FormControl(null),
+      title: new FormControl(null),
+      capacity_time_from: new FormControl(null),
+      capacity_time_to: new FormControl(null),
+      level: new FormControl(null),
+      industry: new FormControl(null),
       skills: new FormControl(null, Validators.required),
-      description: new FormControl(null, Validators.required),
+      description: new FormControl(null),
       remark: new FormControl(null),
     });
 
@@ -150,8 +163,12 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.project_key = this.activeRouter.snapshot.paramMap.get('id');
-    if (this.project_key) {
+    this.isCopy = !!localStorage.getItem('isCopy');
+    localStorage.setItem('isCopy', '');
+    if (this.project_key && !this.isCopy) {
       this.mode = MODE.EDIT;
+    }
+    if (this.mode == MODE.EDIT || this.isCopy) {
       try {
         await this.find();
         await this.getEmployee();
@@ -165,10 +182,9 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     await this.projectDetailForm.valueChanges.subscribe((data) => {
       this.checkAllowSaveProjectDetail();
     });
+
     this.cancelLoadingApp();
   }
-
-  
 
   async find(data = {}) {
     try {
@@ -187,15 +203,21 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   }
 
   async findProjectDetail() {
-    const result = await this.bizProjectService.findDetailByProject_key(this.project_key);
+    const result = await this.bizProjectService.findDetailByProject_key(
+      this.project_key
+    );
+    if (isObjectFull(result.data[0])) {
+      this.isProjectDetailExits = true;
+    }
     this.projectDetailForm.patchValue({ ...result.data[0] });
   }
 
-  async getCandidate() {
+  async getCandidate(): Promise<any[]> {
     const result = await this.registerProjectService.getBizProjectUser(
       this.project_key
     );
     this.candidate_list = result.data;
+    return result.data;
   }
 
   async findProjectByKey() {
@@ -223,7 +245,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
               _key: skill?.skill?._key,
               value: skill?.skill?.value,
               level: skill?.level,
-            } );
+            });
           }
           if (listSkills[0]['_key']) {
             this.project_skill = listSkills;
@@ -376,8 +398,25 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     setTimeout(() => {
       this.isSubmit = false;
     }, 100);
-    if (this.projectForm.valid) {
+    if (this.projectForm.valid && !this.isEditInline) {
       await this.saveBizProject();
+    } else if (this.isEditInline) {
+      this.isDialogOpen = true;
+      this.dialogService
+        .open(AitConfirmDialogComponent, {
+          context: {
+            title: this.translateService.translate(
+              'Do you cancel edit candidate list.'
+            ),
+          },
+        })
+        .onClose.subscribe(async (event) => {
+          this.isDialogOpen = false;
+          if (event) {
+            this.isEditInline = false;
+            this.save();
+          }
+        });
     } else {
       this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
       this.scrollIntoError();
@@ -403,50 +442,52 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
 
   async saveBizProject() {
     try {
-      if (this.mode == MODE.EDIT){
-      const projectUser = this.registerProjectService.data_save;
-      const saveProjectDetail = this.projectDetailForm.value;
-      await this.bizProjectService.save(this.saveDataProject()).then(async (res) => {
-        await this.saveProjectSkill()
-        if (res.status === RESULT_STATUS.OK) {
-          if (isObjectFull(saveProjectDetail)) {
-            await this.saveProjectDetail();
-          }
-
-          if (isArrayFull(projectUser)) {
-            projectUser.forEach((item) => {
-              item['project_key'] = this.project_key;
-              this.registerProjectService.saveTeamMember(item).then((r) => {
-                if (r.status === RESULT_STATUS.OK) {
-                  this.showToastr('', this.getMsg('I0005'));
-                  localStorage.setItem('biz_project_key', this.project_key);
-                  this.router.navigate([`/requirement-list`]);
-                } else {
-                  this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-                }
-              });
-            });
-          } else {
-            this.showToastr('', this.getMsg('I0005'));
-            localStorage.setItem('biz_project_key', this.project_key);
-            this.router.navigate([`/requirement-list`]);
-          }
-        } else {
-          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-        }
-      });
-    } else {
-      await this.bizProjectService.save(this.saveDataProject()).then(async (res) => {
-        if (res.status === RESULT_STATUS.OK) {
-          this.showToastr('', this.getMsg('I0005'));
-        }
-        else {
-          this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-          this.router.navigate([`/requirement-list`]);
-        }
-      });
-    }
-    } catch (e) { }
+      if (this.mode == MODE.EDIT) {
+        const projectUser = this.registerProjectService.data_save;
+        const saveProjectDetail = this.projectDetailForm.value;
+        await this.bizProjectService
+          .save(this.saveDataProject())
+          .then(async (res) => {
+            await this.saveProjectSkill();
+            if (res.status === RESULT_STATUS.OK) {
+              if (isObject(saveProjectDetail)) {
+                await this.saveProjectDetail();
+              }
+              if (isArrayFull(projectUser)) {
+                projectUser.forEach((item) => {
+                  item['project_key'] = this.project_key;
+                  this.registerProjectService.saveTeamMember(item).then((r) => {
+                    if (r.status === RESULT_STATUS.OK) {
+                      this.showToastr('', this.getMsg('I0005'));
+                      localStorage.setItem('biz_project_key', this.project_key);
+                      this.router.navigate([`/requirement-list`]);
+                    } else {
+                      this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+                    }
+                  });
+                });
+              } else {
+                this.showToastr('', this.getMsg('I0005'));
+                localStorage.setItem('biz_project_key', this.project_key);
+                this.router.navigate([`/requirement-list`]);
+              }
+            } else {
+              this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+            }
+          });
+      } else {
+        await this.bizProjectService
+          .save(this.saveDataProject())
+          .then(async (res) => {
+            if (res.status === RESULT_STATUS.OK) {
+              this.showToastr('', this.getMsg('I0005'));
+              this.router.navigate([`/requirement-list`]);
+            } else {
+              this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
+            }
+          });
+      }
+    } catch (e) {}
   }
 
   takeInputValue(value: string, group: string, form: string): void {
@@ -465,7 +506,6 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     } else {
       this.projectDetailForm.controls[target].setValue(null);
     }
-    
   }
 
   takeMasterValues(value: KeyValueDto[], group: string, form: string): void {
@@ -493,8 +533,8 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
 
   checkDateError() {
     const name = 'available_time_error';
-    const valueFrom = this.projectForm.controls['valid_time_from'].value;
-    const valueTo = this.projectForm.controls['valid_time_to'].value;
+    const valueFrom = this.projectForm.controls['capacity_time_from'].value;
+    const valueTo = this.projectForm.controls['capacity_time_to'].value;
 
     if (!valueFrom || !valueTo) {
       this[name] = false;
@@ -509,8 +549,8 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   getError() {
     const msg = this.getMsg('E0004');
     const availableTimeErr = (msg || '')
-      .replace('{0}', this.translateService.translate('valid_time_to'))
-      .replace('{1}', this.translateService.translate('valid_time_from'));
+      .replace('{0}', this.translateService.translate('capacity_time_to'))
+      .replace('{1}', this.translateService.translate('capacity_time_from'));
     this.availableTimeErrorMessage = [];
     this.availableTimeErrorMessage.push(availableTimeErr);
   }
@@ -553,18 +593,25 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     );
   }
 
+  checkAllowSaveProjectUser(value: any) {
+    value ? (this.isChanged = true) : (this.isChanged = false);
+  }
+
   saveDataProject() {
     const saveData = this.projectForm.value;
-    this.project_skill_save =saveData.skills;
+    if (this.isCopy) {
+      delete saveData._key;
+    }
+    this.project_skill_save = saveData.skills;
     delete saveData.skills;
-    if (!saveData['valid_time_to'] && saveData['valid_time_from']) {
-      const start_plan = new Date(saveData['valid_time_from']);
+    if (!saveData['capacity_time_to'] && saveData['capacity_time_from']) {
+      const start_plan = new Date(saveData['capacity_time_from']);
       const end_plan = new Date(
         start_plan.getFullYear(),
         start_plan.getMonth() + 1,
         0
       );
-      saveData['valid_time_to'] = end_plan.setMilliseconds(100);
+      saveData['capacity_time_to'] = end_plan.setMilliseconds(100);
     }
     const titles = saveData.title;
     if (isArrayFull(titles)) {
@@ -647,45 +694,113 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
 
   async saveProjectDetail() {
     const saveData = this.projectDetailForm.value;
-    if( saveData.person_in_charge._key)
-    {
-      saveData.person_in_charge = saveData.person_in_charge._key;
-    }
-    if (isObjectFull(saveData)) {
-      const projectDetial = {};
-      if(saveData._key){
-        projectDetial['_key'] = saveData._key
+    try {
+      if (isObjectFull(saveData)) {
+        if (saveData.person_in_charge._key) {
+          saveData.person_in_charge = saveData.person_in_charge._key;
+        }
+        const projectDetial = {};
+        if (saveData._key) {
+          projectDetial['_key'] = saveData._key;
+        }
+        projectDetial['project'] = this.project_key;
+        projectDetial['customer'] = saveData.customer?._key || null;
+        projectDetial['project_code'] = saveData.project_code || null;
+        projectDetial['person_in_charge'] = saveData.person_in_charge;
+        projectDetial['status'] = saveData.status?._key;
+        await this.bizProjectService.saveBizProjectDetail(projectDetial);
       }
-      projectDetial['project'] = this.project_key;
-      projectDetial['customer'] = saveData.customer?._key || null;
-      projectDetial['project_code'] = saveData.project_code || null;
-      projectDetial['person_in_charge'] = saveData.person_in_charge;
-      projectDetial['status'] = saveData.status?._key;
-      await this.bizProjectService.saveBizProjectDetail(projectDetial);
-    }
+    } catch {}
   }
-
 
   async saveProjectSkill() {
     this.projectSkillSave._from = 'biz_project/' + this.project_key;
-    const skills = this.project_skill_save;   
-    ;
-
+    const skills = this.project_skill_save;
     if (this.project_key) {
       const _fromSkill = [{ _from: 'biz_project/' + this.project_key }];
-      try{
-
+      try {
         await this.bizProjectService.removeBizProjectSkill(_fromSkill);
-      }catch{}
+      } catch {}
     }
-    try{
-
+    try {
       for (const skill of skills) {
         this.projectSkillSave._to = 'm_skill/' + skill._key;
         this.projectSkillSave.level = skill.level;
-        await this.bizProjectService.saveBizProjectSkill([this.projectSkillSave]);
+        await this.bizProjectService.saveBizProjectSkill([
+          this.projectSkillSave,
+        ]);
       }
-    }catch{}
+    } catch {}
     this.cancelLoadingApp();
+  }
+
+  handleClickEdit(value: any) {
+    if (!value) {
+      this.isEditInline = false;
+    } else {
+      this.isEditInline = true;
+    }
+  }
+
+  addProjectUser() {
+    this.isNewProjectUser = true;
+    this.isEditInline = true;
+    // setTimeout(() => {
+    //   this.isNewProjectUser = false;
+    // }, 100);
+  }
+
+  async copy() {
+    localStorage.setItem('isCopy', 'true');
+    window.location.reload();
+  }
+
+  async delete() {
+    this.isDialogOpen = true;
+    this.dialogService
+      .open(AitConfirmDialogComponent, {
+        context: {
+          title: this.translateService.translate('Do you want delete this project.'),
+        },
+      })
+      .onClose.subscribe(async (event) => {
+        this.isDialogOpen = false;
+        if (event) {
+          
+          const data = [
+            {
+              _key: this.project_key,
+            },
+          ];
+          await this.bizProjectService
+            .removeBizProjectByKey(data)
+            .then(async (res) => {
+              if (res.status === RESULT_STATUS.OK) {
+                const result = await this.getCandidate();
+                const _from = `biz_project/${this.project_key}`;
+      
+                for (const item of result) {
+                  const _to = `sys_user/${item.user_id}`;
+                  await this.recommencedService.removeTeamMember(_from, _to);
+                }
+                if (this.isProjectDetailExits) {
+                  await this.bizProjectService
+                    .removeBizProjectDetailByKey(data)
+                    .then(async (res) => {
+                      if (res.status === RESULT_STATUS.OK) {
+                        this.showToastr('', this.getMsg('I0005'));
+                        this.router.navigate([`/requirement-list`]);
+                      }
+                    });
+                } else {
+                  this.showToastr('', this.getMsg('I0005'));
+                  this.router.navigate([`/requirement-list`]);
+                }
+               
+              }
+            });
+        }
+      });
+
   }
 }

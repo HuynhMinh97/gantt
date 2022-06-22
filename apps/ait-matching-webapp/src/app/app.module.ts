@@ -83,7 +83,6 @@ import { MasterDataListComponent } from './pages/master-data/master-data-list/ma
 import { MasterDataInputComponent } from './pages/master-data/master-data-input/master-data-input.component';
 import { MasterDataViewComponent } from './pages/master-data/master-data-view/master-data-view.component';
 import { UserAccountDetailComponent } from './pages/list/user-list/user-account-detail/user-account-detail.component';
-import { RegisterProjectComponent } from './pages/project-requirements/register-project/register-project.component';
 import { MasterListComponent } from './pages/master-group-collection/master-list/master-list.component';
 import { EditDataMasterComponent } from './pages/master-group-collection/edit-data-master/edit-data-master.component';
 import { ViewDataMasterComponent } from './pages/master-group-collection/view-data-master/view-data-master.component';
@@ -174,7 +173,6 @@ const PAGES = [
     MasterDataInputComponent,
     MasterDataViewComponent,
     UserAccountDetailComponent,
-    RegisterProjectComponent,
     MasterListComponent,
     EditDataMasterComponent,
     ViewDataMasterComponent,

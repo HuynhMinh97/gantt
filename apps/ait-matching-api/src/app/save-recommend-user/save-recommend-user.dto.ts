@@ -12,6 +12,9 @@ export class SaveRecommendUserDto extends BaseDto {
   @Field(() => String, { nullable: true })
   remark: string;
 
+  @Field(() => String, { nullable: true })
+  planned: string;
+
   @Field(() => Float, { nullable: true })
   start_plan: number;
 

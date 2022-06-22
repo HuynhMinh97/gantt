@@ -1,5 +1,4 @@
 import { EditDataMasterComponent } from './pages/master-group-collection/edit-data-master/edit-data-master.component';
-import { RegisterProjectComponent } from './pages/project-requirements/register-project/register-project.component';
 import { SkillDetailComponent } from './pages/list/skill-list/skill-detail/skill-detail.component';
 import { AddCationComponent } from './pages/list/caption-list/add-caption/add-caption.component';
 import { CreateUserComponent } from './pages/list/user-list/create-user/create-user.component';
@@ -341,7 +340,7 @@ export const routes: Routes = [
     component: UpdateProjectComponent,
   },
   {
-    path: 'project-requirement-detail/:id',
+    path: 'project-detail/:id',
     canActivate: [AitAuthGuardService],
     component: ProjectRequirementDetailComponent,
   },

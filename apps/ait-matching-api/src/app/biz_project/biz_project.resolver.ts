@@ -469,7 +469,6 @@ export class BizProjectResolver extends AitBaseService {
     @Args('request', { type: () => BizProjectSkillRequest })
     request: BizProjectSkillRequest
   ) {
-    //return this.remove(request, user);
     const user_id = request.user_id;
     const from = JSON.stringify(request.data[0]._from);
     if (user_id) {
@@ -494,4 +493,50 @@ export class BizProjectResolver extends AitBaseService {
   ) {
     return this.save(request, user);
   }
+
+  @Mutation(() => BizProjectResponse, {
+    name: 'removeBizProjectByKey',
+  })
+  async removeBizProjectByKey(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => BizProjectRequest })
+    request: BizProjectRequest
+  ) {
+    const _key = request.data[0]?._key;
+    if (_key) {
+      const aqlQuery = `
+        FOR data IN biz_project
+        FILTER data._key == "${_key}"
+        UPDATE data WITH { del_flag: true } IN biz_project
+        RETURN data
+      `;
+      
+      return await this.query(aqlQuery);
+    } else {
+      return new BizProjectSkillResponse(RESULT_STATUS.ERROR, [], 'error');
+    }
+  }
+
+  @Mutation(() => BizProjectDetailResponse, {
+    name: 'removeBizProjectDetailByKey',
+  })
+  async removeBizProjectDetailByKey(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => BizProjectDetailRequest })
+    request: BizProjectDetailRequest
+  ) {
+    const project = request.data[0]?._key;
+    if (project) {
+      const aqlQuery = `
+        FOR data IN biz_project_detail
+        FILTER data.project == "${project}"
+        UPDATE data WITH { del_flag: true } IN biz_project_detail
+        RETURN data
+      `;
+      return await this.query(aqlQuery);
+    } else {
+      return new BizProjectSkillResponse(RESULT_STATUS.ERROR, [], 'error');
+    }
+  }
+  
 }
