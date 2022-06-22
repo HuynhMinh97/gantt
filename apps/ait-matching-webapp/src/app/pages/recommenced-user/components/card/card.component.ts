@@ -39,7 +39,22 @@ export class AitCardComponent implements OnInit {
   isLoadingAvatar = true;
   cardH: any;
   skills = [];
+  planObj = [];
   originUrl = location.origin + this.binaryService.downloadUrl;
+  private monthShortNames = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
 
   imageNotFound() {
     this.isLoadingAvatar = false;
@@ -99,9 +114,53 @@ export class AitCardComponent implements OnInit {
       );
       this.getAvatar();
       this.addColor();
+      this.setupPlan();
     } catch (e) {
       console.log(e);
     }
+  }
+  async setupPlan() {
+    const planObj = [];
+    const thisMonth = new Date().getMonth() + 1;
+    [...Array(3)].forEach((e, i) => {
+      planObj.push({
+        _key: thisMonth + i + 1,
+        value:
+          thisMonth + i > 11
+            ? this.monthShortNames[thisMonth - 12 + i]
+            : this.monthShortNames[thisMonth + i],
+        mm: 0,
+      });
+    });
+    const res = await this.recommencedService.findPlan(this.cardH.user_id);
+    if (res.status === RESULT_STATUS.OK) {
+      const data = res.data;
+      if (data.length === 3) {
+        this.planObj = data;
+      } else {
+        this.planObj = planObj;
+      }
+    } else {
+      this.planObj = planObj;
+    }
+  }
+
+  sumMM() {
+    if (this.planObj.length === 0) {
+      return 0;
+    } else {
+      return +this.planObj.reduce((a, b) => a + b.mm, 0).toFixed(2);
+    }
+  }
+
+  getMM(index: number) {
+    if (this.planObj.length === 0) return 0;
+    return +this.planObj[index]['mm'].toFixed(2);
+  }
+
+  getValue(index: number) {
+    if (this.planObj.length === 0) return '';
+    return this.planObj[index]['value'];
   }
 
   navigateProfile = (user_id: string) => {

@@ -187,6 +187,4 @@ export class SaveRecommendUserResolver extends AitBaseService {
     );
     return response;
   }
-
- 
 }

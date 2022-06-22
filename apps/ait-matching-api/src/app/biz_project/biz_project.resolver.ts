@@ -14,10 +14,157 @@ import {
   BizProjectResponse,
   BizProjectSkillResponse,
   GetBizProjectInforResponse,
+  PlanResponse,
 } from './biz_project.response';
+import moment from 'moment-business-days';
 
 @Resolver()
 export class BizProjectResolver extends AitBaseService {
+  private monthShortNames = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+  @Query(() => PlanResponse, { name: 'findPlan' })
+  async findPlan(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => BizProjectRequest })
+    request: BizProjectRequest
+  ) {
+    const thisMonth = this.getMonth();
+    const thisYear = new Date().getFullYear();
+    const planObj = [];
+    const monthObj = [];
+    [...Array(3)].forEach((e, i) => {
+      planObj.push({
+        _key: thisMonth + i + 1,
+        value: this.monthShortNames[thisMonth + i],
+        mm: 0,
+      });
+      monthObj.push(thisMonth + i + 1);
+    });
+    const userId = 'sys_user/' + request.condition?.user_id;
+    const aqlStr = `
+    FOR data IN biz_project_user
+      FILTER data._to == "${userId}" &&
+             LENGTH(data.start_plan) > 0 &&
+             DATE_YEAR(data.start_plan) == ${thisYear} &&
+             DATE_MONTH(data.start_plan) IN TO_ARRAY(${JSON.stringify(
+               monthObj
+             )})
+      RETURN data
+    `;
+    const res = await this.query(aqlStr);
+    const data = res.data || [];
+    if (data.length > 0) {
+      data.forEach((e: { start_plan: number; end_plan: number }) => {
+        const startMonth = this.getMonth(e.start_plan);
+        const endMonth = this.getMonth(e.end_plan);
+        const index = planObj.findIndex(({ _key }) => _key === startMonth);
+        if (!startMonth || !endMonth) {
+          return;
+        }
+        // 5919683581
+        if (startMonth === endMonth) {
+          const mm = this.getSimpleMM(e);
+          planObj[index].mm += mm;
+        } else {
+          this.getAdvancedMM(e, planObj);
+        }
+      });
+      return new PlanResponse(200, planObj, '');
+    } else {
+      return new PlanResponse(200, planObj, '');
+    }
+  }
+  getAdvancedMM(data: any, planObj: any[]) {
+    const {
+      hour_plan,
+      manday_plan,
+      manmonth_plan,
+      start_plan,
+      end_plan,
+    } = data;
+    const diff = moment(end_plan).businessDiff(moment(start_plan));
+    const d1 = moment(start_plan)
+      .endOf('month')
+      .businessDiff(moment(start_plan));
+    const e1 = diff - d1;
+    let d2 = 0;
+    let d3 = 0;
+    if (e1 <= 20 && e1 !== 0) {
+      d2 = moment(end_plan).businessDiff(
+        moment(start_plan).add(1, 'months').startOf('month')
+      );
+    } else if (e1 !== 0) {
+      d2 = moment(start_plan)
+        .add(1, 'months')
+        .endOf('month')
+        .businessDiff(moment(start_plan).add(1, 'months').startOf('month'));
+      d3 = moment(end_plan).businessDiff(
+        moment(start_plan).add(2, 'months').startOf('month')
+      );
+    }
+    const sum = d1 + d2 + d3;
+    if (manmonth_plan) {
+      planObj[0].mm += (manmonth_plan / sum) * d1;
+      planObj[1].mm += (manmonth_plan / sum) * d2;
+      planObj[2].mm += (manmonth_plan / sum) * d3;
+      return;
+    }
+    if (manday_plan) {
+      planObj[0].mm += (manday_plan / 20 / sum) * d1;
+      planObj[1].mm += (manday_plan / 20 / sum) * d2;
+      planObj[2].mm += (manday_plan / 20 / sum) * d3;
+      return;
+    }
+    if (hour_plan) {
+      planObj[0].mm += (manday_plan / 160 / sum) * d1;
+      planObj[1].mm += (manday_plan / 160 / sum) * d2;
+      planObj[2].mm += (manday_plan / 160 / sum) * d3;
+      return;
+    }
+  }
+
+  getSimpleMM(data: any): number {
+    const { hour_plan, manday_plan, manmonth_plan } = data;
+    if (manmonth_plan) {
+      return manmonth_plan;
+    }
+    if (manday_plan) {
+      return manday_plan / 20;
+    }
+    if (hour_plan) {
+      return hour_plan / 160;
+    }
+    return 0;
+  }
+
+  getMonth(date = 0): number {
+    try {
+      if (date) {
+        return new Date(date).getMonth() + 1;
+      } else {
+        return new Date().getMonth() + 1;
+      }
+    } catch {
+      return null;
+    }
+  }
+
+  isCurrentYear(date: number): boolean {
+    return new Date().getFullYear() === new Date(date).getFullYear();
+  }
+
   @Query(() => BizProjectResponse, { name: 'findBizProject' })
   findBizProject(
     @AitCtxUser() user: SysUser,

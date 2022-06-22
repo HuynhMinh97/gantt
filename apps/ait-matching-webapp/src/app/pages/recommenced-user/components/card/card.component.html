@@ -66,8 +66,11 @@
   </div>
   <div class="divider"></div>
   <div class="plan">
-    <span class="plan-text">Plan for the next 3 months: 2.5Mm</span>
-    <span class="plan-text">Aug: 1 Mm, Sep: 0.5 Mm, Oct: 1Mm</span>
+    <span class="plan-text">Plan for the next 3 months: {{ sumMM() }}Mm</span>
+    <span class="plan-text" *ngIf="getValue(0)"
+      >{{ getValue(0) }}: {{ getMM(0) }}Mm, {{ getValue(1) }}: {{ getMM(1) }}Mm,
+      {{ getValue(2) }}: {{ getMM(2) }}Mm</span
+    >
   </div>
   <!-- </mat-chip-list> -->
   <div class="action__card">
