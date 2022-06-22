@@ -88,8 +88,8 @@ export class RecommencedUserComponent
       province_city: new FormControl(null),
       industry_working: new FormControl(null),
       current_job_level: new FormControl(null),
-      valid_time_from: new FormControl(null),
-      valid_time_to: new FormControl(null),
+      capacity_time_from: new FormControl(null),
+      capacity_time_to: new FormControl(null),
     });
 
     this.iconLibraries.registerFontPack('font-awesome-far', {
@@ -335,7 +335,7 @@ export class RecommencedUserComponent
           industry_working: z['industry'],
           current_job_level: z['level'],
           current_job_title: z['title'],
-          valid_time_from: z['valid_time_from'],
+          capacity_time_from: z['capacity_time_from'],
           valid_time_to: z['valid_time_to'],
         };
         this.searchForm.patchValue({ ...obj });
@@ -698,8 +698,8 @@ export class RecommencedUserComponent
             if (obj['province_city']) {
               saveData['location'] = obj['province_city'];
             }
-            if (obj['valid_time_from']) {
-              saveData['valid_time_from'] = obj['valid_time_from'];
+            if (obj['capacity_time_from']) {
+              saveData['capacity_time_from'] = obj['capacity_time_from'];
             }
             if (obj['valid_time_to']) {
               saveData['valid_time_to'] = obj['valid_time_to'];
@@ -710,6 +710,7 @@ export class RecommencedUserComponent
             this.bizProjectService.save(saveData).then((res) => {
               if (res.status === RESULT_STATUS.OK) {
                 this.project_id = res.data[0]._key;
+                console.log(this.project_id);
                 if (event) {
                   this.matchingService
                     .saveTeamMember(this.project_id, event.user_id)
@@ -776,6 +777,7 @@ export class RecommencedUserComponent
     }
     this.filterMain();
     this.setCountMatching(this.dataFilter);
+    this.setCountMember(this.dataFilter);
     setTimeout(() => {
       this.setSkeleton(false);
     }, 100);
@@ -794,7 +796,7 @@ export class RecommencedUserComponent
         for (const prop in condition) {
           if (
             prop !== 'keyword' &&
-            prop !== 'valid_time_from' &&
+            prop !== 'capacity_time_from' &&
             prop !== 'valid_time_to'
           ) {
             checkList.push(condition[prop].map((t: any) => t['_key']));
@@ -818,19 +820,19 @@ export class RecommencedUserComponent
                 );
                 if (!isValid) break;
               } else if (
-                prop === 'valid_time_from' ||
+                prop === 'capacity_time_from' ||
                 prop === 'valid_time_to'
               ) {
                 if (
-                  condition['valid_time_from'] &&
+                  condition['capacity_time_from'] &&
                   !condition['valid_time_to']
                 ) {
                   isValid =
-                    this.setHours0(condition['valid_time_from']) <=
+                    this.setHours0(condition['capacity_time_from']) <=
                     this.setHours0(m['create_at']);
                   if (!isValid) break;
                 } else if (
-                  !condition['valid_time_from'] &&
+                  !condition['capacity_time_from'] &&
                   condition['valid_time_to']
                 ) {
                   isValid =
@@ -839,7 +841,7 @@ export class RecommencedUserComponent
                   if (!isValid) break;
                 } else {
                   isValid =
-                    this.setHours0(condition['valid_time_from']) <=
+                    this.setHours0(condition['capacity_time_from']) <=
                       this.setHours0(m['create_at']) &&
                     this.setHours0(condition['valid_time_to']) >=
                       this.setHours0(m['create_at']);

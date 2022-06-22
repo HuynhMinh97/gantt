@@ -121,20 +121,35 @@
           </ait-autocomplete-master-data>
         </div>
         <div class="right_side">
-          <ait-autocomplete-master-data
-            [label]="'Industry'"
-            [collection]="'m_industry'"
-            [id]="'number_format'"
-            [icon]="'search-outline'"
-            [style]="{ width: '400px' }"
-            [placeholder]="'Please select industry'"
-            [disableOutputDefault]="true"
-            [tabIndex]="5"
-            (watchValue)="takeMasterValues($event?.value, 'industry_working')"
-            [isReset]="isReset"
-            [defaultValue]="searchForm.controls['industry_working'].value"
-          >
-          </ait-autocomplete-master-data>
+          <ng-container>
+            <div style="display: flex">
+              <ait-datepicker
+                [label]="'Capacity Time'"
+                [styleLabel]="{ 'text-transform': 'initial' }"
+                [width]="'170px'"
+                [placeholder]="'yyyy/MM/dd'"
+                [isReset]="isReset"
+                [defaultValue]="searchForm.controls['capacity_time_from'].value"
+                (watchValue)="
+                  takeDatePickerValue($event?.value, 'capacity_time_from')
+                "
+              >
+              </ait-datepicker>
+
+              <span class="center_span">~</span>
+              <ait-datepicker
+                [styleLabel]="{ 'text-transform': 'initial' }"
+                [width]="'170px'"
+                [isReset]="isReset"
+                [defaultValue]="searchForm.controls['capacity_time_to'].value"
+                (watchValue)="
+                  takeDatePickerValue($event?.value, 'capacity_time_to')
+                "
+              >
+              </ait-datepicker>
+            </div>
+          </ng-container>
+
           <ait-space [margin]="'7.25px'"></ait-space>
           <ait-autocomplete-master-data
             [label]="'Level'"
@@ -152,34 +167,20 @@
           </ait-autocomplete-master-data>
           <ait-space [margin]="'7.25px'"></ait-space>
 
-          <ng-container>
-            <div style="display: flex">
-              <ait-datepicker
-                [label]="'Valid Time'"
-                [styleLabel]="{ 'text-transform': 'initial' }"
-                [width]="'170px'"
-                [placeholder]="'yyyy/MM/dd'"
-                [isReset]="isReset"
-                [defaultValue]="searchForm.controls['valid_time_from'].value"
-                (watchValue)="
-                  takeDatePickerValue($event?.value, 'valid_time_from')
-                "
-              >
-              </ait-datepicker>
-
-              <span class="center_span">~</span>
-              <ait-datepicker
-                [styleLabel]="{ 'text-transform': 'initial' }"
-                [width]="'170px'"
-                [isReset]="isReset"
-                [defaultValue]="searchForm.controls['valid_time_to'].value"
-                (watchValue)="
-                  takeDatePickerValue($event?.value, 'valid_time_to')
-                "
-              >
-              </ait-datepicker>
-            </div>
-          </ng-container>
+          <ait-autocomplete-master-data
+            [label]="'Industry'"
+            [collection]="'m_industry'"
+            [id]="'number_format'"
+            [icon]="'search-outline'"
+            [style]="{ width: '400px' }"
+            [placeholder]="'Please select industry'"
+            [disableOutputDefault]="true"
+            [tabIndex]="5"
+            (watchValue)="takeMasterValues($event?.value, 'industry_working')"
+            [isReset]="isReset"
+            [defaultValue]="searchForm.controls['industry_working'].value"
+          >
+          </ait-autocomplete-master-data>
         </div>
         <div class="bottom_side">
           <ait-button
@@ -249,7 +250,12 @@
               (onClickChip)="filterSkill(p, i)"
             ></ait-chip>
           </div>
-          <div class="content" *ngIf="currentTab === 'R' && !isLoading && matchingSkill.length === 0">
+          <div
+            class="content"
+            *ngIf="
+              currentTab === 'R' && !isLoading && matchingSkill.length === 0
+            "
+          >
             <ait-chip
               [title]="'All(0)'"
               [icon]="'close-outline'"
