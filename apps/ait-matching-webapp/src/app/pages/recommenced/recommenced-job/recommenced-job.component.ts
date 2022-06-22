@@ -74,8 +74,8 @@ export class RecommencedJobComponent
       location: new FormControl(null),
       industry: new FormControl(null),
       level: new FormControl(null),
-      valid_time_from: new FormControl(null),
-      valid_time_to: new FormControl(null),
+      capacity_time_from: new FormControl(null),
+      capacity_time_to: new FormControl(null),
     });
 
     this.iconLibraries.registerFontPack('font-awesome-far', {

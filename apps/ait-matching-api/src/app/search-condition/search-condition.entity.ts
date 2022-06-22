@@ -8,7 +8,7 @@ export class SearchConditionEntity extends BaseEntity {
 
   @Field(() => String, { nullable: true })
   keyword?: string;
-  
+
   @Field(() => [KeyValueEntity], { nullable: true })
   skills?: string[];
 
@@ -25,8 +25,8 @@ export class SearchConditionEntity extends BaseEntity {
   current_job_level?: string[];
 
   @Field(() => Float, { nullable: true })
-  valid_time_from?: number;
+  capacity_time_from?: number;
 
   @Field(() => Float, { nullable: true })
-  valid_time_to?: number;
+  capacity_time_to?: number;
 }
