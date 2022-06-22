@@ -1,6 +1,17 @@
 import { BaseEntity, KeyValueEntity } from '@ait/core';
-import { Field, Float, ID, ObjectType } from '@nestjs/graphql';
+import { Field, Float, ID, Int, ObjectType } from '@nestjs/graphql';
 
+@ObjectType()
+export class KeyValueMMEntity {
+  @Field(() => String, { nullable: true })
+  _key: string;
+
+  @Field(() => String, { nullable: true })
+  value: string;
+
+  @Field(() => Int, { nullable: true })
+  mm: number;
+}
 @ObjectType()
 export class BizProjectEntity extends BaseEntity {
   @Field(() => String, { nullable: true })
@@ -24,6 +35,9 @@ export class BizProjectEntity extends BaseEntity {
   @Field(() => [KeyValueEntity], { nullable: true })
   skills?: KeyValueEntity[];
 
+  @Field(() => [KeyValueEntity], { nullable: true })
+  plan?: KeyValueEntity[];
+
   @Field(() => Float, { nullable: true })
   capacity_time_from?: number;
 
@@ -36,7 +50,6 @@ export class BizProjectEntity extends BaseEntity {
   @Field(() => String, { nullable: true })
   remark?: string;
 }
-
 
 @ObjectType()
 export class GetProjectInforEntity extends BaseEntity {
@@ -96,7 +109,6 @@ export class BizProjectDetailEntity extends BaseEntity {
 
 @ObjectType()
 export class BizProjectSkillEntity extends BaseEntity {
-
   @Field(() => String, { nullable: true })
   _from?: string;
 
@@ -105,8 +117,19 @@ export class BizProjectSkillEntity extends BaseEntity {
 
   @Field(() => Float, { nullable: true })
   level?: number;
-  
+
   @Field(() => KeyValueEntity, { nullable: true })
   skill?: KeyValueEntity;
-  
+}
+
+@ObjectType()
+export class PlanEntity {
+  @Field(() => String, { nullable: true })
+  _key?: string;
+
+  @Field(() => String, { nullable: true })
+  value?: string;
+
+  @Field(() => Float, { nullable: true })
+  mm?: number;
 }

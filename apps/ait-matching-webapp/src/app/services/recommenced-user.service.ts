@@ -56,6 +56,17 @@ export class RecommencedUserService extends AitBaseService {
     return res.data[0].name || '';
   }
 
+  async findPlan(user_id: string) {
+    const condition = {};
+    condition[KEYS.COLLECTION] = 'biz_project_user';
+    condition[KEYS.CONDITION] = { user_id };
+    return await this.query('findPlan', condition, {
+      _key: true,
+      value: true,
+      mm: true,
+    });
+  }
+
   async getUserByList(
     list: string[],
     onlySaved = 0,
