@@ -72,27 +72,30 @@
       </div>
     </div>
 
-    <div class="template__filter__container radius" *ngIf="isExpandIncluded">
+    <div
+      class="template__filter__container radius"
+      *ngIf="isExpandIncluded && isShowArea3"
+    >
       <div
         class="template__header__filter"
-        (click)="toggleExpan()"
-        [ngStyle]="!isExpan ? { border: 'none' } : null"
+        (click)="toggleExpanArea3()"
+        [ngStyle]="!isExpanArea3 ? { border: 'none' } : null"
       >
         <ait-text-gradient
           [content]="midleAreaTitle"
           [id]="'title'"
           [fontsize]="'21px'"
         ></ait-text-gradient>
-        <div class="icon__expan" (click)="toggleExpan()">
+        <div class="icon__expan" (click)="toggleExpanArea3()">
           <nb-icon
             icon="arrow-ios-upward-outline"
-            *ngIf="isExpan"
-            (click)="toggleExpan()"
+            *ngIf="isExpanArea3"
+            (click)="toggleExpanArea3()"
           ></nb-icon>
           <nb-icon
             icon="arrow-ios-downward-outline"
-            *ngIf="!isExpan"
-            (click)="toggleExpan()"
+            *ngIf="!isExpanArea3"
+            (click)="toggleExpanArea3()"
           ></nb-icon>
         </div>
       </div>
@@ -100,14 +103,14 @@
       <div
         class="template__input__area"
         [ngStyle]="{
-          height: isExpan ? 'auto' : '0px',
-          'margin-bottom': isExpan ? null : '0px',
-          'margin-top': isExpan ? null : '0px'
+          height: isExpanArea3 ? 'auto' : '0px',
+          'margin-bottom': isExpanArea3 ? null : '0px',
+          'margin-top': isExpanArea3 ? null : '0px'
         }"
       >
         <div
           class="content"
-          [ngStyle]="{ visibility: isExpan ? 'visible' : 'collapse' }"
+          [ngStyle]="{ visibility: isExpanArea3 ? 'visible' : 'collapse' }"
         >
           <div class="left__side">
             <ait-space [margin]="'7.25px'"></ait-space>
@@ -124,10 +127,12 @@
       </div>
     </div>
 
-    <div class="template__filter__container radius" *ngIf="isTableIncluded">
+    <div
+      class="template__filter__container radius"
+      *ngIf="isTableIncluded && isShowTableArea"
+    >
       <div
         class="template__header__filter"
-        (click)="toggleTableExpan()"
         [ngStyle]="!isTableExpan ? { border: 'none' } : null"
       >
         <ait-text-gradient
