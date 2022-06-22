@@ -105,6 +105,7 @@ export class GetProjectInfoDto extends BaseDto {
   @Field(() => [ConditionDto], { nullable: true })
   skills?: ConditionDto[];
 }
+
 @InputType()
 export class BizProjectDetailDto extends BaseDto {
   @Field(() => String, { nullable: true })
@@ -143,7 +144,6 @@ export class BizProjectDetailSaveDto extends BaseDto {
 
 @InputType()
 export class BizProjectSkillDto extends BaseDto {
-
   @Field(() => String, { nullable: true })
   _from?: string;
 
@@ -155,4 +155,28 @@ export class BizProjectSkillDto extends BaseDto {
 
   @Field(() => ConditionDto, { nullable: true })
   skill?: ConditionDto;
+}
+
+@InputType()
+export class BizProjectUserDto extends BaseDto {
+  @Field(() => String, { nullable: true })
+  _from?: string;
+
+  @Field(() => String, { nullable: true })
+  _to?: string;
+
+  @Field(() => Float, { nullable: true })
+  start_plan?: number;
+
+  @Field(() => Float, { nullable: true })
+  end_plan?: number;
+
+  @Field(() => Float, { nullable: true })
+  hour_plan?: number;
+
+  @Field(() => Float, { nullable: true })
+  manday_plan?: number;
+
+  @Field(() => Float, { nullable: true })
+  manmonth_plan?: number;
 }

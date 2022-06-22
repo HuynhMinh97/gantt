@@ -231,7 +231,7 @@
             [content]="getTitle('Recommendation for you')"
           >
           </ait-text-gradient>
-          <div class="content">
+          <div class="content" *ngIf="currentTab === 'R' && !isLoading">
             <ait-chip
               *ngFor="let p of matchingSkill; let i = index"
               [title]="getText(p)"
@@ -249,6 +249,22 @@
               (onClickChip)="filterSkill(p, i)"
             ></ait-chip>
           </div>
+          <div class="content" *ngIf="currentTab === 'R' && !isLoading && matchingSkill.length === 0">
+            <ait-chip
+              [title]="'All(0)'"
+              [icon]="'close-outline'"
+              [is18n]="false"
+              [isHaveIcon]="false"
+              [isHaveBorder]="true"
+              [isSelected]="true"
+              tabindex="4"
+              style="outline-color: #10529d"
+              [style]="{
+                'max-width': '140px',
+                'margin-right': '5px'
+              }"
+            ></ait-chip>
+          </div>
         </div>
         <div class="actionGroup" tabindex="24" style="outline-color: #10529d">
           <ait-tabs
@@ -261,7 +277,7 @@
           ></ait-tabs>
         </div>
       </div>
-      <div class="color">
+      <div class="color" *ngIf="currentTab !== 'S' && !isLoading">
         <div
           (click)="filterByType(0)"
           class="cardR"
@@ -345,6 +361,7 @@
             [card]="card"
             [user_id]="user_id"
             [project_id]="project_id"
+            [isAddMode]="true"
             tabindex="{{ 30 + i + 1 }}"
             style="outline-color: #10529d"
             (actionSaveEvent)="handleSyncData($event)"
@@ -369,6 +386,7 @@
             [card]="card"
             [user_id]="user_id"
             [project_id]="project_id"
+            [isSaveMode]="true"
             tabindex="{{ 30 + i + 1 }}"
             style="outline-color: #10529d"
             (actionSaveEvent)="handleSyncData($event)"

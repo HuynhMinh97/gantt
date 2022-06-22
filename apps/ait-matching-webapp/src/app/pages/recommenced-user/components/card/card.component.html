@@ -64,6 +64,11 @@
       ></ait-chip>
     </div>
   </div>
+  <div class="divider"></div>
+  <div class="plan">
+    <span class="plan-text">Plan for the next 3 months: 2.5Mm</span>
+    <span class="plan-text">Aug: 1 Mm, Sep: 0.5 Mm, Oct: 1Mm</span>
+  </div>
   <!-- </mat-chip-list> -->
   <div class="action__card">
     <div
@@ -75,6 +80,7 @@
       }"
     >
       <div
+        *ngIf="!isSaveMode"
         class="btn-card"
         [ngStyle]="{ background: backgroundCard }"
         (click)="actionButtonAdd(cardH.user_id)"
@@ -100,13 +106,20 @@
           }}
         </p>
       </div>
-      <div style="background: 'white'; width: 1px; height: 100%"></div>
       <div
+        *ngIf="!isSaveMode"
+        style="background: 'white'; width: 1px; height: 100%"
+      ></div>
+      <div
+        *ngIf="!isAddMode"
         class="btn-card"
-        [ngStyle]="{ background: backgroundCard }"
+        [ngStyle]="{
+          background: backgroundCard,
+          width: isSaveMode ? '100%' : '50%'
+        }"
         (click)="actionButtonSave(cardH.user_id)"
         nbTooltip="{{
-          cardH.is_saved ? ('saved' | translate) : ('save' | translate)
+          cardH.is_saved ? ('Unsaved' | translate) : ('save' | translate)
         }}"
       >
         <nb-icon
@@ -122,7 +135,35 @@
             margin: 0;
           "
         >
-          {{ cardH.is_saved ? ('saved' | translate) : ('save' | translate) }}
+          {{ cardH.is_saved ? ('Unsaved' | translate) : ('save' | translate) }}
+        </p>
+      </div>
+
+      <div
+        *ngIf="isAddMode"
+        class="btn-card"
+        [ngStyle]="{
+          background: backgroundCard
+        }"
+        (click)="actionButtonPlan(cardH.user_id)"
+        nbTooltip="{{ 'Set Plan' | translate }}"
+      >
+        <nb-icon
+          icon="id-badge"
+          pack="font-awesome-fas"
+          [ngStyle]="{ color: '#fff' }"
+        ></nb-icon>
+
+        <p
+          style="
+            font-weight: bold;
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #ffffff;
+            margin: 0;
+          "
+        >
+          {{ 'Set Plan' | translate }}
         </p>
       </div>
     </div>
