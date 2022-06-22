@@ -30,6 +30,10 @@ th {
     padding: 0.375rem 0.5rem;
 }
 
+table tr td {
+    padding: 5px 10px !important;
+}
+
 table tr td,
 table tr th {
     border: 1px solid #EDF1F7;
@@ -88,14 +92,14 @@ button {
     box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
 }
 
-.action button nb-icon.fa-pen, .action button nb-icon.fa-save{
+button.btn_table nb-icon.fa-save{
     background: linear-gradient( to bottom, #002b6e 0.23%, #2288cc 99.81% );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 
-.action button nb-icon.fa-times , .fa-trash{
+button.btn_table nb-icon.fa-times , .fa-trash{
     background: linear-gradient( to bottom, #f30505 0.23%, #f83d04 99.81% );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -169,3 +173,8 @@ ul.pagination li a:hover:not(.active) {background-color: #ddd;}
   outline: none;
 }
 
+.ip_checkbox {
+    width: 20px;
+    height: 20px;
+    display: unset;
+}
