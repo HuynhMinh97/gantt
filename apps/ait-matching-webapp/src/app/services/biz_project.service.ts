@@ -237,4 +237,25 @@ export class BizProjectService extends AitBaseService {
       returnField
     );
   }
+
+
+  async removeBizProjectByKey(data: any[]) {
+    const returnFields = { _key: true };
+    return await this.mutation(
+      'removeBizProjectByKey',
+      'biz_project',
+      data,
+      returnFields
+    );
+  }
+
+  async removeBizProjectDetailByKey(data: any[]) {
+    const returnFields = { _key: true };
+    return await this.mutation(
+      'removeBizProjectDetailByKey',
+      'biz_project_detail',
+      data,
+      returnFields
+    );
+  }
 }

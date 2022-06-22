@@ -19,7 +19,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NbDialogService, NbLayoutScrollService, NbToastrService } from '@nebular/theme';
+import {
+  NbDialogService,
+  NbLayoutScrollService,
+  NbToastrService,
+} from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import { UserListService } from '../../../services/user-list.service';
@@ -59,13 +63,15 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   projectDetailFormClone: any;
   userProjectClone: any;
   tableComponents: any[] = [1];
-  isNewProjectUser =  false;
+  isNewProjectUser = false;
   isTableIncluded = true;
   isExpandIncluded = true;
   isDialogOpen = false;
   isExpan = true;
-  isExpanArea3 =  true;
+  isExpanArea3 = true;
   isTableExpan = true;
+  isProjectDetailExits = false;
+  isCopy = false;
   isReset = false;
   isLangJP = false;
   isSubmit = false;
@@ -93,7 +99,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   };
   user_list = [];
   employeeList: any[] = [];
-  mode = MODE.NEW;
+  mode = 'NEW';
 
   constructor(
     public router: Router,
@@ -157,8 +163,12 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.project_key = this.activeRouter.snapshot.paramMap.get('id');
-    if (this.project_key) {
+    this.isCopy = !!localStorage.getItem('isCopy');
+    localStorage.setItem('isCopy', '');
+    if (this.project_key && !this.isCopy) {
       this.mode = MODE.EDIT;
+    }
+    if (this.mode == MODE.EDIT || this.isCopy) {
       try {
         await this.find();
         await this.getEmployee();
@@ -172,7 +182,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     await this.projectDetailForm.valueChanges.subscribe((data) => {
       this.checkAllowSaveProjectDetail();
     });
-   
+
     this.cancelLoadingApp();
   }
 
@@ -196,14 +206,18 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     const result = await this.bizProjectService.findDetailByProject_key(
       this.project_key
     );
+    if (isObjectFull(result.data[0])) {
+      this.isProjectDetailExits = true;
+    }
     this.projectDetailForm.patchValue({ ...result.data[0] });
   }
 
-  async getCandidate() {
+  async getCandidate(): Promise<any[]> {
     const result = await this.registerProjectService.getBizProjectUser(
       this.project_key
     );
     this.candidate_list = result.data;
+    return result.data;
   }
 
   async findProjectByKey() {
@@ -391,18 +405,19 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
       this.dialogService
         .open(AitConfirmDialogComponent, {
           context: {
-            title: this.translateService.translate('Do you cancel edit candidate list.'),
+            title: this.translateService.translate(
+              'Do you cancel edit candidate list.'
+            ),
           },
         })
         .onClose.subscribe(async (event) => {
           this.isDialogOpen = false;
           if (event) {
             this.isEditInline = false;
-            this.save()
+            this.save();
           }
         });
-    } else
-    {
+    } else {
       this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
       this.scrollIntoError();
     }
@@ -439,7 +454,6 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
                 await this.saveProjectDetail();
               }
               if (isArrayFull(projectUser)) {
-               
                 projectUser.forEach((item) => {
                   item['project_key'] = this.project_key;
                   this.registerProjectService.saveTeamMember(item).then((r) => {
@@ -467,9 +481,9 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
           .then(async (res) => {
             if (res.status === RESULT_STATUS.OK) {
               this.showToastr('', this.getMsg('I0005'));
+              this.router.navigate([`/requirement-list`]);
             } else {
               this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
-              this.router.navigate([`/requirement-list`]);
             }
           });
       }
@@ -579,12 +593,15 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     );
   }
 
-  checkAllowSaveProjectUser(value: any){
-    value ? this.isChanged = true : this.isChanged =false
+  checkAllowSaveProjectUser(value: any) {
+    value ? (this.isChanged = true) : (this.isChanged = false);
   }
 
   saveDataProject() {
     const saveData = this.projectForm.value;
+    if (this.isCopy) {
+      delete saveData._key;
+    }
     this.project_skill_save = saveData.skills;
     delete saveData.skills;
     if (!saveData['capacity_time_to'] && saveData['capacity_time_from']) {
@@ -677,8 +694,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
 
   async saveProjectDetail() {
     const saveData = this.projectDetailForm.value;
-    try{
-
+    try {
       if (isObjectFull(saveData)) {
         if (saveData.person_in_charge._key) {
           saveData.person_in_charge = saveData.person_in_charge._key;
@@ -694,7 +710,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
         projectDetial['status'] = saveData.status?._key;
         await this.bizProjectService.saveBizProjectDetail(projectDetial);
       }
-    }catch{}
+    } catch {}
   }
 
   async saveProjectSkill() {
@@ -718,21 +734,73 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     this.cancelLoadingApp();
   }
 
-
   handleClickEdit(value: any) {
-    if (!value){
-      this.isEditInline = false; 
+    if (!value) {
+      this.isEditInline = false;
     } else {
       this.isEditInline = true;
     }
   }
 
-  addProjectUser(){
+  addProjectUser() {
     this.isNewProjectUser = true;
-    this.isEditInline = true
+    this.isEditInline = true;
     // setTimeout(() => {
     //   this.isNewProjectUser = false;
     // }, 100);
   }
-  
+
+  async copy() {
+    localStorage.setItem('isCopy', 'true');
+    window.location.reload();
+  }
+
+  async delete() {
+    this.isDialogOpen = true;
+    this.dialogService
+      .open(AitConfirmDialogComponent, {
+        context: {
+          title: this.translateService.translate('Do you want delete this project.'),
+        },
+      })
+      .onClose.subscribe(async (event) => {
+        this.isDialogOpen = false;
+        if (event) {
+          
+          const data = [
+            {
+              _key: this.project_key,
+            },
+          ];
+          await this.bizProjectService
+            .removeBizProjectByKey(data)
+            .then(async (res) => {
+              if (res.status === RESULT_STATUS.OK) {
+                const result = await this.getCandidate();
+                const _from = `biz_project/${this.project_key}`;
+      
+                for (const item of result) {
+                  const _to = `sys_user/${item.user_id}`;
+                  await this.recommencedService.removeTeamMember(_from, _to);
+                }
+                if (this.isProjectDetailExits) {
+                  await this.bizProjectService
+                    .removeBizProjectDetailByKey(data)
+                    .then(async (res) => {
+                      if (res.status === RESULT_STATUS.OK) {
+                        this.showToastr('', this.getMsg('I0005'));
+                        this.router.navigate([`/requirement-list`]);
+                      }
+                    });
+                } else {
+                  this.showToastr('', this.getMsg('I0005'));
+                  this.router.navigate([`/requirement-list`]);
+                }
+               
+              }
+            });
+        }
+      });
+
+  }
 }

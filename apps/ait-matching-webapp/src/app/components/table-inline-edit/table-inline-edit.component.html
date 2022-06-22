@@ -131,8 +131,8 @@
           <td>
             <input class="ip_checkbox" type="checkbox" />
           </td>
-          <td style="text-align: center">
-            <ng-container>
+          <td style="text-align: center" >
+            <ng-container >
               <ait-input-text
                 hidden
                 [readonly]="true"
@@ -143,8 +143,14 @@
               </ait-input-text>
             </ng-container>
             <ng-container>
+              <abutton
+                *ngIf="isView"
+                [value]="item?._key"
+                [rowData]="item"
+                [style]="'disabled'"
+              ><nb-icon icon="more-horizontal-outline"></nb-icon></abutton>
               <ait-table-button
-                *ngIf="!isEdit && item?._key != _key && item != ''"
+                *ngIf="!isEdit && item?._key != _key && item != '' && !isView"
                 [value]="item?._key"
                 [rowData]="item"
                 (editEvent)="handleClickEdit(item?._key)"
