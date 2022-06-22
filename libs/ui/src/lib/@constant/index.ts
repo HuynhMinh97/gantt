@@ -131,6 +131,7 @@ export enum MODE {
   NEW = 'NEW',
   EDIT = 'EDIT',
   VIEW = 'VIEW',
+  SEARCH = 'SEARCH',
 }
 
 export enum TYPE {

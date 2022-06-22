@@ -30,14 +30,24 @@ export class AitSaveTempService extends AitBaseService {
     return await this.query(this.find_name, request, returnFields);
   }
 
-  async save(data: SysSaveTemp[], rf? : any) {
+  async save(data: SysSaveTemp[], rf?: any) {
     const returnFields = rf ? rf : this.returnFields;
-    return await this.mutation(this.save_name, this.collection, data, returnFields);
+    return await this.mutation(
+      this.save_name,
+      this.collection,
+      data,
+      returnFields
+    );
   }
 
   async remove(_key: string) {
     const returnFields = { _key: true };
-    const data = [{_key}];
-    return await this.mutation(this.remove_name, this.collection, data, returnFields);
+    const data = [{ _key }];
+    return await this.mutation(
+      this.remove_name,
+      this.collection,
+      data,
+      returnFields
+    );
   }
 }
