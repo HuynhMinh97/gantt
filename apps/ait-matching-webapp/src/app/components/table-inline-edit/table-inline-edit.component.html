@@ -12,7 +12,7 @@
         <col style="min-width: 41px" />
         <col style="min-width: 100px" />
         <col style="min-width: 250px" />
-        <col style="min-width: 250px" />
+        <col style="min-width: 280px" />
         <col style="min-width: 150px" />
         <col style="min-width: 150px" />
         <col style="min-width: 100px" />
@@ -137,7 +137,7 @@
                 hidden
                 [readonly]="true"
                 [defaultValue]="item?._key"
-                [id]="indexOfelement+'_key'"
+                [id]="'key'"
                 (watchValue)="takeInputValue($event, '_key')"
               >
               </ait-input-text>
@@ -211,7 +211,7 @@
                 "
                 ><ait-autocomplete-master-data
                   *ngIf="employeeList.length > 0"
-                  [id]="indexOfelement+'_employee_name'"
+                  [id]="'employee_name'"
                   [width]="'200px'"
                   [required]="true"
                   [maxItem]="1"
@@ -233,11 +233,14 @@
           <td>
             <span
               class="candidate_value"
-              *ngIf="!isEdit && item?._key != _key && item != ''; else elseEditPlanned"
               >{{ item?.planned || null }}
             </span>
-
-            <ng-template #elseEditPlanned>
+            <br>
+            <span
+            class="candidate_value"
+            >{{ item?.planned_detail || null }}
+          </span>
+            <!-- <ng-template #elseEditPlanned>
               <ng-container
                 *ngIf="
                   (item?._key === _key && isEdit) || ( item == '');
@@ -246,21 +249,21 @@
               >
                 <ait-input-text
                   [defaultValue]="item?.planned"
-                  [id]="indexOfelement+'_planned'"
+                  [id]="'planned'"
                   [styleInput]="{ background: '#ffffff' }"
                   [widthInput]="'100px'"
                   (watchValue)="
                     takeInputValue($event, 'candidateEdit', 'planned')
                   "
                   [defaultValue]="item?.planned"
-                ></ait-input-text
-              ></ng-container>
+                ></ait-input-text>
+                </ng-container>
             </ng-template>
             <ng-template #plannedEdit>
               <span class="candidate_value">{{
                 item?.planned
               }}</span></ng-template
-            >
+            > -->
           </td>
           <td>
             <span
@@ -278,7 +281,7 @@
               >
                 <ait-datepicker
                   [placeholder]="'yyyyy/MM/dd'"
-                  [id]="indexOfelement+'_start_plan'"
+                  [id]="'start_plan'"
                   [style]="{ width: '170px', marginTop: '-10px' }"
                   [isReset]="isReset"
                   [defaultValue]="item?.start_plan"
@@ -314,9 +317,10 @@
               >
                 <ait-datepicker
                   [placeholder]="'yyyyy/MM/dd'"
-                  [id]="indexOfelement+'_end_plan'"
+                  [id]="'end_plan'"
                   [style]="{ width: '170px', marginTop: '-10px' }"
                   [isReset]="isReset"
+                  [isSubmit]="isSubmit"
                   [defaultValue]="item?.end_plan"
                   (watchValue)="
                     takeDatePickerValue(
@@ -351,14 +355,14 @@
               >
                 <ait-input-number
                   [defaultValue]="item?.hour_plan"
-                  [id]="indexOfelement+'_hour_plan'"
+                  [id]="'hour_plan'"
                   [styleInput]="{ background: '#ffffff' }"
                   [widthInput]="'100px'"
                   (watchValue)="
                     takeInputNumberValue($event, 'candidateEdit', 'hour_plan')
                   "
                   (keyup)="
-                    calculaHoursDayMonthPlan('candidateEdit', 'hour_plan',indexOfelement, item)
+                    calculaHoursDayMonthPlan('candidateEdit', 'hour_plan')
                   "
                 ></ait-input-number>
               </ng-container>
@@ -385,14 +389,14 @@
               >
                 <ait-input-number
                   [defaultValue]="item?.manday_plan"
-                  [id]="indexOfelement+'_manday_plan'"
+                  [id]="'manday_plan'"
                   [styleInput]="{ background: '#ffffff' }"
                   [widthInput]="'100px'"
                   (watchValue)="
                     takeInputNumberValue($event, 'candidateEdit', 'manday_plan')
                   "
                   (keyup)="
-                    calculaHoursDayMonthPlan('candidateEdit', 'manday_plan',indexOfelement, item)
+                    calculaHoursDayMonthPlan('candidateEdit', 'manday_plan')
                   "
                 ></ait-input-number>
               </ng-container>
@@ -419,7 +423,7 @@
               >
                 <ait-input-number
                   [defaultValue]="item?.manmonth_plan"
-                  [id]="indexOfelement+'_manmonth_plan'"
+                  [id]="'manmonth_plan'"
                   [styleInput]="{ background: '#ffffff' }"
                   [widthInput]="'100px'"
                   (watchValue)="
@@ -430,7 +434,7 @@
                     )
                   "
                   (keyup)="
-                    calculaHoursDayMonthPlan('candidateEdit', 'manmonth_plan', indexOfelement, item)
+                    calculaHoursDayMonthPlan('candidateEdit', 'manmonth_plan')
                   "
                 ></ait-input-number>
               </ng-container>
@@ -456,7 +460,7 @@
                 "
               >
                 <ait-input-text
-                  [id]="indexOfelement+'_remark'"
+                  [id]="'remark'"
                   [length]="1000"
                   [width]="'200px'"
                   [isSubmit]="false"

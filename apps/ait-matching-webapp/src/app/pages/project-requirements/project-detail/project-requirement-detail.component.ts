@@ -14,7 +14,6 @@ import { Apollo } from 'apollo-angular';
 import dayjs from 'dayjs';
 import { AddRoleService } from '../../../services/add-role.service';
 import { BizProjectService } from '../../../services/biz_project.service';
-import { RegisterProjectService } from '../../../services/register-project.service';
 import { bizProjectDetail, bizProjectRequirement, bizProjectUser } from './projectRequirementInterface';
 
 @Component({
@@ -41,7 +40,6 @@ export class ProjectRequirementDetailComponent
   comboboxValue = ['location', 'title', 'level', 'industry'];
   constructor(
     public activeRouter: ActivatedRoute,
-    private registerProjectService: RegisterProjectService,
     private bizProjectService: BizProjectService,
     private addRoleService: AddRoleService,
 
@@ -97,7 +95,7 @@ export class ProjectRequirementDetailComponent
   }
 
   async findProjectByKey() {
-    const res = await this.registerProjectService.findProjectAitByKey(
+    const res = await this.bizProjectService.findProjectAitByKey(
       this.project_key
     );
     const data = res.data[0];
@@ -114,7 +112,7 @@ export class ProjectRequirementDetailComponent
     
     try {
       const _key = this.project_key;
-      await this.registerProjectService
+      await this.bizProjectService
         .findSkillProject(_key)
         .then(async (res) => {
           const listSkills = res.data.map((m) => m?.skill.value);
@@ -128,7 +126,7 @@ export class ProjectRequirementDetailComponent
   async findTitleProject() {
     try {
       const _key = this.project_key;
-      await this.registerProjectService
+      await this.bizProjectService
         .findTitleProject(_key)
         .then(async (res) => {
           const listTitle = res.data.map((m) => m?.title.value);
@@ -142,7 +140,7 @@ export class ProjectRequirementDetailComponent
   async findIndustryProject() {
     try {
       const _key = this.project_key;
-      await this.registerProjectService
+      await this.bizProjectService
         .findIndustryProject(_key)
         .then(async (res) => {
           const listIndustry = res.data.map((m) => m?.industry.value);
@@ -156,7 +154,7 @@ export class ProjectRequirementDetailComponent
   async findLevelProject() {
     try {
       const _key = this.project_key;
-      await this.registerProjectService
+      await this.bizProjectService
         .findLevelProject(_key)
         .then(async (res) => {
           const listLevel = res.data.map((m) => m?.level.value);
@@ -170,7 +168,7 @@ export class ProjectRequirementDetailComponent
   async findLocationProject() {
     try {
       const _key = this.project_key;
-      await this.registerProjectService
+      await this.bizProjectService
         .findLocationProject(_key)
         .then(async (res) => {
           const listLocation = res.data.map((m) => m?.location.value);
