@@ -24,8 +24,8 @@ import { select, Store } from '@ngrx/store';
 import { Apollo } from 'apollo-angular';
 import dayjs from 'dayjs';
 import { AddRoleService } from '../../services/add-role.service';
+import { BizProjectService } from '../../services/biz_project.service';
 import { RecommencedUserService } from '../../services/recommenced-user.service';
-import { RegisterProjectService } from '../../services/register-project.service';
 
 @Component({
   selector: 'ait-table-inline-edit',
@@ -63,11 +63,11 @@ export class TableInlineEditComponent
 
   constructor(
     private addRoleService: AddRoleService,
-    private registerProjectService: RegisterProjectService,
     private formBuilder: FormBuilder,
     private dialogService: NbDialogService,
     private translateService: AitTranslationService,
     private recommencedService: RecommencedUserService,
+    private bizProjectService: BizProjectService,
 
     env: AitEnvironmentService,
     store: Store<AppState>,
@@ -217,7 +217,7 @@ export class TableInlineEditComponent
   }
 
   handleClickSave(index: number) {
-    const lis_data_save = this.registerProjectService.data_save;
+    const lis_data_save = this.bizProjectService.data_save;
     const data_save = {};
     const input = <HTMLInputElement>(
       document.getElementById(`${index}_${'employee_name'}_input`)
@@ -304,7 +304,7 @@ export class TableInlineEditComponent
     } else {
       lis_data_save.push(data_save);
     }
-    this.registerProjectService.data_save = lis_data_save;
+    this.bizProjectService.data_save = lis_data_save;
     this.isEdit = false;
     this._key = '';
     this.saveInline.emit(false);
@@ -327,7 +327,7 @@ export class TableInlineEditComponent
 
   async getCandidate(): Promise<any[]> {
     this.list_candidate = [];
-    const result = await this.registerProjectService.getBizProjectUser(
+    const result = await this.bizProjectService.getBizProjectUser(
       this.project_key
     );
     const candidates = result.data;

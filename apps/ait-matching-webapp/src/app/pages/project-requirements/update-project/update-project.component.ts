@@ -1,4 +1,4 @@
-import { RegisterProjectService } from '../../../services/register-project.service';
+
 import { UserOnboardingService } from '../../../services/user-onboarding.service';
 import {
   AitAppUtils,
@@ -108,7 +108,6 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     private element: ElementRef,
     private dialogService: NbDialogService,
     private userOnbService: UserOnboardingService,
-    private registerProjectService: RegisterProjectService,
     private userListService: UserListService,
     private addRoleService: AddRoleService,
     private bizProjectService: BizProjectService,
@@ -213,7 +212,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   }
 
   async getCandidate(): Promise<any[]> {
-    const result = await this.registerProjectService.getBizProjectUser(
+    const result = await this.bizProjectService.getBizProjectUser(
       this.project_key
     );
     this.candidate_list = result.data;
@@ -221,7 +220,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   }
 
   async findProjectByKey() {
-    const res = await this.registerProjectService.findProjectAitByKey(
+    const res = await this.bizProjectService.findProjectAitByKey(
       this.project_key
     );
     const data = res.data[0];
@@ -236,7 +235,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   async findSkillProject() {
     try {
       const _key = this.project_key;
-      await this.registerProjectService
+      await this.bizProjectService
         .findSkillProject(_key)
         .then(async (res) => {
           const listSkills = [];
@@ -262,7 +261,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   async findLevelProject() {
     try {
       const _key = this.project_key;
-      await this.registerProjectService
+      await this.bizProjectService
         .findLevelProject(_key)
         .then(async (res) => {
           const listLevel = [];
@@ -286,7 +285,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   async findIndustryProject() {
     try {
       const _key = this.project_key;
-      await this.registerProjectService
+      await this.bizProjectService
         .findIndustryProject(_key)
         .then(async (res) => {
           const listIndustry = [];
@@ -312,7 +311,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   async findTitleProject() {
     try {
       const _key = this.project_key;
-      await this.registerProjectService
+      await this.bizProjectService
         .findTitleProject(_key)
         .then(async (res) => {
           const listTitles = [];
@@ -336,7 +335,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   async findLocationProject() {
     try {
       const _key = this.project_key;
-      await this.registerProjectService
+      await this.bizProjectService
         .findLocationProject(_key)
         .then(async (res) => {
           const listLocation = [];
@@ -443,7 +442,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   async saveBizProject() {
     try {
       if (this.mode == MODE.EDIT) {
-        const projectUser = this.registerProjectService.data_save;
+        const projectUser = this.bizProjectService.data_save;
         const saveProjectDetail = this.projectDetailForm.value;
         await this.bizProjectService
           .save(this.saveDataProject())
@@ -456,7 +455,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
               if (isArrayFull(projectUser)) {
                 projectUser.forEach((item) => {
                   item['project_key'] = this.project_key;
-                  this.registerProjectService.saveTeamMember(item).then((r) => {
+                  this.bizProjectService.saveTeamMember(item).then((r) => {
                     if (r.status === RESULT_STATUS.OK) {
                       this.showToastr('', this.getMsg('I0005'));
                       localStorage.setItem('biz_project_key', this.project_key);
