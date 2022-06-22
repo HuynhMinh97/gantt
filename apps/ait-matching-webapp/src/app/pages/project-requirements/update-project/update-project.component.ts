@@ -458,7 +458,6 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
                   this.bizProjectService.saveTeamMember(item).then((r) => {
                     if (r.status === RESULT_STATUS.OK) {
                       this.showToastr('', this.getMsg('I0005'));
-                      localStorage.setItem('biz_project_key', this.project_key);
                       this.router.navigate([`/requirement-list`]);
                     } else {
                       this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
@@ -467,7 +466,6 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
                 });
               } else {
                 this.showToastr('', this.getMsg('I0005'));
-                localStorage.setItem('biz_project_key', this.project_key);
                 this.router.navigate([`/requirement-list`]);
               }
             } else {
