@@ -57,14 +57,13 @@ export class BizProjectResolver extends AitBaseService {
     FOR data IN biz_project_user
       FILTER data._to == "${userId}" &&
              LENGTH(data.start_plan) > 0 &&
-             DATE_YEAR(data.start_plan) == ${thisYear} &&
-             DATE_MONTH(data.start_plan) IN TO_ARRAY(${JSON.stringify(
-               monthObj
-             )})
+             DATE_YEAR(data.start_plan) == ${thisYear}
       RETURN data
     `;
     const res = await this.query(aqlStr);
-    const data = res.data || [];
+    const data = (res.data || []).filter((e: { start_plan: number }) =>
+      monthObj.includes(this.getMonth(e.start_plan))
+    );
     if (data.length > 0) {
       data.forEach((e: { start_plan: number; end_plan: number }) => {
         const startMonth = this.getMonth(e.start_plan);
@@ -510,7 +509,7 @@ export class BizProjectResolver extends AitBaseService {
         UPDATE data WITH { del_flag: true } IN biz_project
         RETURN data
       `;
-      
+
       return await this.query(aqlQuery);
     } else {
       return new BizProjectSkillResponse(RESULT_STATUS.ERROR, [], 'error');
@@ -538,5 +537,4 @@ export class BizProjectResolver extends AitBaseService {
       return new BizProjectSkillResponse(RESULT_STATUS.ERROR, [], 'error');
     }
   }
-  
 }
