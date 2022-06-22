@@ -25,10 +25,10 @@ export class BizProjectEntity extends BaseEntity {
   skills?: KeyValueEntity[];
 
   @Field(() => Float, { nullable: true })
-  valid_time_from?: number;
+  capacity_time_from?: number;
 
   @Field(() => Float, { nullable: true })
-  valid_time_to?: number;
+  capacity_time_to?: number;
 
   @Field(() => String, { nullable: true })
   description?: string;
@@ -71,10 +71,10 @@ export class GetProjectInforEntity extends BaseEntity {
   skills?: KeyValueEntity;
 
   @Field(() => Float, { nullable: true })
-  valid_time_from?: number;
+  capacity_time_from?: number;
 
   @Field(() => Float, { nullable: true })
-  valid_time_to?: number;
+  capacity_time_to?: number;
 }
 @ObjectType()
 export class BizProjectDetailEntity extends BaseEntity {

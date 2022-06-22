@@ -25,10 +25,10 @@ export class BizProjectDto extends BaseDto {
   skills?: ConditionDto;
 
   @Field(() => Float, { nullable: true })
-  valid_time_from?: number;
+  capacity_time_from?: number;
 
   @Field(() => Float, { nullable: true })
-  valid_time_to?: number;
+  capacity_time_to?: number;
 
   @Field(() => String, { nullable: true })
   description?: string;
@@ -61,10 +61,10 @@ export class BizProjectSaveDto extends BaseDto {
   skills?: string[];
 
   @Field(() => Float, { nullable: true })
-  valid_time_from?: number;
+  capacity_time_from?: number;
 
   @Field(() => Float, { nullable: true })
-  valid_time_to?: number;
+  capacity_time_to?: number;
 
   @Field(() => String, { nullable: true })
   description?: string;
@@ -97,10 +97,10 @@ export class GetProjectInfoDto extends BaseDto {
   name?: string;
 
   @Field(() => Float, { nullable: true })
-  valid_time_from?: number;
+  capacity_time_from?: number;
 
   @Field(() => Float, { nullable: true })
-  valid_time_to?: number;
+  capacity_time_to?: number;
 
   @Field(() => [ConditionDto], { nullable: true })
   skills?: ConditionDto[];

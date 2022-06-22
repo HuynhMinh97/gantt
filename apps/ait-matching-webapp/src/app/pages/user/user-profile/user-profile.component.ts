@@ -256,6 +256,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     await this.reoderSkillsService.findReorder(from).then(async (res) => {
       if (res.status === RESULT_STATUS.OK) {
         const data = res.data;
+        
         this.countSkill = data.length;
         const top5 = {} as OrderSkill;
         top5.name = this.translateService.translate('top 5');
@@ -274,6 +275,8 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         data.forEach((item) => {
           
           let isCategory = false;
+         
+          
           this.skillByCategory.forEach((element, index) => {
             if (
               item.category?.value != null &&
@@ -282,8 +285,10 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
               if (element.name === 'Others') {
                 categoryOther_index = index;
               }
-              
-
+              if(item.category?.value == element.name) {
+                this.skillByCategory[index]['data'].push(item);
+              }
+              const result = element
               isCategory = true;
             }
           });
@@ -302,7 +307,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
             skillsGroup.code = item.category?._key
               ? item.category?._key
               : this.categoryOther_key;
-              
             skillsGroup.data = [];
             skillsGroup.data.push(item);
             if (categoryOther_index > 0)
@@ -314,7 +318,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
             }
           }
         });
-        
+        console.log(this.skillByCategory);
       }
     });
   }

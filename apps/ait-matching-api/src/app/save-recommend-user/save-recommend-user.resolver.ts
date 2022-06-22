@@ -196,53 +196,5 @@ export class SaveRecommendUserResolver extends AitBaseService {
     return response;
   }
 
-  // @Query(() => SaveRecommendUserResponse, { name: 'findBizProjectUserByUser_id' })
-  // async findBizProjectUserByUser_id(
-  //   @Args('request', { type: () => SaveRecommendUserRequest })
-  //   request: SaveRecommendUserRequest
-  // ) {
-  //   const user_id = request.condition?.user_id
-  //   delete request.condition?.user_id;
-  //   const _to = 'sys_user/' + user_id;
-  //   const aqlQuery = `
-  //   FOR a,e,v IN 1..1 INBOUND "${_to}" biz_project_user
-  //       RETURN e`
-  //   const result = await this.query(aqlQuery);
-  //   const listData = result.data;
-    
-  //   const rq = { ...request };
-  //   rq['collection'] = 'user_profile';
-  //   delete rq.condition;
-  //   const res = await this.find(rq);
-  //   const userList = res.data || [];
-  //   const userArr = [];
-  //   for (const data of listData) {
-  //     const user_id = data._to.split("/").splice(1,1);
-      
-  //     let first_name = '';
-  //     let last_name = '';
-  //     for (const user of userList) {
-        
-  //       if (user.user_id == user_id) {
-  //         first_name = user.first_name;
-  //         last_name = user.last_name;
-          
-  //         break;
-  //       }
-  //     }
-  //         userArr.push({
-  //           ...data,
-  //           first_name: first_name,
-  //           last_name: last_name,
-  //           user_id : user_id[0],
-  //         });
-        
-  //   }
-  //   const response = new SaveRecommendUserResponse(
-  //     200,
-  //     userArr as SaveRecommendUserEntity[],
-  //     ''
-  //   );
-  //   return response;
-  // }
+ 
 }

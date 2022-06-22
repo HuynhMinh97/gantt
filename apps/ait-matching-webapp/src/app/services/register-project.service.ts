@@ -10,8 +10,8 @@ export class RegisterProjectService extends AitBaseService {
   async findProjectAitByKey(_key?: string) {
     const returnFields = {
       _key: true,
-      valid_time_from: true,
-      valid_time_to: true,
+      capacity_time_from: true,
+      capacity_time_to: true,
       name: true,
       create_by: true,
       change_by: true,
