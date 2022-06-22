@@ -63,7 +63,6 @@ export class BizProjectService extends AitBaseService {
   };
 
   async find(condition = {}) {
-    condition[KEYS.USER_ID] = this.user_id || AitAppUtils.getUserId() || '';
     condition['location'] = {
       attribute: 'location',
       ref_collection: 'sys_master_data',
@@ -107,10 +106,6 @@ export class BizProjectService extends AitBaseService {
       type: 'matching',
     };
 
-    if (!condition['user_id']) {
-      condition['user_id'] = this.user_id || '';
-    }
-
     return await this.query(
       'findBizProject',
       {
@@ -121,10 +116,9 @@ export class BizProjectService extends AitBaseService {
     );
   }
 
-
-  async findDetailByProject_key(project_key: string){
+  async findDetailByProject_key(project_key: string) {
     const condition = {};
-    condition['project']= project_key;
+    condition['project'] = project_key;
     condition['customer'] = {
       attribute: 'customer',
       ref_collection: 'm_company',
@@ -135,7 +129,8 @@ export class BizProjectService extends AitBaseService {
     condition['status'] = {
       attribute: 'status',
       ref_collection: 'sys_master_data',
-      ref_attribute: '_key',get_by: '_key',
+      ref_attribute: '_key',
+      get_by: '_key',
     };
 
     return await this.query(
@@ -146,7 +141,6 @@ export class BizProjectService extends AitBaseService {
       },
       this.returnDetail
     );
-
   }
 
   async findDetail(condition = {}) {
@@ -197,7 +191,7 @@ export class BizProjectService extends AitBaseService {
     );
   }
 
-  async saveBizProjectDetail(data: any){
+  async saveBizProjectDetail(data: any) {
     const returnField = { _key: true };
     return await this.mutation(
       'saveBizProjectDetail',
