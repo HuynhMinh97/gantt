@@ -80,7 +80,6 @@ export class BizProjectResolver extends AitBaseService {
           this.getAdvancedMM(e, planObj);
         }
       });
-      console.log(planObj)
       return new PlanResponse(200, planObj, '');
     } else {
       return new PlanResponse(200, planObj, '');
@@ -331,7 +330,6 @@ export class BizProjectResolver extends AitBaseService {
       };
       Titles.push({ titles });
     }
-
     const response = new GetBizProjectInforResponse(
       200,
       Titles as GetProjectInforEntity[],
@@ -516,7 +514,6 @@ export class BizProjectResolver extends AitBaseService {
     @Args('request', { type: () => BizProjectSkillRequest })
     request: BizProjectSkillRequest
   ) {
-    console.log(request)
     return this.save(request, user);
   }
 

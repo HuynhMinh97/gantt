@@ -327,7 +327,7 @@
                         {{ project?.project_name?.value }}
                       </p>
                       <div class="desc-info">
-                        <p>{{ project?.title.value }}</p>
+                        <p>{{  project?.title.value ? project?.title.value : project?.name_title }}</p>
                         <p *ngIf="!project.start_date_to">
                           {{ project?.start_date_from | date: monthFormat }}
                           {{
@@ -360,7 +360,7 @@
                     "
                   >
                     <a
-                      (click)="nextPage('user-project', project?._key)"
+                      (click)="nextPageProject(project?._key, project?.title.value )"
                       [id]="'project-' + project?._key"
                       *ngIf="isMyUserProfile"
                     >
@@ -371,7 +371,7 @@
                       ></nb-icon>
                     </a>
                     <a
-                      (click)="nextPage('user-project-detail', project?._key)"
+                      (click)="nextPageProjectDetail(project?._key, project?.title.value)"
                       [id]="'project-' + project?._key"
                       *ngIf="!isMyUserProfile"
                     >
@@ -441,7 +441,7 @@
                     <div>
                       <p id="title-timeline">{{ project?.project_name?.value }}</p>
                       <div class="desc-info">
-                        <p>{{ project?.title.value }}</p>
+                        <p>{{ project?.title.value ? project?.title.value : project?.name_title }}</p>
                         <p *ngIf="!project.start_date_to">
                           {{ project?.start_date_from | date: monthFormat }}
                           {{
@@ -474,7 +474,7 @@
                     "
                   >
                     <a
-                      (click)="nextPage('user-project', project?._key)"
+                      (click)="nextPageProject(project?._key, project?.title.value)"
                       [id]="'project-' + project?._key"
                       *ngIf="isMyUserProfile"
                     >
@@ -485,7 +485,7 @@
                       ></nb-icon>
                     </a>
                     <a
-                      (click)="nextPage('user-project-detail', project?._key)"
+                      (click)="nextPageProjectDetail(project?._key, project?.title.value)"
                       [id]="'project-' + project?._key"
                       *ngIf="!isMyUserProfile"
                     >

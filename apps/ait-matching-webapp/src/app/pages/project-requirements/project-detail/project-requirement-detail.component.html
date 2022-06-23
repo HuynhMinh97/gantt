@@ -67,6 +67,18 @@
   <!-- end left -->
   <div rightArea1>
     <ng-container>
+      <div style="display: flex">
+        <ait-output-text
+        [label]="'Capacity Time'"
+        [width]="'400px'"
+        [value]="projectRequiremant?.capacity_time"
+        [id]="'first_name'"
+      ></ait-output-text>
+      </div>
+      
+    </ng-container>
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
         <ait-output-text
         [label]="'industry'"
         [width]="'400px'"
@@ -84,18 +96,6 @@
         [id]="'first_name'"
       ></ait-output-text>
       </div>
-    </ng-container>
-    <ait-space [margin]="'7.25px'"></ait-space>
-    <ng-container>
-      <div style="display: flex">
-        <ait-output-text
-        [label]="'valid time'"
-        [width]="'400px'"
-        [value]="projectRequiremant?.capacity_time_from + ' - ' + projectRequiremant?.capacity_time_to || null"
-        [id]="'first_name'"
-      ></ait-output-text>
-      </div>
-      
     </ng-container>
     <ait-space [margin]="'7.25px'"></ait-space>
     <ng-container>

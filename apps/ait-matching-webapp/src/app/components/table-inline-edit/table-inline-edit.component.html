@@ -22,7 +22,12 @@
       </colgroup>
       <tr>
         <th class="header_th">
-          <input class="ip_checkbox" type="checkbox" />
+          <input
+            *ngIf="isView"
+            [disabled]="true"
+            class="ip_checkbox"
+            type="checkbox"
+          />
         </th>
         <th class="header_th"></th>
         <th class="header_th">
@@ -127,12 +132,24 @@
         </th>
       </tr>
       <ng-container *ngIf="list_candidate_perpage.length > 0; else dataIsNull">
-        <tr *ngFor="let item of list_candidate_perpage;let indexOfelement=index;" class="row_style">
+        <tr
+          *ngFor="
+            let item of list_candidate_perpage;
+            let indexOfelement = index
+          "
+          class="row_style"
+        >
           <td>
-            <input class="ip_checkbox" type="checkbox" />
+            <input *ngIf="!isView" class="ip_checkbox" type="checkbox" />
+            <input
+              *ngIf="isView"
+              [disabled]="true"
+              class="ip_checkbox"
+              type="checkbox"
+            />
           </td>
-          <td style="text-align: center" >
-            <ng-container >
+          <td style="text-align: center">
+            <ng-container>
               <ait-input-text
                 hidden
                 [readonly]="true"
@@ -148,7 +165,8 @@
                 [value]="item?._key"
                 [rowData]="item"
                 [style]="'disabled'"
-              ><nb-icon icon="more-horizontal-outline"></nb-icon></abutton>
+                ><nb-icon icon="more-horizontal-outline"></nb-icon
+              ></abutton>
               <ait-table-button
                 *ngIf="!isEdit && item?._key != _key && item != '' && !isView"
                 [value]="item?._key"
@@ -157,9 +175,15 @@
                 (deleteEvent)="handleClickDelete(item?._key)"
               ></ait-table-button>
               <ng-container
-                *ngIf="(item?._key === _key && isEdit) || (item == ''); else cancelSave"
+                *ngIf="
+                  (item?._key === _key && isEdit) || item == '';
+                  else cancelSave
+                "
               >
-                <button (click)="handleClickSave(indexOfelement)" class="btn_table">
+                <button
+                  (click)="handleClickSave(indexOfelement)"
+                  class="btn_table"
+                >
                   <nb-icon
                     icon="pen"
                     pack="font-awesome-fas"
@@ -170,7 +194,6 @@
                   ></nb-icon>
                 </button>
                 <button
-                  
                   (click)="handleClickCancel(indexOfelement, item)"
                   class="btn_table"
                 >
@@ -206,7 +229,7 @@
             <ng-template #elseEdit>
               <ng-container
                 *ngIf="
-                  (item?._key === _key && isEdit) || ( item == '');
+                  (item?._key === _key && isEdit) || item == '';
                   else nameEdit
                 "
                 ><ait-autocomplete-master-data
@@ -231,15 +254,11 @@
             >
           </td>
           <td>
-            <span
-              class="candidate_value"
-              >{{ item?.planned || null }}
+            <span class="candidate_value">{{ item?.planned || null }} </span>
+            <br />
+            <span class="candidate_value"
+              >{{ item?.planned_detail || null }}
             </span>
-            <br>
-            <span
-            class="candidate_value"
-            >{{ item?.planned_detail || null }}
-          </span>
             <!-- <ng-template #elseEditPlanned>
               <ng-container
                 *ngIf="
@@ -268,14 +287,17 @@
           <td>
             <span
               class="candidate_value"
-              *ngIf="!isEdit && item?._key != _key && item != ''; else editStartPlan"
+              *ngIf="
+                !isEdit && item?._key != _key && item != '';
+                else editStartPlan
+              "
             >
               {{ item?.start_plan_format }}
             </span>
             <ng-template #editStartPlan>
               <ng-container
                 *ngIf="
-                  (item?._key === _key && isEdit) || ( item == '');
+                  (item?._key === _key && isEdit) || item == '';
                   else startPlanEdit
                 "
               >
@@ -304,14 +326,17 @@
           <td>
             <span
               class="candidate_value"
-              *ngIf="!isEdit && item?._key != _key && item != ''; else editEndPlan"
+              *ngIf="
+                !isEdit && item?._key != _key && item != '';
+                else editEndPlan
+              "
             >
               {{ item?.end_plan_format }}
             </span>
             <ng-template #editEndPlan>
               <ng-container
                 *ngIf="
-                  (item?._key === _key && isEdit) || ( item == '');
+                  (item?._key === _key && isEdit) || item == '';
                   else endPlanEdit
                 "
               >
@@ -342,14 +367,17 @@
           <td>
             <span
               class="candidate_value"
-              *ngIf="!isEdit && item?._key != _key && item != ''; else editHours"
+              *ngIf="
+                !isEdit && item?._key != _key && item != '';
+                else editHours
+              "
             >
               {{ item?.hour_plan }}
             </span>
             <ng-template #editHours>
               <ng-container
                 *ngIf="
-                  (item?._key === _key && isEdit) || ( item == '');
+                  (item?._key === _key && isEdit) || item == '';
                   else HoursEdit
                 "
               >
@@ -383,7 +411,7 @@
             <ng-template #editMd>
               <ng-container
                 *ngIf="
-                  (item?._key === _key && isEdit) || ( item == '');
+                  (item?._key === _key && isEdit) || item == '';
                   else mdEdit
                 "
               >
@@ -417,7 +445,7 @@
             <ng-template #editMm>
               <ng-container
                 *ngIf="
-                  (item?._key === _key && isEdit) || ( item == '');
+                  (item?._key === _key && isEdit) || item == '';
                   else mmEdit
                 "
               >
@@ -448,14 +476,17 @@
           <td>
             <span
               class="candidate_value"
-              *ngIf="!isEdit && item?._key != _key && item != ''; else editRemark"
+              *ngIf="
+                !isEdit && item?._key != _key && item != '';
+                else editRemark
+              "
             >
               {{ item?.remark }}
             </span>
             <ng-template #editRemark>
               <ng-container
                 *ngIf="
-                  (item?._key === _key && isEdit) || (item == '');
+                  (item?._key === _key && isEdit) || item == '';
                   else remarkEdit
                 "
               >
