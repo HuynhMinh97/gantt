@@ -180,6 +180,7 @@ export class UserProjectService extends AitBaseService {
           _key: true,
           value: true,
         },
+        name_title:true,
         title:{
           _key: true,
           value: true,
@@ -187,4 +188,6 @@ export class UserProjectService extends AitBaseService {
       }
     );
   }
+
+
 }

@@ -270,7 +270,6 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
   }
 
   async saveSkill(bizProjectKey: string) {
-    debugger
     this.biz_project_skill._from = 'user_project/' + bizProjectKey;
     const list_skill_copy = [...this.listSkills]
     const user_skill = await this.findSkills()

@@ -7,8 +7,7 @@ export interface bizProjectRequirement {
   skill: string;
   description: string;
   remark: string;
-  capacity_time_from: string;
-  capacity_time_to: string;
+  capacity_time;
 }
 
 export interface bizProjectDetail {
