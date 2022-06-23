@@ -336,7 +336,7 @@ export class RecommencedUserComponent
           current_job_level: z['level'],
           current_job_title: z['title'],
           capacity_time_from: z['capacity_time_from'],
-          valid_time_to: z['valid_time_to'],
+          capacity_time_to: z['capacity_time_to'],
         };
         this.searchForm.patchValue({ ...obj });
         this.search();
@@ -701,8 +701,8 @@ export class RecommencedUserComponent
             if (obj['capacity_time_from']) {
               saveData['capacity_time_from'] = obj['capacity_time_from'];
             }
-            if (obj['valid_time_to']) {
-              saveData['valid_time_to'] = obj['valid_time_to'];
+            if (obj['capacity_time_to']) {
+              saveData['capacity_time_to'] = obj['capacity_time_to'];
             }
             if (obj['skills']) {
               saveData['skills'] = obj['skills'];
@@ -797,7 +797,7 @@ export class RecommencedUserComponent
           if (
             prop !== 'keyword' &&
             prop !== 'capacity_time_from' &&
-            prop !== 'valid_time_to'
+            prop !== 'capacity_time_to'
           ) {
             checkList.push(condition[prop].map((t: any) => t['_key']));
           }
@@ -821,11 +821,11 @@ export class RecommencedUserComponent
                 if (!isValid) break;
               } else if (
                 prop === 'capacity_time_from' ||
-                prop === 'valid_time_to'
+                prop === 'capacity_time_to'
               ) {
                 if (
                   condition['capacity_time_from'] &&
-                  !condition['valid_time_to']
+                  !condition['capacity_time_to']
                 ) {
                   isValid =
                     this.setHours0(condition['capacity_time_from']) <=
@@ -833,17 +833,17 @@ export class RecommencedUserComponent
                   if (!isValid) break;
                 } else if (
                   !condition['capacity_time_from'] &&
-                  condition['valid_time_to']
+                  condition['capacity_time_to']
                 ) {
                   isValid =
-                    this.setHours0(condition['valid_time_to']) >=
+                    this.setHours0(condition['capacity_time_to']) >=
                     this.setHours0(m['create_at']);
                   if (!isValid) break;
                 } else {
                   isValid =
                     this.setHours0(condition['capacity_time_from']) <=
                       this.setHours0(m['create_at']) &&
-                    this.setHours0(condition['valid_time_to']) >=
+                    this.setHours0(condition['capacity_time_to']) >=
                       this.setHours0(m['create_at']);
                   if (!isValid) break;
                 }
