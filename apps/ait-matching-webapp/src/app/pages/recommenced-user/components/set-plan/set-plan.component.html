@@ -1,0 +1,153 @@
+<ait-template-page
+  [pageTitle]="'Set plan for employee'"
+  [isTableIncluded]="false"
+  [isExpandIncluded]="false"
+>
+  <div leftArea2>
+    <ait-space [margin]="'7.25px'"></ait-space>
+
+    <ait-output-text
+      [label]="'Employee'"
+      [id]="'group name'"
+      [width]="'200px'"
+      [value]="name"
+    ></ait-output-text>
+
+    <ait-space [margin]="'7.25px'"></ait-space>
+
+    <ng-container>
+      <div style="display: flex">
+        <ait-datepicker
+          [label]="'Date'"
+          [required]="true"
+          [isSubmit]="isSubmit"
+          [isReset]="isReset"
+          [styleLabel]="{ 'text-transform': 'initial' }"
+          [width]="'170px'"
+          [placeholder]="'yyyy/MM/dd'"
+          [defaultValue]="planForm.controls['start_plan'].value"
+          (watchValue)="takeDatePickerValue($event?.value, 'start_plan')"
+        >
+        </ait-datepicker>
+
+        <span class="center_span">~</span>
+        <ait-datepicker
+          [styleLabel]="{ 'text-transform': 'initial' }"
+          [width]="'170px'"
+          [isReset]="isReset"
+          [defaultValue]="planForm.controls['end_plan'].value"
+          (watchValue)="takeDatePickerValue($event?.value, 'end_plan')"
+        >
+        </ait-datepicker>
+      </div>
+    </ng-container>
+
+    <ait-space [margin]="'7.25px'"></ait-space>
+
+    <ait-input-number
+      [id]="'Man day'"
+      [height]="'40px'"
+      [width]="'400px'"
+      [label]="'Man day'"
+      [placeholder]="'Please input man day'"
+      [length]="4000"
+      [required]="true"
+      [isSubmit]="isSubmit"
+      [isReset]="isReset"
+      [clearError]="isClearErrors"
+      [isLeftPlaceholder]="true"
+      [defaultValue]="planForm.controls['manday_plan'].value"
+      (watchValue)="takeInputNumberValue($event, 'manday_plan')"
+    ></ait-input-number>
+
+    <ait-space [margin]="'7.25px'"></ait-space>
+  </div>
+  <div rightArea2>
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <div class="plan">
+      <span class="plan-text">
+        <nb-icon icon="checkmark-outline"></nb-icon>
+        Plan for the next 3 months: {{ sumMM() }}Mm</span
+      >
+      <span class="plan-text" *ngIf="getValue(0)"
+        >{{ getValue(0) }}: {{ getMM(0) }}Mm, {{ getValue(1) }}:
+        {{ getMM(1) }}Mm, {{ getValue(2) }}: {{ getMM(2) }}Mm</span
+      >
+    </div>
+    <ait-space [margin]="'5.75px'"></ait-space>
+
+    <ait-input-number
+      [id]="'Man Month'"
+      [height]="'40px'"
+      [width]="'400px'"
+      [label]="'Man Month'"
+      [placeholder]="'Please input man month'"
+      [length]="4000"
+      [required]="true"
+      [isSubmit]="isSubmit"
+      [isReset]="isReset"
+      [clearError]="isClearErrors"
+      [isLeftPlaceholder]="true"
+      [defaultValue]="planForm.controls['manmonth_plan'].value"
+      (watchValue)="takeInputNumberValue($event, 'manmonth_plan')"
+    ></ait-input-number>
+
+    <ait-space [margin]="'7.25px'"></ait-space>
+
+    <ait-input-number
+      [id]="'Man Hours'"
+      [height]="'40px'"
+      [width]="'400px'"
+      [label]="'Man Hours'"
+      [placeholder]="'Please input hours'"
+      [length]="4000"
+      [required]="true"
+      [isSubmit]="isSubmit"
+      [isReset]="isReset"
+      [clearError]="isClearErrors"
+      [clearError]="isClearErrors"
+      [isLeftPlaceholder]="true"
+      [defaultValue]="planForm.controls['hour_plan'].value"
+      (watchValue)="takeInputNumberValue($event, 'hour_plan')"
+    ></ait-input-number>
+    <ait-space [margin]="'7.25px'"></ait-space>
+  </div>
+
+  <div groupButtonArea class="btn-group">
+    <ait-button
+      [id]="'remove'"
+      [width]="'150px'"
+      [title]="'remove'"
+      [isDefault]="true"
+      [tabIndex]="40"
+      (click)="remove()"
+    ></ait-button>
+
+    <ait-button
+      [id]="'clear'"
+      [width]="'150px'"
+      [title]="'clear'"
+      [isDefault]="true"
+      [tabIndex]="41"
+      (click)="clear()"
+    ></ait-button>
+
+    <ait-button
+      [id]="'reset'"
+      [width]="'150px'"
+      [title]="'reset'"
+      [isDefault]="true"
+      [tabIndex]="42"
+      (click)="reset()"
+    ></ait-button>
+
+    <ait-button
+      [id]="'add'"
+      [width]="'150px'"
+      [title]="'add'"
+      [isDefault]="true"
+      [tabIndex]="43"
+      (click)="add()"
+    ></ait-button>
+  </div>
+</ait-template-page>

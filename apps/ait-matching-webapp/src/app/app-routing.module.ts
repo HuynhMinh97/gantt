@@ -47,6 +47,7 @@ import { RequirementListComponent } from './pages/requirement-list/requirement-l
 import { MasterDataInputComponent } from './pages/master-data/master-data-input/master-data-input.component';
 import { MasterDataViewComponent } from './pages/master-data/master-data-view/master-data-view.component';
 import { UpdateProjectComponent } from './pages/project-requirements/update-project/update-project.component';
+import { SetPlanComponent } from './pages/recommenced-user/components/set-plan/set-plan.component';
 
 export const routes: Routes = [
   {
@@ -348,6 +349,11 @@ export const routes: Routes = [
     path: 'requirement-list',
     canActivate: [AitAuthGuardService],
     component: RequirementListComponent,
+  },
+  {
+    path: 'set-plan',
+    canActivate: [AitAuthGuardService],
+    component: SetPlanComponent,
   },
   {
     path: '',

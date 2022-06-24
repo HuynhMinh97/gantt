@@ -848,7 +848,6 @@ export class RecommencedUserComponent
                   if (!isValid) break;
                 }
               } else {
-                isValid = false;
                 break;
               }
             }

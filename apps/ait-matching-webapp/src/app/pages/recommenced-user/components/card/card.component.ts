@@ -75,6 +75,10 @@ export class AitCardComponent implements OnInit {
     this.avatar = this.originUrl + avatar;
   };
 
+  getName = () => {
+    return this.cardH?.last_name + ' ' + this.cardH?.first_name;
+  };
+
   getAvatarDefault = () => {
     return this.cardH?.first_name
       ? this.avatarURL +
@@ -212,7 +216,15 @@ export class AitCardComponent implements OnInit {
   };
 
   actionButtonPlan = (_key: string) => {
-    //
+    if (this.project_id) {
+      this.router.navigate([`/set-plan`], {
+        queryParams: {
+          projectId: this.project_id,
+          userId: _key,
+          name: this.getName(),
+        },
+      });
+    }
   };
 
   actionButtonAdd = (_key: string) => {
