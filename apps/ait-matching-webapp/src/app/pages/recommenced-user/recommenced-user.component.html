@@ -39,7 +39,7 @@
           class="out_line"
           #inputSearch
           type="text"
-          [placeholder]="'Please input your keyword'"
+          [placeholder]="getTitle('please input your keyword')"
           autofocus
           formControlName="keyword"
           tabindex="5"
@@ -67,7 +67,7 @@
     <ait-card-content
       style="width: 100%"
       [isColumn]="true"
-      [label]="'Filter'"
+      [label]="'filter'"
       *ngIf="isSubmit"
       [styleLabel]="{ 'font-size': '1.5vmax' }"
       [isOpen]="isExpan"
@@ -229,7 +229,7 @@
         <div style="margin-left: 35px">
           <ait-text-gradient
             [fontsize]="'22px'"
-            [content]="getTitle('Recommendation for you')"
+            [content]="getTitle('recommended for you')"
           >
           </ait-text-gradient>
           <div class="content" *ngIf="currentTab === 'R' && !isLoading">
@@ -294,7 +294,8 @@
             transform: memberChecked[0] ? 'scale(1.1)' : 'scale(1)'
           }"
         >
-          {{ 'Highly recommended (' + countMember[0] + ')' }}
+          {{ getTitle('highly recommended') }}
+          {{ ' (' + countMember[0] + ')' }}
         </div>
         <div
           (click)="filterByType(1)"
@@ -304,7 +305,7 @@
             transform: memberChecked[1] ? 'scale(1.1)' : 'scale(1)'
           }"
         >
-          {{ 'Recommended (' + countMember[1] + ')' }}
+          {{ getTitle('recommended') }}{{ ' (' + countMember[1] + ')' }}
         </div>
         <div
           (click)="filterByType(2)"
@@ -315,7 +316,7 @@
             transform: memberChecked[2] ? 'scale(1.1)' : 'scale(1)'
           }"
         >
-          {{ 'Normal (' + countMember[2] + ')' }}
+          {{ getTitle('normal') }}{{ ' (' + countMember[2] + ')' }}
         </div>
       </div>
       <div class="divider"></div>

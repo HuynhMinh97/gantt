@@ -11,6 +11,7 @@ import {
   AitBaseComponent,
   AitConfirmDialogComponent,
   AitEnvironmentService,
+  AitTranslationService,
   AppState,
 } from '@ait/ui';
 import { Component, OnInit } from '@angular/core';
@@ -70,6 +71,7 @@ export class SetPlanComponent extends AitBaseComponent implements OnInit {
     store: Store<AppState | any>,
     authService: AitAuthService,
     toastrService: NbToastrService,
+    private translateService: AitTranslationService,
     env: AitEnvironmentService,
     apollo: Apollo,
     router: Router
@@ -148,10 +150,6 @@ export class SetPlanComponent extends AitBaseComponent implements OnInit {
           this.planForm.controls['end_plan'].setValue(endMonth);
         }
       }
-      // this.isClearErrors = true;
-      // setTimeout(() => {
-      //   this.isClearErrors = false;
-      // }, 100);
       this.calculatePlan();
     } else {
       this.planForm.controls[form].setValue(null);
@@ -177,6 +175,8 @@ export class SetPlanComponent extends AitBaseComponent implements OnInit {
     this.planObj[1].mm = 0;
     this.planObj[2].mm = 0;
   }
+
+  getTitle = (name: string) => this.translateService.translate(name);
 
   setPlanData(type: string) {
     const { hour_plan, manday_plan, manmonth_plan } = this.planForm.value;

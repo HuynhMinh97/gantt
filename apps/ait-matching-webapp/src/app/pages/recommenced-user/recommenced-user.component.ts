@@ -237,7 +237,7 @@ export class RecommencedUserComponent
     const res = await this.matchingService.getUserByProjectId(project_id);
     if (res.status === RESULT_STATUS.OK) {
       if (res.data?.length === 0) {
-        this.textDataNullTeamMember = 'There is no data to search';
+        this.textDataNullTeamMember = this.no1();
         this.countMember = [0, 0, 0];
       } else {
         this.textDataNullTeamMember = '';
@@ -271,11 +271,9 @@ export class RecommencedUserComponent
       );
       if (res.status === RESULT_STATUS.OK) {
         if (res.data?.length === 0) {
-          onlySaved === 0 && (this.textDataNull = 'There is no data to search');
-          onlySaved === 1 &&
-            (this.textDataNullTeamMember = 'There is no data to search');
-          onlySaved === 2 &&
-            (this.textDataNullSave = 'There is no data to search');
+          onlySaved === 0 && (this.textDataNull = this.no1());
+          onlySaved === 1 && (this.textDataNullTeamMember = this.no1());
+          onlySaved === 2 && (this.textDataNullSave = this.no1());
         }
         return res.data;
       }
@@ -289,11 +287,9 @@ export class RecommencedUserComponent
       );
       if (res.status === RESULT_STATUS.OK) {
         if (res.data?.length === 0) {
-          onlySaved === 0 && (this.textDataNull = 'There is no data to search');
-          onlySaved === 1 &&
-            (this.textDataNullTeamMember = 'There is no data to search');
-          onlySaved === 2 &&
-            (this.textDataNullSave = 'There is no data to search');
+          onlySaved === 0 && (this.textDataNull = this.no1());
+          onlySaved === 1 && (this.textDataNullTeamMember = this.no1());
+          onlySaved === 2 && (this.textDataNullSave = this.no1());
         }
         return res.data;
       }
@@ -409,7 +405,7 @@ export class RecommencedUserComponent
                 this.setSkeleton(false);
               });
             } else {
-              this.textDataEnd = 'Out of data';
+              this.textDataEnd = this.getTitle('Out of data');
             }
           }
         }
@@ -419,7 +415,6 @@ export class RecommencedUserComponent
 
   getTitleSearchBtn = () => this.translateService.translate('002');
   getTitleSaveBtn = () => this.translateService.translate('save');
-
   getTitlePlaceholderSearch = () => this.translateService.translate('001');
 
   getGroupNo(key: string) {
@@ -460,7 +455,7 @@ export class RecommencedUserComponent
         this.setCountMatching(this.dataFilter);
         this.currentCount = Math.ceil(this.dataFilterDf.length / 8);
       } else {
-        this.textDataNull = 'There is no data';
+        this.textDataNull = this.no1();
       }
 
       if (isArrayFull(detail) && onlySaved === 1) {
@@ -475,7 +470,7 @@ export class RecommencedUserComponent
           );
         this.currentCount = Math.ceil(this.dataFilterTeamMemberDf.length / 8);
       } else {
-        this.textDataNullTeamMember = 'There is no data';
+        this.textDataNullTeamMember = this.no1();
       }
 
       if (isArrayFull(detail) && onlySaved === 2) {
@@ -488,7 +483,7 @@ export class RecommencedUserComponent
         );
         this.currentCount = Math.ceil(this.dataFilterSave.length / 8);
       } else {
-        this.textDataNullSave = 'There is no data';
+        this.textDataNullSave = this.no1();
       }
       if (
         detail.length === 0 &&
@@ -510,7 +505,11 @@ export class RecommencedUserComponent
   search() {
     const keyword = this.searchForm.controls['keyword'].value || '';
     if (!keyword) {
-      this.showToastr('', this.getMsg('Please input your keyword!'), 'warning');
+      this.showToastr(
+        '',
+        this.getTitle('please input your keyword'),
+        'warning'
+      );
       return;
     }
     this.isSubmit = true;
@@ -544,7 +543,7 @@ export class RecommencedUserComponent
         this.matchingList = arr || [];
         this.callSearch(arr);
       } else {
-        this.textDataNull = 'There is no data to search';
+        this.textDataNull = this.no1();
         this.setSkeleton(false);
         this.isLoading = false;
       }
@@ -587,7 +586,7 @@ export class RecommencedUserComponent
           this.setSkeleton(false)
         );
       } else {
-        this.textDataNullTeamMember = 'There is no data to search';
+        this.textDataNullTeamMember = this.no1();
         this.countMember = [0, 0, 0];
       }
     } else {
@@ -860,7 +859,7 @@ export class RecommencedUserComponent
         // this.setCountMember(this.dataFilter);
         this.setCountMatching(this.dataFilter);
         if (this.dataFilter.length === 0) {
-          this.textDataNull = 'There is no data';
+          this.textDataNull = this.no1();
         } else {
           this.textDataNull = '';
         }
@@ -875,7 +874,7 @@ export class RecommencedUserComponent
           check.includes(e.group_no)
         );
         if (this.dataFilterTeamMember.length === 0) {
-          this.textDataNullTeamMember = 'There is no data';
+          this.textDataNullTeamMember = this.no1();
         } else {
           this.textDataNullTeamMember = '';
         }
@@ -937,6 +936,10 @@ export class RecommencedUserComponent
       }
       return isValid;
     });
+  }
+
+  no1(): string {
+    return this.getTitle('There is no data to search');
   }
 
   ngOnDestroy() {
