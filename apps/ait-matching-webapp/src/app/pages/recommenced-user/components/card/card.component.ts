@@ -1,7 +1,12 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { RESULT_STATUS } from '@ait/shared';
-import { AitBinaryDataService, AppState, getEmpId } from '@ait/ui';
+import {
+  AitBinaryDataService,
+  AitTranslationService,
+  AppState,
+  getEmpId,
+} from '@ait/ui';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { NbIconLibraries } from '@nebular/theme';
@@ -91,6 +96,7 @@ export class AitCardComponent implements OnInit {
     store: Store<AppState>,
     private router: Router,
     private binaryService: AitBinaryDataService,
+    private translateService: AitTranslationService,
     private recommencedService: RecommencedUserService,
     private iconLibraries: NbIconLibraries
   ) {
@@ -170,6 +176,8 @@ export class AitCardComponent implements OnInit {
   navigateProfile = (user_id: string) => {
     this.router.navigateByUrl('/user/' + user_id);
   };
+
+  getTitle = (name) => this.translateService.translate(name);
 
   addColor = () => {
     if (this.cardH?.group_no === 1) {
