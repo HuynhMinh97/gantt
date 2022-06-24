@@ -204,7 +204,8 @@
                             "date-fns",
                             "crypto-js",
                             "json-to-graphql-query",
-                            "zen-observable"
+                            "zen-observable",
+                            "moment-business-days"
                         ],
                         "scripts": []
                     },

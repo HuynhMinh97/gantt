@@ -35,6 +35,8 @@ export class BizProjectService extends AitBaseService {
       _key: true,
       value: true,
     },
+    project_code: true,
+    status: true,
     capacity_time_from: true,
     capacity_time_to: true,
     create_at: true,

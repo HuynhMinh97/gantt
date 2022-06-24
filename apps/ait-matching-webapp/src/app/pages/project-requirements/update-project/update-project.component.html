@@ -1,14 +1,17 @@
 <ait-template-page
-  [pageTitle]=" mode === 'EDIT' ? 'Update project requirements' : 'Register project requirements'"
+  [pageTitle]="
+    mode === 'EDIT'
+      ? 'Update project requirements'
+      : 'Register project requirements'
+  "
   [tableTitle]="'Candidate list'"
-  [searchTitle]="'Project Requirement'"
+  [searchTitle]="'Project requirement'"
   [midleAreaTitle]="'Project detail'"
   [isTableExpan]="isTableExpan"
   [isExpan]="isExpan"
   [isExpanArea3]="isExpanArea3"
   [isShowArea3]="mode === 'EDIT' ? true : false"
   [isShowTableArea]="mode === 'EDIT' ? true : false"
-
 >
   <div leftArea1>
     <ng-container>
@@ -23,7 +26,7 @@
         [isReset]="resetProjectInfo.name"
         [placeholder]="'please input keyword'"
         [length]="200"
-        (watchValue)="takeInputValue($event,'projectForm', 'name')"
+        (watchValue)="takeInputValue($event, 'projectForm', 'name')"
         [defaultValue]="projectForm?.controls['name']?.value"
       ></ait-input-text>
     </ng-container>
@@ -31,24 +34,20 @@
     <ng-container>
       <div class="input_inline">
         <ait-autocomplete-master-data
-        [id]="'title'"
-        [width]="'400px'"
-        [label]="'title'"
-        [allowNew]="true"
-        [maxItem]="10"
-        [collection]="'m_title'"
-        [placeholder]="'please select title'"
-        [disableOutputDefault]="true"
-        [isSubmit]="isSubmit"
-        [isReset]="resetProjectInfo.title"
-        (watchValue)="
-          takeMasterValues($event?.value, 'projectForm', 'title')
-        "
-        [defaultValue]="project_title"
-      >
-      </ait-autocomplete-master-data>
-
-
+          [id]="'title'"
+          [width]="'400px'"
+          [label]="'title'"
+          [allowNew]="true"
+          [maxItem]="10"
+          [collection]="'m_title'"
+          [placeholder]="'please select title'"
+          [disableOutputDefault]="true"
+          [isSubmit]="isSubmit"
+          [isReset]="resetProjectInfo.title"
+          (watchValue)="takeMasterValues($event?.value, 'projectForm', 'title')"
+          [defaultValue]="project_title"
+        >
+        </ait-autocomplete-master-data>
       </div>
     </ng-container>
     <ait-space [margin]="'7.25px'"></ait-space>
@@ -85,7 +84,7 @@
           [width]="'400px'"
           [placeholder]="'please-input-project-information'"
           [isReset]="resetProjectInfo.description"
-          (watchValue)="takeInputValue($event,'projectForm', 'description')"
+          (watchValue)="takeInputValue($event, 'projectForm', 'description')"
           [defaultValue]="projectForm?.controls['description']?.value"
         >
         </ait-input-text>
@@ -123,7 +122,11 @@
           [isReset]="resetProjectInfo.capacity_time_from"
           [defaultValue]="projectForm?.controls['capacity_time_from']?.value"
           (watchValue)="
-            takeDatePickerValue($event?.value, 'projectForm', 'capacity_time_from')
+            takeDatePickerValue(
+              $event?.value,
+              'projectForm',
+              'capacity_time_from'
+            )
           "
           [isSubmit]="isSubmit"
         ></ait-datepicker>
@@ -137,7 +140,11 @@
           [isReset]="resetProjectInfo.capacity_time_to"
           [defaultValue]="projectForm?.controls['capacity_time_to']?.value"
           (watchValue)="
-            takeDatePickerValue($event?.value, 'projectForm', 'capacity_time_to')
+            takeDatePickerValue(
+              $event?.value,
+              'projectForm',
+              'capacity_time_to'
+            )
           "
           [isSubmit]="isSubmit"
         ></ait-datepicker>
@@ -200,9 +207,8 @@
           [width]="'400px'"
           [placeholder]="'please-input-about'"
           [isReset]="resetProjectInfo.remark"
-          (watchValue)="takeInputValue($event,'projectForm', 'remark')"
+          (watchValue)="takeInputValue($event, 'projectForm', 'remark')"
           [defaultValue]="projectForm?.controls['remark']?.value"
-
         >
         </ait-input-text>
       </div>
@@ -223,9 +229,7 @@
           [collection]="'m_company'"
           [disableOutputDefault]="true"
           (watchValue)="takeMasterValue($event, 'customer')"
-          [defaultValue]="
-          [projectDetailForm?.controls['customer']?.value
-          ]"
+          [defaultValue]="[projectDetailForm?.controls['customer']?.value]"
         ></ait-autocomplete-master-data>
       </div>
     </ng-container>
@@ -261,7 +265,9 @@
           [isSubmit]="false"
           [isReset]="false"
           [placeholder]="'please input project code'"
-          (watchValue)="takeInputValue($event,'projectDetailForm', 'project_code')"
+          (watchValue)="
+            takeInputValue($event, 'projectDetailForm', 'project_code')
+          "
           [defaultValue]="projectDetailForm?.controls['project_code']?.value"
         ></ait-input-text>
       </div>
@@ -281,9 +287,7 @@
           [disableOutputDefault]="true"
           [isReset]="false"
           (watchValue)="takeMasterValue($event, 'status')"
-          [defaultValue]="[
-          projectDetailForm?.controls['status']?.value
-          ]"
+          [defaultValue]="[projectDetailForm?.controls['status']?.value]"
         ></ait-autocomplete-master-data>
       </div>
     </ng-container>
@@ -301,83 +305,84 @@
     </ait-button>
   </div>
   <div tableArea *ngIf="mode === 'EDIT'">
-   
-    <ait-table-inline-edit 
-    [isNew]="isNewProjectUser"
-    [project_key]="project_key"
-    (saveInline)="handleClickEdit($event)"
-    (changeData)="checkAllowSaveProjectUser($event)"> </ait-table-inline-edit>
+    <ait-table-inline-edit
+      [isNew]="isNewProjectUser"
+      [project_key]="project_key"
+      (saveInline)="handleClickEdit($event)"
+      (changeData)="checkAllowSaveProjectUser($event)"
+    >
+    </ait-table-inline-edit>
   </div>
-    <div groupButtonArea class="sticky">
-      <div class="action-row">
-        <div class="block">
-          <ait-button
+  <div groupButtonArea class="sticky">
+    <div class="action-row">
+      <div class="block">
+        <ait-button
           *ngIf="mode === 'EDIT'"
-            [id]="'remove'"
-            [width]="'150px'"
-            [title]="'delete'"
-            [isDefault]="true"
-            (click)="delete()"
-          >
-          </ait-button>
+          [id]="'remove'"
+          [width]="'150px'"
+          [title]="'delete'"
+          [isDefault]="true"
+          (click)="delete()"
+        >
+        </ait-button>
 
-          <ait-button
+        <ait-button
           *ngIf="mode === 'EDIT'"
-            [id]="'copy'"
-            [width]="'150px'"
-            [title]="'copy'"
-            [isDefault]="true"
-            (click)="copy()"
-          >
-          </ait-button>
+          [id]="'copy'"
+          [width]="'150px'"
+          [title]="'copy'"
+          [isDefault]="true"
+          (click)="copy()"
+        >
+        </ait-button>
 
-          <ait-button
-            [id]="'clear'"
-            [width]="'150px'"
-            [title]="'clear'"
-            [isDefault]="true"
-            (click)="clear()"
-          >
-          </ait-button>
+        <ait-button
+          [id]="'clear'"
+          [width]="'150px'"
+          [title]="'clear'"
+          [isDefault]="true"
+          (click)="clear()"
+        >
+        </ait-button>
 
-          <ait-button
-            [id]="'reset'"
-            [width]="'150px'"
-            [title]="'reset'"
-            [isDefault]="true"
-            (click)="resetForm()"
-          >
-          </ait-button>
+        <ait-button
+          [id]="'reset'"
+          [width]="'150px'"
+          [title]="'reset'"
+          [isDefault]="true"
+          (click)="resetForm()"
+        >
+        </ait-button>
 
-          <ait-button
-            *ngIf="!isChanged && mode === 'EDIT'"
-            [id]="'disabled'"
-            [width]="'150px'"
-            [title]="'save'"
-            [style]="'disabled'"
-          >
-          </ait-button>
+        <ait-button
+          *ngIf="!isChanged && mode === 'EDIT'"
+          [id]="'disabled'"
+          [width]="'150px'"
+          [title]="'save'"
+          [style]="'disabled'"
+        >
+        </ait-button>
 
-          <ait-button
-            *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
-            [id]="'save'"
-            [width]="'150px'"
-            [title]="'save'"
-            [isDefault]="true"
-            (click)="save()"
-          >
-          </ait-button>
+        <ait-button
+          *ngIf="(isChanged && mode === 'EDIT') || mode === 'NEW'"
+          [id]="'save'"
+          [width]="'150px'"
+          [title]="'save'"
+          [isDefault]="true"
+          (click)="save()"
+        >
+        </ait-button>
 
-          <ait-button
+        <ait-button
           *ngIf="mode === 'EDIT'"
-            [id]="'find_candidates'"
-            [width]="'150px'"
-            [title]="'find_candidates'"
-            (click)="findCandidates()"
-            [isDefault]="true"
-          >
-          </ait-button>
-        </div>
+          [id]="'find_candidates'"
+          [width]="'150px'"
+          [title]="'find_candidates'"
+          (click)="findCandidates()"
+          [isDefault]="true"
+        >
+        </ait-button>
       </div>
     </div>
+  </div>
 </ait-template-page>
