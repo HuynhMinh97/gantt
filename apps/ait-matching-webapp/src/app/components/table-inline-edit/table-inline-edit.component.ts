@@ -226,7 +226,10 @@ export class TableInlineEditComponent
     const lis_data_save = this.bizProjectService.data_save;
     const data_save = {};
     const project_user = this.candidateEdit.value;
-    if (project_user['end_plan'] && project_user['end_plan'] < project_user['start_plan']) {
+    if (
+      project_user['end_plan'] &&
+      project_user['end_plan'] < project_user['start_plan']
+    ) {
       this.isDialogOpen = true;
       this.dialogService
         .open(AitConfirmDialogComponent, {
@@ -340,21 +343,24 @@ export class TableInlineEditComponent
         data['employee_name'] = item['first_name'] + ' ' + item['last_name'];
       });
       const planned = await this.setupPlan(data['user_id']);
-      // const plan = 'Plan for the next 3 months:' +  Math.round((Number(data['manmonth_plan']) ) * 100) / 100 + 'Mm';
-      const plan = 'Plan for the next 3 months:' + planned.reduce((a, b) => a + b.mm, 0).toFixed(2)
-      const plane_detail = 
+      if (planned.length === 0 ) {}
+      const plan =
+        'Plan for the next 3 months:' + (planned.length !== 0 ?
+       ( planned.reduce((a, b) => a + b.mm, 0).toFixed(2) +
+        'Mm') : (0 + 'Mm') ) ;
+      const plane_detail =
         planned[0].value +
         ': ' +
-        Math.round((Number(planned[0]['mm']) ) * 100) / 100 +
-        ', ' + 
+        Math.round(Number(planned[0]['mm']) * 100) / 100 +
+        ', ' +
         planned[1].value +
         ': ' +
-        Math.round((Number(planned[1]['mm']) ) * 100) / 100 +
+        Math.round(Number(planned[1]['mm']) * 100) / 100 +
         ', ' +
         planned[2].value +
         ': ' +
-        Math.round((Number(planned[2]['mm']) ) * 100) / 100;
-      data['planned'] = plan
+        Math.round(Number(planned[2]['mm']) * 100) / 100;
+      data['planned'] = plan;
       data['planned_detail'] = plane_detail;
 
       this.list_candidate.push(data);
@@ -452,10 +458,7 @@ export class TableInlineEditComponent
     }
   }
 
-  calculaHoursDayMonthPlan(
-    group: string,
-    form_control: string,
-  ) {
+  calculaHoursDayMonthPlan(group: string, form_control: string) {
     let remain_form_control1 = '';
     let remain_form_control2 = '';
     let remain_property1: number;
@@ -532,7 +535,7 @@ export class TableInlineEditComponent
       const data = res.data;
       if (data.length === 3) {
         planObj = data;
-        this.planObj = data
+        this.planObj = data;
       } else {
         this.planObj = planObj;
       }
