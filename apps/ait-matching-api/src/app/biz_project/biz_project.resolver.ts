@@ -1,5 +1,5 @@
 import { AitBaseService, AitCtxUser, SysUser } from '@ait/core';
-import { RESULT_STATUS } from '@ait/shared';
+import { getAdvancedMM, RESULT_STATUS } from '@ait/shared';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GetProjectInforEntity } from './biz_project.entity';
 import {
@@ -8,15 +8,16 @@ import {
   GetBizProjectInfoRequest,
   BizProjectDetailSaveRequest,
   BizProjectSkillRequest,
+  BizProjectUserRequest,
 } from './biz_project.request';
 import {
   BizProjectDetailResponse,
   BizProjectResponse,
   BizProjectSkillResponse,
+  BizProjectUserResponse,
   GetBizProjectInforResponse,
   PlanResponse,
 } from './biz_project.response';
-import moment from 'moment-business-days';
 
 @Resolver()
 export class BizProjectResolver extends AitBaseService {
@@ -34,6 +35,16 @@ export class BizProjectResolver extends AitBaseService {
     'Nov',
     'Dec',
   ];
+
+  @Query(() => BizProjectUserResponse, { name: 'getPlan' })
+  async getPlan(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => BizProjectUserRequest })
+    request: BizProjectUserRequest
+  ) {
+    return await this.find(request, user);
+  }
+
   @Query(() => PlanResponse, { name: 'findPlan' })
   async findPlan(
     @AitCtxUser() user: SysUser,
@@ -72,65 +83,16 @@ export class BizProjectResolver extends AitBaseService {
         if (!startMonth || !endMonth) {
           return;
         }
-        // 5919683581
         if (startMonth === endMonth) {
           const mm = this.getSimpleMM(e);
           planObj[index].mm += mm;
         } else {
-          this.getAdvancedMM(e, planObj);
+          getAdvancedMM(e, planObj, monthObj);
         }
       });
       return new PlanResponse(200, planObj, '');
     } else {
       return new PlanResponse(200, planObj, '');
-    }
-  }
-  getAdvancedMM(data: any, planObj: any[]) {
-    const {
-      hour_plan,
-      manday_plan,
-      manmonth_plan,
-      start_plan,
-      end_plan,
-    } = data;
-    const diff = moment(end_plan).businessDiff(moment(start_plan));
-    const d1 = moment(start_plan)
-      .endOf('month')
-      .businessDiff(moment(start_plan));
-    const e1 = diff - d1;
-    let d2 = 0;
-    let d3 = 0;
-    if (e1 <= 20 && e1 !== 0) {
-      d2 = moment(end_plan).businessDiff(
-        moment(start_plan).add(1, 'months').startOf('month')
-      );
-    } else if (e1 !== 0) {
-      d2 = moment(start_plan)
-        .add(1, 'months')
-        .endOf('month')
-        .businessDiff(moment(start_plan).add(1, 'months').startOf('month'));
-      d3 = moment(end_plan).businessDiff(
-        moment(start_plan).add(2, 'months').startOf('month')
-      );
-    }
-    const sum = d1 + d2 + d3;
-    if (manmonth_plan) {
-      planObj[0].mm += (manmonth_plan / sum) * d1;
-      planObj[1].mm += (manmonth_plan / sum) * d2;
-      planObj[2].mm += (manmonth_plan / sum) * d3;
-      return;
-    }
-    if (manday_plan) {
-      planObj[0].mm += (manday_plan / 20 / sum) * d1;
-      planObj[1].mm += (manday_plan / 20 / sum) * d2;
-      planObj[2].mm += (manday_plan / 20 / sum) * d3;
-      return;
-    }
-    if (hour_plan) {
-      planObj[0].mm += (manday_plan / 160 / sum) * d1;
-      planObj[1].mm += (manday_plan / 160 / sum) * d2;
-      planObj[2].mm += (manday_plan / 160 / sum) * d3;
-      return;
     }
   }
 
@@ -222,6 +184,16 @@ export class BizProjectResolver extends AitBaseService {
     @Args('request', { type: () => BizProjectDetailSaveRequest })
     request: BizProjectDetailSaveRequest
   ) {
+    return this.save(request, user);
+  }
+
+  @Mutation(() => BizProjectUserResponse, { name: 'savePlan' })
+  savePlan(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => BizProjectUserRequest })
+    request: BizProjectUserRequest
+  ) {
+    console.log(request);
     return this.save(request, user);
   }
 
@@ -506,6 +478,27 @@ export class BizProjectResolver extends AitBaseService {
     } else {
       return new BizProjectSkillResponse(RESULT_STATUS.ERROR, [], 'error');
     }
+  }
+
+  @Mutation(() => BizProjectUserResponse, {
+    name: 'removeBizProjectUser',
+  })
+  async removeBizProjectUser(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => BizProjectUserRequest })
+    request: BizProjectUserRequest
+  ) {
+    const _from = request.data[0]._from;
+    const _to = request.data[0]._to;
+    const aqlQuery = `
+        FOR data IN biz_project_user
+        FILTER  data._from == "${_from}" &&
+                data._to == "${_to}"
+        REMOVE { _key: data._key } IN biz_project_user
+        LET removed = OLD
+        RETURN removed
+      `;
+    return await this.query(aqlQuery);
   }
 
   @Mutation(() => BizProjectSkillResponse, { name: 'saveBizProjectSkill' })

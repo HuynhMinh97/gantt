@@ -117,6 +117,28 @@ export class BizProjectService extends AitBaseService {
     );
   }
 
+  async getPlan(project_id: string, user_id: string) {
+    const condition = {
+      _from: `biz_project/${project_id}`,
+      _to: `sys_user/${user_id}`,
+    };
+    return await this.query(
+      'getPlan',
+      {
+        collection: 'biz_project_user',
+        condition,
+      },
+      {
+        _key: true,
+        start_plan: true,
+        end_plan: true,
+        hour_plan: true,
+        manday_plan: true,
+        manmonth_plan: true,
+      }
+    );
+  }
+
   async findDetailByProject_key(project_key: string) {
     const condition = {};
     condition['project'] = project_key;
@@ -223,6 +245,16 @@ export class BizProjectService extends AitBaseService {
     );
   }
 
+  async removeBizProjectUser(data: any[]) {
+    const returnFields = { _key: true };
+    return await this.mutation(
+      'removeBizProjectUser',
+      'biz_project_user',
+      data,
+      returnFields
+    );
+  }
+
   async saveBizProjectSkill(data: any[]) {
     const returnField = { _key: true, del_flag: true };
     return await this.mutation(
@@ -232,7 +264,6 @@ export class BizProjectService extends AitBaseService {
       returnField
     );
   }
-
 
   async removeBizProjectByKey(data: any[]) {
     const returnFields = { _key: true };
@@ -253,8 +284,6 @@ export class BizProjectService extends AitBaseService {
       returnFields
     );
   }
-
-  
 
   async findProjectAitByKey(_key?: string) {
     const returnFields = {
@@ -342,7 +371,7 @@ export class BizProjectService extends AitBaseService {
           _key: true,
           value: true,
         },
-        level: true
+        level: true,
       }
     );
   }
@@ -397,7 +426,6 @@ export class BizProjectService extends AitBaseService {
       }
     );
   }
-
 
   async findLocationProject(_key: string) {
     const condition = {
@@ -493,6 +521,16 @@ export class BizProjectService extends AitBaseService {
           _to,
         },
       ],
+      returnField
+    );
+  }
+
+  async savePlan(data: any) {
+    const returnField = { _key: true };
+    return await this.mutation(
+      'savePlan',
+      'biz_project_user',
+      [data],
       returnField
     );
   }

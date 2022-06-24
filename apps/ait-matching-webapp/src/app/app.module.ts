@@ -91,6 +91,7 @@ import { RequirementListComponent } from './pages/requirement-list/requirement-l
 import { TableInlineEditComponent } from './components/table-inline-edit/table-inline-edit.component';
 import { UpdateProjectComponent } from './pages/project-requirements/update-project/update-project.component';
 import { BizProjectService } from './services/biz_project.service';
+import { SetPlanComponent } from './pages/recommenced-user/components/set-plan/set-plan.component';
 
 if (environment.production) {
   console.log = () => {};
@@ -180,6 +181,7 @@ const PAGES = [
     RequirementListComponent,
     TableInlineEditComponent,
     UpdateProjectComponent,
+    SetPlanComponent,
   ],
   imports: [
     Ng2SmartTableModule,

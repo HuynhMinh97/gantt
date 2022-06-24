@@ -133,3 +133,21 @@ export class PlanEntity {
   @Field(() => Float, { nullable: true })
   mm?: number;
 }
+
+@ObjectType()
+export class BizProjectUserEntity extends BaseEntity {
+  @Field(() => Float, { nullable: true })
+  start_plan?: number;
+
+  @Field(() => Float, { nullable: true })
+  end_plan?: number;
+
+  @Field(() => Float, { nullable: true })
+  hour_plan?: number;
+
+  @Field(() => Float, { nullable: true })
+  manday_plan?: number;
+
+  @Field(() => Float, { nullable: true })
+  manmonth_plan?: number;
+}

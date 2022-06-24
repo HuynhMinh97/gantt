@@ -7,6 +7,7 @@ import {
   GetProjectInfoDto,
   BizProjectDetailSaveDto,
   BizProjectSkillDto,
+  BizProjectUserDto,
 } from './biz_project.dto';
 
 @InputType()
@@ -48,4 +49,13 @@ export class BizProjectSkillRequest extends BaseRequest {
 
   @Field(() => [BizProjectSkillDto], { nullable: true })
   data: BizProjectSkillDto[];
+}
+
+@InputType()
+export class BizProjectUserRequest extends BaseRequest {
+  @Field(() => BizProjectUserDto, { nullable: true })
+  condition: BizProjectUserDto;
+
+  @Field(() => [BizProjectUserDto], { nullable: true })
+  data: BizProjectUserDto[];
 }
