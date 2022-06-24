@@ -1,4 +1,3 @@
-
 import { UserOnboardingService } from '../../../services/user-onboarding.service';
 import {
   AitAppUtils,
@@ -235,24 +234,22 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   async findSkillProject() {
     try {
       const _key = this.project_key;
-      await this.bizProjectService
-        .findSkillProject(_key)
-        .then(async (res) => {
-          const listSkills = [];
-          for (const skill of res.data) {
-            listSkills.push({
-              _key: skill?.skill?._key,
-              value: skill?.skill?.value,
-              level: skill?.level,
-            });
-          }
-          if (listSkills[0]['_key']) {
-            this.project_skill = listSkills;
-            await this.projectForm.controls['skills'].setValue([...listSkills]);
-          }
+      await this.bizProjectService.findSkillProject(_key).then(async (res) => {
+        const listSkills = [];
+        for (const skill of res.data) {
+          listSkills.push({
+            _key: skill?.skill?._key,
+            value: skill?.skill?.value,
+            level: skill?.level,
+          });
+        }
+        if (listSkills[0]['_key']) {
+          this.project_skill = listSkills;
+          await this.projectForm.controls['skills'].setValue([...listSkills]);
+        }
 
-          this.cancelLoadingApp();
-        });
+        this.cancelLoadingApp();
+      });
     } catch {
       this.cancelLoadingApp();
     }
@@ -261,22 +258,20 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   async findLevelProject() {
     try {
       const _key = this.project_key;
-      await this.bizProjectService
-        .findLevelProject(_key)
-        .then(async (res) => {
-          const listLevel = [];
-          for (const item of res.data) {
-            listLevel.push({
-              _key: item?.level?._key,
-              value: item?.level?.value,
-            });
-          }
-          if (listLevel[0]['_key']) {
-            this.project_level = listLevel;
-            await this.projectForm.controls['level'].setValue([...listLevel]);
-          }
-          this.cancelLoadingApp();
-        });
+      await this.bizProjectService.findLevelProject(_key).then(async (res) => {
+        const listLevel = [];
+        for (const item of res.data) {
+          listLevel.push({
+            _key: item?.level?._key,
+            value: item?.level?.value,
+          });
+        }
+        if (listLevel[0]['_key']) {
+          this.project_level = listLevel;
+          await this.projectForm.controls['level'].setValue([...listLevel]);
+        }
+        this.cancelLoadingApp();
+      });
     } catch {
       this.cancelLoadingApp();
     }
@@ -311,22 +306,20 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
   async findTitleProject() {
     try {
       const _key = this.project_key;
-      await this.bizProjectService
-        .findTitleProject(_key)
-        .then(async (res) => {
-          const listTitles = [];
-          for (const item of res.data) {
-            listTitles.push({
-              _key: item?.title?._key,
-              value: item?.title?.value,
-            });
-          }
-          if (listTitles[0]['_key']) {
-            this.project_title = listTitles;
-            await this.projectForm.controls['title'].setValue([...listTitles]);
-          }
-          this.cancelLoadingApp();
-        });
+      await this.bizProjectService.findTitleProject(_key).then(async (res) => {
+        const listTitles = [];
+        for (const item of res.data) {
+          listTitles.push({
+            _key: item?.title?._key,
+            value: item?.title?.value,
+          });
+        }
+        if (listTitles[0]['_key']) {
+          this.project_title = listTitles;
+          await this.projectForm.controls['title'].setValue([...listTitles]);
+        }
+        this.cancelLoadingApp();
+      });
     } catch {
       this.cancelLoadingApp();
     }
@@ -477,6 +470,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
           .save(this.saveDataProject())
           .then(async (res) => {
             if (res.status === RESULT_STATUS.OK) {
+              await this.saveProjectSkill(res.data[0]._key);
               this.showToastr('', this.getMsg('I0005'));
               this.router.navigate([`/requirement-list`]);
             } else {
@@ -710,7 +704,10 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     } catch {}
   }
 
-  async saveProjectSkill() {
+  async saveProjectSkill(projectKey?: string) {
+    if (!this.project_key){
+      this.project_key = projectKey;
+    }
     this.projectSkillSave._from = 'biz_project/' + this.project_key;
     const skills = this.project_skill_save;
     if (this.project_key) {
@@ -757,13 +754,14 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
     this.dialogService
       .open(AitConfirmDialogComponent, {
         context: {
-          title: this.translateService.translate('Do you want delete this project.'),
+          title: this.translateService.translate(
+            'Do you want delete this project.'
+          ),
         },
       })
       .onClose.subscribe(async (event) => {
         this.isDialogOpen = false;
         if (event) {
-          
           const data = [
             {
               _key: this.project_key,
@@ -775,7 +773,7 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
               if (res.status === RESULT_STATUS.OK) {
                 const result = await this.getCandidate();
                 const _from = `biz_project/${this.project_key}`;
-      
+
                 for (const item of result) {
                   const _to = `sys_user/${item.user_id}`;
                   await this.recommencedService.removeTeamMember(_from, _to);
@@ -793,11 +791,9 @@ export class UpdateProjectComponent extends AitBaseComponent implements OnInit {
                   this.showToastr('', this.getMsg('I0005'));
                   this.router.navigate([`/requirement-list`]);
                 }
-               
               }
             });
         }
       });
-
   }
 }

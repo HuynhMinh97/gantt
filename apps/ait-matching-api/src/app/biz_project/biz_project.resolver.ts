@@ -302,7 +302,6 @@ export class BizProjectResolver extends AitBaseService {
       };
       Titles.push({ titles });
     }
-
     const response = new GetBizProjectInforResponse(
       200,
       Titles as GetProjectInforEntity[],

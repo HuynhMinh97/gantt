@@ -14,7 +14,11 @@ import { Apollo } from 'apollo-angular';
 import dayjs from 'dayjs';
 import { AddRoleService } from '../../../services/add-role.service';
 import { BizProjectService } from '../../../services/biz_project.service';
-import { bizProjectDetail, bizProjectRequirement, bizProjectUser } from './projectRequirementInterface';
+import {
+  bizProjectDetail,
+  bizProjectRequirement,
+  bizProjectUser,
+} from './projectRequirementInterface';
 
 @Component({
   selector: 'ait-project-requirement-detail',
@@ -24,12 +28,12 @@ import { bizProjectDetail, bizProjectRequirement, bizProjectUser } from './proje
 export class ProjectRequirementDetailComponent
   extends AitBaseComponent
   implements OnInit {
-    project_key: string;
+  project_key: string;
   dateFormat: string;
   project_skill = [];
   project_title = [];
   project_industry = [];
-  project_level= [];
+  project_level = [];
   project_location = [];
   isExpan = true;
   isTableExpan = true;
@@ -70,16 +74,16 @@ export class ProjectRequirementDetailComponent
     this.project_key = this.activeRouter.snapshot.paramMap.get('id');
     await this.find();
     // this.callLoadingApp();
-    console.log(1)
+    console.log(1);
   }
   getDateFormat(time: number) {
     if (!time) {
       return '';
     } else {
-      return dayjs(time).format(this.dateFormat.toUpperCase() + ' HH:mm');
+      return dayjs(time).format(this.dateFormat.toUpperCase());
     }
   }
-  
+
   async find() {
     try {
       await this.findProjectByKey();
@@ -100,24 +104,30 @@ export class ProjectRequirementDetailComponent
     );
     const data = res.data[0];
     if (res.data.length > 0) {
-      this.projectRequiremant.name = data.name
-      this.projectRequiremant.description = data.description
-      this.projectRequiremant.remark = data.remark
+      this.projectRequiremant.name = data.name;
+      this.projectRequiremant.description = data.description;
+      this.projectRequiremant.remark = data.remark;
+      const capacity_time_from = this.getDateFormat(data.capacity_time_from)
+      const capacity_time_to = this.getDateFormat(data.capacity_time_to)
+
+      const capacity_time = capacity_time_from
+        ? capacity_time_to
+          ? capacity_time_from + '-' + capacity_time_to
+          : capacity_time_from + '-' + ' ~'
+        : '';
+        this.projectRequiremant.capacity_time = capacity_time
     } else {
       this.router.navigate([`/404`]);
     }
   }
 
   async findSkillProject() {
-    
     try {
       const _key = this.project_key;
-      await this.bizProjectService
-        .findSkillProject(_key)
-        .then(async (res) => {
-          const listSkills = res.data.map((m) => m?.skill.value);
-          this.projectRequiremant.skill = listSkills
-        });
+      await this.bizProjectService.findSkillProject(_key).then(async (res) => {
+        const listSkills = res.data.map((m) => m?.skill.value);
+        this.projectRequiremant.skill = listSkills;
+      });
     } catch {
       this.cancelLoadingApp();
     }
@@ -126,12 +136,10 @@ export class ProjectRequirementDetailComponent
   async findTitleProject() {
     try {
       const _key = this.project_key;
-      await this.bizProjectService
-        .findTitleProject(_key)
-        .then(async (res) => {
-          const listTitle = res.data.map((m) => m?.title.value);
-          this.projectRequiremant.title = listTitle
-        });
+      await this.bizProjectService.findTitleProject(_key).then(async (res) => {
+        const listTitle = res.data.map((m) => m?.title.value);
+        this.projectRequiremant.title = listTitle;
+      });
     } catch {
       this.cancelLoadingApp();
     }
@@ -144,7 +152,7 @@ export class ProjectRequirementDetailComponent
         .findIndustryProject(_key)
         .then(async (res) => {
           const listIndustry = res.data.map((m) => m?.industry.value);
-          this.projectRequiremant.industry = listIndustry
+          this.projectRequiremant.industry = listIndustry;
         });
     } catch {
       this.cancelLoadingApp();
@@ -154,12 +162,10 @@ export class ProjectRequirementDetailComponent
   async findLevelProject() {
     try {
       const _key = this.project_key;
-      await this.bizProjectService
-        .findLevelProject(_key)
-        .then(async (res) => {
-          const listLevel = res.data.map((m) => m?.level.value);
-          this.projectRequiremant.level = listLevel
-        });
+      await this.bizProjectService.findLevelProject(_key).then(async (res) => {
+        const listLevel = res.data.map((m) => m?.level.value);
+        this.projectRequiremant.level = listLevel;
+      });
     } catch {
       this.cancelLoadingApp();
     }
@@ -172,7 +178,7 @@ export class ProjectRequirementDetailComponent
         .findLocationProject(_key)
         .then(async (res) => {
           const listLocation = res.data.map((m) => m?.location.value);
-          this.projectRequiremant.location = listLocation
+          this.projectRequiremant.location = listLocation;
         });
     } catch {
       this.cancelLoadingApp();
@@ -180,34 +186,33 @@ export class ProjectRequirementDetailComponent
   }
 
   async findProjectDetail() {
-    try{
-
+    try {
       const result = await this.bizProjectService.findDetailByProject_key(
         this.project_key
-        );
-        const data = result.data[0];
-        if (result.data.length > 0) {
-          const user = await this.getEmployee(data.person_in_charge)
-          this.projectDetail.customer = data.customer.value
-          this.projectDetail.project_code = data.project_code
-          this.projectDetail.status = data.status.value
-          this.projectDetail.person_in_charge = user.value;
-        }
-      }catch {}
+      );
+      const data = result.data[0];
+      if (result.data.length > 0) {
+        const user = await this.getEmployee(data.person_in_charge);
+        this.projectDetail.customer = data.customer.value;
+        this.projectDetail.project_code = data.project_code;
+        this.projectDetail.status = data.status.value;
+        this.projectDetail.person_in_charge = user.value;
+      }
+    } catch {}
   }
 
   async getEmployee(_key: string) {
     const data = [];
     await this.addRoleService.getEmployee().then((res) => {
       if (res.status === RESULT_STATUS.OK) {
-          (res.data || []).forEach((e: any) =>
+        (res.data || []).forEach((e: any) =>
           data.push({ _key: e?._key, value: e?.full_name })
         );
       }
     });
-    console.log(data)
-    const user = data.find(u => u._key === _key)
-    return user
+    console.log(data);
+    const user = data.find((u) => u._key === _key);
+    return user;
   }
 
   

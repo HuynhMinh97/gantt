@@ -195,7 +195,8 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
           if (res?.status === RESULT_STATUS.OK) {
             const data = res.data[0];
             await this.saveUserProject(data._key);
-            await this.saveSkill(data._key);
+            await this.saveUserSkill();
+            // await this.saveSkill(data._key);
             return res;
           }
         });
@@ -268,10 +269,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     delete saveData.skills;
     return saveData;
   }
-
-  async saveSkill(bizProjectKey: string) {
-    debugger
-    this.biz_project_skill._from = 'user_project/' + bizProjectKey;
+  async saveUserSkill() {
     const list_skill_copy = [...this.listSkills]
     const user_skill = await this.findSkills()
     user_skill.forEach(skill => {
@@ -279,30 +277,15 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
       list_skill_copy.push(skill._key);
      }
     })
-    if (this.keyEdit) {
-      const _fromSkill = [{ _from: 'user_project/' + this.project_key }];
-      this.userProjectService.removeSkill(_fromSkill);
-    }
-    for (const skill of this.listSkills) {
-      this.sort_no += 1;
-      this.biz_project_skill.sort_no = this.sort_no;
-      this.biz_project_skill._to = 'm_skill/' + skill;
-      await this.userProjectService.saveSkills(this.biz_project_skill);
-    }
-    await this.saveUserSkill(list_skill_copy);
-  }
-
-
-  async saveUserSkill(skills: any) {
-    const user_skill = {}
+    const saveData = {}
     const _fromSkill = [{ _from: 'sys_user/' + this.user_id }];
       await this.userOnbService.removeBizUserSkill(_fromSkill);
-    user_skill['_from'] = 'sys_user/' + this.user_id;
-    for (const skill of skills) {
+      saveData['_from'] = 'sys_user/' + this.user_id;
+    for (const skill of list_skill_copy) {
       this.sort_no += 1;
-      user_skill['sort_no'] = this.sort_no;
-      user_skill['_to'] = 'm_skill/' + skill;
-      await this.userOnbService.saveUserSkills([user_skill]);
+      saveData['sort_no'] = this.sort_no;
+      saveData['_to'] = 'm_skill/' + skill;
+      await this.userOnbService.saveUserSkills([saveData]);
     }
     this.cancelLoadingApp();
   }
