@@ -259,30 +259,7 @@
             <span class="candidate_value"
               >{{ item?.planned_detail || null }}
             </span>
-            <!-- <ng-template #elseEditPlanned>
-              <ng-container
-                *ngIf="
-                  (item?._key === _key && isEdit) || ( item == '');
-                  else plannedEdit
-                "
-              >
-                <ait-input-text
-                  [defaultValue]="item?.planned"
-                  [id]="'planned'"
-                  [styleInput]="{ background: '#ffffff' }"
-                  [widthInput]="'100px'"
-                  (watchValue)="
-                    takeInputValue($event, 'candidateEdit', 'planned')
-                  "
-                  [defaultValue]="item?.planned"
-                ></ait-input-text>
-                </ng-container>
-            </ng-template>
-            <ng-template #plannedEdit>
-              <span class="candidate_value">{{
-                item?.planned
-              }}</span></ng-template
-            > -->
+           
           </td>
           <td>
             <span

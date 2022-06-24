@@ -126,17 +126,6 @@ export class BizProjectResolver extends AitBaseService {
     return new Date().getFullYear() === new Date(date).getFullYear();
   }
 
-  @Query(() => BizProjectResponse, { name: 'findBizProject' })
-  async findBizProject(
-    @AitCtxUser() user: SysUser,
-    @Args('request', { type: () => BizProjectRequest })
-    request: BizProjectRequest
-  ) {
-    const res = await this.find(request, user);
-    // console.log(JSON.stringify(res));
-    return res;
-  }
-
   @Query(() => BizProjectDetailResponse, { name: 'findBizProjectDetail' })
   async findBizProjectDetail(
     @AitCtxUser() user: SysUser,
@@ -216,10 +205,10 @@ export class BizProjectResolver extends AitBaseService {
     const collection = request.collection;
 
     const aqlQuery = `
-          FOR v,e, p IN 1..1 OUTBOUND "${from}" ${collection}
-          FILTER  e.del_flag != true
-          let skill = {_key: v._key, value:  v.name.${lang} ? v.name.${lang} : v.name}
-          RETURN {_key: v._key, skill:skill, level: e.level} 
+      FOR v,e, p IN 1..1 OUTBOUND "${from}" ${collection}
+      FILTER  e.del_flag != true
+      let skill = {_key: v._key, value:  v.name.${lang} ? v.name.${lang} : v.name}
+      RETURN {_key: v._key, skill:skill, level: e.level} 
       `;
     const result = await this.query(aqlQuery);
     return result;
@@ -235,7 +224,7 @@ export class BizProjectResolver extends AitBaseService {
     const _key = request.condition?._key;
     const collection = request.collection;
     const aqlQuery = `
-    FOR v IN biz_project
+      FOR v IN biz_project
     filter v._key == "${_key}"
     RETURN v.skills
     `;
@@ -278,10 +267,10 @@ export class BizProjectResolver extends AitBaseService {
     const collection = request.collection;
 
     const aqlQuery = `
-    FOR v IN biz_project
-    filter v._key == "${_key}"
-    RETURN v.title
-    `;
+      FOR v IN biz_project
+      filter v._key == "${_key}"
+      RETURN v.title
+      `;
     const result = await this.query(aqlQuery);
 
     const Titles = [];
@@ -367,10 +356,10 @@ export class BizProjectResolver extends AitBaseService {
     const collection = request.collection;
 
     const aqlQuery = `
-    FOR v IN biz_project
-    filter v._key == "${_key}"
-    RETURN v.level
-    `;
+      FOR v IN biz_project
+      filter v._key == "${_key}"
+      RETURN v.level
+      `;
     const result = await this.query(aqlQuery);
 
     const Level = [];
@@ -448,10 +437,10 @@ export class BizProjectResolver extends AitBaseService {
 
   async getNameByKey(_key: string, lang: string, collection: string) {
     const aqlQuery = `
-     FOR v IN ${collection}
-     filter v._key == "${_key}"
-     RETURN v.name.${lang}
-     `;
+      FOR v IN ${collection}
+      filter v._key == "${_key}"
+      RETURN v.name.${lang}
+      `;
 
     return await this.query(aqlQuery);
   }
@@ -473,7 +462,7 @@ export class BizProjectResolver extends AitBaseService {
         REMOVE { _key: data._key } IN biz_project_skill
         LET removed = OLD
         RETURN removed
-      `;
+        `;
       return await this.query(aqlQuery);
     } else {
       return new BizProjectSkillResponse(RESULT_STATUS.ERROR, [], 'error');
@@ -491,13 +480,13 @@ export class BizProjectResolver extends AitBaseService {
     const _from = request.data[0]._from;
     const _to = request.data[0]._to;
     const aqlQuery = `
-        FOR data IN biz_project_user
+      FOR data IN biz_project_user
         FILTER  data._from == "${_from}" &&
                 data._to == "${_to}"
         REMOVE { _key: data._key } IN biz_project_user
         LET removed = OLD
         RETURN removed
-      `;
+        `;
     return await this.query(aqlQuery);
   }
 
@@ -525,7 +514,7 @@ export class BizProjectResolver extends AitBaseService {
         FILTER data._key == "${_key}"
         UPDATE data WITH { del_flag: true } IN biz_project
         RETURN data
-      `;
+        `;
 
       return await this.query(aqlQuery);
     } else {
@@ -548,10 +537,192 @@ export class BizProjectResolver extends AitBaseService {
         FILTER data.project == "${project}"
         UPDATE data WITH { del_flag: true } IN biz_project_detail
         RETURN data
-      `;
+        `;
       return await this.query(aqlQuery);
     } else {
       return new BizProjectSkillResponse(RESULT_STATUS.ERROR, [], 'error');
     }
+  }
+
+  @Query(() => BizProjectResponse, { name: 'findBizProject' })
+  async findBizProject(
+    @AitCtxUser() user: SysUser,
+    @Args('request', { type: () => BizProjectRequest })
+    request: BizProjectRequest
+  ) {
+    const { company, lang } = request;
+    const aqlStr = `
+    LET current_data = ( 
+      FOR data IN biz_project 
+      FILTER data.company == "${company}" && 
+      data.del_flag != true 
+      RETURN MERGE(
+      data, {
+       name:  data.name.${lang} ? data.name.${lang} : IS_STRING(data.name) == true ? data.name : "", 
+     
+      create_by: (
+      data.is_matching != true ? (
+      LET item = (
+      FOR record IN user_profile
+      FILTER record.user_id == data.create_by
+      RETURN record
+      )[0]
+      RETURN (LENGTH(item.first_name > 0) ? CONCAT(item.first_name, " ", item.last_name) : data.create_by)
+      )[0] : data.create_by
+      ), 
+      change_by: (
+      data.is_matching != true ? (
+      LET item = (
+      FOR record IN user_profile
+      FILTER record.user_id == data.change_by
+      RETURN record
+      )[0]
+      RETURN (LENGTH(item.first_name > 0) ? CONCAT(item.first_name, " ", item.last_name) : data.change_by)
+      )[0] : data.change_by
+      ),
+      create_by : (
+      IS_ARRAY(data.create_by) == true ? (
+      FOR doc IN user_profile
+      FILTER doc.user_id IN TO_ARRAY(data.create_by)
+      RETURN
+       doc.name  ) :
+       (FOR doc IN user_profile
+       FILTER doc.user_id == data.create_by
+      RETURN
+      doc.name )[0] ),
+      change_by : (
+      IS_ARRAY(data.change_by) == true ? (
+      FOR doc IN user_profile
+      FILTER doc.user_id IN TO_ARRAY(data.change_by)
+      RETURN
+       doc.name  ) :
+       (FOR doc IN user_profile
+       FILTER doc.user_id == data.change_by
+      RETURN
+      doc.name )[0] ),
+      industry : (
+      IS_ARRAY(data.industry) == true ? (
+      FOR doc IN m_industry
+      FILTER doc._key IN TO_ARRAY(data.industry)
+      RETURN
+      { _key: doc._key, value: doc.name.${lang} } ) :
+       (FOR doc IN m_industry
+       FILTER doc._key == data.industry
+      RETURN
+      { _key: doc._key, value: doc.name.${lang} })[0] ),
+      title : (
+      IS_ARRAY(data.title) == true ? (
+      FOR doc IN m_title
+      FILTER doc._key IN TO_ARRAY(data.title)
+      RETURN
+      { _key: doc._key, value: doc.name.${lang} } ) :
+       (FOR doc IN m_title
+       FILTER doc._key == data.title
+      RETURN
+      { _key: doc._key, value: doc.name.${lang} })[0] ),
+      level : (
+      IS_ARRAY(data.level) == true ? (
+      FOR doc IN sys_master_data
+      FILTER doc._key IN TO_ARRAY(data.level)
+      RETURN
+      { _key: doc._key, value: doc.name.${lang} } ) :
+       (FOR doc IN sys_master_data
+       FILTER doc._key == data.level
+      RETURN
+      { _key: doc._key, value: doc.name.${lang} })[0] ),
+      location : (
+      IS_ARRAY(data.location) == true ? (
+      FOR doc IN sys_master_data
+      FILTER doc._key IN TO_ARRAY(data.location)
+      RETURN
+      { _key: doc._key, value: doc.name.${lang} } ) :
+       (FOR doc IN sys_master_data
+       FILTER doc._key == data.location
+      RETURN
+      { _key: doc._key, value: doc.name.${lang} })[0] ),
+      skills : (
+        FOR v,e, p IN 1..1 OUTBOUND CONCAT("biz_project/", data._key) biz_project_skill
+        FILTER  e.del_flag != true
+        RETURN {_key: v._key, value:  v.name.ja_JP ? v.name.ja_JP : v.name, level: e.level}
+     ),
+      project_code: (
+          FOR doc IN biz_project_detail
+          FILTER doc.project == data._key
+          RETURN doc.project_code
+          )[0],
+          status: (
+            let z = (
+              FOR doc IN biz_project_detail
+                        FILTER doc.project == data._key
+                        RETURN doc.status)[0]
+              RETURN (
+              LENGTH(z) > 0 ? (
+                  for doc IN sys_master_data
+                  filter doc.class == "PROJECT_STATUS" &&
+                  doc._key == z
+                  RETURN doc.name.${lang}
+              )[0] : null)
+          )[0]
+    })
+     )
+     
+     LET result = LENGTH(current_data) > 0 ? current_data : (
+      FOR data IN biz_project
+      FILTER data.company == "000000000000000000000000000000000000" &&
+      data.del_flag != true
+      RETURN MERGE(
+      data, {
+       name:  data.name.${lang} ? data.name.${lang} : IS_STRING(data.name) == true ? data.name : "",
+     
+      create_by: (
+      data.is_matching != true ? (
+      LET item = (
+      FOR record IN user_profile
+      FILTER record.user_id == data.create_by
+      RETURN record
+      )[0]
+      RETURN (LENGTH(item.first_name > 0) ? CONCAT(item.first_name, " ", item.last_name) : data.create_by)
+      )[0] : data.create_by
+      ),
+      change_by: (
+      data.is_matching != true ? (
+      LET item = (
+      FOR record IN user_profile
+      FILTER record.user_id == data.change_by
+      RETURN record
+      )[0]
+      RETURN (LENGTH(item.first_name > 0) ? CONCAT(item.first_name, " ", item.last_name) : data.change_by)
+      )[0] : data.change_by
+      ),
+      create_by: (
+      data.is_matching != true ? (
+      LET item = (
+      FOR record IN user_profile
+      FILTER record.user_id == data.create_by
+      RETURN record
+      )[0]
+      RETURN (LENGTH(item.first_name > 0) ? CONCAT(item.first_name, " ", item.last_name) : data.create_by)
+      )[0] : data.create_by
+      ),
+      change_by: (
+      data.is_matching != true ? (
+      LET item = (
+      FOR record IN user_profile
+      FILTER record.user_id == data.change_by
+      RETURN record
+      )[0]
+      RETURN (LENGTH(item.first_name > 0) ? CONCAT(item.first_name, " ", item.last_name) : data.change_by)
+      )[0] : data.change_by
+      ),   })
+     )
+     
+     FOR data IN result
+      FILTER
+      LOWER(data.create_by) LIKE LOWER(CONCAT("%", TRIM(""), "%"))
+      &&
+      LOWER(data.change_by) LIKE LOWER(CONCAT("%", TRIM(""), "%"))
+      RETURN MERGE(data, {name:  data.name.${lang} ? data.name.${lang} : IS_STRING(data.name) == true ? data.name : "" })
+    `;
+    return this.query(aqlStr);
   }
 }

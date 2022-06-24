@@ -49,6 +49,12 @@ export class BizProjectEntity extends BaseEntity {
 
   @Field(() => String, { nullable: true })
   remark?: string;
+
+  @Field(() => String, { nullable: true })
+  project_code?: string;
+
+  @Field(() => String, { nullable: true })
+  status?: string;
 }
 
 @ObjectType()
