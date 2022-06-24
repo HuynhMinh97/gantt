@@ -84,7 +84,6 @@ export class RequirementListComponent
   public search = async (condition = {}, data = {}) => {
     try {
       const res1 = await this.bizProjectService.find();
-      const res2 = await this.bizProjectService.findDetail();
       const data = res1.data || [];
       const obj = {};
       obj['data'] = data.map((e: unknown) =>
@@ -92,7 +91,7 @@ export class RequirementListComponent
           _key: e['_key'],
           name: e['name'],
           skills: this.getSkills(e['skills'] || []),
-          status: '',
+          status: e['status'],
           create_at: this.getDateFormat(e['create_at']),
           create_by: e['create_by'],
           change_at: this.getDateFormat(e['change_at']),
