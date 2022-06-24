@@ -31,6 +31,9 @@ export class UserProjectEntity extends BaseEntity {
     achievement?: string;
 
     @Field(() => String, { nullable: true })
+    name_title?: string;
+
+    @Field(() => String, { nullable: true })
     _from?: string;
 
     @Field(() => String, { nullable: true })

@@ -36,7 +36,6 @@ export class EditDataMasterComponent
     private editDataMasterService: EditDataMasterService,
     private masterListService: MasterListService,
 
-
     env: AitEnvironmentService,
     store: Store<AppState>,
     apollo: Apollo,
@@ -76,7 +75,7 @@ export class EditDataMasterComponent
     const condition = {
       _key: this._key,
     };
-    
+
     const Data = {};
     Data['data'] = {};
     Data['data'][0] = {};
@@ -84,7 +83,7 @@ export class EditDataMasterComponent
       await this.editDataMasterService
         .getRecordOfMaster(condition, collection)
         .then((res) => {
-          if(res.data[0]._id){
+          if (res.data[0]._id) {
             Data['data'][0]['name_en_US'] = res.data[0]?.name.en_US;
             Data['data'][0]['name_ja_JP'] = res.data[0]?.name.ja_JP;
             Data['data'][0]['name_vi_VN'] = res.data[0]?.name.vi_VN;
@@ -93,7 +92,6 @@ export class EditDataMasterComponent
           }
         });
     }
-    console.log(Data)
     return Data;
   };
 
@@ -103,29 +101,33 @@ export class EditDataMasterComponent
     saveData['name'] = {};
     Object.keys(condition).forEach((key) => {
       const value = condition[key];
-      if (key.includes('en_US')){
-        saveData['name']['en_US'] = value
+      if (key.includes('en_US')) {
+        saveData['name']['en_US'] = value;
       }
-      if (key.includes('ja_JP')){
-        saveData['name']['ja_JP'] = value
+      if (key.includes('ja_JP')) {
+        saveData['name']['ja_JP'] = value;
       }
-      if (key.includes('vi_VN')){
-        saveData['name']['vi_VN'] = value
+      if (key.includes('vi_VN')) {
+        saveData['name']['vi_VN'] = value;
       }
-
     });
-    if (this._key){
+    if (this._key) {
       saveData['_key'] = this._key;
     }
-    saveData['active_flag'] = condition['active_flag'] ? condition['active_flag'] : false;
-    return  await this.editDataMasterService.saveDataMaster(saveData, collection);
+    saveData['active_flag'] = condition['active_flag']
+      ? condition['active_flag']
+      : false;
+    return await this.editDataMasterService.saveDataMaster(
+      saveData,
+      collection
+    );
   };
 
-  async getMasterTableCollection () {
+  async getMasterTableCollection() {
     const result = await this.masterListService.getMasterTable();
     const obj = result.data;
-    obj.forEach(item => {
-      this.collections.push(item.code)
+    obj.forEach((item) => {
+      this.collections.push(item.code);
     });
   }
 }

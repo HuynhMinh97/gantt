@@ -12,9 +12,9 @@ export class AddRoleService extends AitBaseService {
     const condition = {
       del_flag: false
     };
-    condition['type'] = {}
-    condition['type']['operator'] = 'IN'
-    condition['type']['value'] = '03';
+    // condition['type'] = {}
+    // condition['type']['operator'] = 'IN'
+    // condition['type']['value'] = '03';
 
     return await this.query(
       'getAllEmployee',

@@ -43,6 +43,7 @@ import { UserEducationService } from '../../../services/user-education.service';
 import { UserLanguageService } from '../../../services/user-language.service';
 import { MatchingUtils } from '../../../../../../../apps/ait-matching-webapp/src/app/@constants/utils/matching-utils';
 import { UserSkillsService } from '../../../services/user-skills.service';
+import { BizProjectService } from '../../../services/biz_project.service';
 @Component({
   selector: 'ait-user-profile',
   templateUrl: './user-profile.component.html',
@@ -117,6 +118,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     private userExperienceService: UserExperienceService,
     private userProjectService: UserProjectService,
     private reoderSkillsService: UserReoderSkillsService,
+    private bizProjectService: BizProjectService,
     private userProfileService: UserProfileService,
     private dialogService: NbDialogService,
     public activeRouter: ActivatedRoute,
@@ -207,6 +209,24 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     }
   }
 
+  nextPageProject(key: string,is_biz_project: string){
+    if (!is_biz_project){
+      this.router.navigate([`project/${key}`]);
+    }else {
+      this.router.navigate([`user-project/${key}`]);
+    }
+  }
+
+  nextPageProjectDetail(key: string,is_biz_project: string){
+    if (!is_biz_project){
+      this.router.navigate([`project-detail/${key}`]);
+    }else {
+      this.router.navigate([`user-project-detail/${key}`]);
+    }
+  }
+
+
+
   async getMaxSkill() {
     await this.userSkillsService
       .getMaxSkill({ value: ['maxSkill'] })
@@ -256,6 +276,7 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
     await this.reoderSkillsService.findReorder(from).then(async (res) => {
       if (res.status === RESULT_STATUS.OK) {
         const data = res.data;
+        
         this.countSkill = data.length;
         const top5 = {} as OrderSkill;
         top5.name = this.translateService.translate('top 5');
@@ -274,6 +295,8 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
         data.forEach((item) => {
           
           let isCategory = false;
+         
+          
           this.skillByCategory.forEach((element, index) => {
             if (
               item.category?.value != null &&
@@ -282,8 +305,10 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
               if (element.name === 'Others') {
                 categoryOther_index = index;
               }
-              
-
+              if(item.category?.value == element.name) {
+                this.skillByCategory[index]['data'].push(item);
+              }
+              const result = element
               isCategory = true;
             }
           });
@@ -302,12 +327,10 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
             skillsGroup.code = item.category?._key
               ? item.category?._key
               : this.categoryOther_key;
-              
             skillsGroup.data = [];
             skillsGroup.data.push(item);
             if (categoryOther_index > 0)
             {
-              debugger
               this.skillByCategory[categoryOther_index].data.push(item);
             } else {
              
@@ -315,7 +338,6 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
             }
           }
         });
-        
       }
     });
   }
@@ -334,8 +356,9 @@ export class UserProfileComponent extends AitBaseComponent implements OnInit {
             (p) => p.company_working?.value
           );
 
-          const datacompany = company_values.map((element) => {
+          const datacompany = company_values.map( (element) => {
             let timeworkingInfo = 0;
+            
             companyUserProjects.get(element).forEach((e) => {
               timeworkingInfo += this.dateDiffInMonths(
                 e.start_date_from,

@@ -1,20 +1,13 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { RESULT_STATUS } from '@ait/shared';
-import {
-  AitBinaryDataService,
-  AitCurrencySymbolService,
-  AitDateFormatService,
-  AitNumberFormatPipe,
-  AitTranslationService,
-  AppState,
-  getEmpId,
-} from '@ait/ui';
+import { AitBinaryDataService, AppState, getEmpId } from '@ait/ui';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { NbIconLibraries } from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
-import { ReactionService } from 'apps/ait-matching-webapp/src/app/services/reaction.service';
 import { RecommencedUserService } from 'apps/ait-matching-webapp/src/app/services/recommenced-user.service';
+import _ from 'lodash';
 import { COLOR } from '../../../interface';
 
 export const color = {
@@ -31,31 +24,37 @@ export const color = {
 export class AitCardComponent implements OnInit {
   @Input() card: any;
   @Input() user_id: any;
-  i18n = '';
+  @Input() project_id: any;
+  @Input() isSaveMode = false;
+  @Input() isAddMode = false;
   colorCard = COLOR.color1;
   backgroundCard = color.green;
   userId = '';
-  @Input() addressSearch = '';
-  @Input() company_key = '';
   @Output() actionSaveEvent = new EventEmitter();
-  @Input() tabIndex;
-  @Input() isJob = false;
-  fieldDate = ['生年月日'];
+  @Output() actionAddEvent = new EventEmitter();
+  @Output() actionCreateEvent = new EventEmitter(false);
+  @Input() tabIndex: any;
   avatarURL = 'https://ui-avatars.com/api/?name=';
   avatar = '';
   isLoadingAvatar = true;
-  cardH;
+  cardH: any;
   skills = [];
+  planObj = [];
   originUrl = location.origin + this.binaryService.downloadUrl;
-  master_data_fields = [
-    'gender',
-    'occupation',
-    'prefecture',
-    'residence_status',
-    'work',
-    'bussiness',
+  private monthShortNames = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ];
-  key_avatar = '';
 
   imageNotFound() {
     this.isLoadingAvatar = false;
@@ -76,6 +75,10 @@ export class AitCardComponent implements OnInit {
     this.avatar = this.originUrl + avatar;
   };
 
+  getName = () => {
+    return this.cardH?.last_name + ' ' + this.cardH?.first_name;
+  };
+
   getAvatarDefault = () => {
     return this.cardH?.first_name
       ? this.avatarURL +
@@ -84,81 +87,85 @@ export class AitCardComponent implements OnInit {
       : this.avatarURL + '';
   };
 
-  getContent(data) {
-    if (this.master_data_fields.includes(data?.field)) {
-      if (data?.value?.value) {
-        return `・${this.translateService.translate(
-          this.i18n + data?.field
-        )}：${data.value?.value}`;
-      }
-      return '';
-    } else if (data?.field === 'dob') {
-      if (data.value) {
-        return `・${this.translateService.translate(
-          this.i18n + data?.field
-        )}：${this.dateFormatService.formatDate(data.value, 'display')}`;
-      }
-      return '';
-    } else if (data?.field === 'current_salary') {
-      if (data.value) {
-        return `・${this.translateService.translate(
-          this.i18n + data?.field
-        )}：${this.getNumberValue(data.value)}`;
-      }
-      return '';
-    } else if (data?.field === 'business') {
-      if (data?.value?.value) {
-        return `・${this.translateService.translate(
-          this.i18n + data?.field
-        )}：${data.value?.value}`;
-      }
-      return '';
-    } else {
-      return data.value
-        ? `・${this.translateService.translate(this.i18n + data?.field)}：${
-            data.value
-          }`
-        : '';
-    }
-  }
-
-  getNumberValue = (data) => {
-    return (
-      this.numberFormatService.transform(data) +
-      this.currencySymbolService.getCurrencyByLocale()
-    );
-  };
-
   constructor(
     store: Store<AppState>,
-    private reactionService: ReactionService,
     private router: Router,
     private binaryService: AitBinaryDataService,
-    private translateService: AitTranslationService,
-    private dateFormatService: AitDateFormatService,
-    private numberFormatService: AitNumberFormatPipe,
-    private currencySymbolService: AitCurrencySymbolService,
-    private recommencedService: RecommencedUserService
+    private recommencedService: RecommencedUserService,
+    private iconLibraries: NbIconLibraries
   ) {
     store.pipe(select(getEmpId)).subscribe((id) => (this.userId = id));
+    this.iconLibraries.registerFontPack('font-awesome', {
+      packClass: 'far',
+      iconClassPrefix: 'fa',
+    });
+    this.iconLibraries.registerFontPack('font-awesome-fas', {
+      packClass: 'fas',
+      iconClassPrefix: 'fa',
+    });
   }
 
   ngOnInit() {
     try {
-      this.cardH = { ...this.card, is_team_member: false };
-      this.cardH.skills = this.cardH.skills
-        .slice()
-        .sort((a, b) => b.level - a.level);
+      this.cardH = { ...this.card };
+      this.cardH.skills = _.uniqBy(
+        this.cardH.skills
+          .slice()
+          .sort(
+            (a: { level: number }, b: { level: number }) => b.level - a.level
+          ),
+        '_key'
+      );
       this.getAvatar();
       this.addColor();
+      this.setupPlan();
     } catch (e) {
       console.log(e);
     }
   }
+  async setupPlan() {
+    const planObj = [];
+    const thisMonth = new Date().getMonth() + 1;
+    [...Array(3)].forEach((e, i) => {
+      planObj.push({
+        _key: thisMonth + i + 1,
+        value:
+          thisMonth + i > 11
+            ? this.monthShortNames[thisMonth - 12 + i]
+            : this.monthShortNames[thisMonth + i],
+        mm: 0,
+      });
+    });
+    const res = await this.recommencedService.findPlan(this.cardH.user_id);
+    if (res.status === RESULT_STATUS.OK) {
+      const data = res.data;
+      if (data.length === 3) {
+        this.planObj = data;
+      } else {
+        this.planObj = planObj;
+      }
+    } else {
+      this.planObj = planObj;
+    }
+  }
 
-  getDateField = (key) => {
-    return `・${key}：`;
-  };
+  sumMM() {
+    if (this.planObj.length === 0) {
+      return 0;
+    } else {
+      return +this.planObj.reduce((a, b) => a + b.mm, 0).toFixed(2);
+    }
+  }
+
+  getMM(index: number) {
+    if (this.planObj.length === 0) return 0;
+    return +this.planObj[index]['mm'].toFixed(2);
+  }
+
+  getValue(index: number) {
+    if (this.planObj.length === 0) return '';
+    return this.planObj[index]['value'];
+  }
 
   navigateProfile = (user_id: string) => {
     this.router.navigateByUrl('/user/' + user_id);
@@ -166,33 +173,15 @@ export class AitCardComponent implements OnInit {
 
   addColor = () => {
     if (this.cardH?.group_no === 1) {
-      this.backgroundCard = color.green;
-      this.colorCard = COLOR.color1;
-    } else if (this.cardH?.group_no === 2) {
       this.backgroundCard = color.orange;
       this.colorCard = COLOR.color2;
+    } else if (this.cardH?.group_no === 2) {
+      this.backgroundCard = color.green;
+      this.colorCard = COLOR.color1;
     } else {
       this.backgroundCard = color.blue;
       this.colorCard = COLOR.color3;
     }
-  };
-
-  // Highlight name option when user type
-  highlightName = (name) => {
-    const res = name.replace(
-      new RegExp(this.addressSearch.trim(), 'gmi'),
-      (match) => {
-        return `<b class="hightlighted" style="background:yellow">${match}</b>`;
-      }
-    );
-    return res;
-  };
-
-  getIndustry = () => {
-    return this.cardH.company
-      .replace('（', ',')
-      .replace('）', '')
-      .split(',')[1];
   };
 
   routerToProfile() {
@@ -226,7 +215,46 @@ export class AitCardComponent implements OnInit {
     }
   };
 
-  actionButtonAdd = (key: string) => {
+  actionButtonPlan = (_key: string) => {
+    if (this.project_id) {
+      this.router.navigate([`/set-plan`], {
+        queryParams: {
+          projectId: this.project_id,
+          userId: _key,
+          name: this.getName(),
+        },
+      });
+    }
+  };
+
+  actionButtonAdd = (_key: string) => {
     this.cardH.is_team_member = !this.cardH?.is_team_member;
+    if (!this.project_id) {
+      this.actionCreateEvent.emit(this.cardH);
+      return;
+    }
+    if (!this.cardH.is_team_member) {
+      const _from = `biz_project/${this.project_id}`;
+      const _to = `sys_user/${_key}`;
+      this.recommencedService.removeTeamMember(_from, _to).then((r) => {
+        if (r.status === RESULT_STATUS.OK) {
+          this.actionAddEvent.emit({
+            user_id: this.card.user_id,
+            is_team_member: this.card.is_team_member,
+          });
+        }
+      });
+    } else {
+      this.recommencedService
+        .saveTeamMember(this.project_id, this.cardH?.user_id)
+        .then((r) => {
+          if (r.status === RESULT_STATUS.OK) {
+            this.actionAddEvent.emit({
+              user_id: this.card.user_id,
+              is_team_member: this.card.is_team_member,
+            });
+          }
+        });
+    }
   };
 }

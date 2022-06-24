@@ -1,2 +1,165 @@
-<ait-group-view [page]="'project-requirement-detail'" [module]="'common'" [_key]="_key" [find]="find"></ait-group-view>
+<ait-template-page
+  [pageTitle]="'Project requirements detail' "
+  [tableTitle]="'Candidate list'"
+  [searchTitle]="'Project Requirement'"
+  [midleAreaTitle]="'Project detail'"
+  [isTableExpan]="isTableExpan"
+  [isExpan]="isExpan"
+  [isShowArea3]=" true "
+  [isShowTableArea]=" true "
+>
+  <div leftArea1>
+    <ng-container>
+        <ait-output-text
+        [label]="'name'"
+        [width]="'400px'"
+        [value]="projectRequiremant?.name || null"
+        [id]="'first_name'"
+      ></ait-output-text>
+    </ng-container>
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
+      <div class="input_inline">
+        <ait-output-text
+        [label]="'title'"
+        [width]="'400px'"
+        [value]="projectRequiremant?.title || null"
+        [id]="'first_name'"
+      ></ait-output-text>
 
+
+      </div>
+    </ng-container>
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
+      <div class="input_inline">
+        <ait-output-text
+        [label]="'location'"
+        [width]="'400px'"
+        [value]="projectRequiremant?.location || null"
+        [id]="'first_name'"
+      ></ait-output-text>
+      </div>
+    </ng-container>
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
+      <div class="input_inline">
+        <ait-output-text
+        [label]="'description'"
+        [width]="'400px'"
+        [value]="projectRequiremant?.description || null"
+        [id]="'first_name'"
+      ></ait-output-text>
+      </div>
+    </ng-container>
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
+      <div class="input_inline">
+        <ait-output-text
+        [label]="'skills'"
+        [width]="'400px'"
+        [value]="projectRequiremant?.skill || null"
+        [id]="'first_name'"
+      ></ait-output-text>
+      </div>
+    </ng-container>
+  </div>
+  <!-- end left -->
+  <div rightArea1>
+    <ng-container>
+      <div style="display: flex">
+        <ait-output-text
+        [label]="'Capacity Time'"
+        [width]="'400px'"
+        [value]="projectRequiremant?.capacity_time"
+        [id]="'first_name'"
+      ></ait-output-text>
+      </div>
+      
+    </ng-container>
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
+        <ait-output-text
+        [label]="'industry'"
+        [width]="'400px'"
+        [value]="projectRequiremant?.industry || null"
+        [id]="'first_name'"
+      ></ait-output-text>
+    </ng-container>
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
+      <div class="input_inline">
+        <ait-output-text
+        [label]="'level'"
+        [width]="'400px'"
+        [value]="projectRequiremant?.level || null"
+        [id]="'first_name'"
+      ></ait-output-text>
+      </div>
+    </ng-container>
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
+      <div class="input_inline">
+        <ait-output-text
+        [label]="'remark'"
+        [width]="'400px'"
+        [value]="projectRequiremant?.remark || null"
+        [id]="'first_name'"
+      ></ait-output-text>
+      </div>
+    </ng-container>
+  </div>
+  <!-- project detail -->
+  <div leftArea3>
+    <ng-container>
+      <div class="input_inline">
+        <ait-output-text
+        [label]="'customer'"
+        [width]="'400px'"
+        [value]="projectDetail?.customer || null"
+        [id]="'first_name'"
+      ></ait-output-text>
+      </div>
+    </ng-container>
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
+      <div class="input_inline">
+        <ait-output-text
+        [label]="'person_in_charge'"
+        [width]="'400px'"
+        [value]="projectDetail?.person_in_charge || null"
+        [id]="'first_name'"
+      ></ait-output-text>
+      </div>
+    </ng-container>
+  </div>
+  <div rightArea3 >
+    <ng-container>
+      <div class="input_inline">
+        <ait-output-text
+        [label]="'project_code'"
+        [width]="'400px'"
+        [value]="projectDetail?.project_code || null"
+        [id]="'first_name'"
+      ></ait-output-text>
+      </div>
+    </ng-container>
+    <ait-space [margin]="'7.25px'"></ait-space>
+    <ng-container>
+      <div class="input_inline">
+        <ait-output-text
+        [label]="'status'"
+        [width]="'400px'"
+        [value]="projectDetail?.status || null"
+        [id]="'first_name'"
+      ></ait-output-text>
+      </div>
+    </ng-container>
+  </div>
+  <!-- cadidate list -->
+  <div tableArea >
+    <ait-table-inline-edit 
+    [project_key]="project_key"
+    [isView]=true> </ait-table-inline-edit>
+  </div>
+</ait-template-page>

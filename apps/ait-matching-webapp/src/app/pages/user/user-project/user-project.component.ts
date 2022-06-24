@@ -37,6 +37,7 @@ import {
 import { UserProjectService } from '../../../services/user-project.service';
 import { UserProfileService } from '../../../services/user-profile.service';
 import { MatchingUtils } from '../../../../app/@constants/utils/matching-utils';
+import { UserOnboardingService } from '../../../services/user-onboarding.service';
 @Component({
   selector: 'ait-user-project',
   templateUrl: './user-project.component.html',
@@ -106,6 +107,7 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     public authService: AitAuthService,
     public store: Store<AppState | any>,
     public activeRouter: ActivatedRoute,
+    private userOnbService: UserOnboardingService,
     private dialogService: NbDialogService,
     private userProjectService: UserProjectService,
     private translateService: AitTranslationService,
@@ -193,7 +195,8 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
           if (res?.status === RESULT_STATUS.OK) {
             const data = res.data[0];
             await this.saveUserProject(data._key);
-            await this.saveSkill(data._key);
+            await this.saveUserSkill();
+            // await this.saveSkill(data._key);
             return res;
           }
         });
@@ -266,19 +269,25 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     delete saveData.skills;
     return saveData;
   }
-
-  async saveSkill(bizProjectKey: string) {
-    this.biz_project_skill._from = 'user_project/' + bizProjectKey;
-    if (this.keyEdit) {
-      const _fromSkill = [{ _from: 'user_project/' + this.project_key }];
-      this.userProjectService.removeSkill(_fromSkill);
-    }
-    for (const skill of this.listSkills) {
+  async saveUserSkill() {
+    const list_skill_copy = [...this.listSkills]
+    const user_skill = await this.findSkills()
+    user_skill.forEach(skill => {
+     if (!this.listSkills.includes(skill._key)){
+      list_skill_copy.push(skill._key);
+     }
+    })
+    const saveData = {}
+    const _fromSkill = [{ _from: 'sys_user/' + this.user_id }];
+      await this.userOnbService.removeBizUserSkill(_fromSkill);
+      saveData['_from'] = 'sys_user/' + this.user_id;
+    for (const skill of list_skill_copy) {
       this.sort_no += 1;
-      this.biz_project_skill.sort_no = this.sort_no;
-      this.biz_project_skill._to = 'm_skill/' + skill;
-      await this.userProjectService.saveSkills(this.biz_project_skill);
+      saveData['sort_no'] = this.sort_no;
+      saveData['_to'] = 'm_skill/' + skill;
+      await this.userOnbService.saveUserSkills([saveData]);
     }
+    this.cancelLoadingApp();
   }
 
   async saveUserProject(bizProjectKey: string) {
@@ -289,5 +298,20 @@ export class UserProjectComponent extends AitBaseComponent implements OnInit {
     await this.userProjectService.saveConnectionUserProject(
       this.connection_user_project
     );
+  }
+
+  async findSkills() {
+    const from = 'sys_user/' + this.user_id;
+    const listSkills = [];
+    await this.userOnbService.findSkillsByFrom(from).then(async (res) => {
+      for (const skill of res.data) {
+        listSkills.push({
+          _key: skill?.skills?._key,
+          value: skill?.skills?.value,
+          level: skill?.level,
+        });
+      }
+    });
+    return listSkills;
   }
 }

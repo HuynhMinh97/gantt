@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -82,12 +83,22 @@ import { MasterDataListComponent } from './pages/master-data/master-data-list/ma
 import { MasterDataInputComponent } from './pages/master-data/master-data-input/master-data-input.component';
 import { MasterDataViewComponent } from './pages/master-data/master-data-view/master-data-view.component';
 import { UserAccountDetailComponent } from './pages/list/user-list/user-account-detail/user-account-detail.component';
-import { RegisterProjectComponent } from './pages/project-requirements/register-project/register-project.component';
 import { MasterListComponent } from './pages/master-group-collection/master-list/master-list.component';
 import { EditDataMasterComponent } from './pages/master-group-collection/edit-data-master/edit-data-master.component';
 import { ViewDataMasterComponent } from './pages/master-group-collection/view-data-master/view-data-master.component';
 import { ProjectRequirementDetailComponent } from './pages/project-requirements/project-detail/project-requirement-detail.component';
 import { RequirementListComponent } from './pages/requirement-list/requirement-list.component';
+import { TableInlineEditComponent } from './components/table-inline-edit/table-inline-edit.component';
+import { UpdateProjectComponent } from './pages/project-requirements/update-project/update-project.component';
+import { BizProjectService } from './services/biz_project.service';
+import { SetPlanComponent } from './pages/recommenced-user/components/set-plan/set-plan.component';
+
+if (environment.production) {
+  console.log = () => {};
+  console.error = () => {};
+}
+// console.log = () => {};
+console.error = () => {};
 
 const AIT_UI_MODULES = [AitChipModule, AitTabsModule, AitTocMenuModule];
 
@@ -163,12 +174,14 @@ const PAGES = [
     MasterDataInputComponent,
     MasterDataViewComponent,
     UserAccountDetailComponent,
-    RegisterProjectComponent,
     MasterListComponent,
     EditDataMasterComponent,
     ViewDataMasterComponent,
     ProjectRequirementDetailComponent,
     RequirementListComponent,
+    TableInlineEditComponent,
+    UpdateProjectComponent,
+    SetPlanComponent,
   ],
   imports: [
     Ng2SmartTableModule,
@@ -196,7 +209,12 @@ const PAGES = [
     ...AIT_UI_MODULES,
     ...NB_UI_MODULES,
   ],
-  providers: [...AIT_UI_SERVICES, ReactionService, RecommencedUserService],
+  providers: [
+    ...AIT_UI_SERVICES,
+    ReactionService,
+    RecommencedUserService,
+    BizProjectService,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

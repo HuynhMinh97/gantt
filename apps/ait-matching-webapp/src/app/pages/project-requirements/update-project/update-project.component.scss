@@ -1,7 +1,6 @@
+:host ::ng-deep ng2-smart-table .ng2-smart-actions a span {
+  font-size: 14px;
 
-
-:host ::ng-deep ng2-smart-table .ng2-smart-actions a.ng2-smart-action {
-  font-size: 1rem;
 }
 
 .filter__container {
@@ -251,4 +250,55 @@
 :host ::ng-deep .check-form nb-checkbox.status-basic .custom-checkbox {
   background: #fff !important;
   border-color: #8f9bb3 !important;
+}
+
+.table__area::-webkit-scrollbar-thumb {
+  background-color: #10529D;
+  outline: 1px solid transparent;
+  border-radius: 3px;
+}
+
+.table__area::-webkit-scrollbar:horizontal {
+  height: 10px;
+}
+
+// .action-row {
+
+//   position: fixed;
+//   bottom: 140px;
+//   right: 20%;
+
+//   margin-top: 50px;
+//   z-index: 99;
+
+//   .block {
+//     display: flex;
+//   }
+// }
+
+.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  bottom: 30px;
+  margin-top: 50px;
+  z-index: 99;
+  .block {
+    display: flex;
+  }
+}
+
+
+@media only screen and (max-width: 1025px) {
+  .action-row {
+    position: fixed;
+    bottom: 140px;
+    right: 6%;
+
+    margin-top: 50px;
+    z-index: 99;
+
+    .block {
+      display: flex;
+    }
+  }
 }

@@ -10,7 +10,28 @@
         <div class="icon__look__up out_line" tabindex="3">
           <nb-icon
             icon="search"
-            style="font-size: 16px"
+            style="
+              font-size: 16px;
+              background: -moz-linear-gradient(
+                top,
+                #002b6e 0.23%,
+                #2288cc 99.81%
+              );
+              background: -webkit-linear-gradient(
+                top,
+                #002b6e 0.23%,
+                #2288cc 99.81%
+              );
+              background: linear-gradient(
+                to bottom,
+                #002b6e 0.23%,
+                #2288cc 99.81%
+              );
+              -webkit-background-clip: text;
+              -moz-background-clip: text;
+              background-clip: text;
+              -webkit-text-fill-color: transparent;
+            "
             pack="font-awesome-fas"
           ></nb-icon>
         </div>
@@ -49,6 +70,7 @@
       [label]="'Filter'"
       *ngIf="isSubmit"
       [styleLabel]="{ 'font-size': '1.5vmax' }"
+      [isOpen]="isExpan"
     >
       <div class="content">
         <div class="left_side">
@@ -99,20 +121,35 @@
           </ait-autocomplete-master-data>
         </div>
         <div class="right_side">
-          <ait-autocomplete-master-data
-            [label]="'Industry'"
-            [collection]="'m_industry'"
-            [id]="'number_format'"
-            [icon]="'search-outline'"
-            [style]="{ width: '400px' }"
-            [placeholder]="'Please select industry'"
-            [disableOutputDefault]="true"
-            [tabIndex]="5"
-            (watchValue)="takeMasterValues($event?.value, 'industry_working')"
-            [isReset]="isReset"
-            [defaultValue]="searchForm.controls['industry_working'].value"
-          >
-          </ait-autocomplete-master-data>
+          <ng-container>
+            <div style="display: flex">
+              <ait-datepicker
+                [label]="'Capacity Time'"
+                [styleLabel]="{ 'text-transform': 'initial' }"
+                [width]="'170px'"
+                [placeholder]="'yyyy/MM/dd'"
+                [isReset]="isReset"
+                [defaultValue]="searchForm.controls['capacity_time_from'].value"
+                (watchValue)="
+                  takeDatePickerValue($event?.value, 'capacity_time_from')
+                "
+              >
+              </ait-datepicker>
+
+              <span class="center_span">~</span>
+              <ait-datepicker
+                [styleLabel]="{ 'text-transform': 'initial' }"
+                [width]="'170px'"
+                [isReset]="isReset"
+                [defaultValue]="searchForm.controls['capacity_time_to'].value"
+                (watchValue)="
+                  takeDatePickerValue($event?.value, 'capacity_time_to')
+                "
+              >
+              </ait-datepicker>
+            </div>
+          </ng-container>
+
           <ait-space [margin]="'7.25px'"></ait-space>
           <ait-autocomplete-master-data
             [label]="'Level'"
@@ -130,34 +167,20 @@
           </ait-autocomplete-master-data>
           <ait-space [margin]="'7.25px'"></ait-space>
 
-          <ng-container>
-            <div style="display: flex">
-              <ait-datepicker
-                [label]="'Valid Time'"
-                [styleLabel]="{ 'text-transform': 'initial' }"
-                [width]="'170px'"
-                [placeholder]="'yyyy/MM/dd'"
-                [isReset]="isReset"
-                [dateInput]="searchForm.controls['valid_time_from'].value"
-                (watchValue)="
-                  takeDatePickerValue($event?.value, 'valid_time_from')
-                "
-              >
-              </ait-datepicker>
-
-              <span class="center_span">~</span>
-              <ait-datepicker
-                [styleLabel]="{ 'text-transform': 'initial' }"
-                [width]="'170px'"
-                [isReset]="isReset"
-                [dateInput]="searchForm.controls['valid_time_to'].value"
-                (watchValue)="
-                  takeDatePickerValue($event?.value, 'valid_time_to')
-                "
-              >
-              </ait-datepicker>
-            </div>
-          </ng-container>
+          <ait-autocomplete-master-data
+            [label]="'Industry'"
+            [collection]="'m_industry'"
+            [id]="'number_format'"
+            [icon]="'search-outline'"
+            [style]="{ width: '400px' }"
+            [placeholder]="'Please select industry'"
+            [disableOutputDefault]="true"
+            [tabIndex]="5"
+            (watchValue)="takeMasterValues($event?.value, 'industry_working')"
+            [isReset]="isReset"
+            [defaultValue]="searchForm.controls['industry_working'].value"
+          >
+          </ait-autocomplete-master-data>
         </div>
         <div class="bottom_side">
           <ait-button
@@ -209,7 +232,45 @@
             [content]="getTitle('Recommendation for you')"
           >
           </ait-text-gradient>
-          <div class="count-text">{{ getResultCount() }}</div>
+          <div class="content" *ngIf="currentTab === 'R' && !isLoading">
+            <ait-chip
+              *ngFor="let p of matchingSkill; let i = index"
+              [title]="getText(p)"
+              [icon]="'close-outline'"
+              [is18n]="false"
+              [isHaveIcon]="false"
+              [isHaveBorder]="true"
+              [isSelected]="!!p.isSelected"
+              tabindex="4"
+              style="outline-color: #10529d"
+              [style]="{
+                'max-width': '140px',
+                'margin-right': '5px'
+              }"
+              (onClickChip)="filterSkill(p, i)"
+            ></ait-chip>
+          </div>
+          <div
+            class="content"
+            *ngIf="
+              currentTab === 'R' && !isLoading && matchingSkill.length === 0
+            "
+          >
+            <ait-chip
+              [title]="'All(0)'"
+              [icon]="'close-outline'"
+              [is18n]="false"
+              [isHaveIcon]="false"
+              [isHaveBorder]="true"
+              [isSelected]="true"
+              tabindex="4"
+              style="outline-color: #10529d"
+              [style]="{
+                'max-width': '140px',
+                'margin-right': '5px'
+              }"
+            ></ait-chip>
+          </div>
         </div>
         <div class="actionGroup" tabindex="24" style="outline-color: #10529d">
           <ait-tabs
@@ -222,35 +283,48 @@
           ></ait-tabs>
         </div>
       </div>
+      <div class="color" *ngIf="currentTab !== 'S' && !isLoading">
+        <div
+          (click)="filterByType(0)"
+          class="cardR"
+          [ngStyle]="{
+            'min-width': '160px',
+            background:
+              'linear-gradient(90deg, rgba(255, 141, 3, 0.8) 28%, #ed9d3c 67%)',
+            transform: memberChecked[0] ? 'scale(1.1)' : 'scale(1)'
+          }"
+        >
+          {{ 'Highly recommended (' + countMember[0] + ')' }}
+        </div>
+        <div
+          (click)="filterByType(1)"
+          class="cardR"
+          [ngStyle]="{
+            background: 'linear-gradient(90deg, #78c047 50%, #97d791 84%)',
+            transform: memberChecked[1] ? 'scale(1.1)' : 'scale(1)'
+          }"
+        >
+          {{ 'Recommended (' + countMember[1] + ')' }}
+        </div>
+        <div
+          (click)="filterByType(2)"
+          class="cardR"
+          [ngStyle]="{
+            background:
+              'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)',
+            transform: memberChecked[2] ? 'scale(1.1)' : 'scale(1)'
+          }"
+        >
+          {{ 'Normal (' + countMember[2] + ')' }}
+        </div>
+      </div>
       <div class="divider"></div>
       <div
         class="list__card"
         tabindex="{{ 24 + tabs.length }}"
         style="outline-color: #10529d"
       >
-        <div
-          class="what"
-          style="display: flex; flex-direction: row; flex-wrap: wrap"
-          *ngIf="currentTab !== 'R'"
-        >
-          <p *ngIf="cardSkeleton.length === 0 && dataFilterSave.length === 0">
-            {{ textDataNullSave }}
-          </p>
-          <ait-card
-            *ngFor="let card of dataFilterSave; let i = index"
-            [card]="card"
-            [user_id]="user_id"
-            tabindex="{{ 30 + i + 1 }}"
-            style="outline-color: #10529d"
-            [addressSearch]="addressSearch"
-            [company_key]="company_key"
-            (actionSaveEvent)="handleSyncData($event)"
-          >
-          </ait-card>
-          <ait-card-skeleton
-            *ngFor="let card of cardSkeleton"
-          ></ait-card-skeleton>
-        </div>
+        <!-- R -->
         <div
           class="what"
           style="display: flex; flex-direction: row; flex-wrap: wrap"
@@ -263,11 +337,66 @@
             *ngFor="let card of dataFilter; let ix = index"
             [card]="card"
             [user_id]="user_id"
-            [addressSearch]="addressSearch"
-            [company_key]="company_key"
+            [project_id]="project_id"
             tabindex="{{ 30 + ix + 1 }}"
             style="outline-color: #10529d"
             (actionSaveEvent)="handleSyncData($event)"
+            (actionAddEvent)="handleSyncData($event)"
+            (actionCreateEvent)="handleCreateBizProject($event)"
+          >
+          </ait-card>
+          <ait-card-skeleton
+            *ngFor="let card of cardSkeleton"
+          ></ait-card-skeleton>
+        </div>
+        <!-- C -->
+        <div
+          class="what"
+          style="display: flex; flex-direction: row; flex-wrap: wrap"
+          *ngIf="currentTab === 'C'"
+        >
+          <p
+            *ngIf="
+              cardSkeleton.length === 0 && dataFilterTeamMember.length === 0
+            "
+          >
+            {{ textDataNullTeamMember }}
+          </p>
+          <ait-card
+            *ngFor="let card of dataFilterTeamMember; let i = index"
+            [card]="card"
+            [user_id]="user_id"
+            [project_id]="project_id"
+            [isAddMode]="true"
+            tabindex="{{ 30 + i + 1 }}"
+            style="outline-color: #10529d"
+            (actionSaveEvent)="handleSyncData($event)"
+            (actionAddEvent)="handleSyncData($event)"
+          >
+          </ait-card>
+          <ait-card-skeleton
+            *ngFor="let card of cardSkeleton"
+          ></ait-card-skeleton>
+        </div>
+
+        <div
+          class="what"
+          style="display: flex; flex-direction: row; flex-wrap: wrap"
+          *ngIf="currentTab === 'S'"
+        >
+          <p *ngIf="cardSkeleton.length === 0 && dataFilterSave.length === 0">
+            {{ textDataNullSave }}
+          </p>
+          <ait-card
+            *ngFor="let card of dataFilterSave; let i = index"
+            [card]="card"
+            [user_id]="user_id"
+            [project_id]="project_id"
+            [isSaveMode]="true"
+            tabindex="{{ 30 + i + 1 }}"
+            style="outline-color: #10529d"
+            (actionSaveEvent)="handleSyncData($event)"
+            (actionAddEvent)="handleSyncData($event)"
           >
           </ait-card>
           <ait-card-skeleton

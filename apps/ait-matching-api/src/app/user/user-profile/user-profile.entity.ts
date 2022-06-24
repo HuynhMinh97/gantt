@@ -65,7 +65,12 @@ export class UserProfileEntity extends BaseEntity {
   @Field(() => String, { nullable: true })
   phone_number?: string;
 
+  @Field(() => String, { nullable: true })
+  project_id?: string;
+
   @Field(() => Boolean, { nullable: true })
   is_saved?: boolean;
 
+  @Field(() => Boolean, { nullable: true })
+  is_team_member?: boolean;
 }
