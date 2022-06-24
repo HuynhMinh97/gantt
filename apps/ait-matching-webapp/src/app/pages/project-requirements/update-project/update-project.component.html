@@ -1,8 +1,8 @@
 <ait-template-page
-  [pageTitle]=" mode === 'EDIT' ? 'Update project requirements' : 'Register project requirements'"
-  [tableTitle]="'Candidate list'"
-  [searchTitle]="'Project Requirement'"
-  [midleAreaTitle]="'Project detail'"
+  [pageTitle]=" mode === 'EDIT' ? 'update project requirements' : 'register project requirements'"
+  [tableTitle]="'candidate list'"
+  [searchTitle]="'project Requirement'"
+  [midleAreaTitle]="'project detail'"
   [isTableExpan]="isTableExpan"
   [isExpan]="isExpan"
   [isExpanArea3]="isExpanArea3"
@@ -118,7 +118,7 @@
         <ait-datepicker
           [placeholder]="'yyyyy/MM/dd'"
           [id]="'capacity_time_from'"
-          [label]="'Capacity Time'"
+          [label]="'capacity time'"
           [style]="{ width: '170px' }"
           [isReset]="resetProjectInfo.capacity_time_from"
           [defaultValue]="projectForm?.controls['capacity_time_from']?.value"
@@ -235,7 +235,7 @@
         <ait-autocomplete-master-data
           [width]="'400px'"
           [id]="'person_in_charge'"
-          [label]="'Person in charge'"
+          [label]="'person in charge'"
           [isSubmit]="false"
           [maxItem]="1"
           [placeholder]="'please select employee'"

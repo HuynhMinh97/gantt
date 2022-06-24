@@ -340,7 +340,8 @@ export class TableInlineEditComponent
         data['employee_name'] = item['first_name'] + ' ' + item['last_name'];
       });
       const planned = await this.setupPlan(data['user_id']);
-      const plan = 'Plan for the next 3 months:' +  Math.round((Number(data['manmonth_plan']) ) * 100) / 100 + 'Mm';
+      // const plan = 'Plan for the next 3 months:' +  Math.round((Number(data['manmonth_plan']) ) * 100) / 100 + 'Mm';
+      const plan = 'Plan for the next 3 months:' + planned.reduce((a, b) => a + b.mm, 0).toFixed(2)
       const plane_detail = 
         planned[0].value +
         ': ' +
@@ -353,7 +354,7 @@ export class TableInlineEditComponent
         planned[2].value +
         ': ' +
         Math.round((Number(planned[2]['mm']) ) * 100) / 100;
-      data['planned'] = plan;
+      data['planned'] = plan
       data['planned_detail'] = plane_detail;
 
       this.list_candidate.push(data);
@@ -503,6 +504,14 @@ export class TableInlineEditComponent
       this.list_candidate_perpage[index] = {};
     }
     this.list_candidate_perpage[index][control] = value;
+  }
+
+  sumMM() {
+    if (this.planObj.length === 0) {
+      return 0;
+    } else {
+      return +this.planObj.reduce((a, b) => a + b.mm, 0).toFixed(2);
+    }
   }
 
   async setupPlan(user_id: string): Promise<any[]> {
