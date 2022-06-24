@@ -1,5 +1,4 @@
 <div [ngClass]="classContainer">
-  <!-- {{ getPreviousValueInput() }} -->
   <ait-label
     [label]="label"
     [required]="required"
@@ -12,7 +11,6 @@
     class="input__contrainer"
     [ngStyle]="{ width: widthInput }"
     style="margin-top: 8px; border-radius: 5px"
-
   >
     <input
       [id]="ID('input_number_readonly')"
@@ -33,15 +31,17 @@
       [style.width]="width"
       [style.height]="height"
       autocomplete="doNotAutoComplete"
-      tabindex="{{tabIndex}}"
-      (focusout)="isFocus=false"
+      tabindex="{{ tabIndex }}"
+      (focusout)="isFocus = false"
       (focus)="focusInput()"
       [class.focus]="getFocus()"
+      class="inputtext"
     />
     <input
+      class="inputtext"
       [id]="ID('input_number')"
       autocomplete="doNotAutoComplete"
-      *ngIf="!isReadOnly"
+      *ngIf="!isReadOnly && isLeftPlaceholder"
       pattern="[0-9\.]+"
       nbInput
       #inputNumber
@@ -52,10 +52,39 @@
       (input)="onInputHandle($event.target.value)"
       autocomplete="off"
       [formControl]="inputCtrl"
-      (focusout)="handleFocusOut();isFocus=false"
+      (focusout)="handleFocusOut(); isFocus = false"
       (beforeinput)="onKeyDown($event)"
       (keydown)="onKeyUp($event)"
-      (focus)="handleFocus();focusInput()"
+      (focus)="handleFocus(); focusInput()"
+      style="font-size: 12px; background-color: transparent"
+      (click)="handleClick()"
+      [ngStyle]="styleInput"
+      [ngClass]="{ isError: isError }"
+      [style.width]="width"
+      [style.height]="height"
+      class="isDefaultLeft"
+      tabindex="{{ tabIndex }}"
+      [class.focus]="getFocus()"
+    />
+    <input
+      class="inputtext"
+      [id]="ID('input_number')"
+      autocomplete="doNotAutoComplete"
+      *ngIf="!isReadOnly && !isLeftPlaceholder"
+      pattern="[0-9\.]+"
+      nbInput
+      #inputNumber
+      fullWidth
+      fieldSize="medium"
+      [maxLength]="length"
+      [placeholder]="getPlaceHolder()"
+      (input)="onInputHandle($event.target.value)"
+      autocomplete="off"
+      [formControl]="inputCtrl"
+      (focusout)="handleFocusOut(); isFocus = false"
+      (beforeinput)="onKeyDown($event)"
+      (keydown)="onKeyUp($event)"
+      (focus)="handleFocus(); focusInput()"
       style="font-size: 12px; background-color: transparent"
       (click)="handleClick()"
       [ngStyle]="styleInput"
@@ -63,18 +92,22 @@
       [style.width]="width"
       [style.height]="height"
       class="isDefault"
-      tabindex="{{tabIndex}}"
+      tabindex="{{ tabIndex }}"
       [class.focus]="getFocus()"
     />
   </div>
-  <!-- {{inputCtrl.value}} -->
   <div class="caption" *ngIf="guidance">
     <div class="icon" *ngIf="guidanceIcon">
       <nb-icon [icon]="guidanceIcon"></nb-icon>
     </div>
     <div class="info">
       <p
-        style="word-break: break-word; color: #8f9bb3; font-size: 12px; margin-bottom: 0"
+        style="
+          word-break: break-word;
+          color: #8f9bb3;
+          font-size: 12px;
+          margin-bottom: 0;
+        "
         id="{{ ID('caption') }}"
       >
         {{ getCaption2() }}

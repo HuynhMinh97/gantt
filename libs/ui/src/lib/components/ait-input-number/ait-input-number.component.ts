@@ -67,6 +67,7 @@ export class AitInputNumberComponent
 
   @Input() isReset = false;
   @Input() isError = false;
+  @Input() isLeftPlaceholder = false;
   @Input() required = false;
   componentErrors = [];
   dataInput = [];
@@ -179,9 +180,7 @@ export class AitInputNumberComponent
                 this.inputCtrl.setValue(0);
               } else {
                 this.inputCtrl.setValue(
-                  this.defaultValue
-                    ? this.defaultValue
-                    : null
+                  this.defaultValue ? this.defaultValue : null
                 );
               }
             }
@@ -355,7 +354,11 @@ export class AitInputNumberComponent
   };
 
   trnData = (text: string) => {
-    return text?.normalize('NFKC');
+    try {
+      return text?.normalize('NFKC');
+    } catch (e) {
+      return text;
+    }
   };
 
   onKeyUp = (evt) => {
