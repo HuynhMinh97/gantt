@@ -6,7 +6,8 @@
     background: background,
     color: colorText,
     'max-width': maxWidth,
-    border: isSelected ? '1px solid' : ''
+    border: isSelected ? '1px solid' : '',
+    cursor: isHaveBorder ? 'pointer' : ''
   }"
   [ngClass]="isChipInCard ? 'chipInCard' : 'chip'"
   [nbTooltip]="title"
