@@ -502,12 +502,6 @@ export class UserOnboardingComponent
       setTimeout(() => {
         this.isClear = false;
       }, 50);
-      // this.userOnboardingInfo.patchValue({
-      //   ...this.userOnboardingInfoClone,
-      // });
-      // this.companySkills = this.userOnboardingInfo.controls[
-      //   'current_job_skills'
-      // ].value;
       for (const index in this.resetJobSettingInfo) {
         if (!this.userJobSettingInfo.controls[index].value) {
           this.resetJobSettingInfo[index] = true;
@@ -516,10 +510,6 @@ export class UserOnboardingComponent
           }, 100);
         }
       }
-      // this.userJobSettingInfo.patchValue({ ...this.userJobSettingInfoClone });
-      // this.jobSettingSkills = this.userJobSettingInfo.controls[
-      //   'job_setting_skills'
-      // ].value;
 
       await this.getInfomation();
       this.jobSettingData = { ...this.userJobSettingInfo.value };

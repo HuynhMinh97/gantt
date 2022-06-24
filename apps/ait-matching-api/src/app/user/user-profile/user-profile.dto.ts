@@ -3,6 +3,8 @@ import { InputType, Field, Int } from '@nestjs/graphql';
 
 @InputType()
 export class UserProfileDto extends BaseDto {
+  @Field(() => String, { nullable: true })
+  project_id?: string;
 
   @Field(() => String, { nullable: true })
   last_name?: string;
@@ -11,17 +13,17 @@ export class UserProfileDto extends BaseDto {
   first_name?: string;
 
   @Field(() => ConditionDto, { nullable: true })
-  top_skills?: ConditionDto; 
+  top_skills?: ConditionDto;
 
   @Field(() => ConditionDto, { nullable: true })
-  gender?: ConditionDto; 
+  gender?: ConditionDto;
 
   @Field(() => Number, { nullable: true })
   dob?: number;
 
   @Field(() => String, { nullable: true })
   phone_number?: string;
-  
+
   @Field(() => String, { nullable: true })
   about?: string;
 
@@ -60,8 +62,10 @@ export class UserProfileDto extends BaseDto {
 
   @Field(() => Boolean, { nullable: true })
   is_saved?: boolean;
-}
 
+  @Field(() => Boolean, { nullable: true })
+  is_team_member?: boolean;
+}
 
 @InputType()
 export class SaveUserProfileDto extends BaseDto {
@@ -79,7 +83,7 @@ export class SaveUserProfileDto extends BaseDto {
 
   @Field(() => String, { nullable: true })
   title?: string;
-  
+
   @Field(() => String, { nullable: true })
   company_working?: string;
 

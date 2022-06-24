@@ -53,7 +53,6 @@ export interface ApiConfig {
     system?: string;
     database?: string;
   };
-
 }
 
 export interface Enforcement {
@@ -62,11 +61,10 @@ export interface Enforcement {
   api_config_key: string;
 }
 
-
 export enum COLOR {
-  color1 = '#97D791',
-  color2 = '#F5B971',
-  color3 = '#10529d'
+  color1 = '#97D791', //xanh la
+  color2 = '#F5B971', // cam
+  color3 = '#10529d', // xanh duong
 }
 
 export enum FIELD {
@@ -85,7 +83,7 @@ export enum FIELD {
   '3号試験実技' = 'no3_exam_practice_date',
   '3号試験実技合否' = 'no3_exam_practice_pass',
   '許可年月日（3号移行(予定)年月日）' = 'no3_permit_date',
-  '職種' = 'occupation',//update for industry,
+  '職種' = 'occupation', //update for industry,
   '実習生名（カナ）' = 'name_kana', // name on header card
   '在留資格' = 'residence_status',
   '希望の給料' = 'current_salary',
@@ -95,11 +93,11 @@ export enum FIELD {
 
 export const fields = [
   '実習生名',
-  '性別',//性別
-  '生年月日',// 生年月日
+  '性別', //性別
+  '生年月日', // 生年月日
   '都道府県',
-  '職種',//職種,
-  '在留資格',//在留資格
-  '希望の給料',//希望の給料
+  '職種', //職種,
+  '在留資格', //在留資格
+  '希望の給料', //希望の給料
   '希望の職種（分野）',
-]
+];

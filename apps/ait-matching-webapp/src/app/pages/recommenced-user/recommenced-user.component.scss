@@ -132,7 +132,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 20px;
+        margin: 20px 0;
         width: 100%;
         p {
           margin: 0;
@@ -369,4 +369,26 @@
   line-height: 16px;
   color: #8f9bb3;
   margin-left: 30px;
+}
+
+.color {
+  display: flex;
+  align-self: start;
+  margin-bottom: 20px;
+  margin-left: 50px;
+  .cardR {
+    display: flex;
+    cursor: pointer;
+    place-content: center;
+    align-items: center;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    color: white;
+    min-width: 150px;
+    height: 21px;
+  }
+  .cardR + .cardR {
+    margin-left: 20px;
+  }
 }

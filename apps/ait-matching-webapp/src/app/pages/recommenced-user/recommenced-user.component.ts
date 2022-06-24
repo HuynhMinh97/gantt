@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   isArrayFull,
+  isNil,
   isObjectFull,
   KEYS,
   KeyValueDto,
   RESULT_STATUS,
 } from '@ait/shared';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
@@ -22,15 +23,17 @@ import {
   AitAuthService,
   AitBaseComponent,
   AitEnvironmentService,
+  AitSaveTempService,
   AitTranslationService,
   AppState,
+  MODE,
   MODULES,
   PAGES,
   TabView,
 } from '@ait/ui';
 import { Apollo } from 'apollo-angular';
 import { RecommencedUserService } from '../../services/recommenced-user.service';
-import { SearchConditionService } from '../../services/search-condition.service';
+import { BizProjectService } from '../../services/biz_project.service';
 import { SetNameComponent } from './components/set-name/set-name.component';
 import _ from 'lodash';
 
@@ -46,18 +49,19 @@ export enum StorageKey {
 })
 export class RecommencedUserComponent
   extends AitBaseComponent
-  implements OnInit {
+  implements OnInit, OnDestroy {
   searchForm: FormGroup;
   currentCount = 0;
   currentMatchingCount = 0;
   constructor(
     layoutScrollService: NbLayoutScrollService,
     private matchingService: RecommencedUserService,
-    private searchConditionService: SearchConditionService,
+    private bizProjectService: BizProjectService,
     private translateService: AitTranslationService,
     private iconLibraries: NbIconLibraries,
     private formBuilder: FormBuilder,
     private dialogService: NbDialogService,
+    saveTempService: AitSaveTempService,
     store: Store<AppState | any>,
     authService: AitAuthService,
     router: Router,
@@ -73,20 +77,19 @@ export class RecommencedUserComponent
       env,
       layoutScrollService,
       toastrService,
-      null,
+      saveTempService,
       router
     );
 
     this.searchForm = this.formBuilder.group({
-      _key: new FormControl(null),
-      keyword: new FormControl(null),
+      keyword: new FormControl(''),
       skills: new FormControl(null),
       current_job_title: new FormControl(null),
       province_city: new FormControl(null),
       industry_working: new FormControl(null),
       current_job_level: new FormControl(null),
-      valid_time_from: new FormControl(null),
-      valid_time_to: new FormControl(null),
+      capacity_time_from: new FormControl(null),
+      capacity_time_to: new FormControl(null),
     });
 
     this.iconLibraries.registerFontPack('font-awesome-far', {
@@ -124,6 +127,7 @@ export class RecommencedUserComponent
       title: 'Recommended',
       tabIcon: 'star',
       type: 'R',
+      padding: '0 15px',
     },
     {
       title: 'Candidates',
@@ -141,6 +145,7 @@ export class RecommencedUserComponent
   cardSkeleton = Array(8).fill(1);
   textDataNull = '';
   textDataNullSave = '';
+  textDataNullTeamMember = '';
   isExpan = false;
   currentTab = 'R';
   isReset = false;
@@ -151,15 +156,33 @@ export class RecommencedUserComponent
   dataFilterSave = [];
   dataFilterSaveDf = [];
 
-  matchingList = [];
+  dataFilterTeamMember = [];
+  dataFilterTeamMemberDf = [];
 
-  isLoading = true;
+  matchingList = [];
+  matchingSkill = [];
+  matchingResult = [];
+
+  filterList = [];
+
+  countMemberDf = [0, 0, 0];
+  countMember = [0, 0, 0];
+  memberChecked = [false, false, false];
+
+  isSelectAll = true;
+  isLoading = false;
   spinnerLoading = false;
-  isExpan1 = true;
   round = 1;
   textDataEnd = '';
   disableTab = false;
   isSubmit = false;
+
+  project_id = '';
+  tempKey = '';
+
+  // ngDoCheck() {
+  //   console.log(this.dataFilter);
+  // }
 
   getResultCount() {
     if (this.matchingList.length > 0) {
@@ -191,7 +214,7 @@ export class RecommencedUserComponent
       } else {
         this.cardSkeleton = [];
       }
-    } else {
+    } else if (this.currentTab === 'S') {
       if (flag) {
         this.cardSkeleton = Array(
           this.getNummberMode8(this.dataFilterSave.length)
@@ -199,12 +222,43 @@ export class RecommencedUserComponent
       } else {
         this.cardSkeleton = [];
       }
+    } else {
+      if (flag) {
+        this.cardSkeleton = Array(
+          this.getNummberMode8(this.dataFilterTeamMember.length)
+        ).fill(1);
+      } else {
+        this.cardSkeleton = [];
+      }
+    }
+  };
+
+  private getDataByProjectId = async (project_id: string) => {
+    const res = await this.matchingService.getUserByProjectId(project_id);
+    if (res.status === RESULT_STATUS.OK) {
+      if (res.data?.length === 0) {
+        this.textDataNullTeamMember = 'There is no data to search';
+        this.countMember = [0, 0, 0];
+      } else {
+        this.textDataNullTeamMember = '';
+        this.dataFilterTeamMemberDf = this.dataFilterTeamMemberDf
+          .concat(res.data)
+          .map((e) =>
+            Object.assign({
+              ...e,
+              group_no: this.getGroupNo(e.user_id),
+            })
+          );
+        this.dataFilterTeamMember = [...this.dataFilterTeamMemberDf];
+        this.setCountMember(this.dataFilterTeamMemberDf);
+        this.currentCount = Math.ceil(this.dataFilterTeamMemberDf.length / 8);
+      }
     }
   };
 
   private getDetailMatching = async (
     list = [],
-    onlySaved = false,
+    onlySaved = 0,
     start = 0,
     end = 8
   ) => {
@@ -212,11 +266,16 @@ export class RecommencedUserComponent
       const res = await this.matchingService.getDetailMatching(
         onlySaved,
         start * 8,
-        end
+        end,
+        this.project_id
       );
       if (res.status === RESULT_STATUS.OK) {
         if (res.data?.length === 0) {
-          this.textDataNull = 'There is no data to search';
+          onlySaved === 0 && (this.textDataNull = 'There is no data to search');
+          onlySaved === 1 &&
+            (this.textDataNullTeamMember = 'There is no data to search');
+          onlySaved === 2 &&
+            (this.textDataNullSave = 'There is no data to search');
         }
         return res.data;
       }
@@ -225,11 +284,16 @@ export class RecommencedUserComponent
         list,
         onlySaved,
         start * 8,
-        end
+        end,
+        this.project_id
       );
       if (res.status === RESULT_STATUS.OK) {
         if (res.data?.length === 0) {
-          this.textDataNull = 'There is no data to search';
+          onlySaved === 0 && (this.textDataNull = 'There is no data to search');
+          onlySaved === 1 &&
+            (this.textDataNullTeamMember = 'There is no data to search');
+          onlySaved === 2 &&
+            (this.textDataNullSave = 'There is no data to search');
         }
         return res.data;
       }
@@ -237,39 +301,93 @@ export class RecommencedUserComponent
   };
 
   handleSyncData = ($event) => {
-    const { user_id, is_saved } = $event;
+    const { user_id, is_saved, is_team_member } = $event;
     const find = this.dataFilterDf.find((f) => f.user_id === user_id);
     const currentFind = this.dataFilter.find((f) => f.user_id === user_id);
     if (find) {
       find.is_saved = is_saved;
+      find.is_team_member = is_team_member;
     }
 
     if (currentFind) {
       currentFind.is_saved = is_saved;
+      currentFind.is_team_member = is_team_member;
     }
   };
 
   ToggleExpan = () => (this.isExpan = !this.isExpan);
-  ToggleExpan1 = () => {
-    this.isExpan1 = !this.isExpan1;
-  };
 
   getTitle = (name: string) => this.translateService.translate(name);
 
   async ngOnInit() {
-    const queriesKey = localStorage.getItem('my-project-queries');
+    const queriesKey = localStorage.getItem('biz_project_key');
     if (queriesKey) {
-      this.searchConditionService.find({ _key: queriesKey }).then((e) => {
-        this.searchForm.patchValue(e.data[0]);
-        localStorage.setItem('my-project-queries', null);
+      this.project_id = queriesKey;
+      localStorage.removeItem('biz_project_key');
+      this.bizProjectService.find({ _key: queriesKey }).then((e) => {
+        this.isSubmit = true;
+        this.isExpan = true;
+        const z = e.data[0];
+        const obj = {
+          keyword: z['keyword'],
+          skills: z['skills'],
+          province_city: z['location'],
+          industry_working: z['industry'],
+          current_job_level: z['level'],
+          current_job_title: z['title'],
+          capacity_time_from: z['capacity_time_from'],
+          capacity_time_to: z['capacity_time_to'],
+        };
+        this.searchForm.patchValue({ ...obj });
+        this.search();
       });
+    } else {
+      this.checkForTemp();
+    }
+  }
+
+  async checkForTemp() {
+    try {
+      const tempData = await this.findTempData(MODE.SEARCH);
+      if (
+        !isNil(tempData) &&
+        tempData.status === 200 &&
+        tempData.data.length > 0
+      ) {
+        const data = JSON.parse(tempData.data[0].data || {});
+
+        console.log(data);
+        if (isObjectFull(data)) {
+          this.tempKey = tempData.data[0]._key || '';
+          this.searchForm.patchValue(data);
+          this.isSubmit = true;
+          this.isExpan = true;
+          this.search();
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  saveTemp() {
+    try {
+      const currentData = this.searchForm.value;
+      const { keyword } = currentData;
+      if (keyword) {
+        const data = JSON.stringify(currentData || []);
+        this.saveTempData(MODE.SEARCH, data);
+      }
+    } catch (e) {
+      console.log(e);
     }
   }
 
   private callSearch(list = []) {
-    this.isExpan = true;
-    this.getDataByRound(false, list).then(() => {
+    this.getDataByRound(0, list).then(() => {
       this.setSkeleton(false);
+      this.filterMain();
+      this.isLoading = false;
     });
   }
 
@@ -286,7 +404,7 @@ export class RecommencedUserComponent
           if (this.currentTab === 'R' && this.textDataEnd === '') {
             if (this.dataFilterDf.length >= 8) {
               this.setSkeleton(true);
-              this.getDataByRound(false, this.matchingList).then(() => {
+              this.getDataByRound(0, this.matchingList).then(() => {
                 this.filterMain();
                 this.setSkeleton(false);
               });
@@ -304,33 +422,83 @@ export class RecommencedUserComponent
 
   getTitlePlaceholderSearch = () => this.translateService.translate('001');
 
+  getGroupNo(key: string) {
+    const obj = this.matchingResult.find((e) => e.item === key);
+    if (obj) {
+      const num = obj['total_score'] || 0.2;
+      if (num >= 0.6) {
+        return 1;
+      } else if (num >= 0.2) {
+        return 2;
+      } else {
+        return 3;
+      }
+    } else {
+      return 3;
+    }
+  }
+
   // Get Data by round and base on all of result
-  getDataByRound = async (onlySaved = false, list = []) => {
+  getDataByRound = async (onlySaved = 0, list = []) => {
     try {
       const detail = await this.getDetailMatching(
         list,
         onlySaved,
         this.currentCount
       );
-      if (isArrayFull(detail) && !onlySaved) {
-        this.dataFilter = this.dataFilterDf.concat(detail);
-        this.dataFilterDf = [...this.dataFilter];
+      if (isArrayFull(detail) && onlySaved === 0) {
+        this.textDataNull = '';
+        const temp = this.dataFilterDf.concat(detail).map((e) =>
+          Object.assign({
+            ...e,
+            group_no: this.getGroupNo(e.user_id),
+          })
+        );
+        this.dataFilter = [...temp];
+        this.dataFilterDf = [...temp];
+        this.setCountMember(this.dataFilter);
+        this.setCountMatching(this.dataFilter);
         this.currentCount = Math.ceil(this.dataFilterDf.length / 8);
+      } else {
+        this.textDataNull = 'There is no data';
       }
-      if (isArrayFull(detail) && onlySaved) {
+
+      if (isArrayFull(detail) && onlySaved === 1) {
+        this.textDataNullTeamMember = '';
+        this.dataFilterTeamMember = this.dataFilterTeamMember
+          .concat(detail)
+          .map((e) =>
+            Object.assign({
+              ...e,
+              group_no: this.getGroupNo(e.user_id),
+            })
+          );
+        this.currentCount = Math.ceil(this.dataFilterTeamMemberDf.length / 8);
+      } else {
+        this.textDataNullTeamMember = 'There is no data';
+      }
+
+      if (isArrayFull(detail) && onlySaved === 2) {
         this.textDataNullSave = '';
-        this.dataFilterSave = this.dataFilterSave.concat(detail);
+        this.dataFilterSave = this.dataFilterSave.concat(detail).map((e) =>
+          Object.assign({
+            ...e,
+            group_no: this.getGroupNo(e.user_id),
+          })
+        );
         this.currentCount = Math.ceil(this.dataFilterSave.length / 8);
       } else {
         this.textDataNullSave = 'There is no data';
       }
       if (
         detail.length === 0 &&
-        ((this.dataFilter.length !== 0 && !onlySaved) ||
-          (this.dataFilterSave.length !== 0 && onlySaved))
+        ((this.dataFilter.length !== 0 && onlySaved === 0) ||
+          (this.dataFilterSave.length !== 0 && onlySaved === 1) ||
+          (this.dataFilterTeamMember.length !== 0 && onlySaved === 2))
       ) {
         this.textDataNull = '';
         this.textDataNullSave = '';
+        this.textDataNullTeamMember = '';
         this.textDataEnd = 'Out of data';
         this.setSkeleton(false);
       }
@@ -346,20 +514,39 @@ export class RecommencedUserComponent
       return;
     }
     this.isSubmit = true;
+    this.isLoading = true;
     this.dataFilter = [];
     this.dataFilterDf = [];
     this.matchingList = [];
+    this.countMemberDf = [0, 0, 0];
+    this.countMember = [0, 0, 0];
+    this.memberChecked = [false, false, false];
+
     this.currentCount = 0;
     this.textDataEnd = '';
     this.setSkeleton(true);
     this.matchingService.matchingUser(keyword).then((res) => {
-      if (res?.data.length > 0) {
-        const arr = res.data.map((e: { item: string }) => e.item);
+      this.matchingResult = res?.data[0].data || [];
+      if (this.matchingResult.length > 0) {
+        const arr = res.data[0].data.map((e: { item: string }) => e.item);
+        const matchingSkill = res.data[0].matching_input_data.skill.map(
+          (e: any) =>
+            Object.assign({ ...e, count: 0, name: '', isSelected: false })
+        ) as any[];
+        matchingSkill.length > 4 && (matchingSkill.length = 4);
+        matchingSkill.forEach(async (e, i) => {
+          const name = await this.matchingService.findSkillName(e.item);
+          matchingSkill[i].name = name;
+        });
+        this.matchingSkill = [
+          { name: keyword, count: 0, isSelected: true, _key: '' },
+        ].concat(matchingSkill);
         this.matchingList = arr || [];
         this.callSearch(arr);
       } else {
         this.textDataNull = 'There is no data to search';
         this.setSkeleton(false);
+        this.isLoading = false;
       }
     });
   }
@@ -367,16 +554,24 @@ export class RecommencedUserComponent
   // thêm nút scroll to top : TODO
   resetRound = () => (this.round = 1);
 
+  getText = (p: any) => {
+    if (p.name && p.count > 0) {
+      return `${p.name} (${p.count})`;
+    }
+  };
+
   getTabSelect = (tab: any) => {
+    this.dataFilter = [];
+    this.dataFilterDf = [];
+    this.dataFilterTeamMember = [];
+    this.dataFilterTeamMemberDf = [];
     this.dataFilterSave = [];
     this.dataFilterSaveDf = [];
-    this.dataFilterDf = [];
-    this.dataFilter = [];
     this.textDataNull = '';
     this.textDataNullSave = '';
+    this.textDataNullTeamMember = '';
     this.textDataEnd = '';
     this.cardSkeleton = [];
-    this.isLoading = true;
     this.resetRound();
     this.currentCount = 0;
     this.currentMatchingCount = 0;
@@ -384,9 +579,20 @@ export class RecommencedUserComponent
     if (this.currentTab === 'R') {
       this.setSkeleton(true);
       this.callSearch(this.matchingList || []);
+      this.countMember = [...this.countMemberDf];
+    } else if (this.currentTab === 'C') {
+      if (this.project_id) {
+        this.setSkeleton(true);
+        this.getDataByProjectId(this.project_id).then(() =>
+          this.setSkeleton(false)
+        );
+      } else {
+        this.textDataNullTeamMember = 'There is no data to search';
+        this.countMember = [0, 0, 0];
+      }
     } else {
       this.setSkeleton(true);
-      this.getDataByRound(true).then(() => this.setSkeleton(false));
+      this.getDataByRound(2).then(() => this.setSkeleton(false));
     }
   };
 
@@ -407,6 +613,7 @@ export class RecommencedUserComponent
       value = new Date(data).setHours(0, 0, 0, 0);
       this.searchForm.controls[form].markAsDirty();
       this.searchForm.controls[form].setValue(value);
+      return;
     } else {
       this.searchForm.controls[form].setValue(null);
     }
@@ -414,9 +621,10 @@ export class RecommencedUserComponent
   }
 
   reset(): void {
-    const _key = this.searchForm.controls['_key'].value;
+    this.project_id = '';
     try {
       this.searchForm.reset();
+      this.removeTemp();
       this.isReset = true;
       setTimeout(() => {
         this.isReset = false;
@@ -425,17 +633,31 @@ export class RecommencedUserComponent
     } catch (e) {
       console.log(e);
     }
-    if (_key) {
-      this.searchConditionService.remove(_key);
-    }
+
     this.dataFilter = [...this.dataFilterDf];
+    this.setCountMember(this.dataFilter);
+    this.setCountMatching(this.dataFilter);
+  }
+
+  removeTemp() {
+    if (this.tempKey) {
+      this.removeTempData(this.tempKey);
+      this.tempKey = '';
+    }
   }
 
   showQueryList() {
     this.router.navigate([`/requirement-list`]);
   }
 
-  save(): void {
+  handleCreateBizProject(event: any) {
+    if (event) {
+      this.save(event);
+    }
+  }
+
+  save(event = null): void {
+    this.project_id = '';
     this.dialogService
       .open(SetNameComponent, {
         closeOnBackdropClick: true,
@@ -460,11 +682,44 @@ export class RecommencedUserComponent
                 }
               }
             }
-            this.searchConditionService.save(obj).then((res) => {
+            const saveData = {
+              keyword: obj['keyword'],
+              name: obj['name'],
+            };
+            if (obj['current_job_level']) {
+              saveData['level'] = obj['current_job_level'];
+            }
+            if (obj['current_job_title']) {
+              saveData['title'] = obj['current_job_title'];
+            }
+            if (obj['industry_working']) {
+              saveData['industry'] = obj['industry_working'];
+            }
+            if (obj['province_city']) {
+              saveData['location'] = obj['province_city'];
+            }
+            if (obj['capacity_time_from']) {
+              saveData['capacity_time_from'] = obj['capacity_time_from'];
+            }
+            if (obj['capacity_time_to']) {
+              saveData['capacity_time_to'] = obj['capacity_time_to'];
+            }
+            if (obj['skills']) {
+              saveData['skills'] = obj['skills'];
+            }
+            this.bizProjectService.save(saveData).then((res) => {
               if (res.status === RESULT_STATUS.OK) {
-                this.searchForm.controls['_key'].setValue(
-                  res.data[0]?._key || ''
-                );
+                this.project_id = res.data[0]._key;
+                console.log(this.project_id);
+                if (event) {
+                  this.matchingService
+                    .saveTeamMember(this.project_id, event.user_id)
+                    .then((r) => {
+                      if (r.status === RESULT_STATUS.OK) {
+                        this.handleSyncData({ ...event, is_team_member: true });
+                      }
+                    });
+                }
                 this.showToastr('', this.getMsg('I0005'));
               } else {
                 this.showToastr('', this.getMsg('E0100'), KEYS.WARNING);
@@ -481,71 +736,214 @@ export class RecommencedUserComponent
     return new Date(time).setHours(0, 0, 0, 0);
   }
 
-  filterMain(type = 0) {
-    try {
-      const formValue = this.searchForm.value;
-      const condition = Object.entries(formValue).reduce(
-        (a, [k, v]) => (v == null ? a : ((a[k] = v), a)),
-        {}
-      );
-      condition['keyword'] && delete condition['keyword'];
-      const checkList = [];
-      for (const prop in condition) {
-        if (
-          prop !== 'keyword' &&
-          prop !== 'valid_time_from' &&
-          prop !== 'valid_time_to'
-        ) {
-          checkList.push(condition[prop].map((t: any) => t['_key']));
-        }
+  filterByType(index: number) {
+    this.memberChecked[index] = !this.memberChecked[index];
+    this.filterMain();
+  }
+
+  filterSkill({ name, item }, index: number): void {
+    const keyword = this.searchForm.controls['keyword'].value;
+    if (!keyword) {
+      return;
+    }
+    this.matchingSkill[index].isSelected = !this.matchingSkill[index]
+      .isSelected;
+    this.setSkeleton(true);
+    if (name === keyword) {
+      this.isSelectAll = this.matchingSkill[index].isSelected;
+      if (this.isSelectAll) {
+        this.filterList = [];
+        this.matchingSkill.forEach((e, i) => {
+          if (i !== 0) {
+            this.matchingSkill[i].isSelected = false;
+          }
+        });
       }
-      const keyList = _.flatten(checkList);
-      if (isObjectFull(condition) && type === 0) {
-        const dataList = [...this.dataFilterDf];
-        const daveForFilter = dataList.filter((m) => {
-          let isValid = true;
-          for (const prop in condition) {
-            if (isArrayFull(condition[prop]) && isArrayFull(m[prop])) {
-              isValid = m[prop].some((z: any) => keyList.includes(z['_key']));
-              if (!isValid) break;
-            } else if (isArrayFull(condition[prop]) && isObjectFull(m[prop])) {
-              isValid = [m[prop]].some((z: any) => keyList.includes(z['_key']));
-              if (!isValid) break;
-            } else if (prop === 'valid_time_from' || prop === 'valid_time_to') {
-              if (condition['valid_time_from'] && !condition['valid_time_to']) {
-                isValid =
-                  this.setHours0(condition['valid_time_from']) <=
-                  this.setHours0(m['create_at']);
+    } else if (this.matchingSkill[index].isSelected) {
+      this.filterList = [];
+      this.matchingSkill.forEach((e, i) => {
+        if (i !== index) {
+          this.matchingSkill[i].isSelected = false;
+        }
+      });
+      this.isSelectAll = false;
+      this.filterList.push(item);
+    } else {
+      this.filterList = this.filterList.filter((e) => e !== item);
+      if (this.filterList.length === 0) {
+        this.matchingSkill[0].isSelected = true;
+        this.isSelectAll = true;
+      }
+    }
+    this.filterMain();
+    this.setCountMatching(this.dataFilter);
+    this.setCountMember(this.dataFilter);
+    setTimeout(() => {
+      this.setSkeleton(false);
+    }, 100);
+  }
+
+  filterMain(type = 0) {
+    if (this.currentTab === 'R') {
+      try {
+        const formValue = this.searchForm.value;
+        const condition = Object.entries(formValue).reduce(
+          (a, [k, v]) => (v == null ? a : ((a[k] = v), a)),
+          {}
+        );
+        condition['keyword'] && delete condition['keyword'];
+        const checkList = [];
+        for (const prop in condition) {
+          if (
+            prop !== 'keyword' &&
+            prop !== 'capacity_time_from' &&
+            prop !== 'capacity_time_to'
+          ) {
+            checkList.push(condition[prop].map((t: any) => t['_key']));
+          }
+        }
+        const keyList = _.flatten(checkList);
+        if (isObjectFull(condition) && type === 0) {
+          const dataList = [...this.dataFilterDf];
+          const daveForFilter = dataList.filter((m) => {
+            let isValid = true;
+            for (const prop in condition) {
+              if (isArrayFull(condition[prop]) && isArrayFull(m[prop])) {
+                isValid = m[prop].some((z: any) => keyList.includes(z['_key']));
                 if (!isValid) break;
               } else if (
-                !condition['valid_time_from'] &&
-                condition['valid_time_to']
+                isArrayFull(condition[prop]) &&
+                isObjectFull(m[prop])
               ) {
-                isValid =
-                  this.setHours0(condition['valid_time_to']) >=
-                  this.setHours0(m['create_at']);
+                isValid = [m[prop]].some((z: any) =>
+                  keyList.includes(z['_key'])
+                );
                 if (!isValid) break;
-              } else {
-                isValid =
-                  this.setHours0(condition['valid_time_from']) <=
-                    this.setHours0(m['create_at']) &&
-                  this.setHours0(condition['valid_time_to']) >=
+              } else if (
+                prop === 'capacity_time_from' ||
+                prop === 'capacity_time_to'
+              ) {
+                if (
+                  condition['capacity_time_from'] &&
+                  !condition['capacity_time_to']
+                ) {
+                  isValid =
+                    this.setHours0(condition['capacity_time_from']) <=
                     this.setHours0(m['create_at']);
-                if (!isValid) break;
+                  if (!isValid) break;
+                } else if (
+                  !condition['capacity_time_from'] &&
+                  condition['capacity_time_to']
+                ) {
+                  isValid =
+                    this.setHours0(condition['capacity_time_to']) >=
+                    this.setHours0(m['create_at']);
+                  if (!isValid) break;
+                } else {
+                  isValid =
+                    this.setHours0(condition['capacity_time_from']) <=
+                      this.setHours0(m['create_at']) &&
+                    this.setHours0(condition['capacity_time_to']) >=
+                      this.setHours0(m['create_at']);
+                  if (!isValid) break;
+                }
+              } else {
+                break;
               }
-            } else {
-              isValid = false;
-              break;
             }
-          }
-          return isValid;
-        });
-        this.dataFilter = daveForFilter;
-      } else {
-        this.dataFilter = [...this.dataFilterDf];
+            return isValid;
+          });
+          this.dataFilter = this.filterItem(daveForFilter);
+        } else {
+          this.dataFilter = this.filterItem([...this.dataFilterDf]);
+        }
+        // this.setCountMember(this.dataFilter);
+        this.setCountMatching(this.dataFilter);
+        if (this.dataFilter.length === 0) {
+          this.textDataNull = 'There is no data';
+        } else {
+          this.textDataNull = '';
+        }
+      } catch (e) {
+        console.log(e);
       }
-    } catch (e) {
-      console.log(e);
+    } else if (this.currentTab === 'C') {
+      const check = [];
+      this.memberChecked.forEach((e, i) => e && check.push(i + 1));
+      if (check.length > 0) {
+        this.dataFilterTeamMember = this.dataFilterTeamMember.filter((e) =>
+          check.includes(e.group_no)
+        );
+        if (this.dataFilterTeamMember.length === 0) {
+          this.textDataNullTeamMember = 'There is no data';
+        } else {
+          this.textDataNullTeamMember = '';
+        }
+      } else {
+        this.dataFilterTeamMember = [...this.dataFilterTeamMemberDf];
+      }
     }
+  }
+
+  setCountMember = (arr: any[]) => {
+    this.countMember = [0, 0, 0];
+    arr.forEach((e) => {
+      if (e?.group_no === 1) {
+        this.countMember[0]++;
+      } else if (e?.group_no === 2) {
+        this.countMember[1]++;
+      } else {
+        this.countMember[2]++;
+      }
+    });
+  };
+
+  setCountMatching = (arr: any[]) => {
+    this.matchingSkill.map((e) => (e.count = 0));
+    this.matchingSkill.forEach(({ item }, i) => {
+      if (i === 0) {
+        this.matchingSkill[0].count = this.dataFilter.length;
+      } else {
+        arr.forEach(({ skills }) => {
+          const index = skills.findIndex(({ _key }) => _key === item);
+          if (~index) {
+            this.matchingSkill[i].count += 1;
+          }
+        });
+      }
+    });
+  };
+
+  filterItem(data: any[]) {
+    const check = [];
+    this.memberChecked.forEach((e, i) => e && check.push(i + 1));
+    if (check.length === 0 && this.filterList.length === 0) {
+      return data;
+    }
+
+    return data.filter((e) => {
+      let isValid = true;
+      if (check.length > 0) {
+        isValid = check.includes(e.group_no);
+        if (!isValid) {
+          return;
+        }
+      }
+      if (this.filterList.length > 0) {
+        isValid = e.skills.some(({ _key }) => this.filterList.includes(_key));
+        if (!isValid) {
+          return;
+        }
+      }
+      return isValid;
+    });
+  }
+
+  ngOnDestroy() {
+    this.saveTemp();
+  }
+
+  @HostListener('window:beforeunload', ['$event']) unloadHandler() {
+    this.saveTemp();
   }
 }

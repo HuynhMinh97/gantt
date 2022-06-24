@@ -161,6 +161,7 @@
                       <nb-radio
                         *ngFor="let option of genderList; let isDefault = three"
                         [value]="option"
+                        [required]="true"
                         [checked]="
                           userOnboardingInfo?.controls['gender']?.value
                             ? userOnboardingInfo?.controls['gender']?.value

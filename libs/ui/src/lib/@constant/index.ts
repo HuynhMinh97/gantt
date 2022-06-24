@@ -58,6 +58,7 @@ export interface TabView {
   tabIcon: string;
   title: string;
   type: string;
+  padding?: string;
 }
 
 export enum JOB_STATUS {
@@ -130,6 +131,7 @@ export enum MODE {
   NEW = 'NEW',
   EDIT = 'EDIT',
   VIEW = 'VIEW',
+  SEARCH = 'SEARCH',
 }
 
 export enum TYPE {

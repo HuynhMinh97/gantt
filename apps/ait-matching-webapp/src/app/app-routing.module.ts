@@ -1,5 +1,4 @@
 import { EditDataMasterComponent } from './pages/master-group-collection/edit-data-master/edit-data-master.component';
-import { RegisterProjectComponent } from './pages/project-requirements/register-project/register-project.component';
 import { SkillDetailComponent } from './pages/list/skill-list/skill-detail/skill-detail.component';
 import { AddCationComponent } from './pages/list/caption-list/add-caption/add-caption.component';
 import { CreateUserComponent } from './pages/list/user-list/create-user/create-user.component';
@@ -45,6 +44,10 @@ import { MasterListComponent } from './pages/master-group-collection/master-list
 import { ViewDataMasterComponent } from './pages/master-group-collection/view-data-master/view-data-master.component';
 import { ProjectRequirementDetailComponent } from './pages/project-requirements/project-detail/project-requirement-detail.component';
 import { RequirementListComponent } from './pages/requirement-list/requirement-list.component';
+import { MasterDataInputComponent } from './pages/master-data/master-data-input/master-data-input.component';
+import { MasterDataViewComponent } from './pages/master-data/master-data-view/master-data-view.component';
+import { UpdateProjectComponent } from './pages/project-requirements/update-project/update-project.component';
+import { SetPlanComponent } from './pages/recommenced-user/components/set-plan/set-plan.component';
 
 export const routes: Routes = [
   {
@@ -252,11 +255,6 @@ export const routes: Routes = [
     canActivate: [AitAuthGuardService],
     component: CreateUserComponent,
   },
-  // {
-  //   path: 'create-user/:id',
-  //   canActivate: [AitAuthGuardService],
-  //   component: CreateUserComponent,
-  // },
   {
     path: 'user-account-detail/:id',
     canActivate: [AitAuthGuardService],
@@ -303,37 +301,47 @@ export const routes: Routes = [
     component: MasterDataListComponent,
   },
   {
+    path: 'master-data/:id',
+    canActivate: [AitAuthGuardService],
+    component: MasterDataInputComponent,
+  },
+  {
+    path: 'master-data-detail',
+    canActivate: [AitAuthGuardService],
+    component: MasterDataViewComponent,
+  },
+  {
     path: 'master-list',
     canActivate: [AitAuthGuardService],
     component: MasterListComponent,
   },
   {
-    path: 'add-data-master/:id',
+    path: 'master/:id',
     canActivate: [AitAuthGuardService],
     component: EditDataMasterComponent,
   },
   {
-    path: 'add-data-master',
+    path: 'master',
     canActivate: [AitAuthGuardService],
     component: EditDataMasterComponent,
   },
   {
-    path: 'view-data-master/:id',
+    path: 'master-detail/:id',
     canActivate: [AitAuthGuardService],
     component: ViewDataMasterComponent,
   },
   {
-    path: 'register-project/:id',
+    path: 'project/:id',
     canActivate: [AitAuthGuardService],
-    component: RegisterProjectComponent,
+    component: UpdateProjectComponent,
   },
   {
-    path: 'register-project',
+    path: 'project',
     canActivate: [AitAuthGuardService],
-    component: RegisterProjectComponent,
+    component: UpdateProjectComponent,
   },
   {
-    path: 'project-requirement-detail/:id',
+    path: 'project-detail/:id',
     canActivate: [AitAuthGuardService],
     component: ProjectRequirementDetailComponent,
   },
@@ -343,10 +351,15 @@ export const routes: Routes = [
     component: RequirementListComponent,
   },
   {
+    path: 'set-plan',
+    canActivate: [AitAuthGuardService],
+    component: SetPlanComponent,
+  },
+  {
     path: '',
     pathMatch: 'full',
     redirectTo: localStorage.getItem('access_token')
-      ? 'user-profile'
+      ? 'recommenced-user'
       : 'sign-in',
   },
 ];

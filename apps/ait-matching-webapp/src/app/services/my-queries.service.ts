@@ -2,7 +2,7 @@ import { AitBaseService } from '@ait/ui';
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MyQueriesService extends AitBaseService {
   collection = 'biz_project';
@@ -30,12 +30,12 @@ export class MyQueriesService extends AitBaseService {
       _key: true,
       value: true,
     },
-    skill:true,
+    skill: true,
     create_by: true,
     change_by: true,
     create_at: true,
-    valid_time_from: true,
-    valid_time_to: true,
+    capacity_time_from: true,
+    capacity_time_to: true,
     change_at: true,
   };
 
@@ -47,24 +47,19 @@ export class MyQueriesService extends AitBaseService {
     if (!condition['change_by']) {
       condition['change_by'] = {};
     }
-    if (!condition['industry'])
-    {
+    if (!condition['industry']) {
       condition['industry'] = {};
     }
-    if (!condition['title'])
-    {
+    if (!condition['title']) {
       condition['title'] = {};
     }
-    if (!condition['level'])
-    {
+    if (!condition['level']) {
       condition['level'] = {};
     }
-    if (!condition['location'])
-    {
+    if (!condition['location']) {
       condition['location'] = {};
     }
-    if (!condition['skill'])
-    {
+    if (!condition['skill']) {
       condition['skill'] = {};
     }
     condition['industry']['attribute'] = 'industry';
@@ -89,7 +84,7 @@ export class MyQueriesService extends AitBaseService {
       {
         collection: this.collection,
         condition: condition,
-        options: { sort_by: { value: 'valid_time_from', order_by: 'DESC' } },
+        options: { sort_by: { value: 'capacity_time_from', order_by: 'DESC' } },
       },
       this.returnFields
     );

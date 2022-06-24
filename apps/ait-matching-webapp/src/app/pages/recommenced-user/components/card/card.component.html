@@ -20,33 +20,13 @@
       <div class="info">
         <div style="display: flex; width: 100%; flex-direction: column">
           <p class="name empty">
-            {{ cardH?.last_name + ' ' + cardH?.first_name }}
+            {{ getName() }}
           </p>
           <p class="dept empty" [nbTooltip]="cardH?.company_working?.value">
             {{ cardH?.company_working?.value }}
           </p>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="divider__card">
-    <div class="stamp" *ngIf="card?.stamp === 1">
-      <img
-        [nbTooltip]="'在留期限 満了1ヶ月前'"
-        src="../../../../../../../assets/images/stamp_1_month.png"
-        alt=""
-        srcset=""
-        loading="lazy"
-      />
-    </div>
-    <div class="stamp" *ngIf="card?.stamp === 2">
-      <img
-        [nbTooltip]="'在留期限 満了3ヶ月前'"
-        src="../../../../../../../assets/images/stamp_3_months.png"
-        alt=""
-        srcset=""
-        loading="lazy"
-      />
     </div>
   </div>
   <!-- <mat-chip-list> -->
@@ -64,6 +44,14 @@
       ></ait-chip>
     </div>
   </div>
+  <div class="divider"></div>
+  <div class="plan">
+    <span class="plan-text">Plan for the next 3 months: {{ sumMM() }}Mm</span>
+    <span class="plan-text" *ngIf="getValue(0)"
+      >{{ getValue(0) }}: {{ getMM(0) }}Mm, {{ getValue(1) }}: {{ getMM(1) }}Mm,
+      {{ getValue(2) }}: {{ getMM(2) }}Mm</span
+    >
+  </div>
   <!-- </mat-chip-list> -->
   <div class="action__card">
     <div
@@ -75,16 +63,17 @@
       }"
     >
       <div
+        *ngIf="!isSaveMode"
         class="btn-card"
+        [ngStyle]="{ background: backgroundCard }"
         (click)="actionButtonAdd(cardH.user_id)"
         nbTooltip="{{
-          cardH.is_team_member ? ('added' | translate) : ('add' | translate)
+          cardH.is_team_member ? ('remove' | translate) : ('add' | translate)
         }}"
       >
         <nb-icon
           icon="{{ cardH.is_team_member ? 'plus' : 'plus-outline' }}"
           [ngStyle]="{ color: '#fff' }"
-          (click)="actionButtonAdd(cardH.user_id)"
         ></nb-icon>
         <p
           style="
@@ -96,16 +85,24 @@
           "
         >
           {{
-            cardH.is_team_member ? ('added' | translate) : ('add' | translate)
+            cardH.is_team_member ? ('remove' | translate) : ('add' | translate)
           }}
         </p>
       </div>
-      <div style="background: 'white'; width: 1px; height: 100%"></div>
       <div
+        *ngIf="!isSaveMode"
+        style="background: 'white'; width: 1px; height: 100%"
+      ></div>
+      <div
+        *ngIf="!isAddMode"
         class="btn-card"
+        [ngStyle]="{
+          background: backgroundCard,
+          width: isSaveMode ? '100%' : '50%'
+        }"
         (click)="actionButtonSave(cardH.user_id)"
         nbTooltip="{{
-          cardH.is_saved ? ('saved' | translate) : ('save' | translate)
+          cardH.is_saved ? ('Unsaved' | translate) : ('save' | translate)
         }}"
       >
         <nb-icon
@@ -121,7 +118,35 @@
             margin: 0;
           "
         >
-          {{ cardH.is_saved ? ('saved' | translate) : ('save' | translate) }}
+          {{ cardH.is_saved ? ('Unsaved' | translate) : ('save' | translate) }}
+        </p>
+      </div>
+
+      <div
+        *ngIf="isAddMode"
+        class="btn-card"
+        [ngStyle]="{
+          background: backgroundCard
+        }"
+        (click)="actionButtonPlan(cardH.user_id)"
+        nbTooltip="{{ 'Set Plan' | translate }}"
+      >
+        <nb-icon
+          icon="id-badge"
+          pack="font-awesome-fas"
+          [ngStyle]="{ color: '#fff' }"
+        ></nb-icon>
+
+        <p
+          style="
+            font-weight: bold;
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #ffffff;
+            margin: 0;
+          "
+        >
+          {{ 'Set Plan' | translate }}
         </p>
       </div>
     </div>

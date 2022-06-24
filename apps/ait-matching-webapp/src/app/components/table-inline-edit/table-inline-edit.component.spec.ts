@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RegisterProjectComponent } from './register-project.component';
+import { TableInlineEditComponent } from './table-inline-edit.component';
 
-describe('RegisterProjectComponent', () => {
-  let component: RegisterProjectComponent;
-  let fixture: ComponentFixture<RegisterProjectComponent>;
+describe('TableInlineEditComponent', () => {
+  let component: TableInlineEditComponent;
+  let fixture: ComponentFixture<TableInlineEditComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RegisterProjectComponent ]
+      declarations: [ TableInlineEditComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RegisterProjectComponent);
+    fixture = TestBed.createComponent(TableInlineEditComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

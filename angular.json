@@ -192,6 +192,20 @@
                             "node_modules/leaflet/dist/leaflet.css",
                             "apps/ait-webapp-starter/src/styles/styles.scss"
                         ],
+                        "allowedCommonJsDependencies": [
+                            "lodash",
+                            "zrender/lib/svg/svg",
+                            "zrender/lib/vml/vml",
+                            "style-loader!leaflet/dist/leaflet.css",
+                            "numeral",
+                            "date-fns/format",
+                            "dayjs",
+                            "numeral",
+                            "date-fns",
+                            "crypto-js",
+                            "json-to-graphql-query",
+                            "zen-observable"
+                        ],
                         "scripts": []
                     },
                     "configurations": {
