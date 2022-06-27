@@ -24,7 +24,7 @@
         [required]="true"
         [isSubmit]="isSubmit"
         [isReset]="resetProjectInfo.name"
-        [placeholder]="'please input keyword'"
+        [placeholder]="'please input name'"
         [length]="200"
         (watchValue)="takeInputValue($event, 'projectForm', 'name')"
         [defaultValue]="projectForm?.controls['name']?.value"
