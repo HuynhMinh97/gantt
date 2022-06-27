@@ -505,11 +505,14 @@ export class RecommencedUserComponent
   search() {
     const keyword = this.searchForm.controls['keyword'].value || '';
     if (!keyword) {
-      this.showToastr(
-        '',
-        this.getTitle('please input your keyword'),
-        'warning'
-      );
+      this.setSkeleton(false);
+      setTimeout(() => {
+        this.showToastr(
+          '',
+          this.getTitle('please input your keyword'),
+          'warning'
+        );
+      }, 200);
       return;
     }
     this.isSubmit = true;
