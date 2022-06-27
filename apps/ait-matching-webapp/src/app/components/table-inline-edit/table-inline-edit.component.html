@@ -31,28 +31,28 @@
         </th>
         <th class="header_th"></th>
         <th class="header_th">
-          <span class="style_title">Name</span>
+          <span class="style_title">{{ getTitle('name') }}</span>
         </th>
         <th class="header_th">
-          <span class="style_title">Planned</span>
+          <span class="style_title">{{ getTitle('planned') }}</span>
         </th>
         <th class="header_th">
-          <span class="style_title">Start plan</span>
+          <span class="style_title">{{ getTitle('start plan') }}</span>
         </th>
         <th class="header_th">
-          <span class="style_title">End plan</span>
+          <span class="style_title">{{ getTitle('end plan') }}</span>
         </th>
         <th class="header_th">
-          <span class="style_title">Hours</span>
+          <span class="style_title">{{ getTitle('hours') }}</span>
         </th>
         <th class="header_th">
-          <span class="style_title">MD</span>
+          <span class="style_title">{{ getTitle('md') }}</span>
         </th>
         <th class="header_th">
-          <span class="style_title">MM</span>
+          <span class="style_title">{{ getTitle('mm') }}</span>
         </th>
         <th class="header_th">
-          <span class="style_title">Remark</span>
+          <span class="style_title">{{ getTitle('remark') }}</span>
         </th>
       </tr>
       <tr class="filter_row">
@@ -63,8 +63,17 @@
             id="search_employee"
             type="text"
             class="filter"
-            placeholder="Filter"
+            placeholder="{{ getTitle('filter') }}"
             (keyup)="handleFilterName('search_employee', 2)"
+          />
+        </th>
+        <th>
+          <input
+            id="search_planned"
+            type="text"
+            class="filter"
+            placeholder="{{ getTitle('filter') }}"
+            (keyup)="handleFilterName('search_planned', 3)"
           />
         </th>
         <th>
@@ -72,8 +81,8 @@
             id="search_start"
             type="text"
             class="filter"
-            placeholder="Filter"
-            (keyup)="handleFilterName('search_start', 3)"
+            placeholder="{{ getTitle('filter') }}"
+            (keyup)="handleFilterName('search_start', 4)"
           />
         </th>
         <th>
@@ -81,8 +90,8 @@
             id="search_end"
             type="text"
             class="filter"
-            placeholder="Filter"
-            (keyup)="handleFilterName('search_end', 4)"
+            placeholder="{{ getTitle('filter') }}"
+            (keyup)="handleFilterName('search_end', 5)"
           />
         </th>
         <th>
@@ -90,8 +99,8 @@
             id="search_hours"
             type="text"
             class="filter"
-            placeholder="Filter"
-            (keyup)="handleFilterName('search_hours', 5)"
+            placeholder="{{ getTitle('filter') }}"
+            (keyup)="handleFilterName('search_hours', 6)"
           />
         </th>
         <th>
@@ -99,8 +108,8 @@
             id="search_manday"
             type="text"
             class="filter"
-            placeholder="Filter"
-            (keyup)="handleFilterName('search_manday', 6)"
+            placeholder="{{ getTitle('filter') }}"
+            (keyup)="handleFilterName('search_manday', 7)"
           />
         </th>
         <th>
@@ -108,25 +117,17 @@
             id="search_manmonth"
             type="text"
             class="filter"
-            placeholder="Filter"
-            (keyup)="handleFilterName('search_manmonth', 7)"
+            placeholder="{{ getTitle('filter') }}"
+            (keyup)="handleFilterName('search_manmonth', 8)"
           />
         </th>
+       
         <th>
           <input
             id="search_remark"
             type="text"
             class="filter"
-            placeholder="Filter"
-            (keyup)="handleFilterName('search_remark', 8)"
-          />
-        </th>
-        <th>
-          <input
-            id="search_remark"
-            type="text"
-            class="filter"
-            placeholder="Filter"
+            placeholder="{{ getTitle('filter') }}"
             (keyup)="handleFilterName('search_remark', 9)"
           />
         </th>
@@ -254,11 +255,11 @@
             >
           </td>
           <td>
-            <span class="candidate_value">{{ item?.planned || null }} </span>
+            <span class="candidate_value">{{ item?.planned || null }} <br /> {{ item?.planned_detail || null }}</span>
             <br />
-            <span class="candidate_value"
+            <!-- <span class="candidate_value"
               >{{ item?.planned_detail || null }}
-            </span>
+            </span> -->
            
           </td>
           <td>
@@ -551,7 +552,7 @@
       </li>
     </ul>
     <div class="pageDetail">
-      {{ totalRows + ' case ' + start + ' - ' + end }}
+      {{ totalRows +  getTitle('case_in') + start + ' - ' + end + getTitle('case') }}
     </div>
   </div>
 
@@ -560,11 +561,11 @@
       (select)="(rows)"
       (change)="onChangeRowPerpage($event.target.value)"
     >
-      <option value="10">10{{ ' case' | translate }}</option>
-      <option value="20">20{{ ' case' | translate }}</option>
-      <option value="30">30{{ ' case' | translate }}</option>
-      <option value="50">50{{ ' case' | translate }}</option>
-      <option value="100">100{{ ' case' | translate }}</option>
+      <option value="10">10{{ getTitle('case') }}</option>
+      <option value="20">20{{ getTitle('case')}} </option>
+      <option value="30">30{{ getTitle('case')}} </option>
+      <option value="50">50{{ getTitle('case')}} </option>
+      <option value="100">100{{ getTitle('case')}} </option>
     </select>
   </div>
 </div>
