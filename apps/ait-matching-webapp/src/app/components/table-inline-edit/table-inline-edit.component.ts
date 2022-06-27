@@ -509,6 +509,8 @@ export class TableInlineEditComponent
     this.list_candidate_perpage[index][control] = value;
   }
 
+  getTitle = (name: string) => this.translateService.translate(name);
+
   sumMM() {
     if (this.planObj.length === 0) {
       return 0;
