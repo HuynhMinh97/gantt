@@ -29,6 +29,7 @@ export class AitCardContentComponent  implements OnChanges {
   @Input() padding = '';
   @Input() tooltip = '';
   @Input() actionBtn = [];
+  @Input() displayBlock=false;
   @Input() widthBtn = 'auto';
   @Input() disableHeader = false;
   gradientString = 'linear-gradient(89.75deg, #002b6e 0.23%, #2288cc 99.81%)';

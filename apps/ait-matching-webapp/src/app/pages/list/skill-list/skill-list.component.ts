@@ -394,7 +394,7 @@ export class SkillListViewComponent extends AitBaseComponent implements OnInit {
     if (!time) {
       return '';
     } else {
-      return dayjs(time).format(this.dateFormat.toUpperCase() + ' HH:mm');
+      return dayjs(time).format(' MM/YYYY');
     }
   }
 }

@@ -88,7 +88,8 @@
         'flex-direction': isColumn ? 'column' : 'row',
         'align-items': isColumn || isStart ? 'flex-start' : 'center',
         padding: padding ? padding : '',
-        transition: transition ? '0.8s all ease-in-out' : ''
+        transition: transition ? '0.8s all ease-in-out' : '',
+        display: displayBlock?'block':''
       }"
       [ngClass]="isOpen ? null : 'isClose'"
     >

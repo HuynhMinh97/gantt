@@ -30,6 +30,8 @@ import {
   NbFormFieldModule,
   NbRadioModule,
   NbDialogModule,
+  NbLayoutModule ,
+  NbSidebarModule 
 } from '@nebular/theme';
 import { AitCardComponent } from './pages/recommenced-user/components/card/card.component';
 import { ContentRowComponent } from './pages/recommenced-user/components/content/content.component';
@@ -92,7 +94,13 @@ import { TableInlineEditComponent } from './components/table-inline-edit/table-i
 import { UpdateProjectComponent } from './pages/project-requirements/update-project/update-project.component';
 import { BizProjectService } from './services/biz_project.service';
 import { SetPlanComponent } from './pages/recommenced-user/components/set-plan/set-plan.component';
-
+import { GranttChartComponent } from './pages/grantt-chart/grantt-chart.component';
+import {MatTableModule} from '@angular/material/table';
+import { TableRightComponent } from './pages/table-right/table-right.component';
+import { UserApiComponent } from './pages/user-api/user-api.component' 
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatNativeDateModule } from '@angular/material/core';
 if (environment.production) {
   console.log = () => {};
   console.error = () => {};
@@ -114,6 +122,12 @@ const NB_UI_MODULES = [
   NbFormFieldModule,
   NbRadioModule,
   NbDialogModule,
+  NbLayoutModule,
+  NbSidebarModule,
+  MatTableModule,
+  MatDatepickerModule,
+  MatFormFieldModule,
+  MatNativeDateModule
 ];
 
 const COMPONENTS = [
@@ -182,6 +196,9 @@ const PAGES = [
     TableInlineEditComponent,
     UpdateProjectComponent,
     SetPlanComponent,
+    GranttChartComponent,
+    TableRightComponent,
+    UserApiComponent,
   ],
   imports: [
     Ng2SmartTableModule,

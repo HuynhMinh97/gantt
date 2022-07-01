@@ -19,6 +19,8 @@ export class AitOutputTextComponent implements OnChanges {
   @Input() classContainer = '';
   @Input() id = '';
   @Input() tabIndex = '';
+  @Input() isShowLabel=false;
+  @Input() styleOutput={};
   constructor(private translateService: AitTranslationService) {}
 
   ID(element: string) {

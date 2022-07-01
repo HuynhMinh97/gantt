@@ -1,0 +1,81 @@
+<div class="" *ngIf="checkDate=='months'">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        2022 
+
+      </tr>
+      <tr>
+        <th *ngFor="let item of displayedColumnsMonth">Tháng {{item}}</th>
+
+      </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+    
+    
+    
+  
+    
+  </table>
+
+</div>
+<div class="" *ngIf="checkDate=='days'">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        2022
+
+      </tr>
+      
+      <tr>
+        <th *ngFor="let item of displayedColumnsDays">Ngay {{item}}</th>
+
+      </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+    
+    
+    
+  
+    
+  </table>
+
+</div>
+
+<div class="" *ngIf="checkDate=='weeks'">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        2022
+
+      </tr>
+      <tr>
+        <th *ngFor="let item of displayedColumnsMonth" colspan="4">Tháng {{item}}</th>
+
+      </tr>
+      <tr>
+        <th *ngFor="let item of displayedColumnsWeeks">Tuan {{item}}</th>
+
+      </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+    
+    
+    
+  
+    
+  </table>
+
+</div>
+  
+  <p>{{checkDate}}</p>
+  
+  <!-- Copyright 2018 Google Inc. All Rights Reserved.
+      Use of this source code is governed by an MIT-style license that
+      can be found in the LICENSE file at http://angular.io/license -->

@@ -1,0 +1,222 @@
+:root{
+    --primary-height-title-table-left:1 rem;
+    --color-word:#49BBEE;
+}
+
+*{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    font-family: Open Sans, sans-serif;
+    font-size: 0.9375rem;
+    font-weight: 400;
+    line-height: 1.25rem;
+    color: #222B45;
+
+}
+/* Phân chia bố cục */
+.gantt-container{
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    color: #333;
+}
+
+.table-gantt-chart{
+    padding-top: 20px;
+}
+/* .gantt-size{
+   
+    z-index: 3;
+    box-shadow: 12px 0 16px -10px rgb(0 0 0 / 15%);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    color: #333;
+    opacity: 0;
+} */
+/* .gantt-container {
+    flex: 1;
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    background-color: #fafafa;
+        position: relative;
+    overflow: hidden;
+    display: flex;
+    color: #333;
+    opacity: 0;
+} */
+
+.table-row{
+    padding-left: 0;
+    height:50px ;
+    
+}
+.table-text{
+    color: rgb(255, 255, 255);
+    line-height: 32px;
+    text-align: center;
+    overflow-wrap: normal;
+}
+  .scroll-bar{
+    overflow-y: scroll;
+  }
+  
+  .table-title-left{
+    line-height: 1;
+   
+  }
+
+  .table-title-left > th{
+    
+    line-height: 4rem;
+    height: 92px;
+  }
+  .table input {
+    width: 90%;
+    height: 90%;
+  }
+  .table-cell-left{
+    line-height: 1;
+   height: 50px;
+   min-width: 150px;
+  }
+  
+
+  
+  .table-title-year{
+    height: 46px;
+
+}
+
+.table-title-month{
+    height: 46px;
+}
+
+
+
+.scroll-bar{
+    padding-left: 0;
+    padding-right: 0;
+}
+.table-cell-right{
+    line-height: 1;
+}
+
+.cell-month-title{
+    min-width: 250px;
+    text-align: center;
+}
+
+.button-header{
+    display: flex;
+    padding: 10px 20px;
+    justify-content: space-between;
+}
+
+.button-header button{
+    min-width: 100px;
+}
+
+.button-change a{
+    text-decoration: none;
+}
+
+.button{
+    border: none;
+    min-width: 10px !important;
+    height: 26px;
+}
+/* test */
+.circle{
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    background-color: aqua;
+}
+.square{
+    width: 50px;
+    height: 50px;
+    border-radius: 2px;
+    background-color: aqua;
+}
+/* Style cell work */
+.table-work{
+    width: 100%;
+    height: 100%;
+}
+.table-work-cell{
+    width: 100%;
+    /* cursor: pointer; */
+    box-shadow: 0 2px 4px 0 rgb(0 0 0 / 10%);
+    border-radius: 4px;
+    background: #348fe4;
+    overflow: hidden;
+    box-sizing: border-box;
+    min-height: 30px;
+    color: #fff;
+    white-space:nowrap;
+}
+/* fa-icon{
+    display: block;
+    
+} */
+/* test */
+.gantt{
+    width: 100%; 
+    height: 100%;
+    background-color: #fff;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    color: #333;
+    opacity: 0;
+}
+
+.ng2-smart-th{
+    min-width: 150px;
+}
+
+
+
+.table-left{
+    margin-left: 10px;
+}
+
+.table-left-in{
+    padding-left: 0;
+}
+
+.table-right-in{
+    padding-left: 0;
+}
+
+.ng2-smart-row.selected{
+    height: 69px;
+}
+
+.text{
+    font-weight: bold;
+    font-size: 15px;
+    margin-bottom: 1px;
+    padding: 0px;
+    text-decoration: none;
+    
+}
+
+.date-change{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.text-info{
+    justify-content: center;
+    display: flex;
+}
+.title-info{
+    display: flex;
+    justify-content: center;
+
+}

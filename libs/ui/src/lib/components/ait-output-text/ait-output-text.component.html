@@ -1,6 +1,6 @@
 <div [ngClass]="classContainer">
-  <div class="output_text" tabindex="{{tabIndex}}">
-    <ait-label [label]="label" [id]="id"></ait-label>
+  <div class="output_text" [ngStyle]="styleOutput" tabindex="{{tabIndex}}">
+    <ait-label [hidden]="isShowLabel" [label]="label" [id]="id"></ait-label>
     <input
       [nbTooltip]="value"
       [nbTooltipTrigger]="value ? 'hover' : 'noop'"

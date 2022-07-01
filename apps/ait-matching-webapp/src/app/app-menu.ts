@@ -80,7 +80,7 @@ export const MENU_ITEMS = [
         sub_menus: [
           {
             iconName: 'list-outline',
-            title: 'Skill List',
+            title: 'Skills List',
             url_sub: '/skill-list',
           },
         ],

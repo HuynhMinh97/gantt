@@ -1,0 +1,188 @@
+<ait-card-content
+      style="width: 100%; "
+      [isColumn]="true"
+      [label]="'Information'"
+      [styleLabel]="{ 'font-size': '3vmax' }"
+      [displayBlock]="true"
+    >
+
+
+<div class="row">
+  <div groupButtonArea class="btn-group col-md-6">
+  
+    <ait-button
+    [id]="'days'"
+    [width]="'150px'"
+    [title]="'days'"
+    [isDefault]="true"
+    [tabIndex]="43"
+    (click)="handleDays()"
+  ></ait-button>
+  <ait-button
+    [id]="'weeks'"
+    [width]="'150px'"
+    [title]="'weeks'"
+    [isDefault]="true"
+    [tabIndex]="43"
+    (click)="handleWeeks()"
+  ></ait-button>
+  <ait-button
+    [id]="'months'"
+    [width]="'150px'"
+    [title]="'months'"
+    [isDefault]="true"
+    [tabIndex]="43"
+    (click)="handleMonths()"
+  ></ait-button>
+  </div>
+  <div  class="col-md-2">
+    <ait-datepicker
+      [placeholder]="'MM/yyyy'"
+      [id]="'change_at_from'"
+      [label]="'Date From'"
+      [style]="{ width: '170px' }"
+      [format]="'MM/yyyy'"
+      (watchValue)="
+        takeDatePickerValue(
+          $event.value,
+          'searchRole',
+          'change_at_from'
+        )
+      "
+    ></ait-datepicker>
+  </div>
+  <div class="col-md-2">
+    <ait-datepicker
+      [placeholder]="'MM/yyyy'"
+      [id]="'change_at_to'"
+      [label]="'Date To'"
+      [style]="{ width: '170px' }"
+      [(ngModel)]="check"
+      [format]="'MM/yyyy'"
+      (watchValue)="
+        takeDatePickerValue(
+          $event.value,
+          'searchRole',
+          'change_at_from'
+        )
+      "
+    ></ait-datepicker>
+  </div>
+    
+  
+  <div class="col-md-2 date-change">
+    <nb-icon icon="arrow-ios-back-outline"></nb-icon>
+    <a href="#" class="text">Now</a>
+    <nb-icon icon="arrow-ios-forward-outline"></nb-icon>
+  </div>
+</div>
+
+
+<div class="row table-gantt-chart">
+    <div class="col-4 scroll-bar">
+        <table class="table table-bordered">
+            <thead>
+              <tr class="table-title-left">
+                <th scope="col">Project Name</th>
+                <th scope="col">Name Employee</th>
+                <th scope="col">Date from</th>
+                <th scope="col">Date to</th>
+                <th scope="col">Capacity</th>
+        
+              </tr>
+            </thead>
+            <tbody>
+              <tr (mouseenter) ="handleHover($event)" (mouseleave) ="handleHoverOut($event)" *ngFor="let ele of dataSource,let i=index" class="cell-title cell-title-{{i}}">
+                <td class="text-center table-cell-left" id="project-left-{{i}}" >
+                  <ait-autocomplete-master-data
+                      [collection]="'m_title'"
+                      [id]="'number_format'"
+                      [icon]="'search-outline'"
+                      [style]="{ width: '150px' }"
+                      [placeholder]="'Please select title'"
+                      [disableOutputDefault]="true"
+                      [tabIndex]="6"
+                      (watchValue)="takeMasterValues($event?.value, 'current_job_title')"
+                      [isReset]="isReset"
+                      [defaultValue]="projectName"
+                    >
+                    </ait-autocomplete-master-data>
+                  <fa-icon (click)="handleClickIcon(i)" id="icon-plus-{{i}}" style="display:none"  [icon]="faCoffee"></fa-icon></td>
+                <td class="text-center table-cell-left" id="name-left-{{i}}" ><input type="text"  [(ngModel)]="ele.nameEmpolyee"></td>
+                <td class="text-center table-cell-left" id="datefrom-left-{{i}}" ><input [value]="ele.dateFrom|date:'MM/yyyy'" (change)="updateDateFrom($event,i)" type="text" id="date" /></td>
+                <td class="text-center table-cell-left" id="dateto-left-{{i}}" ><input [value]="ele.dateTo|date:'MM/yyyy'" (change)="updateDateTo($event,i)" type="text" id="date" /></td>
+                <td class="text-center table-cell-left" id="capacity-left-{{i}}" >
+                  <ait-output-text
+                    [id]="'group name'"
+                    [width]="'200px'"
+                    [value]="ele.capacity"
+                    [isShowLabel]="true"
+                    [height]="'20px'"
+                    [width]="'150px'"
+                    [styleOutput]="{'min-width':'150px','min-height':'20px'}"
+                  ></ait-output-text>
+                  </td>
+         
+              </tr>
+              
+            </tbody>
+          </table>
+    </div>
+    <div id="scroll-bar" class="col-8 scroll-bar  " >
+        <table class="table table-bordered">
+            <thead>
+                <tr class="table-title-year">
+                    <th colspan="12" >{{indexYear}}</th>
+                </tr>
+              <tr class="table-title-month">
+                <th #cellMonth  *ngFor="let month of months;let indexOfelement=index;"  class="cell-month-title " id="cell-month-title-{{indexOfelement}}"  scope="col">{{month}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let work of dataSource;let indexOfelement=index;" (click)="handlelog($event)" class="table-cell-right" id="table-cell-right-{{indexOfelement}}">
+                <th  *ngFor="let month of months" class="table-row" (mouseenter)="handleMouseOnRowCell($event)" (mouseleave)="handleMouseLeaveRowCell($event)"contenteditable > 
+                  <div class="table-work"></div>  
+                  <!-- <div class="table-work-cell" id="table-work-{{indexOfelement}}"  ><p class="table-text" contenteditable (keyup)="handleChangeCapacity($event,indexOfelement)">{{work.capacity}}</p></div> -->
+                </th>
+               
+              </tr>
+            </tbody>
+          </table>
+    </div>
+    
+  </div>
+
+
+
+</ait-card-content>
+
+
+    
+    
+        
+
+    
+    
+    
+        <!-- <div class="row">
+            <div class="col-md-4">
+                <nb-card class="table-left" size="medium">
+                  <nb-card-body class="table-left-in">
+                    <ng2-smart-table [settings]="settings"[source]="data"(deleteConfirm)="onDeleteConfirm($event)" >
+                    </ng2-smart-table>
+                  </nb-card-body>
+                </nb-card>
+              </div>
+              <div class="col-md-8">
+                <nb-card size="medium">
+                  <nb-card-body class="table-right-in">
+                    <ait-table-right [checkDate]="date" [yearIndex]="yearIndex"></ait-table-right>
+                  </nb-card-body>
+                </nb-card>
+              </div>
+        </div>
+        
+        <ait-text-gradient  [content]="'Information'"
+        ></ait-text-gradient>
+        <ait-table-button></ait-table-button>
+        <ait-ait-table-cell></ait-ait-table-cell> -->

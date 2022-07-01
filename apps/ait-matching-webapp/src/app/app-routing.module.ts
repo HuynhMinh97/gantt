@@ -48,7 +48,7 @@ import { MasterDataInputComponent } from './pages/master-data/master-data-input/
 import { MasterDataViewComponent } from './pages/master-data/master-data-view/master-data-view.component';
 import { UpdateProjectComponent } from './pages/project-requirements/update-project/update-project.component';
 import { SetPlanComponent } from './pages/recommenced-user/components/set-plan/set-plan.component';
-
+import { GranttChartComponent } from './pages/grantt-chart/grantt-chart.component';
 export const routes: Routes = [
   {
     path: 'recommenced-user',
@@ -354,6 +354,11 @@ export const routes: Routes = [
     path: 'set-plan',
     canActivate: [AitAuthGuardService],
     component: SetPlanComponent,
+  },
+  {
+    path: 'gantt-chart',
+    canActivate: [AitAuthGuardService],
+    component: GranttChartComponent,
   },
   {
     path: '',
